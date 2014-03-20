@@ -1,0 +1,44 @@
+Proposed DB tables for XALT:
+
+
+xalt_<MACHINE>_jobs:
+
+
+   run_inc    int(11)       auto_increment,
+   tag_id     int(11)       Not Null,           # job id + count in job?
+   executable varchar(1024) Not Null,           # complete path to name of executable
+   username   varchar(64)   Not Null,           # user name
+   run_date   date          Not Null,
+   run_time   float(13),                        # possible null, in secs. (fractional secs?)
+
+   primary key(run_inc)
+
+--------------------------------------------------------------------------------------------
+
+xalt_<MACHINE>_link_tag:
+
+   tag_id     int(11)       Not Null,            # job id + count in job?
+   link_id    char(36)      Not Null,            # UUID string
+   username   varchar(64)   Not Null,
+   exit_code  tinyint(4)    Not Null,            # ??
+   link_date  date          Not Null,            # date time?
+
+   primary key(tag_id)
+
+--------------------------------------------------------------------------------------------
+
+xalt_<MACHINE>_link_lib
+
+  link_id     char(36)      Not Null,             # UUID String
+  library     varchar(1024) Not Null              # one library
+
+--------------------------------------------------------------------------------------------
+
+xalt_<MACHINE>_env
+
+  run_inc    int(11)        Not Null,             # the run_inc from xalt_<MACHINE>_jobs
+  varName    varchar(64)    Not Null,             # variable name
+  varValue   varchar(1024)                        # value (could be null)
+
+
+  
