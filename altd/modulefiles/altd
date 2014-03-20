@@ -1,0 +1,18 @@
+#%Module
+
+proc ModulesHelp { } {
+    puts stderr "Sets up users' environment to use ALTD. ALTD is the Automatic Library \nTracking Database. It is a piece of middleware developed by NICS to \nhelp track library usage. \n\nIf you encounter any problems while linking or while executing aprun, please unload this module."
+  }
+
+conflict totalview
+
+setenv ALTD_SELECT_ON 0
+setenv ALTD_SELECT_USERS jones,faheymr
+setenv ALTD_SELECT_OFF_USERS "" 
+setenv ALTD_VERBOSE 0
+
+setenv ALTD_ON 1
+setenv ALTD_PATH /sw/altd
+
+prepend-path PATH           /sw/altd/bin
+

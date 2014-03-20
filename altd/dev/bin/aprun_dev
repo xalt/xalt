@@ -1,0 +1,118 @@
+#!/usr/bin/perl
+#
+# aprun -- A wrapper around the Cray aprun that can run an arbitrary prologue
+# and/or epilogue.
+# Copyright 2009 University of Tennessee
+#
+# License:  GNU GPL v2
+# Revision info:
+# $HeadURL: https://svn.nics.utk.edu/repos/xt-tools/trunk/bin/aprun $
+# $Revision: 9 $
+use strict;
+use POSIX;
+
+# taken from http://www.ccsf.edu/Pub/Perl/perlipc/Signals.html
+# begin
+use Config;
+defined $Config{sig_name} || die "No sigs?";
+my (%signo,@signame);
+my $i = 0;
+foreach my $name (split(' ', $Config{sig_name}))
+{
+    $signo{$name} = $i;
+    $signame[$i] = $name;
+    $i++;
+}
+# end
+
+my $tooldir = "/nics/b/home/jones/altd/aprun-prologue";
+
+print STDERR "Tooldir: $tooldir\n";
+
+my $real_aprun = "/usr/bin/aprun";
+
+# prologue
+my $prologue_retcode = 0;
+if ( -e "$tooldir/aprun-prologue" && -x "$tooldir/aprun-prologue" )
+{
+
+    print STDERR "Executing prologue\n";
+    
+    my @prologue_arglist = @ARGV;
+    unshift(@prologue_arglist,"$tooldir/aprun-prologue");
+    $prologue_retcode = system("$tooldir/aprun-prologue",@prologue_arglist);
+}
+if ( $prologue_retcode==-1 )
+{
+    print STDERR "$0:  prologue failed to run\n";
+}
+elsif ( $prologue_retcode!=0 )
+{
+    my $prologue_exit = $? >> 8;
+    my $prologue_signal = $? & 127;
+    if ( $prologue_signal!=0 )
+    {
+	print STDERR "$0:  prologue caught signal $prologue_signal (".$signame[$prologue_signal].")\n";
+    }
+    if ( $prologue_exit!=0 )
+    {
+	print STDERR "$0:  prologue exited with nonzero status $prologue_exit\n";
+    }
+}
+
+# actual aprun
+my @aprun_arglist = @ARGV;
+unshift(@aprun_arglist,$real_aprun);
+#print STDERR "Executing @aprun_arglist\n";
+my $aprun_exit = -1;
+my $aprun_signal = 0;
+my $pid;
+if ( $pid = fork() )
+{
+    # parent
+    wait;
+    my $aprun_retcode = $?;
+    $aprun_exit = $aprun_retcode >> 8;
+    $aprun_signal = $aprun_retcode & 127;
+}
+elsif (defined $pid )
+{
+    # child
+    exec(@aprun_arglist);
+}
+else
+{
+    die "Cannot fork:  $!\n";
+}
+if ( $aprun_signal!=0 )
+{
+    print STDERR "$0:  caught signal $aprun_signal (".$signame[$aprun_signal].")\n";
+}
+
+# epilogue
+my $epilogue_retcode = 0;
+if ( -e "$tooldir/aprun-epilogue" && -x "$tooldir/aprun-epilogue" )
+{
+    my @epilogue_arglist = @ARGV;
+    unshift(@epilogue_arglist,"$tooldir/aprun-epilogue");
+    push(@epilogue_arglist,$aprun_exit);
+    $epilogue_retcode = system("$tooldir/aprun-epilogue",@epilogue_arglist);
+}
+if ( $epilogue_retcode==-1 )
+{
+    print STDERR "$0:  epilogue failed to run\n";
+}
+elsif ( $epilogue_retcode!=0 )
+{
+    my $epilogue_exit = $? >> 8;
+    my $epilogue_signal = $? & 127;
+    if ( $epilogue_signal!=0 )
+    {
+	print STDERR "$0:  epilogue caught signal $epilogue_signal (".$signame[$epilogue_signal].")\n";
+    }
+    if ( $epilogue_exit!=0 )
+    {
+	print STDERR "$0:  epilogue exited with nonzero status $epilogue_exit\n";
+    }
+}
+exit $aprun_exit;

@@ -1,0 +1,162 @@
+#! /usr/bin/python -E
+
+'''
+Copyright (c) 2010 The University of Tennessee
+Copyright (c) 2010 UT-Batelle LLC
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+'''
+
+import sys
+
+sys.path = ['', '/usr/lib/python24.zip', '/usr/lib64/python2.4', '/usr/lib64/python2.4/plat-linux2', '/usr/lib64/python2.4/lib-tk', '/usr/lib64/python2.4/lib-dynload', '/usr/lib64/python2.4/site-packages', '/usr/lib64/python2.4/site-packages/Numeric', '/usr/lib64/python2.4/site-packages/dbus', '/usr/lib64/python2.4/site-packages/gtk-2.0']
+
+import subprocess
+import os
+import MySQLdb
+import getpass
+import datetime
+import stat
+import base64
+import ConfigParser
+from socket import gethostname
+
+try:
+    # Extract PBS Workdir from the environment variable
+    pbs_workdir = os.environ["PBS_O_WORKDIR"]
+
+    executable = ""
+
+
+    for arg in sys.argv:
+        if os.path.exists(arg):
+            if "aprun" not in arg:
+                    executable = arg
+                    break
+                
+    if executable == "":
+        print "Couldn't parse executable"
+        sys.exit(0)
+
+    # Run objdump on the executable
+    output = subprocess.Popen(["objdump","-s","-j",".altd",executable], stdout=subprocess.PIPE,stderr=subprocess.STDOUT).communicate()[0]
+
+    # Parse the objdump output
+    output = output.split("\n")
+    output.pop(0)
+    output.pop(0)
+    output.pop(0)
+    output.pop(0)
+
+    # Build a string with the ALTD binary information in it
+    altd = ""
+
+    for line in output:
+        split = line.split()
+
+        if len(split) > 0:
+            altd = altd + split[-1]
+
+    fields = altd.split(":")
+
+
+    version = "This field could not be extracted from the source file"
+    machine = "This field could not be extracted from the source file"
+    tag_id = "This field could not be extracted from the source file"
+    year = "This field could not be extracted from the source file"
+
+    i = 0
+    for field in fields:
+        
+        if "Version" in field:
+            version = fields[i+1]
+        if "Machine" in field:
+            machine = fields[i+1]
+        if "Tag_id" in field:
+            tag_id = fields[i+1]
+        if "Year" in field:
+            year = fields[i+1]
+        
+
+        i = i + 1
+
+    if version == "This field could not be extracted from the source file":
+        sys.exit(0)
+    if machine == "This field could not be extracted from the source file":
+        sys.exit(0)
+    if tag_id == "This field could not be extracted from the source file":
+        sys.exit(0)
+    if year == "This field could not be extracted from the source file":
+        sys.exit(0)
+
+    # Get the PBS Job ID from the environment variable
+    pbs_id = os.environ["PBS_JOBID"]
+
+    # CD to the Working Directory
+    os.chdir(pbs_workdir)
+
+    # Form an absolute path 
+    path = os.path.abspath(executable)
+
+    # Remove the nid00016 from the PBS ID
+    pbs_id = pbs_id.split(".")[0]
+
+    # Get todays date in python date format
+    date = str(datetime.date.today())
+
+    ALTD_PATH=os.getenv("ALTD_PATH")
+    config=ConfigParser.ConfigParser()
+    cFile=open(ALTD_PATH+'/etc/altd_db.conf','r')
+    config.readfp(cFile)
+    # Load MySQL db info from config file
+    MYSQL_HOST=config.get("MYSQL","HOST")
+    MYSQL_USER=config.get("MYSQL","USER")
+    MYSQL_PASSWD=base64.b64decode(config.get("MYSQL","PASSWD"))
+
+    MYSQL_DB=config.get("MYSQL","DB")
+    cFile.close()
+    
+
+    # Get the machines hostname
+
+    hostname = gethostname()
+
+    if "kraken" in hostname:
+        hostname = "kraken"
+    elif "athena" in hostname:
+        hostname = "athena"
+    elif "verne" in hostname:
+        hostname = "verne"
+    elif "nautilus" in hostname:
+        hostname = "nautilus"
+    elif "keeneland" in hostname:
+        hostname = "keeneland"
+    else:
+        hostname = "unknown"
+    
+    # Connect to the MySQLDB; FIX ME! This should read from the config file
+    db = MySQLdb.connect(host=MYSQL_HOST, user=MYSQL_USER, passwd=MYSQL_PASSWD,db=MYSQL_DB)
+
+    cursor = db.cursor()
+
+    cursor.execute('INSERT INTO altd_'+hostname+'_jobs (tag_id,executable,username,run_date,job_launch_id,build_machine) VALUES (' + tag_id + ',"' + path +'","' + getpass.getuser()  + '", CURDATE() ,' + pbs_id + ',"' + machine +'")')
+
+except:
+    sys.exit(0)

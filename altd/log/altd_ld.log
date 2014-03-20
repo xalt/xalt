@@ -1,0 +1,2557 @@
+2009-07-29 00:35:19,011 - altd_ld - DEBUG - Hostname:krakenpf9
+2009-07-29 00:35:19,012 - altd_ld - INFO - Process gen_assembly
+2009-07-29 00:35:19,092 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 00:35:19,093 - altd_ld - INFO - LIBTRACK: username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-07-29 00:35:19,093 - altd_ld - DEBUG - Tag id:3
+2009-07-29 00:35:19,827 - altd_ld - DEBUG - Hostname:krakenpf9
+2009-07-29 00:35:19,828 - altd_ld - DEBUG - here 1
+2009-07-29 00:35:19,828 - altd_ld - DEBUG - here 2
+2009-07-29 00:35:19,828 - altd_ld - DEBUG - here 3
+2009-07-29 00:35:19,863 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 00:35:19,863 - altd_ld - DEBUG - isConnected?True
+2009-07-29 00:35:19,864 - altd_ld - DEBUG - ROW:((1L,),)
+2009-07-29 00:35:19,864 - altd_ld - DEBUG - MySQL inc_id:1
+2009-07-29 00:35:19,864 - altd_ld - INFO - LIBTRACK: username=ytlu hostname=kraken pos=1 LD_SUC_INFO
+2009-07-29 00:35:19,865 - altd_ld - DEBUG - here 4
+2009-07-29 00:35:58,187 - altd_ld - DEBUG - Hostname:krakenpf9
+2009-07-29 00:35:58,326 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 11:12:41,231 - altd_ld - DEBUG - Hostname:login1
+2009-07-29 11:12:41,231 - altd_ld - INFO - Process gen_assembly
+2009-07-29 11:12:41,335 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 11:12:41,336 - altd_ld - INFO - username=ytlu hostname=unknown pos=1 LD_SUC_INFO
+2009-07-29 11:12:41,336 - altd_ld - DEBUG - Tag id:1
+2009-07-29 11:12:42,291 - altd_ld - DEBUG - Hostname:login1
+2009-07-29 11:12:42,291 - altd_ld - DEBUG - here 1
+2009-07-29 11:12:42,292 - altd_ld - DEBUG - here 2
+2009-07-29 11:12:42,292 - altd_ld - DEBUG - here 3
+2009-07-29 11:12:42,326 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 11:12:42,326 - altd_ld - DEBUG - isConnected?True
+2009-07-29 11:12:42,327 - altd_ld - INFO - username=ytlu hostname=unknown pos=1 LD_SUC_INFO_NEW
+2009-07-29 11:12:42,328 - altd_ld - DEBUG - here 4
+2009-07-29 15:28:23,233 - altd_ld - DEBUG - Hostname:login1
+2009-07-29 15:28:23,234 - altd_ld - DEBUG - No argument passed to pyLD
+2009-07-29 16:53:12,438 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:53:12,438 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:53:12,503 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:53:12,504 - altd_ld - INFO - username=ytlu hostname=unknown pos=2 LD_SUC_INFO
+2009-07-29 16:53:12,504 - altd_ld - DEBUG - Tag id:2
+2009-07-29 16:53:13,106 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:53:13,107 - altd_ld - DEBUG - here 1
+2009-07-29 16:53:13,107 - altd_ld - DEBUG - here 2
+2009-07-29 16:53:13,107 - altd_ld - DEBUG - here 3
+2009-07-29 16:53:13,142 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:53:13,142 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:53:13,143 - altd_ld - INFO - username=ytlu hostname=unknown pos=2 LD_SUC_INFO_NEW
+2009-07-29 16:53:13,144 - altd_ld - DEBUG - here 4
+2009-07-29 16:53:22,183 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:53:22,183 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:53:22,219 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:53:22,220 - altd_ld - INFO - username=ytlu hostname=unknown pos=3 LD_SUC_INFO
+2009-07-29 16:53:22,220 - altd_ld - DEBUG - Tag id:3
+2009-07-29 16:53:22,374 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:53:22,375 - altd_ld - DEBUG - here 1
+2009-07-29 16:53:22,375 - altd_ld - DEBUG - here 2
+2009-07-29 16:53:22,375 - altd_ld - DEBUG - here 3
+2009-07-29 16:53:22,410 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:53:22,411 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:53:22,412 - altd_ld - INFO - username=ytlu hostname=unknown pos=3 LD_SUC_INFO_NEW
+2009-07-29 16:53:22,412 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:02,722 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:02,722 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:02,772 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:02,773 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:57:02,773 - altd_ld - DEBUG - Tag id:4
+2009-07-29 16:57:02,903 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:02,904 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:02,904 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:02,904 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:02,939 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:02,939 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:02,940 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO_NEW
+2009-07-29 16:57:02,940 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:03,122 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:03,122 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:03,157 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:03,157 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO
+2009-07-29 16:57:03,157 - altd_ld - DEBUG - Tag id:5
+2009-07-29 16:57:03,302 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:03,303 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:03,303 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:03,303 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:03,338 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:03,338 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:03,339 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:57:03,339 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:57:03,339 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:57:03,340 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:05,683 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:05,683 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:05,718 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:05,719 - altd_ld - INFO - username=ytlu hostname=unknown pos=6 LD_SUC_INFO
+2009-07-29 16:57:05,719 - altd_ld - DEBUG - Tag id:6
+2009-07-29 16:57:05,860 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:05,860 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:05,860 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:05,860 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:05,896 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:05,896 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:05,897 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:57:05,897 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:57:05,897 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:57:05,898 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:10,294 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:10,295 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:10,330 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:10,330 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:57:10,331 - altd_ld - DEBUG - Tag id:7
+2009-07-29 16:57:10,472 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:10,473 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:10,473 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:10,473 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:10,508 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:10,508 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:10,509 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:57:10,509 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:57:10,509 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:57:10,510 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:13,446 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:13,446 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:13,481 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:13,482 - altd_ld - INFO - username=ytlu hostname=unknown pos=8 LD_SUC_INFO
+2009-07-29 16:57:13,482 - altd_ld - DEBUG - Tag id:8
+2009-07-29 16:57:13,623 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:13,624 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:13,624 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:13,624 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:13,659 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:13,659 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:13,660 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO_NEW
+2009-07-29 16:57:13,661 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:14,213 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:14,213 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:14,248 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:14,249 - altd_ld - INFO - username=ytlu hostname=unknown pos=9 LD_SUC_INFO
+2009-07-29 16:57:14,249 - altd_ld - DEBUG - Tag id:9
+2009-07-29 16:57:14,392 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:14,392 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:14,392 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:14,392 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:14,427 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:14,428 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:14,428 - altd_ld - DEBUG - ROW:((5L,),)
+2009-07-29 16:57:14,428 - altd_ld - DEBUG - MySQL inc_id:5
+2009-07-29 16:57:14,429 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO
+2009-07-29 16:57:14,429 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:15,236 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:15,237 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:15,272 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:15,272 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 16:57:15,272 - altd_ld - DEBUG - Tag id:10
+2009-07-29 16:57:15,406 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:15,406 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:15,407 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:15,407 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:15,441 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:15,442 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:15,443 - altd_ld - INFO - username=ytlu hostname=unknown pos=6 LD_SUC_INFO_NEW
+2009-07-29 16:57:15,443 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:16,628 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:16,629 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:16,664 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:16,664 - altd_ld - INFO - username=ytlu hostname=unknown pos=11 LD_SUC_INFO
+2009-07-29 16:57:16,665 - altd_ld - DEBUG - Tag id:11
+2009-07-29 16:57:16,808 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:16,808 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:16,808 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:16,808 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:16,843 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:16,844 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:16,844 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:57:16,844 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:57:16,844 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:57:16,845 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:17,472 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:17,472 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:17,508 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:17,508 - altd_ld - INFO - username=ytlu hostname=unknown pos=12 LD_SUC_INFO
+2009-07-29 16:57:17,509 - altd_ld - DEBUG - Tag id:12
+2009-07-29 16:57:17,649 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:17,649 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:17,650 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:17,650 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:17,684 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:17,685 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:17,686 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO_NEW
+2009-07-29 16:57:17,686 - altd_ld - DEBUG - here 4
+2009-07-29 16:57:33,697 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:33,698 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:57:33,734 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:33,734 - altd_ld - INFO - username=ytlu hostname=unknown pos=13 LD_SUC_INFO
+2009-07-29 16:57:33,735 - altd_ld - DEBUG - Tag id:13
+2009-07-29 16:57:33,878 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:57:33,878 - altd_ld - DEBUG - here 1
+2009-07-29 16:57:33,878 - altd_ld - DEBUG - here 2
+2009-07-29 16:57:33,878 - altd_ld - DEBUG - here 3
+2009-07-29 16:57:33,913 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:57:33,913 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:57:33,914 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:57:33,914 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:57:33,914 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:57:33,915 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:05,761 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:05,762 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:05,797 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:05,797 - altd_ld - INFO - username=ytlu hostname=unknown pos=14 LD_SUC_INFO
+2009-07-29 16:58:05,798 - altd_ld - DEBUG - Tag id:14
+2009-07-29 16:58:05,943 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:05,943 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:05,944 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:05,944 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:05,979 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:05,979 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:05,980 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:05,980 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:05,980 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:05,980 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:06,164 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:06,164 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:06,199 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:06,199 - altd_ld - INFO - username=ytlu hostname=unknown pos=15 LD_SUC_INFO
+2009-07-29 16:58:06,200 - altd_ld - DEBUG - Tag id:15
+2009-07-29 16:58:06,344 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:06,345 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:06,345 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:06,345 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:06,380 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:06,380 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:06,381 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:06,381 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:06,381 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:06,382 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:08,725 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:08,725 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:08,760 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:08,761 - altd_ld - INFO - username=ytlu hostname=unknown pos=16 LD_SUC_INFO
+2009-07-29 16:58:08,761 - altd_ld - DEBUG - Tag id:16
+2009-07-29 16:58:08,899 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:08,900 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:08,900 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:08,900 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:08,935 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:08,935 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:08,936 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:08,936 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:08,936 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:08,937 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:13,173 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:13,173 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:13,208 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:13,209 - altd_ld - INFO - username=ytlu hostname=unknown pos=17 LD_SUC_INFO
+2009-07-29 16:58:13,209 - altd_ld - DEBUG - Tag id:17
+2009-07-29 16:58:13,355 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:13,355 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:13,355 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:13,355 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:13,390 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:13,390 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:13,391 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:13,391 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:13,391 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:13,392 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:14,058 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:14,058 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:14,093 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:14,093 - altd_ld - INFO - username=ytlu hostname=unknown pos=18 LD_SUC_INFO
+2009-07-29 16:58:14,094 - altd_ld - DEBUG - Tag id:18
+2009-07-29 16:58:14,235 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:14,235 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:14,235 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:14,235 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:14,270 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:14,270 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:14,271 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:14,271 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:14,271 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:14,272 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:16,474 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:16,474 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:16,510 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:16,510 - altd_ld - INFO - username=ytlu hostname=unknown pos=19 LD_SUC_INFO
+2009-07-29 16:58:16,510 - altd_ld - DEBUG - Tag id:19
+2009-07-29 16:58:16,651 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:16,651 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:16,651 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:16,651 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:16,686 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:16,686 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:16,687 - altd_ld - DEBUG - ROW:((5L,),)
+2009-07-29 16:58:16,687 - altd_ld - DEBUG - MySQL inc_id:5
+2009-07-29 16:58:16,687 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO
+2009-07-29 16:58:16,688 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:17,231 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:17,231 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:17,266 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:17,267 - altd_ld - INFO - username=ytlu hostname=unknown pos=20 LD_SUC_INFO
+2009-07-29 16:58:17,267 - altd_ld - DEBUG - Tag id:20
+2009-07-29 16:58:17,407 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:17,407 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:17,407 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:17,408 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:17,443 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:17,443 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:17,444 - altd_ld - DEBUG - ROW:((5L,),)
+2009-07-29 16:58:17,444 - altd_ld - DEBUG - MySQL inc_id:5
+2009-07-29 16:58:17,444 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO
+2009-07-29 16:58:17,444 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:18,252 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:18,252 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:18,287 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:18,288 - altd_ld - INFO - username=ytlu hostname=unknown pos=21 LD_SUC_INFO
+2009-07-29 16:58:18,288 - altd_ld - DEBUG - Tag id:21
+2009-07-29 16:58:18,436 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:18,436 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:18,436 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:18,436 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:18,471 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:18,472 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:18,472 - altd_ld - DEBUG - ROW:((6L,),)
+2009-07-29 16:58:18,472 - altd_ld - DEBUG - MySQL inc_id:6
+2009-07-29 16:58:18,473 - altd_ld - INFO - username=ytlu hostname=unknown pos=6 LD_SUC_INFO
+2009-07-29 16:58:18,473 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:19,595 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:19,596 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:19,631 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:19,631 - altd_ld - INFO - username=ytlu hostname=unknown pos=22 LD_SUC_INFO
+2009-07-29 16:58:19,632 - altd_ld - DEBUG - Tag id:22
+2009-07-29 16:58:19,774 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:19,774 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:19,774 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:19,774 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:19,809 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:19,810 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:19,810 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:19,810 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:19,811 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:19,811 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:20,395 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:20,396 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:20,430 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:20,431 - altd_ld - INFO - username=ytlu hostname=unknown pos=23 LD_SUC_INFO
+2009-07-29 16:58:20,431 - altd_ld - DEBUG - Tag id:23
+2009-07-29 16:58:20,571 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:20,571 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:20,572 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:20,572 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:20,606 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:20,606 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:20,607 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:58:20,607 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:58:20,607 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:58:20,608 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:35,875 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:35,875 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:35,912 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:35,913 - altd_ld - INFO - username=ytlu hostname=unknown pos=24 LD_SUC_INFO
+2009-07-29 16:58:35,913 - altd_ld - DEBUG - Tag id:24
+2009-07-29 16:58:36,053 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:36,053 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:36,053 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:36,053 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:36,088 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:36,088 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:36,089 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:36,089 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:36,089 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:36,090 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:36,632 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:36,632 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:36,667 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:36,667 - altd_ld - INFO - username=ytlu hostname=unknown pos=25 LD_SUC_INFO
+2009-07-29 16:58:36,667 - altd_ld - DEBUG - Tag id:25
+2009-07-29 16:58:36,812 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:36,813 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:36,813 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:36,813 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:36,848 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:36,849 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:36,849 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:36,849 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:36,850 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:36,850 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:37,389 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:37,390 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:37,425 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:37,425 - altd_ld - INFO - username=ytlu hostname=unknown pos=26 LD_SUC_INFO
+2009-07-29 16:58:37,426 - altd_ld - DEBUG - Tag id:26
+2009-07-29 16:58:37,567 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:37,568 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:37,568 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:37,568 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:37,603 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:37,603 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:37,604 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:37,604 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:37,604 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:37,604 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:38,153 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:38,154 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:38,188 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:38,189 - altd_ld - INFO - username=ytlu hostname=unknown pos=27 LD_SUC_INFO
+2009-07-29 16:58:38,189 - altd_ld - DEBUG - Tag id:27
+2009-07-29 16:58:38,333 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:38,333 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:38,334 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:38,334 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:38,369 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:38,369 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:38,369 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:38,370 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:38,370 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:38,370 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:39,708 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:39,708 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:39,743 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:39,743 - altd_ld - INFO - username=ytlu hostname=unknown pos=28 LD_SUC_INFO
+2009-07-29 16:58:39,744 - altd_ld - DEBUG - Tag id:28
+2009-07-29 16:58:39,886 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:39,886 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:39,886 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:39,887 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:39,921 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:39,921 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:39,922 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:39,922 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:39,922 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:39,923 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:40,590 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:40,590 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:40,625 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:40,625 - altd_ld - INFO - username=ytlu hostname=unknown pos=29 LD_SUC_INFO
+2009-07-29 16:58:40,625 - altd_ld - DEBUG - Tag id:29
+2009-07-29 16:58:40,767 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:40,767 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:40,767 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:40,768 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:40,802 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:40,803 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:40,803 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:40,803 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:40,803 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:40,804 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:41,964 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:41,964 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:41,999 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:41,999 - altd_ld - INFO - username=ytlu hostname=unknown pos=30 LD_SUC_INFO
+2009-07-29 16:58:41,999 - altd_ld - DEBUG - Tag id:30
+2009-07-29 16:58:42,141 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:42,141 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:42,142 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:42,142 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:42,176 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:42,177 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:42,177 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:42,177 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:42,178 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:42,178 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:42,748 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:42,749 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:42,783 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:42,784 - altd_ld - INFO - username=ytlu hostname=unknown pos=31 LD_SUC_INFO
+2009-07-29 16:58:42,784 - altd_ld - DEBUG - Tag id:31
+2009-07-29 16:58:43,813 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:43,814 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:43,814 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:43,814 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:43,849 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:43,849 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:43,850 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:43,850 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:43,850 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:43,851 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:44,101 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:44,101 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:44,136 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:44,137 - altd_ld - INFO - username=ytlu hostname=unknown pos=32 LD_SUC_INFO
+2009-07-29 16:58:44,137 - altd_ld - DEBUG - Tag id:32
+2009-07-29 16:58:44,267 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:44,268 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:44,268 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:44,268 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:44,303 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:44,303 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:44,304 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:44,304 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:44,304 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:44,304 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:45,303 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:45,303 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:45,338 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:45,338 - altd_ld - INFO - username=ytlu hostname=unknown pos=33 LD_SUC_INFO
+2009-07-29 16:58:45,339 - altd_ld - DEBUG - Tag id:33
+2009-07-29 16:58:45,478 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:45,478 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:45,479 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:45,479 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:45,514 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:45,514 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:45,515 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:45,515 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:45,515 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:45,515 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:46,381 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:46,382 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:46,416 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:46,417 - altd_ld - INFO - username=ytlu hostname=unknown pos=34 LD_SUC_INFO
+2009-07-29 16:58:46,417 - altd_ld - DEBUG - Tag id:34
+2009-07-29 16:58:46,563 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:46,563 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:46,563 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:46,564 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:46,598 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:46,599 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:46,599 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:46,599 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:46,600 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:46,600 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:47,215 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:47,215 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:47,250 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:47,250 - altd_ld - INFO - username=ytlu hostname=unknown pos=35 LD_SUC_INFO
+2009-07-29 16:58:47,251 - altd_ld - DEBUG - Tag id:35
+2009-07-29 16:58:47,390 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:47,390 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:47,390 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:47,391 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:47,425 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:47,426 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:47,426 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:47,426 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:47,426 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:47,427 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:48,051 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:48,051 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:48,086 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:48,086 - altd_ld - INFO - username=ytlu hostname=unknown pos=36 LD_SUC_INFO
+2009-07-29 16:58:48,087 - altd_ld - DEBUG - Tag id:36
+2009-07-29 16:58:48,231 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:48,231 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:48,231 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:48,231 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:48,266 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:48,266 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:48,267 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:58:48,267 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:58:48,267 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:58:48,267 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:49,248 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:49,248 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:49,283 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:49,284 - altd_ld - INFO - username=ytlu hostname=unknown pos=37 LD_SUC_INFO
+2009-07-29 16:58:49,284 - altd_ld - DEBUG - Tag id:37
+2009-07-29 16:58:49,431 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:49,431 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:49,431 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:49,432 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:49,466 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:49,466 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:49,467 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:58:49,467 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:58:49,467 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:58:49,468 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:50,343 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:50,344 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:50,379 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:50,379 - altd_ld - INFO - username=ytlu hostname=unknown pos=38 LD_SUC_INFO
+2009-07-29 16:58:50,379 - altd_ld - DEBUG - Tag id:38
+2009-07-29 16:58:50,528 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:50,529 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:50,529 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:50,529 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:50,564 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:50,565 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:50,565 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:58:50,566 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:58:50,566 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:58:50,566 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:51,155 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:51,155 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:51,190 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:51,190 - altd_ld - INFO - username=ytlu hostname=unknown pos=39 LD_SUC_INFO
+2009-07-29 16:58:51,191 - altd_ld - DEBUG - Tag id:39
+2009-07-29 16:58:51,336 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:51,336 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:51,336 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:51,336 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:51,371 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:51,372 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:51,372 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:58:51,372 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:58:51,372 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:58:51,373 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:54,622 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:54,622 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:54,657 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:54,658 - altd_ld - INFO - username=ytlu hostname=unknown pos=40 LD_SUC_INFO
+2009-07-29 16:58:54,658 - altd_ld - DEBUG - Tag id:40
+2009-07-29 16:58:54,806 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:54,806 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:54,806 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:54,807 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:54,841 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:54,841 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:54,842 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:54,842 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:54,842 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:54,843 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:57,959 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:57,959 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:57,994 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:57,994 - altd_ld - INFO - username=ytlu hostname=unknown pos=41 LD_SUC_INFO
+2009-07-29 16:58:57,995 - altd_ld - DEBUG - Tag id:41
+2009-07-29 16:58:58,136 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:58,136 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:58,136 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:58,137 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:58,171 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:58,172 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:58,172 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:58,172 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:58,172 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:58,173 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:58,422 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:58,423 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:58,457 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:58,458 - altd_ld - INFO - username=ytlu hostname=unknown pos=42 LD_SUC_INFO
+2009-07-29 16:58:58,458 - altd_ld - DEBUG - Tag id:42
+2009-07-29 16:58:58,599 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:58,600 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:58,600 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:58,600 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:58,635 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:58,635 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:58,636 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:58,636 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:58,636 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:58,636 - altd_ld - DEBUG - here 4
+2009-07-29 16:58:59,262 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:59,262 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:58:59,297 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:59,297 - altd_ld - INFO - username=ytlu hostname=unknown pos=43 LD_SUC_INFO
+2009-07-29 16:58:59,298 - altd_ld - DEBUG - Tag id:43
+2009-07-29 16:58:59,444 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:58:59,444 - altd_ld - DEBUG - here 1
+2009-07-29 16:58:59,444 - altd_ld - DEBUG - here 2
+2009-07-29 16:58:59,445 - altd_ld - DEBUG - here 3
+2009-07-29 16:58:59,479 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:58:59,480 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:58:59,480 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:58:59,480 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:58:59,480 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:58:59,481 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:01,659 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:01,659 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:01,694 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:01,695 - altd_ld - INFO - username=ytlu hostname=unknown pos=44 LD_SUC_INFO
+2009-07-29 16:59:01,695 - altd_ld - DEBUG - Tag id:44
+2009-07-29 16:59:01,837 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:01,837 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:01,838 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:01,838 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:01,872 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:01,873 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:01,873 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:01,873 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:01,874 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:01,874 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:04,699 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:04,700 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:04,735 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:04,736 - altd_ld - INFO - username=ytlu hostname=unknown pos=45 LD_SUC_INFO
+2009-07-29 16:59:04,736 - altd_ld - DEBUG - Tag id:45
+2009-07-29 16:59:04,882 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:04,882 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:04,882 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:04,882 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:04,917 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:04,917 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:04,918 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:04,918 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:04,918 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:04,919 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:10,998 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:10,998 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:11,033 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:11,034 - altd_ld - INFO - username=ytlu hostname=unknown pos=46 LD_SUC_INFO
+2009-07-29 16:59:11,034 - altd_ld - DEBUG - Tag id:46
+2009-07-29 16:59:11,165 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:11,166 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:11,166 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:11,166 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:11,201 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:11,201 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:11,202 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:11,202 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:11,202 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:11,202 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:11,733 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:11,734 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:11,768 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:11,769 - altd_ld - INFO - username=ytlu hostname=unknown pos=47 LD_SUC_INFO
+2009-07-29 16:59:11,769 - altd_ld - DEBUG - Tag id:47
+2009-07-29 16:59:11,903 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:11,903 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:11,903 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:11,903 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:11,938 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:11,938 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:11,939 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:11,939 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:11,939 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:11,940 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:12,471 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:12,472 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:12,507 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:12,508 - altd_ld - INFO - username=ytlu hostname=unknown pos=48 LD_SUC_INFO
+2009-07-29 16:59:12,508 - altd_ld - DEBUG - Tag id:48
+2009-07-29 16:59:12,640 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:12,641 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:12,641 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:12,641 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:12,676 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:12,676 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:12,677 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:12,677 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:12,677 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:12,678 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:13,221 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:13,222 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:13,256 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:13,257 - altd_ld - INFO - username=ytlu hostname=unknown pos=49 LD_SUC_INFO
+2009-07-29 16:59:13,257 - altd_ld - DEBUG - Tag id:49
+2009-07-29 16:59:13,391 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:13,392 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:13,392 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:13,392 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:13,427 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:13,427 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:13,428 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:13,428 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:13,428 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:13,429 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:14,766 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:14,767 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:14,801 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:14,802 - altd_ld - INFO - username=ytlu hostname=unknown pos=50 LD_SUC_INFO
+2009-07-29 16:59:14,802 - altd_ld - DEBUG - Tag id:50
+2009-07-29 16:59:14,973 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:14,973 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:14,973 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:14,973 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:15,008 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:15,008 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:15,009 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:15,009 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:15,009 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:15,010 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:16,270 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:16,271 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:16,305 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:16,306 - altd_ld - INFO - username=ytlu hostname=unknown pos=51 LD_SUC_INFO
+2009-07-29 16:59:16,306 - altd_ld - DEBUG - Tag id:51
+2009-07-29 16:59:16,449 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:16,449 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:16,449 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:16,449 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:16,484 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:16,484 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:16,485 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:16,485 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:16,485 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:16,486 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:17,698 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:17,698 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:17,733 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:17,734 - altd_ld - INFO - username=ytlu hostname=unknown pos=52 LD_SUC_INFO
+2009-07-29 16:59:17,734 - altd_ld - DEBUG - Tag id:52
+2009-07-29 16:59:17,868 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:17,868 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:17,868 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:17,869 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:17,903 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:17,903 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:17,904 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:17,904 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:17,904 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:17,905 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:18,178 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:18,178 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:18,213 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:18,214 - altd_ld - INFO - username=ytlu hostname=unknown pos=53 LD_SUC_INFO
+2009-07-29 16:59:18,214 - altd_ld - DEBUG - Tag id:53
+2009-07-29 16:59:18,363 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:18,363 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:18,363 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:18,364 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:18,398 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:18,398 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:18,400 - altd_ld - INFO - username=ytlu hostname=unknown pos=8 LD_SUC_INFO_NEW
+2009-07-29 16:59:18,400 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:19,539 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:19,539 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:19,574 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:19,574 - altd_ld - INFO - username=ytlu hostname=unknown pos=54 LD_SUC_INFO
+2009-07-29 16:59:19,575 - altd_ld - DEBUG - Tag id:54
+2009-07-29 16:59:19,721 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:19,722 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:19,722 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:19,722 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:19,757 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:19,757 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:19,758 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:59:19,758 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:59:19,758 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:59:19,759 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:20,277 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:20,277 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:20,312 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:20,312 - altd_ld - INFO - username=ytlu hostname=unknown pos=55 LD_SUC_INFO
+2009-07-29 16:59:20,313 - altd_ld - DEBUG - Tag id:55
+2009-07-29 16:59:20,460 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:20,460 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:20,460 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:20,460 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:20,495 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:20,495 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:20,496 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:59:20,496 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:59:20,496 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:59:20,497 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:21,227 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:21,228 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:21,263 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:21,263 - altd_ld - INFO - username=ytlu hostname=unknown pos=56 LD_SUC_INFO
+2009-07-29 16:59:21,263 - altd_ld - DEBUG - Tag id:56
+2009-07-29 16:59:21,400 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:21,401 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:21,401 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:21,401 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:21,436 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:21,436 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:21,436 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 16:59:21,437 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 16:59:21,437 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 16:59:21,437 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:24,813 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:24,813 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:24,848 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:24,849 - altd_ld - INFO - username=ytlu hostname=unknown pos=57 LD_SUC_INFO
+2009-07-29 16:59:24,849 - altd_ld - DEBUG - Tag id:57
+2009-07-29 16:59:24,943 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:24,944 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:24,944 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:24,944 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:24,979 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:24,979 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:24,980 - altd_ld - INFO - username=ytlu hostname=unknown pos=9 LD_SUC_INFO_NEW
+2009-07-29 16:59:24,981 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:25,723 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:25,723 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:25,758 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:25,758 - altd_ld - INFO - username=ytlu hostname=unknown pos=58 LD_SUC_INFO
+2009-07-29 16:59:25,758 - altd_ld - DEBUG - Tag id:58
+2009-07-29 16:59:25,902 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:25,902 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:25,903 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:25,903 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:25,937 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:25,938 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:25,938 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:25,938 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:25,939 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:25,939 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:26,523 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:26,523 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:26,558 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:26,559 - altd_ld - INFO - username=ytlu hostname=unknown pos=59 LD_SUC_INFO
+2009-07-29 16:59:26,559 - altd_ld - DEBUG - Tag id:59
+2009-07-29 16:59:26,705 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:26,705 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:26,706 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:26,706 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:26,741 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:26,741 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:26,742 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:26,742 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:26,742 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:26,742 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:27,319 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:27,319 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:27,354 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:27,355 - altd_ld - INFO - username=ytlu hostname=unknown pos=60 LD_SUC_INFO
+2009-07-29 16:59:27,355 - altd_ld - DEBUG - Tag id:60
+2009-07-29 16:59:27,501 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:27,501 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:27,502 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:27,502 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:27,536 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:27,537 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:27,537 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:27,537 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:27,538 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:27,538 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:31,970 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:31,970 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:32,005 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:32,006 - altd_ld - INFO - username=ytlu hostname=unknown pos=61 LD_SUC_INFO
+2009-07-29 16:59:32,006 - altd_ld - DEBUG - Tag id:61
+2009-07-29 16:59:32,181 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:32,181 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:32,181 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:32,181 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:32,216 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:32,216 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:32,217 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO_NEW
+2009-07-29 16:59:32,218 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:32,470 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:32,470 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:32,505 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:32,506 - altd_ld - INFO - username=ytlu hostname=unknown pos=62 LD_SUC_INFO
+2009-07-29 16:59:32,506 - altd_ld - DEBUG - Tag id:62
+2009-07-29 16:59:32,675 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:32,675 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:32,675 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:32,675 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:32,710 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:32,710 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:32,711 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 16:59:32,711 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 16:59:32,711 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 16:59:32,712 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:36,197 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:36,197 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:36,233 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:36,234 - altd_ld - INFO - username=ytlu hostname=unknown pos=63 LD_SUC_INFO
+2009-07-29 16:59:36,234 - altd_ld - DEBUG - Tag id:63
+2009-07-29 16:59:36,413 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:36,413 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:36,413 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:36,413 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:36,448 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:36,448 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:36,449 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 16:59:36,449 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 16:59:36,449 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 16:59:36,450 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:41,006 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:41,006 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:41,042 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:41,042 - altd_ld - INFO - username=ytlu hostname=unknown pos=64 LD_SUC_INFO
+2009-07-29 16:59:41,042 - altd_ld - DEBUG - Tag id:64
+2009-07-29 16:59:41,224 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:41,224 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:41,224 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:41,225 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:41,260 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:41,260 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:41,261 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 16:59:41,261 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 16:59:41,261 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 16:59:41,261 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:41,595 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:41,595 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:41,630 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:41,631 - altd_ld - INFO - username=ytlu hostname=unknown pos=65 LD_SUC_INFO
+2009-07-29 16:59:41,631 - altd_ld - DEBUG - Tag id:65
+2009-07-29 16:59:41,777 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:41,777 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:41,777 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:41,777 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:41,812 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:41,812 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:41,813 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:41,813 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:41,813 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:41,813 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:42,107 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:42,108 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:42,142 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:42,143 - altd_ld - INFO - username=ytlu hostname=unknown pos=66 LD_SUC_INFO
+2009-07-29 16:59:42,143 - altd_ld - DEBUG - Tag id:66
+2009-07-29 16:59:42,287 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:42,288 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:42,288 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:42,288 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:42,323 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:42,323 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:42,324 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:42,324 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:42,324 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:42,324 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:46,181 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:46,181 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:46,216 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:46,216 - altd_ld - INFO - username=ytlu hostname=unknown pos=67 LD_SUC_INFO
+2009-07-29 16:59:46,217 - altd_ld - DEBUG - Tag id:67
+2009-07-29 16:59:46,360 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:46,361 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:46,361 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:46,361 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:46,396 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:46,396 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:46,397 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:46,397 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:46,397 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:46,397 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:47,361 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:47,361 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:47,396 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:47,397 - altd_ld - INFO - username=ytlu hostname=unknown pos=68 LD_SUC_INFO
+2009-07-29 16:59:47,397 - altd_ld - DEBUG - Tag id:68
+2009-07-29 16:59:47,540 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:47,541 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:47,541 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:47,541 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:47,576 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:47,576 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:47,577 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:47,577 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:47,577 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:47,578 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:48,241 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:48,242 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:48,276 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:48,277 - altd_ld - INFO - username=ytlu hostname=unknown pos=69 LD_SUC_INFO
+2009-07-29 16:59:48,277 - altd_ld - DEBUG - Tag id:69
+2009-07-29 16:59:48,419 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:48,419 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:48,419 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:48,419 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:48,454 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:48,454 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:48,455 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:48,455 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:48,455 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:48,456 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:49,124 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:49,125 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:49,160 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:49,160 - altd_ld - INFO - username=ytlu hostname=unknown pos=70 LD_SUC_INFO
+2009-07-29 16:59:49,160 - altd_ld - DEBUG - Tag id:70
+2009-07-29 16:59:49,300 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:49,300 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:49,301 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:49,301 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:49,335 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:49,336 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:49,336 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:49,336 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:49,337 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:49,337 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:51,240 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:51,240 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:51,275 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:51,275 - altd_ld - INFO - username=ytlu hostname=unknown pos=71 LD_SUC_INFO
+2009-07-29 16:59:51,276 - altd_ld - DEBUG - Tag id:71
+2009-07-29 16:59:51,427 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:51,427 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:51,427 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:51,427 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:51,462 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:51,462 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:51,463 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:51,463 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:51,463 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:51,464 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:52,970 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:52,971 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:53,005 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:53,006 - altd_ld - INFO - username=ytlu hostname=unknown pos=72 LD_SUC_INFO
+2009-07-29 16:59:53,006 - altd_ld - DEBUG - Tag id:72
+2009-07-29 16:59:53,151 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:53,151 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:53,152 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:53,152 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:53,187 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:53,187 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:53,188 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:53,188 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:53,188 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:53,188 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:53,504 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:53,504 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:53,539 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:53,540 - altd_ld - INFO - username=ytlu hostname=unknown pos=73 LD_SUC_INFO
+2009-07-29 16:59:53,540 - altd_ld - DEBUG - Tag id:73
+2009-07-29 16:59:53,683 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:53,683 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:53,684 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:53,684 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:53,718 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:53,719 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:53,719 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:53,719 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:53,720 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:53,720 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:54,540 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:54,540 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:54,575 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:54,576 - altd_ld - INFO - username=ytlu hostname=unknown pos=74 LD_SUC_INFO
+2009-07-29 16:59:54,576 - altd_ld - DEBUG - Tag id:74
+2009-07-29 16:59:54,720 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:54,720 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:54,720 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:54,720 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:54,755 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:54,755 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:54,756 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:54,756 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:54,756 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:54,757 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:55,758 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:55,759 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:55,794 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:55,794 - altd_ld - INFO - username=ytlu hostname=unknown pos=75 LD_SUC_INFO
+2009-07-29 16:59:55,794 - altd_ld - DEBUG - Tag id:75
+2009-07-29 16:59:55,939 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:55,939 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:55,940 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:55,940 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:55,975 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:55,975 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:55,975 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:55,976 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:55,976 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:55,976 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:56,493 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:56,493 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:56,528 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:56,529 - altd_ld - INFO - username=ytlu hostname=unknown pos=76 LD_SUC_INFO
+2009-07-29 16:59:56,529 - altd_ld - DEBUG - Tag id:76
+2009-07-29 16:59:56,671 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:56,671 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:56,671 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:56,672 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:56,706 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:56,707 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:56,707 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:56,707 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:56,708 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:56,708 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:57,259 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:57,259 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:57,294 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:57,295 - altd_ld - INFO - username=ytlu hostname=unknown pos=77 LD_SUC_INFO
+2009-07-29 16:59:57,295 - altd_ld - DEBUG - Tag id:77
+2009-07-29 16:59:57,439 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:57,440 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:57,440 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:57,440 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:57,475 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:57,475 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:57,476 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:57,476 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:57,476 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:57,477 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:58,150 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:58,151 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:58,186 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:58,186 - altd_ld - INFO - username=ytlu hostname=unknown pos=78 LD_SUC_INFO
+2009-07-29 16:59:58,186 - altd_ld - DEBUG - Tag id:78
+2009-07-29 16:59:58,331 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:58,331 - altd_ld - DEBUG - here 1
+2009-07-29 16:59:58,331 - altd_ld - DEBUG - here 2
+2009-07-29 16:59:58,331 - altd_ld - DEBUG - here 3
+2009-07-29 16:59:58,366 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:58,366 - altd_ld - DEBUG - isConnected?True
+2009-07-29 16:59:58,367 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 16:59:58,367 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 16:59:58,367 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 16:59:58,368 - altd_ld - DEBUG - here 4
+2009-07-29 16:59:59,903 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 16:59:59,903 - altd_ld - INFO - Process gen_assembly
+2009-07-29 16:59:59,938 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 16:59:59,939 - altd_ld - INFO - username=ytlu hostname=unknown pos=79 LD_SUC_INFO
+2009-07-29 16:59:59,939 - altd_ld - DEBUG - Tag id:79
+2009-07-29 17:00:00,074 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:00,075 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:00,075 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:00,075 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:00,110 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:00,110 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:00,110 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:00,111 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:00,111 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:00,111 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:00,367 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:00,367 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:00,402 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:00,402 - altd_ld - INFO - username=ytlu hostname=unknown pos=80 LD_SUC_INFO
+2009-07-29 17:00:00,402 - altd_ld - DEBUG - Tag id:80
+2009-07-29 17:00:00,548 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:00,548 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:00,548 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:00,548 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:00,583 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:00,584 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:00,584 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:00,584 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:00,585 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:00,585 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:01,410 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:01,410 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:01,445 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:01,445 - altd_ld - INFO - username=ytlu hostname=unknown pos=81 LD_SUC_INFO
+2009-07-29 17:00:01,446 - altd_ld - DEBUG - Tag id:81
+2009-07-29 17:00:01,581 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:01,581 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:01,582 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:01,582 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:01,616 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:01,617 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:01,617 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:01,617 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:01,618 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:01,618 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:02,652 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:02,655 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:02,690 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:02,690 - altd_ld - INFO - username=ytlu hostname=unknown pos=82 LD_SUC_INFO
+2009-07-29 17:00:02,691 - altd_ld - DEBUG - Tag id:82
+2009-07-29 17:00:02,848 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:02,848 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:02,848 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:02,848 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:02,883 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:02,884 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:02,884 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:02,884 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:02,885 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:02,885 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:03,166 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:03,167 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:03,202 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:03,203 - altd_ld - INFO - username=ytlu hostname=unknown pos=83 LD_SUC_INFO
+2009-07-29 17:00:03,203 - altd_ld - DEBUG - Tag id:83
+2009-07-29 17:00:03,354 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:03,354 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:03,355 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:03,355 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:03,390 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:03,390 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:03,390 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:03,391 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:03,391 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:03,391 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:04,183 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:04,183 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:04,218 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:04,219 - altd_ld - INFO - username=ytlu hostname=unknown pos=84 LD_SUC_INFO
+2009-07-29 17:00:04,219 - altd_ld - DEBUG - Tag id:84
+2009-07-29 17:00:04,362 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:04,363 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:04,363 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:04,363 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:04,398 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:04,398 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:04,399 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:04,399 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:04,399 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:04,400 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:24,315 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:24,315 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:24,350 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:24,351 - altd_ld - INFO - username=ytlu hostname=unknown pos=85 LD_SUC_INFO
+2009-07-29 17:00:24,351 - altd_ld - DEBUG - Tag id:85
+2009-07-29 17:00:24,495 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:24,496 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:24,496 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:24,496 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:24,531 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:24,531 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:24,531 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:24,532 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:24,532 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:24,532 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:27,395 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:27,395 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:27,430 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:27,431 - altd_ld - INFO - username=ytlu hostname=unknown pos=86 LD_SUC_INFO
+2009-07-29 17:00:27,431 - altd_ld - DEBUG - Tag id:86
+2009-07-29 17:00:27,573 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:27,573 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:27,573 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:27,574 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:27,609 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:27,609 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:27,610 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:27,610 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:27,610 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:27,610 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:32,060 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:32,060 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:32,095 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:32,096 - altd_ld - INFO - username=ytlu hostname=unknown pos=87 LD_SUC_INFO
+2009-07-29 17:00:32,096 - altd_ld - DEBUG - Tag id:87
+2009-07-29 17:00:32,244 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:32,244 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:32,244 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:32,245 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:32,280 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:32,280 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:32,281 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:32,281 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:32,281 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:32,281 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:35,210 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:35,210 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:35,245 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:35,246 - altd_ld - INFO - username=ytlu hostname=unknown pos=88 LD_SUC_INFO
+2009-07-29 17:00:35,246 - altd_ld - DEBUG - Tag id:88
+2009-07-29 17:00:35,394 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:35,394 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:35,394 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:35,395 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:35,429 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:35,430 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:35,430 - altd_ld - DEBUG - ROW:((5L,),)
+2009-07-29 17:00:35,430 - altd_ld - DEBUG - MySQL inc_id:5
+2009-07-29 17:00:35,431 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO
+2009-07-29 17:00:35,431 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:36,244 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:36,245 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:36,280 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:36,281 - altd_ld - INFO - username=ytlu hostname=unknown pos=89 LD_SUC_INFO
+2009-07-29 17:00:36,281 - altd_ld - DEBUG - Tag id:89
+2009-07-29 17:00:36,421 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:36,421 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:36,422 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:36,422 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:36,457 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:36,457 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:36,457 - altd_ld - DEBUG - ROW:((5L,),)
+2009-07-29 17:00:36,458 - altd_ld - DEBUG - MySQL inc_id:5
+2009-07-29 17:00:36,458 - altd_ld - INFO - username=ytlu hostname=unknown pos=5 LD_SUC_INFO
+2009-07-29 17:00:36,458 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:37,285 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:37,286 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:37,321 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:37,321 - altd_ld - INFO - username=ytlu hostname=unknown pos=90 LD_SUC_INFO
+2009-07-29 17:00:37,321 - altd_ld - DEBUG - Tag id:90
+2009-07-29 17:00:37,464 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:37,464 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:37,464 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:37,465 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:37,500 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:37,500 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:37,501 - altd_ld - DEBUG - ROW:((6L,),)
+2009-07-29 17:00:37,501 - altd_ld - DEBUG - MySQL inc_id:6
+2009-07-29 17:00:37,501 - altd_ld - INFO - username=ytlu hostname=unknown pos=6 LD_SUC_INFO
+2009-07-29 17:00:37,501 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:38,076 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:38,076 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:38,111 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:38,112 - altd_ld - INFO - username=ytlu hostname=unknown pos=91 LD_SUC_INFO
+2009-07-29 17:00:38,112 - altd_ld - DEBUG - Tag id:91
+2009-07-29 17:00:38,246 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:38,247 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:38,247 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:38,247 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:38,282 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:38,282 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:38,283 - altd_ld - DEBUG - ROW:((6L,),)
+2009-07-29 17:00:38,283 - altd_ld - DEBUG - MySQL inc_id:6
+2009-07-29 17:00:38,283 - altd_ld - INFO - username=ytlu hostname=unknown pos=6 LD_SUC_INFO
+2009-07-29 17:00:38,283 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:39,475 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:39,475 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:39,511 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:39,511 - altd_ld - INFO - username=ytlu hostname=unknown pos=92 LD_SUC_INFO
+2009-07-29 17:00:39,512 - altd_ld - DEBUG - Tag id:92
+2009-07-29 17:00:39,654 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:39,654 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:39,654 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:39,655 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:39,689 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:39,690 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:39,690 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:00:39,691 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:00:39,691 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:00:39,691 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:54,756 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:54,759 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:54,794 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:54,795 - altd_ld - INFO - username=ytlu hostname=unknown pos=93 LD_SUC_INFO
+2009-07-29 17:00:54,795 - altd_ld - DEBUG - Tag id:93
+2009-07-29 17:00:54,936 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:54,937 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:54,937 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:54,937 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:54,972 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:54,972 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:54,973 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:54,973 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:54,973 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:54,974 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:55,522 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:55,522 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:55,557 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:55,558 - altd_ld - INFO - username=ytlu hostname=unknown pos=94 LD_SUC_INFO
+2009-07-29 17:00:55,558 - altd_ld - DEBUG - Tag id:94
+2009-07-29 17:00:55,703 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:55,703 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:55,703 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:55,703 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:55,738 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:55,738 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:55,739 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:55,739 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:55,739 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:55,740 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:56,293 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:56,293 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:56,328 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:56,328 - altd_ld - INFO - username=ytlu hostname=unknown pos=95 LD_SUC_INFO
+2009-07-29 17:00:56,329 - altd_ld - DEBUG - Tag id:95
+2009-07-29 17:00:56,473 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:56,473 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:56,473 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:56,474 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:56,509 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:56,509 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:56,510 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:56,510 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:56,510 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:56,510 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:57,055 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:57,055 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:57,090 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:57,090 - altd_ld - INFO - username=ytlu hostname=unknown pos=96 LD_SUC_INFO
+2009-07-29 17:00:57,091 - altd_ld - DEBUG - Tag id:96
+2009-07-29 17:00:57,235 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:57,235 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:57,235 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:57,235 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:57,270 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:57,270 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:57,271 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:57,271 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:57,271 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:57,272 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:58,628 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:58,628 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:58,663 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:58,664 - altd_ld - INFO - username=ytlu hostname=unknown pos=97 LD_SUC_INFO
+2009-07-29 17:00:58,664 - altd_ld - DEBUG - Tag id:97
+2009-07-29 17:00:58,807 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:58,807 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:58,807 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:58,807 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:58,842 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:58,842 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:58,843 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:58,843 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:58,843 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:58,844 - altd_ld - DEBUG - here 4
+2009-07-29 17:00:59,499 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:59,499 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:00:59,534 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:59,535 - altd_ld - INFO - username=ytlu hostname=unknown pos=98 LD_SUC_INFO
+2009-07-29 17:00:59,535 - altd_ld - DEBUG - Tag id:98
+2009-07-29 17:00:59,679 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:00:59,680 - altd_ld - DEBUG - here 1
+2009-07-29 17:00:59,680 - altd_ld - DEBUG - here 2
+2009-07-29 17:00:59,680 - altd_ld - DEBUG - here 3
+2009-07-29 17:00:59,714 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:00:59,715 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:00:59,715 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:00:59,715 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:00:59,716 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:00:59,716 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:00,869 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:00,869 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:00,904 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:00,905 - altd_ld - INFO - username=ytlu hostname=unknown pos=99 LD_SUC_INFO
+2009-07-29 17:01:00,905 - altd_ld - DEBUG - Tag id:99
+2009-07-29 17:01:01,049 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:01,049 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:01,049 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:01,049 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:01,084 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:01,084 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:01,085 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:01,085 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:01,085 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:01,086 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:01,637 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:01,638 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:01,672 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:01,673 - altd_ld - INFO - username=ytlu hostname=unknown pos=100 LD_SUC_INFO
+2009-07-29 17:01:01,673 - altd_ld - DEBUG - Tag id:100
+2009-07-29 17:01:01,816 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:01,817 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:01,817 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:01,817 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:01,852 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:01,852 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:01,853 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:01,853 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:01,853 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:01,853 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:02,108 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:02,108 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:02,143 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:02,144 - altd_ld - INFO - username=ytlu hostname=unknown pos=101 LD_SUC_INFO
+2009-07-29 17:01:02,144 - altd_ld - DEBUG - Tag id:101
+2009-07-29 17:01:02,286 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:02,289 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:02,290 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:02,290 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:02,325 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:02,325 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:02,325 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:02,326 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:02,326 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:02,326 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:03,319 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:03,320 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:03,355 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:03,355 - altd_ld - INFO - username=ytlu hostname=unknown pos=102 LD_SUC_INFO
+2009-07-29 17:01:03,355 - altd_ld - DEBUG - Tag id:102
+2009-07-29 17:01:03,498 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:03,498 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:03,498 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:03,499 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:03,533 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:03,533 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:03,534 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:03,534 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:03,534 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:03,535 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:04,053 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:04,053 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:04,088 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:04,089 - altd_ld - INFO - username=ytlu hostname=unknown pos=103 LD_SUC_INFO
+2009-07-29 17:01:04,089 - altd_ld - DEBUG - Tag id:103
+2009-07-29 17:01:04,232 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:04,232 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:04,233 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:04,233 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:04,268 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:04,268 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:04,268 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:04,269 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:04,269 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:04,269 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:05,239 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:05,239 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:05,274 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:05,274 - altd_ld - INFO - username=ytlu hostname=unknown pos=104 LD_SUC_INFO
+2009-07-29 17:01:05,275 - altd_ld - DEBUG - Tag id:104
+2009-07-29 17:01:05,413 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:05,413 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:05,413 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:05,413 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:05,448 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:05,448 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:05,449 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:05,449 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:05,449 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:05,450 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:06,069 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:06,069 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:06,104 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:06,104 - altd_ld - INFO - username=ytlu hostname=unknown pos=105 LD_SUC_INFO
+2009-07-29 17:01:06,105 - altd_ld - DEBUG - Tag id:105
+2009-07-29 17:01:06,250 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:06,251 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:06,251 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:06,251 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:06,286 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:06,286 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:06,287 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:01:06,287 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:01:06,287 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:01:06,287 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:07,162 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:07,163 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:07,198 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:07,199 - altd_ld - INFO - username=ytlu hostname=unknown pos=106 LD_SUC_INFO
+2009-07-29 17:01:07,199 - altd_ld - DEBUG - Tag id:106
+2009-07-29 17:01:07,347 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:07,347 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:07,347 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:07,347 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:07,382 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:07,382 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:07,383 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:01:07,383 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:01:07,383 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:01:07,383 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:08,244 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:08,244 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:08,279 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:08,279 - altd_ld - INFO - username=ytlu hostname=unknown pos=107 LD_SUC_INFO
+2009-07-29 17:01:08,280 - altd_ld - DEBUG - Tag id:107
+2009-07-29 17:01:08,422 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:08,422 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:08,422 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:08,423 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:08,458 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:08,458 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:08,459 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:01:08,459 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:01:08,459 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:01:08,459 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:09,329 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:09,330 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:09,365 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:09,365 - altd_ld - INFO - username=ytlu hostname=unknown pos=108 LD_SUC_INFO
+2009-07-29 17:01:09,366 - altd_ld - DEBUG - Tag id:108
+2009-07-29 17:01:09,507 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:09,508 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:09,508 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:09,508 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:09,543 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:09,544 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:09,544 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:01:09,544 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:01:09,545 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:01:09,545 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:12,485 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:12,485 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:12,521 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:12,522 - altd_ld - INFO - username=ytlu hostname=unknown pos=109 LD_SUC_INFO
+2009-07-29 17:01:12,522 - altd_ld - DEBUG - Tag id:109
+2009-07-29 17:01:12,665 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:12,665 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:12,666 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:12,666 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:12,701 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:12,701 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:12,702 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:12,702 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:12,702 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:12,703 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:15,818 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:15,819 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:15,853 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:15,854 - altd_ld - INFO - username=ytlu hostname=unknown pos=110 LD_SUC_INFO
+2009-07-29 17:01:15,854 - altd_ld - DEBUG - Tag id:110
+2009-07-29 17:01:15,999 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:15,999 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:15,999 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:15,999 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:16,034 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:16,034 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:16,035 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:16,035 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:16,035 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:16,036 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:16,290 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:16,290 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:16,325 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:16,325 - altd_ld - INFO - username=ytlu hostname=unknown pos=111 LD_SUC_INFO
+2009-07-29 17:01:16,326 - altd_ld - DEBUG - Tag id:111
+2009-07-29 17:01:16,468 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:16,468 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:16,469 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:16,469 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:16,504 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:16,504 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:16,505 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:16,505 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:16,505 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:16,506 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:19,227 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:19,227 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:19,262 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:19,262 - altd_ld - INFO - username=ytlu hostname=unknown pos=112 LD_SUC_INFO
+2009-07-29 17:01:19,263 - altd_ld - DEBUG - Tag id:112
+2009-07-29 17:01:19,406 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:19,406 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:19,406 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:19,406 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:19,441 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:19,441 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:19,442 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:19,442 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:19,442 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:19,443 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:22,251 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:22,251 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:22,286 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:22,287 - altd_ld - INFO - username=ytlu hostname=unknown pos=113 LD_SUC_INFO
+2009-07-29 17:01:22,287 - altd_ld - DEBUG - Tag id:113
+2009-07-29 17:01:22,430 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:22,431 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:22,431 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:22,431 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:22,466 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:22,466 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:22,467 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:22,467 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:22,467 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:22,467 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:28,345 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:28,346 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:28,381 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:28,382 - altd_ld - INFO - username=ytlu hostname=unknown pos=114 LD_SUC_INFO
+2009-07-29 17:01:28,382 - altd_ld - DEBUG - Tag id:114
+2009-07-29 17:01:28,527 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:28,527 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:28,527 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:28,528 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:28,562 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:28,563 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:28,563 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:28,563 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:28,564 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:28,564 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:29,118 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:29,119 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:29,153 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:29,154 - altd_ld - INFO - username=ytlu hostname=unknown pos=115 LD_SUC_INFO
+2009-07-29 17:01:29,154 - altd_ld - DEBUG - Tag id:115
+2009-07-29 17:01:29,298 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:29,298 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:29,299 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:29,299 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:29,334 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:29,334 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:29,334 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:29,335 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:29,335 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:29,335 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:30,425 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:30,425 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:30,460 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:30,460 - altd_ld - INFO - username=ytlu hostname=unknown pos=116 LD_SUC_INFO
+2009-07-29 17:01:30,461 - altd_ld - DEBUG - Tag id:116
+2009-07-29 17:01:30,599 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:30,600 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:30,600 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:30,600 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:30,635 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:30,635 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:30,636 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:30,636 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:30,636 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:30,637 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:31,149 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:31,150 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:31,184 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:31,185 - altd_ld - INFO - username=ytlu hostname=unknown pos=117 LD_SUC_INFO
+2009-07-29 17:01:31,185 - altd_ld - DEBUG - Tag id:117
+2009-07-29 17:01:31,323 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:31,324 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:31,324 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:31,324 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:31,359 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:31,359 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:31,360 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:31,360 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:31,360 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:31,361 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:32,164 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:32,165 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:32,200 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:32,200 - altd_ld - INFO - username=ytlu hostname=unknown pos=118 LD_SUC_INFO
+2009-07-29 17:01:32,201 - altd_ld - DEBUG - Tag id:118
+2009-07-29 17:01:32,349 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:32,349 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:32,349 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:32,350 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:32,384 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:32,385 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:32,385 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:32,385 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:32,386 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:32,386 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:34,303 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:34,303 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:34,338 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:34,339 - altd_ld - INFO - username=ytlu hostname=unknown pos=119 LD_SUC_INFO
+2009-07-29 17:01:34,339 - altd_ld - DEBUG - Tag id:119
+2009-07-29 17:01:34,482 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:34,482 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:34,482 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:34,483 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:34,518 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:34,518 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:34,519 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:34,519 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:34,519 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:34,520 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:35,153 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:35,154 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:35,189 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:35,190 - altd_ld - INFO - username=ytlu hostname=unknown pos=120 LD_SUC_INFO
+2009-07-29 17:01:35,190 - altd_ld - DEBUG - Tag id:120
+2009-07-29 17:01:35,337 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:35,337 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:35,337 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:35,338 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:35,372 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:35,373 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:35,373 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:01:35,374 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:01:35,374 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:01:35,374 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:36,108 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:36,108 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:36,143 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:36,144 - altd_ld - INFO - username=ytlu hostname=unknown pos=121 LD_SUC_INFO
+2009-07-29 17:01:36,144 - altd_ld - DEBUG - Tag id:121
+2009-07-29 17:01:36,292 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:36,292 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:36,292 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:36,293 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:36,328 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:36,329 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:36,329 - altd_ld - DEBUG - ROW:((7L,),)
+2009-07-29 17:01:36,329 - altd_ld - DEBUG - MySQL inc_id:7
+2009-07-29 17:01:36,330 - altd_ld - INFO - username=ytlu hostname=unknown pos=7 LD_SUC_INFO
+2009-07-29 17:01:36,330 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:37,088 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:37,088 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:37,123 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:37,124 - altd_ld - INFO - username=ytlu hostname=unknown pos=122 LD_SUC_INFO
+2009-07-29 17:01:37,124 - altd_ld - DEBUG - Tag id:122
+2009-07-29 17:01:37,215 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:37,216 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:37,216 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:37,216 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:37,251 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:37,251 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:37,252 - altd_ld - DEBUG - ROW:((9L,),)
+2009-07-29 17:01:37,252 - altd_ld - DEBUG - MySQL inc_id:9
+2009-07-29 17:01:37,252 - altd_ld - INFO - username=ytlu hostname=unknown pos=9 LD_SUC_INFO
+2009-07-29 17:01:37,252 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:40,757 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:40,757 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:40,792 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:40,793 - altd_ld - INFO - username=ytlu hostname=unknown pos=123 LD_SUC_INFO
+2009-07-29 17:01:40,793 - altd_ld - DEBUG - Tag id:123
+2009-07-29 17:01:40,885 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:40,886 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:40,886 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:40,886 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:40,921 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:40,921 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:40,922 - altd_ld - DEBUG - ROW:((9L,),)
+2009-07-29 17:01:40,922 - altd_ld - DEBUG - MySQL inc_id:9
+2009-07-29 17:01:40,922 - altd_ld - INFO - username=ytlu hostname=unknown pos=9 LD_SUC_INFO
+2009-07-29 17:01:40,923 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:41,672 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:41,672 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:41,707 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:41,708 - altd_ld - INFO - username=ytlu hostname=unknown pos=124 LD_SUC_INFO
+2009-07-29 17:01:41,708 - altd_ld - DEBUG - Tag id:124
+2009-07-29 17:01:41,852 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:41,852 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:41,853 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:41,853 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:41,887 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:41,888 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:41,888 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:41,888 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:41,888 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:41,889 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:42,449 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:42,450 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:42,484 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:42,485 - altd_ld - INFO - username=ytlu hostname=unknown pos=125 LD_SUC_INFO
+2009-07-29 17:01:42,485 - altd_ld - DEBUG - Tag id:125
+2009-07-29 17:01:42,629 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:42,629 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:42,629 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:42,629 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:42,664 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:42,664 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:42,665 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:42,665 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:42,665 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:42,666 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:43,282 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:43,282 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:43,317 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:43,317 - altd_ld - INFO - username=ytlu hostname=unknown pos=126 LD_SUC_INFO
+2009-07-29 17:01:43,318 - altd_ld - DEBUG - Tag id:126
+2009-07-29 17:01:43,460 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:43,461 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:43,461 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:43,461 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:43,496 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:43,496 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:43,497 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:43,497 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:43,497 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:43,497 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:48,033 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:48,035 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:48,070 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:48,071 - altd_ld - INFO - username=ytlu hostname=unknown pos=127 LD_SUC_INFO
+2009-07-29 17:01:48,071 - altd_ld - DEBUG - Tag id:127
+2009-07-29 17:01:48,247 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:48,247 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:48,247 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:48,247 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:48,282 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:48,282 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:48,283 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 17:01:48,283 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 17:01:48,283 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 17:01:48,284 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:48,543 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:48,544 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:48,578 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:48,579 - altd_ld - INFO - username=ytlu hostname=unknown pos=128 LD_SUC_INFO
+2009-07-29 17:01:48,579 - altd_ld - DEBUG - Tag id:128
+2009-07-29 17:01:48,757 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:48,757 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:48,757 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:48,758 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:48,792 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:48,793 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:48,793 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 17:01:48,793 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 17:01:48,793 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 17:01:48,794 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:52,551 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:52,552 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:52,587 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:52,587 - altd_ld - INFO - username=ytlu hostname=unknown pos=129 LD_SUC_INFO
+2009-07-29 17:01:52,587 - altd_ld - DEBUG - Tag id:129
+2009-07-29 17:01:52,763 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:52,763 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:52,763 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:52,764 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:52,799 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:52,799 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:52,800 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 17:01:52,800 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 17:01:52,800 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 17:01:52,800 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:53,072 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:53,073 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:53,107 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:53,108 - altd_ld - INFO - username=ytlu hostname=unknown pos=130 LD_SUC_INFO
+2009-07-29 17:01:53,108 - altd_ld - DEBUG - Tag id:130
+2009-07-29 17:01:53,286 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:53,287 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:53,287 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:53,287 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:53,322 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:53,322 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:53,323 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 17:01:53,323 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 17:01:53,323 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 17:01:53,324 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:57,220 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:57,220 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:57,256 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:57,256 - altd_ld - INFO - username=ytlu hostname=unknown pos=131 LD_SUC_INFO
+2009-07-29 17:01:57,256 - altd_ld - DEBUG - Tag id:131
+2009-07-29 17:01:57,429 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:57,430 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:57,430 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:57,430 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:57,465 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:57,465 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:57,465 - altd_ld - DEBUG - ROW:((10L,),)
+2009-07-29 17:01:57,466 - altd_ld - DEBUG - MySQL inc_id:10
+2009-07-29 17:01:57,466 - altd_ld - INFO - username=ytlu hostname=unknown pos=10 LD_SUC_INFO
+2009-07-29 17:01:57,466 - altd_ld - DEBUG - here 4
+2009-07-29 17:01:58,076 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:58,076 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:01:58,111 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:58,111 - altd_ld - INFO - username=ytlu hostname=unknown pos=132 LD_SUC_INFO
+2009-07-29 17:01:58,112 - altd_ld - DEBUG - Tag id:132
+2009-07-29 17:01:58,274 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:01:58,274 - altd_ld - DEBUG - here 1
+2009-07-29 17:01:58,274 - altd_ld - DEBUG - here 2
+2009-07-29 17:01:58,275 - altd_ld - DEBUG - here 3
+2009-07-29 17:01:58,309 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:01:58,309 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:01:58,310 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:01:58,310 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:01:58,310 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:01:58,311 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:02,127 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:02,128 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:02,163 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:02,163 - altd_ld - INFO - username=ytlu hostname=unknown pos=133 LD_SUC_INFO
+2009-07-29 17:02:02,164 - altd_ld - DEBUG - Tag id:133
+2009-07-29 17:02:02,308 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:02,308 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:02,308 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:02,309 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:02,343 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:02,344 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:02,344 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:02,344 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:02,345 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:02,345 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:03,304 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:03,305 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:03,340 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:03,340 - altd_ld - INFO - username=ytlu hostname=unknown pos=134 LD_SUC_INFO
+2009-07-29 17:02:03,341 - altd_ld - DEBUG - Tag id:134
+2009-07-29 17:02:03,484 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:03,484 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:03,485 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:03,485 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:03,520 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:03,520 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:03,521 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:03,521 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:03,521 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:03,522 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:04,173 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:04,173 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:04,207 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:04,208 - altd_ld - INFO - username=ytlu hostname=unknown pos=135 LD_SUC_INFO
+2009-07-29 17:02:04,208 - altd_ld - DEBUG - Tag id:135
+2009-07-29 17:02:04,353 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:04,353 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:04,354 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:04,354 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:04,388 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:04,389 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:04,389 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:04,389 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:04,390 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:04,390 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:05,378 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:05,379 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:05,413 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:05,414 - altd_ld - INFO - username=ytlu hostname=unknown pos=136 LD_SUC_INFO
+2009-07-29 17:02:05,414 - altd_ld - DEBUG - Tag id:136
+2009-07-29 17:02:05,560 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:05,561 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:05,561 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:05,561 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:05,596 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:05,596 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:05,597 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:05,597 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:05,597 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:05,598 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:07,095 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:07,095 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:07,130 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:07,131 - altd_ld - INFO - username=ytlu hostname=unknown pos=137 LD_SUC_INFO
+2009-07-29 17:02:07,131 - altd_ld - DEBUG - Tag id:137
+2009-07-29 17:02:07,275 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:07,276 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:07,276 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:07,276 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:07,311 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:07,312 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:07,312 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:07,312 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:07,313 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:07,313 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:08,838 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:08,841 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:08,875 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:08,876 - altd_ld - INFO - username=ytlu hostname=unknown pos=138 LD_SUC_INFO
+2009-07-29 17:02:08,876 - altd_ld - DEBUG - Tag id:138
+2009-07-29 17:02:09,029 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:09,030 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:09,030 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:09,030 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:09,065 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:09,065 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:09,066 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:09,066 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:09,066 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:09,066 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:09,372 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:09,372 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:09,407 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:09,408 - altd_ld - INFO - username=ytlu hostname=unknown pos=139 LD_SUC_INFO
+2009-07-29 17:02:09,408 - altd_ld - DEBUG - Tag id:139
+2009-07-29 17:02:09,555 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:09,555 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:09,555 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:09,555 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:09,590 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:09,590 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:09,591 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:09,591 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:09,591 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:09,592 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:10,408 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:10,409 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:10,443 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:10,444 - altd_ld - INFO - username=ytlu hostname=unknown pos=140 LD_SUC_INFO
+2009-07-29 17:02:10,444 - altd_ld - DEBUG - Tag id:140
+2009-07-29 17:02:10,586 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:10,587 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:10,587 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:10,587 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:10,622 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:10,622 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:10,623 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:10,623 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:10,623 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:10,623 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:11,553 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:11,554 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:11,588 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:11,589 - altd_ld - INFO - username=ytlu hostname=unknown pos=141 LD_SUC_INFO
+2009-07-29 17:02:11,589 - altd_ld - DEBUG - Tag id:141
+2009-07-29 17:02:11,734 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:11,735 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:11,735 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:11,735 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:11,770 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:11,770 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:11,771 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:11,771 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:11,771 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:11,772 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:12,282 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:12,284 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:12,319 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:12,319 - altd_ld - INFO - username=ytlu hostname=unknown pos=142 LD_SUC_INFO
+2009-07-29 17:02:12,320 - altd_ld - DEBUG - Tag id:142
+2009-07-29 17:02:12,473 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:12,474 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:12,474 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:12,474 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:12,509 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:12,509 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:12,510 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:12,510 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:12,510 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:12,511 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:13,248 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:13,248 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:13,283 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:13,284 - altd_ld - INFO - username=ytlu hostname=unknown pos=143 LD_SUC_INFO
+2009-07-29 17:02:13,284 - altd_ld - DEBUG - Tag id:143
+2009-07-29 17:02:13,378 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:13,378 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:13,378 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:13,379 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:13,413 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:13,414 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:13,414 - altd_ld - DEBUG - ROW:((9L,),)
+2009-07-29 17:02:13,414 - altd_ld - DEBUG - MySQL inc_id:9
+2009-07-29 17:02:13,415 - altd_ld - INFO - username=ytlu hostname=unknown pos=9 LD_SUC_INFO
+2009-07-29 17:02:13,415 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:14,234 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:14,235 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:14,269 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:14,270 - altd_ld - INFO - username=ytlu hostname=unknown pos=144 LD_SUC_INFO
+2009-07-29 17:02:14,270 - altd_ld - DEBUG - Tag id:144
+2009-07-29 17:02:14,415 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:14,415 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:14,416 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:14,416 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:14,450 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:14,451 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:14,451 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:14,451 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:14,452 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:14,452 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:15,815 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:15,816 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:15,851 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:15,851 - altd_ld - INFO - username=ytlu hostname=unknown pos=145 LD_SUC_INFO
+2009-07-29 17:02:15,851 - altd_ld - DEBUG - Tag id:145
+2009-07-29 17:02:15,990 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:15,991 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:15,991 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:15,991 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:16,026 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:16,026 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:16,027 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:16,027 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:16,027 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:16,028 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:16,256 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:16,256 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:16,291 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:16,291 - altd_ld - INFO - username=ytlu hostname=unknown pos=146 LD_SUC_INFO
+2009-07-29 17:02:16,292 - altd_ld - DEBUG - Tag id:146
+2009-07-29 17:02:16,436 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:16,436 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:16,436 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:16,436 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:16,471 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:16,471 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:16,472 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:16,472 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:16,472 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:16,472 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:17,072 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:17,072 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:17,107 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:17,108 - altd_ld - INFO - username=ytlu hostname=unknown pos=147 LD_SUC_INFO
+2009-07-29 17:02:17,108 - altd_ld - DEBUG - Tag id:147
+2009-07-29 17:02:17,251 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:17,251 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:17,251 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:17,251 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:17,286 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:17,287 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:17,287 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:17,287 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:17,288 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:17,288 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:18,301 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:18,301 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:18,336 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:18,336 - altd_ld - INFO - username=ytlu hostname=unknown pos=148 LD_SUC_INFO
+2009-07-29 17:02:18,337 - altd_ld - DEBUG - Tag id:148
+2009-07-29 17:02:18,479 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:18,479 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:18,480 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:18,480 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:18,515 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:18,515 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:18,516 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:18,516 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:18,516 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:18,517 - altd_ld - DEBUG - here 4
+2009-07-29 17:02:19,116 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:19,116 - altd_ld - INFO - Process gen_assembly
+2009-07-29 17:02:19,151 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:19,152 - altd_ld - INFO - username=ytlu hostname=unknown pos=149 LD_SUC_INFO
+2009-07-29 17:02:19,152 - altd_ld - DEBUG - Tag id:149
+2009-07-29 17:02:19,296 - altd_ld - DEBUG - Hostname:login5
+2009-07-29 17:02:19,297 - altd_ld - DEBUG - here 1
+2009-07-29 17:02:19,297 - altd_ld - DEBUG - here 2
+2009-07-29 17:02:19,297 - altd_ld - DEBUG - here 3
+2009-07-29 17:02:19,332 - altd_ld - INFO - MySQLdb is connected
+2009-07-29 17:02:19,332 - altd_ld - DEBUG - isConnected?True
+2009-07-29 17:02:19,333 - altd_ld - DEBUG - ROW:((4L,),)
+2009-07-29 17:02:19,333 - altd_ld - DEBUG - MySQL inc_id:4
+2009-07-29 17:02:19,333 - altd_ld - INFO - username=ytlu hostname=unknown pos=4 LD_SUC_INFO
+2009-07-29 17:02:19,333 - altd_ld - DEBUG - here 4
+2009-07-31 14:03:51,234 - altd_ld - CRITICAL - Cannot load db config file! Program aborted...
+2009-07-31 14:07:15,020 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:07:15,021 - altd_ld - INFO - Process gen_assembly
+2009-07-31 14:07:15,136 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:07:15,136 - altd_ld - INFO - username=ytlu hostname=kraken pos=4 LD_SUC_INFO
+2009-07-31 14:07:15,137 - altd_ld - DEBUG - Tag id:4
+2009-07-31 14:07:15,530 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:07:15,530 - altd_ld - DEBUG - here 1
+2009-07-31 14:07:15,531 - altd_ld - DEBUG - here 2
+2009-07-31 14:07:15,531 - altd_ld - DEBUG - here 3
+2009-07-31 14:07:15,570 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:07:15,570 - altd_ld - DEBUG - isConnected?True
+2009-07-31 14:07:15,571 - altd_ld - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO_NEW
+2009-07-31 14:07:15,572 - altd_ld - DEBUG - here 4
+2009-07-31 14:12:54,525 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:14:39,782 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:14:39,783 - altd_ld - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:14:39,783 - altd_ld - INFO - Process gen_assembly
+2009-07-31 14:14:39,851 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:14:39,852 - altd_ld - INFO - username=ytlu hostname=kraken pos=5 LD_SUC_INFO
+2009-07-31 14:14:39,852 - altd_ld - DEBUG - Tag id:5
+2009-07-31 14:14:40,185 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:14:40,185 - altd_ld - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:14:40,186 - altd_ld - DEBUG - here 1
+2009-07-31 14:14:40,186 - altd_ld - DEBUG - here 2
+2009-07-31 14:14:40,186 - altd_ld - DEBUG - here 3
+2009-07-31 14:14:40,222 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:14:40,222 - altd_ld - DEBUG - isConnected?True
+2009-07-31 14:14:40,223 - altd_ld - DEBUG - ROW:((3L,),)
+2009-07-31 14:14:40,223 - altd_ld - DEBUG - MySQL inc_id:3
+2009-07-31 14:14:40,223 - altd_ld - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-07-31 14:14:40,224 - altd_ld - DEBUG - here 4
+2009-07-31 14:18:03,405 - altd_ld - INFO - Verbose:False
+2009-07-31 14:18:03,425 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:18:03,425 - altd_ld - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:18:03,426 - altd_ld - INFO - Process gen_assembly
+2009-07-31 14:18:03,510 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:18:03,511 - altd_ld - INFO - username=ytlu hostname=kraken pos=6 LD_SUC_INFO
+2009-07-31 14:18:03,511 - altd_ld - DEBUG - Tag id:6
+2009-07-31 14:18:03,856 - altd_ld - INFO - Verbose:False
+2009-07-31 14:18:03,864 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:18:03,864 - altd_ld - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:18:03,864 - altd_ld - DEBUG - here 1
+2009-07-31 14:18:03,864 - altd_ld - DEBUG - here 2
+2009-07-31 14:18:03,865 - altd_ld - DEBUG - here 3
+2009-07-31 14:18:03,902 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:18:03,903 - altd_ld - DEBUG - isConnected?True
+2009-07-31 14:18:03,903 - altd_ld - DEBUG - ROW:((3L,),)
+2009-07-31 14:18:03,904 - altd_ld - DEBUG - MySQL inc_id:3
+2009-07-31 14:18:03,904 - altd_ld - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-07-31 14:18:03,904 - altd_ld - DEBUG - here 4
+2009-07-31 14:21:13,383 - altd_ld2 - INFO - Verbose:True
+2009-07-31 14:21:13,403 - altd_ld2 - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:21:13,404 - altd_ld2 - ERROR - usage error
+2009-07-31 14:21:13,404 - altd_ld2 - ERROR - here 5
+2009-07-31 14:23:39,276 - altd_ld2 - INFO - Verbose:True
+2009-07-31 14:23:39,295 - altd_ld2 - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:23:39,296 - altd_ld2 - ERROR - usage error
+2009-07-31 14:23:39,296 - altd_ld2 - ERROR - here 5
+2009-07-31 14:24:27,846 - altd_ld2 - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:24:27,847 - altd_ld2 - ERROR - usage error
+2009-07-31 14:24:27,847 - altd_ld2 - ERROR - here 5
+2009-07-31 14:24:59,108 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:24:59,129 - altd_ld2 - DEBUG - Hostname:krakenpf5
+2009-07-31 14:24:59,129 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--gen_assembly', '/tmp/1249064698/ldArgs.s']
+2009-07-31 14:24:59,130 - altd_ld2 - DEBUG - PRE:1
+2009-07-31 14:24:59,130 - altd_ld2 - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:24:59,130 - altd_ld2 - ERROR - usage error
+2009-07-31 14:24:59,130 - altd_ld2 - ERROR - here 5
+2009-07-31 14:28:24,294 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:28:24,316 - altd_ld2 - DEBUG - Hostname:krakenpf5
+2009-07-31 14:28:24,316 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--gen_assembly', '/tmp/1249064904/ldArgs.s']
+2009-07-31 14:28:24,317 - altd_ld2 - DEBUG - PRE:0
+2009-07-31 14:28:24,317 - altd_ld2 - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:28:24,317 - altd_ld2 - INFO - Process gen_assembly
+2009-07-31 14:28:24,404 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 14:28:24,405 - altd_ld2 - INFO - username=ytlu hostname=kraken pos=7 LD_SUC_INFO
+2009-07-31 14:28:24,405 - altd_ld2 - DEBUG - Tag id:7
+2009-07-31 14:28:24,816 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:28:24,828 - altd_ld2 - DEBUG - Hostname:krakenpf5
+2009-07-31 14:28:24,828 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--store_line', '7', '0', '/usr/lib64/crt1.o', '/usr/lib64/crti.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/trace_init.o', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtbeginT.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/libpgc.a', '/usr/lib64/libpthread.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/libc.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtend.o', '/usr/lib64/crtn.o']
+2009-07-31 14:28:24,828 - altd_ld2 - DEBUG - PRE:0
+2009-07-31 14:28:24,829 - altd_ld2 - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:28:24,829 - altd_ld2 - DEBUG - here 1
+2009-07-31 14:28:24,829 - altd_ld2 - DEBUG - here 2
+2009-07-31 14:28:24,829 - altd_ld2 - DEBUG - here 3
+2009-07-31 14:28:24,868 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 14:28:24,869 - altd_ld2 - DEBUG - isConnected?True
+2009-07-31 14:28:24,869 - altd_ld2 - DEBUG - ROW:((3L,),)
+2009-07-31 14:28:24,870 - altd_ld2 - DEBUG - MySQL inc_id:3
+2009-07-31 14:28:24,870 - altd_ld2 - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-07-31 14:28:24,870 - altd_ld2 - DEBUG - here 4
+2009-07-31 14:30:38,300 - altd_ld - DEBUG - Verbose:False
+2009-07-31 14:30:38,310 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:30:38,311 - altd_ld - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--gen_assembly', '/tmp/1249065038/ldArgs.s']
+2009-07-31 14:30:38,311 - altd_ld - DEBUG - PRE:0
+2009-07-31 14:30:38,311 - altd_ld - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:30:38,311 - altd_ld - INFO - Process gen_assembly
+2009-07-31 14:30:38,351 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:30:38,352 - altd_ld - INFO - username=ytlu hostname=kraken pos=8 LD_SUC_INFO
+2009-07-31 14:30:38,352 - altd_ld - DEBUG - Tag id:8
+2009-07-31 14:30:38,717 - altd_ld - DEBUG - Verbose:False
+2009-07-31 14:30:38,727 - altd_ld - DEBUG - Hostname:krakenpf5
+2009-07-31 14:30:38,727 - altd_ld - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--store_line', '8', '0', '/usr/lib64/crt1.o', '/usr/lib64/crti.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/trace_init.o', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtbeginT.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/libpgc.a', '/usr/lib64/libpthread.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/libc.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtend.o', '/usr/lib64/crtn.o']
+2009-07-31 14:30:38,727 - altd_ld - DEBUG - PRE:0
+2009-07-31 14:30:38,728 - altd_ld - INFO - SELECT_ON mode user:ytlu
+2009-07-31 14:30:38,728 - altd_ld - DEBUG - here 1
+2009-07-31 14:30:38,728 - altd_ld - DEBUG - here 2
+2009-07-31 14:30:38,728 - altd_ld - DEBUG - here 3
+2009-07-31 14:30:38,766 - altd_ld - INFO - MySQLdb is connected
+2009-07-31 14:30:38,767 - altd_ld - DEBUG - isConnected?True
+2009-07-31 14:30:38,767 - altd_ld - DEBUG - ROW:((3L,),)
+2009-07-31 14:30:38,768 - altd_ld - DEBUG - MySQL inc_id:3
+2009-07-31 14:30:38,768 - altd_ld - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-07-31 14:30:38,768 - altd_ld - DEBUG - here 4
+2009-07-31 14:39:12,481 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:39:12,521 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 14:39:12,595 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 14:49:24,322 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:49:24,388 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 14:49:31,397 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:49:31,427 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 14:50:44,734 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:50:44,768 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 14:51:15,903 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:51:15,914 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 14:58:08,005 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:58:08,028 - altd_ld2 - DEBUG - Hostname:16
+2009-07-31 14:58:08,119 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 14:59:15,126 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 14:59:15,150 - altd_ld2 - DEBUG - Hostname:16
+2009-07-31 14:59:15,253 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 15:01:57,341 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 15:01:57,364 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 15:01:57,455 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 15:05:03,272 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 15:05:03,295 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 15:05:03,295 - altd_ld2 - DEBUG - Machine name:kraken
+2009-07-31 15:05:03,373 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 15:05:40,907 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 15:05:40,928 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 15:05:40,928 - altd_ld2 - DEBUG - Machine name:kraken
+2009-07-31 15:05:41,004 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 15:56:07,107 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 15:56:07,133 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 15:56:07,133 - altd_ld2 - DEBUG - Machine name:kraken
+2009-07-31 15:56:07,246 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 15:59:00,950 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 15:59:00,991 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 15:59:00,991 - altd_ld2 - DEBUG - Machine name:kraken
+2009-07-31 15:59:01,071 - altd_ld2 - INFO - MySQLdb is connected
+2009-07-31 16:01:01,635 - altd_ld2 - DEBUG - Verbose:True
+2009-07-31 16:01:01,661 - altd_ld2 - DEBUG - Hostname:krakenpf2
+2009-07-31 16:01:01,662 - altd_ld2 - DEBUG - Machine name:kraken
+2009-07-31 16:01:01,749 - altd_ld2 - INFO - MySQLdb is connected
+2009-08-03 10:43:25,101 - altd_ld2 - DEBUG - Verbose:True
+2009-08-03 10:43:25,247 - altd_ld2 - DEBUG - Hostname:krakenpf10
+2009-08-03 10:43:25,247 - altd_ld2 - DEBUG - Machine name:kraken
+2009-08-03 10:43:25,247 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--gen_assembly', '/tmp/1249310604/ldArgs.s']
+2009-08-03 10:43:25,248 - altd_ld2 - DEBUG - PRE:0
+2009-08-03 10:43:25,248 - altd_ld2 - INFO - Process gen_assembly
+2009-08-03 10:43:25,379 - altd_ld2 - INFO - MySQLdb is connected
+2009-08-03 10:43:25,380 - altd_ld2 - INFO - username=ytlu hostname=kraken pos=9 LD_SUC_INFO
+2009-08-03 10:43:25,380 - altd_ld2 - DEBUG - Tag id:9
+2009-08-03 10:43:25,762 - altd_ld2 - DEBUG - Verbose:True
+2009-08-03 10:43:25,772 - altd_ld2 - DEBUG - Hostname:krakenpf10
+2009-08-03 10:43:25,773 - altd_ld2 - DEBUG - Machine name:kraken
+2009-08-03 10:43:25,773 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--store_line', '9', '0', '/usr/lib64/crt1.o', '/usr/lib64/crti.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/trace_init.o', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtbeginT.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/libpgc.a', '/usr/lib64/libpthread.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/libc.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtend.o', '/usr/lib64/crtn.o']
+2009-08-03 10:43:25,774 - altd_ld2 - DEBUG - PRE:0
+2009-08-03 10:43:25,774 - altd_ld2 - DEBUG - here 1
+2009-08-03 10:43:25,774 - altd_ld2 - DEBUG - here 2
+2009-08-03 10:43:25,775 - altd_ld2 - DEBUG - here 3
+2009-08-03 10:43:25,813 - altd_ld2 - INFO - MySQLdb is connected
+2009-08-03 10:43:25,814 - altd_ld2 - DEBUG - isConnected?True
+2009-08-03 10:43:25,815 - altd_ld2 - DEBUG - ROW:((3L,),)
+2009-08-03 10:43:25,815 - altd_ld2 - DEBUG - MySQL inc_id:3
+2009-08-03 10:43:25,816 - altd_ld2 - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-08-03 10:43:25,816 - altd_ld2 - DEBUG - here 4
+2009-08-03 10:43:46,629 - altd_ld2 - DEBUG - Verbose:True
+2009-08-03 10:43:46,639 - altd_ld2 - DEBUG - Hostname:krakenpf10
+2009-08-03 10:43:46,640 - altd_ld2 - DEBUG - Machine name:kraken
+2009-08-03 10:43:46,640 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--gen_assembly', '/tmp/1249310626/ldArgs.s']
+2009-08-03 10:43:46,640 - altd_ld2 - DEBUG - PRE:0
+2009-08-03 10:43:46,640 - altd_ld2 - INFO - Process gen_assembly
+2009-08-03 10:43:46,680 - altd_ld2 - INFO - MySQLdb is connected
+2009-08-03 10:43:46,681 - altd_ld2 - INFO - username=ytlu hostname=kraken pos=10 LD_SUC_INFO
+2009-08-03 10:43:46,681 - altd_ld2 - DEBUG - Tag id:10
+2009-08-03 10:43:47,053 - altd_ld2 - DEBUG - Verbose:True
+2009-08-03 10:43:47,063 - altd_ld2 - DEBUG - Hostname:krakenpf10
+2009-08-03 10:43:47,064 - altd_ld2 - DEBUG - Machine name:kraken
+2009-08-03 10:43:47,064 - altd_ld2 - DEBUG - ['/nics/a/home/ytlu/ALTD/bin/pyLD.py', '--store_line', '10', '0', '/usr/lib64/crt1.o', '/usr/lib64/crti.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/trace_init.o', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtbeginT.o', '/opt/pgi/8.0.6/linux86-64/8.0-6/lib/libpgc.a', '/usr/lib64/libpthread.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/libc.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/libgcc_eh.a', '/usr/lib64/gcc/x86_64-suse-linux/4.1.2/crtend.o', '/usr/lib64/crtn.o']
+2009-08-03 10:43:47,064 - altd_ld2 - DEBUG - PRE:0
+2009-08-03 10:43:47,065 - altd_ld2 - DEBUG - here 1
+2009-08-03 10:43:47,065 - altd_ld2 - DEBUG - here 2
+2009-08-03 10:43:47,065 - altd_ld2 - DEBUG - here 3
+2009-08-03 10:43:47,105 - altd_ld2 - INFO - MySQLdb is connected
+2009-08-03 10:43:47,106 - altd_ld2 - DEBUG - isConnected?True
+2009-08-03 10:43:47,107 - altd_ld2 - DEBUG - ROW:((3L,),)
+2009-08-03 10:43:47,107 - altd_ld2 - DEBUG - MySQL inc_id:3
+2009-08-03 10:43:47,108 - altd_ld2 - INFO - username=ytlu hostname=kraken pos=3 LD_SUC_INFO
+2009-08-03 10:43:47,109 - altd_ld2 - DEBUG - here 4
+2009-08-03 10:46:07,716 - altd_ld2 - DEBUG - Verbose:True
+2009-08-03 10:46:07,742 - altd_ld2 - DEBUG - Hostname:krakenpf10
+2009-08-03 10:46:07,743 - altd_ld2 - DEBUG - Machine name:kraken
+2009-08-03 10:46:07,844 - altd_ld2 - INFO - MySQLdb is connected
+2009-09-02 09:53:04,876 - altd_ld2 - ERROR - user jones is not in selected list
+2009-09-02 09:54:28,296 - altd_ld2 - ERROR - (2005, "Unknown MySQL server host 'hotnode.jics.utk.edu' (1)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 89, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 66, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 134, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (2005, "Unknown MySQL server host 'hotnode.jics.utk.edu' (1)")
+2009-09-09 09:42:47,519 - altd_ld2 - CRITICAL - No python MySQL module found
+2009-09-09 09:42:47,519 - altd_ld2 - CRITICAL - Need to install python MySQLdb module...
+2009-09-09 09:48:15,422 - altd_ld2 - CRITICAL - No python MySQL module found
+2009-09-09 09:48:15,422 - altd_ld2 - CRITICAL - Need to install python MySQLdb module...
+2009-09-09 09:49:32,969 - altd_ld2 - ERROR - (2005, "Unknown MySQL server host 'hotnode.jics.utk.edu' (1)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 89, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 75, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 164, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (2005, "Unknown MySQL server host 'hotnode.jics.utk.edu' (1)")
+2009-09-09 09:58:44,649 - altd_ld2 - ERROR - (1045, "Access denied for user 'altd'@'watermelon.nics.utk.edu' (using password: YES)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 89, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 75, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 164, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (1045, "Access denied for user 'altd'@'watermelon.nics.utk.edu' (using password: YES)")
+2009-09-09 09:59:23,529 - altd_ld2 - ERROR - (1045, "Access denied for user 'altd'@'localhost' (using password: YES)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 89, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 75, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 164, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (1045, "Access denied for user 'altd'@'localhost' (using password: YES)")
+2009-09-09 10:02:31,970 - altd_ld2 - ERROR - (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 119, in table_lookup
+    self.conn.query(query)
+ProgrammingError: (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+2009-09-09 10:26:32,153 - altd_ld2 - ERROR - (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 116, in table_lookup
+    self.conn.query(query)
+ProgrammingError: (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+2009-09-09 10:38:09,168 - altd_ld2 - ERROR - (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 116, in table_lookup
+    self.conn.query(query)
+ProgrammingError: (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+2009-09-11 11:20:03,386 - altd_ld2 - ERROR - (2002, "Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 90, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 66, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 134, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (2002, "Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)")
+2009-09-11 11:21:34,894 - altd_ld2 - ERROR - (1045, "Access denied for user 'altd'@'login5.athena.nics.utk.edu' (using password: YES)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 90, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 66, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 134, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (1045, "Access denied for user 'altd'@'login5.athena.nics.utk.edu' (using password: YES)")
+2009-09-14 12:27:13,537 - altd_ld2 - ERROR - (1044, "Access denied for user 'altd'@'watermelon.nics.utk.edu' to database 'altdtest'")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 90, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 75, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 164, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (1044, "Access denied for user 'altd'@'watermelon.nics.utk.edu' to database 'altdtest'")
+2009-09-14 12:51:44,956 - altd_ld2 - ERROR - (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 116, in table_lookup
+    self.conn.query(query)
+ProgrammingError: (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+2009-09-21 10:33:15,463 - altd_ld2 - ERROR - (1045, "Access denied for user 'altd'@'login4.athena.nics.utk.edu' (using password: YES)")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 90, in mysql_db_connect
+    self.conn = MySQLdb.connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASSWD,MYSQL_DB)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/__init__.py", line 66, in Connect
+    return Connection(*args, **kwargs)
+  File "/usr/lib64/python2.4/site-packages/MySQLdb/connections.py", line 134, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+OperationalError: (1045, "Access denied for user 'altd'@'login4.athena.nics.utk.edu' (using password: YES)")
+2009-09-21 10:42:38,276 - altd_ld2 - ERROR - (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 116, in table_lookup
+    self.conn.query(query)
+ProgrammingError: (1146, "Table 'altdtest.altd_unknown_link_tags' doesn't exist")
+2009-09-21 11:22:34,689 - altd_ld2 - ERROR - user jones is not in selected list
+2009-09-21 13:07:35,646 - altd_ld2 - ERROR - user faheymr is not in selected list
+2009-09-21 13:07:49,534 - altd_ld2 - ERROR - user faheymr is not in selected list
+2009-09-21 13:10:59,922 - altd_ld2 - ERROR - user faheymr is not in selected list
+2009-09-21 13:12:45,253 - altd_ld2 - ERROR - user faheymr is not in selected list
+2009-09-21 13:13:57,623 - altd_ld2 - ERROR - user faheymr is not in selected list
+2009-09-21 13:23:42,435 - altd_ld2 - ERROR - (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 't merge input [SECTION | orphan] sections -Ur Build global constructor/destructo' at line 1")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 174, in update_tag_table
+    self.conn.query(query)
+ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 't merge input [SECTION | orphan] sections -Ur Build global constructor/destructo' at line 1")
+2009-09-21 13:23:50,377 - altd_ld2 - ERROR - (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 't merge input [SECTION | orphan] sections -Ur Build global constructor/destructo' at line 1")
+Traceback (most recent call last):
+  File "/nics/b/home/jones/ALTD/bin/pyLD.py", line 174, in update_tag_table
+    self.conn.query(query)
+ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 't merge input [SECTION | orphan] sections -Ur Build global constructor/destructo' at line 1")
