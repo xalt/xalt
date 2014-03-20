@@ -7,14 +7,14 @@ def name_selector(name):
   nameA=name.split(".")
   print(nameA[0])
   print(nameA[1])
-  
+  return nameA[1]
 
 
 
 def main():
   uuid = sys.argv[1]
   fn   = sys.argv[2]
-  name = socket.getfqdn().lower()
+  name = name_selector(socket.getfqdn())
   
   print("name: ",name)
 
