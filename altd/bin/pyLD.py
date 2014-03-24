@@ -163,7 +163,6 @@ class ALTD_LD(object):
             between ALTD_Link_Info and ATLD_Link_Info_End.
         """
         year = time.strftime("%Y")
-
         f = open(path,'w')
 
         f.writelines("\t.section .altd\n")

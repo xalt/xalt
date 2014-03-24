@@ -1,3 +1,54 @@
+Table for XALT:
+
+
+Table: xalt_link  Primary(link_id)
+
+    link_id     char(36)      not null   # UUID string
+    build_user  varchar(64)   not null   # user name ($USER)
+    exit_code   tinyint(4)    not null   # return value from link
+    build_epoch double        not null   # link time epoch
+    exec_path   varchar(1024) not null   # complete path to executable
+    hash_id     char(40)      not null   # sha1sum of executable
+    build_host  varchar(64)   not null   # build host
+
+Table: xalt_link_lib
+
+    link_id     char(36)      not null   # link_id from xalt_link => uuid
+    library     varchar(1024) not null   # library name
+
+
+Table: xalt_jobs  Primary(run_inc)
+
+    run_inc     int(11)       auto_inc   #
+    job_id      char(10)      not null   # string version of job id
+    host        varchar(64)   not null   # machine program is submitted.
+    link_id     char(36)      pos.null   #     
+    account     char(10)      pos.null   # charge account.
+    hash_id     char(40)      pos.null   # sha1sum of executable
+    exec_type   char(7)       not null   #
+    start_time  double        not null   # epoch start time (sec)
+    end_time    double        not null   # could be 0.0   (sec)
+    run_time    double        not null   # could be 0.0   (sec)
+    num_cores   int(11)       not null   # number of cores
+    num_nodes   int(11)       not null   # number of nodes
+    num_threads tinyint(4)    not null   # number of threads 0 or greater
+    queue       varchar(32)   pos.null   # name of queue.
+    user        varchar(64)   not null   # name of user that is running executable.
+ 
+
+Table: xalt_shared_lib
+    hash_id     char(40)      not null   # hash id from executable.
+    library     varchar(1024) not null   # library name
+
+Table: xalt_env
+    run_inc     int(11)       not null   # from xalt_jobs
+    name        varchar(64)   not null   # env. var name
+    value       varchar(1024) not null   # env. var value
+    
+
+
+------------------------------------------------------------------------
+
 Proposed DB tables for XALT:
 
 

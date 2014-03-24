@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- shell-script -*-
 #
 # ALTD ld wrapper script
 # 
