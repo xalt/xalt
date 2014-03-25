@@ -1,0 +1,44 @@
+#!/bin/bash
+#-*- shell-script -*-
+
+GEN_ASSEMBLY=/usr/local/bin/xalt_generate_assembly.py
+GEN_LINKDATA=/usr/local/bin/xalt_generate_linkdata.py
+
+AS=/usr/bin/as
+LD=/usr/bin/ld
+UUIDGEN=/usr/bin/uuidgen
+
+UUID=`$UUIDGEN`
+WRKDIR=/tmp/${USER}_${UUID}
+LINKLINE=$WRKDIR/link.txt
+ARGSRC=$WRKDIR/xalt.s
+ARGOBJ=$WRKDIR/xalt.o
+RESULT=$HOME/.xalt.d/link.$UUID.json
+
+if [ ! -d $WRKDIR ]; then
+  mkdir $WRKDIR
+fi
+
+EPOCH=$($GEN_ASSEMBLY $UUID $ARGSRC)
+
+ARGV="$@"
+
+$AS $ARGSRC -o $ARGOBJ
+
+$LD $ARGV $ARGOBJ -t > $LINKLINE
+
+STATUS=$?
+
+
+if [ "$(echo $ARGV | grep "\-o")" != "" ]; then
+    EXECUTABLE=`echo $ARGV | sed 's/.*-o \(\S*\) .*/\1/'`
+else
+    EXECUTABLE="a.out"
+fi
+
+
+$GEN_LINKDATA $UUID $STATUS `pwd` $EXECUTABLE $ARGOBJ $EPOCH $LINKLINE $RESULT
+
+rm -rf $WRKDIR
+
+exit $STATUS
