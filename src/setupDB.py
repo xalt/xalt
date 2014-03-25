@@ -2,7 +2,7 @@
 # -*- python -*-
 from __future__ import print_function
 import os, sys, re, base64
-import MySQLdb, ConfigParser, getpass
+import MySQLdb, ConfigParser, getpass, time
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
@@ -78,31 +78,12 @@ def main():
     cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" % DB)
     cursor.execute("USE "+DB)
   
-    
-    cursor.execute("""
-        CREATE TABLE `xalt_link` (
-          `uuid`          char(36)       NOT NULL,
-          `build_user`    varchar(64)    NOT NULL,
-          `exit_code`     tinyint(4)     NOT NULL,
-          `build_epoch`   double         NOT NULL,
-          `exec_path`     varchar(1024)  NOT NULL,
-          `hash_id`       char(40)       NOT NULL,
-          `build_host`    varchar(64)    NOT NULL,
-          PRIMARY KEY  (`uuid`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
-        """)
-    print("create xalt_link table")
+    idx = 1
 
-    cursor.execute("""
-        CREATE TABLE `xalt_exe` (
-          `hash_id`       char(40)       NOT NULL,
-          `exec_path`     varchar(1024)  NOT NULL,
-          PRIMARY KEY  (`hash_id`)
-          UNIQUE  KEY  `exec_path` (`exec_path`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
-        """)
-    print("create xalt_exe table")
 
+    print("start")
+
+    # 1
     cursor.execute("""
         CREATE TABLE `xalt_job` (
           `run_inc`       int(11)        NOT NULL auto_increment,       
@@ -124,64 +105,106 @@ def main():
           PRIMARY KEY  (`run_inc`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
         """)
-    print("create xalt_job table")
+    print("(%d) create xalt_job table" % idx)
+    idx += 1
 
+    # 2
     cursor.execute("""
-        CREATE TABLE `xalt_library_name` (
-          `lib_id`        int(11)        NOT NULL,       
-          `library_name`  varchar(1024)  NOT NULL,
-          PRIMARY KEY  (`lib_id`)
-          UNIQUE  KEY  `library_name` (`library_name`)
+        CREATE TABLE `xalt_link` (
+          `uuid`          char(36)       NOT NULL,
+          `build_user`    varchar(64)    NOT NULL,
+          `exit_code`     tinyint(4)     NOT NULL,
+          `build_epoch`   double         NOT NULL,
+          `hash_id`       char(40)       NOT NULL,
+          `build_host`    varchar(64)    NOT NULL,
+          PRIMARY KEY  (`uuid`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
         """)
-    print("create xalt_library_name table")
+    print("(%d) create xalt_link table" % idx); idx += 1 
+
+    # 3
+    cursor.execute("""
+        CREATE TABLE `xalt_exe_hash` (
+          `hash_id`       char(40)        NOT NULL,
+          `exec_path`     varchar(1024)   NOT NULL,
+          PRIMARY KEY  (`hash_id`),
+          UNIQUE  KEY  `exec_path` (`exec_path`(255))
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 
+        """)
+    print("(%d) create xalt_exe table" % idx);  idx += 1
+
+    # 4
+    cursor.execute("""
+        CREATE TABLE `xalt_exe_uuid` (
+          `uuid`        char(36)        NOT NULL,
+          `exec_path`   varchar(1024)   NOT NULL,
+          PRIMARY KEY  (`uuid`),
+          UNIQUE  KEY  `exec_path` (`exec_path`(255))
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
+        """)
+    print("(%d) create xalt_exe table" % idx); idx += 1
+
+    # 5
+    cursor.execute("""
+        CREATE TABLE `xalt_library_name` (
+          `lib_id`        int(11)         NOT NULL,       
+          `library_name`  varchar(1024)   NOT NULL,
+          PRIMARY KEY  (`lib_id`),
+          UNIQUE  KEY  `library_name` (`library_name`(255))
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
+        """)
+    print("(%d) create xalt_library_name table" % idx ); idx += 1;
     
+    # 6
     cursor.execute("""
         CREATE TABLE `xalt_uuid_lib` (
           `join_id`       int(11)        NOT NULL auto_increment,       
           `lib_id`        int(11)        NOT NULL,       
           `uuid`          char(36)       NOT NULL,
-          PRIMARY KEY  (`join_id`)
-          FOREIGN KEY (`lib_id`) REFERENCES `xalt_library_name`(`lib_id`)
+          PRIMARY KEY  (`join_id`),
+          FOREIGN KEY (`lib_id`) REFERENCES `xalt_library_name`(`lib_id`),
           FOREIGN KEY (`uuid`)   REFERENCES `xalt_link`(`uuid`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
         """)
-    print("create xalt_uuid_lib table")
+    print("(%d) create xalt_uuid_lib table" % idx); idx += 1
     
+    # 7
     cursor.execute("""
         CREATE TABLE `xalt_hash_lib` (
-          `join_id        int(11)        NOT NULL auto_increment,       
+          `join_id`       int(11)        NOT NULL auto_increment,       
           `lib_id`        int(11)        NOT NULL,       
-          `hash_id`       char(36)       NOT NULL,
-          PRIMARY KEY  (`join_id`)
-          FOREIGN KEY (`lib_id`)  REFERENCES `xalt_library_name`(`lib_id`)
-          FOREIGN KEY (`hash_id`) REFERENCES `xalt_exe`(`hash_id`)
+          `hash_id`       char(40)       NOT NULL,
+          PRIMARY KEY  (`join_id`),
+          FOREIGN KEY (`lib_id`)  REFERENCES `xalt_library_name`(`lib_id`),
+          FOREIGN KEY (`hash_id`) REFERENCES `xalt_exe_hash`(`hash_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
         """)
-    print("create xalt_hash_lib table")
+    print("(%d) create xalt_hash_lib table" % idx); idx += 1
     
+    # 8
     cursor.execute("""
         CREATE TABLE `xalt_env_name` (
-          `env_id`        int            NOT NULL,       
-          `env_name`      varchar(1024)  NOT NULL,
-          PRIMARY KEY  (`env_id`)
+          `env_id`        int           NOT NULL,       
+          `env_name`      varchar(64)   NOT NULL,
+          PRIMARY KEY  (`env_id`),
           UNIQUE  KEY  `env_name` (`env_name`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
         """)
-    print("create xalt_library_name table")
+    print("(%d) create xalt_library_name table" % idx); idx += 1
 
+    # 9
     cursor.execute("""
         CREATE TABLE `xalt_hash_env` (
           `join_id`       int(11)        NOT NULL auto_increment,       
-          `env_id`        int(11)        NOT NULL,       
-          `hash_id`       char(36)       NOT NULL,
-          `env_value`     varchar(1024)  NOT NULL,
-          PRIMARY KEY  (`join_id`)
-          FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`)
-          FOREIGN KEY (`hash_id`) REFERENCES `xalt_exe`(`hash_id`)
+          `env_id`        int            NOT NULL,       
+          `hash_id`       char(40)       NOT NULL,
+          `env_value`     varchar(512)   NOT NULL,
+          PRIMARY KEY  (`join_id`),
+          FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
+          FOREIGN KEY (`hash_id`) REFERENCES `xalt_exe_hash`(`hash_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1
         """)
-    print("create xalt_hash_lib table")
+    print("(%d) create xalt_hash_lib table" % idx); idx += 1
 
 
     cursor.close()
