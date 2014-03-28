@@ -1,6 +1,8 @@
 #!/bin/bash
 #-*- shell-script -*-
 
+MY_LD=$0
+
 GEN_ASSEMBLY=/usr/local/bin/xalt_generate_assembly.py
 GEN_LINKDATA=/usr/local/bin/xalt_generate_linkdata.py
 
@@ -8,20 +10,86 @@ AS=/usr/bin/as
 LD=/usr/bin/ld
 UUIDGEN=/usr/bin/uuidgen
 
+ARGV="$@"
+
+########################################################################
+# Safety measure:  check to see if $LD still points to the ld command
+#                  if not then loop over the path the find ld again.
+#                  but making sure to skip over this one.
+if [ ! -x $LD ]; then
+  ORIG_IFS=$IFS
+  IFS=":"
+  for i in $PATH; do
+    LD=$i/ld
+    if [ -x $LD -a $LD != $MY_LD ]; then
+      break
+    fi
+  done
+  IFS=$ORIG_IFS
+fi
+
+
+########################################################################
+# Loop over command line arguments to ld. This code is used instead of
+# getopt and others because this wrapper script should not try to know
+# all the options to ld. Instead we are just "cherry-picking" the options
+# we want to know about.
+
+EXECUTABLE="a.out"
+append=false
+prev=
+done=false
+for option
+do
+  if [ -n "$prev" ]; then
+    eval "$prev=\$option"
+    prev=
+    shift
+    continue
+  fi
+
+  case "$option" in
+    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
+    -*) optarg=;;
+    *) optarg=; done=true;;
+  esac
+  
+  case $option in
+    --version|-v|--help)
+      $LD $ARGV
+      exit
+      ;;
+    -o)
+      prev='EXECUTABLE'
+      ;;
+  esac
+
+  #####################################################################
+  # This code below is commented out.  Since this script is not parsing
+  # all options the done flag won't work.
+
+  #if [ "$done" = "true" ]; then
+  #  break;
+  #fi
+
+  shift
+done
+
 UUID=`$UUIDGEN`
+DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 WRKDIR=/tmp/${USER}_${UUID}
 LINKLINE=$WRKDIR/link.txt
 ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
-RESULT=$HOME/.xalt.d/link.$UUID.json
+RESULT=$HOME/.xalt.d/link.${DATESTR}.$UUID.json
 
 if [ ! -d $WRKDIR ]; then
   mkdir $WRKDIR
 fi
 
-EPOCH=$($GEN_ASSEMBLY $UUID $ARGSRC)
+PSTREE=$(pstree $$)
 
-ARGV="$@"
+EPOCH=$($GEN_ASSEMBLY $UUID $PSTREE $ARGSRC)
 
 $AS $ARGSRC -o $ARGOBJ
 
@@ -29,15 +97,17 @@ $LD $ARGV $ARGOBJ -t > $LINKLINE
 
 STATUS=$?
 
-
-if [ "$(echo $ARGV | grep "\-o")" != "" ]; then
-    EXECUTABLE=`echo $ARGV | sed 's/.*-o \(\S*\) .*/\1/'`
-else
-    EXECUTABLE="a.out"
-fi
-
-
 $GEN_LINKDATA $UUID $STATUS `pwd` $EXECUTABLE $ARGOBJ $EPOCH $LINKLINE $RESULT
+  
+
+if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
+   echo ""                       >> $RESULT
+   echo "====================="  >> $RESULT
+   echo  $LD $ARGV $ARGOBJ       >> $RESULT
+   echo "====================="  >> $RESULT
+
+   cat  $LINKLINE >> $RESULT
+fi
 
 rm -rf $WRKDIR
 

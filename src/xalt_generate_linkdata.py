@@ -29,19 +29,22 @@ def cleanup(xaltobj, fn):
     # -lgcc_s (/usr/lib/gcc/x86_64-linux-gnu/4.8/libgcc_s.so)
     m = parenPat.search(s)
     if (m):
-      d[m.group(1)] = True
+      s    = os.path.abspath(m.group(1))
+      d[s] = True
       continue
-
   
     # Save everything else
     idx = s.find("\n")
     if (idx != -1):
       s = s[:idx]
 
+    s = os.path.abspath(s)
     d[s] = True
 
   # make the list unique  
   sA = d.keys()
+  
+  sA = sorted(sA)
 
   return sA
     
@@ -58,19 +61,25 @@ def main():
   build_epoch = sys.argv[6]
   linklineFn  = sys.argv[7]
   resultFn    = sys.argv[8]
+
+  if (execname.find("conftest") != -1):
+    return 1
   
-  
+  hash_line   = capture(['sha1sum', execname])
+  if (hash_line.find("No such file or directory") != -1):
+    return 1
+  hash_id     = hash_line.split()[0]
 
   # Step one clean up linkline data
   sA = cleanup(xaltobj, linklineFn)
   
   resultT                = {}
-  resultT['link_id']     = uuid
+  resultT['uuid']        = uuid
   resultT['build_user']  = os.environ['USER']
   resultT['exit_code']   = status
   resultT['build_epoch'] = build_epoch
-  resultT['exec_name']  = execname
-  resultT['hash_id']     = capture(['sha1sum', execname]).split()[0]
+  resultT['exec_path']   = os.path.abspath(execname)
+  resultT['hash_id']     = hash_id
   resultT['wd']          = wd
   resultT['build_host']  = socket.getfqdn()
   resultT['linkA']       = sA
@@ -85,14 +94,20 @@ def main():
     
     s = json.dumps(resultT, sort_keys=True, indent=2, separators=(',',': '))
 
-
-
     f = open(tmpFn,'w')
     f.write(s)
+    f.write("\n")
+
+    if (hash_line.find("sha1sum:") != -1):
+      f.write(hash_line)
+
     f.close()
     os.rename(tmpFn, resultFn)
   except (OSError):
-    pass
+    print("failed")
 
+  return 0
 
-if ( __name__ == '__main__'): main()
+if ( __name__ == '__main__'):
+  iret = main()
+  sys.exit(iret)

@@ -3,7 +3,25 @@
 from __future__ import print_function
 import os, sys, socket, time, platform
 
-def print_assembly(uuid, fn, version, epochStr):
+def extract_compiler(pstree):
+  ignoreT = {
+    'pstree'   : True,
+    'ld'       : True,
+    'collect2' : True,
+    }
+    
+  a = pstree.split("---")
+  n = len(a)
+
+  result = "unknown"
+  for cmd in reversed(a):
+    if (not (cmd in ignoreT)):
+      result = cmd
+      break
+
+  return cmd
+
+def print_assembly(uuid, fn, version, compiler, epochStr):
   name    = socket.getfqdn()
   user    = os.environ["USER"]
   osName  = platform.system() + "_%_%_" + platform.release()
@@ -18,6 +36,7 @@ def print_assembly(uuid, fn, version, epochStr):
   f.writelines("\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n")
   f.writelines("\t.asciz \"<XALT_Version>%%"+version+"%%\"\n")
   f.writelines("\t.asciz \"<Build.Machine>%%"+name+"%%\"\n")
+  f.writelines("\t.asciz \"<Build.compiler>%%"+compiler+"%%\"\n")
   f.writelines("\t.asciz \"<Build.OS>%%"+osName+"%%\"\n")
   f.writelines("\t.asciz \"<Build.User>%%"+user+"%%\"\n")
   f.writelines("\t.asciz \"<Build.UUID>%%"+uuid+"%%\"\n")
@@ -30,11 +49,14 @@ def print_assembly(uuid, fn, version, epochStr):
 
 def main():
   uuid     = sys.argv[1]
-  fn       = sys.argv[2]
+  pstree   = sys.argv[2]
+  fn       = sys.argv[3]
   version  = "0.1"
   epochStr = str(time.time())
   
-  print_assembly(uuid, fn, version, epochStr)
+  compiler = extract_compiler(pstree)
+
+  print_assembly(uuid, fn, version, compiler, epochStr)
 
   print(epochStr)
 
