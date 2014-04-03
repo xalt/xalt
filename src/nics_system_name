@@ -16,7 +16,6 @@ sub str2name
                            "kid"      => "kids",
                            "keenland" => "keenland", 
                            "titan"    => "titan",
-                           "mijo"     => "mijo",
                            );
 
   for my $name(keys(%nics_system_names))
