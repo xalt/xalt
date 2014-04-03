@@ -16,13 +16,14 @@ sub str2name
                            "kid"      => "kids",
                            "keenland" => "keenland", 
                            "titan"    => "titan",
+                           "mijo"     => "mijo",
                            );
 
   for my $name(keys(%nics_system_names))
     {
       if ($str =~ m/$name/)
         {
-          $result = nics_system_names{$name};
+          $result = $nics_system_names{$name};
         }
     }
   return $result
