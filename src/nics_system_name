@@ -10,19 +10,19 @@ sub str2name
 
   my $result = "unknown";
 
-  my @nics_system_names = (
-                           "kraken",
-                           "darter",
-                           "kids",
-                           "keenland",
-                           "titan",
+  my %nics_system_names = (
+                           "kraken"   => "kraken",
+                           "darter"   => "darter",
+                           "kid"      => "kids",
+                           "keenland" => "keenland", 
+                           "titan"    => "titan",
                            );
 
-  for my $name(@nics_system_names)
+  for my $name(keys(%nics_system_names))
     {
       if ($str =~ m/$name/)
         {
-          $result = $name;
+          $result = nics_system_names{$name};
         }
     }
   return $result
