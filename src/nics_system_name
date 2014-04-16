@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+# -*- cperl -*-
+use strict;
+use POSIX();
+
+sub str2name
+{
+  my ($str) = @_;
+  $str = lc($str);
+
+  my $result = "unknown";
+
+  my %nics_system_names = (
+                           "kraken"   => "kraken",
+                           "darter"   => "darter",
+                           "kid"      => "kids",
+                           "keenland" => "keenland", 
+                           "titan"    => "titan",
+                           );
+
+  for my $name(keys(%nics_system_names))
+    {
+      if ($str =~ m/$name/)
+        {
+          $result = $nics_system_names{$name};
+        }
+    }
+  return $result
+}
+
+sub main
+{
+  my $host = `hostname -f`;
+  chomp($host);
+
+  my $result = str2name($host);
+
+  if ($result eq "unknown")
+    {
+      my ($sysname, $nodename, $release, $version, $machine) = POSIX::uname();
+      $result = str2name($nodename);
+    }
+  print "$result\n";
+}
+
+main();

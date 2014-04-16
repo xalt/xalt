@@ -1,0 +1,87 @@
+To install Lmod on your system please do the following:
+
+a) Download lua-5.1.4.8 from lmod.sf.net:
+
+    wget http://sourceforge.net/projects/lmod/files/lua-5.1.4.8.tar.gz
+
+b) Read the INSTALL file in the lua tar ball.  If you wish to install the package in:
+     /sw/lua/5.1.4.8  then please do:
+
+     $ CC=gcc ./configure --prefix=/sw
+     $ make; make install
+
+  !!! Note that it is /sw and not /sw/lua/5.1.4.8 !!!
+
+c) Create a module file for lua that adds /sw/lua/lua/bin to the PATH.  The Lua module should
+   not be loaded by default.
+
+
+d) Get the lmod source from github:
+
+     $ git clone https://github.com/TACC/lmod.git
+
+
+e) Install Lmod: Inside the lmod source directory do:
+
+    $ module load lua
+    $ ./configure --prefix=/sw
+    $ make install
+
+   This will install Lmod in /sw/lmod/5.x.y.z with a symbolic link between 5.x.y.z with lmod.
+   After Lmod is installed the lua module does not need to loaded again.
+
+f) Add the following to your startup files.  This will remember the modules you currently have
+   loaded. It will then purge, find lmod, define the module command to use Lmod and reload all
+   the module you had loaded.
+
+    if [ -z "$LMOD_CMD" ]; then
+      CURRENT_MODULES=$LOADEDMODULES
+      CURRENT_MPATH=$MODULEPATH
+      module purge
+      MODULEPATH=$CURRENT_MPATH
+
+      # find lmod
+
+      for i in $HOME/l/pkg/lmod/lmod /sw/lmod/lmod/; do
+        if [ -x $i/libexec/lmod ]; then
+          LMOD_PKG=$i
+          LMOD_DIR=$i/libexec
+          LMOD_CMD=$i/libexec/lmod
+          break
+        fi
+      done
+
+      export BASH_ENV=$LMOD_PKG/init/bash
+      export LMOD_FULL_SETTARG_SUPPORT=full
+      export LMOD_COLORIZE=yes
+      export LMOD_PREPEND_BLOCK=normal
+
+      . $BASH_ENV # > /dev/null
+
+
+
+      moduleA=(`echo $CURRENT_MODULES | sed -e 's/modules[^:]*://' | tr ':' ' '`)
+
+      for i in "${moduleA[@]}"; do
+        module -q load $i
+      done
+    else
+      . $BASH_ENV > /dev/null
+    fi  
+
+
+g) Modify the altd module file to use priority.  Change
+
+        prepend-path PATH           /sw/altd/bin
+
+   To:
+   
+        prepend-path PATH           /sw/altd/bin   1000
+
+
+   I believe that it is safe to add the 1000 and have your default module command read it and
+   it will ignore it but you should check.
+
+
+
+
