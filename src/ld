@@ -3,30 +3,26 @@
 
 MY_LD=$0
 
-GEN_ASSEMBLY=/usr/local/bin/xalt_generate_assembly.py
-GEN_LINKDATA=/usr/local/bin/xalt_generate_linkdata.py
+GEN_ASSEMBLY=/opt/apps/xalt/xalt/bin/xalt_generate_assembly.py
+GEN_LINKDATA=/opt/apps/xalt/xalt/bin/xalt_generate_linkdata.py
 
 AS=/usr/bin/as
-LD=/usr/bin/ld
 UUIDGEN=/usr/bin/uuidgen
 
 ARGV="$@"
 
 ########################################################################
-# Safety measure:  check to see if $LD still points to the ld command
-#                  if not then loop over the path the find ld again.
-#                  but making sure to skip over this one.
-if [ ! -x $LD ]; then
-  ORIG_IFS=$IFS
-  IFS=":"
-  for i in $PATH; do
-    LD=$i/ld
-    if [ -x $LD -a $LD != $MY_LD ]; then
-      break
-    fi
-  done
-  IFS=$ORIG_IFS
-fi
+# Search for `ld' and make sure that you don't find this one.
+# We use "type -p -a" instead of searching the path.  Since bash should
+# have search and cached all the executable in the path.  This should be
+# faster then walking the path.
+
+for exe in $(type -p -a ld); do
+  if [ $exe != $MY_LD ]; then
+    LD=$exe
+    break
+  fi
+done
 
 
 ########################################################################
@@ -35,7 +31,7 @@ fi
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
-EXECUTABLE="a.out"
+EXEC="a.out"
 append=false
 prev=
 done=false
@@ -60,7 +56,7 @@ do
       exit
       ;;
     -o)
-      prev='EXECUTABLE'
+      prev='EXEC'
       ;;
   esac
 
@@ -87,7 +83,7 @@ if [ ! -d $WRKDIR ]; then
   mkdir $WRKDIR
 fi
 
-PSTREE=$(pstree $$)
+PSTREE=$(pstree -s $$)
 
 EPOCH=$($GEN_ASSEMBLY $UUID $PSTREE $ARGSRC)
 
@@ -97,7 +93,7 @@ $LD $ARGV $ARGOBJ -t > $LINKLINE
 
 STATUS=$?
 
-$GEN_LINKDATA $UUID $STATUS `pwd` $EXECUTABLE $ARGOBJ $EPOCH $LINKLINE $RESULT
+$GEN_LINKDATA $UUID $STATUS `pwd` $PSTREE $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
   
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then

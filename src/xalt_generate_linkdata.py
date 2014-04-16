@@ -52,15 +52,34 @@ def capture(cmd):
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE,  stderr=subprocess.STDOUT)
   return p.communicate()[0]
   
+def extract_compiler(pstree):
+  ignoreT = {
+    'pstree'   : True,
+    'ld'       : True,
+    'collect2' : True,
+    }
+    
+  a = pstree.split("---")
+  n = len(a)
+
+  result = "unknown"
+  for cmd in reversed(a):
+    if (not (cmd in ignoreT)):
+      result = cmd
+      break
+
+  return cmd
+
 def main():
   uuid        = sys.argv[1]
   status      = sys.argv[2]
   wd          = sys.argv[3]
-  execname    = sys.argv[4]
-  xaltobj     = sys.argv[5]
-  build_epoch = sys.argv[6]
-  linklineFn  = sys.argv[7]
-  resultFn    = sys.argv[8]
+  pstree      = sys.argv[4]
+  execname    = sys.argv[5]
+  xaltobj     = sys.argv[6]
+  build_epoch = sys.argv[7]
+  linklineFn  = sys.argv[8]
+  resultFn    = sys.argv[9]
 
   if (execname.find("conftest") != -1):
     return 1
@@ -75,6 +94,7 @@ def main():
   
   resultT                = {}
   resultT['uuid']        = uuid
+  resultT['link_name']   = extract_compiler(pstree)
   resultT['build_user']  = os.environ['USER']
   resultT['exit_code']   = status
   resultT['build_epoch'] = build_epoch
