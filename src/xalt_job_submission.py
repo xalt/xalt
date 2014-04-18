@@ -49,6 +49,11 @@ class SystemT(object):
       sysT['job_id']    = "SLURM_JOB_ID"
       sysT['queue']     = "SLURM_QUEUE"
       
+
+
+
+
+
     self.__sysT = sysT
       
   def sysT(self):
@@ -108,11 +113,19 @@ class ExtractXALT(object):
 
 class UserEnvT(object):
   def __init__(self, sysT, args, userExec):
+    envTaskSizeNameA = [ "PMI_SIZE", "OMPI_COMM_WORLD_SIZE" ]
+
+
+    numTasks = 0
+    for taskN in envTaskSizeNameA:
+      numTasks += int(os.environ.get(taskN,"0"))
+
     ltime                 = time.time()
     userT                 = {}
     userT['nodehost']     = socket.getfqdn()
     userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
     userT['user']         = os.environ.get("USER","unknown")
+    userT['num_tasks']    = str(numTasks)
     userT['num_cores']    = os.environ.get(sysT['num_cores'],"0")
     userT['num_nodes']    = os.environ.get(sysT['num_nodes'],"0")
     userT['account']      = os.environ.get(sysT['account'],"unknown")

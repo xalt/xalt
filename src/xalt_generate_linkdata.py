@@ -46,7 +46,15 @@ def cleanup(xaltobj, fn):
   
   sA = sorted(sA)
 
-  return sA
+  sB = []
+  for lib in sA:
+    hash_line = capture(['sha1sum', lib])
+    if (hash_line.find("No such file or directory") != -1):
+      v = "unknown"
+    hash_id = hash_line.split()[0]
+    sB.append([lib, hash_id])
+
+  return sB
     
 def capture(cmd):
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE,  stderr=subprocess.STDOUT)
