@@ -1,0 +1,33 @@
+<!--the include list is the only list of dirs to traverse.  
+    the other "excludes" will be special for those paths -->
+<dirs>
+  <root name='installmask'>
+    <include>
+      <list>lib lib64</list>
+    </include>
+  </root>
+  <root name='/sw/xc30'>
+    <include>
+      <list>*</list>
+    </include>
+    <exclude>
+      <list>altd</list>
+    </exclude>
+  </root>
+  <root name='/opt'>
+    <include>
+      <list>fftw</list>
+    </include>
+    <exclude>
+      <list>interlagos x86_64</list>
+    </exclude>
+  </root>
+  <root name='/opt/cray'>
+    <include>
+      <list>dmapp ga hdf5 hdf5-parallel iobuf libsci mpt netcdf netcdf-hdf5parallel nvidia papi parallel-netcdf perftools petsc stat tpsl trilinos</list>
+    </include>
+    <exclude>
+      <list>interlagos x86_64</list>
+    </exclude>
+  </root>
+</dirs>
