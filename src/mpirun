@@ -5,6 +5,10 @@ MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 ARGV="$@"
 
+JOB_SUBMIT=/opt/apps/xalt/xalt/bin/xalt_job_submission.py
+UUIDGEN=/usr/bin/uuidgen
+
+
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -24,6 +28,7 @@ done
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+EXEC="unknown"
 NTASKS=1
 append=false
 prev=
@@ -47,6 +52,10 @@ do
     --np|-n)
       prev='NTASKS'
       ;;
+    --help|-h)
+      $MY_CMD $ARGV
+      exit
+      ;;
   esac
 
   #####################################################################
@@ -61,7 +70,14 @@ do
 done
 
 
+UUID=`$UUIDGEN`
+DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
+jobFn=$HOME/.xalt.d/job.${DATESTR}.$UUID.json
+
+
+sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0      --fn $jobFn -- $ARGV)
 
 $MY_CMD $ARGV
 
+$JOB_SUBMIT         --ntasks $NTASKS --start $sTime --fn $jobFn -- $ARGV

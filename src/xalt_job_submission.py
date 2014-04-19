@@ -19,6 +19,7 @@ class CmdLineOptions(object):
     parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
     parser.add_argument("--runTime", dest='runTime',   action="store", type=float, default="0.0", help="run time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
+    parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
     parser.add_argument("cmdA",      nargs='+',        help="command line for user program")
 
     args = parser.parse_args()
@@ -48,11 +49,6 @@ class SystemT(object):
       sysT['account']   = "SLURM_TACC_ACCOUNT"
       sysT['job_id']    = "SLURM_JOB_ID"
       sysT['queue']     = "SLURM_QUEUE"
-      
-
-
-
-
 
     self.__sysT = sysT
       
@@ -112,30 +108,25 @@ class ExtractXALT(object):
 
 
 class UserEnvT(object):
-  def __init__(self, sysT, args, userExec):
-    envTaskSizeNameA = [ "PMI_SIZE", "OMPI_COMM_WORLD_SIZE" ]
+  def __init__(self, sysT, startT, endT, args, userExec):
 
-
-    numTasks = 0
-    for taskN in envTaskSizeNameA:
-      numTasks += int(os.environ.get(taskN,"0"))
 
     ltime                 = time.time()
     userT                 = {}
     userT['nodehost']     = socket.getfqdn()
     userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
     userT['user']         = os.environ.get("USER","unknown")
-    userT['num_tasks']    = str(numTasks)
+    userT['num_tasks']    = args.ntasks
     userT['num_cores']    = os.environ.get(sysT['num_cores'],"0")
     userT['num_nodes']    = os.environ.get(sysT['num_nodes'],"0")
     userT['account']      = os.environ.get(sysT['account'],"unknown")
     userT['job_id']       = os.environ.get(sysT['job_id'],"unknown")
     userT['queue']        = os.environ.get(sysT['queue'],"unknown")
-    userT['start_date']   = time.strftime("%c",time.localtime(args.startTime))
-    userT['start_time']   = args.startTime
+    userT['start_date']   = time.strftime("%c",time.localtime(startT))
+    userT['start_time']   = startT
     userT['currentEpoch'] = ltime
-    userT['end_time']     = args.endTime
-    userT['run_time']     = args.runTime
+    userT['end_time']     = endT
+    userT['run_time']     = max(0, endT - startT)
     userT['exec']         = userExec.execName()
     userT['exec_type']    = userExec.execType()
     userT['exec_epoch']   = userExec.execEpoch()
@@ -211,8 +202,105 @@ class UserExec(object):
       'getmode_affinity' : True,
     }
 
-    cmd = None
-    for arg in argA:
+    argT = {
+      '-am'                       : 1,
+      '--app'                     : 1,
+      '-c'                        : 1,
+      '-n'                        : 1,
+      '-np'                       : 1,
+      '-cf'                       : 1,  
+      '--cartofile'               : 1,
+      '-cpus-per-proc'            : 1,
+      '--cpus-per-proc'           : 1,
+      '-cpus-per-rank'            : 1,
+      '--cpus-per-rank'           : 1,
+      '-H'                        : 1,
+      '-host'                     : 1,
+      '--host'                    : 1,
+      '-launch-agent'             : 1,
+      '--launch-agent'            : 1,
+      '-machinefile'              : 1,
+      '--machinefile'             : 1,
+      '-mca'                      : 2,
+      '--mca'                     : 2,
+      '-nperboard'                : 1,
+      '--nperboard'               : 1,
+      '-npernode'                 : 1,
+      '--npernode'                : 1,
+      '-npersocket'               : 1,
+      '--npersocket'              : 1,
+      '-num-boards'               : 1,
+      '--num-boards'              : 1,
+      '-num-cores'                : 1,
+      '--num-cores'               : 1,
+      '-num-socket'               : 1,
+      '--num-socket'              : 1,
+      '-ompi-server'              : 1,
+      '--ompi-server'             : 1,
+      '-output-filename'          : 1,
+      '--output-filename'         : 1,
+      '-path'                     : 1,
+      '--path'                    : 1,
+      '--prefix'                  : 1,
+      '--preload-files'           : 1,     
+      '--preload-files-dest-dir'  : 1,
+      '-report-events'            : 1,     
+      '--report-events'           : 1,     
+      '-report-pid'               : 1,     
+      '--report-pid'              : 1,     
+      '-report-uri'               : 1,     
+      '--report-uri'              : 1,     
+      '-rf'                       : 1,     
+      '--rankfile'                : 1,     
+      '-server-wait-time'         : 1,
+      '--server-wait-time'        : 1,
+      '-slot-list'                : 1,
+      '--slot-list'               : 1,
+      '-stdin'                    : 1,
+      '--stdin'                   : 1,
+      '-stride'                   : 1,
+      '--stride'                  : 1,
+      '-tmpdir'                   : 1,
+      '--tmpdir'                  : 1,
+      '-wd'                       : 1,
+      '--wd'                      : 1,
+      '-wdir'                     : 1,
+      '--wdir'                    : 1,
+      '-xml'                      : 1,
+      '--xml'                     : 1,
+      '-xml-file'                 : 1,
+      '--xml-file'                : 1,
+      '-xterm'                    : 1,
+      '--xterm'                   : 1,
+
+      #mpich
+      '-genv'                     : 2,
+      '-genvlist'                 : 1,
+      '-f'                        : 1,
+      '-hosts'                    : 1,
+      '-configfile'               : 1,
+      '-launcher'                 : 1,
+      '-launcher-exec'            : 1,
+      '-rmk'                      : 1,
+    }
+
+    N   = len(argA)
+
+    i   = 0
+    while (i < N):
+      arg = argA[i]
+      n   = argT.get(arg,-1)
+      if (n > 0):
+        i += n + 1
+        continue
+      if (arg[0:1] == "-"):
+        i  = i + 1
+        continue
+      break
+
+    while (i < N):
+      arg = argA[i]
+      i   = i + 1
       bare = os.path.basename(arg)
       if (not (bare in ignoreT)):
         cmd = arg
@@ -273,13 +361,23 @@ class EnvT(object):
 
 def main():
 
+  myEpoch  = time.time() 
+  epochStr = "%.5f" % myEpoch
+
   # parse command line options:
   args = CmdLineOptions().execute()
   
+  if (args.startTime < 1):
+    startTime = myEpoch
+    endTime   = 0
+  else:
+    startTime = args.startTime
+    endTime   = myEpoch
+    
 
   sysT     = SystemT().sysT()
   userExec = UserExec(args.cmdA)
-  userT    = UserEnvT(sysT, args, userExec).userT()
+  userT    = UserEnvT(sysT, startTime, endTime, args, userExec).userT()
   
   submitT              = {}
   submitT['userT']     = userT
@@ -305,5 +403,7 @@ def main():
   except (OSError):
     pass
 
+  if (args.startTime < 1):
+    print(epochStr)
 
 if ( __name__ == '__main__'): main()
