@@ -1,0 +1,233 @@
+#!/bin/bash
+#
+# ALTD ld wrapper script
+# 
+# Authors:
+#   Blake Hitchcock
+#   Mark Fahey
+#   Nick Jones
+#
+#
+#
+# Copyright (c) 2010 The University of Tennessee
+# Copyright (c) 2010 UT-Batelle LLC
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ARGV="$@"
+
+# assuming real ld has been renamed to ld.x and
+# "ld.x" and "as" are in the default path (like /usr/bin)
+
+#LD=ld.x
+
+#LD=/usr/bin/ld
+#LD=/opt/cray/cce/7.3.3/cray-binutils/x86_64-unknown-linux-gnu/bin/ld
+#-- Replace to fix linking issue with cce/8.2.x
+#LD=/usr/bin/ld
+LD=${LINKER_X86_64:-/usr/bin/ld}
+
+AS=as
+
+### the following not needed if set in modulefile
+#if [ -z $ALTD_PATH ]; then  
+#  # hardcoded for now, should be set in /etc/login f
+#  export ALTD_PATH=/sw/tools/altd
+#fi
+#. $ALTD_PATH/etc/altd.conf
+
+# Append x in the test string to avoid potential error with empty string
+# ref: http://tldp.org/LDP/abs/html/comparison-ops.html
+#
+# Then determine if ALTD is on (for selected users or everyone).
+# If not, just do link without tracking as expected.
+# If on, do some checking of ALTD environment variables.
+#
+if [ "x$ALTD_ON" = "x1" -a "x$ALTD_SELECT_ON" = "x1" ]; then
+    if ["x$ALTD_VERBOSE" = "x1" ]; then
+        echo "ALTD_ON and ALTD_SELECT_ON cannot be set at same time"
+    fi    
+    $LD $ARGV
+    exit $?
+elif [ "x$ALTD_ON" != "x1" -a "x$ALTD_SELECT_ON" != "x1" ]; then
+    if [ "x$ALTD_VERBOSE" = "x1" ]; then
+        echo "Nor ALTD_ON and ALTD_SELECT_ON are set"
+    fi
+    $LD $ARGV
+    exit $?
+elif [ "x$ALTD_ON" = "x1" -o "x$ALTD_SELECT_ON" = "x1" ] && [ "x$ALTD_PATH" = "x" ]; then  
+    if [ "x$ALTD_VERBOSE" = "x1" ]; then
+        echo "No ALTD_PATH is set"
+    fi
+    $LD $ARGV
+    exit $?
+elif [ "x$ALTD_SELECT_ON" = "x1" -a "x$ALTD_SELECT_USERS" = "x" ]; then
+    if [ "x$ALTD_VERBOSE" = "x1" ]; then
+        echo "ALTD_SELECT_ON is set, but ALTD_SELECT_USERS is not set"
+    fi
+    $LD $ARGV
+    exit $?
+fi
+
+
+
+# Python helper script - interfaces with database, and does other aux stuff
+
+SCRIPT=$ALTD_PATH/bin/pyLD.py
+
+
+[[ "$#" -eq 0 ]] && \
+    echo "Usage: $0 ld-args ..." && \
+    exit 1
+
+#  This makes the ld wrapper play nicer with real a few ld options - does
+#  the right thing when --version or --help is specified.
+#  Looks for any of help, version, or v and then calls real ld.
+for i in $*
+do
+   if [[ $i == "--help" || $i == "--version" || $i == "-v" ]]; then
+      $LD $ARGV
+      exit 1
+   fi
+done
+
+# Create a workspace to hold temporary information
+echo here $$
+WRKDIR=/tmp/`date +%s`
+mkdir $WRKDIR
+# Do we really need to exit if the directory already exists?
+if [[ $? -ne 0 ]]; then
+    if [ "x$ALTD_VERBOSE" = "x1" ]; then
+        echo "Cannot create temp folder"
+    fi
+    # print -u2 "FATAL: Can not create temporary directory '$WRKDIR'" && \
+    # email the above
+    $LD $ARGV
+    exit $?
+fi
+
+
+# Temporary files;  WRKDIR gets removed later
+TRACEMAP=$WRKDIR/trace.txt
+FINAL=$WRKDIR/final.txt
+UNIQUE=$WRKDIR/unique.txt
+ARGSRC=$WRKDIR/ldArgs.s
+ARGOBJ=$WRKDIR/ldArgs.o
+INC=$WRKDIR/id_ld.txt
+
+
+# generate assembly code to link into executable and
+# put entry in link_tags table
+#sudo -u altd $SCRIPT --gen_assembly $ARGSRC 2> $INC
+$SCRIPT --gen_assembly $ARGSRC 2> $INC
+NSTAT=$?
+TAG_ID=`cat $INC`
+
+# If either our program crashed or we were unable to do a table
+# insert, we want to go ahead and call ld.x and exit
+
+if [[ $NSTAT -ne 0 ]] || [[ $TAG_ID -eq 0 ]]; then
+    # email an error or something
+    if [ "x$ALTD_VERBOSE" = "x1" ]; then
+        echo "ALTD script failed" $NSTAT $TAG_ID
+    fi
+    $LD $ARGV
+    exit $?
+fi
+
+
+
+# build assembly code
+$AS $ARGSRC -o $ARGOBJ
+# link original executable with our assembly code as well
+$LD $ARGV $ARGOBJ -t > $TRACEMAP
+# Store ld exit status
+STATUS=$?
+
+# By exiting on errors now, we don't get an entry in the linkline table
+# that corresponds to the failed link.  Should the link_tags entry be
+# deleted if no linkline entry is made?
+# If we don't exit, we lose the ability of the real ld to deal with errors
+# and risk passing some malformed ARGV to our scripts.
+if [[ $STATUS -ne 0 ]]; then
+        exit $STATUS
+fi
+
+# If user requests tracemap option, we echo the results.
+for t in $ARGV
+do
+    if [ $t = "-t" ]; then
+        echo `cat $TRACEMAP`
+        break
+    fi
+done    
+
+
+# Get Executable name
+
+if [ "$(echo $ARGV | grep "\-o")" != "" ];
+then
+    EXECUTABLE=`echo $ARGV | sed 's/.*-o \(\S*\) .*/\1/'`
+else
+    EXECUTABLE="a.out"
+fi
+
+# do an intentional failed link minus the libraries to get functions calls
+# make sure to not overwrite succesful executable!
+# take $ARGV and remove libraries 
+# so call python script with $ARGV, have python print out new $ARGV, and
+# ahve the shell do something like $ARGV2=`python script` to catch output
+
+echo ARGV $ARGV
+ARGVBAK=$ARGV
+export ARGV=$ARGV
+NEWARGV=`/nics/d/home/faheymr/Python/StripLibs.py`
+unset ARGV
+ARGV=$ARGVBAK
+echo NEWARGV $NEWARGV
+
+# link minus libraries
+$LD $NEWARGV --unresolved-symbols=report-all -o /dev/null > FUNCLIST 2>&1
+
+
+# strip off the "(*).*o"s from the library name
+sed 's/(\([.]*\/.*\.a\).*[.o|.so]*/\1/g' $TRACEMAP | uniq > $UNIQUE
+
+# strip off any lines surrounded by parens
+sed 's/(\(.*\))/\1/g' $UNIQUE > $FINAL
+
+# get rid of colons and new lines
+LINKLINE=`sed '/:/d' $FINAL | tr '\n' ' '`
+
+# remove our created object file from the line
+LINKLINE=`echo $LINKLINE | sed "s|${ARGOBJ}||g"`
+
+# remove the object file created by the compiler from the line
+LINKLINE=`echo $LINKLINE | sed 's|/tmp/[_a-zA-Z0-9-]*\(.o\)||g'`
+
+# use tracemap output from ld.x and store that in linkline table
+# with pointer to entry in link_tags table
+#sudo -u altd $SCRIPT --store_line $TAG_ID $STATUS $EXECUTABLE $LINKLINE 
+$SCRIPT --store_line $TAG_ID $STATUS $EXECUTABLE $LINKLINE 
+
+# Comment out this line to obtain more information for debugging.
+rm -rf $WRKDIR
+
+exit $STATUS
