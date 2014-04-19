@@ -89,6 +89,7 @@ def main():
           `link_id`       int(11)        NOT NULL auto_increment,
           `uuid`          char(36)       NOT NULL,
           `hash_id`       char(40)       NOT NULL,
+          `timestamp`     TIMESTAMP,
           `link_name`     varchar(10)    NOT NULL,
           `build_user`    varchar(64)    NOT NULL,
           `build_host`    varchar(64)    NOT NULL,
@@ -108,6 +109,7 @@ def main():
           `object_path`   varchar(1024)   NOT NULL,
           `uuid`          char(36)                ,
           `hash_id`       char(40)        NOT NULL,
+          `timestamp`     TIMESTAMP,
           `lib_type`      char(2)         NOT NULL,
           PRIMARY KEY  (`obj_id`),
           INDEX  `index_uuid`    (`uuid`),
@@ -136,6 +138,7 @@ def main():
         CREATE TABLE `xalt_job` (
           `run_id`        int(11)        NOT NULL auto_increment,
           `job_id`        int(11)        NOT NULL,
+          `timestamp`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           `host`          varchar(64)    NOT NULL,
           `uuid`          char(36)               ,
           `hash_id`       char(40)       NOT NULL,
