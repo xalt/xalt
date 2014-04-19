@@ -16,23 +16,6 @@ def readFromUser():
   PASSWD=getpass.getpass("Database pass:")
   DB=raw_input("Database name:")
 
-def writeConfig():
-  config=ConfigParser.ConfigParser()
-  config.add_section("MYSQL")
-  config.set("MYSQL","HOST",HOST)
-  config.set("MYSQL","USER",USER)
-  config.set("MYSQL","PASSWD",base64.b64encode(PASSWD))
-  config.set("MYSQL","DB",DB)
-
-  t=time.strftime("%m%d%H%M%Y")
-  f=open(ConfigBaseNm+t,'w')
-  config.write(f)
-  f.close()
-  os.chmod(ConfigBaseNm+t,0640)
-  if (os.path.exists(ConfigFn)):
-    os.remove(ConfigFn)
-  os.symlink(ConfigBaseNm+t,ConfigFn)
-
 def readConfig():
   try:
     global HOST,USER,PASSWD,DB
@@ -49,14 +32,10 @@ def readConfig():
 
 
 
+
 def main():
   if(os.path.exists('xalt_db.conf')):
-    print ("XALT database configuration file exists!")
-    q=raw_input("Do you want to use the file to fill database information?[y/n]")
-    if(q.lower() == "y"):
-      readConfig()
-    else:
-      readFromUser()
+    readConfig()
   else:
     readFromUser()
 
@@ -67,10 +46,30 @@ def main():
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 
+
+
+
+
+
+
+
+
+
+
+
+
   #writeConfig()
   # create database and related tables
   try:
     cursor = conn.cursor()
+
+    
+
+
+
+
+
+
 
     # If MySQL version < 4.1, comment out the line below
     cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")

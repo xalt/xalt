@@ -83,7 +83,7 @@ if [ ! -d $WRKDIR ]; then
   mkdir -p $WRKDIR
 fi
 
-PSTREE=$(pstree -s $$)
+PSTREE=$(pstree -l -s $$)
 
 EPOCH=$($GEN_ASSEMBLY $UUID $PSTREE $ARGSRC)
 
@@ -94,7 +94,6 @@ $LD $ARGV $ARGOBJ -t > $LINKLINE
 STATUS=$?
 
 $GEN_LINKDATA $UUID $STATUS `pwd` $PSTREE $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
-  
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    echo ""                       >> $RESULT

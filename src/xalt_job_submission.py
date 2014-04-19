@@ -16,8 +16,6 @@ class CmdLineOptions(object):
   def execute(self):
     parser = argparse.ArgumentParser()
     parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
-    parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
-    parser.add_argument("--runTime", dest='runTime',   action="store", type=float, default="0.0", help="run time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
     parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
     parser.add_argument("cmdA",      nargs='+',        help="command line for user program")
@@ -181,6 +179,7 @@ class UserExec(object):
     lineA = ldd.split('\n')
 
     libA = []
+    d    = {}
     for line in lineA:
       fieldA = line.split()
       N      = len(fieldA)
@@ -188,11 +187,27 @@ class UserExec(object):
       if (N < 1):
         break
       elif (N == 4):
-        libA.append(fieldA[2])
+        lib = fieldA[2]
       else:
-        libA.append(fieldA[0])
+        lib = fieldA[0]
+      lib = os.path.realpath(lib)
+      d[lib] = True
+    
+    libA = d.keys()
+    libA = sorted(libA)
+    
+    libB = []
+    for lib in libA:
+      hash_line = capture(['sha1sum', lib])
+      if (hash_line.find("No such file or directory") != -1):
+        v = "unknown"
+      else:
+        v = hash_line.split()[0]
 
-    return libA
+      libB.append([lib, v])
+      
+
+    return libB
 
   def __findUserExec(self, argA):
     ignoreT = {
@@ -344,9 +359,18 @@ class EnvT(object):
       re.compile(r'^PS1$'),
       re.compile(r'^_.*$'),
     ]
+    keepT = {
+      '_LMFILES_' : True,
+    }
+
 
     envT = {}
     for k in os.environ:
+
+      if (k in keepT):
+        envT[k] = os.environ[k]
+        continue
+
       keep = True
       for pat in ignoreKeyA:
         m = pat.search(k)
@@ -385,7 +409,6 @@ def main():
   submitT['libA']      = userExec.libA()
   submitT['envT']      = EnvT().envT()
   submitT['hash']      = userExec.hash()
-  
   
   dirname,fn = os.path.split(os.path.abspath(args.resultFn))
   tmpFn      = os.path.join(dirname, "." + fn)

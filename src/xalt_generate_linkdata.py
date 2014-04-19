@@ -29,7 +29,7 @@ def cleanup(xaltobj, fn):
     # -lgcc_s (/usr/lib/gcc/x86_64-linux-gnu/4.8/libgcc_s.so)
     m = parenPat.search(s)
     if (m):
-      s    = os.path.abspath(m.group(1))
+      s    = os.path.realpath(m.group(1))
       d[s] = True
       continue
   
@@ -38,7 +38,7 @@ def cleanup(xaltobj, fn):
     if (idx != -1):
       s = s[:idx]
 
-    s = os.path.abspath(s)
+    s = os.path.realpath(s)
     d[s] = True
 
   # make the list unique  
@@ -50,9 +50,10 @@ def cleanup(xaltobj, fn):
   for lib in sA:
     hash_line = capture(['sha1sum', lib])
     if (hash_line.find("No such file or directory") != -1):
-      v = "unknown"
-    hash_id = hash_line.split()[0]
-    sB.append([lib, hash_id])
+      continue
+    else:
+      v = hash_line.split()[0]
+    sB.append([lib, v])
 
   return sB
     
