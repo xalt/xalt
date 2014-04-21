@@ -1,82 +1,28 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-import os, sys, re, base64
-import MySQLdb, ConfigParser, getpass, time
-import warnings
-warnings.filterwarnings("ignore", "Unknown table.*")
+from XALTdb     import XALTdb
+import os, sys, re, MySQLdb
 
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 
-def readFromUser():
-  global HOST,USER,PASSWD,DB
-  HOST=raw_input("Database host:")
-  USER=raw_input("Database user:")
-  PASSWD=getpass.getpass("Database pass:")
-  DB=raw_input("Database name:")
-
-def writeConfig():
-  config=ConfigParser.ConfigParser()
-  config.add_section("MYSQL")
-  config.set("MYSQL","HOST",HOST)
-  config.set("MYSQL","USER",USER)
-  config.set("MYSQL","PASSWD",base64.b64encode(PASSWD))
-  config.set("MYSQL","DB",DB)
-
-  t=time.strftime("%m%d%H%M%Y")
-  f=open(ConfigBaseNm+t,'w')
-  config.write(f)
-  f.close()
-  os.chmod(ConfigBaseNm+t,0640)
-  if (os.path.exists(ConfigFn)):
-    os.remove(ConfigFn)
-  os.symlink(ConfigBaseNm+t,ConfigFn)
-
-def readConfig():
-  try:
-    global HOST,USER,PASSWD,DB
-    config=ConfigParser.ConfigParser()
-    config.read(ConfigFn)
-    HOST=config.get("MYSQL","HOST")
-    USER=config.get("MYSQL","USER")
-    PASSWD=base64.b64decode(config.get("MYSQL","PASSWD"))
-    DB=config.get("MYSQL","DB")
-  except ConfigParser.NoOptionError, err:
-    sys.stderr.write("\nCannot parse the config file\n")
-    sys.stderr.write("Switch to user input mode...\n\n")
-    readFromUser()
-
 
 
 def main():
-  if(os.path.exists('xalt_db.conf')):
-    print ("XALT database configuration file exists!")
-    q=raw_input("Do you want to use the file to fill database information?[y/n]")
-    if(q.lower() == "y"):
-      readConfig()
-    else:
-      readFromUser()
-  else:
-    readFromUser()
 
-  # connect to the MySQL server
-  try:
-    conn = MySQLdb.connect (HOST,USER,PASSWD)
-  except MySQLdb.Error, e:
-    print ("Error %d: %s" % (e.args[0], e.args[1]))
-    sys.exit (1)
+  xalt = XALTdb(ConfigFn)
+  db   = xalt.db()
 
-  #writeConfig()
-  # create database and related tables
   try:
+    conn   = xalt.connect()
     cursor = conn.cursor()
 
     # If MySQL version < 4.1, comment out the line below
     cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
     # If the database does not exist, create it, otherwise, switch to the database.
-    cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" % DB)
-    cursor.execute("USE "+DB)
+    cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" % xalt.db())
+    cursor.execute("USE "+xalt.db())
 
     idx = 1
 

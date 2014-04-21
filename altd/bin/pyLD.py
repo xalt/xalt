@@ -140,11 +140,13 @@ class ALTD_LD(object):
         if(not self.isConnected):
             inc_id=0
         else:
-            query = "INSERT INTO altd_%s_link_tags VALUES (NULL, '%d', '%s', '%d', NOW())" % (self.machine,0,self.username,-1)
+            query = "INSERT INTO altd_%s_link_tags VALUES (NULL, '%d', '%s', '%d', NOW())" %
+                                                       (self.machine,0,self.username,-1)
             try:
                 self.conn.query(query)
                 inc_id = self.conn.insert_id()
-                log.info("username=%s hostname=%s pos=%ld LD_SUC_INFO" % (self.username, self.machine, inc_id))
+                log.info("username=%s hostname=%s pos=%ld LD_SUC_INFO" %
+                         (self.username, self.machine, inc_id))
             except MySQLdb.Error, err:
                 log.exception(err)
         # Write to stderr for ld script to read in
