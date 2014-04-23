@@ -101,17 +101,17 @@ def main():
   # Step one clean up linkline data
   sA = cleanup(xaltobj, linklineFn)
   
-  resultT                = {}
-  resultT['uuid']        = uuid
-  resultT['link_name']   = extract_compiler(pstree)
-  resultT['build_user']  = os.environ['USER']
-  resultT['exit_code']   = status
-  resultT['build_epoch'] = build_epoch
-  resultT['exec_path']   = os.path.abspath(execname)
-  resultT['hash_id']     = hash_id
-  resultT['wd']          = wd
-  resultT['build_host']  = socket.getfqdn()
-  resultT['linkA']       = sA
+  resultT                 = {}
+  resultT['uuid']         = uuid
+  resultT['link_program'] = extract_compiler(pstree)
+  resultT['build_user']   = os.environ['USER']
+  resultT['exit_code']    = status
+  resultT['build_epoch']  = build_epoch
+  resultT['exec_path']    = os.path.abspath(execname)
+  resultT['hash_id']      = hash_id
+  resultT['wd']           = wd
+  resultT['build_host']   = socket.getfqdn()
+  resultT['linkA']        = sA
   
   dirname,fn = os.path.split(resultFn)
 

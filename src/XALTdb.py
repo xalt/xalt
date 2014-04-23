@@ -33,7 +33,7 @@ class XALTdb(object):
       sys.stderr.write("Switch to user input mode...\n\n")
       self.__readFromUser()
 
-  def connect(self):
+  def connect(self, db = None):
     if(os.path.exists(self.__confFn)):
       self.__readConfig(self.__confFn)
     else:
@@ -41,6 +41,14 @@ class XALTdb(object):
 
     try:
       self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
+      if (db):
+        cursor = self.__conn.cursor()
+        
+        # If MySQL version < 4.1, comment out the line below
+        cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+        cursor.execute("USE "+xalt.db())
+
+
     except MySQLdb.Error, e:
       print ("Error %d: %s" % (e.args[0], e.args[1]))
       sys.exit (1)

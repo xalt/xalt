@@ -1,0 +1,85 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+findName()
+{
+  EXPR=expr
+  if type -p gexpr ; then
+    EXPR=gexpr
+  fi
+
+  if type -p mpiname ; then
+    mpiN=`mpiname -n`
+    mpiV=`mpiname -v`
+    return
+  fi
+
+
+  if type -p mpich2version ; then
+    mpiN=MPICH2
+    mpiV=`mpich2version | head -1`
+    mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
+    return
+  fi 
+  
+  if type -p mpichversion ; then
+    mpiN=MPICH
+    mpiV=`mpichversion | head -1`
+    mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
+    return
+  fi
+
+  mpiexec -V 2> /tmp/mpi$$ 
+  if [ $? = 0 ]; then
+   mpiN="openmpi"
+   mpiV=`head -1 /tmp/mpi$$`
+   mpiV=`$EXPR "$mpiV" : '.*)\s\+\(.*\)'`
+   rm /tmp/mpi$$
+   return
+  fi
+  rm /tmp/mpi$$
+
+  for i in mpiexec mpiexec.hydra ; do
+    if type -p $i ; then
+      MPIEXEC=$i
+    fi
+  done
+  
+  var=$($MPIEXEC -info)
+  if [ $? = 0 ]; then
+    mpiN="mvapich2"
+    mpiV=`$EXPR "$var" : '.*Version:\s\s*\([^ ]*\) '`
+    return
+  fi
+
+  var=$(mpicc -v 2> /dev/null)
+  cmd=${var:0:5}
+  if [ "$cmd" = mpicc ]; then
+    mpiN="mvapich2"
+    mpiV=`$EXPR "$var" : '.* \([^ ]*\)$'`
+    return
+  fi
+}
+
+
+mpiN="UnknownMPI"
+mpiV="0.0"
+
+findName > /dev/null 2>&1
+
+mpiFV=$mpiV
+mpiV=$(echo $mpiV | sed -e 's/[PpRr].*//')
+
+mpiA=($(echo $mpiV | tr '\.' ' '))
+mpiV="${mpiA[0]}.${mpiA[1]}"
+
+
+if [ "$1" = "-dumpversion" ]; then
+  echo $mpiV
+elif [ "$1" = "--name" ]; then
+  echo $mpiN
+else
+  echo "$mpiN $mpiFV"
+fi
+
+

@@ -35,8 +35,8 @@ def main():
           `link_id`       int(11)        NOT NULL auto_increment,
           `uuid`          char(36)       NOT NULL,
           `hash_id`       char(40)       NOT NULL,
-          `timestamp`     TIMESTAMP,
-          `link_name`     varchar(10)    NOT NULL,
+          `date`          DATETIME       NOT NULL,
+          `link_program`  varchar(10)    NOT NULL,
           `build_user`    varchar(64)    NOT NULL,
           `build_host`    varchar(64)    NOT NULL,
           `build_epoch`   double         NOT NULL,
@@ -53,12 +53,11 @@ def main():
         CREATE TABLE `xalt_object` (
           `obj_id`        int(11)         NOT NULL auto_increment,
           `object_path`   varchar(1024)   NOT NULL,
-          `uuid`          char(36)                ,
+          `build_host`    varchar(64)     NOT NULL,
           `hash_id`       char(40)        NOT NULL,
-          `timestamp`     TIMESTAMP,
+          `timestamp`     TIMESTAMP               ,
           `lib_type`      char(2)         NOT NULL,
           PRIMARY KEY  (`obj_id`),
-          INDEX  `index_uuid`    (`uuid`),
           INDEX  `index_hash_id` (`hash_id`),
           UNIQUE KEY `thekey` (`object_path`(512), `hash_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
@@ -84,7 +83,7 @@ def main():
         CREATE TABLE `xalt_job` (
           `run_id`        int(11)        NOT NULL auto_increment,
           `job_id`        int(11)        NOT NULL,
-          `timestamp`     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          `date`          datetime       NOT NULL,
           `host`          varchar(64)    NOT NULL,
           `uuid`          char(36)               ,
           `hash_id`       char(40)       NOT NULL,

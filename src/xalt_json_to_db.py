@@ -1,207 +1,128 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-import os, sys, re, base64
-import MySQLdb, ConfigParser, getpass, time
+from XALTdb     import XALTdb
+from fnmatch    import fnmatch
+import os, sys, re, MySQLdb, json, time
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 
-def readFromUser():
-  global HOST,USER,PASSWD,DB
-  HOST=raw_input("Database host:")
-  USER=raw_input("Database user:")
-  PASSWD=getpass.getpass("Database pass:")
-  DB=raw_input("Database name:")
 
-def readConfig():
-  try:
-    global HOST,USER,PASSWD,DB
-    config=ConfigParser.ConfigParser()
-    config.read(ConfigFn)
-    HOST=config.get("MYSQL","HOST")
-    USER=config.get("MYSQL","USER")
-    PASSWD=base64.b64decode(config.get("MYSQL","PASSWD"))
-    DB=config.get("MYSQL","DB")
-  except ConfigParser.NoOptionError, err:
-    sys.stderr.write("\nCannot parse the config file\n")
-    sys.stderr.write("Switch to user input mode...\n\n")
-    readFromUser()
+def files_in_tree(path, pattern):
+  fileA = []
+  wd = os.getcwd()
+  if (not os.path.isdir(path)):
+    return fileA
 
+  os.chdir(path)
+  path = os.getcwd()
+  os.chdir(wd)
 
+  for root, dirs, files in os.walk(path):
+    for name in files:
+      fn = os.path.join(root, name)
+      if (fnmatch(fn,pattern)):
+        fileA.append(fn)
+  return fileA  
 
+def passwd_generator():
+  xaltUserA = os.environ.get("XALT_USERS")
+  if (xaltUserA):
+    for user in xaltUserA.split(":"):
+      yield user, os.path.expanduser("~" + user)
 
-def main():
-  if(os.path.exists('xalt_db.conf')):
-    readConfig()
   else:
-    readFromUser()
+    passwd = open("/etc/passwd","r")
+    for line in passwd:
+      (username, encrypwd, uid, gid, gecos, homedir, usershell) = line.split(':') 
+      yield username, homedir
+    passwd.close()
 
-  # connect to the MySQL server
+numberPat = re.compile(r'[0-9][0-9]*')
+def obj_type(object_path):
+  result = None
+  a      = object_path.split('.')
+  for entry in reversed(a):
+    m = numberPat.search(entry)
+    if (m):
+      continue
+    else:
+      result = entry
+      break
+  return result
+
+
+def link_json_to_db(xalt, user, linkFnA):
+
   try:
-    conn = MySQLdb.connect (HOST,USER,PASSWD)
+    for fn in linkFnA:
+      f     = open(fn,"r")
+      linkT = json.loads(f.read())
+      f.close()
+      conn   = xalt.connect()
+      query  = "USE "+xalt.db()
+      conn.query(query)
+      query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
+      conn.query(query)
+      result = conn.store_result()
+      if (result.num_rows() > 0):
+        continue
+
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(linkT['build_epoch'])))
+      # It is unique: lets store this link record
+      query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
+               linkT['uuid'], linkT['hash_id'], dateTimeStr, linkT['link_program'], 
+               linkT['build_user'], linkT['build_host'], float(linkT['build_epoch']),
+               int(linkT['exit_code']), linkT['exec_path'])
+      conn.query(query)
+      link_id = conn.insert_id()
+      print("link_id: ",link_id)
+
+      for entryA in linkT['linkA']:
+        object_path = entryA[0]
+        hash_id     = entryA[1]
+
+        query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND build_host='%s'"
+        conn.query(query)
+        result = conn.store_result()
+        if (result.num_rows() > 0):
+          row    = result.fetch_row()
+          obj_id = int(row[0][0])
+          print("found old obj_id: ",obj_id)
+        else:
+          obj_kind = obj_type(object_path)
+
+          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',NOW(),'%s') " % (
+                      object_path, linkT['build_host'], hash_id, obj_kind)
+          conn.query(query)
+          obj_id   = conn.insert_id()
+          print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path)
+
+        # Now link libraries to xalt_link record:
+        query = "INSERT into join_link_object VALUES (NULL,'%d','%d') " % (obj_id, link_id)
+        conn.query(query)
+
+
   except MySQLdb.Error, e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-  #writeConfig()
-  # create database and related tables
-  try:
-    cursor = conn.cursor()
-
     
+  
 
+def main():
+  xalt = XALTdb(ConfigFn)
 
-
-
-
-
-
-    # If MySQL version < 4.1, comment out the line below
-    cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
-    # If the database does not exist, create it, otherwise, switch to the database.
-    cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" % DB)
-    cursor.execute("USE "+DB)
-
-    idx = 1
-
-
-    print("start")
-
-    # 1
-    cursor.execute("""
-        CREATE TABLE `xalt_link` (
-          `link_id`       int(11)        NOT NULL auto_increment,
-          `uuid`          char(36)       NOT NULL,
-          `hash_id`       char(40)       NOT NULL,
-          `link_name`     varchar(10)    NOT NULL,
-          `build_user`    varchar(64)    NOT NULL,
-          `build_host`    varchar(64)    NOT NULL,
-          `build_epoch`   double         NOT NULL,
-          `exit_code`     tinyint(4)     NOT NULL,
-          `exec_path`     varchar(1024)  NOT NULL,
-          PRIMARY KEY  (`link_id`),
-          UNIQUE  KEY  `uuid` (`uuid`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create xalt_link table" % idx); idx += 1
-
-    # 2
-    cursor.execute("""
-        CREATE TABLE `xalt_object` (
-          `obj_id`        int(11)         NOT NULL auto_increment,
-          `object_path`   varchar(1024)   NOT NULL,
-          `uuid`          char(36)                ,
-          `hash_id`       char(40)        NOT NULL,
-          `lib_type`      char(2)         NOT NULL,
-          PRIMARY KEY  (`obj_id`),
-          INDEX  `index_uuid`    (`uuid`),
-          INDEX  `index_hash_id` (`hash_id`),
-          UNIQUE KEY `thekey` (`object_path`(512), `hash_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create xalt_object table" % idx ); idx += 1;
-
-
-    # 3
-    cursor.execute("""
-        CREATE TABLE `join_link_object` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `obj_id`        int(11)        NOT NULL,
-          `link_id`       int(11)        NOT NULL,
-          PRIMARY KEY (`join_id`),
-          FOREIGN KEY (`link_id`) REFERENCES `xalt_link`(`link_id`),
-          FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create join_link_object table" % idx); idx += 1
-
-    # 4
-    cursor.execute("""
-        CREATE TABLE `xalt_job` (
-          `run_id`        int(11)        NOT NULL auto_increment,
-          `job_id`        int(11)        NOT NULL,
-          `host`          varchar(64)    NOT NULL,
-          `uuid`          char(36)               ,
-          `hash_id`       char(40)       NOT NULL,
-          `account`       char(11)       NOT NULL,
-          `exec_type`     char(7)        NOT NULL,
-          `build_user`    varchar(64)    NOT NULL,
-          `start_time`    double         NOT NULL,
-          `end_time`      double         NOT NULL,
-          `run_time`      double         NOT NULL,
-          `num_cores`     int(11)        NOT NULL,
-          `num_nodes`     int(11)        NOT NULL,
-          `num_threads`   tinyint(4)     NOT NULL,
-          `queue`         varchar(32)    NOT NULL,
-          `user`          varchar(32)    NOT NULL,
-          `exec_path`     varchar(1024)  NOT NULL,
-          PRIMARY KEY            (`run_id`),
-          INDEX  `index_uuid`    (`uuid`),
-          INDEX  `index_hash_id` (`hash_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create xalt_job table" % idx)
-    idx += 1
-
-    # 5
-    cursor.execute("""
-        CREATE TABLE `join_job_object` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `obj_id`        int(11)        NOT NULL,
-          `run_id`        int(11)        NOT NULL,
-
-          PRIMARY KEY (`join_id`),
-          FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`run_id`),
-          FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create join_job_object table" % idx); idx += 1
-
-
-    # 6
-    cursor.execute("""
-        CREATE TABLE `xalt_env_name` (
-          `env_id`        int(11)       NOT NULL auto_increment,
-          `env_name`      varchar(64)   NOT NULL,
-          PRIMARY KEY  (`env_id`),
-          UNIQUE  KEY  `env_name` (`env_name`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create xalt_env_name table" % idx); idx += 1
-
-    # 7
-    cursor.execute("""
-        CREATE TABLE `join_job_env` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `env_id`        int(11)        NOT NULL,
-          `run_id`        int(11)        NOT NULL,
-          `env_value`     varchar(1024)  NOT NULL,
-          PRIMARY KEY (`join_id`),
-          FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
-          FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`job_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
-        """)
-    print("(%d) create join_job_env table" % idx); idx += 1
-
-
-    cursor.close()
-  except  MySQLdb.Error, e:
-    print ("Error %d: %s" % (e.args[0], e.args[1]))
-    sys.exit (1)
+  for user, hdir in passwd_generator():
+    xaltDir = os.path.join(hdir,".xalt.d")
+    if (os.path.isdir(xaltDir)):
+      linkFnA = files_in_tree(xaltDir, "*/link.*.json")
+      link_json_to_db(xalt, user, linkFnA)
+      #jobFnA = files_in_tree(xaltDir, "*/job.*.json")
+      #job_json_to_db(xalt, user, jobFnA)
+      
+      
 
 if ( __name__ == '__main__'): main()
