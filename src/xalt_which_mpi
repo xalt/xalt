@@ -16,14 +16,14 @@ findName()
 
 
   if type -p mpich2version ; then
-    mpiN=MPICH2
+    mpiN=mpich2
     mpiV=`mpich2version | head -1`
     mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
     return
   fi 
   
   if type -p mpichversion ; then
-    mpiN=MPICH
+    mpiN=mpich
     mpiV=`mpichversion | head -1`
     mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
     return
