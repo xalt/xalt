@@ -8,7 +8,7 @@ GEN_ASSEMBLY=$XALT_DIR/bin/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_DIR/bin/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_DIR/bin/xalt_syshost.py
 
-SYSHOST=$(SYS_HOST_CMD)
+SYSHOST=$($SYS_HOST_CMD)
 
 AS=/usr/bin/as
 UUIDGEN=/usr/bin/uuidgen

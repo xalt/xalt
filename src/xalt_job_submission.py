@@ -120,7 +120,7 @@ class UserEnvT(object):
 
     ltime                 = time.time()
     userT                 = {}
-    userT['nodehost']     = args.system_name
+    userT['nodehost']     = args.host
     userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
@@ -231,20 +231,10 @@ class EnvT(object):
       re.compile(r'^SSH_.*$'),
       re.compile(r'^XDG_.*$'),
       re.compile(r'^PS1$'),
-      re.compile(r'^_.*$'),
     ]
-    keepT = {
-      '_LMFILES_' : True,
-    }
-
 
     envT = {}
     for k in os.environ:
-
-      if (k in keepT):
-        envT[k] = os.environ[k]
-        continue
-
       keep = True
       for pat in ignoreKeyA:
         m = pat.search(k)
@@ -253,7 +243,6 @@ class EnvT(object):
           break
       if (keep):
         envT[k] = os.environ[k]
-   
     return envT
   
 
@@ -264,7 +253,7 @@ def main():
 
   # parse command line options:
   args = CmdLineOptions().execute()
-  
+
   if (args.startTime < 1):
     startTime = myEpoch
     endTime   = 0
@@ -272,8 +261,7 @@ def main():
     startTime = args.startTime
     endTime   = myEpoch
     
-
-  userExec = args.exec_name
+  userExec = UserExec(args.exec_name[0])
   userT    = UserEnvT(startTime, endTime, args, userExec).userT()
   
   submitT              = {}

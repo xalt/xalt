@@ -25,6 +25,7 @@ esac
 EXEC=unknown
 if [ -x "$FIND_EXEC" ]; then
   EXEC=$($FIND_EXEC "$@")
+
 fi
 
 ########################################################################
@@ -92,9 +93,8 @@ DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
 jobFn=$HOME/.xalt.d/job.${DATESTR}.$UUID.json
 
-
-sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0      --fn $jobFn -- $EXEC)
+sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0      --fn "$jobFn" -- $EXEC)
 
 $MY_CMD $ARGV
 
-$JOB_SUBMIT         --ntasks $NTASKS --start $sTime --fn $jobFn -- $EXEC
+$JOB_SUBMIT         --ntasks $NTASKS --start "$sTime" --fn "$jobFn" -- $EXEC
