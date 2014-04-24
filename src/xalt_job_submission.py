@@ -2,56 +2,65 @@
 # -*- python -*-
 from __future__ import print_function
 
-import os, re, sys, subprocess, time, socket, json, argparse
+import os, re, sys, subprocess, time, socket, json, argparse, platform
 
 def capture(cmd):
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE,  stderr=subprocess.STDOUT)
   return p.communicate()[0]
   
 
+def syshost():
+  hostA = platform.node().split('.')
+  idx = 1 
+  if (len(hostA) < 2):
+    idx = 0
+  return hostA[idx]
+
 class CmdLineOptions(object):
   def __init__(self):
     pass
   
   def execute(self):
+    host   = syshost()
     parser = argparse.ArgumentParser()
     parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
     parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
-    parser.add_argument("cmdA",      nargs='+',        help="command line for user program")
+    parser.add_argument("--host",    dest='host',      action="store", default = host,            help="system host name")
+    parser.add_argument("exec_name", nargs='+',        help="user program")
 
     args = parser.parse_args()
     
     return args
     
-class SystemT(object):
-  def __init__(self):
-    sysT = {}
-
-    queueType = "SLURM"
-    if (os.environ.get("SGE_ACCOUNT")):
-      queueType = "SGE"
-    elif (os.environ.get("SLURM_TACC_ACCOUNT")):
-      queueType = "SLURM"
-      
-    if (queueType == "SGE"):
-      sysT['num_cores'] = "NSLOTS"
-      sysT['num_nodes'] = "NHOSTS"
-      sysT['account']   = "SGE_ACCOUNT"
-      sysT['job_id']    = "JOB_ID"
-      sysT['queue']     = "QUEUE"
-      
-    elif (queueType == "SLURM"):
-      sysT['num_cores'] = "SLURM_TACC_CORES"
-      sysT['num_nodes'] = "SLURM_NNODES"
-      sysT['account']   = "SLURM_TACC_ACCOUNT"
-      sysT['job_id']    = "SLURM_JOB_ID"
-      sysT['queue']     = "SLURM_QUEUE"
-
-    self.__sysT = sysT
-      
-  def sysT(self):
-    return self.__sysT
+#class SystemT(object):
+#  def __init__(self):
+#    sysT = {}
+#
+#    queueType = "SLURM"
+#    if (os.environ.get("SGE_ACCOUNT")):
+#      queueType = "SGE"
+#    elif (os.environ.get("SLURM_TACC_ACCOUNT")):
+#      queueType = "SLURM"
+#      
+#    if (queueType == "SGE"):
+#      sysT['num_cores'] = "NSLOTS"
+#      sysT['num_nodes'] = "NHOSTS"
+#      sysT['account']   = "SGE_ACCOUNT"
+#      sysT['job_id']    = "JOB_ID"
+#      sysT['queue']     = "QUEUE"
+#      
+#    elif (queueType == "SLURM"):
+#      sysT['num_cores'] = "SLURM_TACC_CORES"
+#      sysT['num_nodes'] = "SLURM_NNODES"
+#      sysT['account']   = "SLURM_TACC_ACCOUNT"
+#      sysT['job_id']    = "SLURM_JOB_ID"
+#      sysT['queue']     = "SLURM_QUEUE"
+#
+#    self.__sysT = sysT
+#      
+#  def sysT(self):
+#    return self.__sysT
 
 keyPat = re.compile(r'.*<(.*)>.*')
 
@@ -106,20 +115,15 @@ class ExtractXALT(object):
 
 
 class UserEnvT(object):
-  def __init__(self, sysT, startT, endT, args, userExec):
+  def __init__(self, startT, endT, args, userExec):
 
 
     ltime                 = time.time()
     userT                 = {}
-    userT['nodehost']     = socket.getfqdn()
+    userT['nodehost']     = args.system_name
     userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
-    userT['num_cores']    = os.environ.get(sysT['num_cores'],"0")
-    userT['num_nodes']    = os.environ.get(sysT['num_nodes'],"0")
-    userT['account']      = os.environ.get(sysT['account'],"unknown")
-    userT['job_id']       = os.environ.get(sysT['job_id'],"unknown")
-    userT['queue']        = os.environ.get(sysT['queue'],"unknown")
     userT['start_date']   = time.strftime("%c",time.localtime(startT))
     userT['start_time']   = startT
     userT['currentEpoch'] = ltime
@@ -132,13 +136,19 @@ class UserEnvT(object):
 
     self.__userT = userT
     
+    #userT['num_cores']    = os.environ.get(sysT['num_cores'],"0")
+    #userT['num_nodes']    = os.environ.get(sysT['num_nodes'],"0")
+    #userT['account']      = os.environ.get(sysT['account'],"unknown")
+    #userT['job_id']       = os.environ.get(sysT['job_id'],"unknown")
+    #userT['queue']        = os.environ.get(sysT['queue'],"unknown")
+
   def userT(self):
     return self.__userT
 
 class UserExec(object):
   
-  def __init__(self, argA):
-    self.__execName = self.__findUserExec(argA)
+  def __init__(self, execname):
+    self.__execName = execname
     ldd             = capture(["ldd", self.__execName])
     
     self.__execType = None
@@ -208,142 +218,6 @@ class UserExec(object):
       
 
     return libB
-
-  def __findUserExec(self, argA):
-    ignoreT = {
-      'env'              : True,
-      'time'             : True,
-      'tacc_affinity'    : True,
-      'getmode_affinity' : True,
-    }
-
-    argT = {
-      '-am'                       : 1,
-      '--app'                     : 1,
-      '-c'                        : 1,
-      '-n'                        : 1,
-      '-np'                       : 1,
-      '-cf'                       : 1,  
-      '--cartofile'               : 1,
-      '-cpus-per-proc'            : 1,
-      '--cpus-per-proc'           : 1,
-      '-cpus-per-rank'            : 1,
-      '--cpus-per-rank'           : 1,
-      '-H'                        : 1,
-      '-host'                     : 1,
-      '--host'                    : 1,
-      '-launch-agent'             : 1,
-      '--launch-agent'            : 1,
-      '-machinefile'              : 1,
-      '--machinefile'             : 1,
-      '-mca'                      : 2,
-      '--mca'                     : 2,
-      '-nperboard'                : 1,
-      '--nperboard'               : 1,
-      '-npernode'                 : 1,
-      '--npernode'                : 1,
-      '-npersocket'               : 1,
-      '--npersocket'              : 1,
-      '-num-boards'               : 1,
-      '--num-boards'              : 1,
-      '-num-cores'                : 1,
-      '--num-cores'               : 1,
-      '-num-socket'               : 1,
-      '--num-socket'              : 1,
-      '-ompi-server'              : 1,
-      '--ompi-server'             : 1,
-      '-output-filename'          : 1,
-      '--output-filename'         : 1,
-      '-path'                     : 1,
-      '--path'                    : 1,
-      '--prefix'                  : 1,
-      '--preload-files'           : 1,     
-      '--preload-files-dest-dir'  : 1,
-      '-report-events'            : 1,     
-      '--report-events'           : 1,     
-      '-report-pid'               : 1,     
-      '--report-pid'              : 1,     
-      '-report-uri'               : 1,     
-      '--report-uri'              : 1,     
-      '-rf'                       : 1,     
-      '--rankfile'                : 1,     
-      '-server-wait-time'         : 1,
-      '--server-wait-time'        : 1,
-      '-slot-list'                : 1,
-      '--slot-list'               : 1,
-      '-stdin'                    : 1,
-      '--stdin'                   : 1,
-      '-stride'                   : 1,
-      '--stride'                  : 1,
-      '-tmpdir'                   : 1,
-      '--tmpdir'                  : 1,
-      '-wd'                       : 1,
-      '--wd'                      : 1,
-      '-wdir'                     : 1,
-      '--wdir'                    : 1,
-      '-xml'                      : 1,
-      '--xml'                     : 1,
-      '-xml-file'                 : 1,
-      '--xml-file'                : 1,
-      '-xterm'                    : 1,
-      '--xterm'                   : 1,
-
-      #mpich
-      '-genv'                     : 2,
-      '-genvlist'                 : 1,
-      '-f'                        : 1,
-      '-hosts'                    : 1,
-      '-configfile'               : 1,
-      '-launcher'                 : 1,
-      '-launcher-exec'            : 1,
-      '-rmk'                      : 1,
-    }
-
-    N   = len(argA)
-
-    i   = 0
-    while (i < N):
-      arg = argA[i]
-      n   = argT.get(arg,-1)
-      if (n > 0):
-        i += n + 1
-        continue
-      if (arg[0:1] == "-"):
-        i  = i + 1
-        continue
-      break
-
-    while (i < N):
-      arg = argA[i]
-      i   = i + 1
-      bare = os.path.basename(arg)
-      if (not (bare in ignoreT)):
-        cmd = arg
-        break
-
-    return self.__which(cmd)
-
-  def __which(self, program):
-    def is_exe(fpath):
-      return os.path.exists(fpath) and os.access(fpath, os.X_OK)
-    def ext_candidates(fpath):
-      yield fpath
-      for ext in os.environ.get("PATH", "").split(os.pathsep):
-        yield fpath + ext
-
-    fpath, fname = os.path.split(program)
-    if fpath:
-      if is_exe(program):
-         return program
-    else:
-      for path in os.environ["PATH"].split(os.pathsep):
-        exe_file = os.path.join(path, program)
-        for candidate in ext_candidates(exe_file):
-          if is_exe(candidate):
-            return candidate
-
-    return None
-
     
 class EnvT(object):
   def __init__(self):
@@ -399,9 +273,8 @@ def main():
     endTime   = myEpoch
     
 
-  sysT     = SystemT().sysT()
-  userExec = UserExec(args.cmdA)
-  userT    = UserEnvT(sysT, startTime, endTime, args, userExec).userT()
+  userExec = args.exec_name
+  userT    = UserEnvT(startTime, endTime, args, userExec).userT()
   
   submitT              = {}
   submitT['userT']     = userT

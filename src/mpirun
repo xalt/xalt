@@ -5,9 +5,27 @@ MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 ARGV="$@"
 
-JOB_SUBMIT=/opt/apps/xalt/xalt/bin/xalt_job_submission.py
+XALT_DIR=/opt/apps/xalt/xalt/
+JOB_SUBMIT=$XALT_DIR/bin/xalt_job_submission.py
 UUIDGEN=/usr/bin/uuidgen
+WHICH_MPI=$XALT_DIR/bin/xalt_which_mpi
 
+
+MPI_STACK=$($WHICH_MPI --name)
+
+case "$MPI_STACK" in
+  mpich|mpich2)
+    FIND_EXEC=$XALT_DIR/bin/xalt_find_exec_mpich.py
+    ;;
+  openmpi)
+    FIND_EXEC=$XALT_DIR/bin/xalt_find_exec_openmpi.py
+    ;;
+esac
+
+EXEC=unknown
+if [ -x "$FIND_EXEC" ]; then
+  EXEC=$($FIND_EXEC "$@")
+fi
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -28,7 +46,6 @@ done
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
-EXEC="unknown"
 NTASKS=1
 append=false
 prev=
@@ -76,8 +93,8 @@ DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 jobFn=$HOME/.xalt.d/job.${DATESTR}.$UUID.json
 
 
-sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0      --fn $jobFn -- $ARGV)
+sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0      --fn $jobFn -- $EXEC)
 
 $MY_CMD $ARGV
 
-$JOB_SUBMIT         --ntasks $NTASKS --start $sTime --fn $jobFn -- $ARGV
+$JOB_SUBMIT         --ntasks $NTASKS --start $sTime --fn $jobFn -- $EXEC

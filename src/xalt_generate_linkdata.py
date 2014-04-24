@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__  import print_function
-import os, sys, re, json, socket, subprocess
+import os, sys, re, json, subprocess
 
 parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
@@ -80,15 +80,16 @@ def extract_compiler(pstree):
   return cmd
 
 def main():
-  uuid        = sys.argv[1]
-  status      = sys.argv[2]
-  wd          = sys.argv[3]
-  pstree      = sys.argv[4]
-  execname    = sys.argv[5]
-  xaltobj     = sys.argv[6]
-  build_epoch = sys.argv[7]
-  linklineFn  = sys.argv[8]
-  resultFn    = sys.argv[9]
+  uuid        = sys.argv[ 1]
+  status      = sys.argv[ 2]
+  wd          = sys.argv[ 3]
+  syshost     = sys.argv[ 4]
+  pstree      = sys.argv[ 5]
+  execname    = sys.argv[ 6]
+  xaltobj     = sys.argv[ 7]
+  build_epoch = sys.argv[ 8]
+  linklineFn  = sys.argv[ 9]
+  resultFn    = sys.argv[10]
 
   if (execname.find("conftest") != -1):
     return 1
@@ -110,7 +111,7 @@ def main():
   resultT['exec_path']    = os.path.abspath(execname)
   resultT['hash_id']      = hash_id
   resultT['wd']           = wd
-  resultT['build_host']   = socket.getfqdn()
+  resultT['build_host']   = syshost
   resultT['linkA']        = sA
   
   dirname,fn = os.path.split(resultFn)
