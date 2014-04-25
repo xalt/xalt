@@ -1,26 +1,6 @@
 from __future__ import print_function
+from util       import which
 import os, re, sys
-
-def which(program):
-  def is_exe(fpath):
-    return os.path.exists(fpath) and os.access(fpath, os.X_OK)
-  def ext_candidates(fpath):
-    yield fpath
-    for ext in os.environ.get("PATH", "").split(os.pathsep):
-      yield fpath + ext
-
-  fpath, fname = os.path.split(program)
-  if fpath:
-    if is_exe(program):
-       return program
-  else:
-    for path in os.environ["PATH"].split(os.pathsep):
-      exe_file = os.path.join(path, program)
-      for candidate in ext_candidates(exe_file):
-        if is_exe(candidate):
-          return candidate
-
-  return None
 
 def find_exec(ignoreT, argT, argA):
   N   = len(argA)

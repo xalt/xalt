@@ -34,7 +34,7 @@ def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
   # Print cushion
   f.writelines("\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n")
   f.writelines("\t.asciz \"<XALT_Version>%%"+version+"%%\"\n")
-  f.writelines("\t.asciz \"<Build.Machine>%%"+syshost+"%%\"\n")
+  f.writelines("\t.asciz \"<Build.Syshost>%%"+syshost+"%%\"\n")
   f.writelines("\t.asciz \"<Build.compiler>%%"+compiler+"%%\"\n")
   f.writelines("\t.asciz \"<Build.OS>%%"+osName+"%%\"\n")
   f.writelines("\t.asciz \"<Build.User>%%"+user+"%%\"\n")

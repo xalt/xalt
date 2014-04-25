@@ -97,4 +97,4 @@ sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0        --fn "$jobFn" -- $EXEC)
 
 $MY_CMD $ARGV
 
-$JOB_SUBMIT         --ntasks $NTASKS --start "$sTime" --fn "$jobFn" -- $EXEC
+rTime=$($JOB_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$jobFn" -- $EXEC)

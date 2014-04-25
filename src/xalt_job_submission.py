@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
+from util       import capture, which
 
 import os, re, sys, subprocess, time, socket, json, argparse, platform
-
-def capture(cmd):
-  p = subprocess.Popen(cmd, stdout=subprocess.PIPE,  stderr=subprocess.STDOUT)
-  return p.communicate()[0]
-  
 
 def syshost():
   hostA = platform.node().split('.')
@@ -33,35 +29,6 @@ class CmdLineOptions(object):
     
     return args
     
-#class SystemT(object):
-#  def __init__(self):
-#    sysT = {}
-#
-#    queueType = "SLURM"
-#    if (os.environ.get("SGE_ACCOUNT")):
-#      queueType = "SGE"
-#    elif (os.environ.get("SLURM_TACC_ACCOUNT")):
-#      queueType = "SLURM"
-#      
-#    if (queueType == "SGE"):
-#      sysT['num_cores'] = "NSLOTS"
-#      sysT['num_nodes'] = "NHOSTS"
-#      sysT['account']   = "SGE_ACCOUNT"
-#      sysT['job_id']    = "JOB_ID"
-#      sysT['queue']     = "QUEUE"
-#      
-#    elif (queueType == "SLURM"):
-#      sysT['num_cores'] = "SLURM_TACC_CORES"
-#      sysT['num_nodes'] = "SLURM_NNODES"
-#      sysT['account']   = "SLURM_TACC_ACCOUNT"
-#      sysT['job_id']    = "SLURM_JOB_ID"
-#      sysT['queue']     = "SLURM_QUEUE"
-#
-#    self.__sysT = sysT
-#      
-#  def sysT(self):
-#    return self.__sysT
-
 keyPat = re.compile(r'.*<(.*)>.*')
 
 class ExtractXALT(object):
@@ -120,7 +87,8 @@ class UserEnvT(object):
 
     ltime                 = time.time()
     userT                 = {}
-    userT['nodehost']     = args.host
+    userT['cwd']          = os.getcwd()
+    userT['syshost']      = args.host
     userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
@@ -136,31 +104,26 @@ class UserEnvT(object):
 
     self.__userT = userT
     
-    #userT['num_cores']    = os.environ.get(sysT['num_cores'],"0")
-    #userT['num_nodes']    = os.environ.get(sysT['num_nodes'],"0")
-    #userT['account']      = os.environ.get(sysT['account'],"unknown")
-    #userT['job_id']       = os.environ.get(sysT['job_id'],"unknown")
-    #userT['queue']        = os.environ.get(sysT['queue'],"unknown")
-
   def userT(self):
     return self.__userT
 
 class UserExec(object):
   
   def __init__(self, execname):
-    self.__execName = execname
-    ldd             = capture(["ldd", self.__execName])
+    self.__execName = which(execname)
+    if (self.__execName):
+      ldd             = capture(["ldd", self.__execName])
     
-    self.__execType = None
-    if (ldd.find("not a dynamic executable") > 0):
-      self.__execType = "script"
-    if (ldd.find("No such file or directory") == -1):
-      self.__execType = "binary"
+      self.__execType = None
+      if (ldd.find("not a dynamic executable") > 0):
+        self.__execType = "script"
+      if (ldd.find("No such file or directory") == -1):
+        self.__execType = "binary"
 
-    info = os.stat(self.__execName)
-    self.__modify = info.st_mtime
-    self.__libA   = self.__parseLDD(ldd)
-    self.__hash   = self.__computeHash(self.__execName)
+      info = os.stat(self.__execName)
+      self.__modify = info.st_mtime
+      self.__libA   = self.__parseLDD(ldd)
+      self.__hash   = self.__computeHash(self.__execName)
 
 
   def execName(self):
@@ -262,6 +225,10 @@ def main():
     endTime   = myEpoch
     
   userExec = UserExec(args.exec_name[0])
+  if (not userExec.execName()):
+    print("0")
+    return
+
   userT    = UserEnvT(startTime, endTime, args, userExec).userT()
   
   submitT              = {}
@@ -269,7 +236,7 @@ def main():
   submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
   submitT['libA']      = userExec.libA()
   submitT['envT']      = EnvT().envT()
-  submitT['hash']      = userExec.hash()
+  submitT['hash_id']   = userExec.hash()
   
   dirname,fn = os.path.split(os.path.abspath(args.resultFn))
   tmpFn      = os.path.join(dirname, "." + fn)
@@ -289,5 +256,9 @@ def main():
 
   if (args.startTime < 1):
     print(epochStr)
+  else:
+    print(myEpoch - startTime)
+    
+  
 
 if ( __name__ == '__main__'): main()

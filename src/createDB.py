@@ -38,7 +38,7 @@ def main():
           `date`          DATETIME       NOT NULL,
           `link_program`  varchar(10)    NOT NULL,
           `build_user`    varchar(64)    NOT NULL,
-          `build_host`    varchar(64)    NOT NULL,
+          `build_syshost` varchar(64)    NOT NULL,
           `build_epoch`   double         NOT NULL,
           `exit_code`     tinyint(4)     NOT NULL,
           `exec_path`     varchar(1024)  NOT NULL,
@@ -53,13 +53,13 @@ def main():
         CREATE TABLE `xalt_object` (
           `obj_id`        int(11)         NOT NULL auto_increment,
           `object_path`   varchar(1024)   NOT NULL,
-          `build_host`    varchar(64)     NOT NULL,
+          `syshost`       varchar(64)     NOT NULL,
           `hash_id`       char(40)        NOT NULL,
           `timestamp`     TIMESTAMP               ,
           `lib_type`      char(2)         NOT NULL,
           PRIMARY KEY  (`obj_id`),
           INDEX  `index_hash_id` (`hash_id`),
-          UNIQUE KEY `thekey` (`object_path`(512), `hash_id`)
+          UNIQUE KEY `thekey` (`object_path`(512), `hash_id`, `syshost`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_object table" % idx ); idx += 1;
@@ -82,14 +82,13 @@ def main():
     cursor.execute("""
         CREATE TABLE `xalt_job` (
           `run_id`        int(11)        NOT NULL auto_increment,
-          `job_id`        int(11)        NOT NULL,
+          `job_id`        char(11)       NOT NULL,
           `date`          datetime       NOT NULL,
-          `host`          varchar(64)    NOT NULL,
+          `syshost`       varchar(64)    NOT NULL,
           `uuid`          char(36)               ,
           `hash_id`       char(40)       NOT NULL,
           `account`       char(11)       NOT NULL,
           `exec_type`     char(7)        NOT NULL,
-          `build_user`    varchar(64)    NOT NULL,
           `start_time`    double         NOT NULL,
           `end_time`      double         NOT NULL,
           `run_time`      double         NOT NULL,
@@ -99,9 +98,9 @@ def main():
           `queue`         varchar(32)    NOT NULL,
           `user`          varchar(32)    NOT NULL,
           `exec_path`     varchar(1024)  NOT NULL,
+          `cwd`           varchar(1024)  NOT NULL,
           PRIMARY KEY            (`run_id`),
-          INDEX  `index_uuid`    (`uuid`),
-          INDEX  `index_hash_id` (`hash_id`)
+          UNIQUE KEY `thekey` (`job_id`, `syshost`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_job table" % idx)
