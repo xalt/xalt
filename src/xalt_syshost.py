@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-import socket
+import socket, platform
 
-def nics_syshost(fqdn):
+def nics_syshost(nameA):
   nicsT = {
     "kraken"    : "kraken",
     "darter"    : "darter",
@@ -16,14 +16,28 @@ def nics_syshost(fqdn):
     "athena"    : "anthena",
   }
   result = None
-  for k in nicsT:
-    if (k.find(fqdn,0) != -1):
-      result = nicsT[k]
-      break
+
+  for name in nameA:
+    for k in nicsT:
+      if (k.find(fqdn,0) != -1):
+        result = nicsT[k]
+        return result
   return result
   
-def normal_syshost(fqdn):
-  hostA = fqdn.split('.')
+def normal_syshost(nameA):
+  
+  maxN = 0
+  j    = -1
+  i    = -1
+  for name in nameA:
+    i     = i + 1
+    hostA = name.split('.')
+    num   = len(hostA)
+    if (num > maxN):
+      j  = i
+      maxN = num
+  hostA = nameA[j].split('.')
+
   idx = 1 
   if (len(hostA) < 2):
     idx = 0
@@ -31,10 +45,12 @@ def normal_syshost(fqdn):
 
 def main():
 
-  fqdn    = socket.getfqdn()
-  syshost = nics_syshost(fqdn)
+  nameA = [ socket.getfqdn(),
+            platform.node() ]
+
+  syshost = nics_syshost(nameA)
   if (not syshost):
-    syshost = normal_syshost(fqdn)
+    syshost = normal_syshost(nameA)
 
   print(syshost)
   
