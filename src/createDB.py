@@ -139,7 +139,7 @@ def main():
           `join_id`       int(11)        NOT NULL auto_increment,
           `env_id`        int(11)        NOT NULL,
           `run_id`        int(11)        NOT NULL,
-          `env_value`     varchar(1024)  NOT NULL,
+          `env_value`     blob           NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`job_id`)

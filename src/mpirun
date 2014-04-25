@@ -5,11 +5,11 @@ MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 ARGV="$@"
 
-XALT_DIR=/opt/apps/xalt/xalt/
+XALT_DIR=/opt/apps/xalt/xalt
 JOB_SUBMIT=$XALT_DIR/bin/xalt_job_submission.py
 UUIDGEN=/usr/bin/uuidgen
 WHICH_MPI=$XALT_DIR/bin/xalt_which_mpi
-
+SYSHOST=$($XALT_DIR/bin/xalt_syshost.py)
 
 MPI_STACK=$($WHICH_MPI --name)
 
@@ -91,9 +91,9 @@ done
 UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
-jobFn=$HOME/.xalt.d/job.${DATESTR}.$UUID.json
+jobFn=$HOME/.xalt.d/job.${SYSHOST}.${DATESTR}.$UUID.json
 
-sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0      --fn "$jobFn" -- $EXEC)
+sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0        --fn "$jobFn" -- $EXEC)
 
 $MY_CMD $ARGV
 

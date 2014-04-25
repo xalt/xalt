@@ -120,8 +120,8 @@ def main():
     if (os.path.isdir(xaltDir)):
       linkFnA = files_in_tree(xaltDir, "*/link.*.json")
       link_json_to_db(xalt, user, linkFnA)
-      #jobFnA = files_in_tree(xaltDir, "*/job.*.json")
-      #job_json_to_db(xalt, user, jobFnA)
+      jobFnA = files_in_tree(xaltDir, "*/job.*.json")
+      job_json_to_db(xalt, user, jobFnA)
       
       
 

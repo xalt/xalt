@@ -81,7 +81,7 @@ WRKDIR=/tmp/${USER}_${DATESTR}_${UUID}
 LINKLINE=$WRKDIR/link.txt
 ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
-RESULT=$HOME/.xalt.d/link.${DATESTR}.$UUID.json
+RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ ! -d $WRKDIR ]; then
   mkdir -p $WRKDIR
