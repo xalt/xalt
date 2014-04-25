@@ -19,7 +19,7 @@ def nics_syshost(nameA):
 
   for name in nameA:
     for k in nicsT:
-      if (k.find(fqdn,0) != -1):
+      if (name.find(k,0) != -1):
         result = nicsT[k]
         return result
   return result
