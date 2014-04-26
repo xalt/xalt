@@ -101,8 +101,8 @@ def main():
           `exec_path`     varchar(1024)  NOT NULL,
           `cwd`           varchar(1024)  NOT NULL,
           PRIMARY KEY            (`run_id`),
-          UNIQUE KEY `thekey` (`job_id`, `syshost`)
           INDEX  `index_job_uuid` (`job_uuid`),
+          UNIQUE KEY `thekey` (`job_id`, `syshost`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_job table" % idx)
