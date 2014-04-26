@@ -54,12 +54,14 @@ def link_json_to_db(xalt, user, linkFnA):
       if (result.num_rows() > 0):
         continue
 
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(linkT['build_epoch'])))
+      build_epoch = float(linkT['build_epoch'])
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
+                                  time.localtime(float(linkT['build_epoch'])))
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
-               linkT['uuid'], linkT['hash_id'], dateTimeStr, linkT['link_program'], 
-               linkT['build_user'], linkT['build_syshost'], float(linkT['build_epoch']),
-               int(linkT['exit_code']), linkT['exec_path'])
+        linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
+        linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
+        build_epoch,            int(linkT['exit_code']), linkT['exec_path'])
       conn.query(query)
       link_id = conn.insert_id()
       print("link_id: ",link_id)
@@ -68,7 +70,7 @@ def link_json_to_db(xalt, user, linkFnA):
         object_path = entryA[0]
         hash_id     = entryA[1]
 
-        query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND build_syshost='%s'" % (
+        query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
           hash_id, object_path, linkT['build_syshost'])
         
         conn.query(query)
@@ -137,47 +139,47 @@ def job_json_to_db(xalt, user, jobFnA):
           jobT['userT']['exec_path'],   jobT['userT']['cwd'])
         conn.query(query)
 
-
-
-      query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
-      conn.query(query)
-      result = conn.store_result()
-      if (result.num_rows() > 0):
-        continue
-
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(linkT['build_epoch'])))
-      # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
-               linkT['uuid'], linkT['hash_id'], dateTimeStr, linkT['link_program'], 
-               linkT['build_user'], linkT['build_syshost'], float(linkT['build_epoch']),
-               int(linkT['exit_code']), linkT['exec_path'])
-      conn.query(query)
-      link_id = conn.insert_id()
-      print("link_id: ",link_id)
-
-      for entryA in linkT['linkA']:
+      # loop over shared libraries
+      for entryA in jobT['libA']:
         object_path = entryA[0]
         hash_id     = entryA[1]
-
-        query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND build_host='%s'"
+        query       = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % ( 
+          hash_id, object_path, jobT['userT']['syshost'])
         conn.query(query)
         result = conn.store_result()
         if (result.num_rows() > 0):
           row    = result.fetch_row()
           obj_id = int(row[0][0])
-          print("found old obj_id: ",obj_id)
         else:
           obj_kind = obj_type(object_path)
-
           query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',NOW(),'%s') " % (
-                      object_path, linkT['build_host'], hash_id, obj_kind)
+                      object_path, jobT['userT']['syshost'], hash_id, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
-          print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path)
 
-        # Now link libraries to xalt_link record:
-        query = "INSERT into join_link_object VALUES (NULL,'%d','%d') " % (obj_id, link_id)
+        # Now link libraries to xalt_job record.
+        query = "INSERT into join_job_object VALUES (NULL,'%d','%d') " % (
+          obj_id, run_id)
         conn.query(query)
+
+      # loop over env.
+      for key in jobT['envT']:
+        value = jobT['envT'][key]
+        query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
+        conn.query(query)
+        result = conn.store_result()
+        if (result.num_rows() > 0):
+          row    = result.fetch_row()
+          env_id = int(row[0][0])
+        else:
+          query  = "INSERT INTO xalt_env_name VALUES(NULL, '%s')" % key
+          conn.query(query)
+          env_id = conn.insert_id()
+
+        query = "INSERT INTO join_job_env VALUES (NULL, '%d', '%d', '%s')" % (
+          env_id, run_id, value)
+        conn.query(query)
+        
 
 
   except MySQLdb.Error, e:
