@@ -88,13 +88,13 @@ do
 done
 
 
-UUID=`$UUIDGEN`
+JOB_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
-jobFn=$HOME/.xalt.d/job.${SYSHOST}.${DATESTR}.$UUID.json
+jobFn=$HOME/.xalt.d/job.${SYSHOST}.${DATESTR}.$JOB_UUID.json
 
-sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0        --fn "$jobFn" -- $EXEC)
+sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0        --fn "$jobFn" --job_uuid "$JOB_UUID" -- $EXEC)
 
 $MY_CMD $ARGV
 
-rTime=$($JOB_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$jobFn" -- $EXEC)
+rTime=$($JOB_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$jobFn" --job_uuid "$JOB_UUID" -- $EXEC)

@@ -1,4 +1,22 @@
+from fnmatch import fnmatch
 import os, subprocess
+
+def files_in_tree(path, pattern):
+  fileA = []
+  wd = os.getcwd()
+  if (not os.path.isdir(path)):
+    return fileA
+
+  os.chdir(path)
+  path = os.getcwd()
+  os.chdir(wd)
+
+  for root, dirs, files in os.walk(path):
+    for name in files:
+      fn = os.path.join(root, name)
+      if (fnmatch(fn,pattern)):
+        fileA.append(fn)
+  return fileA  
 
 def which(program):
   def is_exe(fpath):

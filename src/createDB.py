@@ -83,6 +83,7 @@ def main():
         CREATE TABLE `xalt_job` (
           `run_id`        int(11)        NOT NULL auto_increment,
           `job_id`        char(11)       NOT NULL,
+          `job_uuid`      char(36)       NOT NULL,
           `date`          datetime       NOT NULL,
           `syshost`       varchar(64)    NOT NULL,
           `uuid`          char(36)               ,
@@ -101,6 +102,7 @@ def main():
           `cwd`           varchar(1024)  NOT NULL,
           PRIMARY KEY            (`run_id`),
           UNIQUE KEY `thekey` (`job_id`, `syshost`)
+          INDEX  `index_job_uuid` (`job_uuid`),
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_job table" % idx)

@@ -17,12 +17,12 @@ class CmdLineOptions(object):
     pass
   
   def execute(self):
-    host   = syshost()
     parser = argparse.ArgumentParser()
     parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
     parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
-    parser.add_argument("--host",    dest='host',      action="store", default = host,            help="system host name")
+    parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
+    parser.add_argument("--job_uuid",dest='job_uuid',  action="store", default = None,            help="job uuid")
     parser.add_argument("exec_name", nargs='+',        help="user program")
 
     args = parser.parse_args()
@@ -88,7 +88,8 @@ class UserEnvT(object):
     ltime                 = time.time()
     userT                 = {}
     userT['cwd']          = os.getcwd()
-    userT['syshost']      = args.host
+    userT['syshost']      = args.syshost
+    userT['job_uuid']     = args.job_uuid
     userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
@@ -97,7 +98,7 @@ class UserEnvT(object):
     userT['currentEpoch'] = ltime
     userT['end_time']     = endT
     userT['run_time']     = max(0, endT - startT)
-    userT['exec']         = userExec.execName()
+    userT['exec_path']    = userExec.execName()
     userT['exec_type']    = userExec.execType()
     userT['exec_epoch']   = userExec.execEpoch()
     userT['execModify']   = userExec.execModify()

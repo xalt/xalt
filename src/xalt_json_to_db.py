@@ -2,32 +2,14 @@
 # -*- python -*-
 from __future__ import print_function
 from XALTdb     import XALTdb
-from fnmatch    import fnmatch
 from SitePkg    import translate
+from util       import files_in_tree
 import os, sys, re, MySQLdb, json, time
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
-
-
-def files_in_tree(path, pattern):
-  fileA = []
-  wd = os.getcwd()
-  if (not os.path.isdir(path)):
-    return fileA
-
-  os.chdir(path)
-  path = os.getcwd()
-  os.chdir(wd)
-
-  for root, dirs, files in os.walk(path):
-    for name in files:
-      fn = os.path.join(root, name)
-      if (fnmatch(fn,pattern)):
-        fileA.append(fn)
-  return fileA  
 
 def passwd_generator():
   xaltUserA = os.environ.get("XALT_USERS")
@@ -128,22 +110,33 @@ def job_json_to_db(xalt, user, jobFnA):
       conn.query(query)
 
       translate(nameA, jobT['envT'], jobT['userT']);
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(jobT['userT']['start_time'])))
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
+                                  time.localtime(float(jobT['userT']['start_time'])))
       uuid        = jobT['xaltLinkT'].get('uuid')
       if (uuid):
-        uuid = '"' + uuid + '"'
+        uuid = "'" + uuid + "'"
       else:
         uuid = "NULL"
 
-      query = "SELECT run_id FROM xalt_job WHERE hash_id='%s' AND build_host='%s'"
+      query = "SELECT run_id FROM xalt_job WHERE job_uuid='%s'" % jobT['userT']['job_uuid']
       conn.query(query)
       result = conn.store_result()
       if (result.num_rows() > 0):
         row    = result.fetch_row()
-        obj_id = int(row[0][0])
-        print("found old obj_id: ",obj_id)
+        run_id = int(row[0][0])
+        query  = "UPDATE xalt_job SET run_time=%.2f WHERE job_uuid='%s'" % (
+          jobT['userT']['run_time'], jobT['userT']['job_uuid'])
+        conn.query(query)
       else:
-      
+        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s','%s',%s,'%s','%s','%.2f','%.2f','%.2f','%d','%d','%d','%s','%s','%s','%s') " % (
+          jobT['userT']['job_id'],      jobT['userT']['job_uuid'],   dateTimeStr,
+          jobT['userT']['syshost'],     uuid,                        jobT['userT']['account'],
+          jobT['userT']['exec_type'],   jobT['userT']['start_time'], jobT['userT']['end_time'],
+          jobT['userT']['run_time'],    jobT['userT']['num_cores'],  jobT['userT']['num_nodes'],
+          jobT['userT']['num_threads'], jobT['userT']['queue'],      jobT['userT']['user'],
+          jobT['userT']['exec_path'],   jobT['userT']['cwd'])
+        conn.query(query)
+
 
 
       query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
