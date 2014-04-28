@@ -14,7 +14,6 @@ findName()
     return
   fi
 
-
   if type -p mpich2version ; then
     mpiN=mpich2
     mpiV=`mpich2version | head -1`
@@ -29,13 +28,18 @@ findName()
     return
   fi
 
-  mpiexec -V 2> /tmp/mpi$$ 
+  mpiexec -V > /tmp/mpi$$ 2>&1
   if [ $? = 0 ]; then
-   mpiN="openmpi"
-   mpiV=`head -1 /tmp/mpi$$`
-   mpiV=`$EXPR "$mpiV" : '.*)\s\+\(.*\)'`
-   rm /tmp/mpi$$
-   return
+    mpiStr=`head -1 /tmp/mpi$$`
+    if [[ $mpiStr =~ Intel ]]; then
+      mpiN="impi"
+      mpiV=`$EXPR "$mpiStr" : '.*Version\s\+\([^ ]\+\)\s'`
+    else
+      mpiN="openmpi"
+      mpiV=`$EXPR "$mpiStr" : '.*)\s\+\(.*\)'`
+    fi
+    rm /tmp/mpi$$
+    return
   fi
   rm /tmp/mpi$$
 
