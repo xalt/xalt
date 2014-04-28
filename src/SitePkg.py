@@ -1,7 +1,7 @@
 from __future__ import print_function
 import os
 
-def tranlate(nameA, envT, userT):
+def translate(nameA, envT, userT):
   sysT = {}
   queueType = "SLURM"
   if (envT.get("SGE_ACCOUNT")):
@@ -29,4 +29,15 @@ def tranlate(nameA, envT, userT):
     if (key):
       result = envT.get(key,"unknown")
     userT[name] = result
+    
+  keyA = [ 'num_cores', 'num_nodes' ]
+
+  for key in keyA:
+    if (userT[key] == "unknown"):
+      userT[key] = 0
+    else:
+      userT[key] = int(userT[key])    
+  
+  if (userT['job_id'] == "unknown"):
+    userT['job_id'] = envT.get('JOB_ID','unknown')
     

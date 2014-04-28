@@ -90,7 +90,7 @@ class UserEnvT(object):
     userT['cwd']          = os.getcwd()
     userT['syshost']      = args.syshost
     userT['job_uuid']     = args.job_uuid
-    userT['num_threads']  = os.environ.get("OMP_NUM_THREADS","0")
+    userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
     userT['start_date']   = time.strftime("%c",time.localtime(startT))

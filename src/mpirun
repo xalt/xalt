@@ -8,17 +8,18 @@ ARGV="$@"
 XALT_DIR=/opt/apps/xalt/xalt
 JOB_SUBMIT=$XALT_DIR/bin/xalt_job_submission.py
 UUIDGEN=/usr/bin/uuidgen
-WHICH_MPI=$XALT_DIR/bin/xalt_which_mpi
-SYSHOST=$($XALT_DIR/bin/xalt_syshost.py)
+WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
+SYSHOST=$($XALT_DIR/site/xalt_syshost.py)
+export JOB_ID=$($XALT_DIR/site/new_job_id.py)
 
 MPI_STACK=$($WHICH_MPI --name)
 
 case "$MPI_STACK" in
   mpich|mpich2)
-    FIND_EXEC=$XALT_DIR/bin/xalt_find_exec_mpich.py
+    FIND_EXEC=$XALT_DIR/site/xalt_find_exec_mpich.py
     ;;
   openmpi)
-    FIND_EXEC=$XALT_DIR/bin/xalt_find_exec_openmpi.py
+    FIND_EXEC=$XALT_DIR/site/xalt_find_exec_openmpi.py
     ;;
 esac
 

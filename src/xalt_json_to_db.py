@@ -61,7 +61,7 @@ def link_json_to_db(xalt, user, linkFnA):
       query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
         linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-        build_epoch,            int(linkT['exit_code']), linkT['exec_path'])
+        build_epoch,           int(linkT['exit_code']), linkT['exec_path'])
       conn.query(query)
       link_id = conn.insert_id()
       print("link_id: ",link_id)
@@ -83,7 +83,7 @@ def link_json_to_db(xalt, user, linkFnA):
           obj_kind = obj_type(object_path)
 
           query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',NOW(),'%s') " % (
-                      object_path, linkT['build_host'], hash_id, obj_kind)
+                      object_path, linkT['build_syshost'], hash_id, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
           print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path)
@@ -120,24 +120,33 @@ def job_json_to_db(xalt, user, jobFnA):
       else:
         uuid = "NULL"
 
+      print( "Looking for job_uuid: ",jobT['userT']['job_uuid'])
+
       query = "SELECT run_id FROM xalt_job WHERE job_uuid='%s'" % jobT['userT']['job_uuid']
       conn.query(query)
+
       result = conn.store_result()
       if (result.num_rows() > 0):
+        print("found")
         row    = result.fetch_row()
         run_id = int(row[0][0])
         query  = "UPDATE xalt_job SET run_time=%.2f WHERE job_uuid='%s'" % (
           jobT['userT']['run_time'], jobT['userT']['job_uuid'])
         conn.query(query)
+        return
       else:
-        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s','%s',%s,'%s','%s','%.2f','%.2f','%.2f','%d','%d','%d','%s','%s','%s','%s') " % (
-          jobT['userT']['job_id'],      jobT['userT']['job_uuid'],   dateTimeStr,
-          jobT['userT']['syshost'],     uuid,                        jobT['userT']['account'],
-          jobT['userT']['exec_type'],   jobT['userT']['start_time'], jobT['userT']['end_time'],
-          jobT['userT']['run_time'],    jobT['userT']['num_cores'],  jobT['userT']['num_nodes'],
-          jobT['userT']['num_threads'], jobT['userT']['queue'],      jobT['userT']['user'],
-          jobT['userT']['exec_path'],   jobT['userT']['cwd'])
+        print("not found")
+        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s','%s') " % (
+          jobT['userT']['job_id'],      jobT['userT']['job_uuid'],    dateTimeStr,
+          jobT['userT']['syshost'],     uuid,                         jobT['hash_id'],
+          jobT['userT']['account'],     jobT['userT']['exec_type'],   jobT['userT']['start_time'],
+          jobT['userT']['end_time'],    jobT['userT']['run_time'],    jobT['userT']['num_cores'],
+          jobT['userT']['num_nodes'],   jobT['userT']['num_threads'], jobT['userT']['queue'],
+          jobT['userT']['user'],        jobT['userT']['exec_path'],   jobT['userT']['cwd'])
         conn.query(query)
+        run_id   = conn.insert_id()
+
+      print("run_id: ", run_id)
 
       # loop over shared libraries
       for entryA in jobT['libA']:
@@ -157,6 +166,7 @@ def job_json_to_db(xalt, user, jobFnA):
           conn.query(query)
           obj_id   = conn.insert_id()
 
+        print("obj_id: ", obj_id)
         # Now link libraries to xalt_job record.
         query = "INSERT into join_job_object VALUES (NULL,'%d','%d') " % (
           obj_id, run_id)
@@ -171,10 +181,13 @@ def job_json_to_db(xalt, user, jobFnA):
         if (result.num_rows() > 0):
           row    = result.fetch_row()
           env_id = int(row[0][0])
+          found  = True
         else:
           query  = "INSERT INTO xalt_env_name VALUES(NULL, '%s')" % key
           conn.query(query)
           env_id = conn.insert_id()
+          found  = False
+        print("env_id: ", env_id, ", found: ",found)
 
         query = "INSERT INTO join_job_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value)

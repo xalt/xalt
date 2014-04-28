@@ -6,7 +6,7 @@ MY_LD=$0
 XALT_DIR=/opt/apps/xalt/xalt/
 GEN_ASSEMBLY=$XALT_DIR/bin/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_DIR/bin/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_DIR/bin/xalt_syshost.py
+SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
 
 SYSHOST=$($SYS_HOST_CMD)
 
