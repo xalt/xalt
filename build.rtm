@@ -1,0 +1,78 @@
+#!/bin/bash
+# -*- shell-script -*-
+PKG_VERSION=`cat .version`
+echo Making Version: $PKG_VERSION
+
+runMe()
+{
+  local cmdA=("$@")
+
+  local j
+  local jj
+  local i
+  local ignoreError
+  local j=0
+  for i in "${cmdA[@]}" ; do
+    ignoreError=
+    if [ "x${i:0:1}" = x- ]; then
+      i=${i:1}
+      ignoreError=1
+    fi
+
+    j=$((j+1))
+    jj=$(printf "%02d" $j)
+    echo
+    echo "%%---------------------------------%%"
+    echo "   " $jj: $i
+    echo "%%---------------------------------%%"
+    echo
+
+    eval $i
+    if [ -z "$ignoreError" -a $? != 0 ]; then
+      break
+    fi
+  done
+}
+
+myhost=$(hostname -f)
+myhost=${myhost%.tacc.utexas.edu}
+first=${myhost%%.*}
+SYSHOST=${myhost#*.}
+
+case $SYSHOST in
+  rios | mijo | jedrik | vato | vmijo | devo)
+    SUDO="sudo"
+    base="/opt/apps"
+    ;;
+
+  ls4 | longhorn | stampede)
+    base="$HOME/l/pkg"
+    if [ $SYSHOST == "stampede" ]; then
+      base="$base/$(uname -m)"
+    fi
+    ;;
+
+  *)
+    base="$HOME/l/pkg"
+    ;;
+esac
+BASE_DIR=$base
+
+pkgName=xalt
+PKG=$BASE_DIR/$pkgName/$PKG_VERSION
+
+$SUDO rm -rf $PKG
+
+MAKE=make
+command -v remake 2>&1 > /dev/null
+if [ "$?" = 0 ]; then
+  MAKE=remake
+fi
+
+cmdA=("-$MAKE distclean"
+      "./configure --prefix=$PKG"
+      "$SUDO $MAKE install"
+      )
+
+
+runMe "${cmdA[@]}"

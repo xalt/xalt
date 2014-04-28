@@ -22,8 +22,8 @@ class CmdLineOptions(object):
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
     parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
     parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
-    parser.add_argument("--job_uuid",dest='job_uuid',  action="store", default = None,            help="job uuid")
-    parser.add_argument("exec_name", nargs='+',        help="user program")
+    parser.add_argument("--run_uuid",dest='run_uuid',  action="store", default = None,            help="run uuid")
+    parser.add_argument("exec_prog", nargs='+',        help="user program")
 
     args = parser.parse_args()
     
@@ -89,7 +89,7 @@ class UserEnvT(object):
     userT                 = {}
     userT['cwd']          = os.getcwd()
     userT['syshost']      = args.syshost
-    userT['job_uuid']     = args.job_uuid
+    userT['run_uuid']     = args.run_uuid
     userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
@@ -110,8 +110,21 @@ class UserEnvT(object):
 
 class UserExec(object):
   
-  def __init__(self, execname):
-    self.__execName = which(execname)
+  def __init__(self, exec_progA):
+    ignoreT = {
+      'env'              : True,
+      'time'             : True,
+      'tacc_affinity'    : True,
+    }
+
+    cmd = None
+    for prog in exec_progA:
+      bare = os.path.basename(prog)
+      if (not (bare in ignoreT)):
+        cmd = arg
+        break
+
+    self.__execName = which(cmd)
     if (self.__execName):
       ldd             = capture(["ldd", self.__execName])
     
@@ -225,7 +238,7 @@ def main():
     startTime = args.startTime
     endTime   = myEpoch
     
-  userExec = UserExec(args.exec_name[0])
+  userExec = UserExec(args.exec_name)
   if (not userExec.execName()):
     print("0")
     return

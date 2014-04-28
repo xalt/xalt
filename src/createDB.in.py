@@ -4,13 +4,22 @@ from __future__ import print_function
 from XALTdb     import XALTdb
 import os, sys, re, MySQLdb
 
-ConfigBaseNm = "xalt_db"
-ConfigFn     = ConfigBaseNm + ".conf"
 
 
 
 def main():
 
+  ConfigBaseNm = "xalt_db"
+  ConfigFn     = ConfigBaseNm + ".conf"
+
+  if (not os.path.isfile(ConfigFn)):
+    dirNm, exe = os.path.split(sys.argv[0])
+    fn         = os.path.join(dirNm, ConfigFn)
+    if (os.path.isfile(fn)):
+      ConfigFn = fn
+    else:
+      ConfigFn = os.path.abspath(os.path.join(dirNm, "../site", ConfigFn))
+      
   xalt = XALTdb(ConfigFn)
   db   = xalt.db()
 
@@ -83,7 +92,7 @@ def main():
         CREATE TABLE `xalt_job` (
           `run_id`        int(11)        NOT NULL auto_increment,
           `job_id`        char(11)       NOT NULL,
-          `job_uuid`      char(36)       NOT NULL,
+          `run_uuid`      char(36)       NOT NULL,
           `date`          datetime       NOT NULL,
 
           `syshost`       varchar(64)    NOT NULL,
@@ -106,7 +115,7 @@ def main():
           `exec_path`     varchar(1024)  NOT NULL,
           `cwd`           varchar(1024)  NOT NULL,
           PRIMARY KEY            (`run_id`),
-          INDEX  `index_job_uuid` (`job_uuid`),
+          INDEX  `index_run_uuid` (`run_uuid`),
           INDEX `thekey` (`job_id`, `syshost`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_bin AUTO_INCREMENT=1
         """)

@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-from XALTdb     import XALTdb
 import os, sys, MySQLdb 
+dirNm, execName = os.path.split(sys.argv[0])
+sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
+
+from XALTdb     import XALTdb
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
@@ -10,10 +13,14 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 def main():
   ConfigBaseNm = "xalt_db"
   ConfigFn     = ConfigBaseNm + ".conf"
-  dirNm,prg = os.path.split(sys.argv[0])
 
-  if (not os.path.isdir(ConfigFn)):
-    ConfigFn = os.path.join(dirNm, ConfigFn)
+  if (not os.path.isfile(ConfigFn)):
+    dirNm,prg = os.path.split(sys.argv[0])
+    fn        = os.path.join(dirNm, ConfigFn)
+    if (os.path.isfile(fn)):
+      ConfigFn = fn
+    else:
+      ConfigFn = os.path.abspath(os.path.join(dirNm,"../sbin",ConfigFn))
 
 
   xalt = XALTdb(ConfigFn)

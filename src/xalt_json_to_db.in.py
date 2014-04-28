@@ -100,29 +100,29 @@ def link_json_to_db(xalt, user, linkFnA):
 
 
 
-def job_json_to_db(xalt, user, jobFnA):
+def run_json_to_db(xalt, user, runFnA):
   nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' ]
   try:
-    for fn in jobFnA:
+    for fn in runFnA:
       f      = open(fn,"r")
-      jobT   = json.loads(f.read())
+      runT   = json.loads(f.read())
       f.close()
       conn   = xalt.connect()
       query  = "USE "+xalt.db()
       conn.query(query)
 
-      translate(nameA, jobT['envT'], jobT['userT']);
+      translate(nameA, runT['envT'], runT['userT']);
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                  time.localtime(float(jobT['userT']['start_time'])))
-      uuid        = jobT['xaltLinkT'].get('uuid')
+                                  time.localtime(float(runT['userT']['start_time'])))
+      uuid        = runT['xaltLinkT'].get('uuid')
       if (uuid):
         uuid = "'" + uuid + "'"
       else:
         uuid = "NULL"
 
-      print( "Looking for job_uuid: ",jobT['userT']['job_uuid'])
+      print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
-      query = "SELECT run_id FROM xalt_job WHERE job_uuid='%s'" % jobT['userT']['job_uuid']
+      query = "SELECT run_id FROM xalt_job WHERE run_uuid='%s'" % runT['userT']['run_uuid']
       conn.query(query)
 
       result = conn.store_result()
@@ -130,30 +130,30 @@ def job_json_to_db(xalt, user, jobFnA):
         print("found")
         row    = result.fetch_row()
         run_id = int(row[0][0])
-        query  = "UPDATE xalt_job SET run_time=%.2f WHERE job_uuid='%s'" % (
-          jobT['userT']['run_time'], jobT['userT']['job_uuid'])
+        query  = "UPDATE xalt_job SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
+          runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
         return
       else:
         print("not found")
         query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s','%s') " % (
-          jobT['userT']['job_id'],      jobT['userT']['job_uuid'],    dateTimeStr,
-          jobT['userT']['syshost'],     uuid,                         jobT['hash_id'],
-          jobT['userT']['account'],     jobT['userT']['exec_type'],   jobT['userT']['start_time'],
-          jobT['userT']['end_time'],    jobT['userT']['run_time'],    jobT['userT']['num_cores'],
-          jobT['userT']['num_nodes'],   jobT['userT']['num_threads'], jobT['userT']['queue'],
-          jobT['userT']['user'],        jobT['userT']['exec_path'],   jobT['userT']['cwd'])
+          runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
+          runT['userT']['syshost'],     uuid,                         runT['hash_id'],
+          runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
+          runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
+          runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
+          runT['userT']['user'],        runT['userT']['exec_path'],   runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
 
       print("run_id: ", run_id)
 
       # loop over shared libraries
-      for entryA in jobT['libA']:
+      for entryA in runT['libA']:
         object_path = entryA[0]
         hash_id     = entryA[1]
         query       = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % ( 
-          hash_id, object_path, jobT['userT']['syshost'])
+          hash_id, object_path, runT['userT']['syshost'])
         conn.query(query)
         result = conn.store_result()
         if (result.num_rows() > 0):
@@ -162,7 +162,7 @@ def job_json_to_db(xalt, user, jobFnA):
         else:
           obj_kind = obj_type(object_path)
           query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',NOW(),'%s') " % (
-                      object_path, jobT['userT']['syshost'], hash_id, obj_kind)
+                      object_path, runT['userT']['syshost'], hash_id, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
 
@@ -173,8 +173,8 @@ def job_json_to_db(xalt, user, jobFnA):
         conn.query(query)
 
       # loop over env.
-      for key in jobT['envT']:
-        value = jobT['envT'][key]
+      for key in runT['envT']:
+        value = runT['envT'][key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
         conn.query(query)
         result = conn.store_result()
@@ -214,8 +214,8 @@ def main():
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
-      jobFnA = files_in_tree(xaltDir, "*/job.*.json")
-      job_json_to_db(xalt, user, jobFnA)
+      runFnA = files_in_tree(xaltDir, "*/run.*.json")
+      run_json_to_db(xalt, user, runFnA)
       
       
 

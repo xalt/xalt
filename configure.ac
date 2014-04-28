@@ -1,0 +1,8 @@
+AC_INIT(Makefile.in)
+AC_PREFIX_DEFAULT(/usr/local)
+AC_SUBST(PATH_TO_AS)
+AC_SUBST(PATH_TO_UUIDGEN)
+
+AC_PATH_PROG(PATH_TO_AS,as, [])
+AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
+AC_OUTPUT(makefile:Makefile.in)

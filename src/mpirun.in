@@ -5,9 +5,9 @@ MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 ARGV="$@"
 
-XALT_DIR=/opt/apps/xalt/xalt
-JOB_SUBMIT=$XALT_DIR/bin/xalt_job_submission.py
-UUIDGEN=/usr/bin/uuidgen
+XALT_DIR=@xalt_dir@
+RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
+UUIDGEN=@path_to_uuidgen@
 WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 SYSHOST=$($XALT_DIR/site/xalt_syshost.py)
 export JOB_ID=$($XALT_DIR/site/new_job_id.py)
@@ -89,13 +89,13 @@ do
 done
 
 
-JOB_UUID=`$UUIDGEN`
+RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
-jobFn=$HOME/.xalt.d/job.${SYSHOST}.${DATESTR}.$JOB_UUID.json
+runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
-sTime=$($JOB_SUBMIT --ntasks $NTASKS --start 0        --fn "$jobFn" --job_uuid "$JOB_UUID" -- $EXEC)
+sTime=$($RUN_SUBMIT --ntasks $NTASKS --start 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)
 
 $MY_CMD $ARGV
 
-rTime=$($JOB_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$jobFn" --job_uuid "$JOB_UUID" -- $EXEC)
+rTime=$($RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)
