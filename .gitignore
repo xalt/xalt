@@ -39,3 +39,7 @@ autom4te.cache
 # python generated files
 *.pyc
 *.pyo
+
+config.log
+makefile
+config.status

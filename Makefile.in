@@ -3,6 +3,9 @@ prefix          := @prefix@
 XALT_DIR        := @prefix@
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
 PATH_TO_AS      := @PATH_TO_AS@
+PATH_TO_PSTREE  := @PATH_TO_PSTREE@
+BUILD_PSTREE    := @BUILD_PSTREE@
+USE_ARGPARSE    := @USE_CONTRIB_ARGPARSE@
 
 LIBEXEC         := $(prefix)/libexec
 SITE            := $(prefix)/site
@@ -31,7 +34,8 @@ SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec 
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
+          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE)
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -48,6 +52,25 @@ Inst_sbin: $(SBIN_PKG)
 Inst_bin: $(BIN_PKG)
 	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
 
+Build_pstree_no:
+
+Build_pstree_yes:
+	cd contrib;                                                       \
+        tar xf psmisc-22.21.tar.gz;                                       \
+        cd psmisc-22.21;                                                  \
+        ./configure --prefix=$(prefix)/psmisc;                            \
+        make;                                                             \
+        make DESTDIR=$(DESTDIR) install;                                  \
+        ln -s $(DESTDIR)$(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec; \
+	cd ..; rm -rf psmisc-22.21
+
+Use_argparse_no:
+
+Use_argparse_yes: contrib/argparse/argparse.py
+	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+
+
+
 
 __installMe:
 	-for i in $(FILELIST); do                                     	   \
@@ -59,6 +82,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
 	        -e 's|@path_to_uuidgen@|$(PATH_TO_UUIDGEN)|g'              \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                     \
@@ -68,16 +92,19 @@ __installMe:
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/gittag$$$$;                                          \
-          if [ -s /tmp/gittag$$$$ ]; then                                            \
-	    echo "All files not checked in => try again";                            \
-	  else                                                                       \
-	    echo "$(TAG)" >                                         .version;        \
-            git commit -m "moving to TAG_VERSION $(TAG)"             .version;       \
-            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                   ; \
-	    git push --tags                                                        ; \
-          fi;                                                                        \
+	  @git status -s > /tmp/gittag$$$$;                                \
+          if [ -s /tmp/gittag$$$$ ]; then                                  \
+	    echo "All files not checked in => try again";                  \
+	  else                                                             \
+	    echo "$(TAG)" >                                      .version; \
+            git commit -m "moving to TAG_VERSION $(TAG)"         .version; \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'         ; \
+	    git push --tags                                              ; \
+          fi;                                                              \
           rm -f /tmp/gittag$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
         endif
+
+makefile: Makefile.in config.status
+	./config.status $@
