@@ -3,6 +3,7 @@ prefix          := @prefix@
 XALT_DIR        := @prefix@
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
 PATH_TO_AS      := @PATH_TO_AS@
+BUILD_PSTREE    := @BUILD_PSTREE@
 
 LIBEXEC         := $(prefix)/libexec
 SITE            := $(prefix)/site
