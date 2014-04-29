@@ -3,6 +3,7 @@ prefix          := @prefix@
 XALT_DIR        := @prefix@
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
 PATH_TO_AS      := @PATH_TO_AS@
+PATH_TO_PSTREE  := @PATH_TO_PSTREE@
 BUILD_PSTREE    := @BUILD_PSTREE@
 USE_ARGPARSE    := @USE_CONTRIB_ARGPARSE@
 
@@ -54,7 +55,14 @@ Inst_bin: $(BIN_PKG)
 Build_pstree_no:
 
 Build_pstree_yes:
-	@echo building_pstree
+	cd contrib;                                                       \
+        tar xf psmisc-22.21.tar.gz;                                       \
+        cd psmisc-22.21;                                                  \
+        ./configure --prefix=$(prefix)/psmisc;                            \
+        make;                                                             \
+        make DESTDIR=$(DESTDIR) install;                                  \
+        ln -s $(DESTDIR)$(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec; \
+	cd ..; rm -rf psmisc-22.21
 
 Use_argparse_no:
 
@@ -74,6 +82,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
 	        -e 's|@path_to_uuidgen@|$(PATH_TO_UUIDGEN)|g'              \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                     \

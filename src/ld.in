@@ -7,6 +7,7 @@ XALT_DIR=@xalt_dir@
 GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
+PSTREE=@path_to_pstree@
 
 SYSHOST=$($SYS_HOST_CMD)
 
@@ -87,9 +88,9 @@ if [ ! -d $WRKDIR ]; then
   mkdir -p $WRKDIR
 fi
 
-PSTREE=$(pstree -l -s $$)
+PSTREE_OUT=$($PSTREE -l -s $$)
 
-EPOCH=$($GEN_ASSEMBLY $UUID $SYSHOST $PSTREE $ARGSRC)
+EPOCH=$($GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
 
 $AS $ARGSRC -o $ARGOBJ
 
@@ -97,7 +98,7 @@ $LD $ARGV $ARGOBJ -t > $LINKLINE
 
 STATUS=$?
 
-$GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
+$GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    echo ""                       >> $RESULT

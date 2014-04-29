@@ -15,6 +15,7 @@ printf "Use contrib pstree"
 BUILD_PSTREE=no
 if test x$pstree_prog = x; then
   BUILD_PSTREE=yes
+  PATH_TO_PSTREE=$prefix/libexec/pstree
 else
   versionStr=$($pstree_prog --version 2>&1 | head -1)
   name=`expr "$versionStr" : '.*(\(PSmisc\))'`
@@ -22,26 +23,35 @@ else
     major_version=`expr "$versionStr" : '.*(PSmisc) \([[0-9]]\+\)\.'`
     minor_version=`expr "$versionStr" : '.*(PSmisc) \+[[0-9]]\+\.\([[0-9]]\+\)'`
     version=`expr $major_version \* 100000 + $minor_version`
-    contrib_version=2200021
+    contrib_version=2200020
     if test $version -lt $contrib_version ; then
       BUILD_PSTREE=yes
+      PATH_TO_PSTREE=$prefix/libexec/pstree
     fi
   fi
 fi
 echo "... $BUILD_PSTREE"
 
+if test x$BUILD_PSTREE = xyes; then
+   AC_CHECK_HEADERS(curses.h)
+   if test x$ac_cv_header_curses_h != xyes; then
+      echo "Error: must have curses.h before building psmisc"
+      exit 1
+   fi
+fi
+
+
+
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
-
 versionStr=$(python --version 2>&1 | head -1)
 major_version=`expr "$versionStr" : 'Python \+\([[0-9]]\+\)\.'`
 minor_version=`expr "$versionStr" : 'Python \+[[0-9]]\+\.\([[0-9]]\+\)'`
 version=`expr $major_version \* 100000 + $minor_version`
-contrib_version=200008
+contrib_version=200007
 if test $version -lt $contrib_version ; then
   USE_CONTRIB_ARGPARSE=yes
 fi
-
 echo "... $USE_CONTRIB_ARGPARSE"
 
 
