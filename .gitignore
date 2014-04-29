@@ -41,3 +41,5 @@ autom4te.cache
 *.pyo
 
 config.log
+makefile
+config.status
