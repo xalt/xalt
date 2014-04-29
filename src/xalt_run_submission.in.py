@@ -121,7 +121,7 @@ class UserExec(object):
     for prog in exec_progA:
       bare = os.path.basename(prog)
       if (not (bare in ignoreT)):
-        cmd = arg
+        cmd = prog
         break
 
     self.__execName = which(cmd)
@@ -238,7 +238,7 @@ def main():
     startTime = args.startTime
     endTime   = myEpoch
     
-  userExec = UserExec(args.exec_name)
+  userExec = UserExec(args.exec_prog)
   if (not userExec.execName()):
     print("0")
     return
