@@ -585,7 +585,8 @@ ac_unique_file="Makefile.in"
 ac_default_prefix=/usr/local
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-pstreeprog
+pstree_prog
+USE_CONTRIB_ARGPARSE
 BUILD_PSTREE
 PATH_TO_PSTREE
 PATH_TO_UUIDGEN
@@ -1672,6 +1673,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+
 # Extract the first word of "as", so it can be a program name with args.
 set dummy as; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -1756,12 +1758,12 @@ fi
 set dummy pstree; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_pstreeprog+:} false; then :
+if ${ac_cv_path_pstree_prog+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $pstreeprog in
+  case $pstree_prog in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_pstreeprog="$pstreeprog" # Let the user override the test with a path.
+  ac_cv_path_pstree_prog="$pstree_prog" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -1771,7 +1773,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_pstreeprog="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_pstree_prog="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -1782,10 +1784,10 @@ IFS=$as_save_IFS
   ;;
 esac
 fi
-pstreeprog=$ac_cv_path_pstreeprog
-if test -n "$pstreeprog"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $pstreeprog" >&5
-$as_echo "$pstreeprog" >&6; }
+pstree_prog=$ac_cv_path_pstree_prog
+if test -n "$pstree_prog"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $pstree_prog" >&5
+$as_echo "$pstree_prog" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -1794,24 +1796,38 @@ fi
 
 PATH_TO_PSTREE=$pstree_prog
 
+printf "Use contrib pstree"
 BUILD_PSTREE=no
 if test x$pstree_prog = x; then
   BUILD_PSTREE=yes
 else
-  versionStr=$(pstree_prog | head -1)
+  versionStr=$($pstree_prog --version 2>&1 | head -1)
   name=`expr "$versionStr" : '.*(\(PSmisc\))'`
-  if test x$name = "xPSmisc"; then
-    major_version=`expr "$versionStr" : '.*(PSmisc) \(0-9\+\)\.'`
-    minor_version=`expr "$versionStr" : '.*(PSmisc) \+0-9\+\.\(0-9\+\)'
+  if test x$name = "xPSmisc" ; then
+    major_version=`expr "$versionStr" : '.*(PSmisc) \([0-9]\+\)\.'`
+    minor_version=`expr "$versionStr" : '.*(PSmisc) \+[0-9]\+\.\([0-9]\+\)'`
     version=`expr $major_version \* 100000 + $minor_version`
-
     contrib_version=2200021
-
-    if test $version < $contrib_version; then
+    if test $version -lt $contrib_version ; then
       BUILD_PSTREE=yes
     fi
   fi
 fi
+echo "... $BUILD_PSTREE"
+
+printf "Use contrib argparse"
+USE_CONTRIB_ARGPARSE=no
+
+versionStr=$(python --version 2>&1 | head -1)
+major_version=`expr "$versionStr" : 'Python \+\([0-9]\+\)\.'`
+minor_version=`expr "$versionStr" : 'Python \+[0-9]\+\.\([0-9]\+\)'`
+version=`expr $major_version \* 100000 + $minor_version`
+contrib_version=200008
+if test $version -lt $contrib_version ; then
+  USE_CONTRIB_ARGPARSE=yes
+fi
+
+echo "... $USE_CONTRIB_ARGPARSE"
 
 
 
