@@ -1,8 +1,10 @@
 package         := xalt
-prefix          := /opt/apps/xalt/0.3
-XALT_DIR        := /opt/apps/xalt/0.3
+prefix          := /home/mclay/l/pkg/xalt/0.3
+XALT_DIR        := /home/mclay/l/pkg/xalt/0.3
 PATH_TO_UUIDGEN := /usr/bin/uuidgen
 PATH_TO_AS      := /usr/bin/as
+BUILD_PSTREE    := yes
+USE_ARGPARSE    := yes
 
 LIBEXEC         := $(prefix)/libexec
 SITE            := $(prefix)/site
@@ -31,7 +33,8 @@ SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec 
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
+          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE)
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -47,6 +50,18 @@ Inst_sbin: $(SBIN_PKG)
 
 Inst_bin: $(BIN_PKG)
 	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+
+Build_pstree_no:
+
+Build_pstree_yes:
+	@echo building_pstree
+
+Use_argparse_no:
+
+Use_argparse_yes: contrib/argparse/argparse.py
+	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+
+
 
 
 __installMe:
@@ -68,16 +83,19 @@ __installMe:
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/gittag$$$$;                                          \
-          if [ -s /tmp/gittag$$$$ ]; then                                            \
-	    echo "All files not checked in => try again";                            \
-	  else                                                                       \
-	    echo "$(TAG)" >                                         .version;        \
-            git commit -m "moving to TAG_VERSION $(TAG)"             .version;       \
-            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                   ; \
-	    git push --tags                                                        ; \
-          fi;                                                                        \
+	  @git status -s > /tmp/gittag$$$$;                                \
+          if [ -s /tmp/gittag$$$$ ]; then                                  \
+	    echo "All files not checked in => try again";                  \
+	  else                                                             \
+	    echo "$(TAG)" >                                      .version; \
+            git commit -m "moving to TAG_VERSION $(TAG)"         .version; \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'         ; \
+	    git push --tags                                              ; \
+          fi;                                                              \
           rm -f /tmp/gittag$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
         endif
+
+makefile: Makefile.in config.status
+	./config.status $@
