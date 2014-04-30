@@ -2109,6 +2109,7 @@ if test x$pstree_prog != x; then
     contrib_version=2200020
     if test $version -ge $contrib_version ; then
       BUILD_PSTREE=no
+    fi
   fi
 fi
 echo "... $BUILD_PSTREE"
