@@ -78,15 +78,15 @@ __installMe:
            fn=$${bareN%%.in*};                                        	   \
            ext=$${bareN#*.};                                          	   \
            oext=;                                                          \
+	   echo "bareN: $$bareN, ext: $$ext"; \
            [ "$$ext" = "in.py" ] && oext=".py";                            \
-           [ "$$ext" = "symm.in" ] && oext=".symm";                        \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
 	        -e 's|@path_to_uuidgen@|$(PATH_TO_UUIDGEN)|g'              \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
-            [ "$$ext" = "in" -o "$$ext" = ".symm" -o "$$ext" = "in.py" ] && \
+            [ "$$ext" = "in" -o "$$ext" = "symm.in" -o "$$ext" = "in.py" ] && \
                chmod +x $(DIRLOC)/$$fn$$oext;                              \
 	    true;                                                          \
         done
