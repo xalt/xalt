@@ -72,6 +72,7 @@ fi
 cmdA=("-$MAKE distclean"
       "./configure --prefix=$PKG"
       "$SUDO $MAKE install"
+      "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
       )
 
 
