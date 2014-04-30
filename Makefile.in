@@ -14,7 +14,7 @@ SBIN            := $(prefix)/sbin
 DIRLIST         := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
                    $(DESTDIR)$(SBIN) 
 
-BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in
+BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in src/ibrun.symm.in
 
 
 SBIN_PKG        := src/conf_create.in.py  src/createDB.in.py        \

@@ -1,0 +1,885 @@
+#!/bin/bash
+# -*-sh-*-
+# ---------------------------------------------------------------------
+# Stampede Symmetric ibrun
+#
+# ---------------------------------------------------------------------
+
+#------------------------------------------------
+# Usage message
+#------------------------------------------------
+function usage {
+  ## User asked for a help message.  Exit after printing it.
+    echo " "
+    echo "TACC ibrun.symm job launch utility:"
+    echo " "
+    echo "This utility may be used to launch multi-binary MPI applications"
+    echo "between hosts and Xeon Phi (MIC) co-processors. It can also be"
+    echo "used to launch Phi only applications that communicate via MPI."
+    echo " "
+
+    echo "Usage: `basename $0` -m ./<mic_executable> -c ./<cpu_executable> "
+    echo " "
+    echo "Note:  To specify an executable to run on two MICs per node (if installed)"
+    echo "        specify -2 instead of -m "
+    echo " "
+    echo "Relevant MIC Environment Variables:"
+    echo " "
+    echo "  MIC_MY_NSLOTS = total # of MIC MPI tasks"
+    echo "   (Default=\$MIC_PPN * # MIC cards)"
+    echo "  MIC_PPN             = # of MPI tasks per MIC (Default=4)"
+    echo "  MIC_OMP_NUM_THREADS = # of threads per MIC MPI task (Default=30)"
+    echo " "
+    echo "Relevant Host Environment Variables:"
+    echo " "
+    echo "In general, the number of host MPI tasks and their layout are"
+    echo "inherited from the underlying SLURM settings.  However, the user "
+    echo "may override these settings using the following environment "
+    echo "variables: "
+    echo " "
+    echo "  MY_NSLOTS       = total # of MPI host tasks (Default=\$SLURM_NTASKS)"
+    echo "  OMP_NUM_THREADS = # of threads per host MPI task (Default=1)"
+    echo " "
+    echo "To illustrate symmetric usage, consider the following example which "
+    echo "assumes we have an MPI executable built for the host CPU (mpihello.mic)"
+    echo "and a companion MPI executable built for the MIC (mpihello.mic)."
+    echo "An example job script for this configuration is as follows; "
+    echo " "
+    echo "----------------- Example Job Script ------------------"
+    echo "#SBATCH -n 32 -N 4 "
+    echo "#SBATCH -p normal-mic"
+    echo "#SBATCH -t 02:00:00"
+    echo "#SBATCH -A A-yourproject"
+    echo " "
+    echo "export MIC_PPN=2"
+    echo "export MIC_OMP_NUM_THREADS=60"
+    echo "export OMP_NUM_THREADS=2"
+    echo "ibrun.symm -m ./mpihello.mic -c ./mpihello.host "
+    echo "-------------------------------------------------------"
+    echo " "
+    echo "When submitted, the job script above will start 32 host MPI tasks spread"
+    echo "across 4 nodes plus 2 MPI tasks on 4 MIC cards resulting in 40 MPI"
+    echo "tasks total. Each MPI task on the host will use 2 threads/task while"
+    echo "each MPI task on the MIC will use 60 threads/task."
+    echo " "
+    echo "Note that the tasks will be allocated in consecutive order on the nodes, e.g. "
+    echo " "
+    echo "NODE1:  8 host tasks ( 0 - 7) :  2 MIC tasks ( 8 - 9)"
+    echo "NODE2:  8 host tasks (10 -17) :  2 MIC tasks (18 -19)"
+    echo "NODE3:  8 host tasks (20 -27) :  2 MIC tasks (28 -29)"
+    echo "NODE4:  8 host tasks (30 -37) :  2 MIC tasks (38 -39)"
+    echo " "
+    echo "You can change this task ordering to have CPU tasks first, followed by"
+    echo "MIC tasks by setting the environment variable MIC_MPI_HOST_INTERLEAVE=0"
+    echo " "
+    echo "Note:  ibrun.symm does not support the -n or -o arguments. "
+    echo " "
+}
+
+#------------------------------------------------
+# Support Function: Default MPI Runtime Settings
+#------------------------------------------------
+function load_defaults {
+    export TACC_IBRUN_MODE=symmetric
+    export  MV2_MIC_INSTALL_PATH=${MPICH_HOME}/k1om
+    IBRUN_DEFAULTS=/usr/local/bin/ibrun.defaults
+
+    if [ -s $IBRUN_DEFAULTS ];then
+	. $IBRUN_DEFAULTS
+    else
+	echo "TACC: Error -> Unable to load default MPI launch environment"
+	echo "TACC: Error -> $IBRUN_DEFAULTS"
+	exit 1
+    fi
+}
+
+#------------------------------------------------
+#Build the config file and hostlist
+# The default is to interleave the host and MIC's
+#------------------------------------------------
+function build_interleaved_hostlist {
+
+   #Initialize the hostlist index and populate the configfile
+   host_id=0
+   #Track # of tasks for MY_NSLOTS and flag to end host tasks
+   task_id=0
+   nslots_flag=0
+   #Track # of tasks for MIC_MY_NSLOTS and flag to end MIC tasks
+   mic_task_id=0
+   mic_nslots_flag=0
+
+   #Build the hostlist for host, mic, and/or both
+   #Build the hostlist for host using the SLURM_TASKS_PER_NODE syntax
+   #FTW: for each node cluster...
+   for nodes in ${node_clusters[@]}; do
+      #Get the task count and node count for each node cluster
+      if [ "x$HOST_PPN" != "x" ]; then
+         task_count=$HOST_PPN
+      else
+         task_count=`echo $nodes | awk -F '(' '{print $1}'`
+      fi
+      if [[ `echo $nodes | grep x` ]]; then
+         node_count=`echo $nodes | sed -e's/.*x\([0-9]\+\).*/\1/'`
+      else
+         node_count=1
+      fi
+   
+      #Build the host list to match tasks per node
+      #FTW:  for each node...
+      for i in `seq 0 $((node_count-1))`; do
+         #Build command for host
+         if [ "x$hexec" != "x" ]; then
+            #First check to see if we exceed MY_NSLOTS
+            task_id=$((task_id+task_count))
+            if [ "$MY_NSLOTS" -lt "$task_id" ]; then  
+               task_count=$((task_count + MY_NSLOTS - task_id))
+            fi
+            #Add host command to the configfile
+            # and host name to hostfile
+            if [ "$nslots_flag" -eq 0 ]; then  
+               echo " -n $task_count $config_delim $hexec " >> $configfile_tacc 
+               echo " ${br0_hostlist[${host_id}]}:$task_count "  >> $hostfile_tacc 
+            fi
+         fi # end entry for host in config file
+         #If we exceeded MY_NSLOTS -- don't set up any more host tasks
+         if [ "$MY_NSLOTS" -lt "$task_id" ]; then nslots_flag=1; fi  
+   
+         #Build command for mics
+         if [ "x$mexec$m2exec" != "x" ]; then
+            #Add MIC command to the configfile
+            # and host name to hostfile
+            if [ "$mic_nslots_flag" -eq 0 ]; then  
+               if [ "x$mexec" != "x" ]; then
+                  #First check to see if we exceed MIC_MY_NSLOTS
+                  mic_task_id=$((mic_task_id+MIC_PPN))
+                  if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then  
+                     MIC_PPN=$((MIC_PPN + MIC_MY_NSLOTS - mic_task_id))
+                  fi
+                  cmd=""
+                  cmd=" $cmd -n $MIC_PPN $config_delim"
+                  cmd=" $cmd $ENV_MIC "
+                  cmd=" $cmd $mexec "
+                  echo "$cmd " >> $configfile_tacc 
+                  echo " ${mic0_hostlist[${host_id}]}:$MIC_PPN "  >> $hostfile_tacc 
+               fi
+               #If we exceeded MIC_MY_NSLOTS -- don't set up any more MIC tasks
+               if [ "$MIC_MY_NSLOTS" -le "$mic_task_id" ]; then mic_nslots_flag=1; fi  
+            fi 
+   
+            #FTW: second mic...
+            if [ "$mic_nslots_flag" -eq 0 ]; then  
+               if [ "x$m2exec" != "x" ]; then
+                  #Check again to see if we exceed MIC_MY_NSLOTS
+                  mic_task_id=$((mic_task_id+MIC_PPN))
+                  if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then  
+                     MIC_PPN=$((MIC_PPN + MIC_MY_NSLOTS - mic_task_id))
+                  fi
+                  cmd=""
+                  cmd=" $cmd -n $MIC_PPN $config_delim"
+                  cmd=" $cmd $ENV_MIC "
+                  cmd=" $cmd $m2exec "
+                  echo "$cmd " >> $configfile_tacc 
+                  echo " ${mic1_hostlist[${host_id}]}:$MIC_PPN "  >> $hostfile_tacc 
+               fi
+               #If we exceeded MIC_MY_NSLOTS -- don't set up any more MIC tasks
+               if [ "$MIC_MY_NSLOTS" -le "$mic_task_id" ]; then mic_nslots_flag=1; fi  
+            fi
+         fi # end entry for mic in config file
+   
+         cmd=""
+         ((host_id++))
+   
+      done
+   #FTW: end for each node...
+   
+   done
+   #FTW: end for each node cluster...
+}
+
+#------------------------------------------------
+#Build the config file and hostlist
+#  Do not interleave hosts and MICs
+#  All MIC tasks are at the end of the task pool
+#------------------------------------------------
+function build_non_interleaved_hostlist {
+   #Initialize the hostlist index and populate the configfile
+   host_id=0
+   #Track # of tasks for MY_NSLOTS and flag to end host tasks
+   task_id=0
+   nslots_flag=0
+   #Track # of tasks for MIC_MY_NSLOTS and flag to end MIC tasks
+   mic_task_id=0
+   mic_nslots_flag=0
+
+   #Build the hostlist for host, mic, and/or both
+   #Build the hostlist for host using the SLURM_TASKS_PER_NODE syntax
+   #FTW: for each node cluster...
+   # Handle hosts first
+   for nodes in ${node_clusters[@]}; do
+      #Get the task count and node count for each node cluster
+      if [ "x$HOST_PPN" != "x" ]; then
+         task_count=$HOST_PPN
+      else
+         task_count=`echo $nodes | awk -F '(' '{print $1}'`
+      fi
+      if [[ `echo $nodes | grep x` ]]; then
+         node_count=`echo $nodes | sed -e's/.*x\([0-9]\+\).*/\1/'`
+      else
+         node_count=1
+      fi
+   
+      #Build the host list to match tasks per node
+      #FTW:  for each node...
+      for i in `seq 0 $((node_count-1))`; do
+         #Build command for host
+         if [ "x$hexec" != "x" ]; then
+            #First check to see if we exceed MY_NSLOTS
+            task_id=$((task_id+task_count))
+            if [ "$MY_NSLOTS" -lt "$task_id" ]; then  
+               task_count=$((task_count + MY_NSLOTS - task_id))
+            fi
+            #Add host command to the configfile
+            # and host name to hostfile
+            if [ "$nslots_flag" -eq 0 ]; then  
+               echo " -n $task_count $config_delim $hexec " >> $configfile_tacc 
+               echo " ${br0_hostlist[${host_id}]}:$task_count "  >> $hostfile_tacc 
+            fi
+         fi # end entry for host in config file
+         #If we exceeded MY_NSLOTS -- don't set up any more host tasks
+         if [ "$MY_NSLOTS" -lt "$task_id" ]; then nslots_flag=1; fi  
+   
+   
+      done
+   #FTW: end for each node...
+   
+   done
+
+   #Initialize the hostlist index and populate the configfile
+   host_id=0
+   #Track # of tasks for MY_NSLOTS and flag to end host tasks
+   task_id=0
+   nslots_flag=0
+   #Track # of tasks for MIC_MY_NSLOTS and flag to end MIC tasks
+   mic_task_id=0
+   mic_nslots_flag=0
+
+   #FTW: end for each node cluster...
+   # Handle mics next
+   for nodes in ${node_clusters[@]}; do
+      #Get the task count and node count for each node cluster
+      if [ "x$HOST_PPN" != "x" ]; then
+         task_count=$HOST_PPN
+      else
+         task_count=`echo $nodes | awk -F '(' '{print $1}'`
+      fi
+      if [[ `echo $nodes | grep x` ]]; then
+         node_count=`echo $nodes | sed -e's/.*x\([0-9]\+\).*/\1/'`
+      else
+         node_count=1
+      fi
+   
+      #Build the host list to match tasks per node
+      #FTW:  for each node...
+      for i in `seq 0 $((node_count-1))`; do
+         #Build command for mics
+         if [ "x$mexec$m2exec" != "x" ]; then
+            #Add MIC command to the configfile
+            # and host name to hostfile
+            if [ "$mic_nslots_flag" -eq 0 ]; then  
+               if [ "x$mexec" != "x" ]; then
+                  #First check to see if we exceed MIC_MY_NSLOTS
+                  mic_task_id=$((mic_task_id+MIC_PPN))
+                  if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then  
+                     MIC_PPN=$((MIC_PPN + MIC_MY_NSLOTS - mic_task_id))
+                  fi
+                  cmd=""
+                  cmd=" $cmd -n $MIC_PPN $config_delim"
+                  cmd=" $cmd $ENV_MIC "
+                  cmd=" $cmd $mexec "
+                  echo "$cmd " >> $configfile_tacc 
+                  echo " ${mic0_hostlist[${host_id}]}:$MIC_PPN "  >> $hostfile_tacc 
+               fi
+               #If we exceeded MIC_MY_NSLOTS -- don't set up any more MIC tasks
+               if [ "$MIC_MY_NSLOTS" -le "$mic_task_id" ]; then mic_nslots_flag=1; fi  
+            fi 
+   
+            #FTW: second mic...
+            if [ "$mic_nslots_flag" -eq 0 ]; then  
+               if [ "x$m2exec" != "x" ]; then
+                  #Check again to see if we exceed MIC_MY_NSLOTS
+                  mic_task_id=$((mic_task_id+MIC_PPN))
+                  if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then  
+                     MIC_PPN=$((MIC_PPN + MIC_MY_NSLOTS - mic_task_id))
+                  fi
+                  cmd=""
+                  cmd=" $cmd -n $MIC_PPN $config_delim"
+                  cmd=" $cmd $ENV_MIC "
+                  cmd=" $cmd $m2exec "
+                  echo "$cmd " >> $configfile_tacc 
+                  echo " ${mic1_hostlist[${host_id}]}:$MIC_PPN "  >> $hostfile_tacc 
+               fi
+               #If we exceeded MIC_MY_NSLOTS -- don't set up any more MIC tasks
+               if [ "$MIC_MY_NSLOTS" -le "$mic_task_id" ]; then mic_nslots_flag=1; fi  
+            fi
+         fi # end entry for mic in config file
+   
+         cmd=""
+         ((host_id++))
+   
+      done
+   #FTW: end for each node...
+   
+   done
+   #FTW: end for each node cluster...
+}
+
+ibrunDir=/usr/local/bin
+
+nlocal=$(hostname -f)
+nA=($(builtin echo "$nlocal" | tr '.' ' '))
+first=${nA[0]}
+SYSHOST=${nA[1]}
+
+fqdn="$SYSHOST.tacc.utexas.edu"
+
+
+ADMIN_stampede="/tmp/moduleData/reverseMapD:/home1/moduleData/XSEDE/reverseMapD"
+ADMIN_ls4="/home1/moduleData/reverseMapD"
+ADMIN_longhorn="/share/tacc_admin"
+eval "ADMIN_DIR=\$ADMIN_$SYSHOST"
+
+## # 01/14/13 (ks): Temporary fix to disable UD hybrid
+## 
+## if [ -z "$MV2_USE_UD_HYBRID" ]; then
+##     export MV2_USE_UD_HYBRID=0
+## fi
+## 
+## if [ -z "$MV2_USE_OLD_BCAST" ]; then
+##     export MV2_USE_OLD_BCAST=1
+## fi
+## 
+## # 4/16/13 - faster startup times for 1.9b and higher
+## 
+## if [ -z "$MV2_HOMOGENEOUS_CLUSTER" ];then
+##     export MV2_HOMOGENEOUS_CLUSTER=1
+## fi
+## 
+## # 4/16/13 - support for more than 128 MICs with impi
+## 
+## if [ -z "$I_MPI_HYDRA_BRANCH_COUNT" ]; then
+##  export I_MPI_HYDRA_BRANCH_COUNT=6000
+## fi
+## 
+## # 9/10/13 - support for larger number of MPI hosts (ks)
+## 
+## if [ -z "$DAPL_UCM_REP_TIME" ]; then
+##  export DAPL_UCM_REP_TIME=8000
+## fi
+## 
+## if [ -z "$DAPL_UCM_RTU_TIME" ]; then
+##  export DAPL_UCM_RTU_TIME=4000
+## fi
+## 
+## if [ -z "$DAPL_UCM_RETRY" ]; then
+##  export DAPL_UCM_RETRY=10
+## fi
+## 
+
+## Look through all the arguments to ibrun.  If the user asked for help (-h)
+## print the help and then exit immediately.
+
+# echo "ARG1 = $1 "
+
+if [ "$1" != "-m" -a "$1" != "-c" -a "$1" != "--m2" -a "$1" != "-2" ]; then
+   usage
+   exit 0
+fi
+
+# Check for some command line switches before the executable
+stop_parsing=0
+
+mexec=""
+m2exec=""
+hexec=""
+
+while [ $stop_parsing -ne 1 ]
+do
+  case "$1" in
+    -m)
+      shift
+      mexec=$1
+      shift
+      ;;
+    --m2)
+      shift
+      m2exec=$1
+      shift
+      ;;
+    -c)
+      shift
+      hexec=$1
+      shift
+      ;;
+    -2)
+      shift
+      mexec=$1
+      m2exec=$1
+      shift
+      ;;
+    *)
+      stop_parsing=1
+      ;;
+  esac
+done
+
+#-----------------------
+# Load runtime defaults
+#-----------------------
+
+load_defaults
+
+pe_startTime=`date +%s`
+
+# --------------------------------------------------------
+# Check for user provided MIC_PPN and MIC_MY_NSLOTS 
+#  and MIC_OMP_NUM_THREADS
+# --------------------------------------------------------
+#if [ "x$MIC_PPN" == "x" ]; then
+#   MIC_PPN=4
+#fi
+#if [ "x$MIC_MY_NSLOTS" == "x" ]; then
+#   MIC_MY_NSLOTS=0
+#   MIC2_MY_NSLOTS=0
+#   if [ "x$mexec" != "x" ]; then
+#      MIC_MY_NSLOTS=$((MIC_PPN * SLURM_NNODES))
+#   fi
+#   if [ "x$m2exec" != "x" ]; then
+#      MIC2_MY_NSLOTS=$((MIC_PPN * SLURM_NNODES))
+#   fi
+#   MIC_MY_NSLOTS=$((MIC_MY_NSLOTS + MIC2_MY_NSLOTS))
+#fi
+if [ "x$m2exec" != "x" -a  "x$mexec" != "x" ]; then
+   MIC_MY_NSLOTS=$((MIC_MY_NSLOTS + MIC2_MY_NSLOTS))
+fi
+
+
+
+if [ x"$MIC_OMP_NUM_THREADS" == "x" ]; then
+   export MIC_OMP_NUM_THREADS=30
+fi
+
+# Get the PE hostfile, number of slots and wayness from the environment
+
+SCHEDULER=SLURM
+
+BATCH_JOB_ID=$SLURM_JOBID
+NSLOTS_BATCH=$SLURM_NPROCS
+
+#Parse the SLURM_TASKS_PER_NODE string to get # of node clusters
+# e.g.  6(2x),5(2x) -- 1st 2 nodes run 6 tasks, next 2 nodes run 5 tasks
+declare -a node_clusters=(`echo $SLURM_TASKS_PER_NODE | sed -e's/,/ /g'`)
+#    echo "DEBUG: ${node_clusters[@]} "
+#Set the wayness for each node cluster using one env
+# Format of node_tasks_ppn_info = 
+# "{# of tasks per node},{#initial task id}_[repeats if necessary]"
+#                                         ^
+#No spaces are allowed in env variables that build_env.pl handles.
+# So, an "_" is used in place of a space.
+
+#Initialize variables needed to setup node_tasks_ppn_info
+node_tasks_ppn_info=""
+task_count=0
+
+#Loop over node clusters
+for nodes in ${node_clusters[@]}; do
+   #Get the number of tasks per node
+   tasks_ppn_cluster=`echo $nodes | awk -F '(' '{print $1}'`
+
+   #Determine how many nodes are in this cluster, i.e. have the same number of 
+   # tasks/node 
+   if [[ `echo $nodes | grep x` ]]; then
+      node_count=`echo $nodes | sed -e's/.*x\([0-9]\+\).*/\1/'`
+   else
+      node_count=1
+   fi
+
+   #We have to set this up for each node when running with MIC
+   # Loop over the nodes in the node cluster
+
+   node_index=0
+   while [ $node_index -lt $node_count ]; do
+      #Set the number of tasks/node for this node and the task id 
+      # at which it starts
+      node_tasks_ppn_info="${node_tasks_ppn_info}${tasks_ppn_cluster},${task_count}_"
+
+      #Increment the task counter by the number of tasks per node
+      let "task_count = $task_count + $tasks_ppn_cluster "
+
+      #Increment the task counter by the number of tasks on the mic
+      let "task_count = $task_count + $MIC_PPN "
+
+      let "node_index=$node_index+1"
+   done
+done
+    
+#Export as an env variable to pass along to each task
+export NODE_TASKS_PPN_INFO="\"$node_tasks_ppn_info\""
+
+echo "TACC: Starting up job $BATCH_JOB_ID"
+
+srq_size=2048
+default_time_out=23
+
+# Find out which MPI stack we're using
+
+MODE=$TACC_MPI_GETMODE
+if [ -z $MODE ]; then
+   MODE=`getmode.sh`
+fi 
+
+# Set our files and directories
+
+home_batch_dir="$HOME/.slurm"
+
+if [ ! -d $home_batch_dir ]; then
+   mkdir -p $home_batch_dir
+fi
+
+# FYI: mktemp generates a filename with random numbers/letters
+# replacing the XXX
+
+hostfile_tacc=`mktemp $home_batch_dir/job.$BATCH_JOB_ID.hostlist.XXXXXXXX`
+nslotsfile_tacc=`mktemp $home_batch_dir/job.$BATCH_JOB_ID.info.XXXXXXXX`
+configfile_tacc=`mktemp $home_batch_dir/config_file.$BATCH_JOB_ID.XXXXXXXX`
+
+# Just to be sure, remove the host and nslots files in case they
+# already exist.  This should never happen...
+
+if [ -f $nslotsfile_tacc ]; then
+   rm $nslotsfile_tacc
+fi
+
+if [ -f $hostfile_tacc ]; then
+   rm $hostfile_tacc
+fi
+
+if [ -f $configfile_tacc ]; then
+   rm $configfile_tacc
+fi
+
+# Set local LD_PRELOAD with DARSHAN
+if [ x$LD_PRELOAD == "x" ]; then
+   IBRUN_LD_PRELOAD=""
+else
+   IBRUN_LD_PRELOAD="$LD_PRELOAD"
+   unset LD_PRELOAD
+fi
+
+if [ x$TACC_DARSHAN_LIB != "x" ]; then
+   if [ x$IBRUN_LD_PRELOAD == "x" ]; then
+      IBRUN_LD_PRELOAD="${TACC_DARSHAN_FORTRAN_LIB}:${TACC_DARSHAN_LIB}"
+   else
+      IBRUN_LD_PRELOAD="${IBRUN_LD_PRELOAD}:${TACC_DARSHAN_FORTRAN_LIB}:${TACC_DARSHAN_LIB}"
+   fi
+fi
+
+if [ -n "$IBRUN_LD_PRELOAD" ]; then
+   MVAPICH_LD_PRELOAD="LD_PRELOAD=$IBRUN_LD_PRELOAD"
+   OPENMPI_LD_PRELOAD="-x LD_PRELOAD=$IBRUN_LD_PRELOAD"
+fi
+
+# ------------------------------
+# Check for user provided NSLOTS
+# ------------------------------
+if [ x"$MY_NSLOTS" == "x" ]; then
+   if [ -f $nslotsfile_tacc ]; then
+      MY_NSLOTS=`cat $nslotsfile_tacc`
+   else
+      MY_NSLOTS=$NSLOTS_BATCH
+   fi
+fi
+
+#Added for Robert McLay to allow a user to override the wayness of a node
+if [ "x$HOST_PPN" != "x" ]; then
+   MY_NSLOTS=$((HOST_PPN * SLURM_NNODES))
+fi
+
+#Set up the mic environment
+if [ -z "${MIC_ENV_PREFIX}" ]; then
+   export MIC_ENV_PREFIX=MIC
+fi
+
+#Set mvapich2/impi specific usage
+if [ x"$MODE" == "xmvapich2_ssh" -a "x$TACC_IBRUN_MODE" == "xsymmetric" ];then
+   #Set up the command line
+   #Run using mpirun_rsh
+   # mpi_task_starter="MV2_MIC_INSTALL_PATH=${MPICH_HOME}/k1om mpirun_rsh -export"
+   mpi_task_starter="mpirun_rsh -export"
+   config_flag="-config"
+   host_flag="-hostfile"
+
+   #Set up the environment in the config file
+   # FORM of config file
+   # -n <#tasks/host> : env [[<env_name>=<env_value>]...] <executable>
+   config_delim=": env"
+   ENV_MIC=`env | grep -i ^${MIC_ENV_PREFIX}_ | egrep -v MIC_ENV_PREFIX | sed -e s/=/TACC_ENV_DELIMITER/ | awk -vORS=' ' -v pfx=${MIC_ENV_PREFIX} -F "TACC_ENV_DELIMITER" '{b=$1; a=substr($1,length(pfx)+2,length($1));  if (length($2) > 0 ) print " "a"="$2 ; }'`
+
+
+   # Include proxy support?
+   use_mic_proxy=""
+   if [ "$MV2_USE_MIC_PROXY" -eq 1 ];then
+     use_mic_proxy="-use-mic-proxy"
+   fi
+
+elif [ x"$MODE" == "ximpi_hydra" ]; then
+   #Set up the command line
+   #Run using mpiexec.hydra
+   # Must have -iface br0 for multi-node MIC only runs
+   mpi_task_starter="mpiexec.hydra -iface br0"
+   config_flag="-configfile"
+   host_flag="-machinefile"
+
+   #Set up the environment in the config file
+   # FORM of config file
+   # -n <#tasks/host> : [[-env <env_name> <env_value>]...] <executable>
+   config_delim=" "
+   ENV_MIC=`env | grep -i ^${MIC_ENV_PREFIX}_ | egrep -v MIC_ENV_PREFIX | sed -e s/=/TACC_ENV_DELIMITER/ | awk -vORS=' ' -v pfx=${MIC_ENV_PREFIX} -F "TACC_ENV_DELIMITER" '{b=$1; a=substr($1,length(pfx)+2,length($1));  if (length($2) > 0 ) print " -env "a" "$2" "; }'`
+
+   #Set KMP_AFFINITY and I_MPI_PIN_MODE at the beginning of ENV_MIC
+   # If there are any user settings, e.g. MIC_KMP_AFFINITY, they will override these defaults
+   ENV_MIC="-env KMP_AFFINITY balanced -env I_MPI_PIN_MODE mpd $ENV_MIC"
+   
+#    echo "DEBUG: ${hostlist[@]} "
+
+#   echo "# Using command: mpiexec.hydra -configfile <config_file_name> -machinefile <machine_file_name>"  >> $configfile_tacc 
+
+else
+    # Some other MPI stack? fail.
+    echo "TACC: Could not determine MPI stack. Exiting!"
+    exit 1
+fi
+
+#Initialize config file
+touch $configfile_tacc
+touch $hostfile_tacc
+run_command="$mpi_task_starter $config_flag $configfile_tacc $host_flag $hostfile_tacc $use_mic_proxy "
+echo "# Using command: $run_command " >> $configfile_tacc
+
+
+#Get a list of hosts
+declare -a hostlist=(`scontrol show hostname $SLURM_NODELIST `)
+if [ $? -ne 0  ];then
+   echo "TACC: Error -> slurm host list unavailable"
+   exit 1
+fi
+
+#Create a list of bridge hosts
+declare -a br0_hostlist=(`scontrol show hostname $SLURM_NODELIST | sed -e's/$/-br0/'`)
+
+#Create a list of mic hosts
+declare -a mic0_hostlist=(`scontrol show hostname $SLURM_NODELIST | sed -e's/$/-mic0/'`)
+declare -a mic1_hostlist=(`scontrol show hostname $SLURM_NODELIST | sed -e's/$/-mic1/'`)
+#If you are in the normal-2mic queue  switch to mic1 for default mic
+#  mic1 is on the same PCI bus as IB card
+if [ "$SLURM_QUEUE" == "normal-2mic" ]; then
+  declare -a mic0_hostlist=(`scontrol show hostname $SLURM_NODELIST | sed -e's/$/-mic1/'`)
+  declare -a mic1_hostlist=(`scontrol show hostname $SLURM_NODELIST | sed -e's/$/-mic0/'`)
+fi
+
+####Initialize the hostlist index and populate the configfile
+###host_id=0
+####Track # of tasks for MY_NSLOTS and flag to end host tasks
+###task_id=0
+###nslots_flag=0
+####Track # of tasks for MIC_MY_NSLOTS and flag to end MIC tasks
+###mic_task_id=0
+###mic_nslots_flag=0
+###
+
+
+if [ "$MIC_MPI_HOST_INTERLEAVE" -gt 0 ]; then 
+  build_interleaved_hostlist
+else
+  build_non_interleaved_hostlist
+fi
+
+####Build the hostlist for host, mic, and/or both
+####Build the hostlist for host using the SLURM_TASKS_PER_NODE syntax
+####FTW: for each node cluster...
+###for nodes in ${node_clusters[@]}; do
+###   #Get the task count and node count for each node cluster
+###   if [ "x$HOST_PPN" != "x" ]; then
+###      task_count=$HOST_PPN
+###   else
+###      task_count=`echo $nodes | awk -F '(' '{print $1}'`
+###   fi
+###   if [[ `echo $nodes | grep x` ]]; then
+###      node_count=`echo $nodes | sed -e's/.*x\([0-9]\+\).*/\1/'`
+###   else
+###      node_count=1
+###   fi
+###
+###   #Build the host list to match tasks per node
+###   #FTW:  for each node...
+###   for i in `seq 0 $((node_count-1))`; do
+###      #Build command for host
+###      if [ "x$hexec" != "x" ]; then
+###         #First check to see if we exceed MY_NSLOTS
+###         task_id=$((task_id+task_count))
+###         if [ "$MY_NSLOTS" -lt "$task_id" ]; then  
+###            task_count=$((task_count + MY_NSLOTS - task_id))
+###         fi
+###         #Add host command to the configfile
+###         # and host name to hostfile
+###         if [ "$nslots_flag" -eq 0 ]; then  
+###            echo " -n $task_count $config_delim $hexec " >> $configfile_tacc 
+###            echo " ${br0_hostlist[${host_id}]}:$task_count "  >> $hostfile_tacc 
+###         fi
+###      fi # end entry for host in config file
+###      #If we exceeded MY_NSLOTS -- don't set up any more host tasks
+###      if [ "$MY_NSLOTS" -lt "$task_id" ]; then nslots_flag=1; fi  
+###
+###      #Build command for mics
+###      if [ "x$mexec$m2exec" != "x" ]; then
+###         #Add MIC command to the configfile
+###         # and host name to hostfile
+###         if [ "$mic_nslots_flag" -eq 0 ]; then  
+###            if [ "x$mexec" != "x" ]; then
+###               #First check to see if we exceed MIC_MY_NSLOTS
+###               mic_task_id=$((mic_task_id+MIC_PPN))
+###               if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then  
+###                  MIC_PPN=$((MIC_PPN + MIC_MY_NSLOTS - mic_task_id))
+###               fi
+###               cmd=""
+###               cmd=" $cmd -n $MIC_PPN $config_delim"
+###               cmd=" $cmd $ENV_MIC "
+###               cmd=" $cmd $mexec "
+###               echo "$cmd " >> $configfile_tacc 
+###               echo " ${mic0_hostlist[${host_id}]}:$MIC_PPN "  >> $hostfile_tacc 
+###            fi
+###            #If we exceeded MIC_MY_NSLOTS -- don't set up any more MIC tasks
+###            if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then mic_nslots_flag=1; fi  
+###         fi 
+###
+###         #FTW: second mic...
+###         if [ "$mic_nslots_flag" -eq 0 ]; then  
+###            if [ "x$m2exec" != "x" ]; then
+###               #Check again to see if we exceed MIC_MY_NSLOTS
+###               mic_task_id=$((mic_task_id+MIC_PPN))
+###               if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then  
+###                  MIC_PPN=$((MIC_PPN + MIC_MY_NSLOTS - mic_task_id))
+###               fi
+###               cmd=""
+###               cmd=" $cmd -n $MIC_PPN $config_delim"
+###               cmd=" $cmd $ENV_MIC "
+###               cmd=" $cmd $m2exec "
+###               echo "$cmd " >> $configfile_tacc 
+###               echo " ${mic1_hostlist[${host_id}]}:$MIC_PPN "  >> $hostfile_tacc 
+###            fi
+###            #If we exceeded MIC_MY_NSLOTS -- don't set up any more MIC tasks
+###            if [ "$MIC_MY_NSLOTS" -lt "$mic_task_id" ]; then mic_nslots_flag=1; fi  
+###         fi
+###      fi # end entry for mic in config file
+###
+###      cmd=""
+###      ((host_id++))
+###
+###   done
+####FTW: end for each node...
+###
+###done
+####FTW: end for each node cluster...
+
+echo " " >> $configfile_tacc 
+
+#echo "TACC: Setup complete."
+
+#------------------------------
+# Let's finally launch the job
+#------------------------------
+
+## Do some error checking of the user's arguments to ibrun.
+res=0
+
+if [ -n "$LMOD_CMD" ]; then
+   export LMOD_CMD=$LMOD_CMD
+fi
+
+XALT_DIR=@xalt_dir@
+RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
+
+RUN_UUID=`/usr/bin/uuidgen`
+DATESTR=`date +%Y_%m_%d_%H_%M_%S`
+runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
+
+pe_mapD="$ADMIN_DIR"
+
+if [ "x$hexec" != x ]; then
+   pe_fn=`mktemp $home_batch_dir/job.$BATCH_JOB_ID.usage.XXXXXXXX`
+   mv $pe_fn $pe_fn.lua
+   pe_fn=$pe_fn.lua
+
+   if [ -x "$ibrunDir/checkExec" ]; then
+      $ibrunDir/checkExec --map $pe_mapD -- $hexec
+   fi
+
+   if [ -x "$ibrunDir/parseLDD" ]; then
+      $ibrunDir/parseLDD --map $pe_mapD --start $pe_startTime --runTime 0.0 --fn $pe_fn -- $hexec
+   fi
+   sTime=$($RUN_SUBMIT --start 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $hexec)
+fi
+
+if [ -n "$TACC_IBWRAPPER_DEBUG" ]; then
+    exit
+fi
+
+## Modify $hostfile_tacc if user passed special options to ibrun
+
+echo "TACC: Starting parallel tasks..."
+
+
+# Launch a job with mvapich2+MPD's mpiexec command
+if [ x"$MODE" == "ximpi_hydra" -o x"$MODE" == "xmvapich2_ssh" ]; then
+
+    #Run
+    echo  "  $run_command"
+#    $MPICH_HOME/intel64/bin/mpiexec.hydra -iface br0 -configfile $configfile_tacc
+   $run_command
+   res=$?
+else
+    echo -e "TACC: Could not determine which MPI stack to use.\nTACC:Exiting.\n"
+    res=1
+fi
+
+
+if [ "x$hexec" != x ]; then
+  pe_endTime=`date +%s`
+  pe_runTime=`echo "$pe_endTime - $pe_startTime" | bc -q`
+  
+  if [ -x "$ibrunDir/parseLDD" ]; then
+    $ibrunDir/parseLDD --map $pe_mapD --start $pe_startTime --runTime $pe_runTime --fn $pe_fn -- $hexec
+  fi
+  rTime=$($RUN_SUBMIT --start "$sTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $hexec)
+fi
+
+if [ $res -ne 0 ]; then
+    echo "TACC: MPI job exited with code: $res"
+fi
+
+#-----------------------
+# Job tear-down/cleanup
+#-----------------------
+
+if [ x"$TACC_KEEP_FILES" != "x" ]; then
+    if [ -f $nslotsfile_tacc ]; then
+	rm $nslotsfile_tacc
+    fi
+    if [ -f $hostfile_tacc ]; then
+	rm $hostfile_tacc
+    fi
+fi
+
+echo " "
+echo "TACC: Shutdown complete. Exiting." 
+exit $res
+
