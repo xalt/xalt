@@ -13,9 +13,7 @@ PATH_TO_PSTREE=$pstree_prog
 
 printf "Use contrib pstree"
 BUILD_PSTREE=yes
-if test x$pstree_prog = x; then
-  PATH_TO_PSTREE=$prefix/libexec/pstree
-else
+if test x$pstree_prog != x; then
   versionStr=$($pstree_prog --version 2>&1 | head -1)
   name=`expr "$versionStr" : '.*(\(PSmisc\))'`
   if test x$name = "xPSmisc" ; then
@@ -25,14 +23,12 @@ else
     contrib_version=2200020
     if test $version -ge $contrib_version ; then
       BUILD_PSTREE=no
-    else
-      PATH_TO_PSTREE=$prefix/libexec/pstree
-    fi
   fi
 fi
 echo "... $BUILD_PSTREE"
 
 if test x$BUILD_PSTREE = xyes; then
+   PATH_TO_PSTREE=$prefix/libexec/pstree
    AC_CHECK_HEADERS(curses.h)
    if test x$ac_cv_header_curses_h != xyes; then
       echo "Error: must have curses.h before building psmisc"
