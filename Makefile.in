@@ -90,10 +90,20 @@ __installMe:
 	    true;                                                          \
         done
 
+world_update:
+	@git status -s > /tmp/git_st_$$$$;                                 \
+        if [ -s /tmp/git_st_$$$$ ]; then                                   \
+            echo "All files not checked in => try again";                  \
+        else                                                               \
+            git push github;                                               \
+            git push --tags github;                                        \
+        fi;                                                                \
+        rm -f /tmp/git_st_$$$$
+
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/gittag$$$$;                                \
-          if [ -s /tmp/gittag$$$$ ]; then                                  \
+	  @git status -s > /tmp/git_st_$$$$;                               \
+          if [ -s /tmp/git_st_$$$$ ]; then                                 \
 	    echo "All files not checked in => try again";                  \
 	  else                                                             \
 	    echo "$(TAG)" >                                      .version; \
@@ -101,7 +111,7 @@ gittag:
             git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'         ; \
 	    git push --tags                                              ; \
           fi;                                                              \
-          rm -f /tmp/gittag$$$$
+          rm -f /tmp/git_st_$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
         endif
