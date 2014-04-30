@@ -504,7 +504,7 @@ RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 RUN_UUID=`/usr/bin/uuidgen`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
-sTime=$($RUN_SUBMIT --start 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)
+sTime=$($RUN_SUBMIT --start 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $fullcmd "$@")
 
 ## Modify $hostfile_tacc if user passed special options to ibrun
 
