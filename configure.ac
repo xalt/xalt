@@ -12,9 +12,8 @@ AC_PATH_PROG(pstree_prog, pstree, [])
 PATH_TO_PSTREE=$pstree_prog
 
 printf "Use contrib pstree"
-BUILD_PSTREE=no
+BUILD_PSTREE=yes
 if test x$pstree_prog = x; then
-  BUILD_PSTREE=yes
   PATH_TO_PSTREE=$prefix/libexec/pstree
 else
   versionStr=$($pstree_prog --version 2>&1 | head -1)
@@ -24,8 +23,9 @@ else
     minor_version=`expr "$versionStr" : '.*(PSmisc) \+[[0-9]]\+\.\([[0-9]]\+\)'`
     version=`expr $major_version \* 100000 + $minor_version`
     contrib_version=2200020
-    if test $version -lt $contrib_version ; then
-      BUILD_PSTREE=yes
+    if test $version -ge $contrib_version ; then
+      BUILD_PSTREE=no
+    else
       PATH_TO_PSTREE=$prefix/libexec/pstree
     fi
   fi
