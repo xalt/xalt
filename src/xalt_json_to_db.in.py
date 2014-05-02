@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
+import os, sys, re, MySQLdb, json, time, argparse
+dirNm, execName = os.path.split(sys.argv[0])
+sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
+
 from XALTdb     import XALTdb
 from SitePkg    import translate
 from util       import files_in_tree
-import os, sys, re, MySQLdb, json, time, argparse
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
