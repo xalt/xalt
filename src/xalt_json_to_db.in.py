@@ -4,6 +4,7 @@ from __future__ import print_function
 import os, sys, re, MySQLdb, json, time, argparse
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
+sys.path.append(os.path.abspath(os.path.join(dirNm, "../site")))
 
 from XALTdb     import XALTdb
 from SitePkg    import translate
