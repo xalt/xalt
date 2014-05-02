@@ -235,7 +235,7 @@ def main():
         remove_files(linkFnA)
 
       runFnA = files_in_tree(xaltDir, "*/run.*.json")
-      run_json_to_db(xalt, user, runFnA, args.delete))
+      run_json_to_db(xalt, user, runFnA)
       if (args.delete):
         remove_files(runFnA)
       
