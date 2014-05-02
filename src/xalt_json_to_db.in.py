@@ -4,12 +4,28 @@ from __future__ import print_function
 from XALTdb     import XALTdb
 from SitePkg    import translate
 from util       import files_in_tree
-import os, sys, re, MySQLdb, json, time
+import os, sys, re, MySQLdb, json, time, argparse
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
+
+class CmdLineOptions(object):
+  def __init__(self):
+    pass
+  
+  def execute(self):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--delete",  dest='delete',   action="store_true", help="delete files after reading")
+    args = parser.parse_args()
+    return args
+
+
+def remove_files(fileA):
+  for f in fileA:
+    os.remove(f)
+
 
 def passwd_generator():
   xaltUserA = os.environ.get("XALT_USERS")
@@ -203,19 +219,25 @@ def run_json_to_db(xalt, user, runFnA):
 
 
 def main():
+
+  args = CmdLineOptions().execute()
+
   xalt = XALTdb(ConfigFn)
+
+  
 
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
       linkFnA = files_in_tree(xaltDir, "*/link.*.json")
       link_json_to_db(xalt, user, linkFnA)
+      if (args.delete):
+        remove_files(linkFnA)
 
-  for user, hdir in passwd_generator():
-    xaltDir = os.path.join(hdir,".xalt.d")
-    if (os.path.isdir(xaltDir)):
       runFnA = files_in_tree(xaltDir, "*/run.*.json")
-      run_json_to_db(xalt, user, runFnA)
+      run_json_to_db(xalt, user, runFnA, args.delete))
+      if (args.delete):
+        remove_files(runFnA)
       
       
 

@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # -*- python -*-
-from __future__ import print_function
-from XALTdb     import XALTdb
 import os, sys, re, MySQLdb
+from __future__ import print_function
+
+dirNm, execName = os.path.split(sys.argv[0])
+sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
+
+from XALTdb     import XALTdb
 
 
 
