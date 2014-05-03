@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
+from util       import capture
 import os, sys, re, MySQLdb, json, time, argparse
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
@@ -228,7 +229,10 @@ def main():
 
   xalt = XALTdb(ConfigFn)
 
-  
+  strA = capture(['wc', '-l', '/etc/passwd']).split(' ')
+  num  = int (strA[0])
+  pbar = ProgressBar(maxVal=num)
+  icnt = 0
 
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
@@ -242,7 +246,10 @@ def main():
       run_json_to_db(xalt, user, runFnA)
       if (args.delete):
         remove_files(runFnA)
-      
+    icnt += 1
+    pbar.update(icnt)
+
+  pbar.fini()
       
 
 if ( __name__ == '__main__'): main()

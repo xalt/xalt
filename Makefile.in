@@ -17,12 +17,13 @@ DIRLIST         := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
 BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in src/ibrun.symm.in
 
 
-SBIN_PKG        := src/conf_create.in.py  src/createDB.in.py        \
-                   src/xalt_db.conf       src/xalt_json_to_db.in.py
+SBIN_PKG        := src/conf_create.in.py  	     src/createDB.in.py               \
+                   src/xalt_db.conf       	     src/xalt_json_to_db.in.py
 
 LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.in.py \
                    src/xalt_run_submission.in.py     src/xalt_parse_mpirun_args.in.py \
-                   src/util.py                       src/XALTdb.py 
+                   src/util.py                       src/XALTdb.py                    \
+                   src/progressBar.py
 
 SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.in.py \
 	           src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
@@ -34,8 +35,9 @@ SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
-          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE)
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec      \
+          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE) 
+
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -69,16 +71,13 @@ Use_argparse_no:
 Use_argparse_yes: contrib/argparse/argparse.py
 	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
-
-
-
 __installMe:
 	-for i in $(FILELIST); do                                     	   \
            bareN=$${i##*/};                                           	   \
            fn=$${bareN%%.in*};                                        	   \
            ext=$${bareN#*.};                                          	   \
            oext=;                                                          \
-	   echo "bareN: $$bareN, ext: $$ext"; \
+	   : echo "bareN: $$bareN, ext: $$ext"; \
            [ "$$ext" = "in.py" ] && oext=".py";                            \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
