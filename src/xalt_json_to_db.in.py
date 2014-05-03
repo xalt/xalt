@@ -231,7 +231,7 @@ def main():
 
   strA = capture(['wc', '-l', '/etc/passwd']).split(' ')
   num  = int (strA[0])
-  pbar = ProgressBar(maxVal=num)
+  pbar = ProgressBar(maxVal=num,ttyonly=true)
   icnt = 0
 
   for user, hdir in passwd_generator():

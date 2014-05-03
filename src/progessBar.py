@@ -43,7 +43,7 @@ def getTerminalSize():
   return (25, 80)
 
 class ProgressBar(object):
-  def __init__(self, termWidth=None, barWidth=None, maxVal=None, fd=sys.stderr):
+  def __init__(self, termWidth=None, barWidth=None, maxVal=None, ttyOnly=False, fd=sys.stderr):
 
     if (not maxVal):
       ValueError('Must specify maxVal')
@@ -57,8 +57,12 @@ class ProgressBar(object):
           barWidth = 40
 
     barWidth = min(barWidth, self.__maxVal)
-    print("barWidth: ", barWidth)
-    
+
+    self.__active   = True
+    if (ttyOnly and not sys.stdout.isatty()):
+      self.__active = False
+      
+
 
     self.__fd       = fd
     self.__barWidth = barWidth
@@ -67,31 +71,38 @@ class ProgressBar(object):
     self.__fence    = self.__unit
     self.__mark     = 10
     self.__count    = -1
-
     self.__symbolT  = [ '+', '+', '+', '+', '|', '+', '+', '+', '+', '|' ]
 
 
   def update(self, i):
+    if (not self.__active):
+      return
+
     j = 100*i//self.__maxVal
     k = 100*(i+1)//self.__maxVal
 
+    #print("i: ", i, "j: ",j,"k:",k, "fence: ", self.__fence,"mark:",self.__mark)
+
     if (j >= self.__fence):
       symbol = "-"
-      if (( j <= self.__mark and k > self.__mark) or
-          (( j == k) and j == self.__mark)):
+      if (( j <= self.__mark and k >= self.__mark) or
+          ( j == k and j == self.__mark)         or
+          (self.__fence > self.__mark)):
+        
         self.__count +=  1
         self.__mark  += 10
         symbol = self.__symbolT[self.__count]
       self.__fd.write(symbol)
       self.__fence += self.__unit
-  
   def fini(self):
+    if (not self.__active):
+      return
     self.__fd.write("\n")
         
 def main():
 
     num = 200
-    pbar = ProgressBar(maxVal=num)
+    pbar = ProgressBar(maxVal=num, ttyOnly=False)
     for i in xrange(num):
       pbar.update(i+1)
     pbar.fini()  
