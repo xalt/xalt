@@ -84,7 +84,7 @@ def link_json_to_db(xalt, user, linkFnA):
         build_epoch,           int(linkT['exit_code']), linkT['exec_path'])
       conn.query(query)
       link_id = conn.insert_id()
-      print("link_id: ",link_id)
+      #print("link_id: ",link_id)
 
       for entryA in linkT['linkA']:
         object_path = entryA[0]
@@ -98,7 +98,7 @@ def link_json_to_db(xalt, user, linkFnA):
         if (result.num_rows() > 0):
           row    = result.fetch_row()
           obj_id = int(row[0][0])
-          print("found old obj_id: ",obj_id)
+          #print("found old obj_id: ",obj_id)
         else:
           obj_kind = obj_type(object_path)
 
@@ -106,7 +106,7 @@ def link_json_to_db(xalt, user, linkFnA):
                       object_path, linkT['build_syshost'], hash_id, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
-          print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path)
+          #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path)
 
         # Now link libraries to xalt_link record:
         query = "INSERT into join_link_object VALUES (NULL,'%d','%d') " % (obj_id, link_id)
@@ -140,14 +140,14 @@ def run_json_to_db(xalt, user, runFnA):
       else:
         uuid = "NULL"
 
-      print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
+      #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_job WHERE run_uuid='%s'" % runT['userT']['run_uuid']
       conn.query(query)
 
       result = conn.store_result()
       if (result.num_rows() > 0):
-        print("found")
+        #print("found")
         row    = result.fetch_row()
         run_id = int(row[0][0])
         query  = "UPDATE xalt_job SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
@@ -155,7 +155,7 @@ def run_json_to_db(xalt, user, runFnA):
         conn.query(query)
         return
       else:
-        print("not found")
+        #print("not found")
         query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s','%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
@@ -166,7 +166,7 @@ def run_json_to_db(xalt, user, runFnA):
         conn.query(query)
         run_id   = conn.insert_id()
 
-      print("run_id: ", run_id)
+      #print("run_id: ", run_id)
 
       # loop over shared libraries
       for entryA in runT['libA']:
@@ -186,7 +186,7 @@ def run_json_to_db(xalt, user, runFnA):
           conn.query(query)
           obj_id   = conn.insert_id()
 
-        print("obj_id: ", obj_id)
+        #print("obj_id: ", obj_id)
         # Now link libraries to xalt_job record.
         query = "INSERT into join_job_object VALUES (NULL,'%d','%d') " % (
           obj_id, run_id)
@@ -207,7 +207,7 @@ def run_json_to_db(xalt, user, runFnA):
           conn.query(query)
           env_id = conn.insert_id()
           found  = False
-        print("env_id: ", env_id, ", found: ",found)
+        #print("env_id: ", env_id, ", found: ",found)
 
         query = "INSERT INTO join_job_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value)
