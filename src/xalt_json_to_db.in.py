@@ -22,7 +22,8 @@ class CmdLineOptions(object):
   
   def execute(self):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--delete",  dest='delete',   action="store_true", help="delete files after reading")
+    parser.add_argument("--delete",  dest='delete', action="store_true", help="delete files after reading")
+    parser.add_argument("--timer",   dest='timer',  action="store_true", help="Time runtime")
     args = parser.parse_args()
     return args
 
@@ -234,6 +235,8 @@ def main():
   pbar = ProgressBar(maxVal=num,ttyonly=true)
   icnt = 0
 
+  t1 = time.time()
+
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
@@ -250,6 +253,9 @@ def main():
     pbar.update(icnt)
 
   pbar.fini()
-      
+  t2 = time.time()
+  rt = t2 - t1
+  if (args.timer):
+    print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
 if ( __name__ == '__main__'): main()
