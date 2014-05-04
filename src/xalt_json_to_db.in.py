@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- python -*-
-from __future__ import print_function
-from util       import capture
+from __future__  import print_function
+from progressBar import ProgressBar
 import os, sys, re, MySQLdb, json, time, argparse
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(dirNm, "../site")))
 
 from XALTdb     import XALTdb
 from SitePkg    import translate
-from util       import files_in_tree
+from util       import files_in_tree, capture
 import warnings
 warnings.filterwarnings("ignore", "Unknown table.*")
 
