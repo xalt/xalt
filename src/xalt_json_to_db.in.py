@@ -232,7 +232,7 @@ def main():
 
   strA = capture(['wc', '-l', '/etc/passwd']).split(' ')
   num  = int (strA[0])
-  pbar = ProgressBar(maxVal=num,ttyonly=True)
+  pbar = ProgressBar(maxVal=num,ttyOnly=True)
   icnt = 0
 
   t1 = time.time()
