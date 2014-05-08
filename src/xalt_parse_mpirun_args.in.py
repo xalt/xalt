@@ -3,7 +3,8 @@ from util       import which
 import os, re, sys
 
 def find_cmd(ignoreT, i, argA):
-  N = len(argA)
+  N   = len(argA)
+  cmd = None
   while (i < N):
     arg = argA[i]
     i   = i + 1
