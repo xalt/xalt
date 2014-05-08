@@ -63,7 +63,7 @@ Build_pstree_yes:
         ./configure --prefix=$(prefix)/psmisc;                            \
         make;                                                             \
         make DESTDIR=$(DESTDIR) install;                                  \
-        ln -s $(DESTDIR)$(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec; \
+        ln -s $(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec;    \
 	cd ..; rm -rf psmisc-22.21
 
 Use_argparse_no:
@@ -115,6 +115,10 @@ gittag:
         else
 	  @echo "To git tag do: make gittag TAG=?"
         endif
+
+dist:
+	git archive --prefix=xalt-`cat .version`/ master | bzip2 > xalt-`cat .version`.tar.bz2
+
 
 makefile: Makefile.in config.status
 	./config.status $@
