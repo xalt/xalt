@@ -22,7 +22,9 @@ argT = {
   '-o'                        : 1,  
 }
 
+
 def main():
-  print(find_exec(ignoreT, argT, sys.argv[1:]))
+
+  print(find_exec(ignoreT, argT, "-c", sys.argv[1:]))
 
 if ( __name__ == '__main__'): main()
