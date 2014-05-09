@@ -133,7 +133,7 @@ class UserExec(object):
       elif (outStr.find("executable") > 0):
         self.__execType = "binary"
         ldd             = capture(["ldd", self.__execName])
-      elif
+      else:
         self.__execType = None
 
       info = os.stat(self.__execName)
@@ -165,6 +165,9 @@ class UserExec(object):
     return fieldA[0]
 
   def __parseLDD(self,ldd):
+    if (ldd.find("not a dynamic executable") > 0):
+      return []
+
     lineA = ldd.split('\n')
 
     libA = []
