@@ -10,6 +10,7 @@ RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
 WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 SYSHOST=$($XALT_DIR/site/xalt_syshost.py)
+EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 export JOB_ID=$($XALT_DIR/site/new_job_id.py)
 
 MPI_STACK=$($WHICH_MPI --name)
@@ -94,8 +95,11 @@ DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
-sTime=$($RUN_SUBMIT --ntasks $NTASKS --start 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)
+sTime=$($EPOCH)
+$RUN_SUBMIT --ntasks $NTASKS --start 0       --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
 $MY_CMD $ARGV
 
-rTime=$($RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)
+eTime=$($EPOCH)
+$RUN_SUBMIT --ntasks $NTASKS --start "$sTime"--end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+

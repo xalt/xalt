@@ -19,6 +19,7 @@ class CmdLineOptions(object):
   def execute(self):
     parser = argparse.ArgumentParser()
     parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
+    parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
     parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
     parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
@@ -82,7 +83,7 @@ class ExtractXALT(object):
 
 
 class UserEnvT(object):
-  def __init__(self, startT, endT, args, userExec):
+  def __init__(self, args, userExec):
 
 
     ltime                 = time.time()
@@ -93,11 +94,11 @@ class UserEnvT(object):
     userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
-    userT['start_date']   = time.strftime("%c",time.localtime(startT))
-    userT['start_time']   = startT
+    userT['start_date']   = time.strftime("%c",time.localtime(args.startTime))
+    userT['start_time']   = args.startTime
     userT['currentEpoch'] = ltime
-    userT['end_time']     = endT
-    userT['run_time']     = max(0, endT - startT)
+    userT['end_time']     = args.endTime
+    userT['run_time']     = max(0, args.endTime - args.startTime)
     userT['exec_path']    = userExec.execName()
     userT['exec_type']    = userExec.execType()
     userT['exec_epoch']   = userExec.execEpoch()
@@ -225,25 +226,14 @@ class EnvT(object):
 
 def main():
 
-  myEpoch  = time.time() 
-  epochStr = "%.5f" % myEpoch
-
   # parse command line options:
   args = CmdLineOptions().execute()
 
-  if (args.startTime < 1):
-    startTime = myEpoch
-    endTime   = 0
-  else:
-    startTime = args.startTime
-    endTime   = myEpoch
-    
   userExec = UserExec(args.exec_prog)
   if (not userExec.execName()):
-    print("0")
     return
 
-  userT    = UserEnvT(startTime, endTime, args, userExec).userT()
+  userT    = UserEnvT(args, userExec).userT()
   
   submitT              = {}
   submitT['userT']     = userT
@@ -268,11 +258,5 @@ def main():
   except (OSError):
     pass
 
-  if (args.startTime < 1):
-    print(epochStr)
-  else:
-    print(myEpoch - startTime)
-    
-  
 
 if ( __name__ == '__main__'): main()
