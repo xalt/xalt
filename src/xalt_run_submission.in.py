@@ -40,13 +40,13 @@ class ExtractXALT(object):
     return self.__fieldT
 
   def __build_fieldT(self, cmd):
-    outputA = capture(["objdump", "-s", "-j", ".xalt", cmd]).split('\n')
+    outStr  = capture(["objdump", "-s", "-j", ".xalt", cmd])
+
     fieldT = {}
-
-
-    if (not outputA[3].find("Contents of section .xalt:") != -1):
+    if (not outStr.find("Contents of section .xalt:") != -1):
       return fieldT
     
+    outputA = outStr.split('\n')
     outputA.pop(0)
     outputA.pop(0)
     outputA.pop(0)

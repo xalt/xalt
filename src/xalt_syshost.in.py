@@ -13,7 +13,6 @@ def nics_syshost(nameA):
     "nid00026"  : "mars",
     "nid00027"  : "mars",
     "verne"     : "verne",
-    "athena"    : "anthena",
   }
   result = None
 
