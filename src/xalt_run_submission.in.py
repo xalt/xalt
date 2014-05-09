@@ -131,7 +131,7 @@ class UserExec(object):
       self.__execType = None
       if (ldd.find("not a dynamic executable") > 0):
         self.__execType = "script"
-      if (ldd.find("No such file or directory") == -1):
+      elif (ldd.find("No such file or directory") == -1):
         self.__execType = "binary"
 
       info = os.stat(self.__execName)
