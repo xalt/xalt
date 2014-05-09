@@ -26,6 +26,10 @@ def which(program):
     for ext in os.environ.get("PATH", "").split(os.pathsep):
       yield fpath + ext
 
+  if (not program):
+    return None
+  
+
   fpath, fname = os.path.split(program)
   if fpath:
     if is_exe(program):

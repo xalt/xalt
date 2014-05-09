@@ -2,12 +2,27 @@ from __future__ import print_function
 from util       import which
 import os, re, sys
 
-def find_exec(ignoreT, argT, argA):
+def find_cmd(ignoreT, i, argA):
+  N   = len(argA)
+  cmd = None
+  while (i < N):
+    arg = argA[i]
+    i   = i + 1
+    bare = os.path.basename(arg)
+    if (not (bare in ignoreT)):
+      cmd = arg
+      break
+  return cmd
+
+def find_exec(ignoreT, argT, cmdArg, argA):
   N   = len(argA)
 
   i   = 0
   while (i < N):
     arg = argA[i]
+    if (arg == cmdArg):
+      return which(find_cmd(ignoreT, 0, argA[i+1].split()))
+    
     n   = argT.get(arg,-1)
     if (n > 0):
       i += n + 1
@@ -17,13 +32,6 @@ def find_exec(ignoreT, argT, argA):
       continue
     break
 
-  while (i < N):
-    arg = argA[i]
-    i   = i + 1
-    bare = os.path.basename(arg)
-    if (not (bare in ignoreT)):
-      cmd = arg
-      break
+  return which(find_cmd(ignoreT, i, argA))
 
-  return which(cmd)
   

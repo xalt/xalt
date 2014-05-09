@@ -57,7 +57,7 @@ def main():
           `exec_path`     varchar(1024)  NOT NULL,
           PRIMARY KEY  (`link_id`),
           UNIQUE  KEY  `uuid` (`uuid`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_link table" % idx); idx += 1
 
@@ -73,7 +73,7 @@ def main():
           PRIMARY KEY  (`obj_id`),
           INDEX  `index_hash_id` (`hash_id`),
           UNIQUE KEY `thekey` (`object_path`(512), `hash_id`, `syshost`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_object table" % idx ); idx += 1;
 
@@ -87,7 +87,7 @@ def main():
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`link_id`) REFERENCES `xalt_link`(`link_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
     print("(%d) create join_link_object table" % idx); idx += 1
 
@@ -121,7 +121,7 @@ def main():
           PRIMARY KEY            (`run_id`),
           INDEX  `index_run_uuid` (`run_uuid`),
           INDEX `thekey` (`job_id`, `syshost`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_bin AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_job table" % idx)
     idx += 1
@@ -136,7 +136,7 @@ def main():
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`run_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
     print("(%d) create join_job_object table" % idx); idx += 1
 
@@ -148,7 +148,7 @@ def main():
           `env_name`      varchar(64)   NOT NULL,
           PRIMARY KEY  (`env_id`),
           UNIQUE  KEY  `env_name` (`env_name`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_env_name table" % idx); idx += 1
 
@@ -161,12 +161,12 @@ def main():
           `env_value`     blob           NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
-          FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`job_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
+          FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`run_id`) 
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1 
         """)
     print("(%d) create join_job_env table" % idx); idx += 1
 
-    # 7
+    # 8 
     cursor.execute("""
         CREATE TABLE `xalt_job_id` (
           `inc_id`        int(11)        NOT NULL auto_increment,
@@ -174,8 +174,6 @@ def main():
           PRIMARY KEY (`inc_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
-    print("(%d) create xalt_job_id table" % idx); idx += 1
-
     query = "INSERT INTO xalt_job_id VALUES(NULL, '0')"
     conn.query(query)
 
