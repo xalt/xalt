@@ -93,6 +93,9 @@ def link_json_to_db(xalt, user, linkFnA):
         object_path = entryA[0]
         hash_id     = entryA[1]
 
+        
+
+
         query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
           hash_id, object_path, linkT['build_syshost'])
         
@@ -223,6 +226,32 @@ def run_json_to_db(xalt, user, runFnA):
     sys.exit (1)
   
 
+class Rmap(object):
+  def __init__(self, rmapD):
+    rmapA   = rmapD.split(':')
+    searchA = [ ".json", ".old.json"]
+    rmapFn  = None
+    for dir in rmapA:
+      for ext in searchA:
+        rmapFn = os.path.join(dir, "jsonReverseMapT" + ext)
+        if (os.access(rmapFn, os.R_OK)):
+          break
+    self.__rmapT = {}
+    if (rmapFn):
+      rmpMtime = os.stat(rmapFn).st_mtime
+      f        = open(rmapFn,"r")
+      t        = json.loads(f.read())
+      f.close()
+      tsFn     = t.get('timestampFn')
+      if (tsFn):
+        tsMtime = os.stat(tsFn).st_mtime
+        if (rmpMtime >= tsMtime):
+          self.__rmapT = t['reverseMapT']
+    
+
+  def reverseMapT(self)
+    return self.__rmapT 
+
 
 
 def main():
@@ -238,16 +267,19 @@ def main():
 
   t1 = time.time()
 
+  reverseMapT = Rmap(args.rmapD).reverseMapT()
+
+
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
       linkFnA = files_in_tree(xaltDir, "*/link.*.json")
-      link_json_to_db(xalt, user, linkFnA)
+      link_json_to_db(xalt, user, linkFnA, reverseMapT)
       if (args.delete):
         remove_files(linkFnA)
 
       runFnA = files_in_tree(xaltDir, "*/run.*.json")
-      run_json_to_db(xalt, user, runFnA)
+      run_json_to_db(xalt, user, runFnA, reverseMapT)
       if (args.delete):
         remove_files(runFnA)
     icnt += 1
