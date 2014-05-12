@@ -22,8 +22,9 @@ class CmdLineOptions(object):
   
   def execute(self):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--delete",  dest='delete', action="store_true", help="delete files after reading")
-    parser.add_argument("--timer",   dest='timer',  action="store_true", help="Time runtime")
+    parser.add_argument("--delete",      dest='delete', action="store_true", help="delete files after reading")
+    parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
+    parser.add_argument("--reverseMapD", dest='rmapD',  action="store",      help="Path to the directory containing the json reverseMap")
     args = parser.parse_args()
     return args
 
