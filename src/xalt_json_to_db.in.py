@@ -61,7 +61,7 @@ def obj_type(object_path):
   return result
 
 
-def link_json_to_db(xalt, user, linkFnA):
+def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
   try:
     for fn in linkFnA:
@@ -92,9 +92,11 @@ def link_json_to_db(xalt, user, linkFnA):
       for entryA in linkT['linkA']:
         object_path = entryA[0]
         hash_id     = entryA[1]
-
-        
-
+        dirNm, fn   = os.path.split(object_path)
+        moduleName  = 'NULL'
+        pkg         = reverseMapT.get(dirNm)
+        if (pkg):
+          moduleName = "'" + pkg['pkg'] + '(' + pkg['flavor'][0] + ")'"
 
         query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
           hash_id, object_path, linkT['build_syshost'])
@@ -108,11 +110,11 @@ def link_json_to_db(xalt, user, linkFnA):
         else:
           obj_kind = obj_type(object_path)
 
-          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',NOW(),'%s') " % (
-                      object_path, linkT['build_syshost'], hash_id, obj_kind)
+          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
+                      object_path, linkT['build_syshost'], hash_id, moduleName, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
-          #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path)
+          print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
 
         # Now link libraries to xalt_link record:
         query = "INSERT into join_link_object VALUES (NULL,'%d','%d') " % (obj_id, link_id)
@@ -274,12 +276,12 @@ def main():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
       linkFnA = files_in_tree(xaltDir, "*/link.*.json")
-      link_json_to_db(xalt, user, linkFnA, reverseMapT)
+      link_json_to_db(xalt, user, reverseMapT, linkFnA)
       if (args.delete):
         remove_files(linkFnA)
 
       runFnA = files_in_tree(xaltDir, "*/run.*.json")
-      run_json_to_db(xalt, user, runFnA, reverseMapT)
+      run_json_to_db(xalt, user, reverseMapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
     icnt += 1

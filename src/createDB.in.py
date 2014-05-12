@@ -68,6 +68,7 @@ def main():
           `object_path`   varchar(1024)   NOT NULL,
           `syshost`       varchar(64)     NOT NULL,
           `hash_id`       char(40)        NOT NULL,
+          `module_name    varchar(64)             ,  
           `timestamp`     TIMESTAMP               ,
           `lib_type`      char(2)         NOT NULL,
           PRIMARY KEY  (`obj_id`),
