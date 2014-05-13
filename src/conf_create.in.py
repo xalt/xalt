@@ -11,10 +11,10 @@ class CreateConf(object):
     self.__db     = None
     
   def __readFromUser(self):
-    self.__host   = raw_input("Database host:")
-    self.__user   = raw_input("Database user:")
-    self.__passwd = getpass.getpass("Database pass:")
-    self.__db     = raw_input("Database name:")
+    self.__host   = raw_input("Database host: ")
+    self.__user   = raw_input("Database user: ")
+    self.__passwd = getpass.getpass("Database pass: ")
+    self.__db     = raw_input("Database name: ")
     
   def __writeConfig(self):
     config=ConfigParser.ConfigParser()

@@ -3,8 +3,8 @@
 from __future__ import print_function
 import os, sys, re, MySQLdb
 
-dirNm, execName = os.path.split(sys.argv[0])
-sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 
 from XALTdb     import XALTdb
 
