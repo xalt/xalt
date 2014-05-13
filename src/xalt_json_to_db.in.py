@@ -60,6 +60,19 @@ def obj_type(object_path):
       break
   return result
 
+defaultPat = re.compile(r'default:?')
+def obj2module(object_path, reverseMapT):
+  dirNm, fn  = os.path.split(object_path)
+  moduleName = 'NULL'
+  pkg         = reverseMapT.get(dirNm)
+  if (pkg):
+    flavor    = pkg['flavor'][0]
+    flavor    = defaultPat.sub('',flavor)
+    if (flavor):
+      moduleName = "'" + pkg['pkg'] + '(' + flavor + ")'"
+    else:
+      moduleName = "'" + pkg['pkg'] + "'"
+  return moduleName
 
 def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
@@ -92,12 +105,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       for entryA in linkT['linkA']:
         object_path = entryA[0]
         hash_id     = entryA[1]
-        dirNm, fn   = os.path.split(object_path)
-        moduleName  = 'NULL'
-        pkg         = reverseMapT.get(dirNm)
-        if (pkg):
-          moduleName = "'" + pkg['pkg'] + '(' + pkg['flavor'][0] + ")'"
-
+        moduleName  = obj2module(object_path, reverseMapT)
         query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
           hash_id, object_path, linkT['build_syshost'])
         
@@ -128,7 +136,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
 
 
-def run_json_to_db(xalt, user, runFnA):
+def run_json_to_db(xalt, user, reverseMapT, runFnA):
   nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' ]
   try:
     for fn in runFnA:
@@ -180,6 +188,7 @@ def run_json_to_db(xalt, user, runFnA):
       for entryA in runT['libA']:
         object_path = entryA[0]
         hash_id     = entryA[1]
+        moduleName  = obj2module(object_path, reverseMapT)
         query       = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % ( 
           hash_id, object_path, runT['userT']['syshost'])
         conn.query(query)
@@ -189,8 +198,8 @@ def run_json_to_db(xalt, user, runFnA):
           obj_id = int(row[0][0])
         else:
           obj_kind = obj_type(object_path)
-          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',NOW(),'%s') " % (
-                      object_path, runT['userT']['syshost'], hash_id, obj_kind)
+          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
+                      object_path, runT['userT']['syshost'], hash_id, moduleName, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
 
