@@ -102,31 +102,8 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       link_id = conn.insert_id()
       #print("link_id: ",link_id)
 
-      for entryA in linkT['linkA']:
-        object_path = entryA[0]
-        hash_id     = entryA[1]
-        query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
-          hash_id, object_path, linkT['build_syshost'])
-        
-        conn.query(query)
-        result = conn.store_result()
-        if (result.num_rows() > 0):
-          row    = result.fetch_row()
-          obj_id = int(row[0][0])
-          #print("found old obj_id: ",obj_id)
-        else:
-          moduleName = obj2module(object_path, reverseMapT)
-          obj_kind   = obj_type(object_path)
-
-          query      = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
-                      object_path, linkT['build_syshost'], hash_id, moduleName, obj_kind)
-          conn.query(query)
-          obj_id   = conn.insert_id()
-          #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
-
-        # Now link libraries to xalt_link record:
-        query = "INSERT into join_link_object VALUES (NULL,'%d','%d') " % (obj_id, link_id)
-        conn.query(query)
+      load_xalt_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
+                        "join_link_objects", link_id)
 
 
   except MySQLdb.Error, e:
@@ -134,6 +111,41 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
     sys.exit (1)
     
 
+def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
+
+  try:
+    for entryA in objA:
+      object_path = entryA[0]
+      hash_id     = entryA[1]
+      if (hash_id == "unknown"):
+        continue
+
+      query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
+        hash_id, object_path, syshost)
+      
+      conn.query(query)
+      result = conn.store_result()
+      if (result.num_rows() > 0):
+        row    = result.fetch_row()
+        obj_id = int(row[0][0])
+      else:
+        moduleName = obj2module(object_path, reverseMapT)
+        obj_kind   = obj_type(object_path)
+
+        query      = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
+                    object_path, syshost, hash_id, moduleName, obj_kind)
+        conn.query(query)
+        obj_id   = conn.insert_id()
+        #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
+
+      # Now link libraries to xalt_link record:
+      query = "INSERT into %s VALUES (NULL,'%d','%d') " % (table, obj_id, index)
+      conn.query(query)
+
+
+  except MySQLdb.Error, e:
+    print ("Error %d: %s" % (e.args[0], e.args[1]))
+    sys.exit (1)
 
 
 def run_json_to_db(xalt, user, reverseMapT, runFnA):
@@ -184,34 +196,10 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         conn.query(query)
         run_id   = conn.insert_id()
 
-      #print("run_id: ", run_id)
+      load_xalt_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
+                        "join_run_objects", run_id) 
 
-      # loop over shared libraries
-      for entryA in runT['libA']:
-        object_path = entryA[0]
-        hash_id     = entryA[1]
-        moduleName  = obj2module(object_path, reverseMapT)
-        query       = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % ( 
-          hash_id, object_path, runT['userT']['syshost'])
-        conn.query(query)
-        result = conn.store_result()
-        if (result.num_rows() > 0):
-          row    = result.fetch_row()
-          obj_id = int(row[0][0])
-        else:
-          obj_kind = obj_type(object_path)
-          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
-                      object_path, runT['userT']['syshost'], hash_id, moduleName, obj_kind)
-          conn.query(query)
-          obj_id   = conn.insert_id()
-
-        #print("obj_id: ", obj_id)
-        # Now link libraries to xalt_run record.
-        query = "INSERT into join_run_object VALUES (NULL,'%d','%d') " % (
-          obj_id, run_id)
-        conn.query(query)
-
-      # loop over env.
+      # loop over env. vars.
       for key in runT['envT']:
         value = runT['envT'][key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
