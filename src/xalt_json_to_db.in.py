@@ -172,13 +172,15 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         return
       else:
         #print("not found")
-        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s','%s') " % (
+        moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
+        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
           runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
           runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
-          runT['userT']['user'],        runT['userT']['exec_path'],   runT['userT']['cwd'])
+          runT['userT']['user'],        runT['userT']['exec_path'],   moduleName,
+          runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
 
@@ -260,7 +262,7 @@ class Rmap(object):
           self.__rmapT = t['reverseMapT']
     
 
-  def reverseMapT(self)
+  def reverseMapT(self):
     return self.__rmapT 
 
 
