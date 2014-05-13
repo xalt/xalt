@@ -105,7 +105,6 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       for entryA in linkT['linkA']:
         object_path = entryA[0]
         hash_id     = entryA[1]
-        moduleName  = obj2module(object_path, reverseMapT)
         query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
           hash_id, object_path, linkT['build_syshost'])
         
@@ -116,13 +115,14 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
           obj_id = int(row[0][0])
           #print("found old obj_id: ",obj_id)
         else:
-          obj_kind = obj_type(object_path)
+          moduleName = obj2module(object_path, reverseMapT)
+          obj_kind   = obj_type(object_path)
 
-          query    = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
+          query      = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
                       object_path, linkT['build_syshost'], hash_id, moduleName, obj_kind)
           conn.query(query)
           obj_id   = conn.insert_id()
-          print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
+          #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
 
         # Now link libraries to xalt_link record:
         query = "INSERT into join_link_object VALUES (NULL,'%d','%d') " % (obj_id, link_id)
@@ -171,14 +171,16 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         conn.query(query)
         return
       else:
-        #print("not found")
-        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s','%s') " % (
+        #print("not found RTM")
+        moduleName  = obj2module(runT['userT']['exec_path'], reverseMapT)
+        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
           runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
           runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
-          runT['userT']['user'],        runT['userT']['exec_path'],   runT['userT']['cwd'])
+          runT['userT']['user'],        runT['userT']['exec_path'],   moduleName,
+          runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
 
@@ -260,7 +262,7 @@ class Rmap(object):
           self.__rmapT = t['reverseMapT']
     
 
-  def reverseMapT(self)
+  def reverseMapT(self):
     return self.__rmapT 
 
 
@@ -296,6 +298,7 @@ def main():
     icnt += 1
     pbar.update(icnt)
 
+  xalt.connect().close()
   pbar.fini()
   t2 = time.time()
   rt = t2 - t1
