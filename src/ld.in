@@ -88,7 +88,10 @@ if [ ! -d $WRKDIR ]; then
   mkdir -p $WRKDIR
 fi
 
-PSTREE_OUT=$($PSTREE -l -s $$)
+PSTREE_OUT="unknown"
+if [ -x "$PSTREE" ]; then
+  PSTREE_OUT=$($PSTREE -l -s $$)
+fi
 
 EPOCH=$($GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
 

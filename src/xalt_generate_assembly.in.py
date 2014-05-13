@@ -10,6 +10,9 @@ def extract_compiler(pstree):
     'collect2' : True,
     }
     
+  if (pstree == "unknown"):
+    return "unknown"
+
   a = pstree.split("---")
   n = len(a)
 
