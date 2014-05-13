@@ -158,7 +158,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
-      query = "SELECT run_id FROM xalt_job WHERE run_uuid='%s'" % runT['userT']['run_uuid']
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
       conn.query(query)
 
       result = conn.store_result()
@@ -166,14 +166,14 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         #print("found")
         row    = result.fetch_row()
         run_id = int(row[0][0])
-        query  = "UPDATE xalt_job SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
+        query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
           runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
         return
       else:
         #print("not found")
         moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
-        query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
+        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
@@ -206,8 +206,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           obj_id   = conn.insert_id()
 
         #print("obj_id: ", obj_id)
-        # Now link libraries to xalt_job record.
-        query = "INSERT into join_job_object VALUES (NULL,'%d','%d') " % (
+        # Now link libraries to xalt_run record.
+        query = "INSERT into join_run_object VALUES (NULL,'%d','%d') " % (
           obj_id, run_id)
         conn.query(query)
 
@@ -228,7 +228,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           found  = False
         #print("env_id: ", env_id, ", found: ",found)
 
-        query = "INSERT INTO join_job_env VALUES (NULL, '%d', '%d', '%s')" % (
+        query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value)
         conn.query(query)
         

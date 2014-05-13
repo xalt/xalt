@@ -94,7 +94,7 @@ def main():
 
     # 4
     cursor.execute("""
-        CREATE TABLE `xalt_job` (
+        CREATE TABLE `xalt_run` (
           `run_id`        int(11)        NOT NULL auto_increment,
           `job_id`        char(11)       NOT NULL,
           `run_uuid`      char(36)       NOT NULL,
@@ -125,22 +125,22 @@ def main():
           INDEX `thekey` (`job_id`, `syshost`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
-    print("(%d) create xalt_job table" % idx)
+    print("(%d) create xalt_run table" % idx)
     idx += 1
 
     # 5
     cursor.execute("""
-        CREATE TABLE `join_job_object` (
+        CREATE TABLE `join_run_object` (
           `join_id`       int(11)        NOT NULL auto_increment,
           `obj_id`        int(11)        NOT NULL,
           `run_id`        int(11)        NOT NULL,
 
           PRIMARY KEY (`join_id`),
-          FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`run_id`),
+          FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1
         """)
-    print("(%d) create join_job_object table" % idx); idx += 1
+    print("(%d) create join_run_object table" % idx); idx += 1
 
 
     # 6
@@ -156,17 +156,17 @@ def main():
 
     # 7
     cursor.execute("""
-        CREATE TABLE `join_job_env` (
+        CREATE TABLE `join_run_env` (
           `join_id`       int(11)        NOT NULL auto_increment,
           `env_id`        int(11)        NOT NULL,
           `run_id`        int(11)        NOT NULL,
           `env_value`     blob           NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
-          FOREIGN KEY (`run_id`)  REFERENCES `xalt_job`(`run_id`) 
+          FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`) 
         ) ENGINE=MyISAM DEFAULT CHARSET=latin1  COLLATE=latin1_bin AUTO_INCREMENT=1 
         """)
-    print("(%d) create join_job_env table" % idx); idx += 1
+    print("(%d) create join_run_env table" % idx); idx += 1
 
     # 8 
     cursor.execute("""
