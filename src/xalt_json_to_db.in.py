@@ -171,8 +171,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         conn.query(query)
         return
       else:
-        #print("not found RTM")
-        moduleName  = obj2module(runT['userT']['exec_path'], reverseMapT)
+        #print("not found")
+        moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
         query  = "INSERT INTO xalt_job VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
