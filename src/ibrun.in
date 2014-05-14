@@ -39,7 +39,7 @@ runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 sTime=$($EPOCH)
 $RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
-$MY_CMD $ARGV
+$MY_CMD "$@"
 
 eTime=$($EPOCH)
 $RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
