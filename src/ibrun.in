@@ -3,7 +3,6 @@
 
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
-ARGV="$@"
 
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
@@ -22,14 +21,31 @@ fi
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
 # have search and cached all the executable in the path.  This should be
-# faster then walking the path.
+# faster then walking the path.  But only if this script is treated as a
+# bash script.
 
-for exe in $(type -p -a $MY_NAME); do
-  if [ $exe != $MY_PATH ]; then
-    MY_CMD=$exe
-    break
-  fi
-done
+if [ -n "$BASH_VERSION" ]; then
+  for exe in $(type -p -a $MY_NAME); do
+    if [ $exe != $MY_PATH ]; then
+      MY_CMD=$exe
+      break
+    fi
+  done
+else
+  ###################################################################
+  # If this script is not treated as a bash script then do this the
+  # old fashion way.
+
+  OLD_IFS=$IFS
+  IFS=:
+  for dir in $PATH; do
+    echo dir: $dir
+    if [ -x "$dir/$MY_NAME" ]; then
+      MY_CMD="$dir/$MY_NAME"
+    fi
+  done
+  IFS=$OLD_IFS
+fi
 
 RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
