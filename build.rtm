@@ -3,6 +3,15 @@
 PKG_VERSION=`cat .version`
 echo Making Version: $PKG_VERSION
 
+removeList()
+{
+  local pkg=$1
+  local rmL=$2
+  for i in $rmL; do
+    rm -f $pkg/bin/$i
+  done
+}
+
 runMe()
 {
   local cmdA=("$@")
@@ -45,11 +54,12 @@ case $SYSHOST in
     base="/opt/apps"
     ;;
 
-  ls4 | longhorn | stampede)
+  ls4 | stampede | maverick)
     base="$HOME/l/pkg"
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
+    REMOVE=mpirun
     ;;
 
   *)
@@ -69,10 +79,14 @@ if [ "$?" = 0 ]; then
   MAKE=remake
 fi
 
+
+
+
 cmdA=("-$MAKE distclean"
       "./configure --prefix=$PKG"
       "$SUDO $MAKE install"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
+      "removeList $PKG $REMOVE"
       )
 
 
