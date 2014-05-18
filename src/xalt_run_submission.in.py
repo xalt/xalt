@@ -230,24 +230,27 @@ class EnvT(object):
 
 def main():
 
-  # parse command line options:
-  args = CmdLineOptions().execute()
+  try:
+    # parse command line options:
+    args = CmdLineOptions().execute()
 
-  userExec = UserExec(args.exec_prog)
-  if (not userExec.execName()):
-    return
+    userExec = UserExec(args.exec_prog)
+    if (not userExec.execName()):
+      return
 
-  userT    = UserEnvT(args, userExec).userT()
+    userT    = UserEnvT(args, userExec).userT()
   
-  submitT              = {}
-  submitT['userT']     = userT
-  submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
-  submitT['libA']      = userExec.libA()
-  submitT['envT']      = EnvT().envT()
-  submitT['hash_id']   = userExec.hash()
+    submitT              = {}
+    submitT['userT']     = userT
+    submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
+    submitT['libA']      = userExec.libA()
+    submitT['envT']      = EnvT().envT()
+    submitT['hash_id']   = userExec.hash()
   
-  dirname,fn = os.path.split(os.path.abspath(args.resultFn))
-  tmpFn      = os.path.join(dirname, "." + fn)
+    dirname,fn = os.path.split(os.path.abspath(args.resultFn))
+    tmpFn      = os.path.join(dirname, "." + fn)
+  except:
+    pass
 
   try:
     if (not os.path.isdir(dirname)):
