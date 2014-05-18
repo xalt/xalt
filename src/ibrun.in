@@ -11,6 +11,7 @@ SYSHOST=$($XALT_DIR/site/xalt_syshost.py)
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
 FIND_EXEC=$XALT_DIR/site/xalt_find_exec_ibrun.py
+MY_CMD=/usr/local/bin/ibrun
 
 EXEC=unknown
 if [ -x "$FIND_EXEC" ]; then
