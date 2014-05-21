@@ -118,7 +118,6 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
   try:
     for entryA in objA:
-      num         += 1
       object_path  = entryA[0]
       hash_id      = entryA[1]
       if (hash_id == "unknown"):
