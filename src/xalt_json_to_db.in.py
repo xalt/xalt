@@ -76,8 +76,11 @@ def obj2module(object_path, reverseMapT):
 
 def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
+  num = 0
+
   try:
     for fn in linkFnA:
+      num  += 1
       f     = open(fn,"r")
       linkT = json.loads(f.read())
       f.close()
@@ -109,14 +112,15 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
   except MySQLdb.Error, e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
-    
+  return num
 
 def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
   try:
     for entryA in objA:
-      object_path = entryA[0]
-      hash_id     = entryA[1]
+      num         += 1
+      object_path  = entryA[0]
+      hash_id      = entryA[1]
       if (hash_id == "unknown"):
         continue
 
@@ -150,8 +154,10 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
 def run_json_to_db(xalt, user, reverseMapT, runFnA):
   nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' ]
+  num   = 0
   try:
     for fn in runFnA:
+      num   += 1
       f      = open(fn,"r")
       runT   = json.loads(f.read())
       f.close()
@@ -225,7 +231,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
   except MySQLdb.Error, e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
-  
+  return num
 
 class Rmap(object):
   def __init__(self, rmapD):
@@ -263,24 +269,26 @@ def main():
 
   strA = capture(['wc', '-l', '/etc/passwd']).split(' ')
   num  = int (strA[0])
-  pbar = ProgressBar(maxVal=num,ttyOnly=True)
+  pbar = ProgressBar(maxVal=num)
   icnt = 0
 
   t1 = time.time()
 
   reverseMapT = Rmap(args.rmapD).reverseMapT()
 
+  iuser = 0
 
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
+      iuser += 1
       linkFnA = files_in_tree(xaltDir, "*/link.*.json")
-      link_json_to_db(xalt, user, reverseMapT, linkFnA)
+      lnkCnt = link_json_to_db(xalt, user, reverseMapT, linkFnA)
       if (args.delete):
         remove_files(linkFnA)
 
       runFnA = files_in_tree(xaltDir, "*/run.*.json")
-      run_json_to_db(xalt, user, reverseMapT, runFnA)
+      runCnt = run_json_to_db(xalt, user, reverseMapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
     icnt += 1
@@ -292,5 +300,7 @@ def main():
   rt = t2 - t1
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
+
+  print("num users: ", iuser, ", num links: ", lnkCnt, ", num runs: ", runCnt)
 
 if ( __name__ == '__main__'): main()
