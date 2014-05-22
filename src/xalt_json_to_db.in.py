@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- python -*-
+#
+#  optional input:
+#    XALT_USERS:  colon separated list of users
+#
 from __future__ import print_function
 from XALTdb     import XALTdb
 from SitePkg    import translate
