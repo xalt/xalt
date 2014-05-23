@@ -77,43 +77,46 @@ def extract_compiler(pstree):
   return cmd
 
 def main():
-  uuid        = sys.argv[ 1]
-  status      = sys.argv[ 2]
-  wd          = sys.argv[ 3]
-  syshost     = sys.argv[ 4]
-  pstree      = sys.argv[ 5]
-  execname    = sys.argv[ 6]
-  xaltobj     = sys.argv[ 7]
-  build_epoch = sys.argv[ 8]
-  linklineFn  = sys.argv[ 9]
-  resultFn    = sys.argv[10]
+  try:
+    uuid        = sys.argv[ 1]
+    status      = sys.argv[ 2]
+    wd          = sys.argv[ 3]
+    syshost     = sys.argv[ 4]
+    pstree      = sys.argv[ 5]
+    execname    = sys.argv[ 6]
+    xaltobj     = sys.argv[ 7]
+    build_epoch = sys.argv[ 8]
+    linklineFn  = sys.argv[ 9]
+    resultFn    = sys.argv[10]
 
-  if (execname.find("conftest") != -1):
-    return 1
+    if (execname.find("conftest") != -1):
+      return 1
   
-  hash_line   = capture(['sha1sum', execname])
-  if (hash_line.find("No such file or directory") != -1):
-    return 1
-  hash_id     = hash_line.split()[0]
+    hash_line   = capture(['sha1sum', execname])
+    if (hash_line.find("No such file or directory") != -1):
+      return 1
+    hash_id     = hash_line.split()[0]
 
-  # Step one clean up linkline data
-  sA = cleanup(xaltobj, linklineFn)
+    # Step one clean up linkline data
+    sA = cleanup(xaltobj, linklineFn)
   
-  resultT                  = {}
-  resultT['uuid']          = uuid
-  resultT['link_program']  = extract_compiler(pstree)
-  resultT['build_user']    = os.environ['USER']
-  resultT['exit_code']     = status
-  resultT['build_epoch']   = build_epoch
-  resultT['exec_path']     = os.path.abspath(execname)
-  resultT['hash_id']       = hash_id
-  resultT['wd']            = wd
-  resultT['build_syshost'] = syshost
-  resultT['linkA']         = sA
+    resultT                  = {}
+    resultT['uuid']          = uuid
+    resultT['link_program']  = extract_compiler(pstree)
+    resultT['build_user']    = os.environ['USER']
+    resultT['exit_code']     = status
+    resultT['build_epoch']   = build_epoch
+    resultT['exec_path']     = os.path.abspath(execname)
+    resultT['hash_id']       = hash_id
+    resultT['wd']            = wd
+    resultT['build_syshost'] = syshost
+    resultT['linkA']         = sA
   
-  dirname,fn = os.path.split(resultFn)
+    dirname,fn = os.path.split(resultFn)
 
-  tmpFn      = os.path.join(dirname, "." + fn)
+    tmpFn      = os.path.join(dirname, "." + fn)
+  except:
+    pass
 
   try:
     if (not os.path.isdir(dirname)):

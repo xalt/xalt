@@ -1,4 +1,5 @@
 package         := xalt
+VERSION         := $(shell cat .version)
 prefix          := @prefix@
 XALT_DIR        := @prefix@
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
@@ -82,6 +83,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
 	        -e 's|@path_to_uuidgen@|$(PATH_TO_UUIDGEN)|g'              \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
