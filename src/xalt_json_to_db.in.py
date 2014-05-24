@@ -266,9 +266,7 @@ def main():
   args   = CmdLineOptions().execute()
   xalt   = XALTdb(ConfigFn)
 
-  p      = subprocess.Popen("getent passwd | wc -l", stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT, shell=True)
-  num    = p.communicate()[0]
+  num    = capture("getent passwd | wc -l")
   pbar   = ProgressBar(maxVal=num)
   icnt   = 0
 

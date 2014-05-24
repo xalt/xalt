@@ -1,5 +1,16 @@
-from fnmatch import fnmatch
+import logging
+from   fnmatch          import fnmatch
+from   logging.handlers import SysLogHandler
 import os, subprocess
+
+def config_logger():
+  logger = logging.getLogger()
+  logger.setLevel(logging.INFO)
+  syslog = SysLogHandler(address='/dev/log', facility='local3')
+  formatter = logging.Formatter('XALT: %(name)s: %(levelname)s %(message)r')
+  syslog.setFormatter(formatter)
+  logger.addHandler(syslog)
+  
 
 def files_in_tree(path, pattern):
   fileA = []
@@ -44,6 +55,12 @@ def which(program):
   return None
 
 def capture(cmd):
-  p = subprocess.Popen(cmd, stdout=subprocess.PIPE,  stderr=subprocess.STDOUT)
+  if (type(cmd) == type(' ')):
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT, shell =True)
+  else:
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT)
+
+    
   return p.communicate()[0]
-  

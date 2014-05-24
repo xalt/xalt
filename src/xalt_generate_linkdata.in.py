@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__  import print_function
-from util        import capture
+from util        import capture, config_logger
 import os, sys, re, json, subprocess
 
 parenPat  = re.compile(r'.*\((.*)\).*')
@@ -116,7 +116,7 @@ def main():
 
     tmpFn      = os.path.join(dirname, "." + fn)
   except:
-    pass
+    
 
   try:
     if (not os.path.isdir(dirname)):
