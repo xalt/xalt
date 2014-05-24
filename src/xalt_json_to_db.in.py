@@ -186,7 +186,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
           runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
-        return
+        continue
       else:
         #print("not found")
         moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
