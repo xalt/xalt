@@ -37,7 +37,8 @@ all:
 	@echo done
 
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec      \
-          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE) 
+          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE) \
+          Use_getent_yes
 
 
 $(DIRLIST) :
@@ -66,6 +67,12 @@ Build_pstree_yes:
         make DESTDIR=$(DESTDIR) install;                                  \
         ln -s $(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec;    \
 	cd ..; rm -rf psmisc-22.21
+
+Use_getent_yes:
+	cd contrib;                                                       \
+        mkdir -p  $(DESTDIR)$(prefix)/libexec/getent;                     \
+        cp getent/*.py $(DESTDIR)$(prefix)/libexec/getent
+
 
 Use_argparse_no:
 
