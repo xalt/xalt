@@ -7,12 +7,16 @@ def nics_syshost(nameA):
   nicsT = {
     "kraken"    : "kraken",
     "darter"    : "darter",
+    "nid00129"  : "darter",
+    "nid00453"  : "darter",
     "kid"       : "kids",
     "kfs"       : "keeneland",
     "titan"     : "titan",
     "nid00026"  : "mars",
     "nid00027"  : "mars",
     "verne"     : "verne",
+    "nautilus"  : "nautilus",
+    "conseil"   : "nautilus",
   }
   result = None
 

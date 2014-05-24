@@ -1,0 +1,90 @@
+#!/bin/bash
+#-*- shell-script -*-
+---
+
+MY_PATH=$0
+MY_NAME=$(basename $MY_PATH)
+ARGV="$@"
+
+XALT_DIR=@xalt_dir@
+RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
+UUIDGEN=@path_to_uuidgen@
+SYSHOST=$($XALT_DIR/site/xalt_syshost.py)
+export JOB_ID=$($XALT_DIR/site/new_job_id.py)
+
+# We make the big assumption that the only MPI on a Cray is 
+# Cray's mpi and thay the job launcher is aprun.  So we 
+# use the xalt_find_exec_aprun.py script to parse aprun line.
+FIND_EXEC=$XALT_DIR/site/xalt_find_exec_aprun.py
+
+EXEC=unknown
+if [ -x "$FIND_EXEC" ]; then
+  EXEC=$($FIND_EXEC "$@")
+fi
+
+########################################################################
+# Search for the command  and make sure that you don't find this one.
+# We use "type -p -a" instead of searching the path.  Since bash should
+# have search and cached all the executable in the path.  This should be
+# faster then walking the path.
+
+for exe in $(type -p -a $MY_NAME); do
+  if [ $exe != $MY_PATH ]; then
+    MY_CMD=$exe
+    break
+  fi
+done
+
+########################################################################
+# Loop over command line arguments to ld. This code is used instead of
+# getopt and others because this wrapper script should not try to know
+# all the options to ld. Instead we are just "cherry-picking" the options
+# we want to know about.
+
+NTASKS=1
+append=false
+prev=
+done=false
+for option
+do
+  if [ -n "$prev" ]; then
+    eval "$prev=\$option"
+    prev=
+    shift
+    continue
+  fi
+
+  case "$option" in
+    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
+    -*) optarg=;;
+    *) optarg=; done=true;;
+  esac
+  
+  case $option in
+    -n)
+      prev='NTASKS'
+      ;;
+  esac
+
+  #####################################################################
+  # This code below is commented out.  Since this script is not parsing
+  # all options the done flag won't work.
+
+  #if [ "$done" = "true" ]; then
+  #  break;
+  #fi
+
+  shift
+done
+
+
+RUN_UUID=`$UUIDGEN`
+DATESTR=`date +%Y_%m_%d_%H_%M_%S`
+
+runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
+
+sTime=$($RUN_SUBMIT --ntasks $NTASKS --start 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)
+
+$MY_CMD $ARGV
+
+rTime=$($RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC)

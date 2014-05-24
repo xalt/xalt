@@ -8,6 +8,8 @@ def translate(nameA, envT, userT):
     queueType = "SGE"
   elif (envT.get("SLURM_TACC_ACCOUNT")):
     queueType = "SLURM"
+  elif (envT.get("PBS_JOBID")):
+    queueType = "PBS"
       
   if (queueType == "SGE"):
     sysT['num_cores'] = "NSLOTS"
@@ -22,6 +24,13 @@ def translate(nameA, envT, userT):
     sysT['account']   = "SLURM_TACC_ACCOUNT"
     sysT['job_id']    = "SLURM_JOB_ID"
     sysT['queue']     = "SLURM_QUEUE"
+  
+  elif (queueType == "PBS"):
+    sysT['num_cores'] = "PBS_NP"
+    sysT['num_nodes'] = "PBS_NNODES"
+    sysT['account']   = "PBS_JOBNAME"
+    sysT['job_id']    = "PBS_JOBID"
+    sysT['queue']     = "PBS_QUEUE"
   
   for name in nameA:
     result = "unknown"
