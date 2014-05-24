@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__  import print_function
-from util        import capture, config_logger
+from util        import capture, config_logger, extract_compiler
 import os, sys, re, json, subprocess
 
+logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
 
@@ -58,24 +59,6 @@ def cleanup(xaltobj, fn):
 
   return sB
     
-def extract_compiler(pstree):
-  ignoreT = {
-    'pstree'   : True,
-    'ld'       : True,
-    'collect2' : True,
-    }
-    
-  a = pstree.split("---")
-  n = len(a)
-
-  result = "unknown"
-  for cmd in reversed(a):
-    if (not (cmd in ignoreT)):
-      result = cmd
-      break
-
-  return cmd
-
 def main():
   try:
     uuid        = sys.argv[ 1]
@@ -116,6 +99,7 @@ def main():
 
     tmpFn      = os.path.join(dirname, "." + fn)
   except:
+    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
     
 
   try:
@@ -134,7 +118,7 @@ def main():
     f.close()
     os.rename(tmpFn, resultFn)
   except (OSError):
-    print("failed")
+    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata(write json file)")
 
   return 0
 

@@ -12,13 +12,14 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
 from XALTdb      import XALTdb
 from SitePkg     import translate
-from util        import files_in_tree, capture
+from util        import files_in_tree, capture, config_logger
 from progressBar import ProgressBar
 import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
+logger       = config_logger()
 
 class CmdLineOptions(object):
   def __init__(self):

@@ -10,7 +10,28 @@ def config_logger():
   formatter = logging.Formatter('XALT: %(name)s: %(levelname)s %(message)r')
   syslog.setFormatter(formatter)
   logger.addHandler(syslog)
+  return logger
   
+def extract_compiler(pstree):
+  result  = "unknown"
+  ignoreT = {
+    'pstree'   : True,
+    'ld'       : True,
+    'collect2' : True,
+    }
+    
+  if (pstree == "unknown"):
+    return result
+
+  a = pstree.split("---")
+  n = len(a)
+
+  for cmd in reversed(a):
+    if (not (cmd in ignoreT)):
+      result = cmd
+      break
+
+  return cmd
 
 def files_in_tree(path, pattern):
   fileA = []

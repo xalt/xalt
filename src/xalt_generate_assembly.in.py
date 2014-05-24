@@ -1,28 +1,10 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
+from util       import config_logger, extract_compiler
 import os, sys, time, platform
 
-def extract_compiler(pstree):
-  ignoreT = {
-    'pstree'   : True,
-    'ld'       : True,
-    'collect2' : True,
-    }
-    
-  if (pstree == "unknown"):
-    return "unknown"
-
-  a = pstree.split("---")
-  n = len(a)
-
-  result = "unknown"
-  for cmd in reversed(a):
-    if (not (cmd in ignoreT)):
-      result = cmd
-      break
-
-  return cmd
+logger = config_logger()
 
 def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
   user    = os.environ.get("USER","unknown")
@@ -49,22 +31,25 @@ def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
     f.writelines("\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n")
     f.writelines("\t.asciz \"XALT_Link_Info_End\"\n")
   except:
-    pass
+    logger.exception("XALT_EXCEPTION:print_assembly")
     
 
 def main():
-  uuid     = sys.argv[1]
-  syshost  = sys.argv[2]
-  pstree   = sys.argv[3]
-  fn       = sys.argv[4]
-  version  = "@version@"
-  epochStr = str(time.time())
+  try: 
+    uuid     = sys.argv[1]
+    syshost  = sys.argv[2]
+    pstree   = sys.argv[3]
+    fn       = sys.argv[4]
+    version  = "@version@"
+    epochStr = str(time.time())
 
-  compiler = extract_compiler(pstree)
+    compiler = extract_compiler(pstree)
 
-  print_assembly(uuid, fn, version, syshost, compiler, epochStr)
+    print_assembly(uuid, fn, version, syshost, compiler, epochStr)
 
-  print(epochStr)
+    print(epochStr)
+  except:
+    logger.exception("XALT_EXCEPTION:xalt_generate_assembly")
 
 
 if ( __name__ == '__main__'): main()
