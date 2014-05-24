@@ -267,8 +267,7 @@ def main():
 
   xalt = XALTdb(ConfigFn)
 
-  strA = capture(['wc', '-l', '/etc/passwd']).split(' ')
-  num  = int (strA[0])
+  num  = subprocess.call("getent passwd | wc -l", shell=True)
   pbar = ProgressBar(maxVal=num)
   icnt = 0
 
