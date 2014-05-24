@@ -284,12 +284,12 @@ def main():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
       iuser += 1
-      linkFnA = files_in_tree(xaltDir, "*/link.*.json")
-      lnkCnt += link_json_to_db(xalt, user, reverseMapT, linkFnA)
+      linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
+      lnkCnt  += link_json_to_db(xalt, user, reverseMapT, linkFnA)
       if (args.delete):
         remove_files(linkFnA)
 
-      runFnA = files_in_tree(xaltDir, "*/run.*.json")
+      runFnA  = files_in_tree(xaltDir, "*/run.*.json")
       runCnt += run_json_to_db(xalt, user, reverseMapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
