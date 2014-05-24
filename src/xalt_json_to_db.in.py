@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 # -*- python -*-
+#
+#  optional input:
+#    XALT_USERS:  colon separated list of users
+#
 from __future__  import print_function
 import os, sys, re, MySQLdb, json, time, argparse
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
@@ -10,7 +14,7 @@ from XALTdb      import XALTdb
 from SitePkg     import translate
 from util        import files_in_tree, capture
 from progressBar import ProgressBar
-import warnings
+import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ConfigBaseNm = "xalt_db"
@@ -41,11 +45,8 @@ def passwd_generator():
       yield user, os.path.expanduser("~" + user)
 
   else:
-    passwd = open("/etc/passwd","r")
-    for line in passwd:
-      (username, encrypwd, uid, gid, gecos, homedir, usershell) = line.split(':') 
-      yield username, homedir
-    passwd.close()
+    for entry in getent.passwd():
+      yield entry.name, entry.dir
 
 numberPat = re.compile(r'[0-9][0-9]*')
 def obj_type(object_path):
@@ -186,7 +187,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
           runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
-        return
+        continue
       else:
         #print("not found")
         moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
@@ -262,21 +263,20 @@ class Rmap(object):
 
 def main():
 
-  args = CmdLineOptions().execute()
+  args   = CmdLineOptions().execute()
+  xalt   = XALTdb(ConfigFn)
 
-  xalt = XALTdb(ConfigFn)
+  p      = subprocess.Popen("getent passwd | wc -l", stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, shell=True)
+  num    = p.communicate()[0]
+  pbar   = ProgressBar(maxVal=num)
+  icnt   = 0
 
-  strA = capture(['wc', '-l', '/etc/passwd']).split(' ')
-  num  = int (strA[0])
-  pbar = ProgressBar(maxVal=num)
-  icnt = 0
+  t1     = time.time()
 
-  t1 = time.time()
+  rmapT  = Rmap(args.rmapD).reverseMapT()
 
-  reverseMapT = Rmap(args.rmapD).reverseMapT()
-
-  iuser = 0
-
+  iuser  = 0
   lnkCnt = 0
   runCnt = 0
 
@@ -289,8 +289,8 @@ def main():
       if (args.delete):
         remove_files(linkFnA)
 
-      runFnA  = files_in_tree(xaltDir, "*/run.*.json")
-      runCnt += run_json_to_db(xalt, user, reverseMapT, runFnA)
+      runFnA   = files_in_tree(xaltDir, "*/run.*.json")
+      runCnt  += run_json_to_db(xalt, user, reverseMapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
     icnt += 1
