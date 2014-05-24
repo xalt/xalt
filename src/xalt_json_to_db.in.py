@@ -14,7 +14,7 @@ from XALTdb      import XALTdb
 from SitePkg     import translate
 from util        import files_in_tree, capture
 from progressBar import ProgressBar
-import warnings
+import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ConfigBaseNm = "xalt_db"
@@ -45,11 +45,8 @@ def passwd_generator():
       yield user, os.path.expanduser("~" + user)
 
   else:
-    passwd = open("/etc/passwd","r")
-    for line in passwd:
-      (username, encrypwd, uid, gid, gecos, homedir, usershell) = line.split(':') 
-      yield username, homedir
-    passwd.close()
+    for entry in getent.passwd():
+      yield entry.name, entry.dir
 
 numberPat = re.compile(r'[0-9][0-9]*')
 def obj_type(object_path):
