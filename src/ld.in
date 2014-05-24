@@ -1,7 +1,8 @@
 #!/bin/bash
 #-*- shell-script -*-
 
-MY_LD=$0
+MY_PATH=$0
+MY_NAME=$(basename $MY_PATH)
 
 XALT_DIR=@xalt_dir@
 GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
@@ -14,21 +15,34 @@ SYSHOST=$($SYS_HOST_CMD)
 AS=@path_to_as@
 UUIDGEN=@path_to_uuidgen@
 
-ARGV="$@"
-
 ########################################################################
-# Search for `ld' and make sure that you don't find this one.
+# Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
 # have search and cached all the executable in the path.  This should be
-# faster then walking the path.
+# faster then walking the path.  But only if this script is treated as a
+# bash script.
 
-for exe in $(type -p -a ld); do
-  if [ $exe != $MY_LD ]; then
-    LD=$exe
-    break
-  fi
-done
+if [ -n "$BASH_VERSION" ]; then
+  for exe in $(type -p -a $MY_NAME); do
+    if [ $exe != $MY_PATH ]; then
+      MY_CMD=$exe
+      break
+    fi
+  done
+else
+  ###################################################################
+  # If this script is not treated as a bash script then do this the
+  # old fashion way.
 
+  OLD_IFS=$IFS
+  IFS=:
+  for dir in $PATH; do
+    if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
+      MY_CMD="$dir/$MY_NAME"
+    fi
+  done
+  IFS=$OLD_IFS
+fi
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -45,7 +59,6 @@ do
   if [ -n "$prev" ]; then
     eval "$prev=\$option"
     prev=
-    shift
     continue
   fi
 
@@ -57,7 +70,7 @@ do
   
   case $option in
     --version|-v|--help)
-      $LD $ARGV
+      $MY_CMD "$@"
       exit
       ;;
     -o)
@@ -73,7 +86,6 @@ do
   #  break;
   #fi
 
-  shift
 done
 
 UUID=`$UUIDGEN`
@@ -97,7 +109,7 @@ EPOCH=$($GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
 
 $AS $ARGSRC -o $ARGOBJ
 
-$LD $ARGV $ARGOBJ -t > $LINKLINE
+$MY_CMD "$@" $ARGOBJ -t > $LINKLINE
 
 STATUS=$?
 
@@ -106,7 +118,7 @@ $GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LIN
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    echo ""                       >> $RESULT
    echo "====================="  >> $RESULT
-   echo  $LD $ARGV $ARGOBJ       >> $RESULT
+   echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
    echo "====================="  >> $RESULT
 
    cat  $LINKLINE >> $RESULT

@@ -13,7 +13,7 @@ EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 FIND_EXEC=$XALT_DIR/site/xalt_find_exec_ibrun.py
 MY_CMD=/usr/local/bin/ibrun
 
-EXEC=unknown
+EXEC="unknown"
 if [ -x "$FIND_EXEC" ]; then
   EXEC=$($FIND_EXEC "$@")
 fi
@@ -40,8 +40,7 @@ else
   OLD_IFS=$IFS
   IFS=:
   for dir in $PATH; do
-    echo dir: $dir
-    if [ -x "$dir/$MY_NAME" ]; then
+    if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
       MY_CMD="$dir/$MY_NAME"
     fi
   done

@@ -3,7 +3,6 @@
 
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
-ARGV="$@"
 
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
@@ -24,27 +23,42 @@ case "$MPI_STACK" in
     ;;
 esac
 
-EXEC=unknown
+EXEC="unknown"
 if [ -x "$FIND_EXEC" ]; then
   EXEC=$($FIND_EXEC "$@")
-
 fi
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
 # have search and cached all the executable in the path.  This should be
-# faster then walking the path.
+# faster then walking the path.  But only if this script is treated as a
+# bash script.
 
-for exe in $(type -p -a $MY_NAME); do
-  if [ $exe != $MY_PATH ]; then
-    MY_CMD=$exe
-    break
-  fi
-done
+if [ -n "$BASH_VERSION" ]; then
+  for exe in $(type -p -a $MY_NAME); do
+    if [ $exe != $MY_PATH ]; then
+      MY_CMD=$exe
+      break
+    fi
+  done
+else
+  ###################################################################
+  # If this script is not treated as a bash script then do this the
+  # old fashion way.
+
+  OLD_IFS=$IFS
+  IFS=:
+  for dir in $PATH; do
+    if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
+      MY_CMD="$dir/$MY_NAME"
+    fi
+  done
+  IFS=$OLD_IFS
+fi
 
 ########################################################################
-# Loop over command line arguments to ld. This code is used instead of
+# Loop over command line arguments to mpirun. This code is used instead of
 # getopt and others because this wrapper script should not try to know
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
@@ -53,12 +67,10 @@ NTASKS=1
 append=false
 prev=
 done=false
-for option
-do
+for option; do
   if [ -n "$prev" ]; then
     eval "$prev=\$option"
     prev=
-    shift
     continue
   fi
 
@@ -73,7 +85,7 @@ do
       prev='NTASKS'
       ;;
     --help|-h)
-      $MY_CMD $ARGV
+      $MY_CMD "$@"
       exit
       ;;
   esac
@@ -85,8 +97,6 @@ do
   #if [ "$done" = "true" ]; then
   #  break;
   #fi
-
-  shift
 done
 
 
@@ -98,7 +108,7 @@ runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 sTime=$($EPOCH)
 $RUN_SUBMIT --ntasks $NTASKS --start 0        --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
-$MY_CMD $ARGV
+$MY_CMD "$@"
 
 eTime=$($EPOCH)
 $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
