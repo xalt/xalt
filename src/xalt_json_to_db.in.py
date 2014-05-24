@@ -263,23 +263,20 @@ class Rmap(object):
 
 def main():
 
-  args = CmdLineOptions().execute()
+  args   = CmdLineOptions().execute()
+  xalt   = XALTdb(ConfigFn)
 
-  xalt = XALTdb(ConfigFn)
+  p      = subprocess.Popen("getent passwd | wc -l", stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, shell=True)
+  num    = p.communicate()[0]
+  pbar   = ProgressBar(maxVal=num)
+  icnt   = 0
 
-  p = subprocess.Popen("getent passwd | wc -l", stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT, shell=True)
-  num = p.communicate()[0]
+  t1     = time.time()
 
-  pbar = ProgressBar(maxVal=num)
-  icnt = 0
+  rmapT  = Rmap(args.rmapD).reverseMapT()
 
-  t1 = time.time()
-
-  reverseMapT = Rmap(args.rmapD).reverseMapT()
-
-  iuser = 0
-
+  iuser  = 0
   lnkCnt = 0
   runCnt = 0
 
@@ -288,12 +285,12 @@ def main():
     if (os.path.isdir(xaltDir)):
       iuser += 1
       linkFnA = files_in_tree(xaltDir, "*/link.*.json")
-      lnkCnt += link_json_to_db(xalt, user, reverseMapT, linkFnA)
+      lnkCnt += link_json_to_db(xalt, user, rmapT, linkFnA)
       if (args.delete):
         remove_files(linkFnA)
 
       runFnA = files_in_tree(xaltDir, "*/run.*.json")
-      runCnt += run_json_to_db(xalt, user, reverseMapT, runFnA)
+      runCnt += run_json_to_db(xalt, user, rmapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
     icnt += 1
