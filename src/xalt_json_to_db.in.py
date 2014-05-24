@@ -267,7 +267,10 @@ def main():
 
   xalt = XALTdb(ConfigFn)
 
-  num  = subprocess.call("getent passwd | wc -l", shell=True)
+  p = subprocess.Popen("getent passwd | wc -l", stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT, shell=True)
+  num = p.communicate()[0]
+
   pbar = ProgressBar(maxVal=num)
   icnt = 0
 
