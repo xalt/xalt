@@ -267,7 +267,7 @@ def main():
   args   = CmdLineOptions().execute()
   xalt   = XALTdb(ConfigFn)
 
-  num    = capture("getent passwd | wc -l")
+  num    = int(capture("getent passwd | wc -l"))
   pbar   = ProgressBar(maxVal=num)
   icnt   = 0
 
