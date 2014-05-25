@@ -282,14 +282,14 @@ def main():
   for user, hdir in passwd_generator():
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
-      iuser += 1
+      iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
-      lnkCnt  += link_json_to_db(xalt, user, reverseMapT, linkFnA)
+      lnkCnt  += link_json_to_db(xalt, user, rmapT, linkFnA)
       if (args.delete):
         remove_files(linkFnA)
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
-      runCnt  += run_json_to_db(xalt, user, reverseMapT, runFnA)
+      runCnt  += run_json_to_db(xalt, user, rmapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
     icnt += 1
