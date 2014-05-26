@@ -109,7 +109,7 @@ DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
 sTime=$($EPOCH)
-$RUN_SUBMIT --ntasks $NTASKS --start 0        --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
 $MY_CMD "$@"
 
