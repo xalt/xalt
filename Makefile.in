@@ -8,6 +8,9 @@ PATH_TO_PSTREE  := @PATH_TO_PSTREE@
 BUILD_PSTREE    := @BUILD_PSTREE@
 USE_ARGPARSE    := @USE_CONTRIB_ARGPARSE@
 
+GIT_PROG        := @PATH_TO_GIT@
+GIT_VERSION     := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=`git describe --always`; echo "$$GV"; else echo "@git@"; fi)
+
 LIBEXEC         := $(prefix)/libexec
 SITE            := $(prefix)/site
 BIN             := $(prefix)/bin
@@ -91,6 +94,7 @@ __installMe:
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
 	        -e 's|@version@|$(VERSION)|g'                              \
+	        -e 's|@git@|$(GIT_VERSION)|g'                              \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
 	        -e 's|@path_to_uuidgen@|$(PATH_TO_UUIDGEN)|g'              \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \

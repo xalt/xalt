@@ -4,6 +4,9 @@
 #  optional input:
 #    XALT_USERS:  colon separated list of users
 #
+#
+# Git Version: @git@
+
 from __future__  import print_function
 import os, sys, re, MySQLdb, json, time, argparse
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
