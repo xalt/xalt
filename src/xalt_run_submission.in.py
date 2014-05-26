@@ -24,7 +24,7 @@ class CmdLineOptions(object):
     parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
     parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
-    parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "1",             help="number of mpi tasks")
+    parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "-1",            help="number of mpi tasks")
     parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
     parser.add_argument("--run_uuid",dest='run_uuid',  action="store", default = None,            help="run uuid")
     parser.add_argument("exec_prog", nargs='+',        help="user program")
