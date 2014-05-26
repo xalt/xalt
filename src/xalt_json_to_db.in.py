@@ -287,11 +287,13 @@ def main():
       lnkCnt  += link_json_to_db(xalt, user, rmapT, linkFnA)
       if (args.delete):
         remove_files(linkFnA)
+        remove_files(files_in_tree(xaltDir, "*/.link.*.json"))
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
       runCnt  += run_json_to_db(xalt, user, rmapT, runFnA)
       if (args.delete):
         remove_files(runFnA)
+        remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
     icnt += 1
     pbar.update(icnt)
 
