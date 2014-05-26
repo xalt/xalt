@@ -1,5 +1,8 @@
 #!/bin/bash
 #-*- shell-script -*-
+#
+# Git Version: @git@
+
 
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)

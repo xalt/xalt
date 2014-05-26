@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- python -*-
+#
+# Git Version: @git@
+
 from __future__ import print_function
 import os, sys, MySQLdb 
 dirNm, execName = os.path.split(sys.argv[0])

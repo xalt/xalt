@@ -1,5 +1,7 @@
 #!/bin/bash
 # -*- shell-script -*-
+#
+# Git Version: @git@
 
 findName()
 {

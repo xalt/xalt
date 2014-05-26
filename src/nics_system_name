@@ -1,5 +1,8 @@
 #!/usr/bin/env perl
 # -*- cperl -*-
+#
+# Git Version: @git@
+
 use strict;
 use POSIX();
 

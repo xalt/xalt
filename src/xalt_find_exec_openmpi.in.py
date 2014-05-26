@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- python -*-
+#
+# Git Version: @git@
+
 from __future__             import print_function
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
