@@ -85,6 +85,7 @@ fi
 cmdA=("-$MAKE distclean"
       "./configure --prefix=$PKG"
       "$SUDO $MAKE install"
+      "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
       "removeList $PKG $REMOVE"
       )
