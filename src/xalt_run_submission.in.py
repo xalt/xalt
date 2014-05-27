@@ -252,10 +252,7 @@ def main():
   
     dirname,fn = os.path.split(os.path.abspath(args.resultFn))
     tmpFn      = os.path.join(dirname, "." + fn)
-  except:
-    pass
 
-  try:
     if (not os.path.isdir(dirname)):
       os.mkdir(dirname);
     
@@ -265,8 +262,8 @@ def main():
     f.write(s)
     f.close()
     os.rename(tmpFn, args.resultFn)
-  except (OSError):
-    pass
+  except:
+    logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
 
 
 if ( __name__ == '__main__'): main()

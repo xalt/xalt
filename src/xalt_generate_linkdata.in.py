@@ -101,11 +101,8 @@ def main():
     dirname,fn = os.path.split(resultFn)
 
     tmpFn      = os.path.join(dirname, "." + fn)
-  except:
-    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
     
 
-  try:
     if (not os.path.isdir(dirname)):
       os.mkdir(dirname);
     
@@ -120,8 +117,8 @@ def main():
 
     f.close()
     os.rename(tmpFn, resultFn)
-  except (OSError):
-    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata(write json file)")
+  except:
+    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
 
   return 0
 
