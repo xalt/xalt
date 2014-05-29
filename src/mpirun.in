@@ -24,6 +24,9 @@ case "$MPI_STACK" in
   openmpi)
     FIND_EXEC=$XALT_DIR/site/xalt_find_exec_openmpi.py
     ;;
+  sgimpt)
+    FIND_EXEC=$XALT_DIR/site/xalt_find_exec_sgimpt.py
+    ;;
 esac
 
 EXEC="unknown"

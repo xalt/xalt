@@ -4,10 +4,10 @@
 # Git Version: @git@
 
 from __future__             import print_function
+import os, re, sys
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.abspath(os.path.join(dirNm, "../libexec")))
 from xalt_parse_mpirun_args import find_exec
-import os, re, sys
 
 ignoreT = {
   'env'              : True,
