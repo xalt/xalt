@@ -14,8 +14,11 @@ def find_cmd(ignoreT, i, argA):
       break
   return cmd
 
-def find_exec(ignoreT, argT, cmdArg, argA):
+def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
   N   = len(argA)
+
+  if ('dot' in kw):
+    os.environ['PATH'] = os.environ['PATH'] + ":."
 
   i   = 0
   while (i < N):
