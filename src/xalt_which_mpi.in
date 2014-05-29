@@ -30,6 +30,22 @@ findName()
     return
   fi
 
+  # this works with SGI MPT 2.01 on an SGI UV1000
+  if type -p mpiexec_mpt ; then
+    mpiexecPath=$(dirname `which mpiexec_mpt`)
+    $mpiexecPath/mpirun -v > /tmp/mpi$$ 2>&1
+    if [ $? = 0 ]; then
+      mpiStr=`head -1 /tmp/mpi$$`
+      if [[ $mpiStr =~ "SGI MPT" ]]; then
+        mpiN="sgimpt"
+        mpiV=`$EXPR "$mpiStr" : '.*SGI MPT\s\+\([^ ]\+\)\s'`
+      fi
+      rm /tmp/mpi$$
+      return
+    fi
+    rm /tmp/mpi$$
+  fi
+
   mpiexec -V > /tmp/mpi$$ 2>&1
   if [ $? = 0 ]; then
     mpiStr=`head -1 /tmp/mpi$$`
