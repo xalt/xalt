@@ -14,10 +14,7 @@ removeList()
 
 ld_repair()
 {
-  if [ -z "$LMOD_SYSTEM_NAME" ]; then
-    return
-  fi
-  perl -pi -e "s|/$LMOD_SYSTEM_NAME/|/\\\$LMOD_SYSTEM_NAME/|" $PKG/bin/ld
+  perl -pi -e "s|/$SYSHOST/|/\\\$SYSHOST/|" $PKG/bin/ld
 }
 
 runMe()
@@ -54,7 +51,7 @@ runMe()
 myhost=$(hostname -f)
 myhost=${myhost%.tacc.utexas.edu}
 first=${myhost%%.*}
-SYSHOST=${myhost#*.}
+export SYSHOST=${myhost#*.}
 
 case $SYSHOST in
   rios | mijo | jedrik | vato | vmijo | devo)

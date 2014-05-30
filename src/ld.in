@@ -10,9 +10,9 @@ XALT_DIR=@xalt_dir@
 GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
+SYSHOST=$($SYS_HOST_CMD)
 PSTREE=@path_to_pstree@
 
-SYSHOST=$($SYS_HOST_CMD)
 
 AS=@path_to_as@
 UUIDGEN=@path_to_uuidgen@
