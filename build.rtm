@@ -12,6 +12,14 @@ removeList()
   done
 }
 
+ld_repair()
+{
+  if [ -z "$LMOD_SYSTEM_NAME" ]; then
+    return
+  fi
+  perl -pi -e "s|/$LMOD_SYSTEM_NAME/|/\\\$LMOD_SYSTEM_NAME/|" $PKG/bin/ld
+}
+
 runMe()
 {
   local cmdA=("$@")
@@ -82,12 +90,14 @@ fi
 
 
 
+
 cmdA=("-$MAKE distclean"
       "./configure --prefix=$PKG"
       "$SUDO $MAKE install"
       "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
       "removeList $PKG $REMOVE"
+      "ld_repair"
       )
 
 
