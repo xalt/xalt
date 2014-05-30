@@ -32,7 +32,8 @@ LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.
 SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.in.py \
 	           src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
                    src/new_job_id.in.py              src/SitePkg.py                   \
-		   src/xalt_find_exec_ibrun.in.py    src/xalt_find_exec_aprun.in.py
+		   src/xalt_find_exec_ibrun.in.py    src/xalt_find_exec_aprun.in.py   \
+		   src/xalt_find_exec_sgimpt.in.py   
 
 .PHONY:
 
