@@ -129,17 +129,16 @@ class UserExec(object):
         cmd = prog
         break
 
+    self.__execType = None
     self.__execName = which(cmd)
     ldd = None
     if (self.__execName):
       outStr = capture(["file", self.__execName])
-      if (outStr.find("ASCII text") > 0):
-        self.__execType = "script"
-      elif (outStr.find("executable") > 0):
+      if (outStr.find("executable") > 0):
         self.__execType = "binary"
         ldd             = capture(["ldd", self.__execName])
       else:
-        self.__execType = None
+        self.__execType = "script"
 
       info = os.stat(self.__execName)
       self.__modify = info.st_mtime
@@ -170,7 +169,7 @@ class UserExec(object):
     return fieldA[0]
 
   def __parseLDD(self,ldd):
-    if (ldd.find("not a dynamic executable") > 0):
+    if (not ldd or ldd.find("not a dynamic executable") > 0):
       return []
 
     lineA = ldd.split('\n')

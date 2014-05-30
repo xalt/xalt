@@ -60,6 +60,6 @@ argT = {
 }
 
 def main():
-  print(find_exec(ignoreT, argT, None, sys.argv[1:]))
+  print(find_exec(ignoreT, argT, None, sys.argv[1:], dot=True))
 
 if ( __name__ == '__main__'): main()
