@@ -14,7 +14,7 @@ removeList()
 
 ld_repair()
 {
-  perl -pi -e "s|/$SYSHOST/|/\\\$SYSHOST/|" $PKG/bin/ld
+  $SUDO perl -pi -e "s|/$SYSHOST/|/\\\$SYSHOST/|" $PKG/bin/ld
 }
 
 runMe()
