@@ -4,9 +4,11 @@
 # Git Version: @git@
 
 from __future__ import print_function
-from util       import capture, which
+from util       import capture, which, config_logger
 
 import os, re, sys, subprocess, time, socket, json, argparse, platform
+
+logger = config_logger()
 
 def syshost():
   hostA = platform.node().split('.')
