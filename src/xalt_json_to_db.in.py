@@ -239,6 +239,9 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
 
 class Rmap(object):
   def __init__(self, rmapD):
+    self.__rmapT = {}
+    if (not rmapD):
+      return
     rmapA   = rmapD.split(':')
     searchA = [ ".json", ".old.json"]
     rmapFn  = None
@@ -247,7 +250,6 @@ class Rmap(object):
         rmapFn = os.path.join(dir, "jsonReverseMapT" + ext)
         if (os.access(rmapFn, os.R_OK)):
           break
-    self.__rmapT = {}
     if (rmapFn):
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")
