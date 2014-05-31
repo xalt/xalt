@@ -49,6 +49,48 @@ else
   IFS=$OLD_IFS
 fi
 
+########################################################################
+# Loop over command line arguments to mpirun. This code is used instead of
+# getopt and others because this wrapper script should not try to know
+# all the options to ld. Instead we are just "cherry-picking" the options
+# we want to know about.
+
+append=false
+prev=
+done=false
+for option; do
+  if [ -n "$prev" ]; then
+    eval "$prev=\$option"
+    prev=
+    continue
+  fi
+
+  case "$option" in
+    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
+    -*) optarg=;;
+    *) optarg=; done=true;;
+  esac
+  
+  case $option in
+    --help|-h)
+      $MY_CMD "$@"
+      exit
+      ;;
+    ---test)
+      testMe=true
+      ;;
+  esac
+
+  #####################################################################
+  # This code below is commented out.  Since this script is not parsing
+  # all options the done flag won't work.
+
+  #if [ "$done" = "true" ]; then
+  #  break;
+  #fi
+done
+
+
 RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 
@@ -57,7 +99,9 @@ runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 sTime=$($EPOCH)
 $RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
-$MY_CMD "$@"
+if [ -z "$testMe" ]; then
+  $MY_CMD "$@"
+fi
 
 eTime=$($EPOCH)
 $RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
