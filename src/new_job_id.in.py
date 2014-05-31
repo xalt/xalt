@@ -29,6 +29,13 @@ def main():
   xalt = XALTdb(ConfigFn)
   try:
     conn   = xalt.connect()
+  except MySQLdb.Error, e:
+    print("-1")
+    sys.exit(1)
+    
+  
+
+  try:
     query  = "USE "+xalt.db()
     conn.query(query)
     query  = "SELECT job_id FROM xalt_job_id WHERE inc_id='1'"
