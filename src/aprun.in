@@ -84,6 +84,9 @@ for option; do
   esac
   
   case $option in
+    -n)
+      prev='NTASKS'
+      ;;
     --help|-h)
       $MY_CMD "$@"
       exit
@@ -107,12 +110,12 @@ DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
 sTime=$($EPOCH)
-$RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
 if [ -z "$testMe" ]; then
   $MY_CMD "$@"
 fi
 
 eTime=$($EPOCH)
-$RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
