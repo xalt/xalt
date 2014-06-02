@@ -52,6 +52,16 @@ else
 fi
 
 ########################################################################
+# Determine if we are inside a PBS job, if so then set PBS_ACCOUNT to
+# the account string name
+
+if [ -n $PBS_JOBID ]; then
+  export PBS_ACCOUNT=`qstat -f $PBS_JOBID | grep "Account_Name =" | awk '{print $3}'`
+else
+  export PBS_ACCOUNT='unknown'
+fi
+
+########################################################################
 # Loop over command line arguments to mpirun. This code is used instead of
 # getopt and others because this wrapper script should not try to know
 # all the options to ld. Instead we are just "cherry-picking" the options

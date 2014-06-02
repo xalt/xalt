@@ -28,7 +28,7 @@ def translate(nameA, envT, userT):
   elif (queueType == "PBS"):
     sysT['num_cores'] = "PBS_NP"
     sysT['num_nodes'] = "PBS_NNODES"
-    sysT['account']   = "PBS_JOBNAME"
+    sysT['account']   = "PBS_ACCOUNT"
     sysT['job_id']    = "PBS_JOBID"
     sysT['queue']     = "PBS_QUEUE"
   
