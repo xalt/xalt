@@ -57,8 +57,6 @@ fi
 
 if [ -n $PBS_JOBID ]; then
   export PBS_ACCOUNT=`qstat -f $PBS_JOBID | grep "Account_Name =" | awk '{print $3}'`
-else
-  export PBS_ACCOUNT='unknown'
 fi
 
 ########################################################################
