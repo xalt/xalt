@@ -134,11 +134,11 @@ class UserExec(object):
     ldd = None
     if (self.__execName):
       outStr = capture(["file", self.__execName])
-      if (outStr.find("executable") > 0):
+      if (outStr.find("script") > 0):
+        self.__execType = "script"
+      else:
         self.__execType = "binary"
         ldd             = capture(["ldd", self.__execName])
-      else:
-        self.__execType = "script"
 
       info = os.stat(self.__execName)
       self.__modify = info.st_mtime
