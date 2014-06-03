@@ -50,8 +50,8 @@ class XALTdb(object):
 
 
     except MySQLdb.Error, e:
-      print ("Error %d: %s" % (e.args[0], e.args[1]))
-      sys.exit (1)
+      print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]), file=sys.stderr)
+      raise
 
     return self.__conn
 
