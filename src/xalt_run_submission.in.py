@@ -131,7 +131,7 @@ class UserExec(object):
 
     self.__execType = None
     self.__execName = which(cmd)
-    ldd = None
+    self.__libA     = []
     if (self.__execName):
       outStr = capture(["file", self.__execName])
       if (outStr.find("script") > 0 or outStr.find("text") > 0):
@@ -139,10 +139,10 @@ class UserExec(object):
       else:
         self.__execType = "binary"
         ldd             = capture(["ldd", self.__execName])
+        self.__libA     = self.__parseLDD(ldd)
 
       info = os.stat(self.__execName)
       self.__modify = info.st_mtime
-      self.__libA   = self.__parseLDD(ldd)
       self.__hash   = self.__computeHash(self.__execName)
 
 
