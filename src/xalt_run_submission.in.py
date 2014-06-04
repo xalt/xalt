@@ -134,7 +134,7 @@ class UserExec(object):
     ldd = None
     if (self.__execName):
       outStr = capture(["file", self.__execName])
-      if (outStr.find("script") > 0):
+      if (outStr.find("script") > 0 or outStr.find("text") > 0):
         self.__execType = "script"
       else:
         self.__execType = "binary"
