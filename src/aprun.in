@@ -52,6 +52,14 @@ else
 fi
 
 ########################################################################
+# Determine if we are inside a PBS job, if so then set PBS_ACCOUNT to
+# the account string name
+
+if [ -n $PBS_JOBID ]; then
+  export PBS_ACCOUNT=`qstat -f $PBS_JOBID | grep "Account_Name =" | awk '{print $3}'`
+fi
+
+########################################################################
 # Loop over command line arguments to mpirun. This code is used instead of
 # getopt and others because this wrapper script should not try to know
 # all the options to ld. Instead we are just "cherry-picking" the options
@@ -74,6 +82,9 @@ for option; do
   esac
   
   case $option in
+    -n)
+      prev='NTASKS'
+      ;;
     --help|-h)
       $MY_CMD "$@"
       exit
@@ -97,12 +108,12 @@ DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
 sTime=$($EPOCH)
-$RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
 if [ -z "$testMe" ]; then
   $MY_CMD "$@"
 fi
 
 eTime=$($EPOCH)
-$RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
