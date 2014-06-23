@@ -172,7 +172,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
       translate(nameA, runT['envT'], runT['userT']);
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
-      uuid        = runT['xaltLinkT'].get('uuid')
+      uuid        = runT['xaltLinkT'].get('Build.UUID')
       if (uuid):
         uuid = "'" + uuid + "'"
       else:
