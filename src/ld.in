@@ -21,7 +21,11 @@ UUIDGEN=@path_to_uuidgen@
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
 
-if [ -n "$BASH_VERSION" ]; then
+EXEC_X=/usr/bin/${MY_NAME}.x
+
+if [ -x "$EXEC_X" ]; then
+  MY_CMD=$EXEC_X
+elif [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
     if [ $exe != $MY_PATH ]; then
       MY_CMD=$exe
