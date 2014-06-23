@@ -260,7 +260,9 @@ class Rmap(object):
         tsMtime = os.stat(tsFn).st_mtime
         if (rmpMtime >= tsMtime):
           self.__rmapT = t['reverseMapT']
-    
+      else:
+        self.__rmapT = t['reverseMapT']
+        
 
   def reverseMapT(self):
     return self.__rmapT 
