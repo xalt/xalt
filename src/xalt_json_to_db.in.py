@@ -87,7 +87,12 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
     for fn in linkFnA:
       num  += 1
       f     = open(fn,"r")
-      linkT = json.loads(f.read())
+      try:
+        linkT = json.loads(f.read())
+      except:  
+        f.close()
+        continue
+
       f.close()
       conn   = xalt.connect()
       query  = "USE "+xalt.db()
@@ -163,7 +168,12 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
     for fn in runFnA:
       num   += 1
       f      = open(fn,"r")
-      runT   = json.loads(f.read())
+      
+      try:
+        runT   = json.loads(f.read())
+      except:
+        f.close()
+        continue
       f.close()
       conn   = xalt.connect()
       query  = "USE "+xalt.db()
