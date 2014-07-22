@@ -7,7 +7,7 @@
 #      "merge_json_files.py" are in the same directory.
 #   c) Make sure the module command is defined by using $BASH_ENV
 #      or define the module command here.
-#   d) Make sure that LMOD_DIR is defined as well.
+#   d) Make sure that LMOD_DIR is defined as well (it is defined by $BASH_ENV).
 #
 ########################################################################
 #  Site Specific Setting
@@ -34,27 +34,36 @@
     source $BASH_ENV
   fi
 
-
-
 ########################################################################
 #  End Site Specific Setting
 ########################################################################
 
-SCRIPTDIR=$(cd $(dirname $(readlink -f $0)) && pwd)
-PATH=$SCRIPTDIR:$LMOD_DIR:$PATH
+if [ ! -d $RmapDir ]; then
+  mkdir -p $RmapDir
+fi
+
+SCRIPT_DIR=$(cd $(dirname $(readlink -f "$0")) && pwd)
+PATH=$SCRIPT_DIR:$LMOD_DIR:$PATH
 
 cd $RmapDir
 
+module unload "${PrgEnvA[@]}" 2> /dev/null
+prev=""
 for m in "${moduleA[@]}"; do
     sn=$(dirname $m)
     v=${m##*/}
     
-    module unload "${PrgEnvA[@]}"
-    module load $m
+    module unload $prev  2> /dev/null
+    module load $m       2> /dev/null
+    prev=$m
 
-    spider --preload -o jsonReverseMapT $BASE_MODULE_PATH | python -mjson.tool >  rmapT_${sn}_${v}.JSON
+    echo -n '-'
+    spider --preload -o jsonReverseMapT $BASE_MODULE_PATH >  rmapT_${sn}_${v}.JSON
+    echo -n '*'
 
 done
+
+echo "*"
 
 OLD=$RmapDir/jsonReverseMapT.old.json
 NEW=$RmapDir/jsonReverseMapT.new.json
