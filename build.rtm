@@ -54,7 +54,7 @@ first=${myhost%%.*}
 export SYSHOST=${myhost#*.}
 
 case $SYSHOST in
-  rios | mijo | jedrik | vato | vmijo | devo)
+  rios | mijo | jedrik | vato | vmijo | devo | lmod-test | xalt-lmod)
     SUDO="sudo"
     base="/opt/apps"
     ;;

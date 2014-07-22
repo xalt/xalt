@@ -87,7 +87,12 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
     for fn in linkFnA:
       num  += 1
       f     = open(fn,"r")
-      linkT = json.loads(f.read())
+      try:
+        linkT = json.loads(f.read())
+      except:  
+        f.close()
+        continue
+
       f.close()
       conn   = xalt.connect()
       query  = "USE "+xalt.db()
@@ -163,7 +168,12 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
     for fn in runFnA:
       num   += 1
       f      = open(fn,"r")
-      runT   = json.loads(f.read())
+      
+      try:
+        runT   = json.loads(f.read())
+      except:
+        f.close()
+        continue
       f.close()
       conn   = xalt.connect()
       query  = "USE "+xalt.db()
@@ -172,7 +182,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
       translate(nameA, runT['envT'], runT['userT']);
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
-      uuid        = runT['xaltLinkT'].get('uuid')
+      uuid        = runT['xaltLinkT'].get('Build.UUID')
       if (uuid):
         uuid = "'" + uuid + "'"
       else:
@@ -260,7 +270,9 @@ class Rmap(object):
         tsMtime = os.stat(tsFn).st_mtime
         if (rmpMtime >= tsMtime):
           self.__rmapT = t['reverseMapT']
-    
+      else:
+        self.__rmapT = t['reverseMapT']
+        
 
   def reverseMapT(self):
     return self.__rmapT 
