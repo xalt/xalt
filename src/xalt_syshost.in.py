@@ -2,24 +2,35 @@
 # -*- python -*-
 #
 # Git Version: @git@
+#
+# user defined function
+# this is only an example that works at a couple sites
+#
 
 from __future__ import print_function
 import socket, platform
 
-def nics_syshost(nameA):
+# must set this to True or False depending on your naming scheme
+# unless you plan to do a manual mapping of all your machine names
+# see below for description of level1 and level2
+level1format = False
+
+def map_syshost(nameA):
   nicsT = {
-    "kraken"    : "kraken",
-    "darter"    : "darter",
-    "nid00129"  : "darter",
-    "nid00453"  : "darter",
-    "kid"       : "kids",
-    "kfs"       : "keeneland",
-    "titan"     : "titan",
-    "nid00026"  : "mars",
-    "nid00027"  : "mars",
-    "verne"     : "verne",
-    "nautilus"  : "nautilus",
-    "conseil"   : "nautilus",
+    "kraken"       : "kraken",
+    "aprun-darter" : "darter",
+    "kid"          : "kids",
+    "kfs"          : "keeneland",
+    "titan"        : "titan",
+    "nid00026"     : "mars",
+    "nid00027"     : "mars",
+    "nid00043"     : "mars",
+    "nid00053"     : "mars",
+    "verne"        : "verne",
+    "nautilus"     : "nautilus",
+    "conseil"      : "nautilus",
+    "arronax"      : "nautilus",
+    "harpoon"      : "nautilus",
   }
   result = None
 
@@ -30,8 +41,24 @@ def nics_syshost(nameA):
         return result
   return result
   
-def normal_syshost(nameA):
-  
+def level1_syshost(nameA):
+  # Returns the 1st level xx of the xx.yy.zz.ww hostname name.
+  # Useful for naming conventions like
+  #     machine1.dept.institute.edu
+  # where you want to return the machine name without the number.
+
+  # use the platform.node result provided in nameA array
+  #   and strip off trailing numbers
+
+  name = nameA[1].rstrip('1234567890')  
+  return name
+
+def level2_syshost(nameA):
+  # Returns the 2nd level yy of the xx.yy.zz.ww hostname name.
+  # Useful for naming conventions like
+  #     login1.machine.site.edu
+  # where you want to return the machine name.
+
   maxN = 0
   j    = -1
   i    = -1
@@ -56,7 +83,10 @@ def main():
 
   syshost = nics_syshost(nameA)
   if (not syshost):
-    syshost = normal_syshost(nameA)
+    if (level1format):
+      syshost = level1_syshost(nameA)
+    else:
+      syshost = level2_syshost(nameA)
 
   print(syshost)
   
