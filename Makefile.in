@@ -27,7 +27,8 @@ SBIN_PKG        := src/conf_create.in.py  	     src/createDB.in.py              
 LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.in.py \
                    src/xalt_run_submission.in.py     src/xalt_parse_mpirun_args.in.py \
                    src/util.py                       src/XALTdb.py                    \
-                   src/progressBar.py                src/xalt_epoch.in.py
+                   src/progressBar.py                src/xalt_epoch.in.py             \
+                   src/xalt_working_python.in.py
 
 SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.in.py \
 	           src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
