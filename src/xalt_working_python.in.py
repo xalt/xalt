@@ -3,14 +3,11 @@
 #
 # Git Version: @git@
 
-def main():
-  try:
-    from __future__  import print_function
-  except:
-    return 1
-  return 0
+from __future__      import print_function
 
+def main():
+  print ("GOOD")
 
 if ( __name__ == '__main__'):
-  iret = main()
-  sys.exit(iret)
+  main()
+
