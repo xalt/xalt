@@ -81,7 +81,7 @@ def main():
   nameA = [ socket.getfqdn(),
             platform.node() ]
 
-  syshost = nics_syshost(nameA)
+  syshost = map_syshost(nameA)
   if (not syshost):
     if (level1format):
       syshost = level1_syshost(nameA)
