@@ -1,6 +1,10 @@
 from __future__ import print_function
-from util       import which
 import os, re, sys
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+
+from xalt_util  import which
+
 
 def find_cmd(ignoreT, i, argA):
   N   = len(argA)

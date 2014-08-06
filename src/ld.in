@@ -47,9 +47,13 @@ XALT_DIR=@xalt_dir@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 WORKING=$($WORKING_PYTHON 2> /dev/null)
 if [ "$WORKING" != "GOOD" ]; then
-  echo "XALT: Error in users' python setup.  Please report this error!"
-  $MY_CMD "$@"
-  exit
+  unset PYTHONHOME
+  WORKING=$($WORKING_PYTHON 2> /dev/null)
+  if [ "$WORKING" != "GOOD" ]; then
+    echo "XALT: Error in users' python setup.  Please report this error!"
+    $MY_CMD "$@"
+    exit
+  fi
 fi
   
 
