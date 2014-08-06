@@ -40,7 +40,8 @@ else
 fi
 
 ########################################################################
-# Make sure that the python is valid
+# Make sure that the python setup is valid.  If a user makes PYTHONHOME
+# point to a different python then if stmt will be triggered.
 
 XALT_DIR=@xalt_dir@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
