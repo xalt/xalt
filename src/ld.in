@@ -6,16 +6,6 @@
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 
-
-XALT_DIR=@xalt_dir@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
-GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
-SYSHOST=$($SYS_HOST_CMD)
-PSTREE=@path_to_pstree@
-UUIDGEN=@path_to_uuidgen@
-
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -48,6 +38,27 @@ else
   done
   IFS=$OLD_IFS
 fi
+
+########################################################################
+# Make sure that the python is valid
+
+WORKING=$($WORKING_PYTHON 2> /dev/null)
+if [ $WORKING != "GOOD" ]; then
+  echo "XALT: Error in users' python setup.  Please report this error!"
+  $MY_CMD "$@"
+  return
+fi
+  
+
+XALT_DIR=@xalt_dir@
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
+GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
+GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
+SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
+SYSHOST=$($SYS_HOST_CMD)
+PSTREE=@path_to_pstree@
+UUIDGEN=@path_to_uuidgen@
+
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -93,16 +104,6 @@ do
 
 done
 
-########################################################################
-# Make sure that the python is valid
-
-WORKING=$($WORKING_PYTHON 2> /dev/null)
-if [ $WORKING != "GOOD" ]; then
-  echo "XALT: Error in users' python setup.  Please report this error!"
-  $MY_CMD "$@"
-  return
-fi
-  
 
 UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
