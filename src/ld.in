@@ -42,6 +42,8 @@ fi
 ########################################################################
 # Make sure that the python is valid
 
+XALT_DIR=@xalt_dir@
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 WORKING=$($WORKING_PYTHON 2> /dev/null)
 if [ "$WORKING" != "GOOD" ]; then
   echo "XALT: Error in users' python setup.  Please report this error!"
@@ -50,8 +52,6 @@ if [ "$WORKING" != "GOOD" ]; then
 fi
   
 
-XALT_DIR=@xalt_dir@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
