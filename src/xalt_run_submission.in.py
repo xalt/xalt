@@ -4,11 +4,12 @@
 # Git Version: @git@
 
 from __future__ import print_function
+import os, re, sys
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
 from xalt_util  import capture, which, config_logger
 
-import os, re, sys, subprocess, time, socket, json, argparse, platform
+import subprocess, time, socket, json, argparse, platform
 
 logger = config_logger()
 

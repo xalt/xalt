@@ -10,6 +10,7 @@ XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 
 # We make the big assumption that the only MPI on a Cray is 
 # Cray's mpi and thay the job launcher is aprun.  So we 

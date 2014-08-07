@@ -12,7 +12,7 @@ RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
 WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
-
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
