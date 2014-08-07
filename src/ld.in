@@ -5,6 +5,7 @@
 
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
+MY_PYTHON=python
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -45,14 +46,19 @@ fi
 
 XALT_DIR=@xalt_dir@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-WORKING=$($WORKING_PYTHON 2> /dev/null)
+WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
 if [ "$WORKING" != "GOOD" ]; then
   unset PYTHONHOME
-  WORKING=$($WORKING_PYTHON 2> /dev/null)
+  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
   if [ "$WORKING" != "GOOD" ]; then
-    echo "XALT: Error in users' python setup.  Please report this error!"
-    $MY_CMD "$@"
-    exit
+    unset PYTHONPATH
+    MY_PYTHON=@python@
+    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+    if [ "$WORKING" != "GOOD" ]; then
+      echo "XALT: Error in users' python setup.  Please report this error!"
+      $MY_CMD "$@"
+      exit
+    fi
   fi
 fi
   
@@ -60,7 +66,7 @@ fi
 GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
-SYSHOST=$($SYS_HOST_CMD)
+SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
 PSTREE=@path_to_pstree@
 UUIDGEN=@path_to_uuidgen@
 
@@ -127,7 +133,7 @@ if [ -x "$PSTREE" ]; then
   PSTREE_OUT=$($PSTREE -l -s $$)
 fi
 
-EPOCH=$($GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
+EPOCH=$($MY_PYTHON $GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
 
 as $ARGSRC -o $ARGOBJ
 
@@ -135,7 +141,7 @@ $MY_CMD "$@" $ARGOBJ -t > $LINKLINE
 
 STATUS=$?
 
-$GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
+$MY_PYTHON $GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    echo ""                       >> $RESULT

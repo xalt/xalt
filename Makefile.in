@@ -3,6 +3,7 @@ VERSION         := $(shell cat .version)
 prefix          := @prefix@
 XALT_DIR        := @prefix@
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
+PATH_TO_PYTHON  := @PATH_TO_PYTHON@
 PATH_TO_AS      := @PATH_TO_AS@
 PATH_TO_PSTREE  := @PATH_TO_PSTREE@
 BUILD_PSTREE    := @BUILD_PSTREE@
@@ -95,6 +96,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
 	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- python -*-
 #
 # Git Version: @git@
