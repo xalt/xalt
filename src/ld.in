@@ -5,14 +5,7 @@
 
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
-
-XALT_DIR=@xalt_dir@
-GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
-GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
-SYSHOST=$($SYS_HOST_CMD)
-PSTREE=@path_to_pstree@
-UUIDGEN=@path_to_uuidgen@
+MY_PYTHON=python
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -46,6 +39,37 @@ else
   done
   IFS=$OLD_IFS
 fi
+
+########################################################################
+# Make sure that the python setup is valid.  If a user makes PYTHONHOME
+# point to a different python then if stmt will be triggered.
+
+XALT_DIR=@xalt_dir@
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
+WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+if [ "$WORKING" != "GOOD" ]; then
+  unset PYTHONHOME
+  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+  if [ "$WORKING" != "GOOD" ]; then
+    unset PYTHONPATH
+    MY_PYTHON=@python@
+    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+    if [ "$WORKING" != "GOOD" ]; then
+      echo "XALT: Error in users' python setup.  Please report this error!"
+      $MY_CMD "$@"
+      exit
+    fi
+  fi
+fi
+  
+
+GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
+GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
+SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
+SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
+PSTREE=@path_to_pstree@
+UUIDGEN=@path_to_uuidgen@
+
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -91,6 +115,7 @@ do
 
 done
 
+
 UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 WRKDIR=/tmp/${USER}_${DATESTR}_${UUID}
@@ -108,7 +133,7 @@ if [ -x "$PSTREE" ]; then
   PSTREE_OUT=$($PSTREE -l -s $$)
 fi
 
-EPOCH=$($GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
+EPOCH=$($MY_PYTHON $GEN_ASSEMBLY $UUID $SYSHOST $PSTREE_OUT $ARGSRC)
 
 as $ARGSRC -o $ARGOBJ
 
@@ -116,7 +141,7 @@ $MY_CMD "$@" $ARGOBJ -t > $LINKLINE
 
 STATUS=$?
 
-$GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
+$MY_PYTHON $GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LINKLINE $RESULT
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    echo ""                       >> $RESULT

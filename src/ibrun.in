@@ -9,16 +9,11 @@ MY_NAME=$(basename $MY_PATH)
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
-SYSHOST=$($XALT_DIR/site/xalt_syshost.py)
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
 FIND_EXEC=$XALT_DIR/site/xalt_find_exec_ibrun.py
 MY_CMD=/usr/local/bin/ibrun
-
-EXEC="unknown"
-if [ -x "$FIND_EXEC" ]; then
-  EXEC=$($FIND_EXEC "$@")
-fi
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -48,6 +43,30 @@ else
   done
   IFS=$OLD_IFS
 fi
+
+########################################################################
+# Make sure that the python setup is valid.  If a user makes PYTHONHOME
+# point to a different python then if stmt will be triggered.
+
+XALT_DIR=@xalt_dir@
+WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
+WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+if [ "$WORKING" != "GOOD" ]; then
+  unset PYTHONHOME
+  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+  if [ "$WORKING" != "GOOD" ]; then
+    unset PYTHONPATH
+    MY_PYTHON=@python@
+    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+    if [ "$WORKING" != "GOOD" ]; then
+      echo "XALT: Error in users' python setup.  Please report this error!"
+      $MY_CMD "$@"
+      exit
+    fi
+  fi
+fi
+
+
 
 ########################################################################
 # Loop over command line arguments to mpirun. This code is used instead of
@@ -93,15 +112,21 @@ done
 
 RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
+SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
 
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
-sTime=$($EPOCH)
-$RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+EXEC="unknown"
+if [ -x "$FIND_EXEC" ]; then
+  EXEC=$($MY_PYTHON $FIND_EXEC "$@")
+fi
+
+sTime=$($MY_PYTHON $EPOCH)
+$MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
 if [ -z "$testMe" ]; then
   $MY_CMD "$@"
 fi
 
-eTime=$($EPOCH)
-$RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+eTime=$($MY_PYTHON $EPOCH)
+$MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC

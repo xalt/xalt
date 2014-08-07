@@ -1,10 +1,9 @@
-#!/usr/bin/env python
 # -*- python -*-
 #
 # Git Version: @git@
 
 from __future__  import print_function
-from util        import capture, config_logger, extract_compiler
+from xalt_util   import capture, config_logger, extract_compiler
 import os, sys, re, json, subprocess
 
 logger    = config_logger()
