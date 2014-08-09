@@ -100,8 +100,8 @@ do
       $MY_CMD "$@"
       exit
       ;;
-    --terse|-t)
-      USER_TERSE="true"
+    --trace|-t)
+      USER_TRACE="true"
       ;;
 
     -o)
@@ -144,7 +144,7 @@ as $ARGSRC -o $ARGOBJ
 
 $MY_CMD "$@" $ARGOBJ -t > $LINKLINE_OUT 2> $LINKLINE_ERR
 
-if [ -n "$USER_TERSE" ]; then
+if [ -n "$USER_TRACE" ]; then
   cat $LINKLINE_OUT | grep -v $ARGOBJ
   cat $LINKLINE_ERR
 fi
