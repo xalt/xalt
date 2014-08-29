@@ -256,7 +256,7 @@ def main():
   
     s    = json.dumps(submitT, sort_keys=True, indent=2, separators=(',',': '))
     xfer = XALT_transmission_factory.build("file",syshost,resultFn)
-    xfer.save(s)
+    xfer.save("run",s)
   except:
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
 
