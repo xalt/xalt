@@ -1,5 +1,6 @@
 package         := xalt
 VERSION         := $(shell cat .version)
+TRANSMISSION    := @TRANSMISSION@
 prefix          := @prefix@
 XALT_DIR        := @prefix@
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
@@ -96,6 +97,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
 	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              \

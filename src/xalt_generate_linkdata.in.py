@@ -98,8 +98,9 @@ def main():
     resultT['build_syshost'] = syshost
     resultT['linkA']         = sA
     
-    s    = json.dumps(resultT, sort_keys=True, indent=2, separators=(',',': '))
-    xfer = XALT_transmission_factory.build("file",syshost,resultFn)
+    s     = json.dumps(resultT, sort_keys=True, indent=2, separators=(',',': '))
+    style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
+    xfer  = XALT_transmission_factory.build(style,syshost,resultFn)
     xfer.save(s)
 
   except:
