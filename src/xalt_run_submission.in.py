@@ -257,7 +257,7 @@ def main():
     s     = json.dumps(submitT, sort_keys=True, indent=2, separators=(',',': '))
     style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
     xfer  = XALT_transmission_factory.build(style,syshost,resultFn)
-    xfer.save(s)
+    xfer.save("run",s)
   except:
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
 

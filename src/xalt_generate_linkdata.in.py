@@ -101,7 +101,7 @@ def main():
     s     = json.dumps(resultT, sort_keys=True, indent=2, separators=(',',': '))
     style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
     xfer  = XALT_transmission_factory.build(style,syshost,resultFn)
-    xfer.save(s)
+    xfer.save("link",s)
 
   except:
     logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
