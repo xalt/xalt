@@ -2,8 +2,9 @@
 #
 # Git Version: @git@
 
-from __future__  import print_function
-from xalt_util   import capture, config_logger, extract_compiler
+from __future__                import print_function
+from xalt_util                 import capture, config_logger, extract_compiler
+from xalt_transmission_factory import XALT_transmission_factory
 import os, sys, re, json, subprocess
 
 logger    = config_logger()
@@ -96,26 +97,11 @@ def main():
     resultT['wd']            = wd
     resultT['build_syshost'] = syshost
     resultT['linkA']         = sA
-  
-    dirname,fn = os.path.split(resultFn)
-
-    tmpFn      = os.path.join(dirname, "." + fn)
     
+    s    = json.dumps(resultT, sort_keys=True, indent=2, separators=(',',': '))
+    xfer = XALT_transmission_factory.build("file",syshost,resultFn)
+    xfer.save(s)
 
-    if (not os.path.isdir(dirname)):
-      os.mkdir(dirname);
-    
-    s = json.dumps(resultT, sort_keys=True, indent=2, separators=(',',': '))
-
-    f = open(tmpFn,'w')
-    f.write(s)
-    f.write("\n")
-
-    if (hash_line.find("sha1sum:") != -1):
-      f.write(hash_line)
-
-    f.close()
-    os.rename(tmpFn, resultFn)
   except:
     logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
 
