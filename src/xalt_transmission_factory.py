@@ -6,10 +6,10 @@ class XALT_transmission_factory(object):
     self.__syshost = syshost
     self.__kind    = kind
 
-  def _syshost(self)
+  def _syshost(self):
     return self.__syshost
 
-  def _kind(self)
+  def _kind(self):
     return self.__kind
 
   @staticmethod
@@ -44,7 +44,6 @@ class File(XALT_transmission_factory):
       os.mkdir(dirname);
     
     f = open(tmpFn,"w")
-    f.write(s)
     f.write(s)
     f.close()
     os.rename(tmpFn, self.__fn)

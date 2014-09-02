@@ -640,6 +640,7 @@ BUILD_PSTREE
 PATH_TO_PSTREE
 PATH_TO_UUIDGEN
 PATH_TO_AS
+TRANSMISSION
 target_alias
 host_alias
 build_alias
@@ -681,6 +682,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+with_transmission
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1293,6 +1295,11 @@ fi
 if test -n "$ac_init_help"; then
 
   cat <<\_ACEOF
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-transmission=ans transmission style (file,syslog) [[file]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -1969,6 +1976,30 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+
+
+
+
+# Check whether --with-transmission was given.
+if test "${with_transmission+set}" = set; then :
+  withval=$with_transmission; TRANSMISSION="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$with_transmission" >&5
+$as_echo "TRANSMISSION=$with_transmission" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define TRANSMISSION "$with_transmission"
+_ACEOF
+
+else
+  withval="file"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$withval" >&5
+$as_echo "TRANSMISSION=$withval" >&6; }
+    TRANSMISSION="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define TRANSMISSION "$withval"
+_ACEOF
+
+fi
 
 
 
