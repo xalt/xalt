@@ -254,10 +254,9 @@ def main():
     submitT['envT']      = EnvT().envT()
     submitT['hash_id']   = userExec.hash()
   
-    s     = json.dumps(submitT, sort_keys=True, indent=2, separators=(',',': '))
     style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
-    xfer  = XALT_transmission_factory.build(style, syshost, "run", args.resultFn)
-    xfer.save(s)
+    xfer  = XALT_transmission_factory.build(style, args.syshost, "run", args.resultFn)
+    xfer.save(submitT)
   except Exception as e:
     print("XALT_EXCEPTION(xalt_run_submission.py): ",e)
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
