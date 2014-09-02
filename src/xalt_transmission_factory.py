@@ -38,7 +38,6 @@ class Syslog(XALT_transmission_factory):
     sA.append(base64.b64encode(json.dumps(resultT)))
     sA.append("\"")
     s = "".join(sA)
-    print(s)
     os.system(s)
     
 
