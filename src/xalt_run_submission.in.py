@@ -258,7 +258,8 @@ def main():
     style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
     xfer  = XALT_transmission_factory.build(style, syshost, "run", args.resultFn)
     xfer.save(s)
-  except:
+  except Exception as e:
+    print("XALT_EXCEPTION(xalt_run_submission.py): ",e)
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
 
 

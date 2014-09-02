@@ -103,7 +103,8 @@ def main():
     xfer  = XALT_transmission_factory.build(style, syshost, "link", resultFn)
     xfer.save(s)
 
-  except:
+  except Exception as e:
+    print("XALT_EXCEPTION(xalt_generate_linkdata.py): ",e)
     logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
 
   return 0
