@@ -3,13 +3,13 @@ import os
 
 def translate(nameA, envT, userT):
   sysT = {}
-  queueType = "SLURM_GENERIC"
+  queueType = "SLURM"
   if (envT.get("SGE_ACCOUNT")):
     queueType = "SGE"
   elif (envT.get("SLURM_TACC_ACCOUNT")):
-    queueType = "SLURM"
+    queueType = "SLURM_TACC"
   elif (envT.get("SBATCH_ACCOUNT")):
-    queueType = "SLURM_GENERIC"
+    queueType = "SLURM"
   elif (envT.get("PBS_JOBID")):
     queueType = "PBS"
       
@@ -27,7 +27,7 @@ def translate(nameA, envT, userT):
     sysT['job_id']    = "SLURM_JOB_ID"
     sysT['queue']     = "SLURM_QUEUE"
   
-  elif (queueType == "SLURM_GENERIC"):
+  elif (queueType == "SLURM"):
     sysT['num_nodes']  = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
     sysT['job_id']     = "SLURM_JOB_ID"
     sysT['queue']      = "SLURM_QUEUE"
@@ -46,8 +46,8 @@ def translate(nameA, envT, userT):
       result = envT.get(key,"unknown")
     userT[name] = result
     
-  # Compute number of total nodes for SLURM_GENERIC
-  if (queueType == "SLURM_GENERIC"):
+  # Compute number of total nodes for Generic SLURM.
+  if (queueType == "SLURM"):
     userT['num_cores'] = envT.get("SLURM_NNODES",0)*
                          envT.get("SLURM_CORES_PER_NODE",0)
   
