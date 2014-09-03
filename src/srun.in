@@ -156,7 +156,6 @@ done
         else
           # multiple node jobs default to corespernode*nodes
           NTASKS=$(($SLURM_CPUS_ON_NODE*$NNODES))
-          echo NTASKS $NTASKS
         fi
       fi
     fi
