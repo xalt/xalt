@@ -6,7 +6,8 @@ from __future__ import print_function
 import os, re, sys
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
-from xalt_util  import capture, which, config_logger
+from xalt_util                 import capture, which, config_logger
+from xalt_transmission_factory import XALT_transmission_factory
 
 import subprocess, time, socket, json, argparse, platform
 
@@ -265,19 +266,11 @@ def main():
     submitT['envT']      = EnvT().envT()
     submitT['hash_id']   = userExec.hash()
   
-    dirname,fn = os.path.split(os.path.abspath(args.resultFn))
-    tmpFn      = os.path.join(dirname, "." + fn)
-
-    if (not os.path.isdir(dirname)):
-      os.mkdir(dirname);
-    
-    s = json.dumps(submitT, sort_keys=True, indent=2, separators=(',',': '))
-
-    f = open(tmpFn,'w')
-    f.write(s)
-    f.close()
-    os.rename(tmpFn, args.resultFn)
-  except:
+    style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
+    xfer  = XALT_transmission_factory.build(style, args.syshost, "run", args.resultFn)
+    xfer.save(submitT)
+  except Exception as e:
+    print("XALT_EXCEPTION(xalt_run_submission.py): ",e)
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
 
 

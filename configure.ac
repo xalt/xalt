@@ -1,5 +1,19 @@
 AC_INIT(Makefile.in)
 AC_PREFIX_DEFAULT(/usr/local)
+
+AC_SUBST(TRANSMISSION)
+AC_ARG_WITH(transmission,
+    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog) [[file]]]),
+    TRANSMISSION="$withval"
+    AC_MSG_RESULT([TRANSMISSION=$with_transmission])
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission")dnl
+    ,
+    withval="file"
+    AC_MSG_RESULT([TRANSMISSION=$withval])
+    TRANSMISSION="$withval"
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
+
+
 AC_SUBST(PATH_TO_AS)
 AC_SUBST(PATH_TO_UUIDGEN)
 AC_SUBST(PATH_TO_PSTREE)
