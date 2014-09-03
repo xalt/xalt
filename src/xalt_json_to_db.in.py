@@ -114,6 +114,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       conn.query(query)
       link_id = conn.insert_id()
       #print("link_id: ",link_id)
+      conn.commit()
 
       load_xalt_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
@@ -150,6 +151,7 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
         conn.query(query)
         obj_id   = conn.insert_id()
         #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
+        conn.commit()
 
       # Now link libraries to xalt_link record:
       query = "INSERT into %s VALUES (NULL,'%d','%d') " % (table, obj_id, index)
@@ -215,6 +217,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
+        conn.commit()
 
       load_xalt_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
                         "join_run_object", run_id) 
@@ -233,6 +236,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           query  = "INSERT INTO xalt_env_name VALUES(NULL, '%s')" % key
           conn.query(query)
           env_id = conn.insert_id()
+          conn.commit()
           found  = False
         #print("env_id: ", env_id, ", found: ",found)
 
