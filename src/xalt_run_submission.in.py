@@ -220,6 +220,7 @@ class EnvT(object):
       re.compile(r'^SSH_.*$'),
       re.compile(r'^XDG_.*$'),
       re.compile(r'^PS1$'),
+      re.compile(r'^module$'),
     ]
 
     envT = {}
