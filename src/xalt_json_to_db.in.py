@@ -142,7 +142,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       load_xalt_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
       v = pstack.pop()  # unload function()
-      carp("load_xalt_objects():",v)
+      carp("load_xalt_objects()",v)
       v = pstack.pop()
       carp("fn",v)
 
