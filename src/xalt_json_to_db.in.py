@@ -89,6 +89,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
   try:
     for fn in linkFnA:
+      pstack.push("fn: "+fn)
       num  += 1
       f     = open(fn,"r")
       try:
@@ -125,8 +126,8 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       pstack.pop()
 
   except Exception as e:
-    pstack.push(query)
     print(pstack.contents())
+    print(query)
     print ("link_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
@@ -172,11 +173,12 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
 
 def run_json_to_db(xalt, user, reverseMapT, runFnA):
-  nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' ]
+  nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue', 'submit_host' ]
   num   = 0
   query = ""
   try:
     for fn in runFnA:
+      pstack.push("fn: "+fn)
       num   += 1
       f      = open(fn,"r")
       
@@ -191,6 +193,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
       conn.query(query)
 
       translate(nameA, runT['envT'], runT['userT']);
+      pstack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
+
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
       uuid        = runT['xaltLinkT'].get('Build.UUID')
@@ -251,13 +255,14 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         
         query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value)
+                   #value.encode("ascii","ignore"))
         conn.query(query)
-        
+      pstack.pop()  
 
 
   except Exception as e:
-    pstack.push(query)
     print(pstack.contents())
+    print(query)
     print ("run_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
@@ -295,10 +300,7 @@ class Rmap(object):
 
 
 def main():
-  os.environ['PYTHONIOENCODING']="utf-8"
   # push User, host and command line on to pstack
-  pstack.push("User: " + os.environ.get("USER",    "unknown"))
-  pstack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:
@@ -320,6 +322,7 @@ def main():
   runCnt = 0
 
   for user, hdir in passwd_generator():
+    pstack.push("User: " + user)
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
       iuser   += 1
@@ -339,6 +342,7 @@ def main():
         remove_files(runFnA)
         remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
     icnt += 1
+    pstack.pop()
     pbar.update(icnt)
 
   xalt.connect().close()

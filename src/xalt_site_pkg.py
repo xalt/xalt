@@ -21,16 +21,18 @@ def translate(nameA, envT, userT):
     sysT['queue']     = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
-    sysT['num_cores'] = "SLURM_TACC_CORES"
-    sysT['num_nodes'] = "SLURM_NNODES"
-    sysT['account']   = "SLURM_TACC_ACCOUNT"
-    sysT['job_id']    = "SLURM_JOB_ID"
-    sysT['queue']     = "SLURM_QUEUE"
+    sysT['num_cores']   = "SLURM_TACC_CORES"
+    sysT['num_nodes']   = "SLURM_NNODES"
+    sysT['account']     = "SLURM_TACC_ACCOUNT"
+    sysT['job_id']      = "SLURM_JOB_ID"
+    sysT['queue']       = "SLURM_QUEUE"
+    sysT['submit_host'] = "SLURM_SUBMIT_HOST"
   
   elif (queueType == "SLURM"):
-    sysT['num_nodes']  = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
-    sysT['job_id']     = "SLURM_JOB_ID"
-    sysT['queue']      = "SLURM_QUEUE"
+    sysT['num_nodes']   = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
+    sysT['job_id']      = "SLURM_JOB_ID"
+    sysT['queue']       = "SLURM_QUEUE"
+    sysT['submit_host'] = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
     sysT['num_cores'] = "PBS_NP"
