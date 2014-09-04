@@ -295,6 +295,7 @@ class Rmap(object):
 
 
 def main():
+  os.environ['PYTHONIOENCODING']="utf-8"
   # push User, host and command line on to pstack
   pstack.push("User: " + os.environ.get("USER",    "unknown"))
   pstack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
