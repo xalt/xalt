@@ -6,7 +6,7 @@ def translate(nameA, envT, userT):
   queueType = "SLURM"
   if (envT.get("SGE_ACCOUNT")):
     queueType = "SGE"
-  elif (envT.get("SLURM_TACC_ACCOUNT")):
+  elif (envT.get("SLURM_TACC_ACCOUNT") or envT.get("SLURM_TACC_JOBNAME")):
     queueType = "SLURM_TACC"
   elif (envT.get("SBATCH_ACCOUNT")):
     queueType = "SLURM"
@@ -48,7 +48,7 @@ def translate(nameA, envT, userT):
     
   # Compute number of total nodes for Generic SLURM.
   if (queueType == "SLURM"):
-    userT['num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
   
   keyA = [ 'num_cores', 'num_nodes' ]
 
