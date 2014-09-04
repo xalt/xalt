@@ -110,6 +110,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
         linkT = json.loads(f.read())
       except:  
         f.close()
+        #pstack.pop()
         continue
 
       f.close()
@@ -120,6 +121,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       conn.query(query)
       result = conn.store_result()
       if (result.num_rows() > 0):
+        #pstack.pop()
         continue
 
       build_epoch = float(linkT['build_epoch'])
@@ -201,6 +203,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         runT   = json.loads(f.read())
       except:
         f.close()
+        v = pstack.pop()
+        carp("fn",v)
         continue
       f.close()
       conn   = xalt.connect()
@@ -231,6 +235,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
           runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
+        v = pstack.pop()
+        carp("SUBMIT_HOST",v)
         continue
       else:
         #print("not found")
