@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- python -*-
+
+from __future__ import print_function
+import os, sys, re
 class Stack(object):
   def __init__(self):
     self.__items = []
@@ -17,3 +22,22 @@ class Stack(object):
   def contents(self):
     return "\n".join(self.__items)
 
+
+pstack = Stack()
+def main():
+  pstack.push("A")
+  pstack.push("B")
+
+  pstack.push("C1")
+  pstack.pop()
+
+  pstack.push("C2")
+  pstack.push("D2")
+  pstack.pop()
+  pstack.pop()
+
+  print(pstack.contents())
+
+
+
+if ( __name__ == '__main__'): main()

@@ -89,7 +89,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
   try:
     for fn in linkFnA:
-      pstack.push("fn: "+fn)
+      #pstack.push("fn: "+fn)   # push fn
       num  += 1
       f     = open(fn,"r")
       try:
@@ -120,11 +120,11 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       link_id = conn.insert_id()
       #print("link_id: ",link_id)
 
-      pstack.push("load_xalt_objects()")
+      #pstack.push("load_xalt_objects()")
       load_xalt_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
-      pstack.pop()
-      pstack.pop()
+      #pstack.pop()  # unload function()
+      #pstack.pop()  # unload fn
 
   except Exception as e:
     print(pstack.contents())
@@ -329,17 +329,17 @@ def main():
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
-      pstack.push("link_json_to_db()")
+      #pstack.push("link_json_to_db()")
       lnkCnt  += link_json_to_db(xalt, user, rmapT, linkFnA)
-      pstack.pop()
+      #pstack.pop()
       if (args.delete):
         remove_files(linkFnA)
         remove_files(files_in_tree(xaltDir, "*/.link.*.json"))
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
-      pstack.push("run_json_to_db()")
+      #pstack.push("run_json_to_db()")
       runCnt  += run_json_to_db(xalt, user, rmapT, runFnA)
-      pstack.pop()
+      #pstack.pop()
       if (args.delete):
         remove_files(runFnA)
         remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
