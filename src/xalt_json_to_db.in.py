@@ -237,6 +237,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         conn.query(query)
         v = pstack.pop()
         carp("SUBMIT_HOST",v)
+        v = pstack.pop()
+        carp("fn",v)
         continue
       else:
         #print("not found")
