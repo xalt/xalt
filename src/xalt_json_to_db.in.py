@@ -26,6 +26,7 @@ ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 patSQ        = re.compile("'")
 pstack       = Stack()
+colonPairPat = re.compile(r"([^:]+):(.*)")
 
 class CmdLineOptions(object):
   def __init__(self):
@@ -44,6 +45,19 @@ def remove_files(fileA):
   for f in fileA:
     os.remove(f)
 
+
+def carp(key, v):
+  k     = "unknown"
+  m     = colonPairPat.match(v)
+  found = False
+  if (m):
+    k = m.group(1)
+    if (k == key):
+      found = True
+  if (not found):
+    print("Wanted: ",key, ", got: ",v)
+    sys.exit(1)
+        
 
 def passwd_generator():
   xaltUserA = os.environ.get("XALT_USERS")
@@ -258,8 +272,10 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           env_id, run_id, value)
                    #value.encode("ascii","ignore"))
         conn.query(query)
-      pstack.pop()  
-      pstack.pop()  
+      v = pstack.pop()
+      carp("SUBMIT_HOST",v)
+      v = pstack.pop()  
+      carp("fn",v)
 
 
   except Exception as e:
@@ -344,7 +360,8 @@ def main():
         remove_files(runFnA)
         remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
     icnt += 1
-    pstack.pop()
+    v = pstack.pop()
+    carp("User",v)
     pbar.update(icnt)
 
   xalt.connect().close()
