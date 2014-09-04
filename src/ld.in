@@ -151,7 +151,7 @@ fi
 
 STATUS=$?
 
-$MY_PYTHON $GEN_LINKDATA $UUID $STATUS `pwd` $SYSHOST $PSTREE_OUT $EXEC $ARGOBJ $EPOCH $LINKLINE_OUT $RESULT
+$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$STATUS" "`pwd`" "$SYSHOST" "$PSTREE_OUT" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    echo ""                       >> $RESULT

@@ -5,11 +5,13 @@
 from __future__                import print_function
 from xalt_util                 import capture, config_logger, extract_compiler
 from xalt_transmission_factory import XALT_transmission_factory
+from xalt_stack                import Stack
 import os, sys, re, json, subprocess
 
 logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
+pstack    = Stack()
 
 def cleanup(xaltobj, fn):
   f     = open(fn,"r")
@@ -63,6 +65,17 @@ def cleanup(xaltobj, fn):
   return sB
     
 def main():
+  # push User, host and command line on to pstack
+  pstack.push("User: " + os.environ.get("USER",    "unknown"))
+  pstack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
+  sA = []
+  sA.append("CommandLine:")
+  for v in sys.argv:
+    sA.append('"'+v+'"')
+
+  s = " ".join(sA)
+  pstack.push(s)
+
   try:
     uuid        = sys.argv[ 1]
     status      = sys.argv[ 2]
@@ -104,7 +117,7 @@ def main():
 
   except Exception as e:
     print("XALT_EXCEPTION(xalt_generate_linkdata.py): ",e)
-    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata")
+    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata"+pstack.contents())
 
   return 0
 

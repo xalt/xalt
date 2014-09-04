@@ -148,12 +148,12 @@ if [ -x "$FIND_EXEC" ]; then
 fi
 
 sTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
 if [ -z "$testMe" ]; then
   $MY_CMD "$@"
 fi
 
 eTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 

@@ -13,6 +13,7 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+from xalt_stack    import Stack
 from XALTdb        import XALTdb
 from xalt_site_pkg import translate
 from xalt_util     import files_in_tree, capture, config_logger
@@ -24,6 +25,7 @@ ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 patSQ        = re.compile("'")
+pstack       = Stack()
 
 class CmdLineOptions(object):
   def __init__(self):
@@ -83,6 +85,7 @@ def obj2module(object_path, reverseMapT):
 def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
   num = 0
+  query = ""
 
   try:
     for fn in linkFnA:
@@ -116,17 +119,21 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       link_id = conn.insert_id()
       #print("link_id: ",link_id)
 
+      pstack.push("load_xalt_objects()")
       load_xalt_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
+      pstack.pop()
 
-
-  except MySQLdb.Error, e:
+  except Exception as e:
+    pstack.push(query)
+    print(pstack.contents())
     print ("link_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
 
 def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
+  query = ""
   try:
     for entryA in objA:
       object_path  = entryA[0]
@@ -157,7 +164,9 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
       conn.query(query)
 
 
-  except MySQLdb.Error, e:
+  except Exception as e:
+    pstack.push(query)
+    print(pstack.contents())
     print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 
@@ -165,6 +174,7 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 def run_json_to_db(xalt, user, reverseMapT, runFnA):
   nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' ]
   num   = 0
+  query = ""
   try:
     for fn in runFnA:
       num   += 1
@@ -245,7 +255,9 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
         
 
 
-  except MySQLdb.Error, e:
+  except Exception as e:
+    pstack.push(query)
+    print(pstack.contents())
     print ("run_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
@@ -283,6 +295,13 @@ class Rmap(object):
 
 
 def main():
+  # push User, host and command line on to pstack
+  pstack.push("User: " + os.environ.get("USER",    "unknown"))
+  pstack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
+  sA = []
+  sA.append("CommandLine:")
+  for v in sys.argv:
+    sA.append('"'+v+'"')
 
   args   = CmdLineOptions().execute()
   xalt   = XALTdb(ConfigFn)
@@ -304,13 +323,17 @@ def main():
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
+      pstack.push("link_json_to_db()")
       lnkCnt  += link_json_to_db(xalt, user, rmapT, linkFnA)
+      pstack.pop()
       if (args.delete):
         remove_files(linkFnA)
         remove_files(files_in_tree(xaltDir, "*/.link.*.json"))
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
+      pstack.push("run_json_to_db()")
       runCnt  += run_json_to_db(xalt, user, rmapT, runFnA)
+      pstack.pop()
       if (args.delete):
         remove_files(runFnA)
         remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
