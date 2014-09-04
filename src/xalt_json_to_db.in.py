@@ -223,7 +223,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
       # loop over env. vars.
       for key in runT['envT']:
         # use the single quote pattern to protect all the single quotes in env vars.
-        value = patSQ.sub(runT['envT'][key],r"\\'")
+        value = patSQ.sub(r"\\'", runT['envT'][key])
         query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
         conn.query(query)
         result = conn.store_result()
