@@ -206,7 +206,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
-      pquery = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
       conn.query(query)
 
       result = conn.store_result()
