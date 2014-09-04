@@ -124,6 +124,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
       load_xalt_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
       pstack.pop()
+      pstack.pop()
 
   except Exception as e:
     print(pstack.contents())
@@ -166,8 +167,8 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
 
   except Exception as e:
-    pstack.push(query)
     print(pstack.contents())
+    print(query)
     print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 
@@ -205,7 +206,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
-      query = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
+      pquery = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
       conn.query(query)
 
       result = conn.store_result()
@@ -257,6 +258,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           env_id, run_id, value)
                    #value.encode("ascii","ignore"))
         conn.query(query)
+      pstack.pop()  
       pstack.pop()  
 
 
