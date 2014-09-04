@@ -23,6 +23,7 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
+patSQ        = re.compile("'")
 
 class CmdLineOptions(object):
   def __init__(self):
@@ -120,7 +121,7 @@ def link_json_to_db(xalt, user, reverseMapT, linkFnA):
 
 
   except MySQLdb.Error, e:
-    print ("Error %d: %s" % (e.args[0], e.args[1]))
+    print ("link_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
 
@@ -157,7 +158,7 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
 
 
   except MySQLdb.Error, e:
-    print ("Error %d: %s" % (e.args[0], e.args[1]))
+    print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 
 
@@ -221,7 +222,8 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
 
       # loop over env. vars.
       for key in runT['envT']:
-        value = runT['envT'][key]
+        # use the single quote pattern to protect all the single quotes in env vars.
+        value = patSQ.sub(runT['envT'][key],r"\\'")
         query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
         conn.query(query)
         result = conn.store_result()
@@ -236,6 +238,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
           found  = False
         #print("env_id: ", env_id, ", found: ",found)
 
+        
         query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value)
         conn.query(query)
@@ -243,7 +246,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
 
 
   except MySQLdb.Error, e:
-    print ("Error %d: %s" % (e.args[0], e.args[1]))
+    print ("run_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
 
