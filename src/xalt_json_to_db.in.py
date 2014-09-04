@@ -265,7 +265,7 @@ def run_json_to_db(xalt, user, reverseMapT, runFnA):
   except Exception as e:
     print(pstack.contents())
     print(query)
-    print ("run_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
+    print ("run_json_to_db(): ",e)
     sys.exit (1)
   return num
 
