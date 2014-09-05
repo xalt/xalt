@@ -38,7 +38,8 @@ class CmdLineOptions(object):
     
     return args
     
-keyPat = re.compile(r'.*<(.*)>.*')
+keyPat   = re.compile(r'.*<(.*)>.*')
+parenPat = re.compile(r'^()')
 
 class ExtractXALT(object):
 
@@ -208,31 +209,36 @@ class UserExec(object):
 
     return libB
     
+
 class EnvT(object):
   def __init__(self):
     self.__envT = self.__reportUserEnv()
   def envT(self):
     return self.__envT
   def __reportUserEnv(self):
+
     ignoreKeyA = [
       re.compile(r'^LESS_TERMCAP_.*$'),
       re.compile(r'^LS_COLORS$'),
       re.compile(r'^SSH_.*$'),
       re.compile(r'^XDG_.*$'),
       re.compile(r'^PS1$'),
-      re.compile(r'^module$'),
     ]
 
     envT = {}
     for k in os.environ:
+      v = os.environ[k]
       keep = True
       for pat in ignoreKeyA:
         m = pat.search(k)
         if (m):
           keep = False
           break
+      m = parenPat.search(v)
+      if (m):
+        keep = False
       if (keep):
-        envT[k] = os.environ[k]
+        envT[k] = v
     return envT
   
 
