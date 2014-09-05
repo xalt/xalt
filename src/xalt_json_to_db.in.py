@@ -36,6 +36,7 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--delete",      dest='delete', action="store_true", help="delete files after reading")
     parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
+    parser.add_argument("--report_file", dest='listFn', action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',  action="store",      help="Path to the directory containing the json reverseMap")
     args = parser.parse_args()
     return args
@@ -96,13 +97,15 @@ def obj2module(object_path, reverseMapT):
       moduleName = "'" + pkg['pkg'] + "'"
   return moduleName
 
-def link_json_to_db(xalt, user, reverseMapT, linkFnA):
+def link_json_to_db(listFn, xalt, user, reverseMapT, linkFnA):
 
   num = 0
   query = ""
 
   try:
     for fn in linkFnA:
+      if (listFn):
+        sys.stderr.write(fn+"\n")
       pstack.push("fn: "+fn)   # push fn
       num  += 1
       f     = open(fn,"r")
@@ -194,12 +197,14 @@ def load_xalt_objects(conn, objA, reverseMapT, syshost, table, index):
     sys.exit (1)
 
 
-def run_json_to_db(xalt, user, reverseMapT, runFnA):
+def run_json_to_db(listFn, xalt, user, reverseMapT, runFnA):
   nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue', 'submit_host' ]
   num   = 0
   query = ""
   try:
     for fn in runFnA:
+      if (listFn):
+        sys.stderr.write(fn+"\n")
       pstack.push("fn: "+fn)
       num   += 1
       f      = open(fn,"r")
@@ -358,7 +363,7 @@ def main():
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
       pstack.push("link_json_to_db()")
-      lnkCnt  += link_json_to_db(xalt, user, rmapT, linkFnA)
+      lnkCnt  += link_json_to_db(args.listFn, xalt, user, rmapT, linkFnA)
       pstack.pop()
       if (args.delete):
         remove_files(linkFnA)
@@ -366,7 +371,7 @@ def main():
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
       pstack.push("run_json_to_db()")
-      runCnt  += run_json_to_db(xalt, user, rmapT, runFnA)
+      runCnt  += run_json_to_db(args.listFn, xalt, user, rmapT, runFnA)
       pstack.pop()
       if (args.delete):
         remove_files(runFnA)
