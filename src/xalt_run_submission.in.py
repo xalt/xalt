@@ -214,13 +214,23 @@ class EnvT(object):
   def envT(self):
     return self.__envT
   def __reportUserEnv(self):
+    # blacklist of env vars not to track
     ignoreKeyA = [
+      re.compile(r'^HIST.*$'),
       re.compile(r'^LESS_TERMCAP_.*$'),
-      re.compile(r'^LS_COLORS$'),
+      re.compile(r'^COLORTERM$'),
+      re.compile(r'^LS_.*$'),
+      re.compile(r'^LANG$'),
+      re.compile(r'^LESS.*$'),
+      re.compile(r'^MORE$'),
+      re.compile(r'^PAGER$'),
+      re.compile(r'^NNTPSERVER$'),
+      re.compile(r'^NLSPATH$'),
+      re.compile(r'^MAIL$'),
+      re.compile(r'^_ModuleTable.*$'),
       re.compile(r'^SSH_.*$'),
       re.compile(r'^XDG_.*$'),
       re.compile(r'^PS1$'),
-      re.compile(r'^module$'),
     ]
 
     envT = {}

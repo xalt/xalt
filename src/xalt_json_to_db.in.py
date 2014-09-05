@@ -2,7 +2,8 @@
 # -*- python -*-
 #
 #  optional input:
-#    XALT_USERS:  colon separated list of users
+#    XALT_USERS:  colon separated list of users; only these users are 
+#       considered instead of all
 #
 #
 # Git Version: @git@
