@@ -85,3 +85,47 @@ def capture(cmd):
 
     
   return p.communicate()[0]
+
+
+def remove_files(fileA):
+  for f in fileA:
+    os.remove(f)
+
+
+def passwd_generator():
+  xaltUserA = os.environ.get("XALT_USERS")
+  if (xaltUserA):
+    for user in xaltUserA.split(":"):
+      yield user, os.path.expanduser("~" + user)
+
+  else:
+    for entry in getent.passwd():
+      yield entry.name, entry.dir
+
+numberPat = re.compile(r'[0-9][0-9]*')
+def obj_type(object_path):
+  result = None
+  a      = object_path.split('.')
+  for entry in reversed(a):
+    m = numberPat.search(entry)
+    if (m):
+      continue
+    else:
+      result = entry
+      break
+  return result
+
+defaultPat = re.compile(r'default:?')
+def obj2module(object_path, reverseMapT):
+  dirNm, fn  = os.path.split(object_path)
+  moduleName = 'NULL'
+  pkg         = reverseMapT.get(dirNm)
+  if (pkg):
+    flavor    = pkg['flavor'][0]
+    flavor    = defaultPat.sub('',flavor)
+    if (flavor):
+      moduleName = "'" + pkg['pkg'] + '(' + flavor + ")'"
+    else:
+      moduleName = "'" + pkg['pkg'] + "'"
+  return moduleName
+

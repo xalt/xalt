@@ -38,7 +38,8 @@ class CmdLineOptions(object):
     
     return args
     
-keyPat = re.compile(r'.*<(.*)>.*')
+keyPat    = re.compile(r'.*<(.*)>.*')
+shFuncPat = re.compile(r'^() *{')
 
 class ExtractXALT(object):
 
@@ -235,14 +236,18 @@ class EnvT(object):
 
     envT = {}
     for k in os.environ:
+      v = os.environ[k]
       keep = True
       for pat in ignoreKeyA:
         m = pat.search(k)
         if (m):
           keep = False
           break
+      m = shFuncPat.search(v)
+      if (m):
+        keep = False
       if (keep):
-        envT[k] = os.environ[k]
+        envT[k] = v
     return envT
   
 

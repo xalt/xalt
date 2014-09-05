@@ -17,6 +17,8 @@ class XALT_transmission_factory(object):
     name = name.lower()
     if (name == "syslog"):
       obj = Syslog(syshost, kind)
+    elif (name == "directdb"):
+      obj = DirectDB(syshost, kind)
     else:                 
       # file
       obj = File(syshost, kind, fn)
@@ -46,7 +48,6 @@ class File(XALT_transmission_factory):
   def __init__(self, syshost, kind, fn):
     super(File, self).__init__(syshost, kind)
     self.__fn      = fn
-
   def save(self, resultT):
     s           = json.dumps(resultT, sort_keys=True,
                              indent=2, separators=(',',': '))
@@ -59,3 +60,26 @@ class File(XALT_transmission_factory):
     f.write(s)
     f.close()
     os.rename(tmpFn, self.__fn)
+
+
+class DirectDB(XALT_transmission_factory):
+
+  def __init__(self, syshost, kind):
+    super(DirectDB, self).__init__(syshost, kind)
+  def save(self, resultT):
+    # how do we get the xalt database and reverseMapT here?
+    # hope they can be args passed
+    # maybe paths are set at install time, and filename is hardcoded?
+    # hardcoding it for now
+    ConfigFn     = "/sw/tools/xalt/build/etc/xalt_db.conf"
+    RMF = "/sw/tools/xalt/build/etc/reverseMapD"
+
+    xalt   = XALTdb(ConfigFn)
+    reverseMapT = Rmap(RMF).reverseMapT()
+
+    if (self._kind() == "link"):
+      link_to_db(xalt, reverseMapT, resultT)
+    else: 
+      # kind == "run"
+      run_to_db(xalt, reverseMapT, resultT)
+
