@@ -99,7 +99,7 @@ class XALTdb(object):
     except Exception as e:
       print(XALT_Stack.contents())
       print(query)
-      print ("link_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
+      print ("link_to_db(): Error ",e)
       sys.exit (1)
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
