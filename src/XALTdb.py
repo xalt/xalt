@@ -140,82 +140,83 @@ class XALTdb(object):
 
   def run_to_db(self, pstack, reverseMapT, runT):
     
-    conn   = self.connect()
-    query  = "USE "+self.db()
-    conn.query(query)
-
-    translate(nameA, runT['envT'], runT['userT']);
-    pstack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
-
-    dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                time.localtime(float(runT['userT']['start_time'])))
-    uuid        = runT['xaltLinkT'].get('Build.UUID')
-    if (uuid):
-      uuid = "'" + uuid + "'"
-    else:
-      uuid = "NULL"
-
-    #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
-
-    query = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
-    conn.query(query)
-
-    result = conn.store_result()
-    if (result.num_rows() > 0):
-      #print("found")
-      row    = result.fetch_row()
-      run_id = int(row[0][0])
-      query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
-        runT['userT']['run_time'], runT['userT']['end_time'], run_id)
+    try:
+      conn   = self.connect()
+      query  = "USE "+self.db()
       conn.query(query)
-      v = pstack.pop()
-      carp("SUBMIT_HOST",v)
-      v = pstack.pop()
-      carp("fn",v)
-      continue
-    else:
-      #print("not found")
-      moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
-      query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
-        runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
-        runT['userT']['syshost'],     uuid,                         runT['hash_id'],
-        runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
-        runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
-        runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
-        runT['userT']['user'],        runT['userT']['exec_path'],   moduleName,
-        runT['userT']['cwd'])
-      conn.query(query)
-      run_id   = conn.insert_id()
 
-    self.load_objects(pstack, runT['libA'], reverseMapT, runT['userT']['syshost'],
-                      "join_run_object", run_id) 
+      translate(nameA, runT['envT'], runT['userT']);
+      pstack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
-    # loop over env. vars.
-    for key in runT['envT']:
-      # use the single quote pattern to protect all the single quotes in env vars.
-      value = patSQ.sub(r"\\'", runT['envT'][key])
-      query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
+                                  time.localtime(float(runT['userT']['start_time'])))
+      uuid        = runT['xaltLinkT'].get('Build.UUID')
+      if (uuid):
+        uuid = "'" + uuid + "'"
+      else:
+        uuid = "NULL"
+
+      #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
+
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
       conn.query(query)
+
       result = conn.store_result()
       if (result.num_rows() > 0):
+        #print("found")
         row    = result.fetch_row()
-        env_id = int(row[0][0])
-        found  = True
-      else:
-        query  = "INSERT INTO xalt_env_name VALUES(NULL, '%s')" % key
+        run_id = int(row[0][0])
+        query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
+          runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
-        env_id = conn.insert_id()
-        found  = False
-      #print("env_id: ", env_id, ", found: ",found)
+        v = pstack.pop()
+        carp("SUBMIT_HOST",v)
+        v = pstack.pop()
+        carp("fn",v)
+        return
+      else:
+        #print("not found")
+        moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
+        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%s','%s',%s,'%s') " % (
+          runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
+          runT['userT']['syshost'],     uuid,                         runT['hash_id'],
+          runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
+          runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
+          runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
+          runT['userT']['user'],        runT['userT']['exec_path'],   moduleName,
+          runT['userT']['cwd'])
+        conn.query(query)
+        run_id   = conn.insert_id()
 
-      
-      query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
-        env_id, run_id, value.encode("ascii","ignore"))
-      conn.query(query)
-    v = pstack.pop()
-    carp("SUBMIT_HOST",v)
-  except Exception as e:
-    print(pstack.contents())
-    print(query.encode("ascii","ignore"))
-    print ("run_to_db(): ",e)
-    sys.exit (1)
+      self.load_objects(pstack, runT['libA'], reverseMapT, runT['userT']['syshost'],
+                        "join_run_object", run_id) 
+
+      # loop over env. vars.
+      for key in runT['envT']:
+        # use the single quote pattern to protect all the single quotes in env vars.
+        value = patSQ.sub(r"\\'", runT['envT'][key])
+        query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
+        conn.query(query)
+        result = conn.store_result()
+        if (result.num_rows() > 0):
+          row    = result.fetch_row()
+          env_id = int(row[0][0])
+          found  = True
+        else:
+          query  = "INSERT INTO xalt_env_name VALUES(NULL, '%s')" % key
+          conn.query(query)
+          env_id = conn.insert_id()
+          found  = False
+        #print("env_id: ", env_id, ", found: ",found)
+
+        
+        query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
+          env_id, run_id, value.encode("ascii","ignore"))
+        conn.query(query)
+      v = pstack.pop()
+      carp("SUBMIT_HOST",v)
+    except Exception as e:
+      print(pstack.contents())
+      print(query.encode("ascii","ignore"))
+      print ("run_to_db(): ",e)
+      sys.exit (1)

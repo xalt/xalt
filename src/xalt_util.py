@@ -1,7 +1,7 @@
 import logging
 from   fnmatch          import fnmatch
 from   logging.handlers import SysLogHandler
-import os, subprocess
+import os, re, subprocess
 
 def config_logger():
   logger = logging.getLogger()
