@@ -20,7 +20,7 @@ SBIN            := $(prefix)/sbin
 DIRLIST         := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
                    $(DESTDIR)$(SBIN) 
 
-BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in src/ibrun.symm.in src/aprun.in
+BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in src/ibrun.symm.in src/aprun.in src/srun.in
 
 
 SBIN_PKG        := src/conf_create.in.py  	     src/createDB.in.py               \
@@ -37,7 +37,7 @@ SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.
 	           src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
                    src/new_job_id.in.py              src/xalt_site_pkg.py             \
 		   src/xalt_find_exec_ibrun.in.py    src/xalt_find_exec_aprun.in.py   \
-		   src/xalt_find_exec_sgimpt.in.py   
+		   src/xalt_find_exec_sgimpt.in.py   src/xalt_find_exec_srun.in.py
 
 .PHONY:
 
