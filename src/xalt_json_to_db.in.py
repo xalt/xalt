@@ -22,6 +22,7 @@ from xalt_stack    import Stack
 from XALTdb        import XALTdb
 from xalt_site_pkg import translate
 from xalt_util     import *
+from xalt_global   import *
 from progressBar   import ProgressBar
 from XALT_Rmap     import Rmap
 import warnings, getent
@@ -30,7 +31,6 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
-pstack       = Stack()
 
 class CmdLineOptions(object):
   def __init__(self):
@@ -46,7 +46,7 @@ class CmdLineOptions(object):
     return args
 
 
-def link_json_to_db(xalt, pstack, listFn, reverseMapT, linkFnA):
+def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
 
   num = 0
   query = ""
@@ -55,38 +55,38 @@ def link_json_to_db(xalt, pstack, listFn, reverseMapT, linkFnA):
     for fn in linkFnA:
       if (listFn):
         sys.stderr.write(fn+"\n")
-      pstack.push("fn: "+fn)   # push fn
+      XALT_Stack.push("fn: "+fn)   # push fn
       f     = open(fn,"r")
       try:
         linkT = json.loads(f.read())
       except:  
         f.close()
-        v = pstack.pop()
+        v = XALT_Stack.pop()
         carp("fn",v)
         continue
 
       f.close()
-      xalt.link_to_db(pstack, reverseMapT, linkT)
+      xalt.link_to_db(reverseMapT, linkT)
       num  += 1
-      v     = pstack.pop()
+      v     = XALT_Stack.pop()
       carp("fn",v)
 
   except Exception as e:
-    print(pstack.contents())
+    print(XALT_Stack.contents())
     print(query)
     print ("link_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
   return num
 
 
-def run_json_to_db(xalt, pstack, listFn, reverseMapT, runFnA):
+def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
   num   = 0
   query = ""
   try:
     for fn in runFnA:
       if (listFn):
         sys.stderr.write(fn+"\n")
-      pstack.push("fn: "+fn)
+      XALT_Stack.push("fn: "+fn)
       num   += 1
       f      = open(fn,"r")
       
@@ -94,17 +94,17 @@ def run_json_to_db(xalt, pstack, listFn, reverseMapT, runFnA):
         runT   = json.loads(f.read())
       except:
         f.close()
-        v = pstack.pop()
+        v = XALT_Stack.pop()
         carp("fn",v)
         continue
       f.close()
 
-      xalt.run_to_db(pstack, reverseMapT, runT)
-      v = pstack.pop()  
+      xalt.run_to_db(reverseMapT, runT)
+      v = XALT_Stack.pop()  
       carp("fn",v)
 
   except Exception as e:
-    print(pstack.contents())
+    print(XALT_Stack.contents())
     print(query.encode("ascii","ignore"))
     print ("run_json_to_db(): ",e)
     sys.exit (1)
@@ -112,12 +112,12 @@ def run_json_to_db(xalt, pstack, listFn, reverseMapT, runFnA):
 
 
 def main():
-  # Push command line on to pstack
+  # Push command line on to XALT_Stack
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:
     sA.append('"'+v+'"')
-  pstack.push(" ".join(sA))
+  XALT_Stack.push(" ".join(sA))
 
   args   = CmdLineOptions().execute()
   xalt   = XALTdb(ConfigFn)
@@ -135,27 +135,27 @@ def main():
   runCnt = 0
 
   for user, hdir in passwd_generator():
-    pstack.push("User: " + user)
+    XALT_Stack.push("User: " + user)
     xaltDir = os.path.join(hdir,".xalt.d")
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
-      pstack.push("link_json_to_db()")
-      lnkCnt  += link_json_to_db(xalt, pstack, args.listFn, rmapT, linkFnA)
-      pstack.pop()
+      XALT_Stack.push("link_json_to_db()")
+      lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, linkFnA)
+      XALT_Stack.pop()
       if (args.delete):
         remove_files(linkFnA)
         #remove_files(files_in_tree(xaltDir, "*/.link.*.json"))
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
-      pstack.push("run_json_to_db()")
-      runCnt  += run_json_to_db(xalt, pstack, args.listFn, rmapT, runFnA)
-      pstack.pop()
+      XALT_Stack.push("run_json_to_db()")
+      runCnt  += run_json_to_db(xalt, args.listFn, rmapT, runFnA)
+      XALT_Stack.pop()
       if (args.delete):
         remove_files(runFnA)
         #remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
     icnt += 1
-    v = pstack.pop()
+    v = XALT_Stack.pop()
     carp("User",v)
     pbar.update(icnt)
 

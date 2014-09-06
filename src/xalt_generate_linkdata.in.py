@@ -12,11 +12,11 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 from xalt_util                 import *
 from xalt_transmission_factory import XALT_transmission_factory
 from xalt_stack                import Stack
+from xalt_global               import *
 
 logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
-pstack    = Stack()
 
 def cleanup(xaltobj, fn):
   f     = open(fn,"r")
@@ -70,16 +70,16 @@ def cleanup(xaltobj, fn):
   return sB
     
 def main():
-  # push User, host and command line on to pstack
-  pstack.push("User: " + os.environ.get("USER",    "unknown"))
-  pstack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
+  # push User, host and command line on to XALT_Stack
+  XALT_Stack.push("User: " + os.environ.get("USER",    "unknown"))
+  XALT_Stack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:
     sA.append('"'+v+'"')
 
   s = " ".join(sA)
-  pstack.push(s)
+  XALT_Stack.push(s)
 
   try:
     uuid        = sys.argv[ 1]
@@ -116,13 +116,13 @@ def main():
     resultT['build_syshost'] = syshost
     resultT['linkA']         = sA
     
-    style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
-    xfer  = XALT_transmission_factory.build(style, syshost, "link", resultFn)
+    xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
+                                            syshost, "link", resultFn)
     xfer.save(resultT)
 
   except Exception as e:
     print("XALT_EXCEPTION(xalt_generate_linkdata.py): ",e)
-    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata"+pstack.contents())
+    logger.exception("XALT_EXCEPTION:xalt_generate_linkdata"+XALT_Stack.contents())
 
   return 0
 

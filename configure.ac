@@ -13,6 +13,18 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
+AC_SUBST(ETC_DIR)
+AC_ARG_WITH(etcDir,
+    AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
+    ETC_DIR="$withval"
+    AC_MSG_RESULT([ETC_DIR=$with_etcDir])
+    AC_DEFINE_UNQUOTED(ETC_DIR, "$with_etcDir")dnl
+    ,
+    withval="."
+    AC_MSG_RESULT([ETC_DIR=$withval])
+    ETC_DIR="$withval"
+    AC_DEFINE_UNQUOTED(ETC_DIR, "$withval"))dnl
+
 
 AC_SUBST(PATH_TO_AS)
 AC_SUBST(PATH_TO_UUIDGEN)

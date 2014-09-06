@@ -11,6 +11,7 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
 from xalt_util                 import capture, which, config_logger
 from xalt_transmission_factory import XALT_transmission_factory
+from xalt_global               import *
 
 import subprocess, time, socket, json, argparse, platform
 
@@ -274,8 +275,8 @@ def main():
     submitT['envT']      = EnvT().envT()
     submitT['hash_id']   = userExec.hash()
   
-    style = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
-    xfer  = XALT_transmission_factory.build(style, args.syshost, "run", args.resultFn)
+    xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
+                                            args.syshost, "run", args.resultFn)
     xfer.save(submitT)
   except Exception as e:
     print("XALT_EXCEPTION(xalt_run_submission.py): ",e)

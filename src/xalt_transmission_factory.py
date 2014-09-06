@@ -3,7 +3,7 @@ import os, sys, json, base64
 
 from XALTdb      import XALTdb
 from XALT_Rmap   import Rmap
-from xalt_stack  import Stack
+from xalt_global import *
 
 class XALT_transmission_factory(object):
   def __init__(self, syshost, kind):
@@ -71,19 +71,14 @@ class DirectDB(XALT_transmission_factory):
   def __init__(self, syshost, kind):
     super(DirectDB, self).__init__(syshost, kind)
   def save(self, resultT):
-    # how do we get the xalt database and reverseMapT here?
-    # hope they can be args passed
-    # maybe paths are set at install time, and filename is hardcoded?
-    # hardcoding it for now
-    ConfigFn     = "/sw/tools/xalt/build/etc/xalt_db.conf"
-    RMF          = "/sw/tools/xalt/build/etc/reverseMapD"
+    ConfigFn     = pathJoin(XALT_ETC_DIR,"xalt_db.conf")
+    RMapFn       = pathJoin(XALT_ETC_DIR,"reverseMapD")
 
     xalt        = XALTdb(ConfigFn)
-    reverseMapT = Rmap(RMF).reverseMapT()
-    pstack      = Stack()
+    reverseMapT = Rmap(RMapFn).reverseMapT()
     if (self._kind() == "link"):
-      xalt.link_to_db(pstack, reverseMapT, resultT)
+      xalt.link_to_db(reverseMapT, resultT)
     else: 
       # kind == "run"
-      xalt.run_to_db(pstack, reverseMapT, resultT)
+      xalt.run_to_db(reverseMapT, resultT)
 

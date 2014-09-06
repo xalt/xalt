@@ -640,6 +640,7 @@ BUILD_PSTREE
 PATH_TO_PSTREE
 PATH_TO_UUIDGEN
 PATH_TO_AS
+ETC_DIR
 TRANSMISSION
 target_alias
 host_alias
@@ -683,6 +684,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_transmission
+with_etcDir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1300,6 +1302,8 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-transmission=ans transmission style (file,syslog) [[file]]
+  --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
+                          found [[.]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -1997,6 +2001,28 @@ $as_echo "TRANSMISSION=$withval" >&6; }
     TRANSMISSION="$withval"
     cat >>confdefs.h <<_ACEOF
 #define TRANSMISSION "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-etcDir was given.
+if test "${with_etcDir+set}" = set; then :
+  withval=$with_etcDir; ETC_DIR="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$with_etcDir" >&5
+$as_echo "ETC_DIR=$with_etcDir" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define ETC_DIR "$with_etcDir"
+_ACEOF
+
+else
+  withval="."
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$withval" >&5
+$as_echo "ETC_DIR=$withval" >&6; }
+    ETC_DIR="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define ETC_DIR "$withval"
 _ACEOF
 
 fi

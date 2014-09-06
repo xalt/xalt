@@ -65,7 +65,7 @@ class XALTdb(object):
   def db(self):
     return self.__db
 
-  def link_to_db(self, pstack, reverseMapT, linkT):
+  def link_to_db(self, reverseMapT, linkT):
     query = ""
 
     try:
@@ -89,20 +89,20 @@ class XALTdb(object):
       conn.query(query)
       link_id = conn.insert_id()
 
-      pstack.push("load_xalt_objects():"+linkT['exec_path'])
-      self.load_objects(conn, pstack, linkT['linkA'], reverseMapT, linkT['build_syshost'],
+      XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])
+      self.load_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
-      v = pstack.pop()  # unload function()
+      v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
 
 
     except Exception as e:
-      print(pstack.contents())
+      print(XALT_Stack.contents())
       print(query)
       print ("link_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
       sys.exit (1)
 
-  def load_objects(self, conn, pstack, objA, reverseMapT, syshost, tableName, index):
+  def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
 
     try:
       for entryA in objA:
@@ -134,12 +134,12 @@ class XALTdb(object):
         conn.query(query)
 
     except Exception as e:
-      print(pstack.contents())
+      print(XALT_Stack.contents())
       print(query)
       print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
       sys.exit (1)
 
-  def run_to_db(self, pstack, reverseMapT, runT):
+  def run_to_db(self, reverseMapT, runT):
     
     nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' , 'submit_host']
     try:
@@ -148,7 +148,7 @@ class XALTdb(object):
       conn.query(query)
 
       translate(nameA, runT['envT'], runT['userT']);
-      pstack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
+      XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
@@ -171,7 +171,7 @@ class XALTdb(object):
         query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
           runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
-        v = pstack.pop()
+        v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
         return
       else:
@@ -188,7 +188,7 @@ class XALTdb(object):
         conn.query(query)
         run_id   = conn.insert_id()
 
-      self.load_objects(conn, pstack, runT['libA'], reverseMapT, runT['userT']['syshost'],
+      self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
                         "join_run_object", run_id) 
 
       # loop over env. vars.
@@ -213,10 +213,10 @@ class XALTdb(object):
         query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value.encode("ascii","ignore"))
         conn.query(query)
-      v = pstack.pop()
+      v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)
     except Exception as e:
-      print(pstack.contents())
+      print(XALT_Stack.contents())
       print(query.encode("ascii","ignore"))
       print ("run_to_db(): ",e)
       sys.exit (1)
