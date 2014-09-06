@@ -10,6 +10,7 @@ from   xalt_util import *
 from   xalt_site_pkg import translate
 warnings.filterwarnings("ignore", "Unknown table.*")
 
+patSQ = re.compile("'")
 class XALTdb(object):
   def __init__(self, confFn):
     self.__host   = None
