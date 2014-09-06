@@ -11,7 +11,6 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
 from xalt_util                 import *
 from xalt_transmission_factory import XALT_transmission_factory
-from xalt_stack                import Stack
 from xalt_global               import *
 
 logger    = config_logger()

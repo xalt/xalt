@@ -18,7 +18,6 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
-from xalt_stack    import Stack
 from XALTdb        import XALTdb
 from xalt_site_pkg import translate
 from xalt_util     import *

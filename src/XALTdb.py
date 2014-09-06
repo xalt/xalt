@@ -6,7 +6,8 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
 import MySQLdb, ConfigParser, getpass, time
 import warnings
-from   xalt_util import *
+from   xalt_util     import *
+from   xalt_global   import *
 from   xalt_site_pkg import translate
 warnings.filterwarnings("ignore", "Unknown table.*")
 
