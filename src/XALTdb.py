@@ -7,6 +7,7 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 import MySQLdb, ConfigParser, getpass, time
 import warnings
 from   xalt_util import *
+from   xalt_site_pkg import translate
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 class XALTdb(object):
@@ -139,6 +140,7 @@ class XALTdb(object):
 
   def run_to_db(self, pstack, reverseMapT, runT):
     
+    nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' , 'submit_host']
     try:
       conn   = self.connect()
       query  = "USE "+self.db()
