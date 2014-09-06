@@ -88,7 +88,7 @@ class XALTdb(object):
       link_id = conn.insert_id()
 
       pstack.push("load_xalt_objects():"+linkT['exec_path'])
-      self.load_objects(pstack, linkT['linkA'], reverseMapT, linkT['build_syshost'],
+      self.load_objects(conn, pstack, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
       v = pstack.pop()  # unload function()
       carp("load_xalt_objects()",v)
@@ -100,10 +100,9 @@ class XALTdb(object):
       print ("link_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
       sys.exit (1)
 
-  def load_objects(self, pstack, objA, reverseMapT, syshost, tableName, index):
+  def load_objects(self, conn, pstack, objA, reverseMapT, syshost, tableName, index):
 
     try:
-      conn = self.connect()
       for entryA in objA:
         object_path  = entryA[0]
         hash_id      = entryA[1]
@@ -171,8 +170,6 @@ class XALTdb(object):
         conn.query(query)
         v = pstack.pop()
         carp("SUBMIT_HOST",v)
-        v = pstack.pop()
-        carp("fn",v)
         return
       else:
         #print("not found")
@@ -188,7 +185,7 @@ class XALTdb(object):
         conn.query(query)
         run_id   = conn.insert_id()
 
-      self.load_objects(pstack, runT['libA'], reverseMapT, runT['userT']['syshost'],
+      self.load_objects(conn, pstack, runT['libA'], reverseMapT, runT['userT']['syshost'],
                         "join_run_object", run_id) 
 
       # loop over env. vars.
