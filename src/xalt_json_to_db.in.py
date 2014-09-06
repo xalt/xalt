@@ -74,7 +74,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
   except Exception as e:
     print(XALT_Stack.contents())
     print(query)
-    print ("link_json_to_db(): Error %d: %s" % (e.args[0], e.args[1]))
+    print ("link_json_to_db(): Error: ",e)
     sys.exit (1)
   return num
 
@@ -106,7 +106,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
   except Exception as e:
     print(XALT_Stack.contents())
     print(query.encode("ascii","ignore"))
-    print ("run_json_to_db(): ",e)
+    print ("run_json_to_db(): Error:",e)
     sys.exit (1)
   return num
 
