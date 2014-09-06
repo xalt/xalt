@@ -39,7 +39,7 @@ class CmdLineOptions(object):
     return args
     
 keyPat    = re.compile(r'.*<(.*)>.*')
-shFuncPat = re.compile(r'^() *{')
+shFuncPat = re.compile(r'^\(\) *{')
 
 class ExtractXALT(object):
 
@@ -229,6 +229,7 @@ class EnvT(object):
       re.compile(r'^NLSPATH$'),
       re.compile(r'^MAIL$'),
       re.compile(r'^_ModuleTable.*$'),
+      re.compile(r'^_SettargTable.*$'),
       re.compile(r'^SSH_.*$'),
       re.compile(r'^XDG_.*$'),
       re.compile(r'^PS1$'),
