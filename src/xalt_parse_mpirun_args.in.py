@@ -39,6 +39,8 @@ def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
       continue
     break
 
-  return which(find_cmd(ignoreT, i, argA))
+  path = which(find_cmd(ignoreT, i, argA)) or "unknown"
+  return path
+
 
   
