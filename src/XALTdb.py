@@ -1,3 +1,4 @@
+
 from __future__ import print_function
 import os, sys, re, base64
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
@@ -13,7 +14,12 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 
 patSQ = re.compile("'")
 class XALTdb(object):
+  """
+  This XALTdb class opens the XALT database and is responsible for
+  all the database interactions.
+  """
   def __init__(self, confFn):
+    """ Initialize the class and save the db config file. """
     self.__host   = None
     self.__user   = None
     self.__passwd = None
@@ -22,12 +28,16 @@ class XALTdb(object):
     self.__confFn = confFn
 
   def __readFromUser(self):
+    """ Ask user for database access info. (private) """
+
     self.__host   = raw_input("Database host:")
     self.__user   = raw_input("Database user:")
     self.__passwd = getpass.getpass("Database pass:")
     self.__db     = raw_input("Database name:")
 
-  def __readConfig(self,confFn):
+  def __readConfig(self):
+    """ Read database access info from config file. (private)"""
+    confFn = self.__confFn
     try:
       config=ConfigParser.ConfigParser()
       config.read(confFn)
@@ -41,8 +51,13 @@ class XALTdb(object):
       self.__readFromUser()
 
   def connect(self, db = None):
+    """
+    Public interface to connect to DB.
+    @param db:  If this exists it will be used.
+    
+    """
     if(os.path.exists(self.__confFn)):
-      self.__readConfig(self.__confFn)
+      self.__readConfig()
     else:
       self.__readFromUser()
 
@@ -64,9 +79,15 @@ class XALTdb(object):
 
 
   def db(self):
+    """ Return name of db"""
     return self.__db
 
   def link_to_db(self, reverseMapT, linkT):
+    """
+    Stores the link table data into the XALT db
+    @param reverseMapT: The reverse map table that maps directories to modules
+    @param linkT:       The table that contains the link data.
+    """
     query = ""
 
     try:
@@ -104,6 +125,15 @@ class XALTdb(object):
       sys.exit (1)
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
+    """
+    Stores the objects that make an executable into the XALT DB.
+    @param conn:         The db connection object
+    @param objA:         The array of objects that are stored.
+    @param reverseMapT:  The map between directories and modules
+    @param syshost:      The system host name (stampede, darter), not login1.stampede.tacc.utexas.edu
+    @param tableName:    Name of the object table.
+    @param index:        The db index for the join table.
+    """
 
     try:
       for entryA in objA:
@@ -141,6 +171,11 @@ class XALTdb(object):
       sys.exit (1)
 
   def run_to_db(self, reverseMapT, runT):
+    """
+    Store the "run" data into the database.
+    @param: reverseMapT: The map between directories and modules
+    @param: runT:        The run data stored in a table
+    """
     
     nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' , 'submit_host']
     try:
