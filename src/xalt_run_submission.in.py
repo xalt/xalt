@@ -4,8 +4,11 @@
 
 from __future__ import print_function
 import os, re, sys
+
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
 from xalt_util                 import capture, which, config_logger
 from xalt_transmission_factory import XALT_transmission_factory
 

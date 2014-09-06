@@ -9,11 +9,14 @@ class Stack(object):
          
   #method for pushing an item on a stack
   def push(self,item):
+    #print("Pushing: ", item)
     self.__items.append(item)
-         
+
   #method for popping an item from a stack
   def pop(self):
-    return self.__items.pop()
+    v = self.__items.pop()
+    #print("Popping: ",v)
+    return v
    
   #method to check whether the stack is empty or not
   def isEmpty(self):

@@ -3,10 +3,15 @@
 # Git Version: @git@
 
 from __future__                import print_function
+import os, sys, re, json, subprocess
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
 from xalt_util                 import *
 from xalt_transmission_factory import XALT_transmission_factory
 from xalt_stack                import Stack
-import os, sys, re, json, subprocess
 
 logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')

@@ -1,8 +1,10 @@
+from __future__         import print_function
 import logging
-from   fnmatch          import fnmatch
 from   logging.handlers import SysLogHandler
-import os, re, subprocess
+from   fnmatch          import fnmatch
+import os, re, sys, subprocess, getent
 
+colonPairPat = re.compile(r"([^:]+):(.*)")
 def config_logger():
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
@@ -97,7 +99,7 @@ def carp(key, v):
       found = True
   if (not found):
     print("Wanted: ",key, ", got: ",v)
-    sys.exit(1)
+    raise Exception
         
 def remove_files(fileA):
   for f in fileA:

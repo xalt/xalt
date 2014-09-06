@@ -30,9 +30,7 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
-patSQ        = re.compile("'")
 pstack       = Stack()
-colonPairPat = re.compile(r"([^:]+):(.*)")
 
 class CmdLineOptions(object):
   def __init__(self):
@@ -82,7 +80,6 @@ def link_json_to_db(xalt, pstack, listFn, reverseMapT, linkFnA):
 
 
 def run_json_to_db(xalt, pstack, listFn, reverseMapT, runFnA):
-  nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue', 'submit_host' ]
   num   = 0
   query = ""
   try:
@@ -120,6 +117,7 @@ def main():
   sA.append("CommandLine:")
   for v in sys.argv:
     sA.append('"'+v+'"')
+  pstack.push(" ".join(sA))
 
   args   = CmdLineOptions().execute()
   xalt   = XALTdb(ConfigFn)
@@ -151,7 +149,7 @@ def main():
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
       pstack.push("run_json_to_db()")
-      runCnt  += run_json_to_db(args.listFn, xalt, user, rmapT, runFnA)
+      runCnt  += run_json_to_db(xalt, pstack, args.listFn, rmapT, runFnA)
       pstack.pop()
       if (args.delete):
         remove_files(runFnA)
