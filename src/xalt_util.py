@@ -87,11 +87,25 @@ def capture(cmd):
   return p.communicate()[0]
 
 
+def carp(key, v):
+  k     = "unknown"
+  m     = colonPairPat.match(v)
+  found = False
+  if (m):
+    k = m.group(1)
+    if (k == key):
+      found = True
+  if (not found):
+    print("Wanted: ",key, ", got: ",v)
+    sys.exit(1)
+        
 def remove_files(fileA):
   for f in fileA:
-    os.remove(f)
-
-
+    try:
+      os.remove(f)
+    except:
+      pass
+    
 def passwd_generator():
   xaltUserA = os.environ.get("XALT_USERS")
   if (xaltUserA):

@@ -4,6 +4,11 @@
 
 from __future__ import print_function
 import os, sys, time, platform
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
 from xalt_util  import config_logger, extract_compiler
 
 logger = config_logger()
