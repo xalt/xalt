@@ -18,8 +18,6 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 #
-#  Class for obtaining modulename by using a file with a reverseMap
-#
 # Git Version: @git@
 
 from __future__  import print_function
@@ -29,7 +27,19 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
 class Rmap(object):
+  """ This class files the reverseMap File from the reverse map directory"""
   def __init__(self, rmapD):
+    """
+    This ctor opens the reverse map directory. It looks for a file named
+    "jsonReverseMapT.json".  If that file is not found it looks for
+    "jsonReverseMapT.old.json".  The file is read in and converted to a
+    python table.   The contents contain a timestampfn key value pair.
+    
+    The reverse map table is return in all cases except when the timestamp
+    file exists and is newer than the reverseMap file.
+    
+    @param rmapD: The reverse map directory
+    """
     self.__rmapT = {}
     if (not rmapD):
       return
@@ -56,6 +66,11 @@ class Rmap(object):
         
 
   def reverseMapT(self):
+    """
+    return the reverse map table found by the ctor.
+
+    @return reverseMapT 
+    """
     return self.__rmapT 
 
 
