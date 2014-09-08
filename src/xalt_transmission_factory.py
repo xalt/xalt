@@ -20,7 +20,13 @@
 from __future__  import print_function
 import os, sys, json, base64
 
-from XALTdb      import XALTdb
+try:
+  from XALTdb      import XALTdb
+  XALTdb_available = True
+except ImportError:
+  XALTdb_available = False
+  
+  
 from XALT_Rmap   import Rmap
 from xalt_global import *
 
@@ -90,6 +96,9 @@ class DirectDB(XALT_transmission_factory):
   def __init__(self, syshost, kind):
     super(DirectDB, self).__init__(syshost, kind)
   def save(self, resultT):
+    if (not XALTdb_available):
+      raise ImportError
+    
     ConfigFn     = pathJoin(XALT_ETC_DIR,"xalt_db.conf")
     RMapFn       = pathJoin(XALT_ETC_DIR,"reverseMapD")
 
