@@ -95,13 +95,13 @@ def cleanup(xaltobj, fn):
     
 def main():
   """
-  
+  Built a json output of the ld --trace data.
   """
-
-
+  User = os.environ.get("USER",  "unknown")
+  Host = os.environ.get("HOSTNAME","unknown")
   # push User, host and command line on to XALT_Stack
-  XALT_Stack.push("User: " + os.environ.get("USER",    "unknown"))
-  XALT_Stack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
+  XALT_Stack.push("User: " + User)
+  XALT_Stack.push("Host: " + Host)
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:
@@ -125,7 +125,7 @@ def main():
     if (execname.find("conftest") != -1):
       return 1
   
-    hash_line   = capture(['sha1sum', execname])
+    hash_line   = capture(['sha1sum', execname])  
     if (hash_line.find("No such file or directory") != -1):
       return 1
     hash_id     = hash_line.split()[0]
@@ -136,7 +136,7 @@ def main():
     resultT                  = {}
     resultT['uuid']          = uuid
     resultT['link_program']  = extract_compiler(pstree)
-    resultT['build_user']    = os.environ.get("USER",unknown)
+    resultT['build_user']    = User
     resultT['exit_code']     = status
     resultT['build_epoch']   = build_epoch
     resultT['exec_path']     = os.path.abspath(execname)
