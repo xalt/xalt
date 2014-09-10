@@ -38,6 +38,11 @@ parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
 
 def cleanup(xaltobj, fn):
+  """
+  cleanup the output of ld --trace 
+  @param xaltobj: The name of the XALT object file.
+  @param fn:      The file path that contains the ld --trace output.
+  """
   f     = open(fn,"r")
   lines = f.readlines()
   d     = {}
@@ -89,6 +94,11 @@ def cleanup(xaltobj, fn):
   return sB
     
 def main():
+  """
+  
+  """
+
+
   # push User, host and command line on to XALT_Stack
   XALT_Stack.push("User: " + os.environ.get("USER",    "unknown"))
   XALT_Stack.push("Host: " + os.environ.get("HOSTNAME","unknown"))
