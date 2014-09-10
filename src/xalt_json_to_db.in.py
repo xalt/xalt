@@ -52,10 +52,14 @@ ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 
 class CmdLineOptions(object):
+  """ Command line Options class """
+
   def __init__(self):
+    """ Empty Ctor """
     pass
   
   def execute(self):
+    """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--delete",      dest='delete', action="store_true", help="delete files after reading")
     parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
@@ -66,7 +70,15 @@ class CmdLineOptions(object):
 
 
 def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
+  """
+  Reads in each link file name and converts json to python table and sends it to be written to DB.
 
+  @param xalt:        An XALTdb object.
+  @param listFn:      A flag that causes the name of the file to be written to stderr.
+  @param reverseMapT: The Reverse Map Table.
+  @param linkFnA:     An array of link file names
+
+  """
   num = 0
   query = ""
 
@@ -99,6 +111,15 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
 
 
 def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
+  """
+  Reads in each run file name and converts json to python table and sends it to be written to DB.
+
+  @param xalt:        An XALTdb object.
+  @param listFn:      A flag that causes the name of the file to be written to stderr.
+  @param reverseMapT: The Reverse Map Table.
+  @param runFnA:      An array of run file names
+
+  """
   num   = 0
   query = ""
   try:
@@ -131,6 +152,11 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
 
 
 def main():
+  """
+  Loop over user accounts, find json files and write them to DB.
+  """
+
+
   # Push command line on to XALT_Stack
   sA = []
   sA.append("CommandLine:")
