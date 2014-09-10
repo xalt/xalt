@@ -163,12 +163,12 @@ EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
 as $ARGSRC -o $ARGOBJ
 
 $MY_CMD "$@" $ARGOBJ -t > $LINKLINE_OUT 
+status=$?
 
 if [ -n "$USER_TRACE" ]; then
   cat $LINKLINE_OUT | grep -v $ARGOBJ
 fi
 
-STATUS=$?
 
 $MY_PYTHON "$GEN_LINKDATA" "$UUID" "$STATUS" "`pwd`" "$SYSHOST" "$PSTREE_OUT" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
 
@@ -183,4 +183,4 @@ fi
 
 rm -rf $WRKDIR
 
-exit $STATUS
+exit $status

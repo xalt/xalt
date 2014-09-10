@@ -197,10 +197,15 @@ fi
 sTime=$($MY_PYTHON $EPOCH)
 $MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
+status=0
 if [ -z "$testMe" ]; then
   $MY_CMD "$@"
+  status="$?"
 fi
 
 eTime=$($MY_PYTHON $EPOCH)
 $MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+
+exit $status
+
 
