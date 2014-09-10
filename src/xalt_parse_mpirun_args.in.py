@@ -42,7 +42,7 @@ def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
   N   = len(argA)
 
   if ('dot' in kw):
-    os.environ['PATH'] = os.environ['PATH'] + ":."
+    os.environ['PATH'] = os.environ.get('PATH',"") + ":."
 
   i   = 0
   while (i < N):

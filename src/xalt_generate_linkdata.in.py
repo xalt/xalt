@@ -126,7 +126,7 @@ def main():
     resultT                  = {}
     resultT['uuid']          = uuid
     resultT['link_program']  = extract_compiler(pstree)
-    resultT['build_user']    = os.environ['USER']
+    resultT['build_user']    = os.environ.get("USER",unknown)
     resultT['exit_code']     = status
     resultT['build_epoch']   = build_epoch
     resultT['exec_path']     = os.path.abspath(execname)

@@ -34,6 +34,16 @@ from xalt_util  import config_logger, extract_compiler
 logger = config_logger()
 
 def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
+  """
+  Build the XALT assembly code
+
+  @param uuid:     UUID string
+  @param fn:       The output file name
+  @param version:  Current XALT version
+  @param syshost:  System name (darter, stampede), not login1.stampede.tacc.utexas.edu
+  @param compiler: the name of the linking compiler
+  @param epochStr: Current Timestamp
+  """
   user    = os.environ.get("USER","unknown")
   osName  = platform.system() + "_%_%_" + platform.release()
 
@@ -62,6 +72,7 @@ def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
     
 
 def main():
+  """ Generate XALT assembly code """
   try: 
     uuid     = sys.argv[1]
     syshost  = sys.argv[2]
