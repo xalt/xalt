@@ -35,6 +35,10 @@ from XALTdb     import XALTdb
 
 
 def main():
+  """
+  This program creates the Database used by XALT.
+  """
+
 
   ConfigBaseNm = "xalt_db"
   ConfigFn     = ConfigBaseNm + ".conf"

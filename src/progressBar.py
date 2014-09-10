@@ -25,7 +25,9 @@ import os, sys, re
 
 def getTerminalSize():
   """
-  returns (lines:int, cols:int)
+  Finds the terminal size if possible otherwise it assumes 25, 80
+  @returns: lines  the number of rows
+  @returns: cols   the number of columns
   """
   import os, struct
   def ioctl_GWINSZ(fd):
@@ -63,8 +65,17 @@ def getTerminalSize():
   return (25, 80)
 
 class ProgressBar(object):
-  def __init__(self, termWidth=None, barWidth=None, maxVal=None, ttyOnly=False, fd=sys.stderr):
+  """ A progress bar display class """
 
+  def __init__(self, termWidth=None, barWidth=None, maxVal=None, ttyOnly=False, fd=sys.stderr):
+    """
+    Ctor that figures out the range of the progress bar.
+    @param termWidth: The terminal width
+    @param barWidth:  The number of character that make up the bar
+    @param maxVal:    The maximum value (required)
+    @param ttyOnly:   If true then only print progress bar element if connected to a terminal.
+    @param fd:        The output stream.
+    """
     if (not maxVal):
       ValueError('Must specify maxVal')
 
@@ -95,6 +106,11 @@ class ProgressBar(object):
 
 
   def update(self, i):
+    """
+    Update progress bar.
+    @param i:  input value
+    """
+
     if (not self.__active):
       return
 
@@ -115,6 +131,7 @@ class ProgressBar(object):
       self.__fd.write(symbol)
       self.__fence += self.__unit
   def fini(self):
+    """ Finish progress bar output. """
     if (not self.__active):
       return
     self.__fd.write("\n")
