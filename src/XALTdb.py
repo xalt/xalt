@@ -31,6 +31,18 @@ from   xalt_global   import *
 from   xalt_site_pkg import translate
 warnings.filterwarnings("ignore", "Unknown table.*")
 
+def convertToInt(s):
+  """
+  Convert to string to int.  Protect against bad input.
+  @param s: Input string
+  @return: integer value.  If bad return 0.
+  """
+  try:
+    value = int(s)
+  except ValueError:
+    value = 0
+  return value
+
 patSQ = re.compile("'")
 class XALTdb(object):
   """
@@ -122,11 +134,17 @@ class XALTdb(object):
       build_epoch = float(linkT['build_epoch'])
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(linkT['build_epoch'])))
+
+      #paranoid conversion:  Protect DB from bad input:
+      exit_code = convertToInt(linkT['exit_code'])
+      exec_path = patSQ.sub((r"\\'", linkT['exec_path'])
+
+
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
         linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-        build_epoch,           int(linkT['exit_code']),  linkT['exec_path'])
+        build_epoch,           exit_code,                exec_path)
       conn.query(query)
       link_id = conn.insert_id()
 
