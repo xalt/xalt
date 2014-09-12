@@ -27,6 +27,14 @@ from xalt_util  import which
 
 
 def find_cmd(ignoreT, i, argA):
+  """
+  Walk the command line and find the command by ignoring names in ignoreT
+  such as env time, etc
+
+  @param ignoreT: Table of names to ignore.
+  @param i:       The location in the argA array to start looking.
+  @param argA:    The command line split into an array.
+  """
   N   = len(argA)
   cmd = None
   while (i < N):
@@ -39,6 +47,15 @@ def find_cmd(ignoreT, i, argA):
   return cmd
 
 def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
+  """
+  Walk the command line and first walk over the command line options.
+
+  @param ignoreT: Table of names to ignore.
+  @param argT:    Table of command line args. Keys are the name of the argument, values are the number of arguments it takes (> 0).
+  @param cmdArg:  command (like in ibrun.symm) that points to a user program.
+  @param argA:    The command line split into an array.
+  @param kw:      If dot=True then add "." to the end of PATH.
+  """
   N   = len(argA)
 
   if ('dot' in kw):
