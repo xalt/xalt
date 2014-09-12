@@ -26,18 +26,38 @@
 from __future__ import print_function
 import os, sys, re, ConfigParser, getpass, base64
 
-class CreateConf(object):
+dirNm, execName = os.path.split(sys.argv[0])
+sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
+import argparse
+
+class CmdLineOptions(object):
   def __init__(self):
-    self.__host   = None
-    self.__user   = None
-    self.__passwd = None
-    self.__db     = None
+    pass
+  
+  def execute(self):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dbhost",  dest='dbhost',  action="store",  help="db host")
+    parser.add_argument("--dbuser",  dest='dbuser',  action="store",  help="db user")
+    parser.add_argument("--passwd",  dest='passwd',  action="store",  help="password")
+    parser.add_argument("--dbname",  dest='dbname',  action="store",  help="name of db")
+
+    args = parser.parse_args()
+    
+    return args
+class CreateConf(object):
+  def __init__(self, args):
+    self.__host   = args.dbhost 
+    self.__user   = args.dbuser 
+    self.__passwd = args.passwd 
+    self.__db     = args.dbname 
     
   def __readFromUser(self):
-    self.__host   = raw_input("Database host: ")
-    self.__user   = raw_input("Database user: ")
-    self.__passwd = getpass.getpass("Database pass: ")
-    self.__db     = raw_input("Database name: ")
+    if (not self.__host):   self.__host   = raw_input("Database host: ")
+    if (not self.__user):   self.__user   = raw_input("Database user: ")
+    if (not self.__passwd): self.__passwd = getpass.getpass("Database pass: ")
+    if (not self.__db):     self.__db     = raw_input("Database name: ")
     
   def __writeConfig(self):
     config=ConfigParser.ConfigParser()
@@ -54,13 +74,15 @@ class CreateConf(object):
     f.close()
 
   def create(self):
+
     self.__readFromUser()
     self.__writeConfig()
     
 
 
 def main():
-  createConf = CreateConf()
+  args = CmdLineOptions().execute()
+  createConf = CreateConf(args)
   createConf.create()
 
 
