@@ -1,22 +1,25 @@
 #!/bin/bash
 # -*- shell-script -*-
 
-initStdEnvVars()
+initialize()
 {
-  PATH=$outputDir/xalt/bin:$outputDir/xalt/sbin:$PATH;
+  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
   numStep=0
   COUNT=0
+
+  rm -f _stderr.* _stdout.* out.* err.* .xalt.d
+
 }
 
 installXALT()
 {
-  rm -rf xalt
-  make -f $projectDir/makefile prefix=$outputDir/xalt PATH_TO_SRC=$projectDir \
+  rm -rf XALT
+  make -f $projectDir/makefile prefix=$outputDir/XALT PATH_TO_SRC=$projectDir \
     install > /dev/null
-  cp $projectDir/src/removeDataBase.py xalt/sbin
+  cp $projectDir/src/removeDataBase.py XALT/sbin
 }
 
 installDB()
@@ -31,3 +34,22 @@ installDB()
   createDB.py        --dbname $DBNAME
 }
 
+runMe ()
+{
+   COUNT=$(($COUNT + 1))
+   numStep=$(($numStep+1))
+   NUM=$(printf "%02d" $numStep)
+   echo "===========================" >  _stderr.$NUM
+   echo "step $COUNT"                 >> _stderr.$NUM
+   echo "$@"                          >> _stderr.$NUM
+   echo "===========================" >> _stderr.$NUM
+
+   echo "===========================" >  _stdout.$NUM
+   echo "step $COUNT"                 >> _stdout.$NUM
+   echo "$@"                          >> _stdout.$NUM
+   echo "===========================" >> _stdout.$NUM
+
+   numStep=$(($numStep+1))
+   NUM=$(printf "%02d" $numStep)
+   "$@" > _stdout.$NUM 2>> _stderr.$NUM
+}

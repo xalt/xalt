@@ -23,6 +23,16 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+########################################################################
+#  If the first argument is --part_of_xalt then exit immediately
+#  This avoids problems when there are more than one copy of this
+#  command in the path.
+
+if [ "$1" == --part_of_xalt ]; then
+  echo "XALT:YES"
+  exit
+fi
+
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 MY_PYTHON=python
@@ -33,6 +43,9 @@ MY_PYTHON=python
 # have search and cached all the executable in the path.  This should be
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
+#
+# Note: There may be multiple copies of this script in the path.
+#       We ignore any that are part of XALT.
 
 EXEC_X=/usr/bin/${MY_NAME}.x
 
@@ -42,7 +55,10 @@ elif [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
     if [ $exe != $MY_PATH ]; then
       MY_CMD=$exe
-      break
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
 else
@@ -55,10 +71,67 @@ else
   for dir in $PATH; do
     if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
       MY_CMD="$dir/$MY_NAME"
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
   IFS=$OLD_IFS
 fi
+
+########################################################################
+# Loop over command line arguments to ld. This code is used instead of
+# getopt and others because this wrapper script should not try to know
+# all the options to ld. Instead we are just "cherry-picking" the options
+# we want to know about.
+
+EXEC="a.out"
+append=false
+prev=
+done=false
+for option
+do
+  if [ -n "$prev" ]; then
+    eval "$prev=\$option"
+    prev=
+    continue
+  fi
+
+  case "$option" in
+    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
+    -*) optarg=;;
+    *) optarg=; done=true;;
+  esac
+  
+  case $option in
+    --version|-v|--help)
+      $MY_CMD "$@"
+      exit
+      ;;
+    --trace|-t)
+      USER_TRACE="true"
+      ;;
+
+    --part_of_xalt)
+      echo "XALT:YES"
+      exit
+      ;;
+
+    -o)
+      prev='EXEC'
+      ;;
+  esac
+
+  #####################################################################
+  # This code below is commented out.  Since this script is not parsing
+  # all options the done flag won't work.
+
+  #if [ "$done" = "true" ]; then
+  #  break;
+  #fi
+
+done
 
 ########################################################################
 # Make sure that the python setup is valid.  If a user makes PYTHONHOME
@@ -100,53 +173,6 @@ if [ "$UUIDGEN" = @path_to_uuidgen@ ]; then
 fi
 
 
-########################################################################
-# Loop over command line arguments to ld. This code is used instead of
-# getopt and others because this wrapper script should not try to know
-# all the options to ld. Instead we are just "cherry-picking" the options
-# we want to know about.
-
-EXEC="a.out"
-append=false
-prev=
-done=false
-for option
-do
-  if [ -n "$prev" ]; then
-    eval "$prev=\$option"
-    prev=
-    continue
-  fi
-
-  case "$option" in
-    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
-    -*) optarg=;;
-    *) optarg=; done=true;;
-  esac
-  
-  case $option in
-    --version|-v|--help)
-      $MY_CMD "$@"
-      exit
-      ;;
-    --trace|-t)
-      USER_TRACE="true"
-      ;;
-
-    -o)
-      prev='EXEC'
-      ;;
-  esac
-
-  #####################################################################
-  # This code below is commented out.  Since this script is not parsing
-  # all options the done flag won't work.
-
-  #if [ "$done" = "true" ]; then
-  #  break;
-  #fi
-
-done
 
 
 UUID=`$UUIDGEN`

@@ -23,6 +23,16 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+########################################################################
+#  If the first argument is --part_of_xalt then exit immediately
+#  This avoids problems when there are more than one copy of this
+#  command in the path.
+
+if [ "$1" == --part_of_xalt ]; then
+  echo "XALT:YES"
+  exit
+fi
+
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 MY_PYTHON=python
@@ -40,12 +50,19 @@ WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 # have search and cached all the executable in the path.  This should be
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
+#
+# Note: There may be multiple copies of this script in the path.
+#       We ignore any that are part of XALT.
+
 
 if [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
     if [ $exe != $MY_PATH ]; then
       MY_CMD=$exe
-      break
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
 else
@@ -58,6 +75,10 @@ else
   for dir in $PATH; do
     if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
       MY_CMD="$dir/$MY_NAME"
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
   IFS=$OLD_IFS
