@@ -47,8 +47,6 @@ from XALT_Rmap     import Rmap
 import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
-ConfigBaseNm = "xalt_db"
-ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 
 class CmdLineOptions(object):
@@ -65,6 +63,7 @@ class CmdLineOptions(object):
     parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn', action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',  action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--dbname",      dest='dbname', action="store",      default="xalt", help="Name of the database")
     args = parser.parse_args()
     return args
 
@@ -165,7 +164,7 @@ def main():
   XALT_Stack.push(" ".join(sA))
 
   args   = CmdLineOptions().execute()
-  xalt   = XALTdb(ConfigFn)
+  xalt   = XALTdb(dbConfigFn(args.dbname))
 
   num    = int(capture("getent passwd | wc -l"))
   pbar   = ProgressBar(maxVal=num)

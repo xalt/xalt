@@ -30,28 +30,39 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 
 from XALTdb     import XALTdb
+from xalt_util  import dbConfigFn
+import argparse
+class CmdLineOptions(object):
+  """ Command line Options class """
 
-
-
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dbname",      dest='dbname', action="store",      default = "xalt", help="xalt")
+    args = parser.parse_args()
+    return args
 
 def main():
   """
   This program creates the Database used by XALT.
   """
 
+  args     = CmdLineOptions().execute()
+  configFn = dbConfigFn(args.dbname)
 
-  ConfigBaseNm = "xalt_db"
-  ConfigFn     = ConfigBaseNm + ".conf"
-
-  if (not os.path.isfile(ConfigFn)):
+  if (not os.path.isfile(configFn)):
     dirNm, exe = os.path.split(sys.argv[0])
-    fn         = os.path.join(dirNm, ConfigFn)
+    fn         = os.path.join(dirNm, configFn)
     if (os.path.isfile(fn)):
-      ConfigFn = fn
+      configFn = fn
     else:
-      ConfigFn = os.path.abspath(os.path.join(dirNm, "../site", ConfigFn))
+      configFn = os.path.abspath(os.path.join(dirNm, "../site", configFn))
       
-  xalt = XALTdb(ConfigFn)
+  xalt = XALTdb(configFn)
   db   = xalt.db()
 
   try:

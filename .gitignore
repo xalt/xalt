@@ -1,6 +1,7 @@
 
 ########################################################################
 # global list of files to ignore
+.#*
 *~
 .*~
 *.o
@@ -43,3 +44,5 @@ autom4te.cache
 config.log
 makefile
 config.status
+testreports
+t1

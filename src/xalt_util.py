@@ -164,3 +164,11 @@ def obj2module(object_path, reverseMapT):
       moduleName = "'" + pkg['pkg'] + "'"
   return moduleName
 
+
+def dbConfigFn(dbname):
+  """
+  Build config file name from dbname.
+  @param dbname: db name
+  """
+  return dbname + "_db.conf"
+
