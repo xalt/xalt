@@ -23,7 +23,7 @@ test_descript = {
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
      mpirun -n 1 ./hello 2> /dev/null
 
-     export XALT_USER="$USER:$outputDir"
+     export XALT_USERS="$USER;$outputDir"
      xalt_json_to_db.py --dbname $DBNAME
 
 

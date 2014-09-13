@@ -10,7 +10,8 @@ initialize()
   numStep=0
   COUNT=0
 
-  rm -f _stderr.* _stdout.* out.* err.* .xalt.d
+  rm -f  _stderr.* _stdout.* out.* err.* .xalt.d
+  rm -rf .xalt.d
 
 }
 
