@@ -4,21 +4,18 @@ test_name = "end2end"
 
 test_descript = {
    'description' : "End to end test",
-   'keywords'    : [ test_name,],
+   'keywords'    : [ "simple", test_name,],
 
    'active'      : True,
    'test_name'   : test_name,
 
    'run_script'  : """
-     export PATH=$(projectDir)/src:$PATH;
-     export PYTHONPATH=$(projectDir)/contrib:$PYTHONPATH
-     DBNAME=testxalt
-     DBUSER=xaltTest
-     PASSWD=kutwgbh
-     conf_create.in.py  --dbhost localhost --dbuser $DBUSER \
-                        --passwd $PASSWD   --dbname $DBNAME
-     removeDataBase.py  --dbname $DBNAME > /dev/null 2>&1
-     createDB.in.py     --dbname $DBNAME
+     . $(projectDir)/rt/common_funcs.sh
+
+     initStdEnvVars
+     installXALT
+     installDB
+     removeDataBase.py  --dbname $DBNAME  
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,
 

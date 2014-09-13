@@ -65,7 +65,9 @@ fi
 # point to a different python then if stmt will be triggered.
 
 XALT_DIR=@xalt_dir@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
+XALT_LIBEXEC_DIR=@xalt_libexec_dir@
+XALT_SITE_DIR=@xalt_site_dir@
+WORKING_PYTHON=$XALT_LIBEXEC_DIR/xalt_working_python.py
 WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
 if [ "$WORKING" != "GOOD" ]; then
   unset PYTHONHOME
@@ -83,12 +85,19 @@ if [ "$WORKING" != "GOOD" ]; then
 fi
   
 
-GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
-GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
+GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
+GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
+SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost.py
 SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
 PSTREE=@path_to_pstree@
 UUIDGEN=@path_to_uuidgen@
+
+if [ "$PSTREE" = @path_to_pstree@ ]; then
+  PSTREE=/usr/bin/pstree
+fi
+if [ "$UUIDGEN" = @path_to_uuidgen@ ]; then
+  UUIDGEN=/usr/bin/uuidgen
+fi
 
 
 ########################################################################
