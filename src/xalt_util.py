@@ -127,22 +127,6 @@ def remove_files(fileA):
     except:
       pass
     
-def passwd_generator():
-  xaltUserA = os.environ.get("XALT_USERS")
-  if (xaltUserA):
-    for user in xaltUserA.split(":"):
-      idx = user.find(";")
-      if (idx != -1):
-        hdir = user[idx+1:]
-        user = user[:idx]
-      else:
-        hdir = os.path.expanduser("~" + user)
-      yield user, hdir
-
-  else:
-    for entry in getent.passwd():
-      yield entry.name, entry.dir
-
 numberPat = re.compile(r'[0-9][0-9]*')
 def obj_type(object_path):
   result = None

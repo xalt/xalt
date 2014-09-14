@@ -21,6 +21,9 @@ from __future__ import print_function
 import os
 
 def translate(nameA, envT, userT):
+  """
+  Site Package prototype.
+  """
   sysT = {}
   queueType = "SLURM"
   if (envT.get("SGE_ACCOUNT")):
