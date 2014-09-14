@@ -38,6 +38,9 @@ import subprocess, time, socket, json, argparse, platform
 logger = config_logger()
 
 def syshost():
+  """
+  Find a default system host name.  Return 2nd name after the dot, unless there is only one, then return first name.
+  """
   hostA = platform.node().split('.')
   idx = 1 
   if (len(hostA) < 2):
@@ -45,10 +48,14 @@ def syshost():
   return hostA[idx]
 
 class CmdLineOptions(object):
+  """ Command line Options class """
+
   def __init__(self):
+    """ Empty Ctor """
     pass
   
   def execute(self):
+    """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
     parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
@@ -66,16 +73,17 @@ keyPat    = re.compile(r'.*<(.*)>.*')
 shFuncPat = re.compile(r'^\(\) *{')
 
 class ExtractXALT(object):
-
+  """
+  This class extracts the XALT scribe placed in the program or shared library.
+  """
   def __init__(self, cmd):
-    self.__fieldT = self.__build_fieldT(cmd)
+    """
+    Parse the input path for the xalt record.  If it exists extract the
+    key value pairs and store in a table.
 
-  def xaltRecordT(self):
-    return self.__fieldT
-
-  def __build_fieldT(self, cmd):
+    @param cmd: the path to the program or shared library that has (or could have) an XALT record.
+    """
     outStr  = capture(["objdump", "-s", "-j", ".xalt", cmd])
-
     fieldT = {}
     if (not outStr.find("Contents of section .xalt:") != -1):
       return fieldT
@@ -111,14 +119,22 @@ class ExtractXALT(object):
         value = xaltA[idx].replace("_%_%_"," ")
         fieldT[key] = value
     
-    return fieldT 
-   
+    self.__fieldT = fieldT 
+
+  def xaltRecordT(self):
+    """ Return the XALT values found in cmd. """
+    return self.__fieldT
 
 
 class UserEnvT(object):
+  """ Class to extract important values from the environment """
   def __init__(self, args, userExec):
+    """
+    Ctor to construct the important user env values and store them in userT.
 
-
+    @param args:     The parsed command line arguments.
+    @param userExec: the path to the user executable.
+    """
     ltime                 = time.time()
     userT                 = {}
     userT['cwd']          = os.getcwd()
@@ -140,12 +156,23 @@ class UserEnvT(object):
     self.__userT = userT
     
   def userT(self):
+    """ return the constructed user table. """
     return self.__userT
 
 class UserExec(object):
-  
+  """
+  Find all about the user's executable.
+  """
   def __init__(self, exec_progA):
+    """
+    Find the user's executable by walking the command line
+    and skipping the executables name in ignoreT.  Then find
+    the full path to the executable.  Finally find the shared
+    libraries if there and get the hash time.
 
+    @param exec_progA: the command line after the mpirun type
+    arguments have been removed.
+    """
     ignoreT = {
       'env'              : True,
       'time'             : True,
@@ -175,28 +202,36 @@ class UserExec(object):
 
 
   def execName(self):
+    """ Return the name of the executable """
     return self.__execName
 
   def execType(self):
+    """ Return the executable type: binary or script. """
     return self.__execType
 
   def execEpoch(self):
+    """ Return the executables modify time in epoch time."""
     return self.__modify
 
   def execModify(self):
+    """ Return the modify date time string. """
     return time.strftime("%c",time.localtime(self.__modify))
 
   def libA(self):
+    """ Return the array of shared libraries for this executable. """
     return self.__libA
 
   def hash(self):
+    """ Return the sha1sum of the executable. """
     return self.__hash
 
   def __computeHash(self, cmd):
+    """ Compute the sha1sum of the executable. """
     fieldA = capture(["sha1sum", cmd]).split()
     return fieldA[0]
 
   def __parseLDD(self,ldd):
+    """ Return the list of shared libraries with their sha1sum. """
     if (not ldd or ldd.find("not a dynamic executable") > 0):
       return []
 
@@ -234,11 +269,19 @@ class UserExec(object):
     return libB
     
 class EnvT(object):
+  """ Capture the user's environment.  Remove some variables."""
   def __init__(self):
+    """ Save the users environment. """
     self.__envT = self.__reportUserEnv()
   def envT(self):
+    """ Return the user environment. """
     return self.__envT
   def __reportUserEnv(self):
+    """
+    Walk the users environment and save every thing except for a few env. vars.
+    Also remove any exported shell functions.
+    """
+
     # blacklist of env vars not to track
     ignoreKeyA = [
       re.compile(r'^HIST.*$'),
@@ -277,6 +320,10 @@ class EnvT(object):
   
 
 def main():
+  """
+  Write the environment, XALT info from executable and use the
+  transmission factory to save it.
+  """
 
   try:
     # parse command line options:
