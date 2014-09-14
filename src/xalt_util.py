@@ -131,7 +131,13 @@ def passwd_generator():
   xaltUserA = os.environ.get("XALT_USERS")
   if (xaltUserA):
     for user in xaltUserA.split(":"):
-      yield user, os.path.expanduser("~" + user)
+      idx = user.find(";")
+      if (idx != -1):
+        hdir = user[idx+1:]
+        user = user[:idx]
+      else:
+        hdir = os.path.expanduser("~" + user)
+      yield user, hdir
 
   else:
     for entry in getent.passwd():
@@ -163,4 +169,12 @@ def obj2module(object_path, reverseMapT):
     else:
       moduleName = "'" + pkg['pkg'] + "'"
   return moduleName
+
+
+def dbConfigFn(dbname):
+  """
+  Build config file name from dbname.
+  @param dbname: db name
+  """
+  return dbname + "_db.conf"
 

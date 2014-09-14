@@ -18,12 +18,19 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+PATH_TO_SRC     := @PATH_TO_SRC@
+path_to_src     := PATH_TO_SRC
+ifeq ($(PATH_TO_SRC),@$(path_to_src)@)
+  PATH_TO_SRC   := .
+endif
+CURRENT_MK      := $(lastword $(MAKEFILE_LIST))
+
 package         := xalt
-VERSION         := $(shell cat .version)
+VERSION         := $(shell cat $(PATH_TO_SRC)/.version)
 TRANSMISSION    := @TRANSMISSION@
 ETC_DIR         := @ETC_DIR@
 prefix          := @prefix@
-XALT_DIR        := @prefix@
+XALT_DIR        := $(prefix)
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
 PATH_TO_PYTHON  := @PATH_TO_PYTHON@
 PATH_TO_AS      := @PATH_TO_AS@
@@ -42,10 +49,11 @@ DIRLIST         := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
                    $(DESTDIR)$(SBIN) 
 
 BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in src/ibrun.symm.in src/aprun.in src/srun.in
-
+BIN_PKG         := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
 SBIN_PKG        := src/conf_create.in.py  	     src/createDB.in.py               \
                    src/xalt_db.conf       	     src/xalt_json_to_db.in.py
+SBIN_PKG        := $(patsubst %, $(PATH_TO_SRC)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.in.py \
                    src/xalt_run_submission.in.py     src/xalt_parse_mpirun_args.in.py \
@@ -54,12 +62,14 @@ LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.
                    src/xalt_working_python.in.py     src/xalt_transmission_factory.py \
                    src/xalt_stack.py                 src/XALT_Rmap.py                 \
                    src/xalt_global.py
+LIBEXEC_PKG     := $(patsubst %, $(PATH_TO_SRC)/%, $(LIBEXEC_PKG))
 
 SITE_PKG        := src/xalt_find_exec_mpich.in.py    src/xalt_find_exec_openmpi.in.py \
 	           src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
                    src/new_job_id.in.py              src/xalt_site_pkg.py             \
 		   src/xalt_find_exec_ibrun.in.py    src/xalt_find_exec_aprun.in.py   \
 		   src/xalt_find_exec_sgimpt.in.py   src/xalt_find_exec_srun.in.py
+SITE_PKG        := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 
 .PHONY:
 
@@ -71,20 +81,28 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec      \
           Use_getent_yes
 
 
+echo:
+	@echo CURDIR: $(CURDIR)
+	@echo PATH_TO_SRC: $(PATH_TO_SRC)
+	@echo SITE_PKG: $(SITE_PKG)
+	@echo MAKE: $(MAKE)
+	@echo MAKEFLAGS: $(MAKEFLAGS)
+	@echo MAKEFILE_LIST: $(MAKEFILE_LIST	
+
 $(DIRLIST) :
 	mkdir -p $@
 
 Inst_site: $(SITE_PKG)
-	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
 
 Inst_libexec: $(LIBEXEC_PKG)
-	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
 Inst_sbin: $(SBIN_PKG)
-	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
 Inst_bin: $(BIN_PKG)
-	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
 
 Build_pstree_no:
 
@@ -99,15 +117,15 @@ Build_pstree_yes:
 	cd ..; rm -rf psmisc-22.21
 
 Use_getent_yes:
-	cd contrib;                                                       \
+	cd $(PATH_TO_SRC)/contrib;                                        \
         mkdir -p  $(DESTDIR)$(prefix)/libexec/getent;                     \
         cp getent/*.py $(DESTDIR)$(prefix)/libexec/getent
 
 
 Use_argparse_no:
 
-Use_argparse_yes: contrib/argparse/argparse.py
-	$(MAKE) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+Use_argparse_yes: $(PATH_TO_SRC)/contrib/argparse/argparse.py
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
 __installMe:
 	-for i in $(FILELIST); do                                     	   \
@@ -115,10 +133,12 @@ __installMe:
            fn=$${bareN%%.in*};                                        	   \
            ext=$${bareN#*.};                                          	   \
            oext=;                                                          \
-	   : echo "bareN: $$bareN, ext: $$ext"; \
+	   : echo "bareN: $$bareN, ext: $$ext";                            \
            [ "$$ext" = "in.py" ] && oext=".py";                            \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
+	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \
+	        -e 's|@xalt_site_dir@|$(SITE)|g'                           \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g          '                    \
@@ -181,6 +201,7 @@ tags:
 	    -e 's|.*\.snm$$||g'                                  \
 	    -e 's|.*\.toc$$||g'                                  \
 	    -e 's|.*\.vrb$$||g'                                  \
+	    -e 's|.*syslogTest$$||g'                             \
             -e 's|^#.*||g'                                       \
             -e 's|/#.*||g'                                       \
             -e 's|\.#.*||g'                                      \
@@ -200,5 +221,5 @@ dist:
 	git archive --prefix=xalt-`cat .version`/ master | bzip2 > xalt-`cat .version`.tar.bz2
 
 
-makefile: Makefile.in config.status
-	./config.status $@
+makefile: $(PATH_TO_SRC)/Makefile.in $(PATH_TO_SRC)/config.status
+	$(PATH_TO_SRC)/config.status $@

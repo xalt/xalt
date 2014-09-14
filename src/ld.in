@@ -23,6 +23,16 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+########################################################################
+#  If the first argument is --part_of_xalt then exit immediately
+#  This avoids problems when there are more than one copy of this
+#  command in the path.
+
+if [ "$1" == --part_of_xalt ]; then
+  echo "XALT:YES"
+  exit
+fi
+
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
 MY_PYTHON=python
@@ -33,6 +43,9 @@ MY_PYTHON=python
 # have search and cached all the executable in the path.  This should be
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
+#
+# Note: There may be multiple copies of this script in the path.
+#       We ignore any that are part of XALT.
 
 EXEC_X=/usr/bin/${MY_NAME}.x
 
@@ -42,7 +55,10 @@ elif [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
     if [ $exe != $MY_PATH ]; then
       MY_CMD=$exe
-      break
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
 else
@@ -55,41 +71,14 @@ else
   for dir in $PATH; do
     if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
       MY_CMD="$dir/$MY_NAME"
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
   IFS=$OLD_IFS
 fi
-
-########################################################################
-# Make sure that the python setup is valid.  If a user makes PYTHONHOME
-# point to a different python then if stmt will be triggered.
-
-XALT_DIR=@xalt_dir@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-if [ "$WORKING" != "GOOD" ]; then
-  unset PYTHONHOME
-  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-  if [ "$WORKING" != "GOOD" ]; then
-    unset PYTHONPATH
-    MY_PYTHON=@python@
-    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-    if [ "$WORKING" != "GOOD" ]; then
-      echo "XALT: Error in users' python setup.  Please report this error!"
-      $MY_CMD "$@"
-      exit
-    fi
-  fi
-fi
-  
-
-GEN_ASSEMBLY=$XALT_DIR/libexec/xalt_generate_assembly.py
-GEN_LINKDATA=$XALT_DIR/libexec/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_DIR/site/xalt_syshost.py
-SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
-PSTREE=@path_to_pstree@
-UUIDGEN=@path_to_uuidgen@
-
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -124,6 +113,11 @@ do
       USER_TRACE="true"
       ;;
 
+    --part_of_xalt)
+      echo "XALT:YES"
+      exit
+      ;;
+
     -o)
       prev='EXEC'
       ;;
@@ -138,6 +132,47 @@ do
   #fi
 
 done
+
+########################################################################
+# Make sure that the python setup is valid.  If a user makes PYTHONHOME
+# point to a different python then if stmt will be triggered.
+
+XALT_DIR=@xalt_dir@
+XALT_LIBEXEC_DIR=@xalt_libexec_dir@
+XALT_SITE_DIR=@xalt_site_dir@
+WORKING_PYTHON=$XALT_LIBEXEC_DIR/xalt_working_python.py
+WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+if [ "$WORKING" != "GOOD" ]; then
+  unset PYTHONHOME
+  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+  if [ "$WORKING" != "GOOD" ]; then
+    unset PYTHONPATH
+    MY_PYTHON=@python@
+    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+    if [ "$WORKING" != "GOOD" ]; then
+      echo "XALT: Error in users' python setup.  Please report this error!"
+      $MY_CMD "$@"
+      exit
+    fi
+  fi
+fi
+  
+
+GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
+GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
+SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost.py
+SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
+PSTREE=@path_to_pstree@
+UUIDGEN=@path_to_uuidgen@
+
+if [ "$PSTREE" = @path_to_pstree@ ]; then
+  PSTREE=/usr/bin/pstree
+fi
+if [ "$UUIDGEN" = @path_to_uuidgen@ ]; then
+  UUIDGEN=/usr/bin/uuidgen
+fi
+
+
 
 
 UUID=`$UUIDGEN`
