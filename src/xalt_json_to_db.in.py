@@ -150,12 +150,8 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
   return num
 
 
+
 def main():
-  """
-  Loop over user accounts, find json files and write them to DB.
-  """
-
-
   # Push command line on to XALT_Stack
   sA = []
   sA.append("CommandLine:")

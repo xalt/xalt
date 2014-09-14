@@ -10,7 +10,7 @@ initialize()
   numStep=0
   COUNT=0
 
-  rm -f  _stderr.* _stdout.* out.* err.* .xalt.d
+  rm -f  _stderr.* _stdout.* out.* err.* 
   rm -rf .xalt.d
 
 }
@@ -20,7 +20,8 @@ installXALT()
   rm -rf XALT
   make -f $projectDir/makefile prefix=$outputDir/XALT PATH_TO_SRC=$projectDir \
     install > /dev/null
-  cp $projectDir/src/removeDataBase.py XALT/sbin
+  cp $projectDir/src/removeDataBase.py    XALT/sbin
+  cp $projectDir/test/check_entries_db.py XALT/sbin
 }
 
 installDB()

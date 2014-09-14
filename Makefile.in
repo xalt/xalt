@@ -87,6 +87,7 @@ echo:
 	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
+	@echo MAKEFILE_LIST: $(MAKEFILE_LIST	
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -220,5 +221,5 @@ dist:
 	git archive --prefix=xalt-`cat .version`/ master | bzip2 > xalt-`cat .version`.tar.bz2
 
 
-makefile: Makefile.in config.status
-	./config.status $@
+makefile: $(PATH_TO_SRC)/Makefile.in $(PATH_TO_SRC)/config.status
+	$(PATH_TO_SRC)/config.status $@

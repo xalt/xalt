@@ -153,7 +153,7 @@ class XALTdb(object):
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
-
+      conn.commit()
 
     except Exception as e:
       print(XALT_Stack.contents())
@@ -288,6 +288,7 @@ class XALTdb(object):
         conn.query(query)
       v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)
+      conn.commit()
     except Exception as e:
       print(XALT_Stack.contents())
       print(query.encode("ascii","ignore"))

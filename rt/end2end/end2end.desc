@@ -26,8 +26,8 @@ test_descript = {
      export XALT_USERS="$USER;$outputDir"
      xalt_json_to_db.py --dbname $DBNAME
 
-
-     removeDataBase.py  --dbname $DBNAME  
+     check_entries_db.py --dbname $DBNAME --results result.csv
+     removeDataBase.py   --dbname $DBNAME  
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,
 
