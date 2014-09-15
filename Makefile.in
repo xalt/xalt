@@ -87,7 +87,7 @@ echo:
 	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
-	@echo MAKEFILE_LIST: $(MAKEFILE_LIST	
+	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
 
 $(DIRLIST) :
 	mkdir -p $@
