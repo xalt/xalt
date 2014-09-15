@@ -19,9 +19,10 @@ test_descript = {
 
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
+     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
-     mpirun -n 1 ./hello 2> /dev/null
+     mpirun -n 1 ./hello 
 
      export XALT_USERS="$USER;$outputDir"
      xalt_file_to_db.py  --dbname $DBNAME

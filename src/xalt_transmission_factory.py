@@ -109,5 +109,3 @@ class DirectDB(XALT_transmission_factory):
     else: 
       # kind == "run"
       xalt.run_to_db(reverseMapT, resultT)
-
-    xalt.connect().close()
