@@ -24,7 +24,7 @@ test_descript = {
      mpirun -n 1 ./hello 2> /dev/null
 
      export XALT_USERS="$USER;$outputDir"
-     xalt_json_to_db.py --dbname $DBNAME
+     xalt_file_to_db.py  --dbname $DBNAME
 
      check_entries_db.py --dbname $DBNAME --results result.csv
      removeDataBase.py   --dbname $DBNAME  

@@ -99,8 +99,8 @@ class DirectDB(XALT_transmission_factory):
     if (not XALTdb_available):
       raise ImportError
     
-    ConfigFn     = pathJoin(XALT_ETC_DIR,"xalt_db.conf")
-    RMapFn       = pathJoin(XALT_ETC_DIR,"reverseMapD")
+    ConfigFn     = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
+    RMapFn       = os.path.join(XALT_ETC_DIR,"reverseMapD")
 
     xalt        = XALTdb(ConfigFn)
     reverseMapT = Rmap(RMapFn).reverseMapT()
@@ -110,3 +110,4 @@ class DirectDB(XALT_transmission_factory):
       # kind == "run"
       xalt.run_to_db(reverseMapT, resultT)
 
+    xalt.connect().close()
