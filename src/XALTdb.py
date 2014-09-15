@@ -126,6 +126,10 @@ class XALTdb(object):
       conn   = self.connect()
       query  = "USE "+self.db()
       conn.query(query)
+      query  = "START TRANSACTION"
+      conn.query(query)
+      
+
       query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
       conn.query(query)
       result = conn.store_result()
@@ -154,7 +158,9 @@ class XALTdb(object):
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
-      conn.commit()
+      query = "COMMIT"
+      conn.query(query)
+      conn.close()
 
     except Exception as e:
       print(XALT_Stack.contents())
@@ -201,7 +207,7 @@ class XALTdb(object):
         # Now link libraries to xalt_link record:
         query = "INSERT into %s VALUES (NULL,'%d','%d') " % (tableName, obj_id, index)
         conn.query(query)
-
+  
     except Exception as e:
       print(XALT_Stack.contents())
       print(query)
@@ -220,7 +226,10 @@ class XALTdb(object):
       conn   = self.connect()
       query  = "USE "+self.db()
       conn.query(query)
+      query  = "START TRANSACTION"
+      conn.query(query)
 
+      
       translate(nameA, runT['envT'], runT['userT']);
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
@@ -289,7 +298,10 @@ class XALTdb(object):
         conn.query(query)
       v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)
-      conn.commit()
+      query = "COMMIT"
+      conn.query(query)
+      conn.close()
+
     except Exception as e:
       print(XALT_Stack.contents())
       print(query.encode("ascii","ignore"))
