@@ -165,11 +165,13 @@ SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost.py
 SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
 PSTREE=@path_to_pstree@
 UUIDGEN=@path_to_uuidgen@
+pstreePath=path_to_pstree
+uuidPath=path_to_uuidgen
 
-if [ "$PSTREE" = @path_to_pstree@ ]; then
+if [ "$PSTREE" = "@${pstreePath}@" ]; then
   PSTREE=/usr/bin/pstree
 fi
-if [ "$UUIDGEN" = @path_to_uuidgen@ ]; then
+if [ "$UUIDGEN" = "@${uuidPath}@" ]; then
   UUIDGEN=/usr/bin/uuidgen
 fi
 
