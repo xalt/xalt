@@ -1,8 +1,8 @@
 #! /usr/bin/python -E
 
 '''
-Copyright (c) 2010 The University of Tennessee
-Copyright (c) 2010 UT-Batelle LLC
+# Copyright (c) 2010 The University of Tennessee
+# Copyright (c) 2010 UT-Batelle LLC
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

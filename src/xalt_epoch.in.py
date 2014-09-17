@@ -4,7 +4,8 @@
 
 #-----------------------------------------------------------------------
 # XALT: A tool to track the programs on a cluster.
-# Copyright (C) 2013-2014 Robert McLay and Mark Fahey
+# Copyright (C) 2013-2014 University of Texas at Austin
+# Copyright (C) 2013-2014 University of Tennessee
 # 
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
