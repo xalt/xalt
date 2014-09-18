@@ -1,6 +1,7 @@
 #-----------------------------------------------------------------------
 # XALT: A tool to track the programs on a cluster.
-# Copyright (C) 2013-2014 Robert McLay and Mark Fahey
+# Copyright (C) 2013-2014 University of Texas at Austin
+# Copyright (C) 2013-2014 University of Tennessee
 # 
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -52,7 +53,7 @@ BIN_PKG         := src/ld.in src/mpirun.in src/ibrun.in src/ibrun.symm.in src/ap
 BIN_PKG         := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
 SBIN_PKG        := src/conf_create.in.py  	     src/createDB.in.py               \
-                   src/xalt_db.conf       	     src/xalt_json_to_db.in.py
+                   src/xalt_db.conf       	     src/xalt_file_to_db.in.py
 SBIN_PKG        := $(patsubst %, $(PATH_TO_SRC)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.in.py \
@@ -87,7 +88,7 @@ echo:
 	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
-	@echo MAKEFILE_LIST: $(MAKEFILE_LIST	
+	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -195,6 +196,7 @@ tags:
 	    -e 's|.*\.aux$$||g'                                  \
 	    -e 's|.*\.fdb_latexmk$$||g'                          \
 	    -e 's|.*\.fls$$||g'                                  \
+	    -e 's|.*\.key||g'                                    \
 	    -e 's|.*\.nav$$||g'                                  \
 	    -e 's|.*\.out$$||g'                                  \
 	    -e 's|.*\.pdf$$||g'                                  \

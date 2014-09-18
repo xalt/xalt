@@ -13,7 +13,7 @@ PATH=/home1/02875/swtools/l/pkg/x86_64/xalt/xalt/sbin:$PATH
 cd /home1/02875/swtools/use_xalt
 spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > rmapD/jsonReverseMapT.json
 date                                >  ~swtools/use_xalt/json_to_db.log
-xalt_json_to_db.py --reverseMapD rmapD --delete --timer >> ~swtools/use_xalt/json_to_db.log 2>&1
+xalt_file_to_db.py --reverseMapD rmapD --delete --timer >> ~swtools/use_xalt/json_to_db.log 2>&1
 
 sz=`wc -l ~swtools/use_xalt/json_to_db.log`
 sz=${sz%% *.log}

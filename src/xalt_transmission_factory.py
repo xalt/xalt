@@ -1,6 +1,7 @@
 #-----------------------------------------------------------------------
 # XALT: A tool to track the programs on a cluster.
-# Copyright (C) 2013-2014 Robert McLay and Mark Fahey
+# Copyright (C) 2013-2014 University of Texas at Austin
+# Copyright (C) 2013-2014 University of Tennessee
 # 
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -99,8 +100,8 @@ class DirectDB(XALT_transmission_factory):
     if (not XALTdb_available):
       raise ImportError
     
-    ConfigFn     = pathJoin(XALT_ETC_DIR,"xalt_db.conf")
-    RMapFn       = pathJoin(XALT_ETC_DIR,"reverseMapD")
+    ConfigFn     = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
+    RMapFn       = os.path.join(XALT_ETC_DIR,"reverseMapD")
 
     xalt        = XALTdb(ConfigFn)
     reverseMapT = Rmap(RMapFn).reverseMapT()
@@ -109,4 +110,3 @@ class DirectDB(XALT_transmission_factory):
     else: 
       # kind == "run"
       xalt.run_to_db(reverseMapT, resultT)
-
