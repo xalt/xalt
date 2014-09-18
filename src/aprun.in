@@ -121,6 +121,10 @@ for option; do
   esac
   
   case $option in
+    -b)
+      $MY_CMD "$@"
+      exit
+      ;;
     -n)
       prev='NTASKS'
       ;;
