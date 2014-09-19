@@ -35,6 +35,10 @@ import socket, platform
 level1format = False
 
 def map_syshost(nameA):
+  """
+  Use the nameA array to report a system name
+  """
+
   nicsT = {
     "kraken"       : "kraken",
     "aprun-darter" : "darter",
@@ -61,22 +65,29 @@ def map_syshost(nameA):
   return result
   
 def level1_syshost(nameA):
-  # Returns the 1st level xx of the xx.yy.zz.ww hostname name.
-  # Useful for naming conventions like
-  #     machine1.dept.institute.edu
-  # where you want to return the machine name without the number.
+  """
+   Returns the 1st level xx of the xx.yy.zz.ww hostname name.
+   Useful for naming conventions like
+       machine1.dept.institute.edu
+   where you want to return the machine name without the number.
 
-  # use the platform.node result provided in nameA array
-  #   and strip off trailing numbers
+   use the platform.node result provided in nameA array
+     and strip off trailing numbers
+
+  """
+
 
   name = nameA[1].rstrip('1234567890')  
   return name
 
 def level2_syshost(nameA):
-  # Returns the 2nd level yy of the xx.yy.zz.ww hostname name.
-  # Useful for naming conventions like
-  #     login1.machine.site.edu
-  # where you want to return the machine name.
+  """
+  Returns the 2nd level yy of the xx.yy.zz.ww hostname name.
+  Useful for naming conventions like
+      login1.machine.site.edu
+  where you want to return the machine name.
+
+  """
 
   maxN = 0
   j    = -1
@@ -96,6 +107,10 @@ def level2_syshost(nameA):
   return hostA[idx]
 
 def main():
+  """
+  This command tries to report the system name base on host name information.
+  It should return darter and not login1.darter.
+  """
 
   nameA = [ socket.getfqdn(),
             platform.node() ]
