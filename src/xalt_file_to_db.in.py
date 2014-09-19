@@ -4,7 +4,7 @@
 # Git Version: @git@
 
 #-----------------------------------------------------------------------
-# XALT: A tool to track the programs on a cluster.
+# XALT: A tool that tracks users jobs and environments on a cluster.
 # Copyright (C) 2013-2014 University of Texas at Austin
 # Copyright (C) 2013-2014 University of Tennessee
 # 
@@ -151,6 +151,16 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
   return num
 
 def passwd_generator():
+  """
+  This generator walks the /etc/passwd file and returns the next
+  user and home directory.  If XALT_USERS is set then it used that
+  instead.  It is a colon separated list.  
+
+  Super hack: if the colon separated list has a ";" in it then the
+  first part is the user the second is the home directory.  This is
+  use in testing.
+  """
+
   xaltUserA = os.environ.get("XALT_USERS")
   if (xaltUserA):
     for user in xaltUserA.split(":"):
@@ -169,6 +179,11 @@ def passwd_generator():
 
 
 def main():
+  """
+  Walks the list of users via the passwd_generator and load the
+  link and run files.
+  """
+
   # Push command line on to XALT_Stack
   sA = []
   sA.append("CommandLine:")

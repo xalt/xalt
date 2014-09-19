@@ -7,7 +7,7 @@
 #
 
 #-----------------------------------------------------------------------
-# XALT: A tool to track the programs on a cluster.
+# XALT: A tool that tracks users jobs and environments on a cluster.
 # Copyright (C) 2013-2014 University of Texas at Austin
 # Copyright (C) 2013-2014 University of Tennessee
 # 
