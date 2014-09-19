@@ -138,6 +138,7 @@ done
 # Make sure that the python setup is valid.  If a user makes PYTHONHOME
 # point to a different python then if stmt will be triggered.
 
+PY_PATH_ORIG=$PYTHONPATH
 XALT_DIR=@xalt_dir@
 XALT_LIBEXEC_DIR=@xalt_libexec_dir@
 XALT_SITE_DIR=@xalt_site_dir@
@@ -191,8 +192,11 @@ EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
 
 as $ARGSRC -o $ARGOBJ
 
+PY_PATH_XALT=$PYTHONPATH
+export PYTHONPATH=$PY_PATH_ORIG
 $MY_CMD "$@" $ARGOBJ -t > $LINKLINE_OUT 
 status=$?
+export PYTHONPATH=$PY_PATH_XALT
 
 if [ -n "$USER_TRACE" ]; then
   cat $LINKLINE_OUT | grep -v $ARGOBJ

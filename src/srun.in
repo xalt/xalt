@@ -24,6 +24,16 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+########################################################################
+#  If the first argument is --part_of_xalt then exit immediately
+#  This avoids problems when there are more than one copy of this
+#  command in the path.
+
+if [ "$1" == --part_of_xalt ]; then
+  echo "XALT:YES"
+  exit
+fi
+
 # This srun wrapper only tested on one LANL cluster named mustang.
 # Very dependent on the site/xalt_find_exec_srun.py python script.
 # Because -n option has no environment variable counterpart, we
@@ -76,6 +86,7 @@ fi
 # Make sure that the python setup is valid.  If a user makes PYTHONHOME
 # point to a different python then if stmt will be triggered.
 
+PY_PATH_ORIG=$PYTHONPATH
 XALT_DIR=@xalt_dir@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
@@ -200,13 +211,17 @@ $MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$r
 
 status=0
 if [ -z "$testMe" ]; then
+  PY_PATH_XALT=$PYTHONPATH
+  export PYTHONPATH=$PY_PATH_ORIG
   $MY_CMD "$@"
   status="$?"
+  export PYTHONPATH=$PY_PATH_XALT
 fi
 
 eTime=$($MY_PYTHON $EPOCH)
 $MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
 
+export PYTHONPATH=$PY_PATH_ORIG
 exit $status
 
 
