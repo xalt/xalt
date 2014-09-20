@@ -170,10 +170,13 @@ if [ -z "$testMe" ]; then
   PY_HOME_XALT=$PYTHONHOME
   PY_PATH_XALT=$PYTHONPATH
   export PYTHONPATH=$PY_PATH_ORIG
-  export PYTHONHOME=$PY_HOME_ORIG
+  [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
+
   $MY_CMD "$@"
   status="$?"
-  export PYTHONHOME=$PY_HOME_XALT
+
+  unset  PYTHONHOME
+  [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
   export PYTHONPATH=$PY_PATH_XALT
 fi
 eTime=$($MY_PYTHON $EPOCH)

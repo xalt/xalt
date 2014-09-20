@@ -85,9 +85,9 @@ class ExtractXALT(object):
     @param cmd: the path to the program or shared library that has (or could have) an XALT record.
     """
     outStr  = capture(["objdump", "-s", "-j", ".xalt", cmd])
-    fieldT = {}
+    self.__fieldT = {}
     if (not outStr.find("Contents of section .xalt:") != -1):
-      return fieldT
+      return 
     
     outputA = outStr.split('\n')
     outputA.pop(0)

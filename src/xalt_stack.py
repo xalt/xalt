@@ -27,6 +27,9 @@ import os, sys, re
 class Stack(object):
   """ Basic stack class """
   def __init__(self):
+    """
+    initialize array that is used for the stack.
+    """
     self.__items = []
          
 
