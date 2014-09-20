@@ -138,12 +138,15 @@ class ProgressBar(object):
     self.__fd.write("\n")
         
 def main():
+  """
+  Test program for progress bar.
+  """
 
-    num = 200
-    pbar = ProgressBar(maxVal=num, ttyOnly=False)
-    for i in xrange(num):
-      pbar.update(i+1)
-    pbar.fini()  
+  num = 200
+  pbar = ProgressBar(maxVal=num, ttyOnly=False)
+  for i in xrange(num):
+    pbar.update(i+1)
+  pbar.fini()  
 
 if ( __name__ == '__main__'): main()
       

@@ -32,18 +32,45 @@ from XALT_Rmap   import Rmap
 from xalt_global import *
 
 class XALT_transmission_factory(object):
+  """
+  This class is a factory to determine which way to "write" the json data.
+  """
   def __init__(self, syshost, kind):
+    """
+    This ctor saves away the system name and kind of record (link, run)
+
+    @param syshost: Name of the system.
+    @param kind:  Type of record: link or run
+    """
+
     self.__syshost = syshost
     self.__kind    = kind
 
   def _syshost(self):
+    """
+    returns the system name
+    @return returns the system name
+    """
     return self.__syshost
 
   def _kind(self):
+    """
+    Returns the kind of record: link or run
+    @return the kind of record.
+    """
     return self.__kind
 
   @staticmethod
   def build(name, syshost, kind, fn):
+    """
+    The static factory build routine that returns the transmission object.
+
+    @param name: Name of the factory: syslog, directdb, file
+    @param syshost: The system name.  Should be stampede or darter not login1.stampede....
+    @param kind: Type of record: link, run
+    @param fn:  file name (only used by file transport object
+    """
+
     name = name.lower()
     if (name == "syslog"):
       obj = Syslog(syshost, kind)
@@ -56,10 +83,23 @@ class XALT_transmission_factory(object):
     return obj
 
 class Syslog(XALT_transmission_factory):
+  """
+  This class write the json record to syslog
+  """
 
   def __init__(self, syshost, kind):
+    """
+    This is the ctor for Syslog transmission method
+    @param syshost: Name of the system.
+    @param kind:  Type of record: link or run
+    """
+
     super(Syslog, self).__init__(syshost, kind)
   def save(self, resultT):
+    """
+    The json table is written to syslog with the text converted to base64.
+    @param resultT: The json record table
+    """
     sA = []
     sA.append("logger -t XALT_LOGGING")
     sA.append(" \"")
@@ -74,11 +114,25 @@ class Syslog(XALT_transmission_factory):
     
 
 class File(XALT_transmission_factory):
+  """
+  This is the file transport class
+  """
 
   def __init__(self, syshost, kind, fn):
+    """
+    This ctor is for the file transport method.
+    @param syshost: Name of the system.
+    @param kind:  Type of record: link or run
+    @param fn:  the file name to write the record to.
+    """
     super(File, self).__init__(syshost, kind)
     self.__fn      = fn
+
   def save(self, resultT):
+    """
+    The json table is written to the file specified in the ctor.
+    @param resultT: The json record table
+    """
     s           = json.dumps(resultT, sort_keys=True,
                              indent=2, separators=(',',': '))
     dirname, fn = os.path.split(self.__fn)
@@ -93,10 +147,22 @@ class File(XALT_transmission_factory):
 
 
 class DirectDB(XALT_transmission_factory):
+  """
+  This class is the direct to db transmission method.
+  """
 
   def __init__(self, syshost, kind):
+    """
+    This is the ctor for Direct to DB transmission method
+    @param syshost: Name of the system.
+    @param kind:  Type of record: link or run
+    """
     super(DirectDB, self).__init__(syshost, kind)
   def save(self, resultT):
+    """
+    The json table is written directly to the db.
+    @param resultT: The json record table
+    """
     if (not XALTdb_available):
       raise ImportError
     

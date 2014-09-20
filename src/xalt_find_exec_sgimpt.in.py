@@ -50,6 +50,9 @@ argT = {
 }
 
 def main():
+  """
+  Find name of executable when using sgimpt
+  """
   print(find_exec(ignoreT, argT, None, sys.argv[1:]))
 
 if ( __name__ == '__main__'): main()

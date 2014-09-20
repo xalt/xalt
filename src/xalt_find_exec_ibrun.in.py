@@ -47,6 +47,9 @@ argT = {
 
 
 def main():
+  """
+  Find name of executable when using ibrun.
+  """
 
   print(find_exec(ignoreT, argT, "-c", sys.argv[1:]))
 

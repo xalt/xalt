@@ -26,6 +26,9 @@ import os, re, sys, subprocess, getent
 
 colonPairPat = re.compile(r"([^:]+):(.*)")
 def config_logger():
+  """
+  Configure the logging functions
+  """
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
   syslog = SysLogHandler(address='/dev/log', facility='local3')
@@ -35,6 +38,10 @@ def config_logger():
   return logger
   
 def extract_compiler(pstree):
+  """
+  Take the output of pstree and find the compiler
+  @param pstree: the single line of processes back to init.
+  """
   result  = "unknown"
   ignoreT = {
     'pstree'   : True,
@@ -56,6 +63,11 @@ def extract_compiler(pstree):
   return cmd
 
 def files_in_tree(path, pattern):
+  """
+  Find a list of files in directory [[path]] that match [[pattern]]
+  @param path: directory.
+  @param pattern: file glob pattern.
+  """
   fileA = []
   wd = os.getcwd()
   if (not os.path.isdir(path)):
@@ -73,31 +85,40 @@ def files_in_tree(path, pattern):
   return fileA  
 
 def which(program):
+  """
+  Find full path to [[program]]
+  @param program: program to find in path.
+  """
+
   def is_exe(fpath):
+    """
+    Check to see if [[fpath]] exists and is executable
+    @param fpath: full path to executable
+    """
     return os.path.exists(fpath) and os.access(fpath, os.X_OK)
-  def ext_candidates(fpath):
-    yield fpath
-    for ext in os.environ.get("PATH", "").split(os.pathsep):
-      yield fpath + ext
 
   if (not program):
     return None
-  
 
   fpath, fname = os.path.split(program)
-  if fpath:
-    if is_exe(program):
+  if (fpath):
+    if (is_exe(program)):
        return os.path.realpath(program)
   else:
     for path in os.environ.get("PATH","").split(os.pathsep):
       exe_file = os.path.join(path, program)
       for candidate in ext_candidates(exe_file):
-        if is_exe(candidate):
+        if (is_exe(candidate)):
           return os.path.realpath(candidate)
 
   return None
 
 def capture(cmd):
+  """
+  Capture standard out for a command.
+  @param cmd: Command string or array.
+  """
+
   if (type(cmd) == type(' ')):
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT, shell =True)
@@ -110,6 +131,13 @@ def capture(cmd):
 
 
 def carp(key, v):
+  """
+  Check to make sure that the first part of v contains key.  Raise exception if not.
+  
+  @param key: key
+  @param v: value
+  """
+
   k     = "unknown"
   m     = colonPairPat.match(v)
   found = False
@@ -122,6 +150,11 @@ def carp(key, v):
     raise Exception
         
 def remove_files(fileA):
+  """
+  Remove this list of files.  Do not raise exception if file doesn't exist.
+  @param fileA: array of file
+  """
+
   for f in fileA:
     try:
       os.remove(f)
@@ -130,6 +163,10 @@ def remove_files(fileA):
     
 numberPat = re.compile(r'[0-9][0-9]*')
 def obj_type(object_path):
+  """
+  Determine what object type [[object_path]] is (a, o, so)
+  @param object_path: name of object.
+  """
   result = None
   a      = object_path.split('.')
   for entry in reversed(a):
@@ -143,6 +180,13 @@ def obj_type(object_path):
 
 defaultPat = re.compile(r'default:?')
 def obj2module(object_path, reverseMapT):
+  """
+  Find module for [[object_path]] in [[reverseMapT]] if it is exists, "NULL" otherwise.
+  @param object_path: full object path
+  @param reverseMapT: reverse map table. Paths to modules
+  """
+
+
   dirNm, fn  = os.path.split(object_path)
   moduleName = 'NULL'
   pkg         = reverseMapT.get(dirNm)

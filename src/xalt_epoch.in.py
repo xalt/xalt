@@ -26,5 +26,8 @@ from __future__ import print_function
 import time
 
 def main():
+  """
+  Print current epoch to 3 decimal places.
+  """
   print("%.3f" % time.time())
 if ( __name__ == '__main__'): main()

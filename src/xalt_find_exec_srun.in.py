@@ -60,6 +60,9 @@ argT = {
 
 
 def main():
+  """
+  Find name of executable when using srun.
+  """
 
   print(find_exec(ignoreT, argT, "-c", sys.argv[1:]))
 

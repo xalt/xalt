@@ -25,6 +25,9 @@
 from __future__      import print_function
 
 def main():
+  """
+  Test for working print_function from __future__
+  """
   print ("GOOD")
 
 if ( __name__ == '__main__'):
