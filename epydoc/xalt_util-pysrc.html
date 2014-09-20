@@ -88,25 +88,29 @@
 </div><div id="config_logger-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="config_logger-expanded"><a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
 <a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-docstring">  Configure the logging functions</tt> </tt>
 <a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
-<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">  <tt id="link-1" class="py-name" targets="Variable script-xalt_file_to_db_in_py.logger=script-xalt_file_to_db_in_py-module.html#logger,Variable script-xalt_generate_assembly_in_py.logger=script-xalt_generate_assembly_in_py-module.html#logger,Variable script-xalt_generate_linkdata_in_py.logger=script-xalt_generate_linkdata_in_py-module.html#logger,Variable script-xalt_run_submission_in_py.logger=script-xalt_run_submission_in_py-module.html#logger"><a title="script-xalt_file_to_db_in_py.logger
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">  <tt id="link-1" class="py-name" targets="Variable script-xalt_file_to_db_in_py.logger=script-xalt_file_to_db_in_py-module.html#logger,Variable script-xalt_generate_assembly_in_py.logger=script-xalt_generate_assembly_in_py-module.html#logger,Variable script-xalt_generate_linkdata_in_py.logger=script-xalt_generate_linkdata_in_py-module.html#logger,Variable script-xalt_run_submission_in_py.logger=script-xalt_run_submission_in_py-module.html#logger,Variable script-xalt_syslog_to_db_in_py.logger=script-xalt_syslog_to_db_in_py-module.html#logger"><a title="script-xalt_file_to_db_in_py.logger
 script-xalt_generate_assembly_in_py.logger
 script-xalt_generate_linkdata_in_py.logger
-script-xalt_run_submission_in_py.logger" class="py-name" href="#" onclick="return doclink('link-1', 'logger', 'link-1');">logger</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-1', 'logger', 'link-1');">logger</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
 <a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">  <tt id="link-2" class="py-name"><a title="script-xalt_file_to_db_in_py.logger
 script-xalt_generate_assembly_in_py.logger
 script-xalt_generate_linkdata_in_py.logger
-script-xalt_run_submission_in_py.logger" class="py-name" href="#" onclick="return doclink('link-2', 'logger', 'link-1');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-2', 'logger', 'link-1');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
 <a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">  <tt class="py-name">syslog</tt> <tt class="py-op">=</tt> <tt class="py-name">SysLogHandler</tt><tt class="py-op">(</tt><tt class="py-name">address</tt><tt class="py-op">=</tt><tt class="py-string">'/dev/log'</tt><tt class="py-op">,</tt> <tt class="py-name">facility</tt><tt class="py-op">=</tt><tt class="py-string">'local3'</tt><tt class="py-op">)</tt> </tt>
 <a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">  <tt class="py-name">formatter</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">Formatter</tt><tt class="py-op">(</tt><tt class="py-string">'XALT: %(name)s: %(levelname)s %(message)r'</tt><tt class="py-op">)</tt> </tt>
 <a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">  <tt class="py-name">syslog</tt><tt class="py-op">.</tt><tt class="py-name">setFormatter</tt><tt class="py-op">(</tt><tt class="py-name">formatter</tt><tt class="py-op">)</tt> </tt>
 <a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">  <tt id="link-3" class="py-name"><a title="script-xalt_file_to_db_in_py.logger
 script-xalt_generate_assembly_in_py.logger
 script-xalt_generate_linkdata_in_py.logger
-script-xalt_run_submission_in_py.logger" class="py-name" href="#" onclick="return doclink('link-3', 'logger', 'link-1');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">syslog</tt><tt class="py-op">)</tt> </tt>
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-3', 'logger', 'link-1');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">syslog</tt><tt class="py-op">)</tt> </tt>
 <a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">  <tt class="py-keyword">return</tt> <tt id="link-4" class="py-name"><a title="script-xalt_file_to_db_in_py.logger
 script-xalt_generate_assembly_in_py.logger
 script-xalt_generate_linkdata_in_py.logger
-script-xalt_run_submission_in_py.logger" class="py-name" href="#" onclick="return doclink('link-4', 'logger', 'link-1');">logger</a></tt> </tt>
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-4', 'logger', 'link-1');">logger</a></tt> </tt>
 </div><a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">   </tt>
 <a name="extract_compiler"></a><div id="extract_compiler-def"><a name="L40"></a><tt class="py-lineno"> 40</tt> <a class="py-toggle" href="#" id="extract_compiler-toggle" onclick="return toggle('extract_compiler');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_util-module.html#extract_compiler">extract_compiler</a><tt class="py-op">(</tt><tt class="py-param">pstree</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
 </div><div id="extract_compiler-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="extract_compiler-expanded"><a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
@@ -324,7 +328,7 @@ expandto(location.href);
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Sep 20 12:15:43 2014
+    Generated by Epydoc 3.0.1 on Sat Sep 20 12:25:05 2014
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

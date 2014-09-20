@@ -52,10 +52,14 @@ ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 
 class CmdLineOptions(object):
+  """ Command line Options class """
+
   def __init__(self):
+    """ Empty Ctor """
     pass
   
   def execute(self):
+    """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--syslog_file", dest='syslog', action="store",      help="location and name of syslog file")
     parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
@@ -65,7 +69,10 @@ class CmdLineOptions(object):
 
 
 def main():
-  # Push command line on to XALT_Stack
+  """
+  read from syslog file into XALT db.
+  """
+
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:

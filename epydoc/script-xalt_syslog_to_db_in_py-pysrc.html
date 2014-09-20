@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>script-xalt_syslog_to_db_in_py</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >XALT</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Script&nbsp;xalt_syslog_to_db_in_py
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="script-xalt_syslog_to_db_in_py-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="script-xalt_syslog_to_db_in_py-module.html">Script script-xalt_syslog_to_db_in_py</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"># -*- python -*-</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment"># Git Version: @git@</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment">#-----------------------------------------------------------------------</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"># XALT: A tool to track the programs on a cluster.</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"># Copyright (C) 2013-2014 Robert McLay and Mark Fahey</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"># </tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment"># This library is free software; you can redistribute it and/or modify</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU Lesser General Public License as</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># published by the Free Software Foundation; either version 2.1 of </tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"># the License, or (at your option) any later version. </tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment"># This library is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"># Lesser  General Public License for more details. </tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU Lesser General Public</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-comment"># License along with this library; if not, write to the Free</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-comment"># Software Foundation, Inc., 59 Temple Place, Suite 330,</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-comment"># Boston, MA 02111-1307 USA</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-comment">#-----------------------------------------------------------------------</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-comment">#  xalt_syslog takes the output found in xalt syslog file</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-comment">#  provided with the --syslog_file=ans argument and puts it </tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-comment">#  into the database</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-comment">#  One has to set up syslog to capture the XALT output</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-comment">#  Example is provided in the xalt_syslog.conf file that can </tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-comment">#  be put in the /etc/rsyslog.d directory.</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">__future__</tt>  <tt class="py-keyword">import</tt> <tt class="py-name">print_function</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">re</tt><tt class="py-op">,</tt> <tt class="py-name">MySQLdb</tt><tt class="py-op">,</tt> <tt class="py-name">json</tt><tt class="py-op">,</tt> <tt class="py-name">time</tt><tt class="py-op">,</tt> <tt class="py-name">argparse</tt><tt class="py-op">,</tt> <tt class="py-name">base64</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable XALT_Rmap.dirNm=XALT_Rmap-module.html#dirNm,Variable script-conf_create_in_py.dirNm=script-conf_create_in_py-module.html#dirNm"><a title="XALT_Rmap.dirNm
+script-conf_create_in_py.dirNm" class="py-name" href="#" onclick="return doclink('link-0', 'dirNm', 'link-0');">dirNm</a></tt><tt class="py-op">,</tt> <tt id="link-1" class="py-name" targets="Variable XALT_Rmap.execName=XALT_Rmap-module.html#execName,Variable script-conf_create_in_py.execName=script-conf_create_in_py-module.html#execName,Method script-xalt_run_submission_in_py.UserExec.execName()=script-xalt_run_submission_in_py.UserExec-class.html#execName"><a title="XALT_Rmap.execName
+script-conf_create_in_py.execName
+script-xalt_run_submission_in_py.UserExec.execName" class="py-name" href="#" onclick="return doclink('link-1', 'execName', 'link-1');">execName</a></tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">realpath</tt><tt class="py-op">(</tt><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">realpath</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-2" class="py-name"><a title="XALT_Rmap.dirNm
+script-conf_create_in_py.dirNm" class="py-name" href="#" onclick="return doclink('link-2', 'dirNm', 'link-0');">dirNm</a></tt><tt class="py-op">,</tt> <tt class="py-string">"../libexec"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">realpath</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-3" class="py-name"><a title="XALT_Rmap.dirNm
+script-conf_create_in_py.dirNm" class="py-name" href="#" onclick="return doclink('link-3', 'dirNm', 'link-0');">dirNm</a></tt><tt class="py-op">,</tt> <tt class="py-string">"../site"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name" targets="Module XALTdb=XALTdb-module.html,Class XALTdb.XALTdb=XALTdb.XALTdb-class.html"><a title="XALTdb
+XALTdb.XALTdb" class="py-name" href="#" onclick="return doclink('link-4', 'XALTdb', 'link-4');">XALTdb</a></tt>        <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name"><a title="XALTdb
+XALTdb.XALTdb" class="py-name" href="#" onclick="return doclink('link-5', 'XALTdb', 'link-4');">XALTdb</a></tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name" targets="Module xalt_site_pkg=xalt_site_pkg-module.html"><a title="xalt_site_pkg" class="py-name" href="#" onclick="return doclink('link-6', 'xalt_site_pkg', 'link-6');">xalt_site_pkg</a></tt> <tt class="py-keyword">import</tt> <tt id="link-7" class="py-name" targets="Function xalt_site_pkg.translate()=xalt_site_pkg-module.html#translate"><a title="xalt_site_pkg.translate" class="py-name" href="#" onclick="return doclink('link-7', 'translate', 'link-7');">translate</a></tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-8" class="py-name" targets="Module xalt_util=xalt_util-module.html"><a title="xalt_util" class="py-name" href="#" onclick="return doclink('link-8', 'xalt_util', 'link-8');">xalt_util</a></tt>     <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-9" class="py-name" targets="Module xalt_global=xalt_global-module.html"><a title="xalt_global" class="py-name" href="#" onclick="return doclink('link-9', 'xalt_global', 'link-9');">xalt_global</a></tt>   <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-10" class="py-name" targets="Module progressBar=progressBar-module.html"><a title="progressBar" class="py-name" href="#" onclick="return doclink('link-10', 'progressBar', 'link-10');">progressBar</a></tt>   <tt class="py-keyword">import</tt> <tt id="link-11" class="py-name" targets="Class progressBar.ProgressBar=progressBar.ProgressBar-class.html"><a title="progressBar.ProgressBar" class="py-name" href="#" onclick="return doclink('link-11', 'ProgressBar', 'link-11');">ProgressBar</a></tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-12" class="py-name" targets="Module XALT_Rmap=XALT_Rmap-module.html"><a title="XALT_Rmap" class="py-name" href="#" onclick="return doclink('link-12', 'XALT_Rmap', 'link-12');">XALT_Rmap</a></tt>     <tt class="py-keyword">import</tt> <tt id="link-13" class="py-name" targets="Class XALT_Rmap.Rmap=XALT_Rmap.Rmap-class.html"><a title="XALT_Rmap.Rmap" class="py-name" href="#" onclick="return doclink('link-13', 'Rmap', 'link-13');">Rmap</a></tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt id="link-14" class="py-name" targets="Variable script-xalt_syslog_to_db_in_py.ConfigBaseNm=script-xalt_syslog_to_db_in_py-module.html#ConfigBaseNm"><a title="script-xalt_syslog_to_db_in_py.ConfigBaseNm" class="py-name" href="#" onclick="return doclink('link-14', 'ConfigBaseNm', 'link-14');">ConfigBaseNm</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"xalt_db"</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt id="link-15" class="py-name" targets="Variable script-xalt_syslog_to_db_in_py.ConfigFn=script-xalt_syslog_to_db_in_py-module.html#ConfigFn"><a title="script-xalt_syslog_to_db_in_py.ConfigFn" class="py-name" href="#" onclick="return doclink('link-15', 'ConfigFn', 'link-15');">ConfigFn</a></tt>     <tt class="py-op">=</tt> <tt id="link-16" class="py-name"><a title="script-xalt_syslog_to_db_in_py.ConfigBaseNm" class="py-name" href="#" onclick="return doclink('link-16', 'ConfigBaseNm', 'link-14');">ConfigBaseNm</a></tt> <tt class="py-op">+</tt> <tt class="py-string">".conf"</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt id="link-17" class="py-name" targets="Variable script-xalt_file_to_db_in_py.logger=script-xalt_file_to_db_in_py-module.html#logger,Variable script-xalt_generate_assembly_in_py.logger=script-xalt_generate_assembly_in_py-module.html#logger,Variable script-xalt_generate_linkdata_in_py.logger=script-xalt_generate_linkdata_in_py-module.html#logger,Variable script-xalt_run_submission_in_py.logger=script-xalt_run_submission_in_py-module.html#logger,Variable script-xalt_syslog_to_db_in_py.logger=script-xalt_syslog_to_db_in_py-module.html#logger"><a title="script-xalt_file_to_db_in_py.logger
+script-xalt_generate_assembly_in_py.logger
+script-xalt_generate_linkdata_in_py.logger
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-17', 'logger', 'link-17');">logger</a></tt>       <tt class="py-op">=</tt> <tt id="link-18" class="py-name" targets="Function xalt_util.config_logger()=xalt_util-module.html#config_logger"><a title="xalt_util.config_logger" class="py-name" href="#" onclick="return doclink('link-18', 'config_logger', 'link-18');">config_logger</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"> </tt>
+<a name="CmdLineOptions"></a><div id="CmdLineOptions-def"><a name="L54"></a><tt class="py-lineno"> 54</tt> <a class="py-toggle" href="#" id="CmdLineOptions-toggle" onclick="return toggle('CmdLineOptions');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="script-xalt_syslog_to_db_in_py.CmdLineOptions-class.html">CmdLineOptions</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CmdLineOptions-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="CmdLineOptions-expanded"><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">  <tt class="py-docstring">""" Command line Options class """</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"> </tt>
+<a name="CmdLineOptions.__init__"></a><div id="CmdLineOptions.__init__-def"><a name="L57"></a><tt class="py-lineno"> 57</tt> <a class="py-toggle" href="#" id="CmdLineOptions.__init__-toggle" onclick="return toggle('CmdLineOptions.__init__');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="script-xalt_syslog_to_db_in_py.CmdLineOptions-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CmdLineOptions.__init__-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="CmdLineOptions.__init__-expanded"><a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">    <tt class="py-docstring">""" Empty Ctor """</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt class="py-keyword">pass</tt> </tt>
+</div><a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">   </tt>
+<a name="CmdLineOptions.execute"></a><div id="CmdLineOptions.execute-def"><a name="L61"></a><tt class="py-lineno"> 61</tt> <a class="py-toggle" href="#" id="CmdLineOptions.execute-toggle" onclick="return toggle('CmdLineOptions.execute');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="script-xalt_syslog_to_db_in_py.CmdLineOptions-class.html#execute">execute</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="CmdLineOptions.execute-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="CmdLineOptions.execute-expanded"><a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">    <tt class="py-docstring">""" Specify command line arguments and parse the command line"""</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">    <tt class="py-name">parser</tt> <tt class="py-op">=</tt> <tt class="py-name">argparse</tt><tt class="py-op">.</tt><tt class="py-name">ArgumentParser</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">    <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">"--syslog_file"</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">'syslog'</tt><tt class="py-op">,</tt> <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">"store"</tt><tt class="py-op">,</tt>      <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"location and name of syslog file"</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">    <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">"--timer"</tt><tt class="py-op">,</tt>       <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">'timer'</tt><tt class="py-op">,</tt>  <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">"store_true"</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Time runtime"</tt><tt class="py-op">)</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">    <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">"--reverseMapD"</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">'rmapD'</tt><tt class="py-op">,</tt>  <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">"store"</tt><tt class="py-op">,</tt>      <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Path to the directory containing the json reverseMap"</tt><tt class="py-op">)</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">    <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">parse_args</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">args</tt> </tt>
+</div></div><a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"> </tt>
+<a name="main"></a><div id="main-def"><a name="L71"></a><tt class="py-lineno"> 71</tt> <a class="py-toggle" href="#" id="main-toggle" onclick="return toggle('main');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="script-xalt_syslog_to_db_in_py-module.html#main">main</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="main-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="main-expanded"><a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"><tt class="py-docstring">  read from syslog file into XALT db.</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">  <tt class="py-name">sA</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">  <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"CommandLine:"</tt><tt class="py-op">)</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">  <tt class="py-keyword">for</tt> <tt class="py-name">v</tt> <tt class="py-keyword">in</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">:</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">'"'</tt><tt class="py-op">+</tt><tt class="py-name">v</tt><tt class="py-op">+</tt><tt class="py-string">'"'</tt><tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">  <tt id="link-19" class="py-name" targets="Variable xalt_global.XALT_Stack=xalt_global-module.html#XALT_Stack,Variable xalt_transmission_factory.XALT_Stack=xalt_transmission_factory-module.html#XALT_Stack"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-19', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-20" class="py-name" targets="Method xalt_stack.Stack.push()=xalt_stack.Stack-class.html#push"><a title="xalt_stack.Stack.push" class="py-name" href="#" onclick="return doclink('link-20', 'push', 'link-20');">push</a></tt><tt class="py-op">(</tt><tt class="py-string">" "</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">sA</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line"> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">  <tt class="py-name">args</tt>   <tt class="py-op">=</tt> <tt id="link-21" class="py-name" targets="Class removeDataBase.CmdLineOptions=removeDataBase.CmdLineOptions-class.html,Class script-conf_create_in_py.CmdLineOptions=script-conf_create_in_py.CmdLineOptions-class.html,Class script-createDB_in_py.CmdLineOptions=script-createDB_in_py.CmdLineOptions-class.html,Class script-xalt_file_to_db_in_py.CmdLineOptions=script-xalt_file_to_db_in_py.CmdLineOptions-class.html,Class script-xalt_run_submission_in_py.CmdLineOptions=script-xalt_run_submission_in_py.CmdLineOptions-class.html,Class script-xalt_syslog_to_db_in_py.CmdLineOptions=script-xalt_syslog_to_db_in_py.CmdLineOptions-class.html"><a title="removeDataBase.CmdLineOptions
+script-conf_create_in_py.CmdLineOptions
+script-createDB_in_py.CmdLineOptions
+script-xalt_file_to_db_in_py.CmdLineOptions
+script-xalt_run_submission_in_py.CmdLineOptions
+script-xalt_syslog_to_db_in_py.CmdLineOptions" class="py-name" href="#" onclick="return doclink('link-21', 'CmdLineOptions', 'link-21');">CmdLineOptions</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Method removeDataBase.CmdLineOptions.execute()=removeDataBase.CmdLineOptions-class.html#execute,Method script-conf_create_in_py.CmdLineOptions.execute()=script-conf_create_in_py.CmdLineOptions-class.html#execute,Method script-createDB_in_py.CmdLineOptions.execute()=script-createDB_in_py.CmdLineOptions-class.html#execute,Method script-xalt_file_to_db_in_py.CmdLineOptions.execute()=script-xalt_file_to_db_in_py.CmdLineOptions-class.html#execute,Method script-xalt_run_submission_in_py.CmdLineOptions.execute()=script-xalt_run_submission_in_py.CmdLineOptions-class.html#execute,Method script-xalt_syslog_to_db_in_py.CmdLineOptions.execute()=script-xalt_syslog_to_db_in_py.CmdLineOptions-class.html#execute"><a title="removeDataBase.CmdLineOptions.execute
+script-conf_create_in_py.CmdLineOptions.execute
+script-createDB_in_py.CmdLineOptions.execute
+script-xalt_file_to_db_in_py.CmdLineOptions.execute
+script-xalt_run_submission_in_py.CmdLineOptions.execute
+script-xalt_syslog_to_db_in_py.CmdLineOptions.execute" class="py-name" href="#" onclick="return doclink('link-22', 'execute', 'link-22');">execute</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">  <tt class="py-name">xalt</tt>   <tt class="py-op">=</tt> <tt id="link-23" class="py-name"><a title="XALTdb
+XALTdb.XALTdb" class="py-name" href="#" onclick="return doclink('link-23', 'XALTdb', 'link-4');">XALTdb</a></tt><tt class="py-op">(</tt><tt id="link-24" class="py-name"><a title="script-xalt_syslog_to_db_in_py.ConfigFn" class="py-name" href="#" onclick="return doclink('link-24', 'ConfigFn', 'link-15');">ConfigFn</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line"> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">  <tt class="py-name">syslogFile</tt>  <tt class="py-op">=</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">syslog</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line"> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">  <tt class="py-name">num</tt>    <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt id="link-25" class="py-name" targets="Function xalt_util.capture()=xalt_util-module.html#capture"><a title="xalt_util.capture" class="py-name" href="#" onclick="return doclink('link-25', 'capture', 'link-25');">capture</a></tt><tt class="py-op">(</tt><tt class="py-string">"cat "</tt><tt class="py-op">+</tt><tt class="py-name">syslogFile</tt><tt class="py-op">+</tt><tt class="py-string">" | wc -l"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">  <tt class="py-name">pbar</tt>   <tt class="py-op">=</tt> <tt id="link-26" class="py-name"><a title="progressBar.ProgressBar" class="py-name" href="#" onclick="return doclink('link-26', 'ProgressBar', 'link-11');">ProgressBar</a></tt><tt class="py-op">(</tt><tt class="py-name">maxVal</tt><tt class="py-op">=</tt><tt class="py-name">num</tt><tt class="py-op">)</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">  <tt class="py-name">icnt</tt>   <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">  <tt class="py-name">t1</tt>     <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">time</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">  <tt class="py-name">rmapT</tt>  <tt class="py-op">=</tt> <tt id="link-27" class="py-name"><a title="XALT_Rmap.Rmap" class="py-name" href="#" onclick="return doclink('link-27', 'Rmap', 'link-13');">Rmap</a></tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">rmapD</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-28" class="py-name" targets="Method XALT_Rmap.Rmap.reverseMapT()=XALT_Rmap.Rmap-class.html#reverseMapT"><a title="XALT_Rmap.Rmap.reverseMapT" class="py-name" href="#" onclick="return doclink('link-28', 'reverseMapT', 'link-28');">reverseMapT</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line"> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">  <tt class="py-name">lnkCnt</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">  <tt class="py-name">runCnt</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">  <tt class="py-name">count</tt><tt class="py-op">=</tt><tt class="py-number">0</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">  <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">isfile</tt><tt class="py-op">(</tt><tt class="py-name">syslogFile</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">=</tt><tt class="py-name">open</tt><tt class="py-op">(</tt><tt class="py-name">syslogFile</tt><tt class="py-op">,</tt> <tt class="py-string">'r'</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">f</tt><tt class="py-op">:</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">      <tt class="py-keyword">if</tt> <tt class="py-string">"XALT_LOGGING"</tt> <tt class="py-keyword">in</tt> <tt class="py-name">line</tt><tt class="py-op">:</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-name">array</tt><tt class="py-op">=</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">":"</tt><tt class="py-op">)</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-name">date</tt> <tt class="py-op">=</tt> <tt class="py-name">array</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">+</tt> <tt class="py-string">":"</tt> <tt class="py-op">+</tt> <tt class="py-name">array</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt>  </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-name">type</tt> <tt class="py-op">=</tt> <tt class="py-name">array</tt><tt class="py-op">[</tt><tt class="py-number">3</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt id="link-29" class="py-name" targets="Function script-xalt_run_submission_in_py.syshost()=script-xalt_run_submission_in_py-module.html#syshost"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-29', 'syshost', 'link-29');">syshost</a></tt> <tt class="py-op">=</tt> <tt class="py-name">array</tt><tt class="py-op">[</tt><tt class="py-number">4</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-name">resultT</tt><tt class="py-op">=</tt><tt class="py-name">json</tt><tt class="py-op">.</tt><tt class="py-name">loads</tt><tt class="py-op">(</tt><tt class="py-name">base64</tt><tt class="py-op">.</tt><tt class="py-name">b64decode</tt><tt class="py-op">(</tt><tt class="py-name">array</tt><tt class="py-op">[</tt><tt class="py-number">5</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt id="link-30" class="py-name"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-30', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="xalt_stack.Stack.push" class="py-name" href="#" onclick="return doclink('link-31', 'push', 'link-20');">push</a></tt><tt class="py-op">(</tt><tt class="py-string">"XALT_LOGGING: "</tt> <tt class="py-op">+</tt> <tt class="py-name">date</tt> <tt class="py-op">+</tt> <tt class="py-string">" "</tt> <tt class="py-op">+</tt> <tt class="py-name">type</tt> <tt class="py-op">+</tt> <tt class="py-string">" "</tt> <tt class="py-op">+</tt> <tt id="link-32" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-32', 'syshost', 'link-29');">syshost</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"><tt class="py-comment">#        XALT_Stack.push("XALT_LOGGING resultT: " + resultT)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt> <tt class="py-name">type</tt> <tt class="py-op">==</tt> <tt class="py-string">"link"</tt> <tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">          <tt id="link-33" class="py-name"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-33', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-34" class="py-name"><a title="xalt_stack.Stack.push" class="py-name" href="#" onclick="return doclink('link-34', 'push', 'link-20');">push</a></tt><tt class="py-op">(</tt><tt class="py-string">"link_to_db()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">          <tt class="py-name">xalt</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name" targets="Method XALTdb.XALTdb.link_to_db()=XALTdb.XALTdb-class.html#link_to_db"><a title="XALTdb.XALTdb.link_to_db" class="py-name" href="#" onclick="return doclink('link-35', 'link_to_db', 'link-35');">link_to_db</a></tt><tt class="py-op">(</tt><tt class="py-name">rmapT</tt><tt class="py-op">,</tt> <tt class="py-name">resultT</tt><tt class="py-op">)</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">          <tt id="link-36" class="py-name"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-36', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-37" class="py-name" targets="Method xalt_stack.Stack.pop()=xalt_stack.Stack-class.html#pop"><a title="xalt_stack.Stack.pop" class="py-name" href="#" onclick="return doclink('link-37', 'pop', 'link-37');">pop</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">          <tt class="py-name">lnkCnt</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-op">(</tt> <tt class="py-name">kind</tt> <tt class="py-op">==</tt> <tt class="py-string">"run"</tt> <tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">          <tt id="link-38" class="py-name"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-38', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-39" class="py-name"><a title="xalt_stack.Stack.push" class="py-name" href="#" onclick="return doclink('link-39', 'push', 'link-20');">push</a></tt><tt class="py-op">(</tt><tt class="py-string">"run_to_db()"</tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">          <tt class="py-name">xalt</tt><tt class="py-op">.</tt><tt id="link-40" class="py-name" targets="Method XALTdb.XALTdb.run_to_db()=XALTdb.XALTdb-class.html#run_to_db"><a title="XALTdb.XALTdb.run_to_db" class="py-name" href="#" onclick="return doclink('link-40', 'run_to_db', 'link-40');">run_to_db</a></tt><tt class="py-op">(</tt><tt class="py-name">rmapT</tt><tt class="py-op">,</tt> <tt class="py-name">resultT</tt><tt class="py-op">)</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">          <tt id="link-41" class="py-name"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-41', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-42" class="py-name"><a title="xalt_stack.Stack.pop" class="py-name" href="#" onclick="return doclink('link-42', 'pop', 'link-37');">pop</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">          <tt class="py-name">runCnt</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">          <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-string">"Error in xalt_syslog_to_db"</tt><tt class="py-op">)</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt id="link-43" class="py-name"><a title="xalt_global.XALT_Stack
+xalt_transmission_factory.XALT_Stack" class="py-name" href="#" onclick="return doclink('link-43', 'XALT_Stack', 'link-19');">XALT_Stack</a></tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="xalt_stack.Stack.pop" class="py-name" href="#" onclick="return doclink('link-44', 'pop', 'link-37');">pop</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-name">count</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-name">pbar</tt><tt class="py-op">.</tt><tt id="link-45" class="py-name" targets="Method progressBar.ProgressBar.update()=progressBar.ProgressBar-class.html#update"><a title="progressBar.ProgressBar.update" class="py-name" href="#" onclick="return doclink('link-45', 'update', 'link-45');">update</a></tt><tt class="py-op">(</tt><tt class="py-name">count</tt><tt class="py-op">)</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line"> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line"><tt class="py-comment">#  what should be done if there are errors?</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"><tt class="py-comment">#    what went wrong?</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"><tt class="py-comment">#    how do we restart?</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"><tt class="py-comment">#  xalt.connect().close()</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">  <tt class="py-name">pbar</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Method progressBar.ProgressBar.fini()=progressBar.ProgressBar-class.html#fini"><a title="progressBar.ProgressBar.fini" class="py-name" href="#" onclick="return doclink('link-46', 'fini', 'link-46');">fini</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">  <tt class="py-name">t2</tt> <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">time</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">  <tt class="py-name">rt</tt> <tt class="py-op">=</tt> <tt class="py-name">t2</tt> <tt class="py-op">-</tt> <tt class="py-name">t1</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">  <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">timer</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-string">"Time: "</tt><tt class="py-op">,</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">strftime</tt><tt class="py-op">(</tt><tt class="py-string">"%T"</tt><tt class="py-op">,</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">gmtime</tt><tt class="py-op">(</tt><tt class="py-name">rt</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">  <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-string">"total processed : "</tt><tt class="py-op">,</tt> <tt class="py-name">count</tt><tt class="py-op">,</tt> <tt class="py-string">", num links: "</tt><tt class="py-op">,</tt> <tt class="py-name">lnkCnt</tt><tt class="py-op">,</tt> <tt class="py-string">", num runs: "</tt><tt class="py-op">,</tt> <tt class="py-name">runCnt</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-op">(</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> <tt id="link-47" class="py-name" targets="Function progressBar.main()=progressBar-module.html#main,Function removeDataBase.main()=removeDataBase-module.html#main,Function script-conf_create_in_py.main()=script-conf_create_in_py-module.html#main,Function script-createDB_in_py.main()=script-createDB_in_py-module.html#main,Function script-new_job_id_in_py.main()=script-new_job_id_in_py-module.html#main,Function script-xalt_epoch_in_py.main()=script-xalt_epoch_in_py-module.html#main,Function script-xalt_file_to_db_in_py.main()=script-xalt_file_to_db_in_py-module.html#main,Function script-xalt_find_exec_aprun_in_py.main()=script-xalt_find_exec_aprun_in_py-module.html#main,Function script-xalt_find_exec_ibrun_in_py.main()=script-xalt_find_exec_ibrun_in_py-module.html#main,Function script-xalt_find_exec_mpich_in_py.main()=script-xalt_find_exec_mpich_in_py-module.html#main,Function script-xalt_find_exec_openmpi_in_py.main()=script-xalt_find_exec_openmpi_in_py-module.html#main,Function script-xalt_find_exec_sgimpt_in_py.main()=script-xalt_find_exec_sgimpt_in_py-module.html#main,Function script-xalt_find_exec_srun_in_py.main()=script-xalt_find_exec_srun_in_py-module.html#main,Function script-xalt_generate_assembly_in_py.main()=script-xalt_generate_assembly_in_py-module.html#main,Function script-xalt_generate_linkdata_in_py.main()=script-xalt_generate_linkdata_in_py-module.html#main,Function script-xalt_run_submission_in_py.main()=script-xalt_run_submission_in_py-module.html#main,Function script-xalt_syshost_in_py.main()=script-xalt_syshost_in_py-module.html#main,Function script-xalt_syslog_to_db_in_py.main()=script-xalt_syslog_to_db_in_py-module.html#main,Function script-xalt_working_python_in_py.main()=script-xalt_working_python_in_py-module.html#main,Function xalt_stack.main()=xalt_stack-module.html#main"><a title="progressBar.main
+removeDataBase.main
+script-conf_create_in_py.main
+script-createDB_in_py.main
+script-new_job_id_in_py.main
+script-xalt_epoch_in_py.main
+script-xalt_file_to_db_in_py.main
+script-xalt_find_exec_aprun_in_py.main
+script-xalt_find_exec_ibrun_in_py.main
+script-xalt_find_exec_mpich_in_py.main
+script-xalt_find_exec_openmpi_in_py.main
+script-xalt_find_exec_sgimpt_in_py.main
+script-xalt_find_exec_srun_in_py.main
+script-xalt_generate_assembly_in_py.main
+script-xalt_generate_linkdata_in_py.main
+script-xalt_run_submission_in_py.main
+script-xalt_syshost_in_py.main
+script-xalt_syslog_to_db_in_py.main
+script-xalt_working_python_in_py.main
+xalt_stack.main" class="py-name" href="#" onclick="return doclink('link-47', 'main', 'link-47');">main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >XALT</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Sep 20 12:25:05 2014
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
