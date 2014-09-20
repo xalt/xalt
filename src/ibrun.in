@@ -45,7 +45,6 @@ WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
 FIND_EXEC=$XALT_DIR/site/xalt_find_exec_ibrun.py
-MY_CMD=/usr/local/bin/ibrun
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -53,6 +52,10 @@ MY_CMD=/usr/local/bin/ibrun
 # have search and cached all the executable in the path.  This should be
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
+#
+# Note: There may be multiple copies of this script in the path.
+#       We ignore any that are part of XALT.
+
 
 if [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
@@ -107,7 +110,13 @@ if [ "$WORKING" != "GOOD" ]; then
   fi
 fi
 
+########################################################################
+# Determine if we are inside a PBS job, if so then set PBS_ACCOUNT to
+# the account string name
 
+if [ -n "$PBS_JOBID" ]; then
+  export PBS_ACCOUNT=`qstat -f $PBS_JOBID | grep "Account_Name =" | awk '{print $3}'`
+fi
 
 ########################################################################
 # Loop over command line arguments to mpirun. This code is used instead of
@@ -115,6 +124,7 @@ fi
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+NTASKS=1
 append=false
 prev=
 done=false
@@ -154,7 +164,6 @@ done
 RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
-
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
 EXEC="unknown"
@@ -163,7 +172,7 @@ if [ -x "$FIND_EXEC" ]; then
 fi
 
 sTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
+$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
 status=0
 if [ -z "$testMe" ]; then
@@ -179,8 +188,8 @@ if [ -z "$testMe" ]; then
   [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
   export PYTHONPATH=$PY_PATH_XALT
 fi
-eTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
-export PYTHONPATH=$PY_PATH_ORIG
+eTime=$($MY_PYTHON $EPOCH)
+$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
+
 exit $status

@@ -1,7 +1,7 @@
 #!/bin/bash
 #-*- shell-script -*-
 #
-# Git Version: @git@
+#  Git Version: @git@
 
 #-----------------------------------------------------------------------
 # XALT: A tool that tracks users jobs and environments on a cluster.
@@ -41,8 +41,8 @@ MY_PYTHON=python
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
-EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
+EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
 # We make the big assumption that the only MPI on a Cray is 
 # Cray's mpi and thay the job launcher is aprun.  So we 
@@ -56,6 +56,10 @@ FIND_EXEC=$XALT_DIR/site/xalt_find_exec_aprun.py
 # have search and cached all the executable in the path.  This should be
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
+#
+# Note: There may be multiple copies of this script in the path.
+#       We ignore any that are part of XALT.
+
 
 if [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
@@ -95,7 +99,6 @@ PY_PATH_ORIG=$PYTHONPATH
 XALT_DIR=@xalt_dir@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-
 if [ "$WORKING" != "GOOD" ]; then
   unset PYTHONHOME
   WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
@@ -125,6 +128,7 @@ fi
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+NTASKS=1
 append=false
 prev=
 done=false
@@ -166,12 +170,14 @@ for option; do
   #  break;
   #fi
 done
+
+
 RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
-
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
-EXEC=unknown
+
+EXEC="unknown"
 if [ -x "$FIND_EXEC" ]; then
   EXEC=$($MY_PYTHON $FIND_EXEC "$@")
 fi
@@ -185,8 +191,10 @@ if [ -z "$testMe" ]; then
   PY_PATH_XALT=$PYTHONPATH
   export PYTHONPATH=$PY_PATH_ORIG
   [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
+
   $MY_CMD "$@"
   status="$?"
+
   unset  PYTHONHOME
   [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
   export PYTHONPATH=$PY_PATH_XALT
