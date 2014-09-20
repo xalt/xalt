@@ -2,7 +2,7 @@
 #-*- shell-script -*-
 #
 #  Git Version: @git@
-#
+
 #-----------------------------------------------------------------------
 # XALT: A tool that tracks users jobs and environments on a cluster.
 # Copyright (C) 2013-2014 University of Texas at Austin
@@ -60,12 +60,19 @@ FIND_EXEC=$XALT_DIR/site/xalt_find_exec_srun.py
 # have search and cached all the executable in the path.  This should be
 # faster then walking the path.  But only if this script is treated as a
 # bash script.
+#
+# Note: There may be multiple copies of this script in the path.
+#       We ignore any that are part of XALT.
+
 
 if [ -n "$BASH_VERSION" ]; then
   for exe in $(type -p -a $MY_NAME); do
     if [ $exe != $MY_PATH ]; then
       MY_CMD=$exe
-      break
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
 else
@@ -78,6 +85,10 @@ else
   for dir in $PATH; do
     if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
       MY_CMD="$dir/$MY_NAME"
+      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
+      if [ "$part_of_xalt" != "XALT:YES" ]; then
+	break
+      fi
     fi
   done
   IFS=$OLD_IFS
@@ -172,35 +183,34 @@ for option; do
   #fi
 done
 
-  # if NTASKS was not set, try to set it
-  #  if NNODES not set then error
-  #  else set NTASKS based on various scenarios
-  if [[ -z "$NTASKS" ]]; then
-    if [[ -z "$NNODES" ]]; then
-      echo "XALT srun wrapper error: NTASKS not set"
-      exit
+# if NTASKS was not set, try to set it
+#  if NNODES not set then error
+#  else set NTASKS based on various scenarios
+if [[ -z "$NTASKS" ]]; then
+  if [[ -z "$NNODES" ]]; then
+    echo "XALT srun wrapper error: NTASKS not set"
+    exit
+  else
+    if [[ -z $SLURM_JOBID ]]; then
+      # interactive jobs default to one task
+      NTASKS=1
     else
-      if [[ -z $SLURM_JOBID ]]; then
-        # interactive jobs default to one task
+      if [[ $NNODES -eq 1 ]]; then
+        # one node jobs default to one task
         NTASKS=1
       else
-        if [[ $NNODES -eq 1 ]]; then
-          # one node jobs default to one task
-          NTASKS=1
-        else
-          # multiple node jobs default to corespernode*nodes
-          NTASKS=$(($SLURM_CPUS_ON_NODE*$NNODES))
-        fi
+        # multiple node jobs default to corespernode*nodes
+        NTASKS=$(($SLURM_CPUS_ON_NODE*$NNODES))
       fi
     fi
   fi
+fi
 
 
 
 RUN_UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
-
 runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
 EXEC="unknown"
@@ -209,7 +219,7 @@ if [ -x "$FIND_EXEC" ]; then
 fi
 
 sTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
 status=0
 if [ -z "$testMe" ]; then
@@ -227,9 +237,6 @@ if [ -z "$testMe" ]; then
 fi
 
 eTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --ntasks $NTASKS --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- $EXEC
+$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
-export PYTHONPATH=$PY_PATH_ORIG
 exit $status
-
-

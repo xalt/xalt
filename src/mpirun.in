@@ -1,7 +1,7 @@
 #!/bin/bash
 #-*- shell-script -*-
 #
-# Git Version: @git@
+#  Git Version: @git@
 
 #-----------------------------------------------------------------------
 # XALT: A tool that tracks users jobs and environments on a cluster.
@@ -41,10 +41,10 @@ MY_PYTHON=python
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
-WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
-EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
+EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
+WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -199,8 +199,10 @@ if [ -z "$testMe" ]; then
   PY_PATH_XALT=$PYTHONPATH
   export PYTHONPATH=$PY_PATH_ORIG
   [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
+
   $MY_CMD "$@"
   status="$?"
+
   unset  PYTHONHOME
   [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
   export PYTHONPATH=$PY_PATH_XALT
@@ -211,5 +213,3 @@ $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "
 
 export PYTHONPATH=$PY_PATH_ORIG
 exit $status
-
-
