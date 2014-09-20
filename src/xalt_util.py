@@ -107,9 +107,8 @@ def which(program):
   else:
     for path in os.environ.get("PATH","").split(os.pathsep):
       exe_file = os.path.join(path, program)
-      for candidate in ext_candidates(exe_file):
-        if (is_exe(candidate)):
-          return os.path.realpath(candidate)
+      if (is_exe(exe_file)):
+        return os.path.realpath(exe_file)
 
   return None
 
