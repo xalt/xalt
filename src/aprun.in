@@ -36,6 +36,7 @@ fi
 
 MY_PATH=$0
 MY_NAME=$(basename $MY_PATH)
+MY_PYTHON=python
 
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
@@ -89,10 +90,12 @@ fi
 # Make sure that the python setup is valid.  If a user makes PYTHONHOME
 # point to a different python then if stmt will be triggered.
 
+PY_HOME_ORIG=$PYTHONHOME
 PY_PATH_ORIG=$PYTHONPATH
 XALT_DIR=@xalt_dir@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+
 if [ "$WORKING" != "GOOD" ]; then
   unset PYTHONHOME
   WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
@@ -178,15 +181,17 @@ $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "
 
 status=0
 if [ -z "$testMe" ]; then
+  PY_HOME_XALT=$PYTHONHOME
   PY_PATH_XALT=$PYTHONPATH
   export PYTHONPATH=$PY_PATH_ORIG
+  export PYTHONHOME=$PY_HOME_ORIG
   $MY_CMD "$@"
   status="$?"
+  export PYTHONHOME=$PY_HOME_XALT
   export PYTHONPATH=$PY_PATH_XALT
 fi
 
 eTime=$($MY_PYTHON $EPOCH)
 $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
-export PYTHONPATH=$PY_PATH_ORIG
 exit $status
