@@ -60,9 +60,12 @@ exit_if_part_of_xalt()
 find_real_command()
 {
   local MY_PATH=$1
+  local EXEC_X=$2
   local MY_NAME=$(basename $MY_PATH)
 
-  if [ -n "$BASH_VERSION" ]; then
+  if [ -x "$EXEC_X" ]; then
+    MY_CMD=$EXEC_X
+  elif [ -n "$BASH_VERSION" ]; then
     for exe in $(type -p -a $MY_NAME); do
       if [ $exe != $MY_PATH ]; then
         MY_CMD=$exe
@@ -169,8 +172,6 @@ run_real_command()
 
   eTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
-
-  echo $status
 }
 
   

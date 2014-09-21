@@ -24,16 +24,37 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+XALT_DIR=@xalt_dir@
+
+source $XALT_DIR/bin/xalt_helper_functions.sh
+
 ########################################################################
 #  If the first argument is --part_of_xalt then exit immediately
 #  This avoids problems when there are more than one copy of this
 #  command in the path.
 
-if [ "$1" == --part_of_xalt ]; then
-  echo "XALT:YES"
+exit_if_part_of_xalt
+
+########################################################################
+# Search for the command  and make sure that you don't find this one.
+
+MY_CMD=$(find_real_command $0)
+
+########################################################################
+# Make sure that the python setup is valid.  If a user makes PYTHONHOME
+# point to a different python then if stmt will be triggered.
+
+MY_PYTHON=$(find_working_python)
+
+if [ "$MY_PYTHON" = "broken" ]; then
+  echo "XALT: Error in users' python setup.  Please report this error!"
+  $MY_CMD "$@"
   exit
 fi
 
+
+
+########################################################################
 # This srun wrapper only tested on one LANL cluster named mustang.
 # Very dependent on the site/xalt_find_exec_srun.py python script.
 # Because -n option has no environment variable counterpart, we
@@ -41,86 +62,6 @@ fi
 # Also, since srun takes "-n4" and "-n 4" as possibilities, had to
 # add logic to decode "-n4" syntax.
 # 
-
-MY_PATH=$0
-MY_NAME=$(basename $MY_PATH)
-MY_PYTHON=python
-
-XALT_DIR=@xalt_dir@
-RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
-UUIDGEN=@path_to_uuidgen@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-EPOCH=$XALT_DIR/libexec/xalt_epoch.py
-
-FIND_EXEC=$XALT_DIR/site/xalt_find_exec_srun.py
-
-########################################################################
-# Search for the command  and make sure that you don't find this one.
-# We use "type -p -a" instead of searching the path.  Since bash should
-# have search and cached all the executable in the path.  This should be
-# faster then walking the path.  But only if this script is treated as a
-# bash script.
-#
-# Note: There may be multiple copies of this script in the path.
-#       We ignore any that are part of XALT.
-
-
-if [ -n "$BASH_VERSION" ]; then
-  for exe in $(type -p -a $MY_NAME); do
-    if [ $exe != $MY_PATH ]; then
-      MY_CMD=$exe
-      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
-      if [ "$part_of_xalt" != "XALT:YES" ]; then
-	break
-      fi
-    fi
-  done
-else
-  ###################################################################
-  # If this script is not treated as a bash script then do this the
-  # old fashion way.
-
-  OLD_IFS=$IFS
-  IFS=:
-  for dir in $PATH; do
-    if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
-      MY_CMD="$dir/$MY_NAME"
-      part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
-      if [ "$part_of_xalt" != "XALT:YES" ]; then
-	break
-      fi
-    fi
-  done
-  IFS=$OLD_IFS
-fi
-
-########################################################################
-# Make sure that the python setup is valid.  If a user makes PYTHONHOME
-# point to a different python then if stmt will be triggered.
-
-PY_HOME_ORIG=$PYTHONHOME
-PY_PATH_ORIG=$PYTHONPATH
-XALT_DIR=@xalt_dir@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-if [ "$WORKING" != "GOOD" ]; then
-  unset PYTHONHOME
-  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-  if [ "$WORKING" != "GOOD" ]; then
-    unset PYTHONPATH
-    MY_PYTHON=@python@
-    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-    if [ "$WORKING" != "GOOD" ]; then
-      echo "XALT: Error in users' python setup.  Please report this error!"
-      $MY_CMD "$@"
-      exit
-    fi
-  fi
-fi
-
-
-
-########################################################################
 # Loop over command line arguments to mpirun. This code is used instead of
 # getopt and others because this wrapper script should not try to know
 # all the options to ld. Instead we are just "cherry-picking" the options
@@ -190,53 +131,26 @@ if [[ -z "$NTASKS" ]]; then
   if [[ -z "$NNODES" ]]; then
     echo "XALT srun wrapper error: NTASKS not set"
     exit
+  elif [[ -z $SLURM_JOBID ]]; then
+    # interactive jobs default to one task
+    NTASKS=1
+  elif [[ $NNODES -eq 1 ]]; then
+    # one node jobs default to one task
+    NTASKS=1
   else
-    if [[ -z $SLURM_JOBID ]]; then
-      # interactive jobs default to one task
-      NTASKS=1
-    else
-      if [[ $NNODES -eq 1 ]]; then
-        # one node jobs default to one task
-        NTASKS=1
-      else
-        # multiple node jobs default to corespernode*nodes
-        NTASKS=$(($SLURM_CPUS_ON_NODE*$NNODES))
-      fi
-    fi
+    # multiple node jobs default to corespernode*nodes
+    NTASKS=$(($SLURM_CPUS_ON_NODE*$NNODES))
   fi
 fi
 
 
+FIND_EXEC=$XALT_DIR/site/xalt_find_exec_srun.py
 
-RUN_UUID=`$UUIDGEN`
-DATESTR=`date +%Y_%m_%d_%H_%M_%S`
-SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
-runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
+######################################################################
+# This function sets the $status variable.
 
-EXEC="unknown"
-if [ -x "$FIND_EXEC" ]; then
-  EXEC=$($MY_PYTHON $FIND_EXEC "$@")
-fi
+run_real_command "$FIND_EXEC" "$MY_PYTHON" "$NTASKS" "$@"
 
-sTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
-status=0
-if [ -z "$testMe" ]; then
-  PY_HOME_XALT=$PYTHONHOME
-  PY_PATH_XALT=$PYTHONPATH
-  export PYTHONPATH=$PY_PATH_ORIG
-  [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
-
-  $MY_CMD "$@"
-  status="$?"
-
-  unset  PYTHONHOME
-  [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
-  export PYTHONPATH=$PY_PATH_XALT
-fi
-
-eTime=$($MY_PYTHON $EPOCH)
-$MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 
 exit $status

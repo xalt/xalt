@@ -120,6 +120,7 @@ case "$MPI_STACK" in
     ;;
 esac
 
-status = $(run_real_command "$FIND_EXEC" "$MY_PYTHON" "$NTASKS" "$@")
+# This function sets the $status variable.
+run_real_command "$FIND_EXEC" "$MY_PYTHON" "$NTASKS" "$@"
 
 exit $status
