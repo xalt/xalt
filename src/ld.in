@@ -34,7 +34,7 @@ source $MY_DIR/xalt_helper_functions.sh
 #  This avoids problems when there are more than one copy of this
 #  command in the path.
 
-exit_if_part_of_xalt
+exit_if_part_of_xalt $1
 
 
 ########################################################################
