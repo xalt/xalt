@@ -108,6 +108,8 @@ do
 
 done
 
+XALT_LIBEXEC_DIR=$XALT_DIR/libexec
+XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost.py

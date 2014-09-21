@@ -106,7 +106,7 @@ for option; do
 done
 
 FIND_EXEC="unknown"
-
+WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 MPI_STACK=$($WHICH_MPI --name)
 case "$MPI_STACK" in
   mpich|mpich2)
