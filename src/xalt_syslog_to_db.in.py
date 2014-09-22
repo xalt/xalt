@@ -100,12 +100,18 @@ def main():
     f=open(syslogFile, 'r')
     for line in f:
       if "XALT_LOGGING" in line:
-        array=line.split(":")
-        date = array[0] + ":" + array[1] 
-        type = array[3].strip()
-        syshost = array[4].strip()
-        resultT=json.loads(base64.b64decode(array[5]))
-        XALT_Stack.push("XALT_LOGGING: " + date + " " + type + " " + syshost)
+
+        i=line.find("link:")
+        if i == -1 :
+          i=line.find("run:")
+        if i == -1:
+          continue   # did not find a link or run, continue to next line
+
+        array=line[i:].split(":")
+        type = array[0].strip()
+        syshost = array[1].strip()
+        resultT=json.loads(base64.b64decode(array[2]))
+        XALT_Stack.push("XALT_LOGGING: " + type + " " + syshost)
 #        XALT_Stack.push("XALT_LOGGING resultT: " + resultT)
 
         if ( type == "link" ):
@@ -113,7 +119,7 @@ def main():
           xalt.link_to_db(rmapT, resultT)
           XALT_Stack.pop()
           lnkCnt += 1
-        elif ( kind == "run" ):
+        elif ( type == "run" ):
           XALT_Stack.push("run_to_db()")
           xalt.run_to_db(rmapT, resultT)
           XALT_Stack.pop()
@@ -121,8 +127,9 @@ def main():
         else:
           print("Error in xalt_syslog_to_db")
         XALT_Stack.pop()
-        count += 1
-        pbar.update(count)
+
+      count += 1
+      pbar.update(count)
 
 #  what should be done if there are errors?
 #    what went wrong?
