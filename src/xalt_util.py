@@ -22,7 +22,7 @@ from __future__         import print_function
 import logging
 from   logging.handlers import SysLogHandler
 from   fnmatch          import fnmatch
-import os, re, sys, subprocess, getent
+import os, re, sys, subprocess
 
 colonPairPat = re.compile(r"([^:]+):(.*)")
 def config_logger():
