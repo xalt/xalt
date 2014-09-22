@@ -137,13 +137,17 @@ class File(XALT_transmission_factory):
                              indent=2, separators=(',',': '))
     dirname, fn = os.path.split(self.__fn)
     tmpFn       = os.path.join(dirname, "." + fn)
-    if (not os.path.isdir(dirname)):
-      os.mkdir(dirname);
     
-    f = open(tmpFn,"w")
-    f.write(s)
-    f.close()
-    os.rename(tmpFn, self.__fn)
+    try:
+      if (not os.path.isdir(dirname)):
+        os.mkdir(dirname);
+    
+      f = open(tmpFn,"w")
+      f.write(s)
+      f.close()
+      os.rename(tmpFn, self.__fn)
+    except:
+      pass
 
 
 class DirectDB(XALT_transmission_factory):
