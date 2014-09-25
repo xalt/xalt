@@ -48,7 +48,7 @@ MY_CMD=$(find_real_command $0 $EXEC_X)
 # Make sure that the python setup is valid.  If a user makes PYTHONHOME
 # point to a different python then if stmt will be triggered.
 
-MY_PYTHON=$(find_working_python)
+find_working_python  # This function sets MY_PYTHON
 
 if [ "$MY_PYTHON" = "broken" ]; then
   echo "XALT: Error in users' python setup.  Please report this error!"
