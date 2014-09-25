@@ -152,7 +152,7 @@ run_real_command()
   fi
 
   sTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
+  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
 
   status=0
   if [ -z "$testMe" ]; then
@@ -170,7 +170,7 @@ run_real_command()
   fi
 
   eTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
+  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
 }
 
   
