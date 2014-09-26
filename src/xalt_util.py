@@ -20,7 +20,7 @@
 #-----------------------------------------------------------------------
 from __future__         import print_function
 import logging
-from   logging.handlers import SysLogHandler, FileHandler
+from   logging.handlers import SysLogHandler
 from   fnmatch          import fnmatch
 import os, re, sys, subprocess
 
@@ -37,8 +37,7 @@ def config_logger():
     syslog.setFormatter(formatter)
     logger.addHandler(syslog)
   except:
-    nullFn = FileHandler("/dev/null")
-    logger.addHandler(nullFn)
+    logger.addHandler(logging.FileHandler("/dev/null"))
     pass
     
   return logger
