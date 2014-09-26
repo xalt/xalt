@@ -85,7 +85,6 @@ def main():
   syslogFile  = args.syslog
 
   num    = int(capture("cat "+syslogFile+" | wc -l"))
-  pbar   = ProgressBar(maxVal=num)
   icnt   = 0
 
   t1     = time.time()
@@ -96,47 +95,51 @@ def main():
   runCnt = 0
   count=0
 
-  if (os.path.isfile(syslogFile)):
-    f=open(syslogFile, 'r')
-    for line in f:
-      if "XALT_LOGGING" in line:
+  if num != 0: 
+    pbar   = ProgressBar(maxVal=num)
+    if (os.path.isfile(syslogFile)):
+      f=open(syslogFile, 'r')
+      for line in f:
+        if "XALT_LOGGING" in line:
 
-        i=line.find("link:")
-        if i == -1 :
-          i=line.find("run:")
-        if i == -1:
-          continue   # did not find a link or run, continue to next line
+          i=line.find("link:")
+          if i == -1 :
+            i=line.find("run:")
+          if i == -1:
+            continue   # did not find a link or run, continue to next line
 
-        array=line[i:].split(":")
-        type = array[0].strip()
-        syshost = array[1].strip()
-        resultT=json.loads(base64.b64decode(array[2]))
-        XALT_Stack.push("XALT_LOGGING: " + type + " " + syshost)
-#        XALT_Stack.push("XALT_LOGGING resultT: " + resultT)
+          array=line[i:].split(":")
+          type = array[0].strip()
+          syshost = array[1].strip()
+          resultT=json.loads(base64.b64decode(array[2]))
+          XALT_Stack.push("XALT_LOGGING: " + type + " " + syshost)
+#          XALT_Stack.push("XALT_LOGGING resultT: " + resultT)
 
-        if ( type == "link" ):
-          XALT_Stack.push("link_to_db()")
-          xalt.link_to_db(rmapT, resultT)
+          if ( type == "link" ):
+            XALT_Stack.push("link_to_db()")
+            xalt.link_to_db(rmapT, resultT)
+            XALT_Stack.pop()
+            lnkCnt += 1
+          elif ( type == "run" ):
+            XALT_Stack.push("run_to_db()")
+            xalt.run_to_db(rmapT, resultT)
+            XALT_Stack.pop()
+            runCnt += 1
+          else:
+            print("Error in xalt_syslog_to_db")
           XALT_Stack.pop()
-          lnkCnt += 1
-        elif ( type == "run" ):
-          XALT_Stack.push("run_to_db()")
-          xalt.run_to_db(rmapT, resultT)
-          XALT_Stack.pop()
-          runCnt += 1
-        else:
-          print("Error in xalt_syslog_to_db")
-        XALT_Stack.pop()
 
-      count += 1
-      pbar.update(count)
+        count += 1
+        pbar.update(count)
+
+    pbar.fini()
 
 #  what should be done if there are errors?
 #    what went wrong?
 #    how do we restart?
 #
 #  xalt.connect().close()
-  pbar.fini()
+
   t2 = time.time()
   rt = t2 - t1
   if (args.timer):
