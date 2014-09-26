@@ -20,7 +20,7 @@
 #-----------------------------------------------------------------------
 from __future__         import print_function
 import logging
-from   logging.handlers import SysLogHandler
+from   logging.handlers import SysLogHandler, FileHandler
 from   fnmatch          import fnmatch
 import os, re, sys, subprocess
 
@@ -31,10 +31,16 @@ def config_logger():
   """
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
-  syslog = SysLogHandler(address='/dev/log', facility='local3')
-  formatter = logging.Formatter('XALT: %(name)s: %(levelname)s %(message)r')
-  syslog.setFormatter(formatter)
-  logger.addHandler(syslog)
+  try: 
+    syslog = SysLogHandler(address='/dev/log', facility='local3')
+    formatter = logging.Formatter('XALT: %(name)s: %(levelname)s %(message)r')
+    syslog.setFormatter(formatter)
+    logger.addHandler(syslog)
+  except:
+    nullFn = FileHandler("/dev/null")
+    logger.addHandler(nullFn)
+    pass
+    
   return logger
   
 def extract_compiler(pstree):
