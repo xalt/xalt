@@ -22,7 +22,7 @@ from __future__         import print_function
 import logging
 from   logging.handlers import SysLogHandler
 from   fnmatch          import fnmatch
-import os, re, sys, subprocess, getent
+import os, re, sys, subprocess
 
 colonPairPat = re.compile(r"([^:]+):(.*)")
 def config_logger():
@@ -31,10 +31,15 @@ def config_logger():
   """
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
-  syslog = SysLogHandler(address='/dev/log', facility='local3')
-  formatter = logging.Formatter('XALT: %(name)s: %(levelname)s %(message)r')
-  syslog.setFormatter(formatter)
-  logger.addHandler(syslog)
+  try: 
+    syslog = SysLogHandler(address='/dev/log', facility='local3')
+    formatter = logging.Formatter('XALT: %(name)s: %(levelname)s %(message)r')
+    syslog.setFormatter(formatter)
+    logger.addHandler(syslog)
+  except:
+    logger.addHandler(logging.FileHandler("/dev/null"))
+    pass
+    
   return logger
   
 def extract_compiler(pstree):

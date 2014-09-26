@@ -79,10 +79,9 @@ SITE_PKG        := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec      \
-          Build_pstree_$(BUILD_PSTREE) Use_argparse_$(USE_ARGPARSE) \
-          Use_getent_yes
-
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
+          Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
+          Build_pstree_$(BUILD_PSTREE)
 
 echo:
 	@echo CURDIR: $(CURDIR)
@@ -188,9 +187,11 @@ tags:
 	sed -e 's|.*/.git.*||g'                                  \
             -e 's|.*/rt/.*/t1/.*||g'                             \
             -e 's|./TAGS||g'                                     \
+            -e 's|.*/epydoc/.*$$||g'                             \
             -e 's|./makefile||g'                                 \
             -e 's|./configure$$||g'                              \
-            -e 's|/.DS_Store$$||g'                               \
+            -e 's|.*/.DS_Store$$||g'                             \
+            -e 's|.DS_Store$$||g'                                \
             -e 's|.*\.tgz$$||g'                                  \
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
