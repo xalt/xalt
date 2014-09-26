@@ -173,6 +173,3 @@ run_real_command()
   eTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" -- "$EXEC"
 }
-
-  
-
