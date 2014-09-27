@@ -139,7 +139,14 @@ fi
 
 EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
 
-as $ARGSRC -o $ARGOBJ
+#
+# If the $ARGSRC exists then build it
+# otherwise don't try to link with it.
+if [ -f "$ARGSRC" ]; then
+  as $ARGSRC -o $ARGOBJ
+else
+  ARGOBJ=""
+fi
 
 #Save python state
 PY_PATH_XALT=$PYTHONPATH
