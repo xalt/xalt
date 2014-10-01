@@ -32,27 +32,6 @@ UUIDGEN=@path_to_uuidgen@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
-find_system_cmd()
-{
-  local full_path="$1"
-  local name="$2"
-  local AT="@"
-
-  if [ "$full_path" != "${AT}${name}${AT}" ]; then
-    builtin echo $full_path
-    return
-  fi
-    
-  for i in /bin /usr/bin /usr/local/bin; do
-    full_path="$i/$name"
-    if [ -x "$full_path" ]; then
-      builtin echo $full_path
-      return
-    fi
-  done
-  builtin echo $name
-}
-
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -70,8 +49,8 @@ find_real_command()
   local MY_PATH=$1
   local EXEC_X=$2
   local MY_NAME=$(basename $MY_PATH)
-  local HEAD=$(find_system_cmd "@head@" head)
-  local GREP=$(find_system_cmd "@grep@" grep)
+  local HEAD="@head@"
+  local GREP="@grep@"
 
   if [ -x "$EXEC_X" ]; then
     MY_CMD=$EXEC_X
@@ -80,7 +59,7 @@ find_real_command()
       if [ $exe != $MY_PATH ]; then
         MY_CMD=$exe
 	if ! $HEAD -n 5 $MY_CMD | $GREP -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
-	    break
+	  break
         fi
       fi
     done
@@ -95,13 +74,13 @@ find_real_command()
       if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
         MY_CMD="$dir/$MY_NAME"
 	if ! $HEAD -n 5 $MY_CMD | $GREP -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
-	    break
+	  break
         fi
       fi
     done
     IFS=$OLD_IFS
   fi
-  echo $MY_CMD
+  builtin echo $MY_CMD
 }
 
 ########################################################################
@@ -179,4 +158,7 @@ run_real_command()
 
   eTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
+
+  #----------------------------------------------------------------------
+  # The $status variable is used to report the exit status of $MY_CMD"
 }

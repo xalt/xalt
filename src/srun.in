@@ -43,7 +43,7 @@ MY_CMD=$(find_real_command $0)
 find_working_python  # This function sets MY_PYTHON
 
 if [ "$MY_PYTHON" = "broken" ]; then
-  echo "XALT: Error in users' python setup.  Please report this error!"
+  builtin echo "XALT: Error in users' python setup.  Please report this error!"
   $MY_CMD "$@"
   exit
 fi
@@ -125,7 +125,7 @@ done
 #  else set NTASKS based on various scenarios
 if [[ -z "$NTASKS" ]]; then
   if [[ -z "$NNODES" ]]; then
-    echo "XALT srun wrapper error: NTASKS not set"
+    builtin echo "XALT srun wrapper error: NTASKS not set"
     exit
   elif [[ -z $SLURM_JOBID ]]; then
     # interactive jobs default to one task

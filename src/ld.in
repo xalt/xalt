@@ -45,7 +45,7 @@ MY_CMD=$(find_real_command $0 $EXEC_X)
 find_working_python  # This function sets MY_PYTHON
 
 if [ "$MY_PYTHON" = "broken" ]; then
-  echo "XALT: Error in users' python setup.  Please report this error!"
+  builtin echo "XALT: Error in users' python setup.  Please report this error!"
   $MY_CMD "$@"
   exit
 fi
@@ -83,11 +83,6 @@ do
       USER_TRACE="true"
       ;;
 
-    --part_of_xalt)
-      echo "XALT:YES"
-      exit
-      ;;
-
     -o)
       prev='EXEC'
       ;;
@@ -111,7 +106,11 @@ SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost.py
 SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
 PSTREE=@path_to_pstree@
 UUIDGEN=@path_to_uuidgen@
-
+RM=@path_to_rm@
+AS=@path_to_as@
+CAT=@path_to_cat@
+MKDIR=@path_to_mkdir@
+GREP=@grep@
 
 UUID=`$UUIDGEN`
 DATESTR=`date +%Y_%m_%d_%H_%M_%S`
@@ -123,7 +122,7 @@ ARGOBJ=$WRKDIR/xalt.o
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ ! -d $WRKDIR ]; then
-  mkdir -p $WRKDIR
+  $MKDIR -p $WRKDIR
 fi
 
 PSTREE_OUT="unknown"
@@ -138,7 +137,7 @@ EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
 if [ -f "$ARGSRC" ]; then
-  as $ARGSRC -o $OBJ
+  $AS $ARGSRC -o $OBJ
 else
   OBJ=""
 fi
@@ -158,21 +157,21 @@ unset  PYTHONHOME
 [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
 
 if [ -n "$USER_TRACE" ]; then
-  cat $LINKLINE_OUT | grep -v $ARGOBJ
+  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ
 fi
 
 
 $MY_PYTHON "$GEN_LINKDATA" "$UUID" "$STATUS" "`pwd`" "$SYSHOST" "$PSTREE_OUT" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
-   echo ""                       >> $RESULT
-   echo "====================="  >> $RESULT
-   echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
-   echo "====================="  >> $RESULT
+   builtin echo ""                       >> $RESULT
+   builtin echo "====================="  >> $RESULT
+   builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
+   builtin echo "====================="  >> $RESULT
 
-   cat  $LINKLINE >> $RESULT
+   $CAT  $LINKLINE >> $RESULT
 fi
 
-rm -rf $WRKDIR
+$RM -rf $WRKDIR
 
 exit $status

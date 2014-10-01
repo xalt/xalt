@@ -34,6 +34,9 @@ prefix          := @prefix@
 XALT_DIR        := $(prefix)
 PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
 PATH_TO_PYTHON  := @PATH_TO_PYTHON@
+PATH_TO_RM      := @PATH_TO_RM@
+PATH_TO_CAT     := @PATH_TO_CAT@
+PATH_TO_MKDIR   := @PATH_TO_MKDIR@
 PATH_TO_AS      := @PATH_TO_AS@
 PATH_TO_HEAD    := @PATH_TO_HEAD@
 PATH_TO_GREP    := @PATH_TO_GREP@
@@ -143,7 +146,10 @@ __installMe:
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           \
+	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      \
+	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g          '                    \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
