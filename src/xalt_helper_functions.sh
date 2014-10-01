@@ -42,7 +42,7 @@ EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 # Note: There may be multiple copies of this script in the path.
 #       We ignore any that are part of XALT.
 
-# Returns full to real command.
+# Returns full path to real command.
 
 find_real_command()
 {
