@@ -69,9 +69,8 @@ find_real_command()
     for exe in $(type -p -a $MY_NAME); do
       if [ $exe != $MY_PATH ]; then
         MY_CMD=$exe
-        part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
-        if [ "$part_of_xalt" != "XALT:YES" ]; then
-  	  break
+	if ! head -n 5 $MY_CMD | grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+	    break
         fi
       fi
     done
@@ -85,9 +84,8 @@ find_real_command()
     for dir in $PATH; do
       if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
         MY_CMD="$dir/$MY_NAME"
-        part_of_xalt=$($MY_CMD --part_of_xalt 2> /dev/null)
-        if [ "$part_of_xalt" != "XALT:YES" ]; then
-  	  break
+	if ! head -n 5 $MY_CMD | grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+	    break
         fi
       fi
     done

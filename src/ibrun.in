@@ -1,6 +1,8 @@
 #!/bin/bash
 #-*- shell-script -*-
 #
+#  MAGIC_STRING__XALT__XALT__MAGIC_STRING
+#
 #  Git Version: @git@
 
 #-----------------------------------------------------------------------
@@ -28,13 +30,6 @@ XALT_DIR=@xalt_dir@
 MY_DIR=$(dirname $0)
 
 source $MY_DIR/xalt_helper_functions.sh
-
-########################################################################
-#  If the first argument is --part_of_xalt then exit immediately
-#  This avoids problems when there are more than one copy of this
-#  command in the path.
-
-exit_if_part_of_xalt $1
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
