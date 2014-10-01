@@ -32,18 +32,26 @@ UUIDGEN=@path_to_uuidgen@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
-########################################################################
-#  If the first argument is --part_of_xalt then exit immediately
-#  This avoids problems when there are more than one copy of this
-#  command in the path.
-exit_if_part_of_xalt()
+find_system_cmd()
 {
-  if [ "$1" == --part_of_xalt ]; then
-    echo "XALT:YES"
-    exit
-  fi
-}
+  local full_path="$1"
+  local name="$2"
+  local AT="@"
 
+  if [ "$full_path" != "${AT}${name}${AT}" ]; then
+    builtin echo $full_path
+    return
+  fi
+    
+  for i in /bin /usr/bin /usr/local/bin; do
+    full_path="$i/$name"
+    if [ -x "$full_path" ]; then
+      builtin echo $full_path
+      return
+    fi
+  done
+  builtin echo $name
+}
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -62,6 +70,8 @@ find_real_command()
   local MY_PATH=$1
   local EXEC_X=$2
   local MY_NAME=$(basename $MY_PATH)
+  local HEAD=$(find_system_cmd "@head@" head)
+  local GREP=$(find_system_cmd "@grep@" grep)
 
   if [ -x "$EXEC_X" ]; then
     MY_CMD=$EXEC_X
@@ -69,7 +79,7 @@ find_real_command()
     for exe in $(type -p -a $MY_NAME); do
       if [ $exe != $MY_PATH ]; then
         MY_CMD=$exe
-	if ! head -n 5 $MY_CMD | grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+	if ! $HEAD -n 5 $MY_CMD | $GREP -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
 	    break
         fi
       fi
@@ -84,7 +94,7 @@ find_real_command()
     for dir in $PATH; do
       if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
         MY_CMD="$dir/$MY_NAME"
-	if ! head -n 5 $MY_CMD | grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+	if ! $HEAD -n 5 $MY_CMD | $GREP -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
 	    break
         fi
       fi
