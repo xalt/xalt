@@ -26,8 +26,17 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+##########################################################################
+#
+# ld wrapper: Add XALT "scribble" to executable or shared library.
+#             Then run real ld, with trace.  Save the link trace
+#             into an XALT link record.
+#
+##########################################################################
+
 XALT_DIR=@xalt_dir@
-MY_DIR=$(dirname $0)
+DIRNAME=@path_to_dirname@
+MY_DIR=$($DIRNAME $0)
 
 source $MY_DIR/xalt_helper_functions.sh
 
@@ -39,15 +48,14 @@ MY_CMD=$(find_real_command $0 $EXEC_X)
 
 
 ########################################################################
-# Make sure that the python setup is valid.  If a user makes PYTHONHOME
-# point to a different python then if stmt will be triggered.
+# Make sure that the python setup is valid. 
 
 find_working_python  # This function sets MY_PYTHON
 
 if [ "$MY_PYTHON" = "broken" ]; then
   builtin echo "XALT: Error in users' python setup.  Please report this error!"
   $MY_CMD "$@"
-  exit
+  exit $?
 fi
 
 ########################################################################
@@ -77,7 +85,7 @@ do
   case $option in
     --version|-v|--help)
       $MY_CMD "$@"
-      exit
+      exit $?
       ;;
     --trace|-t)
       USER_TRACE="true"
