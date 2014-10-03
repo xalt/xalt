@@ -25,12 +25,17 @@
 #-----------------------------------------------------------------------
 
 ########################################################################
+# Helper functions used by XALT scripts such as ld, ibrun, aprun, etc.
+########################################################################
+
+########################################################################
 #  Global variables:
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
+BASENAME=@path_to_basename@
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -46,19 +51,30 @@ EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 
 find_real_command()
 {
-  local MY_PATH=$1
-  local EXEC_X=$2
-  local MY_NAME=$(basename $MY_PATH)
-  local HEAD="@head@"
-  local GREP="@grep@"
+  local my_path=$1
+  local exec_x=$2
+  
+  local my_name=$($BASENAME $MY_PATH)
+  local head="@head@"
+  local grep="@grep@"
+  local my_cmd="unknown"
 
-  if [ -x "$EXEC_X" ]; then
-    MY_CMD=$EXEC_X
+  if [ -x "$exec_x" ]; then
+    # if $exec_x is exists and is executable then use it
+    # This is typically used by ld and when points /usr/bin/ld.x
+    my_cmd=$exec_x
   elif [ -n "$BASH_VERSION" ]; then
-    for exe in $(type -p -a $MY_NAME); do
-      if [ $exe != $MY_PATH ]; then
-        MY_CMD=$exe
-	if ! $HEAD -n 5 $MY_CMD | $GREP -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+    # If this is a bash script (and not a bash script in sh mode) then
+    # use type to list all possible "ld" or "ibrun".  
+
+    for exe in $(type -p -a $my_name); do
+      if [ $exe != $my_path ]; then
+        #
+        # If the executable is not the same the same as the origin then it is a possible
+        # choice.  Now check to see if this choice has the magic string in the first 5 lines.
+        # Only if it doesn't contain the magic string then $exe is MY_CMD.
+	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+          my_cmd=$exe
 	  break
         fi
       fi
@@ -66,33 +82,41 @@ find_real_command()
   else
     ###################################################################
     # If this script is not treated as a bash script then do this the
-    # old fashion way.
-
+    # old fashion way. Otherwise the logic is the same as above.
     OLD_IFS=$IFS
     IFS=:
     for dir in $PATH; do
-      if [ $dir/$MY_NAME != $MY_PATH -a -x "$dir/$MY_NAME" ]; then
-        MY_CMD="$dir/$MY_NAME"
-	if ! $HEAD -n 5 $MY_CMD | $GREP -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+      exe="$dir/$my_name"
+      if [ $exe != $my_path -a -x $exe ]; then
+	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+          my_cmd=$exe
 	  break
         fi
       fi
     done
     IFS=$OLD_IFS
   fi
-  builtin echo $MY_CMD
+  builtin echo $my_cmd
 }
 
 ########################################################################
-# Make sure that the python setup is valid.  If a user makes PYTHONHOME
-# point to a different python then if stmt will be triggered.
-
-# returns a valid python or "broken" if no working python is found
+# Make sure that the python setup is valid. This returns a valid python
+# or "broken" if no working python is found
+#
+# The logic is as follows. Check for at each step.  If pass then stop
+# checking, otherwise continue.  
+#   1. Check for working python with no changes
+#   2. Check for working python with PYTHONHOME unset
+#   3. Check for working python with PYTHONPATH unset
+#      and system python.
+#   4. Report python broken.
+#
+# Note that the xalt_working_program.py just prints "GOOD" if it works.
 
 find_working_python()
 {
-  PY_HOME_ORIG=$PYTHONHOME
-  PY_PATH_ORIG=$PYTHONPATH
+  py_home_orig=$PYTHONHOME
+  py_path_orig=$PYTHONPATH
   MY_PYTHON=python
   XALT_DIR=@xalt_dir@
   WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
@@ -117,45 +141,62 @@ find_working_python()
 
 run_real_command()
 {
-  FIND_EXEC=$1
+  # Strip leading arguments off of command line
+  # This will leave "$@" to be the same as the original in
+  # user's call to the wrapper.
+
+  FIND_EXEC_PRGM=$1
   shift
   MY_PYTHON=$1
   shift
   NTASKS=$1
   shift
 
+  # Give NTASKS an illegal value if it wasn't set.
   if [ -z "$NTASKS" ]; then
-    NTASKS=1
+    NTASKS=-1
   fi
 
+  # Build the filename for the results.
   RUN_UUID=`$UUIDGEN`
   DATESTR=`date +%Y_%m_%d_%H_%M_%S`
   SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
   runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
 
+  
+  # Find the user executable by walking the original command line.
   EXEC="unknown"
-  if [ "$FIND_EXEC" != "unknown" -a -x "$FIND_EXEC" ]; then
-    EXEC=$($MY_PYTHON $FIND_EXEC "$@")
+  if [ "$FIND_EXEC_PRGM" != "unknown" -a -x "$FIND_EXEC_PRGM" ]; then
+    EXEC=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
   fi
 
+  # Record the job record at the start of the job.  This way if the job
+  # doesn't complete there will be a record of the job.
   sTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
 
+
+
   status=0
   if [ -z "$testMe" ]; then
-    PY_HOME_XALT=$PYTHONHOME
-    PY_PATH_XALT=$PYTHONPATH
-    export PYTHONPATH=$PY_PATH_ORIG
-    [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
 
+    # restore python state to what the user originally had
+    py_home_xalt=$PYTHONHOME
+    py_path_xalt=$PYTHONPATH
+    export PYTHONPATH=$PY_path_orig
+    [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$py_home_orig
+
+    # Run the real command and save the status
     $MY_CMD "$@"
     status="$?"
 
+    # return python state back to XALT
     unset  PYTHONHOME
-    [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
-    export PYTHONPATH=$PY_PATH_XALT
+    [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$py_home_xalt
+    export PYTHONPATH=$py_path_xalt
   fi
 
+  # Record the job record at the end of the job.
   eTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
 

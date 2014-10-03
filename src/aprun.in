@@ -26,8 +26,16 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+##########################################################################
+#
+# aprun wrapper: Place XALT program tracking calls before and after
+#                running the real aprun.
+#
+##########################################################################
+
 XALT_DIR=@xalt_dir@
-MY_DIR=$(dirname $0)
+DIRNAME=@path_to_dirname@
+MY_DIR=$($DIRNAME $0)
 
 source $MY_DIR/xalt_helper_functions.sh
 
@@ -37,15 +45,15 @@ source $MY_DIR/xalt_helper_functions.sh
 MY_CMD=$(find_real_command $0)
 
 ########################################################################
-# Make sure that the python setup is valid.  If a user makes PYTHONHOME
-# point to a different python then if stmt will be triggered.  
+# Make sure that the python setup is valid.  
 
 find_working_python  # This function sets MY_PYTHON
 
 if [ "$MY_PYTHON" = "broken" ]; then
   builtin echo "XALT: Error in users' python setup.  Please report this error!"
   $MY_CMD "$@"
-  exit
+  status=$?
+  exit $status
 fi
 
 ########################################################################
@@ -83,14 +91,14 @@ for option; do
   case $option in
     -b)
       $MY_CMD "$@"
-      exit
+      exit $?
       ;;
     -n)
       prev='NTASKS'
       ;;
     --help|-h)
       $MY_CMD "$@"
-      exit
+      exit $?
       ;;
     ---test)
       testMe=true
@@ -106,16 +114,14 @@ for option; do
   #fi
 done
 
-
 #######################################################################
 # We make the big assumption that the only MPI on a Cray is 
 # Cray's mpi and thay the job launcher is aprun.  So we 
 # use the xalt_find_exec_aprun.py script to parse aprun line.
 
-FIND_EXEC=$XALT_DIR/site/xalt_find_exec_aprun.py
+FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_aprun.py
 
-#######################################################################
 # This function sets the $status variable.
-run_real_command "$FIND_EXEC" "$MY_PYTHON" "$NTASKS" "$@"
+run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "$NTASKS" "$@"
 
 exit $status
