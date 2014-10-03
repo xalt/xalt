@@ -54,7 +54,7 @@ find_real_command()
   local my_path=$1
   local exec_x=$2
   
-  local my_name=$($BASENAME $MY_PATH)
+  local my_name=$($BASENAME $my_path)
   local head="@head@"
   local grep="@grep@"
   local my_cmd="unknown"
