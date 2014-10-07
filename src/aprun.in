@@ -35,6 +35,10 @@ source $MY_DIR/xalt_helper_functions.sh
 # Search for the command  and make sure that you don't find this one.
 
 MY_CMD=$(find_real_command $0)
+if [ -z $MY_CMD ]; then
+  echo Cannot find aprun command
+  exit
+fi
 
 ########################################################################
 # Make sure that the python setup is valid.  If a user makes PYTHONHOME
