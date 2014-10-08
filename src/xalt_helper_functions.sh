@@ -138,6 +138,12 @@ find_working_python()
       fi
     fi
   fi
+
+  if [ "$MY_PYTHON" = "broken" ]; then
+    builtin echo "XALT: Error in users' python setup.  Please report this error!"
+    $MY_CMD "$@"
+    exit $?
+  fi
 }
 
 ########################################################################
