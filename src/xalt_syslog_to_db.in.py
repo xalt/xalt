@@ -84,6 +84,7 @@ def main():
 
   syslogFile  = args.syslog
 
+  # should add a check if file exists
   num    = int(capture("cat "+syslogFile+" | wc -l"))
   icnt   = 0
 
@@ -93,7 +94,8 @@ def main():
 
   lnkCnt = 0
   runCnt = 0
-  count=0
+  badCnt = 0
+  count = 0
 
   if num != 0: 
     pbar   = ProgressBar(maxVal=num)
@@ -111,23 +113,34 @@ def main():
           array=line[i:].split(":")
           type = array[0].strip()
           syshost = array[1].strip()
-          resultT=json.loads(base64.b64decode(array[2]))
-          XALT_Stack.push("XALT_LOGGING: " + type + " " + syshost)
-#          XALT_Stack.push("XALT_LOGGING resultT: " + resultT)
+          try:
+            resultT=json.loads(base64.b64decode(array[2]))
+            XALT_Stack.push("XALT_LOGGING: " + type + " " + syshost)
+#            XALT_Stack.push("XALT_LOGGING resultT: " + resultT)
 
-          if ( type == "link" ):
-            XALT_Stack.push("link_to_db()")
-            xalt.link_to_db(rmapT, resultT)
+            if ( type == "link" ):
+              XALT_Stack.push("link_to_db()")
+              xalt.link_to_db(rmapT, resultT)
+              XALT_Stack.pop()
+              lnkCnt += 1
+            elif ( type == "run" ):
+              XALT_Stack.push("run_to_db()")
+              xalt.run_to_db(rmapT, resultT)
+              XALT_Stack.pop()
+              runCnt += 1
+            else:
+              print("Error in xalt_syslog_to_db")
             XALT_Stack.pop()
-            lnkCnt += 1
-          elif ( type == "run" ):
-            XALT_Stack.push("run_to_db()")
-            xalt.run_to_db(rmapT, resultT)
-            XALT_Stack.pop()
-            runCnt += 1
-          else:
-            print("Error in xalt_syslog_to_db")
-          XALT_Stack.pop()
+          except:
+            badCnt += 1
+            # figure out length of array[2], as it might be 
+            # near the syslog message size limit
+            strg=array[2]
+            lens = len(strg)
+#            lenx = lens - (lens % 4 if lens % 4 else 4)
+            print("xalt_syslog_to_db: undecodable entry!  length: ",lens)
+#            resultT = base64.decodestring(strg[:lenx])
+#            print("result:  ",result)
 
         count += 1
         pbar.update(count)
@@ -145,6 +158,6 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 #
-  print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt)
+  print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt, ", badCnt: ", badCnt)
 
 if ( __name__ == '__main__'): main()
