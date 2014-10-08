@@ -47,7 +47,7 @@ BASENAME=@path_to_basename@
 # Note: There may be multiple copies of this script in the path.
 #       We ignore any that are part of XALT.
 
-# Returns full path to real command.
+# This sets the GLOBAL $MY_CMD variable.
 
 find_real_command()
 {
@@ -96,7 +96,12 @@ find_real_command()
     done
     IFS=$OLD_IFS
   fi
-  builtin echo $my_cmd
+  if [ "$my_cmd" = unknown ]; then
+    builtin echo "XALT Error: unable to find $my_name"
+    false
+    exit $?
+  fi
+  MY_CMD=$my_cmd  
 }
 
 ########################################################################
