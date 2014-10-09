@@ -39,12 +39,17 @@ MY_DIR=$($DIRNAME $0)
 
 source $MY_DIR/xalt_helper_functions.sh
 
-########################################################################
+##########################################################################
+# Check for user requested tracing.
+requested_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
+
+
+##########################################################################
 # Search for the command  and make sure that you don't find this one.
 
 MY_CMD=$(find_real_command $0)
 
-########################################################################
+##########################################################################
 # Make sure that the python setup is valid.  
 
 find_working_python  # This function sets MY_PYTHON

@@ -37,6 +37,33 @@ WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 BASENAME=@path_to_basename@
 
+##########################################################################
+#  Check command line arguments to see if user has requested tracing
+#  This function returns argA and a value for XALT_TRACING
+request_tracing()
+{
+  XALT_TRACING="no"
+  argA=()
+  for i in "$@"; do
+    if [ "$i" = "--xalt_tracing" ]; then
+      XALT_TRACING=yes
+    else
+      argA+=("$i")
+    fi
+  done
+}
+
+##########################################################################
+#  Print message when tracing
+
+tracing_msg()
+{
+  if [ "$XALT_TRACING" = "yes" ]; then
+    builtin echo "${argA[@]}"
+  fi
+}
+
+
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -82,7 +109,7 @@ find_real_command()
   else
     ###################################################################
     # If this script is not treated as a bash script then do this the
-    # old fashion way. Otherwise the logic is the same as above.
+    # old fashion way. Otherwise the logic is the same as bash version.
     OLD_IFS=$IFS
     IFS=:
     for dir in $PATH; do
