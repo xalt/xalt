@@ -74,7 +74,7 @@ tracing_msg()
 # Note: There may be multiple copies of this script in the path.
 #       We ignore any that are part of XALT.
 
-# Returns full path to real command.
+# This sets the GLOBAL $MY_CMD variable.
 
 find_real_command()
 {
@@ -123,7 +123,12 @@ find_real_command()
     done
     IFS=$OLD_IFS
   fi
-  builtin echo $my_cmd
+  if [ "$my_cmd" = unknown ]; then
+    builtin echo "XALT Error: unable to find $my_name"
+    false
+    exit $?
+  fi
+  MY_CMD=$my_cmd  
 }
 
 ########################################################################
@@ -159,6 +164,12 @@ find_working_python()
 	MY_PYTHON="broken"
       fi
     fi
+  fi
+
+  if [ "$MY_PYTHON" = "broken" ]; then
+    builtin echo "XALT: Error in users' python setup.  Please report this error!"
+    $MY_CMD "$@"
+    exit $?
   fi
 }
 

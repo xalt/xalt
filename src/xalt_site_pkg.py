@@ -58,11 +58,12 @@ def translate(nameA, envT, userT):
     sysT['submit_host'] = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
-    sysT['num_cores'] = "PBS_NP"
-    sysT['num_nodes'] = "PBS_NUM_NODES"
-    sysT['account']   = "PBS_ACCOUNT"
-    sysT['job_id']    = "PBS_JOBID"
-    sysT['queue']     = "PBS_QUEUE"
+    sysT['num_cores']   = "PBS_NP"
+    sysT['num_nodes']   = "PBS_NUM_NODES"
+    sysT['account']     = "PBS_ACCOUNT"
+    sysT['job_id']      = "PBS_JOBID"
+    sysT['queue']       = "PBS_QUEUE"
+    sysT['submit_host'] = "PBS_O_HOST"
   
   for name in nameA:
     result = "unknown"

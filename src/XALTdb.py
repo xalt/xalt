@@ -254,6 +254,8 @@ class XALTdb(object):
         query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
           runT['userT']['run_time'], runT['userT']['end_time'], run_id)
         conn.query(query)
+        query = "COMMIT"
+        conn.query(query)
         v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
         return

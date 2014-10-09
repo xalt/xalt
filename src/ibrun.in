@@ -42,19 +42,12 @@ source $MY_DIR/xalt_helper_functions.sh
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 
-MY_CMD=$(find_real_command $0)
+find_real_command $0  # this command sets $MY_CMD
 
 ########################################################################
 # Make sure that the python setup is valid.  
 
 find_working_python  # This function sets MY_PYTHON
-
-if [ "$MY_PYTHON" = "broken" ]; then
-  builtin echo "XALT: Error in users' python setup.  Please report this error!"
-  $MY_CMD "$@"
-  status=$?
-  exit $status
-fi
 
 ########################################################################
 # Loop over command line arguments. This code is used instead of
