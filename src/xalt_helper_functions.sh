@@ -51,6 +51,8 @@ request_tracing()
       argA+=("$i")
     fi
   done
+  tracing_msg "XALT Tracing Activated"
+
 }
 
 ##########################################################################
@@ -59,7 +61,8 @@ request_tracing()
 tracing_msg()
 {
   if [ "$XALT_TRACING" = "yes" ]; then
-    builtin echo "${argA[@]}"
+    builtin echo ""
+    builtin echo "$@"
   fi
 }
 
@@ -85,6 +88,8 @@ find_real_command()
   local head="@head@"
   local grep="@grep@"
   local my_cmd="unknown"
+
+  tracing_msg "find_real_command: Searching for the real: $my_name"
 
   if [ -x "$exec_x" ]; then
     # if $exec_x is exists and is executable then use it
@@ -129,6 +134,7 @@ find_real_command()
     exit $?
   fi
   MY_CMD=$my_cmd  
+  tracing_msg "find_real_command: found $MY_CMD"
 }
 
 ########################################################################
@@ -166,6 +172,8 @@ find_working_python()
     fi
   fi
 
+  tracing_msg "find_working_python: Setting MY_PYTHON to $MY_PYTHON"
+
   if [ "$MY_PYTHON" = "broken" ]; then
     builtin echo "XALT: Error in users' python setup.  Please report this error!"
     $MY_CMD "$@"
@@ -195,6 +203,7 @@ run_real_command()
     NTASKS=-1
   fi
 
+
   # Build the filename for the results.
   RUN_UUID=`$UUIDGEN`
   DATESTR=`date +%Y_%m_%d_%H_%M_%S`
@@ -208,8 +217,12 @@ run_real_command()
     EXEC=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
   fi
 
+  tracing_msg "run_real_command: User's EXEC: $EXEC"
+
   # Record the job record at the start of the job.  This way if the job
   # doesn't complete there will be a record of the job.
+
+  tracing_msg "run_real_command: XALT Start Record"
   sTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
 
@@ -224,6 +237,7 @@ run_real_command()
     export PYTHONPATH=$PY_path_orig
     [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$py_home_orig
 
+    tracing_msg "run_real_command: Running: $MY_CMD"
     # Run the real command and save the status
     $MY_CMD "$@"
     status="$?"
@@ -234,6 +248,7 @@ run_real_command()
     export PYTHONPATH=$py_path_xalt
   fi
 
+  tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$($MY_PYTHON $EPOCH)
   $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
