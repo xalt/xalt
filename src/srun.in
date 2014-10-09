@@ -39,6 +39,10 @@ MY_DIR=$($DIRNAME $0)
 
 source $MY_DIR/xalt_helper_functions.sh
 
+##########################################################################
+# Check for user requested tracing.
+requested_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
+
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 
@@ -102,7 +106,7 @@ for option; do
       prev='NNODES'
       ;;
     --help|-h|--usage|-V|--version)
-      $MY_CMD "$@"
+      $MY_CMD "${argA[@]}"
       exit $?
       ;;
     ---test)
@@ -142,6 +146,6 @@ fi
 FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_srun.py
 
 # This function sets the $status variable.
-run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "$NTASKS" "$@"
+run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "$NTASKS" "${argA[@]}"
 
 exit $status

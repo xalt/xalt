@@ -40,6 +40,11 @@ MY_DIR=$($DIRNAME $0)
 
 source $MY_DIR/xalt_helper_functions.sh
 
+##########################################################################
+# Check for user requested tracing.
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
+
+
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 
@@ -77,7 +82,7 @@ do
   
   case $option in
     --version|-v|--help)
-      $MY_CMD "$@"
+      $MY_CMD "${argA[@]}"
       exit $?
       ;;
     --trace|-t)
@@ -149,7 +154,9 @@ PY_HOME_XALT=$PYTHONHOME
 export PYTHONPATH=$PY_PATH_ORIG
 [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
 
-$MY_CMD "$@" $OBJ -t > $LINKLINE_OUT 
+tracing_msg $MY_CMD "${argA[@]}"
+
+$MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
 status=$?
 
 #Return python state
