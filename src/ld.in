@@ -134,6 +134,9 @@ fi
 PSTREE_OUT="unknown"
 if [ -x "$PSTREE" ]; then
   PSTREE_OUT=$($PSTREE -l -s $$)
+  if [ ! $? ]; then
+    logger "XALT_PSTREE_SEGV: User: $USER: WD: $CWD, UUID: $UUID, CMD: $@"
+  fi
 fi
 
 EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
