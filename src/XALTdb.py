@@ -292,12 +292,17 @@ class XALTdb(object):
           conn.query(query)
           env_id = conn.insert_id()
           found  = False
-        #print("env_id: ", env_id, ", found: ",found)
 
         
         query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
           env_id, run_id, value.encode("ascii","ignore"))
-        conn.query(query)
+        try:
+          conn.query(query)
+        except Exception as e:
+          query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
+            env_id, run_id, "XALT_ILLEGAL_VALUE")
+          conn.query(query)
+          
       v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)
       query = "COMMIT"
