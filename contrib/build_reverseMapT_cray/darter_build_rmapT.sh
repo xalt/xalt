@@ -21,9 +21,10 @@
 
   PrgEnvA=("PrgEnv-cray"  "PrgEnv-gnu" "PrgEnv-intel")
 
-  moduleA=( "PrgEnv-cray/5.0.15"     "PrgEnv-gnu/5.0.15"   "PrgEnv-intel/5.0.15"
-            "PrgEnv-cray/5.1.18"     "PrgEnv-gnu/5.1.18"   "PrgEnv-intel/5.1.18"
-            "PrgEnv-cray/5.1.29"     "PrgEnv-gnu/5.1.29"   "PrgEnv-intel/5.1.29")
+  moduleA=("PrgEnv-cray/5.2.25"     "PrgEnv-gnu/5.2.25"   "PrgEnv-intel/5.2.25")
+#           "PrgEnv-cray/5.0.15"     "PrgEnv-gnu/5.0.15"   "PrgEnv-intel/5.0.15"
+#           "PrgEnv-cray/5.1.18"     "PrgEnv-gnu/5.1.18"   "PrgEnv-intel/5.1.18"
+#           "PrgEnv-cray/5.1.29"     "PrgEnv-gnu/5.1.29"   "PrgEnv-intel/5.1.29")
 
 
   #########################################################################
