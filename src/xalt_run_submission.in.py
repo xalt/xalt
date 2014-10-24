@@ -293,6 +293,7 @@ class EnvT(object):
       re.compile(r'^LESS.*$'),
       re.compile(r'^MORE$'),
       re.compile(r'^PAGER$'),
+      re.compile(r'^PROMPT_COMMAND$'),
       re.compile(r'^NNTPSERVER$'),
       re.compile(r'^NLSPATH$'),
       re.compile(r'^MAIL$'),
