@@ -134,7 +134,7 @@ fi
 PSTREE_OUT="unknown"
 if [ -x "$PSTREE" ]; then
   PSTREE_OUT=$($PSTREE -l -s $$)
-  if [ ! $? ]; then
+  if [ $? -ne 0 ]; then
     logger -t XALT_PSTREE_SEGV -- "User: $USER: WD: $PWD, UUID: $UUID, CMD: $@"
   fi
 fi
