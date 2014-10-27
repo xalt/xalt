@@ -26,8 +26,8 @@ echo Making Version: $PKG_VERSION
 removeList()
 {
   local pkg=$1
-  local rmL=$2
-  for i in $rmL; do
+  shift;
+  for i in "$@"; do
     rm -f $pkg/bin/$i
   done
 }
