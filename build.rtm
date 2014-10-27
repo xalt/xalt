@@ -71,7 +71,6 @@ runMe()
 myhost=$(hostname -f)
 myhost=${myhost%.tacc.utexas.edu}
 first=${myhost%%.*}
-removeA=()
 export SYSHOST=${myhost#*.}
 
 case $SYSHOST in
@@ -85,7 +84,7 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    removeA+=("mpirun" "srun" "aprun")
+    REMOVE="mpirun srun aprun"
     ;;
 
   *)
@@ -114,7 +113,7 @@ cmdA=("-$MAKE distclean"
       "$SUDO $MAKE install"
       "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
-      "removeList $PKG $removeA[@]"
+      "removeList $PKG $REMOVE"
       "ld_repair"
       )
 
