@@ -112,7 +112,7 @@ def main():
           `lib_type`      char(2)         NOT NULL,
           PRIMARY KEY  (`obj_id`),
           INDEX  `index_hash_id` (`hash_id`),
-          UNIQUE KEY `thekey` (`object_path`(512), `hash_id`, `syshost`)
+          UNIQUE KEY `thekey` (`object_path`(256), `hash_id`, `syshost`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_object table" % idx ); idx += 1;
