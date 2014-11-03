@@ -133,14 +133,7 @@ fi
 
 PSTREE_OUT="unknown"
 if [ -x "$PSTREE" ]; then
-  CORE_SZ=$(ulimit -c)
-  ulimit -c 20000
   PSTREE_OUT=$($PSTREE -l -s $$)
-  if [ $? -ne 0 ]; then
-    cp core.* /tmp
-    logger -t XALT_PSTREE_SEGV -- "User: $USER: WD: $PWD, UUID: $UUID, CMD: $@"
-  fi
-  ulimit -c $CORE_SZ
 fi
 
 EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
