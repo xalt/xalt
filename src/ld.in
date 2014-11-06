@@ -134,9 +134,6 @@ fi
 PSTREE_OUT="unknown"
 if [ -x "$PSTREE" ]; then
   PSTREE_OUT=$($PSTREE -l -s $$)
-  if [ ! $? ]; then
-    logger -t XALT_PSTREE_SEGV -- "User: $USER: WD: $PWD, UUID: $UUID, CMD: $@"
-  fi
 fi
 
 EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
@@ -152,10 +149,10 @@ else
 fi
 
 #Save python state
-PY_PATH_XALT=$PYTHONPATH
-PY_HOME_XALT=$PYTHONHOME
-export PYTHONPATH=$PY_PATH_ORIG
-[ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$PY_HOME_ORIG
+py_path_xalt=$PYTHONPATH
+py_home_xalt=$PYTHONHOME
+export PYTHONPATH=$py_path_orig
+[ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
 
 tracing_msg $MY_CMD "${argA[@]}"
 
@@ -163,9 +160,9 @@ $MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT
 status=$?
 
 #Return python state
-export PYTHONPATH=$PY_PATH_XALT
+export PYTHONPATH=$py_path_xalt
 unset  PYTHONHOME
-[ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$PY_HOME_XALT
+[ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
 
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ

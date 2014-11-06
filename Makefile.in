@@ -120,7 +120,7 @@ Build_pstree_yes:
         tar xf psmisc-22.21.tar.gz;                                       \
         cd psmisc-22.21;                                                  \
         ./configure --prefix=$(prefix)/psmisc;                            \
-        make;                                                             \
+        make CFLAGS="-g -O0";                                             \
         make DESTDIR=$(DESTDIR) install;                                  \
         ln -s $(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec;    \
 	cd ..; rm -rf psmisc-22.21

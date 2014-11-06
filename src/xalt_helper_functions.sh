@@ -234,8 +234,8 @@ run_real_command()
     # restore python state to what the user originally had
     py_home_xalt=$PYTHONHOME
     py_path_xalt=$PYTHONPATH
-    export PYTHONPATH=$PY_path_orig
-    [ -n "$PY_HOME_ORIG" ] && export PYTHONHOME=$py_home_orig
+    export PYTHONPATH=$py_path_orig
+    [ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
 
     tracing_msg "run_real_command: Running: $MY_CMD"
     # Run the real command and save the status
@@ -244,7 +244,7 @@ run_real_command()
 
     # return python state back to XALT
     unset  PYTHONHOME
-    [ -n "$PY_HOME_XALT" ] && export PYTHONHOME=$py_home_xalt
+    [ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
     export PYTHONPATH=$py_path_xalt
   fi
 
