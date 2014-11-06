@@ -95,6 +95,9 @@ for option; do
     -n)
       prev='NTASKS'
       ;;
+    -d)
+      prev='NTHRDS'
+      ;;
     --help|-h)
       $MY_CMD "${argA[@]}"
       exit $?
@@ -112,6 +115,11 @@ for option; do
   #  break;
   #fi
 done
+
+if [[ "$NTHRDS" ]]; then
+    # set NTASKS to total core count, not just MPI tasks
+    NTASKS=$(($NTASKS*$NTHRDS))
+fi
 
 #######################################################################
 # We make the big assumption that the only MPI on a Cray is 
