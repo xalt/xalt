@@ -154,6 +154,7 @@ def main():
           `num_nodes`     int(11)        NOT NULL,
           `num_threads`   tinyint(4)     NOT NULL,
           `queue`         varchar(32)    NOT NULL,
+          `exit_code`     tinyint(4)     NOT NULL,
 
           `user`          varchar(32)    NOT NULL,
           `exec_path`     varchar(1024)  NOT NULL,

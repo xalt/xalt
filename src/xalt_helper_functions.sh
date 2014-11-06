@@ -251,7 +251,7 @@ run_real_command()
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
+  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" --status $status -- "$EXEC"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"

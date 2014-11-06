@@ -62,6 +62,7 @@ class CmdLineOptions(object):
     parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
     parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
     parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "-1",            help="number of mpi tasks")
+    parser.add_argument("--status",  dest='status',    action="store", default = "0",             help="return status from run")
     parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
     parser.add_argument("--run_uuid",dest='run_uuid',  action="store", default = None,            help="run uuid")
     parser.add_argument("exec_prog", nargs='+',        help="user program")
@@ -144,6 +145,7 @@ class UserEnvT(object):
     userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = args.ntasks
+    userT['exit_status']  = args.status
     userT['start_date']   = time.strftime("%c",time.localtime(args.startTime))
     userT['start_time']   = args.startTime
     userT['currentEpoch'] = ltime
