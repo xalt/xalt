@@ -251,13 +251,15 @@ class XALTdb(object):
         #print("found")
         row    = result.fetch_row()
         run_id = int(row[0][0])
-        query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
-          runT['userT']['run_time'], runT['userT']['end_time'], run_id)
-        conn.query(query)
-        query = "COMMIT"
-        conn.query(query)
-        v = XALT_Stack.pop()
-        carp("SUBMIT_HOST",v)
+        if (runT['userT']['end_time'] > 0):
+          query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
+            runT['userT']['run_time'], runT['userT']['end_time'], run_id)
+          conn.query(query)
+          query = "COMMIT"
+          conn.query(query)
+          v = XALT_Stack.pop()
+          carp("SUBMIT_HOST",v)
+
         return
       else:
         #print("not found")
