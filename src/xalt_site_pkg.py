@@ -74,8 +74,12 @@ def translate(nameA, envT, userT):
     
   # Compute number of total nodes for Generic SLURM.
   if (queueType == "SLURM"):
-    userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
+    #userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
+    userT['num_cores'] = int(envT.get("NTASKS",0))
   
+  if (queueType == "PBS"):
+    userT['num_cores'] = int(envT.get("NTASKS",0))
+
   keyA = [ 'num_cores', 'num_nodes' ]
 
   for key in keyA:
