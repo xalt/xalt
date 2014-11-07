@@ -85,7 +85,7 @@ for option; do
   esac
   
   case $option in
-    --np|-n)
+    -np|-n)
       prev='NTASKS'
       ;;
     --help|-h)
