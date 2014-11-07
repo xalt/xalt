@@ -18,6 +18,30 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
+#
+# This routine needs to set a few special fields that go into the
+# database.  We try to get the "account", "job_id", "num_cores",
+# "num_nodes", "num_threads", "queue" and "submithost" from the job.
+# Some of these are static for the job while some change for each
+# use of the code launcher.  This file is just an example of how a
+# couple sites get this information.  
+#
+# You see information like "account" and "job_id" can usually be
+# obtained from the scheduler environment.
+#
+# Other information like num_cores you probably need to get from the
+# the job launcher.  And this is where it gets tricky - below we 
+# don't set num_cores for the PBS example because it is already set
+# by the aprun and mpirun job launchers and passed through to the
+# xalt_run_submission.py script. 
+#
+# Other information like num_threads may or may not be obtainable
+# depending on the job launcher and what not.  The degree to which 
+# you get this information directly results in what kinds of reports
+# you can do.  If you don't have an accurate accounting for the number
+# of cores used (for example), then any reports that yield core hour
+# results may not be useful.
+#
 from __future__ import print_function
 import os
 
@@ -58,7 +82,7 @@ def translate(nameA, envT, userT):
     sysT['submit_host'] = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
-    sysT['num_cores']   = "PBS_NP"
+#    sysT['num_cores']   = "PBS_NP"
     sysT['num_nodes']   = "PBS_NUM_NODES"
     sysT['account']     = "PBS_ACCOUNT"
     sysT['job_id']      = "PBS_JOBID"
@@ -77,8 +101,8 @@ def translate(nameA, envT, userT):
     #userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
     userT['num_cores'] = int(envT.get("NTASKS",0))
   
-  if (queueType == "PBS"):
-    userT['num_cores'] = int(envT.get("NTASKS",0))
+#  if (queueType == "PBS"):
+#    userT['num_cores'] = int(envT.get("NTASKS",0))
 
   keyA = [ 'num_cores', 'num_nodes' ]
 
