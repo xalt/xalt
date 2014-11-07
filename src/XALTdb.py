@@ -186,15 +186,23 @@ class XALTdb(object):
         if (hash_id == "unknown"):
           continue
 
-        query = "SELECT obj_id FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
+        query = "SELECT obj_id, object_path FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
           hash_id, object_path, syshost)
         
         conn.query(query)
         result = conn.store_result()
-        if (result.num_rows() > 0):
-          row    = result.fetch_row()
-          obj_id = int(row[0][0])
-        else:
+        found  = False
+
+        rowA   = result.fetchall()
+        for row in rowA:
+          obj_id_x   = int(row[0])
+          obj_path_x = row[1]
+          if (obj_path_x == object_path):
+            found = True
+            obj_id = obj_id_x
+            break
+        
+        if (not found):
           moduleName = obj2module(object_path, reverseMapT)
           obj_kind   = obj_type(object_path)
 
@@ -263,14 +271,15 @@ class XALTdb(object):
         return
       else:
         #print("not found")
-        moduleName = obj2module(runT['userT']['exec_path'], reverseMapT)
+        moduleName  = obj2module(runT['userT']['exec_path'], reverseMapT)
+        exit_status = runT['userT'].get('exit_status',0)
         query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%d','%s','%s', %s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
           runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
           runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
-          runT['userT']['exit_status'], runT['userT']['user'],        runT['userT']['exec_path'],
+          exit_status,                  runT['userT']['user'],        runT['userT']['exec_path'],
           moduleName,                   runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
