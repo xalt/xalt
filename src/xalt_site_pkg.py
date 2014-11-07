@@ -35,12 +35,15 @@
 # by the aprun and mpirun job launchers and passed through to the
 # xalt_run_submission.py script. 
 #
-# Other information like num_threads may or may not be obtainable
-# depending on the job launcher and what not.  The degree to which 
-# you get this information directly results in what kinds of reports
-# you can do.  If you don't have an accurate accounting for the number
-# of cores used (for example), then any reports that yield core hour
-# results may not be useful.
+# num_threads is assumed to OMP_NUM_THREADS and obtained in 
+# xalt_run_submission.py.
+#
+# Other information like may or may not be obtainable depending on 
+# the job launcher and what not.  The degree to which you get this 
+# information directly results in what kinds of reports you can do.  
+# If you don't have an accurate accounting for the number of cores 
+# used (for example), then any reports that yield core hour results 
+# may not be useful.
 #
 from __future__ import print_function
 import os
@@ -82,7 +85,7 @@ def translate(nameA, envT, userT):
     sysT['submit_host'] = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
-#    sysT['num_cores']   = "PBS_NP"
+#    sysT['num_cores']   = "PBS_NP" 
     sysT['num_nodes']   = "PBS_NUM_NODES"
     sysT['account']     = "PBS_ACCOUNT"
     sysT['job_id']      = "PBS_JOBID"
@@ -97,9 +100,9 @@ def translate(nameA, envT, userT):
     userT[name] = result
     
   # Compute number of total nodes for Generic SLURM.
-  if (queueType == "SLURM"):
-    #userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
-    userT['num_cores'] = int(envT.get("NTASKS",0))
+#  if (queueType == "SLURM"):
+#    userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
+#    userT['num_cores'] = int(envT.get("NTASKS",0))
   
 #  if (queueType == "PBS"):
 #    userT['num_cores'] = int(envT.get("NTASKS",0))
