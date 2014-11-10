@@ -191,18 +191,10 @@ class XALTdb(object):
         
         conn.query(query)
         result = conn.store_result()
-        found  = False
-
-        rowA   = result.fetchall()
-        for row in rowA:
-          obj_id_x   = int(row[0])
-          obj_path_x = row[1]
-          if (obj_path_x == object_path):
-            found = True
-            obj_id = obj_id_x
-            break
-        
-        if (not found):
+        if (result.num_rows() > 0):
+          row    = result.fetch_row()
+          obj_id = int(row[0][0])
+        else:
           moduleName = obj2module(object_path, reverseMapT)
           obj_kind   = obj_type(object_path)
 
