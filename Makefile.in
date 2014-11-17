@@ -39,6 +39,7 @@ PATH_TO_CAT     := @PATH_TO_CAT@
 PATH_TO_MKDIR   := @PATH_TO_MKDIR@
 PATH_TO_AS      := @PATH_TO_AS@
 PATH_TO_BASENAME:= @PATH_TO_BASENAME@
+PATH_TO_READLINK:= @PATH_TO_READLINK@
 PATH_TO_DIRNAME := @PATH_TO_DIRNAME@
 PATH_TO_HEAD    := @PATH_TO_HEAD@
 PATH_TO_GREP    := @PATH_TO_GREP@
@@ -151,11 +152,12 @@ __installMe:
 	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
 	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            \
+	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            \
 	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              \
 	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      \
 	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
-	        -e 's|@etc_dir@|$(ETC_DIR)|g          '                    \
+	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
 	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
 	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \

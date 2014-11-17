@@ -35,7 +35,8 @@
 
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
-MY_DIR=$($DIRNAME $0)
+READLINK=@path_to_readlink@
+MY_DIR=$($DIRNAME $($READLINK -f $0))
 
 source $MY_DIR/xalt_helper_functions.sh
 
