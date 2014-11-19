@@ -20,6 +20,7 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
+from time       import sleep
 import os, sys, re, base64
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -93,19 +94,23 @@ class XALTdb(object):
     else:
       self.__readFromUser()
 
-    try:
-      self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
-      if (db):
-        cursor = self.__conn.cursor()
-        
-        # If MySQL version < 4.1, comment out the line below
-        cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
-        cursor.execute("USE "+xalt.db())
+    for i in xrange(0,6):
+      try:
+        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
+        if (db):
+          cursor = self.__conn.cursor()
+          
+          # If MySQL version < 4.1, comment out the line below
+          cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+          cursor.execute("USE "+xalt.db())
 
-
-    except MySQLdb.Error, e:
-      print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]), file=sys.stderr)
-      raise
+      except MySQLdb.Error, e:
+        if (i < 5):
+          sleep(i*0.1)
+          pass
+        else:
+          print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]), file=sys.stderr)
+          raise
 
     return self.__conn
 
@@ -222,6 +227,7 @@ class XALTdb(object):
     """
     
     nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' , 'submit_host']
+    query = ""
     try:
       conn   = self.connect()
       query  = "USE "+self.db()
