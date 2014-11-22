@@ -94,7 +94,8 @@ class XALTdb(object):
     else:
       self.__readFromUser()
 
-    for i in xrange(0,6):
+    n = 100
+    for i in xrange(0,n+1):
       try:
         self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
         if (db):
@@ -105,11 +106,11 @@ class XALTdb(object):
           cursor.execute("USE "+xalt.db())
 
       except MySQLdb.Error, e:
-        if (i < 5):
+        if (i < n):
           sleep(i*0.1)
           pass
         else:
-          print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]), file=sys.stderr)
+          print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
           raise
 
     return self.__conn
@@ -263,8 +264,8 @@ class XALTdb(object):
           conn.query(query)
           query = "COMMIT"
           conn.query(query)
-          v = XALT_Stack.pop()
-          carp("SUBMIT_HOST",v)
+        v = XALT_Stack.pop()
+        carp("SUBMIT_HOST",v)
 
         return
       else:
