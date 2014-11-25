@@ -111,6 +111,8 @@ FIND_EXEC_PRGM="unknown"
 
 WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 
+PATH=$(echo $PATH | sed -e 's|/opt/apps/xalt/xalt/bin:||')
+
 tracing_msg "Before $XALT_DIR/site/xalt_which_mpi"
 MPI_STACK=$($WHICH_MPI --name)
 tracing_msg "MPI_STACK: $MPI_STACK"

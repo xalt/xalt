@@ -40,8 +40,8 @@ findName()
 
   tracing_msg "Testing for mvapich2"
   if type -p mpiname ; then
-    mpiN=`mpiname -n`
-    mpiV=`mpiname -v`
+    mpiN=`mpiname -n 2> /dev/null`
+    mpiV=`mpiname -v 2> /dev/null`
     return
   fi
 
