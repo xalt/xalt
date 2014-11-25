@@ -186,7 +186,10 @@ find_working_python()
 # in the PATH.
 remove_xalt_bin_from_path()
 {
-  PATH=$($MY_PYTHON $XALT_DIR/libexec/xalt_remove_from_path.py $XALT_DIR/bin)
+  local cmd=$1 
+  local cmdpath=$(type -p $cmd) 
+  local xalt_bin=$(dirname $cmdpath) 
+  PATH=$($MY_PYTHON $XALT_DIR/libexec/xalt_remove_from_path.py $xalt_bin)       
 }
 
 ########################################################################
