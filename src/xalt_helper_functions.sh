@@ -36,6 +36,7 @@ UUIDGEN=@path_to_uuidgen@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 BASENAME=@path_to_basename@
+DIRNAME=@path_to_dirname@
 
 ##########################################################################
 #  Check command line arguments to see if user has requested tracing
@@ -188,7 +189,7 @@ remove_xalt_bin_from_path()
 {
   local cmd=$1 
   local cmdpath=$(type -p $cmd) 
-  local xalt_bin=$(dirname $cmdpath) 
+  local xalt_bin=$($DIRNAME $($READLINK -f $cmdpath))
   PATH=$($MY_PYTHON $XALT_DIR/libexec/xalt_remove_from_path.py $xalt_bin)       
 }
 
