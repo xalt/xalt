@@ -23,6 +23,14 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
+tracing_msg()
+{
+  if [ "$XALT_TRACING" = "yes" ]; then
+    builtin echo ""
+    builtin echo "$@"
+  fi
+}
+
 findName()
 {
   EXPR=expr
@@ -30,12 +38,14 @@ findName()
     EXPR=gexpr
   fi
 
+  tracing_msg "Testing for mvapich2"
   if type -p mpiname ; then
     mpiN=`mpiname -n`
     mpiV=`mpiname -v`
     return
   fi
 
+  tracing_msg "Testing for mpich2"
   if type -p mpich2version ; then
     mpiN=mpich2
     mpiV=`mpich2version | head -1`
@@ -43,6 +53,7 @@ findName()
     return
   fi 
   
+  tracing_msg "Testing for mpich"
   if type -p mpichversion ; then
     mpiN=mpich
     mpiV=`mpichversion | head -1`
@@ -50,6 +61,7 @@ findName()
     return
   fi
 
+  tracing_msg "Testing for SGI MPT"
   # this works with SGI MPT 2.01 on an SGI UV1000
   if type -p mpiexec_mpt ; then
     mpiexecPath=$(dirname `which mpiexec_mpt`)
@@ -66,7 +78,9 @@ findName()
     rm /tmp/mpi$$
   fi
 
-  mpirun -V > /tmp/mpi$$ 2>&1
+  
+  tracing_msg "Testing for OpenMPI/IMPI"
+  mpiexec -V > /tmp/mpi$$ 2>&1
   if [ $? = 0 ]; then
     mpiStr=`head -1 /tmp/mpi$$`
     if [[ $mpiStr =~ Intel ]]; then
@@ -87,6 +101,7 @@ findName()
     fi
   done
   
+  tracing_msg "Testing for $MPIEXEC -info"
   var=$($MPIEXEC -info)
   if [ $? = 0 ]; then
     mpiN="mvapich2"
@@ -94,6 +109,7 @@ findName()
     return
   fi
 
+  tracing_msg "Testing for $mpicc -v"
   var=$(mpicc -v 2> /dev/null)
   cmd=${var:0:5}
   if [ "$cmd" = mpicc ]; then

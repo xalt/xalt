@@ -42,7 +42,9 @@ BASENAME=@path_to_basename@
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  XALT_TRACING="no"
+  if [ -z "$XALT_TRACING" ]; then
+    XALT_TRACING="no"
+  fi
   argA=()
   for i in "$@"; do
     if [ "$i" = "--xalt_tracing" ]; then
@@ -52,7 +54,6 @@ request_tracing()
     fi
   done
   tracing_msg "XALT Tracing Activated"
-
 }
 
 ##########################################################################
