@@ -67,7 +67,6 @@ tracing_msg()
   fi
 }
 
-
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -180,6 +179,14 @@ find_working_python()
     $MY_CMD "$@"
     exit $?
   fi
+}
+
+########################################################################
+# Once we have found the xalt commands we don't want to have XALT_BIN
+# in the PATH.
+remove_xalt_bin_from_path()
+{
+  PATH=$($MY_PYTHON $XALT_DIR/libexec/xalt_remove_from_path.py $XALT_DIR/bin)
 }
 
 ########################################################################
