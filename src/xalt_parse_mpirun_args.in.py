@@ -70,28 +70,40 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
   if ('dot' in kw):
     os.environ['PATH'] = os.environ.get('PATH',"") + ":."
 
-  t = { }
-  i   = 0
-  while (i < N):
-    arg = argA[i]
+  i    = 0
+  done = False
+  resultA = []
 
-    i = parse_ntasks(npT, arg, i, argA, t)
+  while (not done):
+    t = {}
+    while (i < N):
+      arg = argA[i]
 
-    if (arg == cmdArg):
-      return which(find_cmd(ignoreT, 0, argA[i+1].split()))
-    
-    n   = argT.get(arg,-1)
-    if (n > 0):
-      i += n + 1
-      continue
-    if (arg[0:1] == "-"):
-      i  = i + 1
-      continue
-    break
+      i = parse_ntasks(npT, arg, i, argA, t)
 
-  path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
-  ntasks  = compute_ntasks(t)
-  resultA = { {'exec_prog':path, 'ntasks':ntasks} }
+      if (arg == cmdArg):
+        return which(find_cmd(ignoreT, 0, argA[i+1].split()))
+      
+      n   = argT.get(arg,-1)
+      if (n > 0):
+        i += n + 1
+        continue
+      if (arg[0:1] == "-"):
+        i  = i + 1
+        continue
+      break
+    path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
+    ntasks  = compute_ntasks(t)
+    resultA.append({'exec_prog':path, 'ntasks':ntasks})
+
+    # Loop for colons
+    done = True
+    while (i < N):
+      arg = argA[i]
+      if (arg == ":"):
+        done = False
+        break
+      
   return json.dumps(resultA)
 
 patSingleOpt = re.compile(r'(-[a-zA-Z])(\d*)')
