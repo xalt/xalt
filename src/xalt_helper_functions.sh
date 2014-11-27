@@ -216,7 +216,7 @@ run_real_command()
 
   
   # Find the user executable by walking the original command line.
-  EXEC_T="{exec_prog='unknown', ntask='1'}"
+  EXEC_T="[ {'exec_prog':'unknown', 'ntask'='1'} ]"
   if [ "$FIND_EXEC_PRGM" != "unknown" -a -x "$FIND_EXEC_PRGM" ]; then
     EXEC_T=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
   fi

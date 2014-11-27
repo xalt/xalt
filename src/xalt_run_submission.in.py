@@ -334,7 +334,7 @@ def main():
     args = CmdLineOptions().execute()
 
     
-    runA = json.loads(args.exec_progT)
+    runA = json.loads(args.exec_progT[0])
     for run in runA:
       
       userExec = UserExec(run.exec_prog)

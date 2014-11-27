@@ -62,7 +62,7 @@ npT = {
   '-N'                        : "nodes",
   }
 
-def compute_ntasks(t)
+def compute_ntasks(t):
   tasks = t.get("tasks")
   nodes = t.get("nodes")
   if (not tasks):

@@ -47,12 +47,10 @@ def find_cmd(ignoreT, i, argA):
       break
   return cmd
 
-def default_compute_ntasks(t)
+def default_compute_ntasks(t):
   tasks   = t.get("tasks",1)
   threads = t.get("threads",1)
   return tasks*threads
-
-
 
 def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
   """
@@ -79,12 +77,6 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
 
     i = parse_ntasks(npT, arg, i, argA, t)
 
-
-    if (arg in npT):
-      i      = i + 1
-      key    = npT[arg]
-      t[key] = argA[i]
-
     if (arg == cmdArg):
       return which(find_cmd(ignoreT, 0, argA[i+1].split()))
     
@@ -99,13 +91,13 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
 
   path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
   ntasks  = compute_ntasks(t)
-  resultT = {exec_prog=path, ntasks=ntasks}
-  return json.dumps(resultT)
+  resultA = { {'exec_prog':path, 'ntasks':ntasks} }
+  return json.dumps(resultA)
 
 patSingleOpt = re.compile(r'(-[a-zA-Z])(\d*)')
 patLongOpt   = re.compile(r'(--[a-zA-Z]+)=(\d+)')
 
-def parse_ntasks(npT, arg, i, argA, t)
+def parse_ntasks(npT, arg, i, argA, t):
   """
   Parse a single option for task, threads and nodes.
   @param npT:     Options for the number of tasks.
@@ -132,9 +124,10 @@ def parse_ntasks(npT, arg, i, argA, t)
     value = m.group(2)
 
   if ( opt in npT):
+    key = npT[opt]
     if (value == None):
       i = i + 1
       value = argA[i]
-    t[opt] = value
+    t[key] = value
 
   return i
