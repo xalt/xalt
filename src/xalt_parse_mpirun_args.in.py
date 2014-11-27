@@ -20,7 +20,7 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, re, sys
+import os, re, sys, json
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 
@@ -47,12 +47,13 @@ def find_cmd(ignoreT, i, argA):
       break
   return cmd
 
-def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
+def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
   """
   Walk the command line and first walk over the command line options.
 
   @param ignoreT: Table of names to ignore.
   @param argT:    Table of command line args. Keys are the name of the argument, values are the number of arguments it takes (> 0).
+  @param npT:     Options for the number of tasks.
   @param cmdArg:  command (like in ibrun.symm) that points to a user program.
   @param argA:    The command line split into an array.
   @param kw:      If dot=True then add "." to the end of PATH.
@@ -62,9 +63,15 @@ def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
   if ('dot' in kw):
     os.environ['PATH'] = os.environ.get('PATH',"") + ":."
 
+  t = { tasks = 1, threads = 1 }
   i   = 0
   while (i < N):
     arg = argA[i]
+    if (arg in npT):
+      i      = i + 1
+      key    = npT[arg]
+      t[key] = argA[i]
+
     if (arg == cmdArg):
       return which(find_cmd(ignoreT, 0, argA[i+1].split()))
     
@@ -78,7 +85,10 @@ def find_exec(ignoreT, argT, cmdArg, argA, *n, **kw):
     break
 
   path = which(find_cmd(ignoreT, i, argA)) or "unknown"
-  return path
+  
+  ntasks  = t.tasks * t.threads
+  resultT = {path=path, ntasks=ntasks}
+  return json.dumps(resultT)
 
 
   

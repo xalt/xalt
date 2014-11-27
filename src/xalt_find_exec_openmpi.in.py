@@ -38,8 +38,6 @@ argT = {
   '-am'                       : 1,
   '--app'                     : 1,
   '-c'                        : 1,
-  '-n'                        : 1,
-  '-np'                       : 1,
   '-cf'                       : 1,  
   '--cartofile'               : 1,
   '-cpus-per-proc'            : 1,
@@ -104,6 +102,11 @@ argT = {
   '--xml-file'                : 1,
   '-xterm'                    : 1,
   '--xterm'                   : 1,
+}
+
+npT = {
+  '-n'                        : "tasks",
+  '-np'                       : "tasks",
 }
 
 def main():

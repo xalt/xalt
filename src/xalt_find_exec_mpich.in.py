@@ -40,8 +40,6 @@ argT = {
   '-genv'                     : 2,
   '-genvlist'                 : 1,
   '-f'                        : 1,
-  '-n'                        : 1,  
-  '-np'                       : 1,  
   '-hosts'                    : 1,
   '-configfile'               : 1,
   '-launcher'                 : 1,
@@ -49,10 +47,16 @@ argT = {
   '-rmk'                      : 1,
 }
 
+npT = {
+  '-n'                        : "tasks",  
+  '-np'                       : "tasks",  
+}  
+
+
 def main():
   """
   Find name of executable when using mpich.
   """
-  print(find_exec(ignoreT, argT, None, sys.argv[1:]))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:]))
 
 if ( __name__ == '__main__'): main()

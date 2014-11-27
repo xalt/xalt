@@ -63,8 +63,8 @@ request_tracing()
 tracing_msg()
 {
   if [ "$XALT_TRACING" = "yes" ]; then
-    builtin echo ""
-    builtin echo "$@"
+    builtin echo ""   1>&2
+    builtin echo "$@" 1>&2
   fi
 }
 
@@ -207,14 +207,6 @@ run_real_command()
   shift
   MY_PYTHON=$1
   shift
-  NTASKS=$1
-  shift
-
-  # Give NTASKS an illegal value if it wasn't set.
-  if [ -z "$NTASKS" ]; then
-    NTASKS=-1
-  fi
-
 
   # Build the filename for the results.
   RUN_UUID=`$UUIDGEN`

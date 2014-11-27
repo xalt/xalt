@@ -93,12 +93,6 @@ for option; do
       $MY_CMD "${argA[@]}"
       exit $?
       ;;
-    -n)
-      prev='NTASKS'
-      ;;
-    -d)
-      prev='NTHRDS'
-      ;;
     --help|-h)
       $MY_CMD "${argA[@]}"
       exit $?
@@ -117,11 +111,6 @@ for option; do
   #fi
 done
 
-if [[ "$NTHRDS" ]]; then
-    # set NTASKS to total core count, not just MPI tasks
-    NTASKS=$(($NTASKS*$NTHRDS))
-fi
-
 #######################################################################
 # We make the big assumption that the only MPI on a Cray is 
 # Cray's mpi and thay the job launcher is aprun.  So we 
@@ -130,6 +119,6 @@ fi
 FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_aprun.py
 
 # This function sets the $status variable.
-run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "$NTASKS" "${argA[@]}"
+run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "${argA[@]}"
 
 exit $status

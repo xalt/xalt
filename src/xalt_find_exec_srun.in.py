@@ -44,7 +44,6 @@ argT = {
   '-J'                        : 1,
   '-L'                        : 1,
   '-m'                        : 1,
-  '-n'                        : 1,
   '-N'                        : 1,
   '-o'                        : 1,
   '-p'                        : 1,
@@ -58,12 +57,24 @@ argT = {
   '-B'                        : 1,
 }
 
+npT = {
+  '-n'                        : "tasks",
+  '--ntasks'                  : "tasks",
+  '-N'                        : "nodes",
+  }
+
+def compute_ntasks(t)
+  
+
+
+
+
 
 def main():
   """
   Find name of executable when using srun.
   """
 
-  print(find_exec(ignoreT, argT, "-c", sys.argv[1:]))
+  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]))
 
 if ( __name__ == '__main__'): main()
