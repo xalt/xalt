@@ -38,7 +38,7 @@ findName()
     EXPR=gexpr
   fi
 
-  tracing_msg "Testing for mvapich2"
+  tracing_msg "Testing for mvapich2 w/mpiname"
   if type -p mpiname ; then
     mpiN=`mpiname -n 2> /dev/null`
     mpiV=`mpiname -v 2> /dev/null`
@@ -48,7 +48,7 @@ findName()
   tracing_msg "Testing for mpich2"
   if type -p mpich2version ; then
     mpiN=mpich2
-    mpiV=`mpich2version | head -1`
+    mpiV=`mpich2version | head -n 1`
     mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
     return
   fi 
@@ -56,7 +56,7 @@ findName()
   tracing_msg "Testing for mpich"
   if type -p mpichversion ; then
     mpiN=mpich
-    mpiV=`mpichversion | head -1`
+    mpiV=`mpichversion | head -n 1`
     mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
     return
   fi
@@ -67,7 +67,7 @@ findName()
     mpiexecPath=$(dirname `which mpiexec_mpt`)
     $mpiexecPath/mpirun -v > /tmp/mpi$$ 2>&1
     if [ $? = 0 ]; then
-      mpiStr=`head -1 /tmp/mpi$$`
+      mpiStr=`head -n 1 /tmp/mpi$$`
       if [[ $mpiStr =~ "SGI MPT" ]]; then
         mpiN="sgimpt"
         mpiV=`$EXPR "$mpiStr" : '.*SGI MPT\s\+\([^ ]\+\)\s'`
@@ -82,7 +82,7 @@ findName()
   tracing_msg "Testing for OpenMPI/IMPI"
   mpiexec -V > /tmp/mpi$$ 2>&1
   if [ $? = 0 ]; then
-    mpiStr=`head -1 /tmp/mpi$$`
+    mpiStr=`head -n 1 /tmp/mpi$$`
     if [[ $mpiStr =~ Intel ]]; then
       mpiN="impi"
       mpiV=`$EXPR "$mpiStr" : '.*Version\s\+\([^ ]\+\)\s'`
@@ -139,5 +139,3 @@ elif [ "$1" = "--name" ]; then
 else
   echo "$mpiN $mpiFV"
 fi
-
-

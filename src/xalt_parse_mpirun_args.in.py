@@ -47,6 +47,13 @@ def find_cmd(ignoreT, i, argA):
       break
   return cmd
 
+def default_compute_ntasks(t)
+  tasks   = t.get("tasks",1)
+  threads = t.get("threads",1)
+  return tasks*threads
+
+
+
 def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
   """
   Walk the command line and first walk over the command line options.
@@ -60,13 +67,19 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
   """
   N   = len(argA)
 
+  compute_ntasks=kw.get("compute_ntasks",default_compute_ntasks)
+
   if ('dot' in kw):
     os.environ['PATH'] = os.environ.get('PATH',"") + ":."
 
-  t = { tasks = 1, threads = 1 }
+  t = { }
   i   = 0
   while (i < N):
     arg = argA[i]
+
+    i = parse_ntasks(npT, arg, i, argA, t)
+
+
     if (arg in npT):
       i      = i + 1
       key    = npT[arg]
@@ -84,11 +97,44 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
       continue
     break
 
-  path = which(find_cmd(ignoreT, i, argA)) or "unknown"
-  
-  ntasks  = t.tasks * t.threads
-  resultT = {path=path, ntasks=ntasks}
+  path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
+  ntasks  = compute_ntasks(t)
+  resultT = {exec_prog=path, ntasks=ntasks}
   return json.dumps(resultT)
 
+patSingleOpt = re.compile(r'(-[a-zA-Z])(\d*)')
+patLongOpt   = re.compile(r'(--[a-zA-Z]+)=(\d+)')
 
+def parse_ntasks(npT, arg, i, argA, t)
+  """
+  Parse a single option for task, threads and nodes.
+  @param npT:     Options for the number of tasks.
+  @param arg:     The single argument.
+  @param i:       the current index into argA.
+  @param argA:    The array of command line arguments.
+  @param t:       result table.
+  """
   
+  opt   = arg
+  value = None
+
+  # Search for pattern -n124 or -n
+  m = patSingleOpt.match(arg)
+  if (m):
+    opt = m.group(1)
+    if (m.group(2) != ""):
+      value = m.group(2)
+
+  # Search for pattern --nodes=123
+  m = patLongOpt.match(arg)
+  if (m):
+    opt   = m.group(1)
+    value = m.group(2)
+
+  if ( opt in npT):
+    if (value == None):
+      i = i + 1
+      value = argA[i]
+    t[opt] = value
+
+  return i

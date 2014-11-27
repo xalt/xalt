@@ -44,7 +44,6 @@ argT = {
   '-J'                        : 1,
   '-L'                        : 1,
   '-m'                        : 1,
-  '-N'                        : 1,
   '-o'                        : 1,
   '-p'                        : 1,
   '-r'                        : 1,
@@ -64,17 +63,24 @@ npT = {
   }
 
 def compute_ntasks(t)
-  
-
-
-
-
+  tasks = t.get("tasks")
+  nodes = t.get("nodes")
+  if (not tasks):
+    if (not nodes):
+      tasks = 1
+    else if (not os.environ.get("SLURM_JOBID")):
+      tasks = 1
+    if (nodes == 1):
+      tasks = 1
+    else:
+      tasks = os.environ.get("SLURM_CPUS_ON_NODE",1)*nodes
+  return tasks
 
 def main():
   """
   Find name of executable when using srun.
   """
 
-  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]))
+  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]), compute_ntasks=compute_ntasks)
 
 if ( __name__ == '__main__'): main()

@@ -24,7 +24,7 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, re, sys
+import os, re, sys, json
 
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
@@ -58,14 +58,13 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
-    parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
-    parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
-    parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "-1",            help="number of mpi tasks")
-    parser.add_argument("--status",  dest='status',    action="store", default = "0",             help="return status from run")
-    parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
-    parser.add_argument("--run_uuid",dest='run_uuid',  action="store", default = None,            help="run uuid")
-    parser.add_argument("exec_prog", nargs='+',        help="user program")
+    parser.add_argument("--start",    dest='startTime', action="store", type=float, default="0.0", help="start time")
+    parser.add_argument("--end",      dest='endTime',   action="store", type=float, default="0.0", help="end time")
+    parser.add_argument("--fn",       dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
+    parser.add_argument("--status",   dest='status',    action="store", default = "0",             help="return status from run")
+    parser.add_argument("--syshost",  dest='syshost',   action="store", default = syshost(),       help="system host name")
+    parser.add_argument("--run_uuid", dest='run_uuid',  action="store", default = None,            help="run uuid")
+    parser.add_argument("exec_progT", nargs='+',        help="user program")
 
     args = parser.parse_args()
     
@@ -130,11 +129,12 @@ class ExtractXALT(object):
 
 class UserEnvT(object):
   """ Class to extract important values from the environment """
-  def __init__(self, args, userExec):
+  def __init__(self, args, ntasks, userExec):
     """
     Ctor to construct the important user env values and store them in userT.
 
     @param args:     The parsed command line arguments.
+    @param ntasks:   The number of tasks.
     @param userExec: the path to the user executable.
     """
     ltime                 = time.time()
@@ -144,7 +144,7 @@ class UserEnvT(object):
     userT['run_uuid']     = args.run_uuid
     userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
-    userT['num_tasks']    = args.ntasks
+    userT['num_tasks']    = int(ntasks)
     userT['exit_status']  = args.status
     userT['start_date']   = time.strftime("%c",time.localtime(args.startTime))
     userT['start_time']   = args.startTime
@@ -333,22 +333,26 @@ def main():
     # parse command line options:
     args = CmdLineOptions().execute()
 
-    userExec = UserExec(args.exec_prog)
-    if (not userExec.execName()):
-      return
+    
+    runA = json.loads(args.exec_progT)
+    for run in runA:
+      
+      userExec = UserExec(run.exec_prog)
+      if (not userExec.execName()):
+        return
 
-    userT    = UserEnvT(args, userExec).userT()
+      userT    = UserEnvT(args, run.ntasks, userExec).userT()
   
-    submitT              = {}
-    submitT['userT']     = userT
-    submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
-    submitT['libA']      = userExec.libA()
-    submitT['envT']      = EnvT().envT()
-    submitT['hash_id']   = userExec.hash()
+      submitT              = {}
+      submitT['userT']     = userT
+      submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
+      submitT['libA']      = userExec.libA()
+      submitT['envT']      = EnvT().envT()
+      submitT['hash_id']   = userExec.hash()
   
-    xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
-                                            args.syshost, "run", args.resultFn)
-    xfer.save(submitT)
+      xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
+                                              args.syshost, "run", args.resultFn)
+      xfer.save(submitT)
   except Exception as e:
     print("XALT_EXCEPTION(xalt_run_submission.py): ",e)
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")

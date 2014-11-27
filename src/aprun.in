@@ -71,7 +71,6 @@ fi
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
-NTASKS=1
 append=false
 prev=
 done=false

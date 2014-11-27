@@ -216,21 +216,19 @@ run_real_command()
 
   
   # Find the user executable by walking the original command line.
-  EXEC="unknown"
+  EXEC_T="{exec_prog='unknown', ntask='1'}"
   if [ "$FIND_EXEC_PRGM" != "unknown" -a -x "$FIND_EXEC_PRGM" ]; then
-    EXEC=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
+    EXEC_T=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
   fi
 
-  tracing_msg "run_real_command: User's EXEC: $EXEC"
+  tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
 
-  # Record the job record at the start of the job.  This way if the job
-  # doesn't complete there will be a record of the job.
+  # Record the run record at the start of the job.  This way if the run
+  # doesn't complete there will be a record.
 
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
-
-
+  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC_T"
 
   status=0
   if [ -z "$testMe" ]; then
@@ -255,7 +253,7 @@ run_real_command()
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" --status $status -- "$EXEC"
+  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"
