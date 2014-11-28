@@ -209,11 +209,7 @@ run_real_command()
   shift
 
   # Build the filename for the results.
-  RUN_UUID=`$UUIDGEN`
-  DATESTR=`date +%Y_%m_%d_%H_%M_%S`
   SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
-  runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
-
   
   # Find the user executable by walking the original command line.
   EXEC_T="[ {'exec_prog':'unknown', 'ntask'='1'} ]"
@@ -228,7 +224,7 @@ run_real_command()
 
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC_T"
+  UUID_A=$($MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0 --uuidgen "$UUIDGEN" --syshost "$SYSHOST" -- "$EXEC_T")
 
   status=0
   if [ -z "$testMe" ]; then
@@ -253,7 +249,7 @@ run_real_command()
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
+  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuidA "$UUID_A" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"

@@ -100,6 +100,7 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
     done = True
     while (i < N):
       arg = argA[i]
+      i   = i + 1
       if (arg == ":"):
         done = False
         break
