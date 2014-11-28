@@ -162,6 +162,8 @@ tracing_msg $MY_CMD "${argA[@]}"
 $MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
 status=$?
 
+tracing_msg $MY_CMD "${argA[@]}"
+
 #Return python state
 export PYTHONPATH=$py_path_xalt
 unset  PYTHONHOME
@@ -172,7 +174,7 @@ if [ -n "$USER_TRACE" ]; then
 fi
 
 
-$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$STATUS" "`pwd`" "$SYSHOST" "$PSTREE_OUT" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
+$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$PSTREE_OUT" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
    builtin echo ""                       >> $RESULT
