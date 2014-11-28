@@ -147,7 +147,7 @@ class UserEnvT(object):
     userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
     userT['num_tasks']    = int(ntasks)
-    userT['exit_status']  = args.status
+    userT['exit_status']  = int(args.status)
     userT['start_date']   = time.strftime("%c",time.localtime(args.startTime))
     userT['start_time']   = args.startTime
     userT['currentEpoch'] = ltime
