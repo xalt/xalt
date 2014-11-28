@@ -272,7 +272,7 @@ class XALTdb(object):
         #print("not found")
         moduleName  = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status = runT['userT'].get('exit_status',0)
-        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%d','%s','%s', %s,'%s') " % (
+        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%d','%s','%s', '%s','%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
