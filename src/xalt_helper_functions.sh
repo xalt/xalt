@@ -226,6 +226,8 @@ run_real_command()
   sTime=$($MY_PYTHON $EPOCH)
   UUID_A=$($MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0 --uuidgen "$UUIDGEN" --syshost "$SYSHOST" -- "$EXEC_T")
 
+  tracing_msg "UUID_A: $UUID_A"
+
   status=0
   if [ -z "$testMe" ]; then
 
