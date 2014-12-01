@@ -74,6 +74,7 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
   done = False
   resultA = []
 
+  path = None
   while (not done):
     t = {}
     while (i < N):
@@ -82,7 +83,8 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
       i = parse_ntasks(npT, arg, i, argA, t)
 
       if (arg == cmdArg):
-        return which(find_cmd(ignoreT, 0, argA[i+1].split()))
+        path = which(find_cmd(ignoreT, 0, argA[i+1].split()))
+        break
       
       n   = argT.get(arg,-1)
       if (n > 0):
@@ -92,7 +94,8 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
         i  = i + 1
         continue
       break
-    path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
+    if (not path):
+      path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
     ntasks  = compute_ntasks(t)
     resultA.append({'exec_prog':path, 'ntasks':ntasks})
 

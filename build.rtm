@@ -84,7 +84,7 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    REMOVE="mpirun srun aprun"
+    REMOVE="mpirun srun aprun mpiexec"
     ;;
 
   *)
