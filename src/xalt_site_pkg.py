@@ -106,8 +106,8 @@ def translate(nameA, envT, userT):
   keyA = [ 'job_num_cores', 'num_cores', 'num_nodes' ]
 
   for key in keyA:
-    value = userT.get(key)
-    if ( not value ):
+    value = userT.get(key,"unknown")
+    if ( value == "unknown" ):
       userT[key] = 0
     else:
       userT[key] = int(userT[key])    
