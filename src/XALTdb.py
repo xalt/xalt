@@ -270,16 +270,17 @@ class XALTdb(object):
         return
       else:
         #print("not found")
-        moduleName  = obj2module(runT['userT']['exec_path'], reverseMapT)
-        exit_status = runT['userT'].get('exit_status',0)
-        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%d','%s','%s', '%s','%s') " % (
+        moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
+        exit_status   = int(runT['userT'].get('exit_status',0))
+        job_num_cores = int(runT['userT'].get('job_num_cores',0))
+        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%d', '%s','%d','%s', '%s','%s','%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
           runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
-          runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
-          exit_status,                  runT['userT']['user'],        runT['userT']['exec_path'],
-          moduleName,                   runT['userT']['cwd'])
+          job_num_cores,                runT['userT']['num_nodes'],   runT['userT']['num_threads'],
+          runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
+          runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
 

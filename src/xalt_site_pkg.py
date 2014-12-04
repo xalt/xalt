@@ -64,25 +64,28 @@ def translate(nameA, envT, userT):
     queueType = "PBS"
       
   if (queueType == "SGE"):
-    sysT['num_cores'] = "NSLOTS"
-    sysT['num_nodes'] = "NHOSTS"
-    sysT['account']   = "SGE_ACCOUNT"
-    sysT['job_id']    = "JOB_ID"
-    sysT['queue']     = "QUEUE"
+    sysT['num_cores']     = "NSLOTS"
+    sysT['job_num_cores'] = "NSLOTS"
+    sysT['num_nodes']     = "NHOSTS"
+    sysT['account']       = "SGE_ACCOUNT"
+    sysT['job_id']        = "JOB_ID"
+    sysT['queue']         = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
-    sysT['num_cores']   = "SLURM_TACC_CORES"
-    sysT['num_nodes']   = "SLURM_NNODES"
-    sysT['account']     = "SLURM_TACC_ACCOUNT"
-    sysT['job_id']      = "SLURM_JOB_ID"
-    sysT['queue']       = "SLURM_QUEUE"
-    sysT['submit_host'] = "SLURM_SUBMIT_HOST"
+    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    sysT['num_cores']      = "SLURM_TACC_CORES"
+    sysT['num_nodes']      = "SLURM_NNODES"
+    sysT['account']        = "SLURM_TACC_ACCOUNT"
+    sysT['job_id']         = "SLURM_JOB_ID"
+    sysT['queue']          = "SLURM_QUEUE"
+    sysT['submit_host']    = "SLURM_SUBMIT_HOST"
   
   elif (queueType == "SLURM"):
-    sysT['num_nodes']   = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
-    sysT['job_id']      = "SLURM_JOB_ID"
-    sysT['queue']       = "SLURM_QUEUE"
-    sysT['submit_host'] = "SLURM_SUBMIT_HOST"
+    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
+    sysT['job_id']         = "SLURM_JOB_ID"
+    sysT['queue']          = "SLURM_QUEUE"
+    sysT['submit_host']    = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
 #    sysT['num_cores']   = "PBS_NP" 
@@ -97,20 +100,14 @@ def translate(nameA, envT, userT):
     key    = sysT.get(name)
     if (key):
       result = envT.get(key,"unknown")
-    userT[name] = result
+    if (not (name in userT)):
+      userT[name] = result
     
-  # Compute number of total nodes for Generic SLURM.
-#  if (queueType == "SLURM"):
-#    userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
-#    userT['num_cores'] = int(envT.get("NTASKS",0))
-  
-#  if (queueType == "PBS"):
-#    userT['num_cores'] = int(envT.get("NTASKS",0))
-
-  keyA = [ 'num_cores', 'num_nodes' ]
+  keyA = [ 'job_num_cores', 'num_cores', 'num_nodes' ]
 
   for key in keyA:
-    if (userT[key] == "unknown"):
+    value = userT.get(key)
+    if ( not value ):
       userT[key] = 0
     else:
       userT[key] = int(userT[key])    
