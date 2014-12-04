@@ -105,7 +105,9 @@ argT = {
 }
 
 npT = {
+  '-c'                        : "tasks",
   '-n'                        : "tasks",
+  '--n'                       : "tasks",
   '-np'                       : "tasks",
 }
 
