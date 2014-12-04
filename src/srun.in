@@ -100,12 +100,6 @@ for option; do
   #  fi
   #fi
   case $option in
-    #-n|--ntasks)
-    #  prev='NTASKS'
-    #  ;;
-    #-N)
-    #  prev='NNODES'
-    #  ;;
     --help|-h|--usage|-V|--version)
       $MY_CMD "${argA[@]}"
       exit $?

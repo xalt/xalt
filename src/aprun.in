@@ -88,11 +88,7 @@ for option; do
   esac
   
   case $option in
-    -b)
-      $MY_CMD "${argA[@]}"
-      exit $?
-      ;;
-    --help|-h)
+    --help|-h|-b)
       $MY_CMD "${argA[@]}"
       exit $?
       ;;
