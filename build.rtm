@@ -68,10 +68,12 @@ runMe()
   done
 }
 
-myhost=$(hostname -f)
-myhost=${myhost%.tacc.utexas.edu}
-first=${myhost%%.*}
-export SYSHOST=${myhost#*.}
+if [ -z "$SYSHOST" ]; then
+  myhost=$(hostname -f)
+  myhost=${myhost%.tacc.utexas.edu}
+  first=${myhost%%.*}
+  export SYSHOST=${myhost#*.}
+fi
 
 case $SYSHOST in
   rios | mijo | jedrik | vato | vmijo | devo | lmod-test | xalt-lmod)
@@ -87,6 +89,10 @@ case $SYSHOST in
     REMOVE="mpirun srun aprun mpiexec"
     ;;
 
+  kfs|xc30)
+    base="$HOME/l/pkg"
+    EXTRA="/$SYSHOST"
+
   *)
     base="$HOME/l/pkg"
     ;;
@@ -94,7 +100,7 @@ esac
 BASE_DIR=$base
 
 pkgName=xalt
-PKG=$BASE_DIR/$pkgName/$PKG_VERSION
+PKG=$BASE_DIR/$pkgName/${PKG_VERSION}${EXTRA}
 
 $SUDO rm -rf $PKG
 
@@ -109,6 +115,7 @@ fi
 
 
 cmdA=("-$MAKE distclean"
+      "rm -f $PKG"
       "./configure --prefix=$PKG"
       "$SUDO $MAKE install"
       "rm -f config.log"
