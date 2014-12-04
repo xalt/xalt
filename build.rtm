@@ -92,6 +92,7 @@ case $SYSHOST in
   kfs|xc30)
     base="$HOME/l/pkg"
     EXTRA="/$SYSHOST"
+    ;;
 
   *)
     base="$HOME/l/pkg"
