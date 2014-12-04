@@ -348,7 +348,7 @@ def main():
       fn   = uuidA[i]['fn']
       userExec = UserExec(run['exec_prog'])
       if (not userExec.execName()):
-        return
+        continue
 
       userT    = UserEnvT(args, uuid, run['ntasks'], userExec).userT()
   
