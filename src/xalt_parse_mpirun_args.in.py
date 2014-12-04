@@ -106,6 +106,7 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
       i   = i + 1
       if (arg == ":"):
         done = False
+        path = None
         break
       
   return json.dumps(resultA)
