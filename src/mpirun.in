@@ -110,8 +110,8 @@ WHICH_MPI=$XALT_DIR/site/xalt_which_mpi
 MPI_STACK=$($WHICH_MPI --name)
 tracing_msg "MPI_STACK: $MPI_STACK"
 case "$MPI_STACK" in
-  mpich|mpich2)
-    FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_mpich.py
+  mpich|mpich2|mvapich2|impi)
+    FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_hydra.py
     ;;
   openmpi)
     FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_openmpi.py
