@@ -54,7 +54,7 @@ request_tracing()
       argA+=("$i")
     fi
   done
-  tracing_msg "XALT Tracing Activated"
+  tracing_msg "XALT Tracing Activated for version: @git@"
 }
 
 ##########################################################################
