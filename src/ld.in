@@ -162,8 +162,6 @@ tracing_msg $MY_CMD "${argA[@]}"
 $MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
 status=$?
 
-tracing_msg $MY_CMD "${argA[@]}"
-
 #Return python state
 export PYTHONPATH=$py_path_xalt
 unset  PYTHONHOME
