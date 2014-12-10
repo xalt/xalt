@@ -183,17 +183,6 @@ find_working_python()
 }
 
 ########################################################################
-# Once we have found the xalt commands we don't want to have XALT_BIN
-# in the PATH.
-remove_xalt_bin_from_path()
-{
-  local cmd=$1 
-  local cmdpath=$(type -p $cmd) 
-  local xalt_bin=$($DIRNAME $($READLINK -f $cmdpath))
-  PATH=$($MY_PYTHON $XALT_DIR/libexec/xalt_remove_from_path.py $xalt_bin)       
-}
-
-########################################################################
 # Run the real command and wrap the call to real program with
 # xalt_run_submission.py
 
