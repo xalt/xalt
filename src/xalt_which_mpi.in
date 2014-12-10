@@ -80,9 +80,9 @@ findName()
 
   
   tracing_msg "Testing for OpenMPI/IMPI"
-  mpiexec --version > /tmp/mpi$$ 2>&1
+  mpiVerStr=$(mpiexec --version)
   if [ $? = 0 ]; then
-    mpiStr=`head -n 1 /tmp/mpi$$`
+    mpiStr=$(echo $mpiVerStr | head -n 1)
     if [[ $mpiStr =~ Intel ]]; then
       mpiN="impi"
       mpiV=`$EXPR "$mpiStr" : '.*Version\s\+\([^ ]\+\)\s'`
@@ -90,10 +90,8 @@ findName()
       mpiN="openmpi"
       mpiV=`$EXPR "$mpiStr" : '.*)\s\+\(.*\)'`
     fi
-    rm /tmp/mpi$$
     return
   fi
-  rm /tmp/mpi$$
 
   for i in mpiexec mpiexec.hydra ; do
     if type -p $i ; then
