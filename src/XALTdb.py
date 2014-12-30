@@ -104,6 +104,8 @@ class XALTdb(object):
           # If MySQL version < 4.1, comment out the line below
           cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
           cursor.execute("USE "+xalt.db())
+        break
+
 
       except MySQLdb.Error, e:
         if (i < n):
@@ -112,7 +114,6 @@ class XALTdb(object):
         else:
           print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
           raise
-
     return self.__conn
 
 
@@ -273,7 +274,7 @@ class XALTdb(object):
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = int(runT['userT'].get('exit_status',0))
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
-        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%d', '%s','%d','%s', '%s','%s','%s') " % (
+        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%d', '%s','%d','%s', '%s',%s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
