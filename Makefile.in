@@ -73,7 +73,7 @@ LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.
                    src/progressBar.py                src/xalt_epoch.in.py             \
                    src/xalt_working_python.in.py     src/xalt_transmission_factory.py \
                    src/xalt_stack.py                 src/XALT_Rmap.py                 \
-                   src/xalt_global.py                src/xalt_remove_from_path.in.py
+                   src/xalt_global.py
 LIBEXEC_PKG     := $(patsubst %, $(PATH_TO_SRC)/%, $(LIBEXEC_PKG))
 
 SITE_PKG        := src/xalt_find_exec_hydra.in.py    src/xalt_find_exec_openmpi.in.py \
