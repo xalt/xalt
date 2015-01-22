@@ -83,7 +83,7 @@ class XALTdb(object):
       sys.stderr.write("Switch to user input mode...\n\n")
       self.__readFromUser()
 
-  def connect(self, db = None):
+  def connect(self, databaseName = None):
     """
     Public interface to connect to DB.
     @param db:  If this exists it will be used.
@@ -98,7 +98,7 @@ class XALTdb(object):
     for i in xrange(0,n+1):
       try:
         self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
-        if (db):
+        if (databaseName):
           cursor = self.__conn.cursor()
           
           # If MySQL version < 4.1, comment out the line below
