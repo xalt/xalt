@@ -48,8 +48,8 @@ def find_cmd(ignoreT, i, argA):
   return cmd
 
 def default_compute_ntasks(t):
-  tasks   = t.get("tasks",1)
-  threads = t.get("threads",1)
+  tasks   = int(t.get("tasks",1))
+  threads = int(t.get("threads",1))
   return tasks*threads
 
 def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):

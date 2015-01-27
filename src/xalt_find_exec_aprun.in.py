@@ -42,8 +42,6 @@ argT = {
   '--cpu-binding'             : 1,
   '-cp'                       : 1,
   '--cpu-binding-file'        : 1,
-  '-d'                        : 1,
-  '--cpus-per-pe'             : 1,
   '-D'                        : 1,
   '--debug'                   : 1,
   '-e'                        : 1,
@@ -73,13 +71,15 @@ argT = {
   '-sl'                       : 1,
   '--numa-node-list'          : 1,
   '-sn'                       : 1,
+  '-t'                        : 1,
   '--numa-nodes-per-node'     : 1,
   '--cpu-time-limit'          : 1,
 }
 
 npT = {
   '-n'                        : "tasks",
-  '-t'                        : "threads",
+  '-d'                        : "threads",
+  '--cpus-per-pe'             : "threads",
 }  
 
 

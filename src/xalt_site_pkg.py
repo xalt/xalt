@@ -88,7 +88,7 @@ def translate(nameA, envT, userT):
     sysT['submit_host']    = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
-    sysT['job_num_cores'] = "PBS_NP" 
+    sysT['job_num_cores'] = envT.get("PBS_NP" ,0)
     userT['num_cores']    = userT['num_tasks']
     sysT['num_nodes']     = "PBS_NUM_NODES"
     sysT['account']       = "PBS_ACCOUNT"
