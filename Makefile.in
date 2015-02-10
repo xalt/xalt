@@ -19,69 +19,70 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
-PATH_TO_SRC     := @PATH_TO_SRC@
-path_to_src     := PATH_TO_SRC
+PATH_TO_SRC       := @PATH_TO_SRC@
+path_to_src       := PATH_TO_SRC
 ifeq ($(PATH_TO_SRC),@$(path_to_src)@)
-  PATH_TO_SRC   := .
+  PATH_TO_SRC     := .
 endif
-CURRENT_MK      := $(lastword $(MAKEFILE_LIST))
+CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
-package         := xalt
-VERSION         := $(shell cat $(PATH_TO_SRC)/.version)
-TRANSMISSION    := @TRANSMISSION@
-ETC_DIR         := @ETC_DIR@
-prefix          := @prefix@
-XALT_DIR        := $(prefix)
-PATH_TO_UUIDGEN := @PATH_TO_UUIDGEN@
-PATH_TO_PYTHON  := @PATH_TO_PYTHON@
-PATH_TO_RM      := @PATH_TO_RM@
-PATH_TO_CAT     := @PATH_TO_CAT@
-PATH_TO_MKDIR   := @PATH_TO_MKDIR@
-PATH_TO_AS      := @PATH_TO_AS@
-PATH_TO_BASENAME:= @PATH_TO_BASENAME@
-PATH_TO_READLINK:= @PATH_TO_READLINK@
-PATH_TO_DIRNAME := @PATH_TO_DIRNAME@
-PATH_TO_HEAD    := @PATH_TO_HEAD@
-PATH_TO_GREP    := @PATH_TO_GREP@
-PATH_TO_PSTREE  := @PATH_TO_PSTREE@
-BUILD_PSTREE    := @BUILD_PSTREE@
-USE_ARGPARSE    := @USE_CONTRIB_ARGPARSE@
+package           := xalt
+VERSION           := $(shell cat $(PATH_TO_SRC)/.version)
+TRANSMISSION      := @TRANSMISSION@
+ETC_DIR           := @ETC_DIR@
+prefix            := @prefix@
+XALT_DIR          := $(prefix)
+HAVE_PYMOD_PSUTIL := @HAVE_PYMOD_PSUTIL@
+PATH_TO_UUIDGEN   := @PATH_TO_UUIDGEN@
+PATH_TO_PYTHON    := @PATH_TO_PYTHON@
+PATH_TO_RM        := @PATH_TO_RM@
+PATH_TO_CAT       := @PATH_TO_CAT@
+PATH_TO_MKDIR     := @PATH_TO_MKDIR@
+PATH_TO_AS        := @PATH_TO_AS@
+PATH_TO_BASENAME  := @PATH_TO_BASENAME@
+PATH_TO_READLINK  := @PATH_TO_READLINK@
+PATH_TO_DIRNAME   := @PATH_TO_DIRNAME@
+PATH_TO_HEAD      := @PATH_TO_HEAD@
+PATH_TO_GREP      := @PATH_TO_GREP@
+PATH_TO_PSTREE    := @PATH_TO_PSTREE@
+BUILD_PSTREE      := @BUILD_PSTREE@
+USE_ARGPARSE      := @USE_CONTRIB_ARGPARSE@
 
-GIT_PROG        := @PATH_TO_GIT@
-GIT_VERSION     := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=`git describe --always`; echo "$$GV"; else echo "@git@"; fi)
+GIT_PROG          := @PATH_TO_GIT@
+GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=`git describe --always`; echo "$$GV"; else echo "@git@"; fi)
 
-LIBEXEC         := $(prefix)/libexec
-SITE            := $(prefix)/site
-BIN             := $(prefix)/bin
-SBIN            := $(prefix)/sbin
-DIRLIST         := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
-                   $(DESTDIR)$(SBIN) 
+LIBEXEC           := $(prefix)/libexec
+SITE              := $(prefix)/site
+BIN               := $(prefix)/bin
+SBIN              := $(prefix)/sbin
+DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
+                     $(DESTDIR)$(SBIN) 
 
-BIN_PKG         := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
-                   src/ibrun.symm.in src/aprun.in src/srun.in                         \
-                   src/xalt_helper_functions.sh
-BIN_PKG         := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
+BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
+                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
+                     src/xalt_helper_functions.sh
+BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
-SBIN_PKG        := src/conf_create.in.py  	     src/createDB.in.py               \
-                   src/xalt_db.conf                  src/xalt_file_to_db.in.py        \
-                   src/xalt_syslog_to_db.in.py
-SBIN_PKG        := $(patsubst %, $(PATH_TO_SRC)/%, $(SBIN_PKG))
+SBIN_PKG          := src/conf_create.in.py  	     src/createDB.in.py               \
+                     src/xalt_db.conf                  src/xalt_file_to_db.in.py        \
+                     src/xalt_syslog_to_db.in.py
+SBIN_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SBIN_PKG))
 
-LIBEXEC_PKG     := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.in.py \
-                   src/xalt_run_submission.in.py     src/xalt_parse_mpirun_args.in.py \
-                   src/xalt_util.py                  src/XALTdb.py                    \
-                   src/progressBar.py                src/xalt_epoch.in.py             \
-                   src/xalt_working_python.in.py     src/xalt_transmission_factory.py \
-                   src/xalt_stack.py                 src/XALT_Rmap.py                 \
-                   src/xalt_global.py
-LIBEXEC_PKG     := $(patsubst %, $(PATH_TO_SRC)/%, $(LIBEXEC_PKG))
+LIBEXEC_PKG       := src/xalt_generate_assembly.in.py  src/xalt_generate_linkdata.in.py \
+                     src/xalt_run_submission.in.py     src/xalt_parse_mpirun_args.in.py \
+                     src/xalt_util.py                  src/XALTdb.py                    \
+                     src/progressBar.py                src/xalt_epoch.in.py             \
+                     src/xalt_working_python.in.py     src/xalt_transmission_factory.py \
+                     src/xalt_stack.py                 src/XALT_Rmap.py                 \
+                     src/xalt_global.py
+LIBEXEC_PKG       := $(patsubst %, $(PATH_TO_SRC)/%, $(LIBEXEC_PKG))
 
-SITE_PKG        := src/xalt_find_exec_hydra.in.py    src/xalt_find_exec_openmpi.in.py \
-	           src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
-                   src/new_job_id.in.py              src/xalt_site_pkg.py             \
-		   src/xalt_find_exec_ibrun.in.py    src/xalt_find_exec_aprun.in.py   \
-		   src/xalt_find_exec_sgimpt.in.py   src/xalt_find_exec_srun.in.py
-SITE_PKG        := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
+SITE_PKG          := src/xalt_find_exec_hydra.in.py    src/xalt_find_exec_openmpi.in.py \
+	             src/xalt_which_mpi.in             src/xalt_syshost.in.py           \
+                     src/new_job_id.in.py              src/xalt_site_pkg.py             \
+		     src/xalt_find_exec_ibrun.in.py    src/xalt_find_exec_aprun.in.py   \
+		     src/xalt_find_exec_sgimpt.in.py   src/xalt_find_exec_srun.in.py
+SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 
 .PHONY:
 
@@ -158,6 +159,7 @@ __installMe:
 	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      \
 	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
+                -e 's|@have_pymod_psutil@|$(HAVE_PYMOD_PSUTIL)|g'          \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
 	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
