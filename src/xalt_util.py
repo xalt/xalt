@@ -52,11 +52,18 @@ def extract_compiler():
     p = Process(pid=int(os.getpid()))
     ignore_programs = ['ld', 'collect2']
 
-    while p.parent:
-      if p.parent.name not in ignore_programs:
-        result = p.parent.name
+    def p_parent():
+      """
+      Determine parent of Process instance.
+      Check whether parent is a function (psutil > v2) or a property (psutil < v2)
+      """
+      return (callable(p.parent) and p.parent()) or p.parent
+
+    while p_parent():
+      if p_parent().name not in ignore_programs:
+        result = p_parent().name
         break
-      p=p.parent
+      p=p_parent()
   except ImportError:
     ignore_programs = ['pstree', 'ld', 'collect2', 'python', 'sh']
     pstree_bin = "@path_to_pstree@"
