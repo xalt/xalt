@@ -59,9 +59,16 @@ def extract_compiler():
       """
       return (callable(p.parent) and p.parent()) or p.parent
 
+    def p_parent_name():
+      """
+      Determine the name of a parent of Process instance.
+      Check whether parent is a function (psutil > v2) or a property (psutil < v2)
+      """
+      return (callable(p.parent) and p.parent().name()) or p.parent.name()
+
     while p_parent():
-      if p_parent().name not in ignore_programs:
-        result = p_parent().name
+      if p_parent_name() not in ignore_programs:
+        result = p_parent_name()
         break
       p=p_parent()
   except ImportError:
