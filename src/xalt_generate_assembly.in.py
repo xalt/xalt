@@ -77,12 +77,11 @@ def main():
   try: 
     uuid     = sys.argv[1]
     syshost  = sys.argv[2]
-    pstree   = sys.argv[3]
-    fn       = sys.argv[4]
+    fn       = sys.argv[3]
     version  = "@version@"
     epochStr = str(time.time())
 
-    compiler = extract_compiler(pstree)
+    compiler = extract_compiler()
 
     print_assembly(uuid, fn, version, syshost, compiler, epochStr)
 
