@@ -50,7 +50,7 @@ def extract_compiler():
   try:
     from psutil import Process
     p = Process(pid=int(os.getpid()))
-    ignore_programs = ['ld', 'collect2']
+    ignore_programs = ['ld', 'collect2','bash','Python']
 
     def p_parent():
       """
