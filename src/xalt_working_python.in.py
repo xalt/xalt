@@ -28,6 +28,10 @@ def main():
   """
   Test for working print_function from __future__
   """
+  if ("@have_pymod_psutil@" == "yes"):
+     from psutil import Process
+
+
   print ("GOOD")
 
 if ( __name__ == '__main__'):

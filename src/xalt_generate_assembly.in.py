@@ -47,13 +47,19 @@ def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
   """
   user    = os.environ.get("USER","unknown")
   osName  = platform.system() + "_%_%_" + platform.release()
+  system  = platform.system()
 
   year  = time.strftime("%Y")
   date  = time.strftime("%c").replace(" ","_%_%_")
 
   try: 
     f    = open(fn,"w")
-    f.writelines("\t.section .xalt\n")
+
+    if (system == "Darwin"): 
+      f.writelines("\t.section .XALT, .xalt\n")
+    else:
+      f.writelines("\t.section .xalt\n")
+
     f.writelines("\t.asciz \"XALT_Link_Info\"\n") #this is how to find the section in the exec
     # Print cushion
     f.writelines("\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n")
@@ -77,12 +83,11 @@ def main():
   try: 
     uuid     = sys.argv[1]
     syshost  = sys.argv[2]
-    pstree   = sys.argv[3]
-    fn       = sys.argv[4]
+    fn       = sys.argv[3]
     version  = "@version@"
     epochStr = str(time.time())
 
-    compiler = extract_compiler(pstree)
+    compiler = extract_compiler()
 
     print_assembly(uuid, fn, version, syshost, compiler, epochStr)
 

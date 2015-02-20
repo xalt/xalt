@@ -24,7 +24,7 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, re, sys, json
+import os, re, sys, json, platform
 
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
@@ -78,30 +78,21 @@ class ExtractXALT(object):
   """
   This class extracts the XALT scribe placed in the program or shared library.
   """
-  def __init__(self, cmd):
+  def __init__(self, execPath):
     """
     Parse the input path for the xalt record.  If it exists extract the
     key value pairs and store in a table.
 
-    @param cmd: the path to the program or shared library that has (or could have) an XALT record.
+    @param execPath: the path to the program or shared library that has (or could have) an XALT record.
     """
-    outStr  = capture(["objdump", "-s", "-j", ".xalt", cmd])
-    self.__fieldT = {}
-    if (not outStr.find("Contents of section .xalt:") != -1):
-      return 
-    
-    outputA = outStr.split('\n')
-    outputA.pop(0)
-    outputA.pop(0)
-    outputA.pop(0)
-    outputA.pop(0)
-  
-    sA = []
-    for line in outputA:
-      split = line.split()
-      if (len(split) > 0):
-        sA.append(split[-1])
-    s = "".join(sA)
+
+    system  = platform.system()
+
+    if (system == "Darwin"):
+      s = self.__extract_xalt_darwin()
+    else:
+      s = self.__extract_xalt_linux()
+
   
     xaltA   = re.split('%%', s)
   
@@ -122,6 +113,51 @@ class ExtractXALT(object):
         fieldT[key] = value
     
     self.__fieldT = fieldT 
+
+  def __extract_xalt_linux(self, execPath):
+    """
+    Use objdump to extract the xalt record in a linux executable.
+    @param execPath: the path to the program or shared library that has (or could have) an XALT record. 
+    """
+
+    outStr  = capture(["objdump", "-s", "-j", ".xalt", execPath ])
+    self.__fieldT = {}
+    if (not outStr.find("Contents of section .xalt:") != -1):
+      return 
+    
+    outputA = outStr.split('\n')
+    outputA.pop(0)
+    outputA.pop(0)
+    outputA.pop(0)
+    outputA.pop(0)
+  
+    sA = []
+    for line in outputA:
+      split = line.split()
+      if (len(split) > 0):
+        sA.append(split[-1])
+    return "".join(sA)
+
+  def __extract_xalt_darwin(self, execPath):
+    """
+    Use objdump to extract the xalt record in a linux executable.
+    @param execPath: the path to the program or shared library that has (or could have) an XALT record.
+    """
+    outStr = capture (["otool", "-s", ".XALT", ".xalt", execPath]
+
+    outputA = outStr.split("\n")
+    outputA.pop(0)
+    outputA.pop(0)
+  
+    sA = []
+    for line in outputA:
+      split = line.split()
+      if (len(split) > 0):
+        for hexStr in split[1:]:
+          sA.append(chr(int(hexStr,16)))
+
+    return "".join(sA)
+
 
   def xaltRecordT(self):
     """ Return the XALT values found in cmd. """
