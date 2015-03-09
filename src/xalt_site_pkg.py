@@ -62,6 +62,8 @@ def translate(nameA, envT, userT):
     queueType = "SLURM"
   elif (envT.get("PBS_JOBID")):
     queueType = "PBS"
+  elif (envT.get("LSF_VERSION")):
+    queueType = "LSF"
       
   if (queueType == "SGE"):
     sysT['num_cores']     = "NSLOTS"
@@ -96,6 +98,16 @@ def translate(nameA, envT, userT):
     sysT['queue']          = "PBS_QUEUE"
     sysT['submit_host']    = "PBS_O_HOST"
   
+  elif (queueType == "LSF"):
+    userT['job_num_cores'] = "LSB_MAX_NUM_PROCESSORS"
+    userT['num_cores']     = "LSB_DJOB_NUMPROC"
+    mcpu_hostA             = envT.get("LSB_MCPU_HOSTS","a 1").split()
+    userT['num_nodes']     = len(mcpu_hostsA)/2
+    sysT['account']        = "%%_UNKNOWN_%%"
+    sysT['job_id']         = "LSB_JOBID"
+    sysT['queue']          = "LSB_QUEUE"
+    sysT['submit_host']    = "LSB_EXEC_CLUSTER"
+  
   for name in nameA:
     result = "unknown"
     key    = sysT.get(name)
@@ -115,6 +127,3 @@ def translate(nameA, envT, userT):
   
   if (userT['job_id'] == "unknown"):
     userT['job_id'] = envT.get('JOB_ID','unknown')
-
-
-

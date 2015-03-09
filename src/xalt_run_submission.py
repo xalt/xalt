@@ -89,9 +89,9 @@ class ExtractXALT(object):
     system  = platform.system()
 
     if (system == "Darwin"):
-      s = self.__extract_xalt_darwin()
+      s = self.__extract_xalt_darwin(execPath)
     else:
-      s = self.__extract_xalt_linux()
+      s = self.__extract_xalt_linux(execPath)
 
   
     xaltA   = re.split('%%', s)
@@ -143,7 +143,7 @@ class ExtractXALT(object):
     Use objdump to extract the xalt record in a linux executable.
     @param execPath: the path to the program or shared library that has (or could have) an XALT record.
     """
-    outStr = capture (["otool", "-s", ".XALT", ".xalt", execPath]
+    outStr = capture (["otool", "-s", ".XALT", ".xalt", execPath])
 
     outputA = outStr.split("\n")
     outputA.pop(0)
