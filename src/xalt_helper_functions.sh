@@ -201,8 +201,8 @@ run_real_command()
   SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
   
   # Find the user executable by walking the original command line.
-  EXEC_T="[ {'exec_prog':'unknown', 'ntask'='1'} ]"
-  if [ "$FIND_EXEC_PRGM" != "unknown" -a -x "$FIND_EXEC_PRGM" ]; then
+  EXEC_T='[{"exec_prog": "unknown", "ntask": 1} ]'
+  if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
     EXEC_T=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
   fi
 
