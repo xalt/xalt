@@ -198,7 +198,7 @@ run_real_command()
   shift
 
   # Build the filename for the results.
-  SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
+  SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost_@site_name@.py)
   
   # Find the user executable by walking the original command line.
   EXEC_T="[ {'exec_prog':'unknown', 'ntask'='1'} ]"
