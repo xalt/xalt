@@ -1,0 +1,103 @@
+#!/bin/bash
+#-*- shell-script -*-
+#
+#  MAGIC_STRING__XALT__XALT__MAGIC_STRING
+# 
+#  Git Version: @git@
+
+#-----------------------------------------------------------------------
+# XALT: A tool that tracks users jobs and environments on a cluster.
+# Copyright (C) 2013-2014 University of Texas at Austin
+# Copyright (C) 2013-2014 University of Tennessee
+# 
+# This library is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation; either version 2.1 of 
+# the License, or (at your option) any later version. 
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Lesser  General Public License for more details. 
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330,
+# Boston, MA 02111-1307 USA
+#-----------------------------------------------------------------------
+
+##########################################################################
+#
+# mpirun wrapper: Place XALT program tracking calls before and after
+#                 running the real mpirun.
+#
+##########################################################################
+
+XALT_DIR=@xalt_dir@
+DIRNAME=@path_to_dirname@
+READLINK=@path_to_readlink@
+MY_DIR=$($DIRNAME $($READLINK -f $0))
+
+source $MY_DIR/xalt_helper_functions.sh
+
+##########################################################################
+# Check for user requested tracing.
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
+
+########################################################################
+# Search for the command  and make sure that you don't find this one.
+
+find_real_command $0  # this command sets $MY_CMD
+
+########################################################################
+# Make sure that the python setup is valid.  
+
+find_working_python  # This function sets MY_PYTHON
+
+########################################################################
+# Loop over command line arguments to mpirun. This code is used instead of
+# getopt and others because this wrapper script should not try to know
+# all the options to ld. Instead we are just "cherry-picking" the options
+# we want to know about.
+
+append=false
+prev=
+done=false
+for option; do
+  if [ -n "$prev" ]; then
+    eval "$prev=\$option"
+    prev=
+    continue
+  fi
+
+  case "$option" in
+    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
+    -*) optarg=;;
+    *) optarg=; done=true;;
+  esac
+  
+  case $option in
+    --help|-h|-V|--version)
+      $MY_CMD "${argA[@]}"
+      exit $?
+      ;;
+    ---test)
+      testMe=true
+      ;;
+  esac
+
+  #####################################################################
+  # This code below is commented out.  Since this script is not parsing
+  # all options the done flag won't work.
+
+  #if [ "$done" = "true" ]; then
+  #  break;
+  #fi
+done
+
+FIND_EXEC_PRGM="$XALT_DIR/site/xalt_find_exec_ncar.py"
+
+# This function sets the $status variable.
+run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "${argA[@]}"
+
+exit $status

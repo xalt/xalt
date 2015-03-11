@@ -34,7 +34,6 @@ from xalt_parse_mpirun_args import find_exec
 ignoreT = {
   'env'              : True,
   'time'             : True,
-  'job_memusage.exe' : True,
 }
 
 argT = {
@@ -97,8 +96,6 @@ argT = {
 }
 
 npT = {
-  '-n'                        : "tasks",  
-  '-np'                       : "tasks",  
 }  
 
 

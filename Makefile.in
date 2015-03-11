@@ -61,7 +61,7 @@ DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
 
 BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
                      src/ibrun.symm.in src/aprun.in src/srun.in                         \
-                     src/xalt_helper_functions.sh
+                     src/mpirun.lsf.in src/xalt_helper_functions.sh
 BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
 SBIN_PKG          := src/conf_create.in.py  	       src/createDB.in.py               \
@@ -82,7 +82,8 @@ SITE_PKG          := src/xalt_find_exec_hydra.py       src/xalt_find_exec_openmp
 	             src/xalt_which_mpi.in             src/xalt_syshost_$(SITE_NAME).py \
                      src/new_job_id.in.py              src/xalt_site_pkg.py             \
 		     src/xalt_find_exec_ibrun.py       src/xalt_find_exec_aprun.py      \
-		     src/xalt_find_exec_sgimpt.py      src/xalt_find_exec_srun.py
+		     src/xalt_find_exec_sgimpt.py      src/xalt_find_exec_srun.py       \
+                     src/xalt_find_exec_ncar.py
 SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 
 .PHONY:
