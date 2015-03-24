@@ -43,7 +43,7 @@ DIRNAME=@path_to_dirname@
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  if [ -z "$XALT_TRACING" ]; then
+  if [ -z "${XALT_TRACING:-}" ]; then
     XALT_TRACING="no"
   fi
   argA=()
@@ -62,7 +62,7 @@ request_tracing()
 
 tracing_msg()
 {
-  if [ "$XALT_TRACING" = "yes" ]; then
+  if [ "${XALT_TRACING:-}" = "yes" ]; then
     builtin echo ""   1>&2
     builtin echo "$@" 1>&2
   fi
@@ -96,7 +96,7 @@ find_real_command()
     # if $exec_x is exists and is executable then use it
     # This is typically used by ld and when points /usr/bin/ld.x
     my_cmd=$exec_x
-  elif [ -n "$BASH_VERSION" ]; then
+  elif [ -n "${BASH_VERSION:-}" ]; then
     # If this is a bash script (and not a bash script in sh mode) then
     # use type to list all possible "ld" or "ibrun".  
 
@@ -218,13 +218,13 @@ run_real_command()
   tracing_msg "UUID_A: $UUID_A"
 
   status=0
-  if [ -z "$testMe" ]; then
+  if [ -z "${testMe:-}" ]; then
 
     # restore python state to what the user originally had
     py_home_xalt=$PYTHONHOME
     py_path_xalt=$PYTHONPATH
     export PYTHONPATH=$py_path_orig
-    [ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
+    [ -n "${py_home_orig:-}" ] && export PYTHONHOME=$py_home_orig
 
     tracing_msg "run_real_command: Running: $MY_CMD"
     # Run the real command and save the status
@@ -233,7 +233,7 @@ run_real_command()
 
     # return python state back to XALT
     unset  PYTHONHOME
-    [ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
+    [ -n "${py_home_xalt:-}" ] && export PYTHONHOME=$py_home_xalt
     export PYTHONPATH=$py_path_xalt
   fi
 

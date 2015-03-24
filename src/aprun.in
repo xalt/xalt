@@ -60,7 +60,7 @@ find_working_python  # This function sets MY_PYTHON
 # Determine if we are inside a PBS job, if so then set PBS_ACCOUNT to
 # the account string name
 
-if [ -n "$PBS_JOBID" ]; then
+if [ -n "${PBS_JOBID:-}" ]; then
   export PBS_ACCOUNT=`qstat -f $PBS_JOBID | grep "Account_Name =" | awk '{print $3}'`
 fi
 
