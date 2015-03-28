@@ -79,6 +79,13 @@ findName()
   fi
 
   
+  tracing_msg "Testing for OpenMPI using ompi_info"
+  if type -p ompi_info ; then
+     mpiV=$(ompi_info | grep -E "^\s+Open Mpi:" | sed -e 's/ *Open Mpi: //')
+     mpiN="openmpi"
+     return
+  fi
+
   tracing_msg "Testing for OpenMPI/IMPI"
   mpiVerStr=$(mpiexec --version)
   if [ $? = 0 ]; then
