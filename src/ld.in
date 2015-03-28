@@ -168,7 +168,7 @@ fi
 
 $MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
 
-if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
+if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
    builtin echo "====================="  >> $RESULT
    builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
