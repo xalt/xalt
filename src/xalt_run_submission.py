@@ -388,6 +388,8 @@ def main():
       fn   = uuidA[i]['fn']
       userExec = UserExec(run['exec_prog'])
       if (not userExec.execName()):
+        if (tracing == "yes"):
+          print ("Did not find executable, not writing .json file", file=sys.stderr)
         continue
 
       userT    = UserEnvT(args, uuid, run['ntasks'], userExec).userT()

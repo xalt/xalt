@@ -36,31 +36,31 @@ ignoreT = {
 # srun args that take one option in the form "-arg option"
 argT = {
   '-A'                        : 1,
-  '-c'                        : 1,
-  '-d'                        : 1,
+  '-B'                        : 1,
+  '-C'                        : 1,
   '-D'                        : 1,
-  '-e'                        : 1,
-  '-i'                        : 1,
   '-J'                        : 1,
   '-L'                        : 1,
+  '-T'                        : 1,
+  '-W'                        : 1,
+  '-c'                        : 1,
+  '-d'                        : 1,
+  '-e'                        : 1,
+  '-i'                        : 1,
   '-m'                        : 1,
   '-o'                        : 1,
   '-p'                        : 1,
   '-r'                        : 1,
-  '-T'                        : 1,
   '-t'                        : 1,
-  '-W'                        : 1,
-  '-C'                        : 1,
   '-w'                        : 1,
   '-x'                        : 1,
-  '-B'                        : 1,
 }
 
 npT = {
   '-n'                        : "tasks",
   '--ntasks'                  : "tasks",
   '-N'                        : "nodes",
-  }
+}
 
 def compute_ntasks(t):
   tasks = t.get("tasks")
@@ -82,6 +82,6 @@ def main():
   Find name of executable when using srun.
   """
 
-  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:], compute_ntasks=compute_ntasks))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], compute_ntasks=compute_ntasks))
 
 if ( __name__ == '__main__'): main()
