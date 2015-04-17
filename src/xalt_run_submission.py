@@ -379,11 +379,17 @@ def main():
         fn = "".join(fnA)
         uuidA.append({'uuid' : uuid, 'fn' : fn})
 
+    tracing = os.environ.get("XALT_TRACING")
+    if (tracing == "yes"):
+      print ("XALT_TRANSMISSION_STYLE: ",XALT_TRANSMISSION_STYLE, file=sys.stderr)
+
     for i, run in enumerate(runA):
       uuid = uuidA[i]['uuid']
       fn   = uuidA[i]['fn']
       userExec = UserExec(run['exec_prog'])
       if (not userExec.execName()):
+        if (tracing == "yes"):
+          print ("Did not find executable, not writing .json file", file=sys.stderr)
         continue
 
       userT    = UserEnvT(args, uuid, run['ntasks'], userExec).userT()
@@ -394,7 +400,7 @@ def main():
       submitT['libA']      = userExec.libA()
       submitT['envT']      = EnvT().envT()
       submitT['hash_id']   = userExec.hash()
-  
+
       xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
                                               args.syshost, "run", fn)
       xfer.save(submitT)

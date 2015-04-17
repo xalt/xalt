@@ -43,8 +43,8 @@ DIRNAME=@path_to_dirname@
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  if [ -z "${XALT_TRACING:-}" ]; then
-    XALT_TRACING="no"
+  if [ -n "${XALT_TRACING:-}" ]; then
+    XALT_TRACING="yes"
   fi
   argA=()
   for i in "$@"; do
@@ -54,6 +54,9 @@ request_tracing()
       argA+=("$i")
     fi
   done
+  if [ -n "${XALT_TRACING:-}" ]; then
+    export XALT_TRACING
+  fi
   tracing_msg "XALT Tracing Activated for version: @git@"
 }
 
