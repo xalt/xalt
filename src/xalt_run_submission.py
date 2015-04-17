@@ -390,6 +390,7 @@ def main():
       if (not userExec.execName()):
         if (tracing == "yes"):
           print ("Did not find executable, not writing .json file", file=sys.stderr)
+          print ("User path is: ",os.environ.get("PATH"), file=sys.stderr)
         continue
 
       userT    = UserEnvT(args, uuid, run['ntasks'], userExec).userT()
