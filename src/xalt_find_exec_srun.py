@@ -82,6 +82,7 @@ def main():
   Find name of executable when using srun.
   """
 
-  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:], compute_ntasks=compute_ntasks))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:],
+                  dot=True, compute_ntasks=compute_ntasks))
 
 if ( __name__ == '__main__'): main()
