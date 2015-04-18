@@ -62,61 +62,68 @@ def translate(nameA, envT, userT):
     queueType = "SLURM"
   elif (envT.get("PBS_JOBID")):
     queueType = "PBS"
+  elif (envT.get("LSF_VERSION")):
+    queueType = "LSF"
       
   if (queueType == "SGE"):
-    sysT['num_cores'] = "NSLOTS"
-    sysT['num_nodes'] = "NHOSTS"
-    sysT['account']   = "SGE_ACCOUNT"
-    sysT['job_id']    = "JOB_ID"
-    sysT['queue']     = "QUEUE"
+    sysT['num_cores']     = "NSLOTS"
+    sysT['job_num_cores'] = "NSLOTS"
+    sysT['num_nodes']     = "NHOSTS"
+    sysT['account']       = "SGE_ACCOUNT"
+    sysT['job_id']        = "JOB_ID"
+    sysT['queue']         = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
-    sysT['num_cores']   = "SLURM_TACC_CORES"
-    sysT['num_nodes']   = "SLURM_NNODES"
-    sysT['account']     = "SLURM_TACC_ACCOUNT"
-    sysT['job_id']      = "SLURM_JOB_ID"
-    sysT['queue']       = "SLURM_QUEUE"
-    sysT['submit_host'] = "SLURM_SUBMIT_HOST"
+    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    sysT['num_cores']      = "SLURM_TACC_CORES"
+    sysT['num_nodes']      = "SLURM_NNODES"
+    sysT['account']        = "SLURM_TACC_ACCOUNT"
+    sysT['job_id']         = "SLURM_JOB_ID"
+    sysT['queue']          = "SLURM_QUEUE"
+    sysT['submit_host']    = "SLURM_SUBMIT_HOST"
   
   elif (queueType == "SLURM"):
-    sysT['num_nodes']   = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
-    sysT['job_id']      = "SLURM_JOB_ID"
-    sysT['queue']       = "SLURM_QUEUE"
-    sysT['submit_host'] = "SLURM_SUBMIT_HOST"
+    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
+    sysT['job_id']         = "SLURM_JOB_ID"
+    sysT['queue']          = "SLURM_QUEUE"
+    sysT['submit_host']    = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
-#    sysT['num_cores']   = "PBS_NP" 
-    sysT['num_nodes']   = "PBS_NUM_NODES"
-    sysT['account']     = "PBS_ACCOUNT"
-    sysT['job_id']      = "PBS_JOBID"
-    sysT['queue']       = "PBS_QUEUE"
-    sysT['submit_host'] = "PBS_O_HOST"
+    userT['job_num_cores'] = envT.get("PBS_NP" ,0)
+    userT['num_cores']     = userT['num_tasks']
+    sysT['num_nodes']      = "PBS_NUM_NODES"
+    sysT['account']        = "PBS_ACCOUNT"
+    sysT['job_id']         = "PBS_JOBID"
+    sysT['queue']          = "PBS_QUEUE"
+    sysT['submit_host']    = "PBS_O_HOST"
+  
+  elif (queueType == "LSF"):
+    userT['job_num_cores'] = "LSB_MAX_NUM_PROCESSORS"
+    userT['num_cores']     = "LSB_DJOB_NUMPROC"
+    mcpu_hostA             = envT.get("LSB_MCPU_HOSTS","a 1").split()
+    userT['num_nodes']     = len(mcpu_hostsA)/2
+    sysT['account']        = "%%_UNKNOWN_%%"
+    sysT['job_id']         = "LSB_JOBID"
+    sysT['queue']          = "LSB_QUEUE"
+    sysT['submit_host']    = "LSB_EXEC_CLUSTER"
   
   for name in nameA:
     result = "unknown"
     key    = sysT.get(name)
     if (key):
       result = envT.get(key,"unknown")
-    userT[name] = result
+    if (not (name in userT)):
+      userT[name] = result
     
-  # Compute number of total nodes for Generic SLURM.
-#  if (queueType == "SLURM"):
-#    userT['num_cores'] = int(envT.get("SLURM_NNODES",0))*int(envT.get("SLURM_CPUS_ON_NODE",0))
-#    userT['num_cores'] = int(envT.get("NTASKS",0))
-  
-#  if (queueType == "PBS"):
-#    userT['num_cores'] = int(envT.get("NTASKS",0))
-
-  keyA = [ 'num_cores', 'num_nodes' ]
+  keyA = [ 'job_num_cores', 'num_cores', 'num_nodes' ]
 
   for key in keyA:
-    if (userT[key] == "unknown"):
+    value = userT.get(key,"unknown")
+    if ( value == "unknown" ):
       userT[key] = 0
     else:
       userT[key] = int(userT[key])    
   
   if (userT['job_id'] == "unknown"):
     userT['job_id'] = envT.get('JOB_ID','unknown')
-
-
-

@@ -1,0 +1,141 @@
+#!/usr/bin/env python
+# -*- python -*-
+from __future__ import print_function
+import os, sys, re, MySQLdb, json, time, argparse
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
+from xalt_util     import *
+from xalt_global   import *
+
+class XALTdb(object):
+  """
+  This XALTdb class opens the XALT database and is responsible for
+  all the database interactions.
+  """
+  def __init__(self, confFn):
+    """ Initialize the class and save the db config file. """
+    self.__host   = None
+    self.__user   = None
+    self.__passwd = None
+    self.__db     = None
+    self.__conn   = None
+    self.__confFn = confFn
+
+  def __readFromUser(self):
+    """ Ask user for database access info. (private) """
+
+    self.__host   = raw_input("Database host:")
+    self.__user   = raw_input("Database user:")
+    self.__passwd = getpass.getpass("Database pass:")
+    self.__db     = raw_input("Database name:")
+
+  def __readConfig(self):
+    """ Read database access info from config file. (private)"""
+    confFn = self.__confFn
+    try:
+      config=ConfigParser.ConfigParser()
+      config.read(confFn)
+      self.__host    = config.get("MYSQL","HOST")
+      self.__user    = config.get("MYSQL","USER")
+      self.__passwd  = base64.b64decode(config.get("MYSQL","PASSWD"))
+      self.__db      = config.get("MYSQL","DB")
+    except ConfigParser.NoOptionError, err:
+      sys.stderr.write("\nCannot parse the config file\n")
+      sys.stderr.write("Switch to user input mode...\n\n")
+      self.__readFromUser()
+
+  def connect(self, databaseName = None):
+    """
+    Public interface to connect to DB.
+    @param db:  If this exists it will be used.
+    
+    """
+    if(os.path.exists(self.__confFn)):
+      self.__readConfig()
+    else:
+      self.__readFromUser()
+
+    n = 100
+    for i in xrange(0,n+1):
+      try:
+        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
+        if (databaseName):
+          cursor = self.__conn.cursor()
+          
+          # If MySQL version < 4.1, comment out the line below
+          cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+          cursor.execute("USE "+xalt.db())
+        break
+
+
+      except MySQLdb.Error, e:
+        if (i < n):
+          sleep(i*0.1)
+          pass
+        else:
+          print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
+          raise
+    return self.__conn
+
+
+  def db(self):
+    """ Return name of db"""
+    return self.__db
+
+  def runs(self, startDate, endDate):
+    """ Collect data from DB """
+
+    try:
+      runA  = []
+      conn  = self.connect()
+      query = "USE "+self.db()
+      conn.query(query)
+
+      query = "select date, syshost, account, start_time, run_time, num_cores, "    +
+              "num_nodes, num_threads, user, exec_path, module_name, run_id    "    +
+              "from xalt_run where xalt_run.date >= '%s' and xalt_run.date <= '%s' limit 10 " % (
+              startDate, endDate)
+      conn.query(query)
+
+      result = conn.store_result()
+
+      if (result.num_rows() > 0):
+        print("result.num_rows(): ",result.num_rows())
+        rowA = result.fetch_row()
+        
+        for row in rowA:
+          runA.append({'date'       : row[0], 'syshost'     : row[1], 'account'   : row[2],
+                       'start_time' : row[3], 'run_time'    : row[4], 'num_cores' : row[5],
+                       'num_nodes'  : row[6], 'num_threads' : row[7], 'user'      : row[8],
+                       'exec_path'  : row[7], 'module_name' : row[8], 'run_id'    : row[9]})
+
+        for run in runA:
+          print('run_id: ',run['run_id'], ', exec_path: ', run['exec_path'])
+              
+
+
+class CmdLineOptions(object):
+  """ Command line Options class """
+
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--start",      dest='startDate', action="store",    help="The day to collect")
+    parser.add_argument("--end",        dest='endDate',   action="store",    help="The month to collect")
+    parser.add_argument("--dbname",     dest='dbname', action="store",  default="xalt", help="Name of the database")
+    args = parser.parse_args()
+    return args
+
+def main():
+  args = CmdLineOptions().execute()
+  xalt = XALTdb(dbConfigFn(args.dbname))
+  xalt.runs(args.startDate,args.endDate)
+  
+if ( __name__ == '__main__'): main()

@@ -42,8 +42,6 @@ argT = {
   '--cpu-binding'             : 1,
   '-cp'                       : 1,
   '--cpu-binding-file'        : 1,
-  '-d'                        : 1,
-  '--cpus-per-pe'             : 1,
   '-D'                        : 1,
   '--debug'                   : 1,
   '-e'                        : 1,
@@ -57,10 +55,9 @@ argT = {
   '-L'                        : 1,
   '-l'                        : 1,
   '-m'                        : 1,
-  '--memory-per-pe'           : 1,
-  '-n'                        : 1,
-  '--pes'                     : 1,
   '-N'                        : 1,
+  '--memory-per-pe'           : 1,
+  '--pes'                     : 1,
   '--pes-per-node'            : 1,
   '-p'                        : 1,
   '--p-governor'              : 1,
@@ -74,16 +71,23 @@ argT = {
   '-sl'                       : 1,
   '--numa-node-list'          : 1,
   '-sn'                       : 1,
-  '--numa-nodes-per-node'     : 1,
   '-t'                        : 1,
+  '--numa-nodes-per-node'     : 1,
   '--cpu-time-limit'          : 1,
 }
+
+npT = {
+  '-n'                        : "tasks",
+  '-d'                        : "threads",
+  '--cpus-per-pe'             : "threads",
+}  
+
 
 def main():
   """
   Find name of executable when using aprun.
   """
 
-  print(find_exec(ignoreT, argT, None, sys.argv[1:], dot=True))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
 
 if ( __name__ == '__main__'): main()

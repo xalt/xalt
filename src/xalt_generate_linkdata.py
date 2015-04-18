@@ -24,7 +24,7 @@
 #-----------------------------------------------------------------------
 
 from __future__                import print_function
-import os, sys, re, json, subprocess
+import os, sys
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -116,12 +116,11 @@ def main():
     status      = sys.argv[ 2]
     wd          = sys.argv[ 3]
     syshost     = sys.argv[ 4]
-    pstree      = sys.argv[ 5]
-    execname    = sys.argv[ 6]
-    xaltobj     = sys.argv[ 7]
-    build_epoch = sys.argv[ 8]
-    linklineFn  = sys.argv[ 9]
-    resultFn    = sys.argv[10]
+    execname    = sys.argv[ 5]
+    xaltobj     = sys.argv[ 6]
+    build_epoch = sys.argv[ 7]
+    linklineFn  = sys.argv[ 8]
+    resultFn    = sys.argv[ 9]
 
     if (execname.find("conftest") != -1):
       return 1
@@ -136,10 +135,10 @@ def main():
   
     resultT                  = {}
     resultT['uuid']          = uuid
-    resultT['link_program']  = extract_compiler(pstree)
+    resultT['link_program']  = extract_compiler()
     resultT['build_user']    = User
-    resultT['exit_code']     = status
-    resultT['build_epoch']   = build_epoch
+    resultT['exit_code']     = int(status)
+    resultT['build_epoch']   = float(build_epoch)
     resultT['exec_path']     = os.path.abspath(execname)
     resultT['hash_id']       = hash_id
     resultT['wd']            = wd

@@ -24,7 +24,7 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, re, sys
+import os, re, sys, json, platform
 
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
@@ -58,14 +58,14 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--start",   dest='startTime', action="store", type=float, default="0.0", help="start time")
-    parser.add_argument("--end",     dest='endTime',   action="store", type=float, default="0.0", help="end time")
-    parser.add_argument("--fn",      dest='resultFn',  action="store", default = "/dev/null",     help="resultFn")
-    parser.add_argument("--ntasks",  dest='ntasks',    action="store", default = "-1",            help="number of mpi tasks")
-    parser.add_argument("--status",  dest='status',    action="store", default = "0",             help="return status from run")
-    parser.add_argument("--syshost", dest='syshost',   action="store", default = syshost(),       help="system host name")
-    parser.add_argument("--run_uuid",dest='run_uuid',  action="store", default = None,            help="run uuid")
-    parser.add_argument("exec_prog", nargs='+',        help="user program")
+    parser.add_argument("--start",    dest='startTime', action="store", type=float, default="0.0", help="start time")
+    parser.add_argument("--end",      dest='endTime',   action="store", type=float, default="0.0", help="end time")
+    parser.add_argument("--status",   dest='status',    action="store", default = "0",             help="return status from run")
+    parser.add_argument("--syshost",  dest='syshost',   action="store", default = syshost(),       help="system host name")
+    parser.add_argument("--uuidgen",  dest='uuidgen',   action="store", default = None,            help="uuidgen program")
+    parser.add_argument("--uuidA",    dest='uuidA',     action="store", default = None,            help="An array of uuid")
+
+    parser.add_argument("exec_progT", nargs='+',        help="user program")
 
     args = parser.parse_args()
     
@@ -78,30 +78,21 @@ class ExtractXALT(object):
   """
   This class extracts the XALT scribe placed in the program or shared library.
   """
-  def __init__(self, cmd):
+  def __init__(self, execPath):
     """
     Parse the input path for the xalt record.  If it exists extract the
     key value pairs and store in a table.
 
-    @param cmd: the path to the program or shared library that has (or could have) an XALT record.
+    @param execPath: the path to the program or shared library that has (or could have) an XALT record.
     """
-    outStr  = capture(["objdump", "-s", "-j", ".xalt", cmd])
-    self.__fieldT = {}
-    if (not outStr.find("Contents of section .xalt:") != -1):
-      return 
-    
-    outputA = outStr.split('\n')
-    outputA.pop(0)
-    outputA.pop(0)
-    outputA.pop(0)
-    outputA.pop(0)
-  
-    sA = []
-    for line in outputA:
-      split = line.split()
-      if (len(split) > 0):
-        sA.append(split[-1])
-    s = "".join(sA)
+
+    system  = platform.system()
+
+    if (system == "Darwin"):
+      s = self.__extract_xalt_darwin(execPath)
+    else:
+      s = self.__extract_xalt_linux(execPath)
+
   
     xaltA   = re.split('%%', s)
   
@@ -123,6 +114,51 @@ class ExtractXALT(object):
     
     self.__fieldT = fieldT 
 
+  def __extract_xalt_linux(self, execPath):
+    """
+    Use objdump to extract the xalt record in a linux executable.
+    @param execPath: the path to the program or shared library that has (or could have) an XALT record. 
+    """
+
+    outStr  = capture(["objdump", "-s", "-j", ".xalt", execPath ])
+    self.__fieldT = {}
+    if (not outStr.find("Contents of section .xalt:") != -1):
+      return 
+    
+    outputA = outStr.split('\n')
+    outputA.pop(0)
+    outputA.pop(0)
+    outputA.pop(0)
+    outputA.pop(0)
+  
+    sA = []
+    for line in outputA:
+      split = line.split()
+      if (len(split) > 0):
+        sA.append(split[-1])
+    return "".join(sA)
+
+  def __extract_xalt_darwin(self, execPath):
+    """
+    Use objdump to extract the xalt record in a linux executable.
+    @param execPath: the path to the program or shared library that has (or could have) an XALT record.
+    """
+    outStr = capture (["otool", "-s", ".XALT", ".xalt", execPath])
+
+    outputA = outStr.split("\n")
+    outputA.pop(0)
+    outputA.pop(0)
+  
+    sA = []
+    for line in outputA:
+      split = line.split()
+      if (len(split) > 0):
+        for hexStr in split[1:]:
+          sA.append(chr(int(hexStr,16)))
+
+    return "".join(sA)
+
+
   def xaltRecordT(self):
     """ Return the XALT values found in cmd. """
     return self.__fieldT
@@ -130,22 +166,24 @@ class ExtractXALT(object):
 
 class UserEnvT(object):
   """ Class to extract important values from the environment """
-  def __init__(self, args, userExec):
+  def __init__(self, args, uuid, ntasks, userExec):
     """
     Ctor to construct the important user env values and store them in userT.
 
     @param args:     The parsed command line arguments.
+    @param uuid:     The uuid string.
+    @param ntasks:   The number of tasks.
     @param userExec: the path to the user executable.
     """
     ltime                 = time.time()
     userT                 = {}
     userT['cwd']          = os.getcwd()
     userT['syshost']      = args.syshost
-    userT['run_uuid']     = args.run_uuid
+    userT['run_uuid']     = uuid
     userT['num_threads']  = int(os.environ.get("OMP_NUM_THREADS","0"))
     userT['user']         = os.environ.get("USER","unknown")
-    userT['num_tasks']    = args.ntasks
-    userT['exit_status']  = args.status
+    userT['num_tasks']    = int(ntasks)
+    userT['exit_status']  = int(args.status)
     userT['start_date']   = time.strftime("%c",time.localtime(args.startTime))
     userT['start_time']   = args.startTime
     userT['currentEpoch'] = ltime
@@ -166,26 +204,14 @@ class UserExec(object):
   """
   Find all about the user's executable.
   """
-  def __init__(self, exec_progA):
+  def __init__(self, cmd):
     """
-    Find the user's executable by walking the command line
-    and skipping the executables name in ignoreT.  Then find
-    the full path to the executable.  Finally find the shared
+    Find the full path to the executable.  Then find the shared
     libraries if there and get the hash time.
 
     @param exec_progA: the command line after the mpirun type
     arguments have been removed.
     """
-    ignoreT = {
-      'env'              : True,
-      'time'             : True,
-    }
-    cmd = None
-    for prog in exec_progA:
-      bare = os.path.basename(prog)
-      if (not (bare in ignoreT)):
-        cmd = prog
-        break
 
     self.__execType = None
     self.__execName = which(cmd)
@@ -332,25 +358,57 @@ def main():
   try:
     # parse command line options:
     args = CmdLineOptions().execute()
+    runA = json.loads(args.exec_progT[0])
+    if (args.endTime > 0):
+      uuidA = json.loads(args.uuidA)
+    else:
+      dateStr = capture("date +%Y_%m_%d_%H_%M_%S")[0:-1]
+      N       = len(runA)
+      uuidA   = []
+      for i in xrange(N):
+        fnA     = []
+        uuid = capture(args.uuidgen)[0:-1]
+        fnA.append(os.environ.get("HOME","/"))
+        fnA.append("/.xalt.d/run.")
+        fnA.append(args.syshost)
+        fnA.append(".")
+        fnA.append(dateStr)
+        fnA.append(".")
+        fnA.append(uuid)
+        fnA.append(".json")
+        fn = "".join(fnA)
+        uuidA.append({'uuid' : uuid, 'fn' : fn})
 
-    userExec = UserExec(args.exec_prog)
-    if (not userExec.execName()):
-      return
+    tracing = os.environ.get("XALT_TRACING")
+    if (tracing == "yes"):
+      print ("XALT_TRANSMISSION_STYLE: ",XALT_TRANSMISSION_STYLE, file=sys.stderr)
 
-    userT    = UserEnvT(args, userExec).userT()
+    for i, run in enumerate(runA):
+      uuid = uuidA[i]['uuid']
+      fn   = uuidA[i]['fn']
+      userExec = UserExec(run['exec_prog'])
+      if (not userExec.execName()):
+        if (tracing == "yes"):
+          print ("Did not find executable, not writing .json file", file=sys.stderr)
+          print ("User path is: ",os.environ.get("PATH"), file=sys.stderr)
+        continue
+
+      userT    = UserEnvT(args, uuid, run['ntasks'], userExec).userT()
   
-    submitT              = {}
-    submitT['userT']     = userT
-    submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
-    submitT['libA']      = userExec.libA()
-    submitT['envT']      = EnvT().envT()
-    submitT['hash_id']   = userExec.hash()
-  
-    xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
-                                            args.syshost, "run", args.resultFn)
-    xfer.save(submitT)
+      submitT              = {}
+      submitT['userT']     = userT
+      submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
+      submitT['libA']      = userExec.libA()
+      submitT['envT']      = EnvT().envT()
+      submitT['hash_id']   = userExec.hash()
+
+      xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
+                                              args.syshost, "run", fn)
+      xfer.save(submitT)
+    if (args.endTime == 0):
+      print(json.dumps(uuidA))
   except Exception as e:
-    print("XALT_EXCEPTION(xalt_run_submission.py): ",e)
+    print("XALT_EXCEPTION(xalt_run_submission.py): ",e, file=sys.stderr)
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")
 
 

@@ -23,6 +23,14 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
+tracing_msg()
+{
+  if [ "$XALT_TRACING" = "yes" ]; then
+    builtin echo ""    1>&2
+    builtin echo "$@"  1>&2
+  fi
+}
+
 findName()
 {
   EXPR=expr
@@ -30,32 +38,36 @@ findName()
     EXPR=gexpr
   fi
 
+  tracing_msg "Testing for mvapich2 w/mpiname"
   if type -p mpiname ; then
-    mpiN=`mpiname -n`
-    mpiV=`mpiname -v`
+    mpiN=`mpiname -n 2> /dev/null`
+    mpiV=`mpiname -v 2> /dev/null`
     return
   fi
 
+  tracing_msg "Testing for mpich2"
   if type -p mpich2version ; then
     mpiN=mpich2
-    mpiV=`mpich2version | head -1`
+    mpiV=`mpich2version | head -n 1`
     mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
     return
   fi 
   
+  tracing_msg "Testing for mpich"
   if type -p mpichversion ; then
     mpiN=mpich
-    mpiV=`mpichversion | head -1`
+    mpiV=`mpichversion | head -n 1`
     mpiV=`$EXPR "$mpiV" : '.*:\s\s*\(.*\)'`
     return
   fi
 
+  tracing_msg "Testing for SGI MPT"
   # this works with SGI MPT 2.01 on an SGI UV1000
   if type -p mpiexec_mpt ; then
     mpiexecPath=$(dirname `which mpiexec_mpt`)
     $mpiexecPath/mpirun -v > /tmp/mpi$$ 2>&1
     if [ $? = 0 ]; then
-      mpiStr=`head -1 /tmp/mpi$$`
+      mpiStr=`head -n 1 /tmp/mpi$$`
       if [[ $mpiStr =~ "SGI MPT" ]]; then
         mpiN="sgimpt"
         mpiV=`$EXPR "$mpiStr" : '.*SGI MPT\s\+\([^ ]\+\)\s'`
@@ -66,9 +78,18 @@ findName()
     rm /tmp/mpi$$
   fi
 
-  mpiexec -V > /tmp/mpi$$ 2>&1
+  
+  tracing_msg "Testing for OpenMPI using ompi_info"
+  if type -p ompi_info ; then
+     mpiV=$(ompi_info | grep -E "^\s+Open Mpi:" | sed -e 's/ *Open Mpi: //')
+     mpiN="openmpi"
+     return
+  fi
+
+  tracing_msg "Testing for OpenMPI/IMPI"
+  mpiVerStr=$(mpiexec --version)
   if [ $? = 0 ]; then
-    mpiStr=`head -1 /tmp/mpi$$`
+    mpiStr=$(echo $mpiVerStr | head -n 1)
     if [[ $mpiStr =~ Intel ]]; then
       mpiN="impi"
       mpiV=`$EXPR "$mpiStr" : '.*Version\s\+\([^ ]\+\)\s'`
@@ -76,10 +97,8 @@ findName()
       mpiN="openmpi"
       mpiV=`$EXPR "$mpiStr" : '.*)\s\+\(.*\)'`
     fi
-    rm /tmp/mpi$$
     return
   fi
-  rm /tmp/mpi$$
 
   for i in mpiexec mpiexec.hydra ; do
     if type -p $i ; then
@@ -87,6 +106,7 @@ findName()
     fi
   done
   
+  tracing_msg "Testing for $MPIEXEC -info"
   var=$($MPIEXEC -info)
   if [ $? = 0 ]; then
     mpiN="mvapich2"
@@ -94,6 +114,7 @@ findName()
     return
   fi
 
+  tracing_msg "Testing for $mpicc -v"
   var=$(mpicc -v 2> /dev/null)
   cmd=${var:0:5}
   if [ "$cmd" = mpicc ]; then
@@ -107,7 +128,7 @@ findName()
 mpiN="UnknownMPI"
 mpiV="0.0"
 
-findName > /dev/null 2>&1
+findName > /dev/null
 
 mpiFV=$mpiV
 mpiV=$(echo $mpiV | sed -e 's/[PpRr].*//')
@@ -123,5 +144,3 @@ elif [ "$1" = "--name" ]; then
 else
   echo "$mpiN $mpiFV"
 fi
-
-

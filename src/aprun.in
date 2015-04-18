@@ -60,7 +60,7 @@ find_working_python  # This function sets MY_PYTHON
 # Determine if we are inside a PBS job, if so then set PBS_ACCOUNT to
 # the account string name
 
-if [ -n "$PBS_JOBID" ]; then
+if [ -n "${PBS_JOBID:-}" ]; then
   export PBS_ACCOUNT=`qstat -f $PBS_JOBID | grep "Account_Name =" | awk '{print $3}'`
 fi
 
@@ -71,7 +71,6 @@ fi
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
-NTASKS=1
 append=false
 prev=
 done=false
@@ -89,17 +88,7 @@ for option; do
   esac
   
   case $option in
-    -b)
-      $MY_CMD "${argA[@]}"
-      exit $?
-      ;;
-    -n)
-      prev='NTASKS'
-      ;;
-    -d)
-      prev='NTHRDS'
-      ;;
-    --help|-h)
+    --help|-h|-b)
       $MY_CMD "${argA[@]}"
       exit $?
       ;;
@@ -117,11 +106,6 @@ for option; do
   #fi
 done
 
-if [[ "$NTHRDS" ]]; then
-    # set NTASKS to total core count, not just MPI tasks
-    NTASKS=$(($NTASKS*$NTHRDS))
-fi
-
 #######################################################################
 # We make the big assumption that the only MPI on a Cray is 
 # Cray's mpi and thay the job launcher is aprun.  So we 
@@ -130,6 +114,6 @@ fi
 FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_aprun.py
 
 # This function sets the $status variable.
-run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "$NTASKS" "${argA[@]}"
+run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "${argA[@]}"
 
 exit $status

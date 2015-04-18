@@ -36,13 +36,16 @@ UUIDGEN=@path_to_uuidgen@
 WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 BASENAME=@path_to_basename@
+DIRNAME=@path_to_dirname@
 
 ##########################################################################
 #  Check command line arguments to see if user has requested tracing
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  XALT_TRACING="no"
+  if [ -n "${XALT_TRACING:-}" ]; then
+    XALT_TRACING="yes"
+  fi
   argA=()
   for i in "$@"; do
     if [ "$i" = "--xalt_tracing" ]; then
@@ -51,8 +54,10 @@ request_tracing()
       argA+=("$i")
     fi
   done
-  tracing_msg "XALT Tracing Activated"
-
+  if [ -n "${XALT_TRACING:-}" ]; then
+    export XALT_TRACING
+  fi
+  tracing_msg "XALT Tracing Activated for version: @git@"
 }
 
 ##########################################################################
@@ -60,12 +65,11 @@ request_tracing()
 
 tracing_msg()
 {
-  if [ "$XALT_TRACING" = "yes" ]; then
-    builtin echo ""
-    builtin echo "$@"
+  if [ "${XALT_TRACING:-}" = "yes" ]; then
+    builtin echo ""   1>&2
+    builtin echo "$@" 1>&2
   fi
 }
-
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -95,7 +99,7 @@ find_real_command()
     # if $exec_x is exists and is executable then use it
     # This is typically used by ld and when points /usr/bin/ld.x
     my_cmd=$exec_x
-  elif [ -n "$BASH_VERSION" ]; then
+  elif [ -n "${BASH_VERSION:-}" ]; then
     # If this is a bash script (and not a bash script in sh mode) then
     # use type to list all possible "ld" or "ibrun".  
 
@@ -195,47 +199,35 @@ run_real_command()
   shift
   MY_PYTHON=$1
   shift
-  NTASKS=$1
-  shift
-
-  # Give NTASKS an illegal value if it wasn't set.
-  if [ -z "$NTASKS" ]; then
-    NTASKS=-1
-  fi
-
 
   # Build the filename for the results.
-  RUN_UUID=`$UUIDGEN`
-  DATESTR=`date +%Y_%m_%d_%H_%M_%S`
-  SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost.py)
-  runFn=$HOME/.xalt.d/run.${SYSHOST}.${DATESTR}.$RUN_UUID.json
-
+  SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost_@site_name@.py)
   
   # Find the user executable by walking the original command line.
-  EXEC="unknown"
-  if [ "$FIND_EXEC_PRGM" != "unknown" -a -x "$FIND_EXEC_PRGM" ]; then
-    EXEC=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
+  EXEC_T='[{"exec_prog": "unknown", "ntask": 1} ]'
+  if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
+    EXEC_T=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
   fi
 
-  tracing_msg "run_real_command: User's EXEC: $EXEC"
+  tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
 
-  # Record the job record at the start of the job.  This way if the job
-  # doesn't complete there will be a record of the job.
+  # Record the run record at the start of the job.  This way if the run
+  # doesn't complete there will be a record.
 
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end 0        --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" -- "$EXEC"
+  UUID_A=$($MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0 --uuidgen "$UUIDGEN" --syshost "$SYSHOST" -- "$EXEC_T")
 
-
+  tracing_msg "UUID_A: $UUID_A"
 
   status=0
-  if [ -z "$testMe" ]; then
+  if [ -z "${testMe:-}" ]; then
 
     # restore python state to what the user originally had
     py_home_xalt=$PYTHONHOME
     py_path_xalt=$PYTHONPATH
     export PYTHONPATH=$py_path_orig
-    [ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
+    [ -n "${py_home_orig:-}" ] && export PYTHONHOME=$py_home_orig
 
     tracing_msg "run_real_command: Running: $MY_CMD"
     # Run the real command and save the status
@@ -244,14 +236,14 @@ run_real_command()
 
     # return python state back to XALT
     unset  PYTHONHOME
-    [ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
+    [ -n "${py_home_xalt:-}" ] && export PYTHONHOME=$py_home_xalt
     export PYTHONPATH=$py_path_xalt
   fi
 
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --ntasks "$NTASKS" --start "$sTime" --end "$eTime" --fn "$runFn" --run_uuid "$RUN_UUID" --syshost "$SYSHOST" --status $status -- "$EXEC"
+  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuidA "$UUID_A" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"

@@ -22,7 +22,7 @@ from __future__         import print_function
 import logging
 from   logging.handlers import SysLogHandler
 from   fnmatch          import fnmatch
-import os, re, sys, subprocess
+import os, re, subprocess
 
 colonPairPat = re.compile(r"([^:]+):(.*)")
 def config_logger():
@@ -42,30 +42,50 @@ def config_logger():
     
   return logger
   
-def extract_compiler(pstree):
+def extract_compiler():
   """
-  Take the output of pstree and find the compiler
-  @param pstree: the single line of processes back to init.
+  Take the output of psutil (if available) or pstree and find the compiler
   """
-  result  = "unknown"
-  ignoreT = {
-    'pstree'   : True,
-    'ld'       : True,
-    'collect2' : True,
-    }
-    
-  if (pstree == "unknown"):
-    return result
+  result = "unknown"
+  try:
+    from psutil import Process
+    p = Process(pid=int(os.getpid()))
+    ignore_programs = ['ld', 'collect2','bash','Python']
 
-  a = pstree.split("---")
-  n = len(a)
+    def p_parent():
+      """
+      Determine parent of Process instance.
+      Check whether parent is a function (psutil > v2) or a property (psutil < v2)
+      """
+      return (callable(p.parent) and p.parent()) or p.parent
 
-  for cmd in reversed(a):
-    if (not (cmd in ignoreT)):
-      result = cmd
-      break
+    def p_parent_name():
+      """
+      Determine the name of a parent of Process instance.
+      Check whether parent is a function (psutil > v2) or a property (psutil < v2)
+      """
+      return (callable(p.parent) and p.parent().name()) or p.parent.name()
 
-  return cmd
+    while p_parent():
+      if p_parent_name() not in ignore_programs:
+        result = p_parent_name()
+        break
+      p=p_parent()
+  except ImportError:
+    ignore_programs = ['pstree', 'ld', 'collect2', 'python', 'sh']
+    pstree_bin = "@path_to_pstree@"
+    pstree = capture("%s -l -s %d" % (pstree_bin, os.getpid())).strip()
+    if (pstree == "unknown"):
+      return result
+
+    a = pstree.split("---")
+
+    for cmd in reversed(a):
+      if cmd not in ignore_programs:
+        result = cmd
+        break
+
+  return result
 
 def files_in_tree(path, pattern):
   """

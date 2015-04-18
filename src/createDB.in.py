@@ -150,6 +150,7 @@ def main():
           `end_time`      double         NOT NULL,
           `run_time`      double         NOT NULL,
           `num_cores`     int(11)        NOT NULL,
+          `job_num_cores` int(11)        NOT NULL,
 
           `num_nodes`     int(11)        NOT NULL,
           `num_threads`   tinyint(4)     NOT NULL,

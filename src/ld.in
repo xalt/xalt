@@ -111,9 +111,8 @@ XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost.py
+SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
 SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
-PSTREE=@path_to_pstree@
 UUIDGEN=@path_to_uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
@@ -134,12 +133,7 @@ if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
 fi
 
-PSTREE_OUT="unknown"
-if [ -x "$PSTREE" ]; then
-  PSTREE_OUT=$($PSTREE -l -s $$)
-fi
-
-EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$PSTREE_OUT" "$ARGSRC")
+EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$ARGSRC")
 
 #
 # If the $ARGSRC exists then build it
@@ -172,9 +166,9 @@ if [ -n "$USER_TRACE" ]; then
 fi
 
 
-$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$STATUS" "`pwd`" "$SYSHOST" "$PSTREE_OUT" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
+$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
 
-if [ "$?" = 0 -a -n "$XALT_LD_DEBUG" ]; then
+if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
    builtin echo "====================="  >> $RESULT
    builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT

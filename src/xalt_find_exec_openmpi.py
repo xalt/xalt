@@ -35,26 +35,44 @@ ignoreT = {
 }
 
 argT = {
+  '-aborted'                  : 1,
+  '--aborted'                 : 1,
+  '--app'                     : 1,
   '-am'                       : 1,
   '--app'                     : 1,
+  '--bind-to'                 : 1,
   '-c'                        : 1,
-  '-n'                        : 1,
-  '-np'                       : 1,
   '-cf'                       : 1,  
   '--cartofile'               : 1,
+  '-cpus-set'                 : 1,
+  '--cpus-set'                : 1,
   '-cpus-per-proc'            : 1,
   '--cpus-per-proc'           : 1,
   '-cpus-per-rank'            : 1,
   '--cpus-per-rank'           : 1,
+  '-debugger'                 : 1,
+  '--debugger'                : 1,
+  '-default-hostfile'         : 1,
+  '--default-hostfile'        : 1,
+  '-gmca'                     : 2,
+  '--gmca'                    : 2,
   '-H'                        : 1,
   '-host'                     : 1,
   '--host'                    : 1,
+  '-hostfile'                 : 1,
+  '--hostfile'                : 1,
   '-launch-agent'             : 1,
   '--launch-agent'            : 1,
   '-machinefile'              : 1,
   '--machinefile'             : 1,
+  '--map-by'                  : 1,
+  '-max-restarts'             : 1,
+  '--max-restarts'            : 1,
+  '-max-vm-size'              : 1,
+  '--max-vm-size'             : 1,
   '-mca'                      : 2,
   '--mca'                     : 2,
+  '-N'                        : 1,
   '-nperboard'                : 1,
   '--nperboard'               : 1,
   '-npernode'                 : 1,
@@ -73,6 +91,7 @@ argT = {
   '--output-filename'         : 1,
   '-path'                     : 1,
   '--path'                    : 1,
+  '--ppr'                     : 1,
   '--prefix'                  : 1,
   '--preload-files'           : 1,     
   '--preload-files-dest-dir'  : 1,
@@ -83,6 +102,7 @@ argT = {
   '-report-uri'               : 1,     
   '--report-uri'              : 1,     
   '-rf'                       : 1,     
+  '--rank-by'                 : 1,
   '--rankfile'                : 1,     
   '-server-wait-time'         : 1,
   '--server-wait-time'        : 1,
@@ -98,18 +118,24 @@ argT = {
   '--wd'                      : 1,
   '-wdir'                     : 1,
   '--wdir'                    : 1,
-  '-xml'                      : 1,
-  '--xml'                     : 1,
+  '-x'                        : 1,
   '-xml-file'                 : 1,
   '--xml-file'                : 1,
   '-xterm'                    : 1,
   '--xterm'                   : 1,
 }
 
+npT = {
+  '-c'                        : "tasks",
+  '-n'                        : "tasks",
+  '--n'                       : "tasks",
+  '-np'                       : "tasks",
+}
+
 def main():
   """
   Find name of executable when using openmpi
   """
-  print(find_exec(ignoreT, argT, None, sys.argv[1:], dot=True))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
 
 if ( __name__ == '__main__'): main()

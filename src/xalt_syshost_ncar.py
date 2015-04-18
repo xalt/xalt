@@ -1,6 +1,10 @@
 # -*- python -*-
 #
 # Git Version: @git@
+#
+# user defined function
+# this is only an example that works at a couple sites
+#
 
 #-----------------------------------------------------------------------
 # XALT: A tool that tracks users jobs and environments on a cluster.
@@ -22,37 +26,47 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
+from __future__ import print_function
 
-from __future__             import print_function
-import os, sys
+#Si changed this on Mar 5, 2015
+#Need the re module 
+import re, platform
 
-dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
-sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
+def map_syshost(name):
+  """
+  Use the name to report a system name
+  """
 
-from xalt_parse_mpirun_args import find_exec
+  ncarT = {
+    re.compile(r"^ys.*"): "yellowstone",
+    re.compile(r"^geyser.*"): "geyser",
+    re.compile(r"^caldera.*"):"caldera",
+  }
+  result = None
 
-ignoreT = {
-  'env'              : True,
-  'time'             : True,
-}
-
-argT = {
-  '-genv'                     : 2,
-  '-genvlist'                 : 1,
-  '-f'                        : 1,
-  '-n'                        : 1,  
-  '-np'                       : 1,  
-  '-hosts'                    : 1,
-  '-configfile'               : 1,
-  '-launcher'                 : 1,
-  '-launcher-exec'            : 1,
-  '-rmk'                      : 1,
-}
-
+  for k in ncarT:
+    m = k.search(name)
+    if (m):
+      result = ncarT[k]
+      break
+  return result
+  
 def main():
   """
-  Find name of executable when using mpich.
+  This command tries to report the system name base on host name information.
+  It should return darter and not login1.darter.
   """
-  print(find_exec(ignoreT, argT, None, sys.argv[1:]))
+
+##  nameA = [ socket.getfqdn(),
+##            platform.node() ]
+
+  name = platform.node()
+
+  syshost = map_syshost(name)
+  if (not syshost):
+    syshost = "unknown" 
+
+  print(syshost)
+  
 
 if ( __name__ == '__main__'): main()

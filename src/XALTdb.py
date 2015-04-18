@@ -83,7 +83,7 @@ class XALTdb(object):
       sys.stderr.write("Switch to user input mode...\n\n")
       self.__readFromUser()
 
-  def connect(self, db = None):
+  def connect(self, databaseName = None):
     """
     Public interface to connect to DB.
     @param db:  If this exists it will be used.
@@ -94,24 +94,26 @@ class XALTdb(object):
     else:
       self.__readFromUser()
 
-    for i in xrange(0,6):
+    n = 100
+    for i in xrange(0,n+1):
       try:
         self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
-        if (db):
+        if (databaseName):
           cursor = self.__conn.cursor()
           
           # If MySQL version < 4.1, comment out the line below
           cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
           cursor.execute("USE "+xalt.db())
+        break
+
 
       except MySQLdb.Error, e:
-        if (i < 5):
+        if (i < n):
           sleep(i*0.1)
           pass
         else:
-          print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]), file=sys.stderr)
+          print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
           raise
-
     return self.__conn
 
 
@@ -263,22 +265,23 @@ class XALTdb(object):
           conn.query(query)
           query = "COMMIT"
           conn.query(query)
-          v = XALT_Stack.pop()
-          carp("SUBMIT_HOST",v)
+        v = XALT_Stack.pop()
+        carp("SUBMIT_HOST",v)
 
         return
       else:
         #print("not found")
-        moduleName  = obj2module(runT['userT']['exec_path'], reverseMapT)
-        exit_status = runT['userT'].get('exit_status',0)
-        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%s', '%d','%s','%s', %s,'%s') " % (
+        moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
+        exit_status   = int(runT['userT'].get('exit_status',0))
+        job_num_cores = int(runT['userT'].get('job_num_cores',0))
+        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%d', '%s','%d','%s', '%s',%s,'%s') " % (
           runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
           runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
           runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
-          runT['userT']['num_nodes'],   runT['userT']['num_threads'], runT['userT']['queue'],
-          exit_status,                  runT['userT']['user'],        runT['userT']['exec_path'],
-          moduleName,                   runT['userT']['cwd'])
+          job_num_cores,                runT['userT']['num_nodes'],   runT['userT']['num_threads'],
+          runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
+          runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd'])
         conn.query(query)
         run_id   = conn.insert_id()
 

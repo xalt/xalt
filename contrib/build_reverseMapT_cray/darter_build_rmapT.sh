@@ -70,7 +70,7 @@ OLD=$RmapDir/jsonReverseMapT.old.json
 NEW=$RmapDir/jsonReverseMapT.new.json
 RESULT=$RmapDir/jsonReverseMapT.json
 
-merge_json_files.py rmapT_${sn}_${v}.JSON > $NEW
+merge_json_files.py rmapT_*.JSON > $NEW
 if [ "$?" = 0 ]; then
   chmod 644 $NEW
   if [ -f $RESULT ]; then
