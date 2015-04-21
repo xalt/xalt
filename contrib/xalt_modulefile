@@ -1,0 +1,23 @@
+#%Module
+
+proc ModulesHelp { } {
+    puts stderr "Sets up users' environment to use XALT."
+    puts stderr "XALT is a User Environment Tracking Infrastructure."
+}
+
+conflict totalview
+
+prepend-path PATH           /sw/mach/xalt/0.5.3/bin
+prepend-path PATH           /sw/mach/xalt/0.5.3/libexec
+prepend-path PYTHONPATH     /sw/mach/xalt/0.5.3/libexec
+prepend-path PYTHONPATH     /sw/mach/xalt/0.5.3/site
+
+# options can be (file,directdb,syslog)
+setenv  XALT_TRANSMISSION_STYLE  file    
+
+setenv  XALT_ETC_DIR  /sw/mach/xalt/0.5.3/etc
+
+
+# ALT_LINKER makes this work with the Cray compiler
+#setenv  ALT_LINKER     /sw/mach/xalt/0.5.3/bin/ld
+
