@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ########################################################################
 # To get this to work please do the following:
 #   a) Modify the Site Specific Settings to match your site
@@ -9,23 +10,31 @@
 #      or define the module command here.
 #   d) Make sure that LMOD_DIR is defined as well (it is defined by $BASH_ENV).
 #
+# Revisions:
+# April 23, 2015:
+#  This has just just some minor tweaks from the previous versions:
+#  - It will take one argument as the directory where to put reverseMapD, 
+#    so it can be called with ./cray_build_rmapT.sh $XALT_ETC_DIR
+#    i.e. no longer need manual edit
+#  - use $MODULEPATH instead of hard-coded path
+#  - remove ModuleA and simplified PrgEnvA
+#  - it assumes that $LMOD_DIR is really the prefix for Lmod installation 
+#    rather than whatever sets by some lmod_startup_script, so it adds the 
+#    path for Spider appropriately as $LMOD_DIR/lmod/lmod/libexec.
+#  These simplifies things.  No longer assumes using lmod as tcl module 
+#  replacement.
+#
 ########################################################################
 #  Site Specific Setting
 ########################################################################
 
 
-  BASE_MODULE_PATH=/opt/apps/modulefiles/Core:/opt/apps/lmod/lmod/modulefiles/Core
-
-  ADMIN_DIR=/opt/moduleData/
-  RmapDir=$ADMIN_DIR/reverseMapD
+  BASE_MODULE_PATH=${MODULEPATH}
+  RmapDir=$1/reverseMapD
+  
+  echo "RmapDir=${RmapDir}"
 
   PrgEnvA=("PrgEnv-cray"  "PrgEnv-gnu" "PrgEnv-intel")
-
-  moduleA=("PrgEnv-cray/5.2.25"     "PrgEnv-gnu/5.2.25"   "PrgEnv-intel/5.2.25")
-#           "PrgEnv-cray/5.0.15"     "PrgEnv-gnu/5.0.15"   "PrgEnv-intel/5.0.15"
-#           "PrgEnv-cray/5.1.18"     "PrgEnv-gnu/5.1.18"   "PrgEnv-intel/5.1.18"
-#           "PrgEnv-cray/5.1.29"     "PrgEnv-gnu/5.1.29"   "PrgEnv-intel/5.1.29")
-
 
   #########################################################################
   # must define the module command and $LMOD_DIR:
@@ -44,22 +53,19 @@ if [ ! -d $RmapDir ]; then
 fi
 
 SCRIPT_DIR=$(cd $(dirname $(readlink -f "$0")) && pwd)
-PATH=$SCRIPT_DIR:$LMOD_DIR:$PATH
-
-cd $RmapDir
+PATH=$SCRIPT_DIR:$LMOD_DIR/lmod/lmod/libexec:$PATH
 
 module unload "${PrgEnvA[@]}" 2> /dev/null
 prev=""
-for m in "${moduleA[@]}"; do
+for m in "${PrgEnvA[@]}"; do
     sn=$(dirname $m)
-    v=${m##*/}
     
     module unload $prev  2> /dev/null
     module load $m       2> /dev/null
     prev=$m
 
     echo -n '-'
-    spider --preload -o jsonReverseMapT $BASE_MODULE_PATH >  rmapT_${sn}_${v}.JSON
+    spider --preload -o jsonReverseMapT $BASE_MODULE_PATH >  ${RmapDir}/rmapT_${m}.JSON
     echo -n '*'
 
 done
@@ -70,7 +76,7 @@ OLD=$RmapDir/jsonReverseMapT.old.json
 NEW=$RmapDir/jsonReverseMapT.new.json
 RESULT=$RmapDir/jsonReverseMapT.json
 
-merge_json_files.py rmapT_*.JSON > $NEW
+merge_json_files.py ${RmapDir}/rmapT_*.JSON > $NEW
 if [ "$?" = 0 ]; then
   chmod 644 $NEW
   if [ -f $RESULT ]; then
@@ -78,10 +84,5 @@ if [ "$?" = 0 ]; then
   fi
   mv $NEW $RESULT
 fi
-
-rm rmapT_*.JSON
-
-
-
 
 
