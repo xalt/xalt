@@ -57,7 +57,7 @@ SITE              := $(prefix)/site
 BIN               := $(prefix)/bin
 SBIN              := $(prefix)/sbin
 DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
-                     $(DESTDIR)$(SBIN) 
+                     $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
 
 BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
                      src/ibrun.symm.in src/aprun.in src/srun.in                         \
@@ -95,6 +95,8 @@ all:
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
           Build_pstree_$(BUILD_PSTREE)
+
+
 
 echo:
 	@echo CURDIR: $(CURDIR)
