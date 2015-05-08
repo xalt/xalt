@@ -1,0 +1,53 @@
+This is a QUICK INSTALL guide for XALT.
+
+PRE-REQUISITE: LUA and LMOD
+----------------------------------------------------------
+1. Install Lua from LMOD's sourceforge 
+(already include luafilesystem & luaposix needed by LMOD)
+
+go to http://sourceforge.net/projects/lmod/files/lua-5.1.4.8.tar.gz/download
+
+OR
+wget 
+
+tar -xf lua-5.1.4.8.tar.gz
+cd lua-5.1.4.8/
+./configure --prefix=$XALT_DIR
+make && make install
+
+2. Install Lmod (Optional, needed if wanted to track module names)
+git clone https://github.com/TACC/Lmod.git
+./configure --prefix=$XALT_DIR
+make install
+
+
+
+INSTALLING XALT
+-----------------------------------------------------------
+
+1. Installation
+
+git clone https://github.com/Fahey-McLay/xalt.git
+
+cd xalt
+./configure --prefix=$XALT_DIR --with-etcDir=$XALT_DIR/etc
+make 
+make install
+
+cd ../bin
+rm ibrun* mpirun mpiexec srun
+
+2. Manual configuration
+
+- Modify $XALT_DIR/site/xalt_syshost_default.py
+mv site/xalt_syshost_default.py site/xalt_syshost.py 
+
+- Modify $XALT_DIR/site/xalt_find_exec_aprun.py (likely not necessary)
+
+- Create modulefile
+
+- Create DB config file, and put them in XALT_ETC_DIR
+
+python sbin/conf_create.py --> xalt_db.conf
+
+python sbin/createDB.py (may need to be run from $XALT_ETC_DIR)
