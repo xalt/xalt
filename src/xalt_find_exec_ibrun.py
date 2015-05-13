@@ -33,6 +33,8 @@ from xalt_parse_mpirun_args import find_exec
 
 ignoreT = {
   'env'              : True,
+  'perf'             : True,
+  'stat'             : True,
   'numactl'          : True,
   'tacc_affinity'    : True,
   'time'             : True,
