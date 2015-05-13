@@ -33,20 +33,25 @@ from xalt_parse_mpirun_args import find_exec
 
 ignoreT = {
   'env'              : True,
-  'perf'             : True,
-  'stat'             : True,
-  'numactl'          : True,
-  'tacc_affinity'    : True,
-  'tacc_xrun'        : True,
   'time'             : True,
 }
 
 argT = {
-  '-2'                        : 1,
-  '-m'                        : 1,
-  '-n'                        : 1,  
-  '-np'                       : 1,  
-  '-o'                        : 1,  
+  '--basepath'                  : 1,  
+  '--branchcount'               : 1,  
+  '--configfiles'               : 1,
+  '--debuglvl'                  : 1,
+  '--hybrid'                    : 1,
+  '--ignoreconfigfiles'         : 1,
+  '--mpirunoptions'             : 1,
+  '--order'                     : 1,
+  '--overridepin'               : 1,
+  '--qlogicmpi-quiescencecheck' : 1,
+  '--schedtype'                 : 1,
+  '--stats'                     : 1,
+  '--variablesprefix'           : 1,
+  '-S'                          : 1,
+  '-h'                          : 1,
 }
 
 npT = {
@@ -57,6 +62,6 @@ def main():
   Find name of executable when using ibrun.
   """
 
-  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
 
 if ( __name__ == '__main__'): main()

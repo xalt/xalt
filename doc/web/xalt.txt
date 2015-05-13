@@ -1,0 +1,37 @@
+XALT: Tracking User Job-level Activity on Clusters
+
+Purpose:
+
+XALT is a tool for sites to collect and understand what users are
+running on their cluster.  It tracks the executables and libraries
+that users run.  It can be tied to the module system to know what
+modules are being used as well.
+
+
+Overview:
+
+The way that XALT collects data is that it provides a wrapper around
+the linker (ld) and the parallel job launcher (aprun, ibrun, mpirun,
+etc).  XALT knows the names of the executables and the names of the
+static and dynamic libraries that are part of the executable through
+the ld wrapper.  Then for parallel jobs it knows what programs are run
+and how they were run (Number of Nodes, etc) as well as the
+environment.  Each link and run are written to a database for further
+analysis. With this information sites can know exactly what types of
+executables and from what fields of science.  
+
+
+
+Funding Source:
+
+National Science Foundation award 1339690 entitled “Collaborative
+Research: SI2-SSE: XALT: Understanding the Software Needs of High End
+Computer Users.” 
+
+
+Download:
+
+XALT can be downloaded from  github  (https://github.com/Fahey-McLay/xalt.git)
+and sourceforge (http://sourceforge.net/projects/xalt/files)
+ 
+

@@ -74,7 +74,9 @@ def translate(nameA, envT, userT):
     sysT['queue']         = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
-    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    num_nodes              = int(envT.get("SLURM_NNODES",0))
+    coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
+    userT['job_num_cores'] = num_nodes*coresPerNode
     sysT['num_cores']      = "SLURM_TACC_CORES"
     sysT['num_nodes']      = "SLURM_NNODES"
     sysT['account']        = "SLURM_TACC_ACCOUNT"
@@ -83,7 +85,9 @@ def translate(nameA, envT, userT):
     sysT['submit_host']    = "SLURM_SUBMIT_HOST"
   
   elif (queueType == "SLURM"):
-    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    num_nodes              = int(envT.get("SLURM_NNODES",0))
+    coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
+    userT['job_num_cores'] = num_nodes*coresPerNode
     sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
     sysT['job_id']         = "SLURM_JOB_ID"
     sysT['queue']          = "SLURM_QUEUE"
