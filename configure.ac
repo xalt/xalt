@@ -13,6 +13,18 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
+AC_SUBST(SITE)
+AC_ARG_WITH(site,
+    AC_HELP_STRING([--with-site=ans],[Site name [[default]]]),
+    SITE="$withval"
+    AC_MSG_RESULT([SITE=$with_site])
+    AC_DEFINE_UNQUOTED(SITE, "$with_site")dnl
+    ,
+    withval="default"
+    AC_MSG_RESULT([SITE=$withval])
+    SITE="$withval"
+    AC_DEFINE_UNQUOTED(SITE, "$withval"))dnl
+
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
     AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),

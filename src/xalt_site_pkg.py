@@ -62,6 +62,8 @@ def translate(nameA, envT, userT):
     queueType = "SLURM"
   elif (envT.get("PBS_JOBID")):
     queueType = "PBS"
+  elif (envT.get("LSF_VERSION")):
+    queueType = "LSF"
       
   if (queueType == "SGE"):
     sysT['num_cores']     = "NSLOTS"
@@ -72,7 +74,9 @@ def translate(nameA, envT, userT):
     sysT['queue']         = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
-    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    num_nodes              = int(envT.get("SLURM_NNODES",0))
+    coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
+    userT['job_num_cores'] = num_nodes*coresPerNode
     sysT['num_cores']      = "SLURM_TACC_CORES"
     sysT['num_nodes']      = "SLURM_NNODES"
     sysT['account']        = "SLURM_TACC_ACCOUNT"
@@ -81,7 +85,9 @@ def translate(nameA, envT, userT):
     sysT['submit_host']    = "SLURM_SUBMIT_HOST"
   
   elif (queueType == "SLURM"):
-    userT['job_num_cores'] = envT.get("SLURM_NNODES",0)*envT.get("SLURM_CPUS_ON_NODE",0)
+    num_nodes              = int(envT.get("SLURM_NNODES",0))
+    coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
+    userT['job_num_cores'] = num_nodes*coresPerNode
     sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
     sysT['job_id']         = "SLURM_JOB_ID"
     sysT['queue']          = "SLURM_QUEUE"
@@ -95,6 +101,16 @@ def translate(nameA, envT, userT):
     sysT['job_id']         = "PBS_JOBID"
     sysT['queue']          = "PBS_QUEUE"
     sysT['submit_host']    = "PBS_O_HOST"
+  
+  elif (queueType == "LSF"):
+    userT['job_num_cores'] = "LSB_MAX_NUM_PROCESSORS"
+    userT['num_cores']     = "LSB_DJOB_NUMPROC"
+    mcpu_hostA             = envT.get("LSB_MCPU_HOSTS","a 1").split()
+    userT['num_nodes']     = len(mcpu_hostsA)/2
+    sysT['account']        = "%%_UNKNOWN_%%"
+    sysT['job_id']         = "LSB_JOBID"
+    sysT['queue']          = "LSB_QUEUE"
+    sysT['submit_host']    = "LSB_EXEC_CLUSTER"
   
   for name in nameA:
     result = "unknown"
@@ -115,6 +131,3 @@ def translate(nameA, envT, userT):
   
   if (userT['job_id'] == "unknown"):
     userT['job_id'] = envT.get('JOB_ID','unknown')
-
-
-
