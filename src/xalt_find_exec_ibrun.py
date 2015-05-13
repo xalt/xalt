@@ -35,6 +35,7 @@ ignoreT = {
   'env'              : True,
   'numactl'          : True,
   'tacc_affinity'    : True,
+  'tacc_xrun'        : True,
   'time'             : True,
 }
 
@@ -54,6 +55,6 @@ def main():
   Find name of executable when using ibrun.
   """
 
-  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:], dot=True))
+  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]))
 
 if ( __name__ == '__main__'): main()
