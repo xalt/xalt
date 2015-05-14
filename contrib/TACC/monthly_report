@@ -33,7 +33,7 @@ equiv_patternT = {
     r'^A01'                           : 'A0*',                           
     r'^adcirc'                        : 'ADCIRC*',                       
     r'^padcirc'                       : 'ADCIRC*',                       
-    r'^AHF-v1.0'                      : 'AHF-v1.0*',                     
+    r'^AHF-v1\.0'                     : 'AHF-v1.0*',                     
     r'^arps'                          : 'ARPS*',                         
     r'^arps_mpi'                      : 'ARPS*',                         
     r'^pmemd'                         : 'Amber*',                        
@@ -44,9 +44,10 @@ equiv_patternT = {
     r'^c37b1'                         : 'CHARMM*',                       
     r'^charmm'                        : 'CHARMM*',                       
     r'^CHNS'                          : 'CHNS*',                         
+    r'^run\.cctm'                     : 'CMAQ_CCTM*',
     r'^cactus_'                       : 'Cactus*',                       
     r'^chroma'                        : 'Chroma*',                       
-    r'^harom.parscalar'               : 'Chroma*',                       
+    r'^harom\.parscalar'              : 'Chroma*',                       
     r'^sm_chroma'                     : 'Chroma*',                       
     r'^CitcomS'                       : 'CitcomS*',                      
     r'^CoMD-'                         : 'CoMD*',                         
@@ -91,12 +92,14 @@ equiv_patternT = {
     r'^NavStk_'                       : 'NavStk*',                       
     r'^NewAlgorithm'                  : 'NewAlgorithm*',                 
     r'^O2case'                        : 'O2case*',                       
+    r'^.*[Ff][Oo][Aa][Mm].*'          : 'OpenFOAM*',
     r'^OpenSees'                      : 'OpenSees*',                     
     r'^OpenSeesSP'                    : 'OpenSees*',                     
     r'^P-SPH'                         : 'P-SPH*',                        
     r'^parsec.mpi'                    : 'PARSEC*',                       
     r'^P_merge_LD'                    : 'P_merge_LD*',                   
     r'^python'                        : 'Python*',                       
+    r'^qcprog'                        : 'QCHEM*',
     r'^ph.x'                          : 'QE*',                           
     r'^pw.x'                          : 'QE*',                           
     r'^READ_WRFNETCDF'                : 'READ_WRFNETCDF*',               
@@ -176,6 +179,7 @@ equiv_patternT = {
     r'^ramses'                        : 'ramses*',                       
     r'^ranksort_'                     : 'ranksort*',                     
     r'^rfcst_'                        : 'rfcst*',                        
+    r'^rocflocm'                      : 'rocflocm*',                        
     r'^run\.cctm'                     : 'run.cctm*',                     
     r'^run\.ddm'                      : 'run.ddm*',                      
     r'^run_3ln'                       : 'run_3ln*',                      
@@ -209,7 +213,7 @@ for k,v  in equiv_patternT:
   compiled_patternT[re.compile(k)]=v
 
 userDirPatternT = {
-  '/home\d?/\d+/([^/]+)' : "/home/",
+  '/home\d?/\d+/([^/]+)'  : "/home/",
   '/scratch/\d+/([^/]+)'  : "/scratch/",
   '/work/\d+/([^/]+)'     : "/work/",
 }
@@ -226,14 +230,6 @@ def replace_exec_path(path):
 
   return hashlib.sha1(base).hexdigest()
 
-def replace_user_path(path):
-  for regexp,v in compiled_userDirPatternT.iteritems():
-    m = regexp.search(path)
-    if (m):
-      user = m.group(1)
-      
-      return regexp.sub(v,path)
-  return path
 
 class XALTdb(object):
   """
@@ -324,6 +320,28 @@ class XALTdb(object):
       return result
 
   
+    # Check to see if name is in the database:
+    if (dbT == "xalt_account"):
+      query = "select anon_acct, field_of_science from xalt_account where account = %s" % account
+      conn.query(query)
+      result = conn.store_result()
+      nrows  = result.num_rows()
+      if (nrows > 0):
+        row = result.fetch_row()
+        anon_acct    = row[0][0]
+        field_of_sci = row[0][1]
+        value = {'anon' = anon, 'field_of_sci' : field_of_sci}
+        return value
+    else:
+      query = "select anon_user from xalt_user where user = %s" % user
+      conn.query(query)
+      result = conn.store_result()
+      nrows  = result.num_rows()
+      if (nrows > 0):
+        row = result.fetch_row()
+        anon_user = row[0][0]
+        return anon_user
+      
     # find current size of 
     sz = self.__sizeT[dbT]
     if (sz < 0):
@@ -363,20 +381,23 @@ class XALTdb(object):
     query  = "START TRANSACTION"
     conn.query(query)
     if (dbT == "xalt_account"):
-      field_of_sci = "unknown" # fixMe!!
+      field_of_sci = field_of_science(account)
       query        = "INSERT into xalt_account VALUES (NULL, '%s','%s','%s')" % (
                      name, anon, field_of_sci)
+      value        = {'anon' = anon, 'field_of_sci' : field_of_sci}
+
     else:
       query        = "INSERT into xalt_account VALUES (NULL, '%s','%s')" % (
                      name, anon)
+      value        = anon
     conn.query(query)
     query = "COMMIT"
     conn.query(query)
     
     # Cache values
     self.__sizeT[dbT] = sz        
-    T[name] = anon
-
+    T[name] = value
+    return value
 
   def runs(self, startDate, endDate):
     """ Collect data from DB """
@@ -413,14 +434,17 @@ class XALTdb(object):
           account   = row[0][2]
           exec_path = row[0][9]
           anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
-          anon_acct = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
+          value     = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
+          anon_acct = value['anon']
+          science   = value['field_of_sci']
           exe       = replace_exec_path(exec_path)
 
 
           runT   = {'d' : date,      'h' : row[0][ 1], 'a' : anon_acct,
                     's' : row[0][3], 'r' : row[0][ 4], 'c' : row[0][ 5],
                     'n' : row[0][6], 't' : row[0][ 7], 'u' : anon_user,
-                    'p' : exe,       'm' : row[0][10], 'j' : row[0][12]}
+                    'p' : exe,       'm' : row[0][10], 'j' : row[0][12],
+                    'f' : science }
           
           linkA = []
           query = "select object_path, module_name from xalt_object, join_run_object where "      + \
@@ -431,8 +455,17 @@ class XALTdb(object):
           r2 = conn.store_result()
           lnk_rows = r2.num_rows()
           for i in xrange(lnk_rows):
-            row = r2.fetch_row()
-            path = replace_user_path(row[0][0])
+            row  = r2.fetch_row()
+            path = row[0][0]
+
+            # anonymize user paths.
+            for regexp, v in compiled_userDirPatternT.iteritems():
+              m = regexp.match(path)
+              if (m):
+                user      = m.group(1)
+                anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
+                path      = regexp.sub(os.path.join(v,anon_user),path)
+                break
             linkA.append([path, row[0][1]])
 
           runT['linkA'] = linkA
