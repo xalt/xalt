@@ -211,14 +211,29 @@ def main():
 
     # 8 
     cursor.execute("""
-        CREATE TABLE `xalt_job_id` (
-          `inc_id`        int(11)        NOT NULL auto_increment,
-          `job_id`        int(11)        NOT NULL,
-          PRIMARY KEY (`inc_id`)
+        CREATE TABLE `xalt_user` (
+          `usr_id`        int(11)        NOT NULL auto_increment,
+          `user`          varchar(32)    NOT NULL,
+          `anon_user`     varchar(12)    NOT NULL,
+          PRIMARY KEY (`usr_id`),
+          INDEX `the_user` (`user`),
+          INDEX `a_user`   (`anon_user`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
-    query = "INSERT INTO xalt_job_id VALUES(NULL, '0')"
-    conn.query(query)
+    print("(%d) create xalt_user table" % idx); idx += 1
+
+    # 9 
+    cursor.execute("""
+        CREATE TABLE `xalt_account` (
+          `acct_id`          int(11)        NOT NULL auto_increment,
+          `account`          varchar(32)    NOT NULL,
+          `anon_user`        varchar(10)    NOT NULL,
+          `field_of_science` varchar(64)    NOT NULL,
+          PRIMARY KEY (`acct_id`),
+          INDEX `the_account` (`account`),
+          INDEX `a_acct`   (`anon_acct`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        """)
 
     cursor.close()
   except  MySQLdb.Error, e:

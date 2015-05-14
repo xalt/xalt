@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-import os, sys, re, MySQLdb, json, time, argparse
+import os, sys, re, MySQLdb, json, time, argparse, base64, json
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+import ConfigParser
 from xalt_util     import *
 from xalt_global   import *
 
@@ -85,36 +86,62 @@ class XALTdb(object):
     """ Return name of db"""
     return self.__db
 
+
   def runs(self, startDate, endDate):
     """ Collect data from DB """
 
     try:
+      query = "not set"
       runA  = []
       conn  = self.connect()
       query = "USE "+self.db()
       conn.query(query)
 
-      query = "select date, syshost, account, start_time, run_time, num_cores, "    +
-              "num_nodes, num_threads, user, exec_path, module_name, run_id    "    +
-              "from xalt_run where xalt_run.date >= '%s' and xalt_run.date <= '%s' limit 10 " % (
+      query = "select date, syshost, account, start_time, run_time, num_cores,      "    + \
+              "num_nodes, num_threads, user, exec_path, module_name, run_id, job_id "    + \
+              "from xalt_run where xalt_run.date >= '%s' and xalt_run.date < '%s' " % (
               startDate, endDate)
       conn.query(query)
 
       result = conn.store_result()
 
-      if (result.num_rows() > 0):
-        print("result.num_rows(): ",result.num_rows())
-        rowA = result.fetch_row()
-        
-        for row in rowA:
-          runA.append({'date'       : row[0], 'syshost'     : row[1], 'account'   : row[2],
-                       'start_time' : row[3], 'run_time'    : row[4], 'num_cores' : row[5],
-                       'num_nodes'  : row[6], 'num_threads' : row[7], 'user'      : row[8],
-                       'exec_path'  : row[7], 'module_name' : row[8], 'run_id'    : row[9]})
+      nrows = result.num_rows() 
+      if (nrows > 0):
+        for j in xrange(nrows):
+          row    = result.fetch_row()
+          date   = str(row[0][0])
+          run_id = row[0][11]
+          #runT   = {'date'       : date,      'syshost'     : row[0][ 1], 'account'   : row[0][ 2],
+          #          'start_time' : row[0][3], 'run_time'    : row[0][ 4], 'num_cores' : row[0][ 5],
+          #          'num_nodes'  : row[0][6], 'num_threads' : row[0][ 7], 'user'      : row[0][ 8],
+          #          'exec_path'  : row[0][9], 'module_name' : row[0][10]}
 
-        for run in runA:
-          print('run_id: ',run['run_id'], ', exec_path: ', run['exec_path'])
-              
+          runT   = {'d' : date,      'h' : row[0][ 1], 'a' : row[0][ 2],
+                    's' : row[0][3], 'r' : row[0][ 4], 'c' : row[0][ 5],
+                    'n' : row[0][6], 't' : row[0][ 7], 'u' : row[0][ 8],
+                    'p' : row[0][9], 'm' : row[0][10], 'j' : row[0][12]}
+          
+          linkA = []
+          query = "select object_path, module_name from xalt_object, join_run_object where "      + \
+                  "join_run_object.run_id = '%s' and join_run_object.obj_id = xalt_object.obj_id" % (
+                  run_id )
+          conn.query(query)
+          
+          r2 = conn.store_result()
+          lnk_rows = r2.num_rows()
+          for i in xrange(lnk_rows):
+            row = r2.fetch_row()
+            linkA.append([row[0][0], row[0][1]])
+          runT['linkA'] = linkA
+          runA.append(runT)
+
+        s = json.dumps(runA, sort_keys=True,
+                       indent=1, separators=(',',': '))
+        print(s)
+
+    except Exception as e:
+      print("query: ",query)
+      print("something when wrong: ",e)
 
 
 class CmdLineOptions(object):
