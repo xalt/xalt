@@ -314,7 +314,7 @@ class XALTdb(object):
 
     """
 
-    # Return if anonymous name is known
+    # Return if anonymous name is known:
     result = T.get(name)
     if (result):
       return result
@@ -342,7 +342,7 @@ class XALTdb(object):
         anon_user = row[0][0]
         return anon_user
       
-    # find current size of 
+    # find current size of the database.
     sz = self.__sizeT[dbT]
     if (sz < 0):
       query  = "select count(*) from %s " % dbT
