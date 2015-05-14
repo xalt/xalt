@@ -10,6 +10,20 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 import ConfigParser
 from xalt_util     import *
 from xalt_global   import *
+from urllib2       import Request, urlopen, URLError
+
+def field_of_science(account):
+  s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
+  request = Request(s)
+  try:
+    response = urlopen(request)
+    answer   = response.read()
+  except:
+    print("Got an error code: ",e)
+
+  ansT = json.loads(answer)
+  return ansT['field_of_science']
+
 
 class XALTdb(object):
   """
