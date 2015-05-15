@@ -2,6 +2,7 @@
 # -*- python -*-
 from __future__ import print_function
 import os, sys, re, MySQLdb, json, time, argparse, base64, json
+import hashlib
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -10,6 +11,225 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 import ConfigParser
 from xalt_util     import *
 from xalt_global   import *
+from urllib2       import Request, urlopen, URLError
+
+def field_of_science(account):
+  s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
+  request = Request(s)
+  try:
+    response = urlopen(request)
+    answer   = response.read()
+  except:
+    print("Got an error code: ",e)
+
+  ansT = json.loads(answer)
+  return ansT['field_of_science']
+
+
+equiv_patternA = [
+    [ r'^1690'                          , '1690*.x*'                       ],
+    [ r'^2D_needle'                     , '2D_needle*'                     ],
+    [ r'^3D_needle'                     , '3D_needle*'                     ],
+    [ r'^A01'                           , 'A0*'                            ],
+    [ r'^adcirc'                        , 'ADCIRC*'                        ],
+    [ r'^padcirc'                       , 'ADCIRC*'                        ],
+    [ r'^AHF-v1\.0'                     , 'AHF-v1.0*'                      ],
+    [ r'^arps'                          , 'ARPS*'                          ],
+    [ r'^arps_mpi'                      , 'ARPS*'                          ],
+    [ r'^pmemd'                         , 'Amber*'                         ],
+    [ r'^sander'                        , 'Amber*'                         ],
+    [ r'^Analysis016'                   , 'Analysis016*'                   ],
+    [ r'^BADDI3'                        , 'BADDI3*'                        ],
+    [ r'^CAMx'                          , 'CAMx*'                          ],
+    [ r'^c37b1'                         , 'CHARMM*'                        ],
+    [ r'^charmm'                        , 'CHARMM*'                        ],
+    [ r'^CHNS'                          , 'CHNS*'                          ],
+    [ r'^run\.cctm'                     , 'CMAQ_CCTM*'                     ],
+    [ r'^cactus_'                       , 'Cactus*'                        ],
+    [ r'^chroma'                        , 'Chroma*'                        ],
+    [ r'^harom\.parscalar'              , 'Chroma*'                        ],
+    [ r'^sm_chroma'                     , 'Chroma*'                        ],
+    [ r'^CitcomS'                       , 'CitcomS*'                       ],
+    [ r'^CoMD-'                         , 'CoMD*'                          ],
+    [ r'^Compute_'                      , 'Compute_Weather_Code*'          ],
+    [ r'^DADDI_'                        , 'DADDI*'                         ],
+    [ r'^mpi_dbscan'                    , 'DBScan*'                        ],
+    [ r'^DCMIP'                         , 'DCMIP*'                         ],
+    [ r'^dlpoly'                        , 'DL_POLY*'                       ],
+    [ r'^DNS2d'                         , 'DNS2d*'                         ],
+    [ r'^enzo'                          , 'ENZO*'                          ],
+    [ r'^FIN'                           , 'FIN*'                           ],
+    [ r'^FPHC'                          , 'FPHC*'                          ],
+    [ r'^flash4'                        , 'Flash4*'                        ],
+    [ r'^Floating_Jinhui'               , 'Floating_Jinhui*'               ],
+    [ r'^FractionalVaporSaturationTime' , 'FractionalVaporSaturationTime*' ],
+    [ r'^FrankWolfe'                    , 'FrankWolfe*'                    ],     
+    [ r'^GIZMO'                         , 'GIZMO*'                         ],
+    [ r'^GSreturn'                      , 'GSreturn*'                      ],
+    [ r'^.*Gadget.*'                    , 'Gadget*'                        ],
+    [ r'^GigaPOWERS'                    , 'GigaPOWERS*'                    ],
+    [ r'^graph500'                      , 'Graph500*'                      ],
+    [ r'^mdrun'                         , 'Gromacs*'                       ],
+    [ r'^HF'                            , 'HF*'                            ],
+    [ r'^HOPSPACK_-'                    , 'HOPSPACK*'                      ],
+    [ r'^xhpcg'                         , 'HPCG*'                          ],
+    [ r'^xhpl'                          , 'HPL*'                           ],
+    [ r'^IMB-'                          , 'IMB*'                           ],
+    [ r'^IceNine'                       , 'IceNine*'                       ],
+    [ r'^lmp_'                          , 'LAMMPS*'                        ],
+    [ r'^LESPDFISAT'                    , 'LESPDFISAT*'                    ],
+    [ r'^lulesh'                        , 'LULESH*'                        ],
+    [ r'^Longitudinal-'                 , 'Longitudinal*'                  ],
+    [ r'^MHDAM3d_'                      , 'MHDAM3d*'                       ],
+    [ r'^su3_'                          , 'MILC*'                          ],
+    [ r'^mitgcmuv'                      , 'MITGCM*'                        ],
+    [ r'^charmrun'                      , 'NAMD*'                          ],
+    [ r'^namd2'                         , 'NAMD*'                          ],
+    [ r'^nektar'                        , 'NEKTAR*'                        ],
+    [ r'^nrlmol'                        , 'NRLMol*'                        ],
+    [ r'^NVT_'                          , 'NVT*'                           ],
+    [ r'^[Nn][Ww][Cc]hem'               , 'NWChem*'                        ],
+    [ r'^NavStk_'                       , 'NavStk*'                        ],
+    [ r'^NewAlgorithm'                  , 'NewAlgorithm*'                  ],
+    [ r'^O2case'                        , 'O2case*'                        ],
+    [ r'^.*[Ff][Oo][Aa][Mm].*'          , 'OpenFOAM*'                      ],
+    [ r'^OpenSees'                      , 'OpenSees*'                      ],
+    [ r'^OpenSeesSP'                    , 'OpenSees*'                      ],
+    [ r'^P-SPH'                         , 'P-SPH*'                         ],
+    [ r'^parsec.mpi'                    , 'PARSEC*'                        ],
+    [ r'^P_merge_LD'                    , 'P_merge_LD*'                    ],
+    [ r'^python'                        , 'Python*'                        ],
+    [ r'^qcprog'                        , 'QCHEM*'                         ],
+    [ r'^ph.x'                          , 'QE*'                            ],
+    [ r'^pw.x'                          , 'QE*'                            ],
+    [ r'^READ_WRFNETCDF'                , 'READ_WRFNETCDF*'                ],
+    [ r'^[Rr]osetta'                    , 'Rosetta*'                       ],
+    [ r'^SAM_ADV_'                      , 'SAM_ADV*'                       ],
+    [ r'^SSEPBMPI_3d_'                  , 'SSEPBMPI_3d*'                   ],
+    [ r'^Sandia_100_'                   , 'Sandia_100*'                    ],
+    [ r'^Sbm_LFP_'                      , 'Sbm_LFP*'                       ],
+    [ r'^SesiSol'                       , 'SeisSol*'                       ],
+    [ r'^Select_Particles'              , 'Select_Particles*'              ],
+    [ r'^Sept1'                         , 'Sept1*'                         ],
+    [ r'^siesta'                        , 'Siesta*'                        ],
+    [ r'^Spacing'                       , 'Spacing*'                       ],
+    [ r'^xspecfem3D'                    , 'SpecFEM3D*'                     ],
+    [ r'^Splotch'                       , 'Splotch*'                       ],
+    [ r'^Stratified_'                   , 'Stratified*'                    ],
+    [ r'^TADDI'                         , 'TADDI*'                         ],
+    [ r'^T_Matrix'                      , 'T_Matrix*'                      ],
+    [ r'^Trispectrum'                   , 'Trispectrum*'                   ],
+    [ r'^UT-GMRES'                      , 'UT-GMRES*'                      ],
+    [ r'^UT-MOM'                        , 'UT-MOM*'                        ],
+    [ r'^UT.*AIM'                       , 'UTAIM*'                         ],
+    [ r'[0-9]+_[0-9]+.sh'               , 'Unknown_number_pair.sh*'        ],
+    [ r'^vasp'                          , 'VASP*'                          ],          
+    [ r'^wps_'                          , 'WPS*'                           ],
+    [ r'^global_enkf_wrf'               , 'WRF*'                           ],
+    [ r'^wrf'                           , 'WRF*'                           ],
+    [ r'^Xvicar'                        , 'Xvicar*'                        ],
+    [ r'^a\.out'                        , 'a.out'                          ],
+    [ r'ablDyM'                         , 'ablDyM*'                        ],
+    [ r'^ah1w'                          , 'ah1w*'                          ],
+    [ r'^astrobear'                     , 'astrobear*'                     ],
+    [ r'^athena'                        , 'athena*'                        ],
+    [ r'^bsr'                           , 'bsr*'                           ],
+    [ r'^buoyantBoussinesq'             , 'buoyantBoussines*'              ],
+    [ r'^.*cdmft'                       , 'cdmft*'                         ],
+    [ r'^citcom'                        , 'citcom*'                        ],
+    [ r'^cntor'                         , 'cntor*'                         ],
+    [ r'^coawst'                        , 'coawst*'                        ],
+    [ r'^com_estimator'                 , 'com_estimator*'                 ],
+    [ r'^cp2k\.'                        , 'cp2k*'                          ],
+    [ r'^dam_'                          , 'dam*'                           ],
+    [ r'^deform_lung'                   , 'deform_lung*'                   ],
+    [ r'^dgbte_'                        , 'dgbte*'                         ],
+    [ r'^dgsg'                          , 'dgsg*'                          ],
+    [ r'^equm-'                         , 'equm*'                          ],
+    [ r'^etbm_hartree'                  , 'etbm_hartree*'                  ],
+    [ r'^fdtd-engine'                   , 'fdtd-engine*'                   ],
+    [ r'^fkqcwl'                        , 'fkqcwl*'                        ],
+    [ r'^flw-avni'                      , 'fl2-avni*'                      ],
+    [ r'^flamelet[A-Z]'                 , 'flamelet*'                      ],
+    [ r'^fmm_'                          , 'fmm*'                           ],
+    [ r'^grmhd'                         , 'grmhd*'                         ],
+    [ r'^harris2d'                      , 'harris2d*'                      ],
+    [ r'^himeno'                        , 'himeno*'                        ],
+    [ r'^iblank'                        , 'iblank*'                        ],
+    [ r'^ioChann'                       , 'ioChann*'                       ],
+    [ r'^ks_spectrum'                   , 'ks_spectrum*'                   ],
+    [ r'^laminarSMOKE'                  , 'laminarSMOKE*'                  ],
+    [ r'^lassopg'                       , 'lassopg*'                       ],
+    [ r'^lbs3d'                         , 'lbs3d*'                         ],
+    [ r'^lchgall_'                      , 'lchgall*'                       ],
+    [ r'^lesmpi_rankine'                , 'lesmpi_rankine*'                ],
+    [ r'^lz_'                           , 'lz*'                            ],
+    [ r'^mandel_'                       , 'mandel*'                        ],
+    [ r'^mcmc_test'                     , 'mcmc*'                          ],
+    [ r'^md3d_'                         , 'md3d*'                          ],
+    [ r'^melSplit'                      , 'melSplit*'                      ],
+    [ r'^mh1w'                          , 'mh1w*'                          ],
+    [ r'^mhray_'                        , 'mhray*'                         ],
+    [ r'^molpairs'                      , 'molpairs*'                      ],
+    [ r'^ocean[MG]'                     , 'ocean*'                         ],
+    [ r'^pelfe_'                        , 'pelfe*'                         ],
+    [ r'^perf_cfft'                     , 'perf_cfft*'                     ],
+    [ r'^piso'                          , 'piso*'                          ],
+    [ r'^polaris_'                      , 'polaris*'                       ],
+    [ r'^ramses'                        , 'ramses*'                        ],
+    [ r'^ranksort_'                     , 'ranksort*'                      ],
+    [ r'^rfcst_'                        , 'rfcst*'                         ],
+    [ r'^rocflocm'                      , 'rocflocm*'                      ],
+    [ r'^run\.cctm'                     , 'run.cctm*'                      ],
+    [ r'^run\.ddm'                      , 'run.ddm*'                       ],
+    [ r'^run_3ln'                       , 'run_3ln*'                       ],
+    [ r'^run_aedtproc'                  , 'run_aedtproc*'                  ],
+    [ r'^sem_model_slice'               , 'sem_model_slice*'               ],
+    [ r'^sfmpi'                         , 'sfmpi*'                         ],
+    [ r'^smk_'                          , 'smk*'                           ],
+    [ r'^sp-mz'                         , 'sp-mz*'                         ],
+    [ r'^spmv-'                         , 'spmv*'                          ],
+    [ r'^sssp_eval-'                    , 'sssp_eval*'                     ],
+    [ r'^toascii.*ksh'                  , 'toascii*'                       ],
+    [ r'^v14'                           , 'v14*'                           ],
+    [ r'^validation[A-Z0-9]'            , 'validation*'                    ],
+    [ r'^varOmega'                      , 'varOmega*'                      ],
+    [ r'^vat_2d'                        , 'vat_2d*'                        ],
+    [ r'^vat_3d'                        , 'vat_3d*'                        ],
+    [ r'^vfmfe'                         , 'vfmfe*'                         ],
+    [ r'^virial3'                       , 'virial3*'                       ],
+    [ r'^vlpl'                          ,p 'vlpl*'                         ],
+    [ r'^xkhi03'                        , 'xkhi03*'                        ],
+    [ r'^xlmg1'                         , 'xlmg1*'                         ],
+    [ r'^xpacc'                         , 'xpacc*'                         ],
+    [ r'^xsbig'                         , 'xsbig*'                         ],
+    [ r'^ymir_'                         , 'ymir*'                          ],
+    ]
+
+
+
+for entry  in equiv_patternA:
+  entry[0] = re.compile(entry[0])
+
+userDirPatternT = {
+  '/home\d?/\d+/([^/]+)'  : "/home/",
+  '/scratch/\d+/([^/]+)'  : "/scratch/",
+  '/work/\d+/([^/]+)'     : "/work/",
+}
+
+compiled_userDirPatternT = {}
+for k,v  in userDirPatternT.iteritems():
+  compiled_userDirPatternT[re.compile(k)]=v
+
+def replace_exec_path(path):
+  base = os.path.basename(path)
+  for entry in equiv_patternA:
+    regexp = entry[0]
+    if (regexp.search(path)):
+      return entry[1]
+
+  return hashlib.sha1(base).hexdigest()
+
 
 class XALTdb(object):
   """
@@ -24,6 +244,7 @@ class XALTdb(object):
     self.__db     = None
     self.__conn   = None
     self.__confFn = confFn
+    self.__sizeT  = {'xalt_user' : -1, 'xalt_account' : -1}
 
   def __readFromUser(self):
     """ Ask user for database access info. (private) """
@@ -86,18 +307,112 @@ class XALTdb(object):
     """ Return name of db"""
     return self.__db
 
+
+  def __convert(self, conn, dbT, prefix, field, T, name):
+    """ 
+    Convert name to anonymous name.  This routine caches any names already found. 
+
+    """
+
+    # Return if anonymous name is known:
+    result = T.get(name)
+    if (result):
+      return result
+
+  
+    # Check to see if name is in the database:
+    if (dbT == "xalt_account"):
+      query = "select anon_acct, field_of_science from xalt_account where account = %s" % account
+      conn.query(query)
+      result = conn.store_result()
+      nrows  = result.num_rows()
+      if (nrows > 0):
+        row = result.fetch_row()
+        anon_acct    = row[0][0]
+        field_of_sci = row[0][1]
+        value = {'anon' : anon, 'field_of_sci' : field_of_sci}
+        return value
+    else:
+      query = "select anon_user from xalt_user where user = %s" % user
+      conn.query(query)
+      result = conn.store_result()
+      nrows  = result.num_rows()
+      if (nrows > 0):
+        row = result.fetch_row()
+        anon_user = row[0][0]
+        return anon_user
+      
+    # find current size of the database.
+    sz = self.__sizeT[dbT]
+    if (sz < 0):
+      query  = "select count(*) from %s " % dbT
+      conn.query(query)
+      result = conn.store_result()
+      nrows  = result.num_rows()
+      if (nrows == 0):
+        raise "This should not happen!! The size of "+dbT+" is unknown!"
+      row = result.fetch_row()
+      sz  = int(row[0][0])
+
+
+    # Build anonymous name
+    sz   += 1
+    n     = name + name + "%09d" % sz
+    done  = False
+    count = 0
+    while (not done):
+      s    = hashlib.sha1(n).hexdigest()[0:5]
+      anon = "%s%08d" % (prefix, int(s, 16))
+
+      # Is this anon name already in DB?
+      query  = "select %s from %s where %s = %s" % (field, dbT,  field, anon)
+      conn.query(query)
+      result = conn.store_result()
+      nrows  = result.num_rows()
+      if (nrows > 0):
+        n = n + n
+        count += 1
+        if (count > 5):
+          raise "Tried to build anonymous name too many times"
+      else:
+        done = True
+
+    # Save away new anon_name:
+    query  = "START TRANSACTION"
+    conn.query(query)
+    if (dbT == "xalt_account"):
+      field_of_sci = field_of_science(account)
+      query        = "INSERT into xalt_account VALUES (NULL, '%s','%s','%s')" % (
+                     name, anon, field_of_sci)
+      value        = {'anon' : anon, 'field_of_sci' : field_of_sci}
+
+    else:
+      query        = "INSERT into xalt_account VALUES (NULL, '%s','%s')" % (
+                     name, anon)
+      value        = anon
+    conn.query(query)
+    query = "COMMIT"
+    conn.query(query)
+    
+    # Cache values
+    self.__sizeT[dbT] = sz        
+    T[name] = value
+    return value
+
   def runs(self, startDate, endDate):
     """ Collect data from DB """
 
     try:
+      userT = {}
+      acctT = {}
       query = "not set"
       runA  = []
       conn  = self.connect()
       query = "USE "+self.db()
       conn.query(query)
 
-      query = "select date, syshost, account, start_time, run_time, num_cores, "    + \
-              "num_nodes, num_threads, user, exec_path, module_name, run_id    "    + \
+      query = "select date, syshost, account, start_time, run_time, num_cores,      "    + \
+              "num_nodes, num_threads, user, exec_path, module_name, run_id, job_id "    + \
               "from xalt_run where xalt_run.date >= '%s' and xalt_run.date < '%s' " % (
               startDate, endDate)
       conn.query(query)
@@ -115,10 +430,21 @@ class XALTdb(object):
           #          'num_nodes'  : row[0][6], 'num_threads' : row[0][ 7], 'user'      : row[0][ 8],
           #          'exec_path'  : row[0][9], 'module_name' : row[0][10]}
 
-          runT   = {'d' : date,      'h' : row[0][ 1], 'a' : row[0][ 2],
+          user      = row[0][8]
+          account   = row[0][2]
+          exec_path = row[0][9]
+          anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
+          value     = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
+          anon_acct = value['anon']
+          science   = value['field_of_sci']
+          exe       = replace_exec_path(exec_path)
+
+
+          runT   = {'d' : date,      'h' : row[0][ 1], 'a' : anon_acct,
                     's' : row[0][3], 'r' : row[0][ 4], 'c' : row[0][ 5],
-                    'n' : row[0][6], 't' : row[0][ 7], 'u' : row[0][ 8],
-                    'p' : row[0][9], 'm' : row[0][10]}
+                    'n' : row[0][6], 't' : row[0][ 7], 'u' : anon_user,
+                    'p' : exe,       'm' : row[0][10], 'j' : row[0][12],
+                    'f' : science }
           
           linkA = []
           query = "select object_path, module_name from xalt_object, join_run_object where "      + \
@@ -129,19 +455,25 @@ class XALTdb(object):
           r2 = conn.store_result()
           lnk_rows = r2.num_rows()
           for i in xrange(lnk_rows):
-            row = r2.fetch_row()
-            linkA.append([row[0][0], row[0][1]])
+            row  = r2.fetch_row()
+            path = row[0][0]
+
+            # anonymize user paths.
+            for regexp, v in compiled_userDirPatternT.iteritems():
+              m = regexp.match(path)
+              if (m):
+                user      = m.group(1)
+                anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
+                path      = regexp.sub(os.path.join(v,anon_user),path)
+                break
+            linkA.append([path, row[0][1]])
+
           runT['linkA'] = linkA
           runA.append(runT)
 
         s = json.dumps(runA, sort_keys=True,
                        indent=1, separators=(',',': '))
-        #s = json.dumps(runA)
         print(s)
-
-
-        
-
 
     except Exception as e:
       print("query: ",query)
