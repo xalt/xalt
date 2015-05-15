@@ -198,7 +198,7 @@ equiv_patternA = [
     [ r'^vat_3d'                        , 'vat_3d*'                        ],
     [ r'^vfmfe'                         , 'vfmfe*'                         ],
     [ r'^virial3'                       , 'virial3*'                       ],
-    [ r'^vlpl'                          ,p 'vlpl*'                         ],
+    [ r'^vlpl'                          , 'vlpl*'                          ],
     [ r'^xkhi03'                        , 'xkhi03*'                        ],
     [ r'^xlmg1'                         , 'xlmg1*'                         ],
     [ r'^xpacc'                         , 'xpacc*'                         ],
@@ -225,7 +225,8 @@ def replace_exec_path(path):
   base = os.path.basename(path)
   for entry in equiv_patternA:
     regexp = entry[0]
-    if (regexp.search(path)):
+    m      = regexp.search(base)
+    if (m):
       return entry[1]
 
   return hashlib.sha1(base).hexdigest()
@@ -322,7 +323,7 @@ class XALTdb(object):
   
     # Check to see if name is in the database:
     if (dbT == "xalt_account"):
-      query = "select anon_acct, field_of_science from xalt_account where account = %s" % account
+      query = "select anon_acct, field_of_science from xalt_account where account = '%s'" % name
       conn.query(query)
       result = conn.store_result()
       nrows  = result.num_rows()
@@ -330,10 +331,10 @@ class XALTdb(object):
         row = result.fetch_row()
         anon_acct    = row[0][0]
         field_of_sci = row[0][1]
-        value = {'anon' : anon, 'field_of_sci' : field_of_sci}
+        value = {'anon' : anon_acct, 'field_of_sci' : field_of_sci}
         return value
     else:
-      query = "select anon_user from xalt_user where user = %s" % user
+      query = "select anon_user from xalt_user where user = '%s'" % name
       conn.query(query)
       result = conn.store_result()
       nrows  = result.num_rows()
@@ -365,7 +366,7 @@ class XALTdb(object):
       anon = "%s%08d" % (prefix, int(s, 16))
 
       # Is this anon name already in DB?
-      query  = "select %s from %s where %s = %s" % (field, dbT,  field, anon)
+      query  = "select %s from %s where %s = '%s'" % (field, dbT,  field, anon)
       conn.query(query)
       result = conn.store_result()
       nrows  = result.num_rows()
@@ -387,7 +388,7 @@ class XALTdb(object):
       value        = {'anon' : anon, 'field_of_sci' : field_of_sci}
 
     else:
-      query        = "INSERT into xalt_account VALUES (NULL, '%s','%s')" % (
+      query        = "INSERT into xalt_user VALUES (NULL, '%s','%s')" % (
                      name, anon)
       value        = anon
     conn.query(query)
@@ -444,7 +445,7 @@ class XALTdb(object):
                     's' : row[0][3], 'r' : row[0][ 4], 'c' : row[0][ 5],
                     'n' : row[0][6], 't' : row[0][ 7], 'u' : anon_user,
                     'p' : exe,       'm' : row[0][10], 'j' : row[0][12],
-                    'f' : science }
+                    'f' : science,   'o' : exec_path }
           
           linkA = []
           query = "select object_path, module_name from xalt_object, join_run_object where "      + \
