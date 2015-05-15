@@ -209,7 +209,7 @@ equiv_patternT = {
 
 
 compiled_patternT = {}
-for k,v  in equiv_patternT:
+for k,v  in equiv_patternT.iteritems():
   compiled_patternT[re.compile(k)]=v
 
 userDirPatternT = {
@@ -219,7 +219,7 @@ userDirPatternT = {
 }
 
 compiled_userDirPatternT = {}
-for k,v  in userDirPatternT:
+for k,v  in userDirPatternT.iteritems():
   compiled_userDirPatternT[re.compile(k)]=v
 
 def replace_exec_path(path):
