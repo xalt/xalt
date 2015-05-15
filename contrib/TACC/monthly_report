@@ -330,7 +330,7 @@ class XALTdb(object):
         row = result.fetch_row()
         anon_acct    = row[0][0]
         field_of_sci = row[0][1]
-        value = {'anon' = anon, 'field_of_sci' : field_of_sci}
+        value = {'anon' : anon, 'field_of_sci' : field_of_sci}
         return value
     else:
       query = "select anon_user from xalt_user where user = %s" % user
@@ -384,7 +384,7 @@ class XALTdb(object):
       field_of_sci = field_of_science(account)
       query        = "INSERT into xalt_account VALUES (NULL, '%s','%s','%s')" % (
                      name, anon, field_of_sci)
-      value        = {'anon' = anon, 'field_of_sci' : field_of_sci}
+      value        = {'anon' : anon, 'field_of_sci' : field_of_sci}
 
     else:
       query        = "INSERT into xalt_account VALUES (NULL, '%s','%s')" % (
