@@ -62,6 +62,6 @@ def main():
   Find name of executable when using ibrun.
   """
 
-  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
+  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:]))
 
 if ( __name__ == '__main__'): main()
