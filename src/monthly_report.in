@@ -441,11 +441,11 @@ class XALTdb(object):
           exe       = replace_exec_path(exec_path)
 
 
-          runT   = {'d' : date,      'h' : row[0][ 1], 'a' : anon_acct,
-                    's' : row[0][3], 'r' : row[0][ 4], 'c' : row[0][ 5],
-                    'n' : row[0][6], 't' : row[0][ 7], 'u' : anon_user,
-                    'p' : exe,       'm' : row[0][10], 'j' : row[0][12],
-                    'f' : science,   'o' : exec_path }
+          runT   = {'date'             : date,      'host'        : row[0][ 1], 'account'   : anon_acct,
+                    'start_time'       : row[0][3], 'run_time'    : row[0][ 4], 'num_cores' : row[0][ 5],
+                    'num_nodes'        : row[0][6], 'num_threads' : row[0][ 7], 'user'      : anon_user,
+                    'exec_path'        : exe,       'module_name' : row[0][10], 'job_id'    : row[0][12],
+                    'field_of_science' : science }
           
           linkA = []
           query = "select object_path, module_name from xalt_object, join_run_object where "      + \
@@ -467,7 +467,7 @@ class XALTdb(object):
                 anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
                 path      = regexp.sub(os.path.join(v,anon_user),path)
                 break
-            linkA.append([path, row[0][1]])
+            linkA.append({'path' : path, 'module_name' : row[0][1]})
 
           runT['linkA'] = linkA
           runA.append(runT)
