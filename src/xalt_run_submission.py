@@ -93,7 +93,11 @@ class ExtractXALT(object):
     else:
       s = self.__extract_xalt_linux(execPath)
 
-  
+    self.__fieldT = {}
+
+    if (s == None):
+      return
+
     xaltA   = re.split('%%', s)
   
     fieldT = {}
@@ -111,7 +115,7 @@ class ExtractXALT(object):
         idx   = idx + 1
         value = xaltA[idx].replace("_%_%_"," ")
         fieldT[key] = value
-    
+
     self.__fieldT = fieldT 
 
   def __extract_xalt_linux(self, execPath):
