@@ -19,7 +19,7 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 from __future__  import print_function
-import os, sys, json, base64
+import os, sys, json, base64, zlib
 
 try:
   from XALTdb      import XALTdb
@@ -74,6 +74,8 @@ class XALT_transmission_factory(object):
     name = name.lower()
     if (name == "syslog"):
       obj = Syslog(syshost, kind)
+    if (name == "syslog_v2"):
+      obj = Syslog_V2(syshost, kind)
     elif (name == "directdb"):
       obj = DirectDB(syshost, kind)
     else:                 
@@ -111,6 +113,51 @@ class Syslog(XALT_transmission_factory):
     sA.append("\"")
     s = "".join(sA)
     os.system(s)
+    
+class Syslog_V2(XALT_transmission_factory):
+  """
+  This class write the json record to syslog
+  """
+
+  def __init__(self, syshost, kind):
+    """
+    This is the ctor for Syslog transmission method
+    @param syshost: Name of the system.
+    @param kind:  Type of record: link or run
+    """
+
+    super(Syslog, self).__init__(syshost, kind)
+  def save(self, resultT, uuid):
+    """
+    The json table is written to syslog with the text is first compressed
+    then converted to base64.
+    @param resultT: The json record table
+    @param uuid: The unique id
+    """
+    b      = base64.b64encode(zlib.compress(json.dumps(resultT)))
+    blkSz  = 2048
+    nBlks  = (len(b) - 1)/blkSz + 1
+    bA     = []
+    istart = 0
+    iend   = blkSz
+    for i in xrange(nBlks):
+      sA = []
+      sA.append("logger -t XALT_LOGGING V=2")
+      sA.append(" kind=")
+      sA.append(self._kind())
+      sA.append(" syshost=")
+      sA.append(self._syshost())
+      sA.append(" uuid=")
+      sA.append(uuid)
+      sA.append(" idx=")
+      sA.append(str(i))
+      sA.append(" nb=")
+      sA.append(str(nBlks))
+      sA.append(" value=")
+      sA.append(b[istart:iend])
+      istart = iend
+      iend   = istart + blkSz
+      os.system("".join(sA))
     
 
 class File(XALT_transmission_factory):

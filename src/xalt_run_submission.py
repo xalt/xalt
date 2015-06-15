@@ -408,7 +408,7 @@ def main():
 
       xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
                                               args.syshost, "run", fn)
-      xfer.save(submitT)
+      xfer.save(submitT, uuid)
     if (args.endTime == 0):
       print(json.dumps(uuidA))
   except Exception as e:

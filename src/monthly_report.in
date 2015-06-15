@@ -467,7 +467,7 @@ class XALTdb(object):
                 anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
                 path      = regexp.sub(os.path.join(v,anon_user),path)
                 break
-            linkA.append({'path' : path, 'module_name' : row[0][1]})
+            linkA.append({'library_path' : path, 'library_module_name' : row[0][1]})
 
           runT['linkA'] = linkA
           runA.append(runT)
