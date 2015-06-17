@@ -13,6 +13,19 @@ from xalt_util     import *
 from xalt_global   import *
 from urllib2       import Request, urlopen, URLError
 
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    return inspect.currentframe().f_code.co_filename
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
+
 def field_of_science(account):
   s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
   request = Request(s)
@@ -320,6 +333,7 @@ class XALTdb(object):
     if (result):
       return result
 
+    print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
   
     # Check to see if name is in the database:
     if (dbT == "xalt_account"):
@@ -343,6 +357,7 @@ class XALTdb(object):
         anon_user = row[0][0]
         return anon_user
       
+    print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
     # find current size of the database.
     sz = self.__sizeT[dbT]
     if (sz < 0):
@@ -357,13 +372,16 @@ class XALTdb(object):
 
 
     # Build anonymous name
+
+
     sz   += 1
-    n     = name + name + "%09d" % sz
     done  = False
     count = 0
     while (not done):
-      s    = hashlib.sha1(n).hexdigest()[0:5]
-      anon = "%s%08d" % (prefix, int(s, 16))
+      a     = os.urandom(128)
+      rnd   = a.encode('base-64')
+      s     = hashlib.sha1(rnd).hexdigest()[0:5]
+      anon  = "%s%08d" % (prefix, int(s, 16))
 
       # Is this anon name already in DB?
       query  = "select %s from %s where %s = '%s'" % (field, dbT,  field, anon)
@@ -453,6 +471,7 @@ class XALTdb(object):
                   run_id )
           conn.query(query)
           
+          print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
           r2 = conn.store_result()
           lnk_rows = r2.num_rows()
           for i in xrange(lnk_rows):
@@ -472,6 +491,7 @@ class XALTdb(object):
           runT['linkA'] = linkA
           runA.append(runT)
 
+        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
         s = json.dumps(runA, sort_keys=True,
                        indent=1, separators=(',',': '))
         print(s)
