@@ -333,8 +333,6 @@ class XALTdb(object):
     if (result):
       return result
 
-    print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
-  
     # Check to see if name is in the database:
     if (dbT == "xalt_account"):
       query = "select anon_acct, field_of_science from xalt_account where account = '%s'" % name
@@ -357,7 +355,6 @@ class XALTdb(object):
         anon_user = row[0][0]
         return anon_user
       
-    print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
     # find current size of the database.
     sz = self.__sizeT[dbT]
     if (sz < 0):
@@ -459,10 +456,10 @@ class XALTdb(object):
           exe       = replace_exec_path(exec_path)
 
 
-          runT   = {'date'             : date,      'host'        : row[0][ 1], 'account'   : anon_acct,
-                    'start_time'       : row[0][3], 'run_time'    : row[0][ 4], 'num_cores' : row[0][ 5],
-                    'num_nodes'        : row[0][6], 'num_threads' : row[0][ 7], 'user'      : anon_user,
-                    'exec_path'        : exe,       'module_name' : row[0][10], 'job_id'    : row[0][12],
+          runT   = {'date'             : date,      'host'        : row[0][ 1], 'allocation' : anon_acct,
+                    'start_time'       : row[0][3], 'run_time'    : row[0][ 4], 'num_cores'  : row[0][ 5],
+                    'num_nodes'        : row[0][6], 'num_threads' : row[0][ 7], 'user'       : anon_user,
+                    'exec_path'        : exe,       'module_name' : row[0][10], 'job_id'     : row[0][12],
                     'field_of_science' : science }
           
           linkA = []
@@ -471,7 +468,6 @@ class XALTdb(object):
                   run_id )
           conn.query(query)
           
-          print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
           r2 = conn.store_result()
           lnk_rows = r2.num_rows()
           for i in xrange(lnk_rows):
@@ -491,10 +487,11 @@ class XALTdb(object):
           runT['linkA'] = linkA
           runA.append(runT)
 
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
-        s = json.dumps(runA, sort_keys=True,
-                       indent=1, separators=(',',': '))
-        print(s)
+        print("[")
+        for entry in runA:
+          s = json.dumps(runA)
+          print(s)
+        print("]")
 
     except Exception as e:
       print("query: ",query)
