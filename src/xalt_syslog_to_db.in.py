@@ -34,7 +34,7 @@
 #
 
 from __future__  import print_function
-import os, sys, re, MySQLdb, json, time, argparse, base64
+import os, sys, re, MySQLdb, json, time, argparse, base64, zlib, shlex
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -61,11 +61,139 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--syslog_file", dest='syslog', action="store",      help="location and name of syslog file")
-    parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
-    parser.add_argument("--reverseMapD", dest='rmapD',  action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--syslog_file", dest='syslog',   action="store",      help="Location and name of syslog file")
+    parser.add_argument("--leftover_fn", dest='leftover', action="store",      default='leftover.log',
+                                                                               help="Name of the leftover file")
+    parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
+    parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
     args = parser.parse_args()
     return args
+
+
+class Record(object):
+  """
+  This class holds the pieces of a single record as it comes in from
+  syslog
+  """
+  def __init__(self, t):
+    nblks          = int(t['nb'])
+    self.__nblks   = nblks
+    self.__kind    = t['kind']
+    self.__syshost = t['syshost']
+    self.__blkCnt  = 0
+
+    blkA = []
+    for i in xrange(nblks):
+      blkA.append(False)
+
+    self.__blkA    = blkA
+    self.addBlk(t)
+
+  def addBlk(self,t):
+    idx               = int(t['idx'])
+    self.__blkA[idx]  = t['value']
+    self.__blkCnt    += 1
+    
+  def completed(self):
+    return (self.__blkCnt >= self.__nblks)
+
+  def value(self):
+    return "".join(self.__blkA)
+
+  def prt(self, prefix, uuid):
+    sA    = []
+    nblks = self.__nblks
+    blkA  = self.__blkA
+
+    sPA   = []
+    sPA.append(prefix)
+    sPA.append(" kind=")
+    sPA.append(self.__kind)
+    sPA.append(" syshost=")
+    sPA.append(self.__syshost)
+    sPA.append(" uuid=")
+    sPA.append(uuid)
+    sPA.append(" nb=")
+    sPA.append(str(nblks))
+    ss = "".join(sPA)
+
+    for idx in xrange(nblks):
+      value = blkA[idx]
+      if (value):
+        sA.append(ss)
+        sA.append(" idx=")
+        sA.append(str(idx))
+        sA.append(" value=")
+        sA.append(value)
+        sA.append("\n")
+    return "".join(sA)
+
+def parseSyslogV1(s):
+  t = { 'kind' : None, 'value' : None, 'syshost' : None, 'version' : 1}
+
+  idx = s.find("link:")
+  if (idx == -1):
+    idx = s.find("run:")
+  if (idx == -1):
+    return t, False
+
+  array        = s[idx:].split(":")
+  t['kind']    = array[0].strip()
+  t['syshost'] = array[1].strip()
+  t['value']   = base64.b64decode(array[2])
+  return t, True
+
+
+
+def parseSyslogV2(s, recordT):
+  t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
+
+  idx = s.find(" V=2 ")
+  if (idx  == -1):
+    return t, False
+
+  # Strip off "XALT_LOGGING V=2" from string.
+  s                      = s[idx+5:]
+
+  # Setup parser
+  lexer                  = shlex.shlex(s)
+  lexer.whitespace_split = True
+  lexer.whitespace       = ' ='
+
+  # Pick off two values at a time.
+  try: 
+    while True:
+      key    = next(lexer)
+      value  = next(lexer)
+      t[key] = value
+  except StopIteration:
+    pass
+  
+
+  # get the uuid from the input, then place an entry in the *recordT* table.
+  # or just add the block to the current record.
+  uuid = t['uuid']
+  r    = recordT.get(uuid, None)
+  if (r):
+    r.addBlk(t)
+  else:
+    r  = Record(t)
+    recordT[uuid] = r
+
+  # If the block is completed then grap the value, remove the entry from *recordT*
+  # and return a completed table.
+  if (r.completed()):
+    t['value'] = zlib.decompress(base64.b64decode(r.value())
+    recordT.pop(uuid)
+    return t, True
+
+  # Entry is not complete.
+  return t, False
+
+def parseSyslog(s, recordT):
+  if ("XALT_LOGGING V=2 " in s):
+    return parseSyslogV2(s, recordT)
+  return parseSyslogV1(s)
 
 
 def main():
@@ -95,69 +223,71 @@ def main():
   lnkCnt = 0
   runCnt = 0
   badCnt = 0
-  count = 0
+  count  = 0
 
-  if num != 0: 
-    pbar   = ProgressBar(maxVal=num)
-    if (os.path.isfile(syslogFile)):
-      f=open(syslogFile, 'r')
-      for line in f:
-        if "XALT_LOGGING" in line:
+  recordT = {}
 
-          i=line.find("link:")
-          if i == -1 :
-            i=line.find("run:")
-          if i == -1:
-            continue   # did not find a link or run, continue to next line
+  if (num == 0):
+    return
+    
+  pbar   = ProgressBar(maxVal=num)
 
-          array=line[i:].split(":")
-          type = array[0].strip()
-          syshost = array[1].strip()
-          try:
-            resultT=json.loads(base64.b64decode(array[2]))
-            XALT_Stack.push("XALT_LOGGING: " + type + " " + syshost)
-#            XALT_Stack.push("XALT_LOGGING resultT: " + resultT)
+  fnA = [ args.leftover, syslogFile ]
 
-            if ( type == "link" ):
-              XALT_Stack.push("link_to_db()")
-              xalt.link_to_db(rmapT, resultT)
-              XALT_Stack.pop()
-              lnkCnt += 1
-            elif ( type == "run" ):
-              XALT_Stack.push("run_to_db()")
-              xalt.run_to_db(rmapT, resultT)
-              XALT_Stack.pop()
-              runCnt += 1
-            else:
-              print("Error in xalt_syslog_to_db")
-            XALT_Stack.pop()
-          except:
-            badCnt += 1
-            # figure out length of array[2], as it might be 
-            # near the syslog message size limit
-            strg=array[2]
-            lens = len(strg)
-#            lenx = lens - (lens % 4 if lens % 4 else 4)
-            print("xalt_syslog_to_db: undecodable entry!  length: ",lens)
-#            resultT = base64.decodestring(strg[:lenx])
-#            print("result:  ",result)
+  for fn in fnA:
+    if (not os.path.isfile(fn)):
+      continue
 
-        count += 1
-        pbar.update(count)
+    f=open(fn, 'r')
+    for line in f:
+      if (not ("XALT_LOGGING" in line)):
+        continue
+      t, done = parseSyslog(line, recordT)
+      if (not done):
+        continue
 
-    pbar.fini()
+      try:
+        XALT_Stack.push("XALT_LOGGING: " + type + " " + t['syshost'])
 
-#  what should be done if there are errors?
-#    what went wrong?
-#    how do we restart?
-#
-#  xalt.connect().close()
+        if ( t['kind'] == "link" ):
+          XALT_Stack.push("link_to_db()")
+          xalt.link_to_db(rmapT, t['value'])
+          XALT_Stack.pop()
+          lnkCnt += 1
+        elif ( t['kind'] == "run" ):
+          XALT_Stack.push("run_to_db()")
+          xalt.run_to_db(rmapT, t['value'])
+          XALT_Stack.pop()
+          runCnt += 1
+        else:
+          print("Error in xalt_syslog_to_db")
+        XALT_Stack.pop()
+      except:
+        badCnt += 1
+
+      count += 1
+      pbar.update(count)
+
+  pbar.fini()
 
   t2 = time.time()
   rt = t2 - t1
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
-#
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt, ", badCnt: ", badCnt)
+        
+  if (os.path.isfile(leftover)):
+    os.rename(leftover, leftover .. ".old")
+  
+  # if there is anything left in recordT file write it out to the leftover file.
+
+  if (recordT):
+    f = open(leftover, "w")
+    for uuid in recordT:
+      r = recordT[uuid]
+      s = r.prt("XALT_LOGGING V=2", uuid)
+      f.write(s)
+    f.close()
+
 
 if ( __name__ == '__main__'): main()
