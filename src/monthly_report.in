@@ -13,6 +13,19 @@ from xalt_util     import *
 from xalt_global   import *
 from urllib2       import Request, urlopen, URLError
 
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    return inspect.currentframe().f_code.co_filename
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
+
 def field_of_science(account):
   s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
   request = Request(s)
@@ -320,7 +333,6 @@ class XALTdb(object):
     if (result):
       return result
 
-  
     # Check to see if name is in the database:
     if (dbT == "xalt_account"):
       query = "select anon_acct, field_of_science from xalt_account where account = '%s'" % name
@@ -357,13 +369,16 @@ class XALTdb(object):
 
 
     # Build anonymous name
+
+
     sz   += 1
-    n     = name + name + "%09d" % sz
     done  = False
     count = 0
     while (not done):
-      s    = hashlib.sha1(n).hexdigest()[0:5]
-      anon = "%s%08d" % (prefix, int(s, 16))
+      a     = os.urandom(128)
+      rnd   = a.encode('base-64')
+      s     = hashlib.sha1(rnd).hexdigest()[0:5]
+      anon  = "%s%08d" % (prefix, int(s, 16))
 
       # Is this anon name already in DB?
       query  = "select %s from %s where %s = '%s'" % (field, dbT,  field, anon)
@@ -441,10 +456,10 @@ class XALTdb(object):
           exe       = replace_exec_path(exec_path)
 
 
-          runT   = {'date'             : date,      'host'        : row[0][ 1], 'account'   : anon_acct,
-                    'start_time'       : row[0][3], 'run_time'    : row[0][ 4], 'num_cores' : row[0][ 5],
-                    'num_nodes'        : row[0][6], 'num_threads' : row[0][ 7], 'user'      : anon_user,
-                    'exec_path'        : exe,       'module_name' : row[0][10], 'job_id'    : row[0][12],
+          runT   = {'date'             : date,      'host'        : row[0][ 1], 'allocation' : anon_acct,
+                    'start_time'       : row[0][3], 'run_time'    : row[0][ 4], 'num_cores'  : row[0][ 5],
+                    'num_nodes'        : row[0][6], 'num_threads' : row[0][ 7], 'user'       : anon_user,
+                    'exec_path'        : exe,       'module_name' : row[0][10], 'job_id'     : row[0][12],
                     'field_of_science' : science }
           
           linkA = []
@@ -472,9 +487,11 @@ class XALTdb(object):
           runT['linkA'] = linkA
           runA.append(runT)
 
-        s = json.dumps(runA, sort_keys=True,
-                       indent=1, separators=(',',': '))
-        print(s)
+        print("[")
+        for entry in runA:
+          s = json.dumps(runA)
+          print(s)
+        print("]")
 
     except Exception as e:
       print("query: ",query)

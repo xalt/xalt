@@ -98,7 +98,7 @@ class Syslog(XALT_transmission_factory):
     """
 
     super(Syslog, self).__init__(syshost, kind)
-  def save(self, resultT):
+  def save(self, resultT, uuid):
     """
     The json table is written to syslog with the text converted to base64.
     @param resultT: The json record table
@@ -176,7 +176,7 @@ class File(XALT_transmission_factory):
     super(File, self).__init__(syshost, kind)
     self.__fn      = fn
 
-  def save(self, resultT):
+  def save(self, resultT, uuid):
     """
     The json table is written to the file specified in the ctor.
     @param resultT: The json record table
@@ -210,7 +210,7 @@ class DirectDB(XALT_transmission_factory):
     @param kind:  Type of record: link or run
     """
     super(DirectDB, self).__init__(syshost, kind)
-  def save(self, resultT):
+  def save(self, resultT, uuid):
     """
     The json table is written directly to the db.
     @param resultT: The json record table
