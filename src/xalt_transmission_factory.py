@@ -18,6 +18,7 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
+from __future__  import division
 from __future__  import print_function
 import os, sys, json, base64, zlib
 
@@ -136,7 +137,7 @@ class Syslog_V2(XALT_transmission_factory):
     """
     b      = base64.b64encode(zlib.compress(json.dumps(resultT)))
     blkSz  = 2048
-    nBlks  = (len(b) - 1)/blkSz + 1
+    nBlks  = (len(b) - 1)//blkSz + 1
     bA     = []
     istart = 0
     iend   = blkSz
