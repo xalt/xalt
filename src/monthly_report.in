@@ -438,6 +438,8 @@ class XALTdb(object):
       nrows = result.num_rows() 
       if (nrows > 0):
         print("[")
+        nrows = 10
+        endline = ","
         for j in xrange(nrows):
           row    = result.fetch_row()
           date   = str(row[0][0])
@@ -486,8 +488,13 @@ class XALTdb(object):
             linkA.append({'library_path' : path, 'library_module_name' : row[0][1]})
 
           runT['linkA'] = linkA
-          print(json.dumps(runT))
+
+          if (j+1 >= nrows):
+            endline = ""
+          print(json.dumps(runT),endline)
+
         print("]")
+
 
     except Exception as e:
       print("query: ",query)
