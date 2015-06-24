@@ -139,12 +139,19 @@ class Syslog_V2(XALT_transmission_factory):
     """
     #b      = base64.b64encode(zlib.compress(json.dumps(resultT)))
     #b      = json.dumps(resultT)
-    b      = base64.b64encode(json.dumps(resultT))
-    blkSz  = 32768
-    nBlks  = (len(b) - 1)//blkSz + 1
-    bA     = []
-    istart = 0
-    iend   = blkSz
+    jsonStr = json.dumps(resultT)
+    b       = base64.b64encode(jsonStr)
+
+    s       = base64.b64decode(b)
+    if (s != jsonStr):
+      print("s != jsonStr", file=sys.stderr)
+      raise Exception
+
+    blkSz   = 32768
+    nBlks   = (len(b) - 1)//blkSz + 1
+    bA      = []
+    istart  = 0
+    iend    = blkSz
     for i in xrange(nBlks):
       sA = []
       sA.append("logger -t XALT_LOGGING V=2")

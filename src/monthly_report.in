@@ -29,7 +29,8 @@ def __FILE__():
 def field_of_science(account):
   s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
   request = Request(s)
-  answer  = '{"field_of_science":"not_found"}'                                                                                                                                                                                               try:
+  answer  = '{"field_of_science":"not_found"}'
+  try:
     response = urlopen(request)
     answer   = response.read()
   except:
@@ -386,7 +387,6 @@ class XALTdb(object):
       result = conn.store_result()
       nrows  = result.num_rows()
       if (nrows > 0):
-        n = n + n
         count += 1
         if (count > 5):
           raise "Tried to build anonymous name too many times"
