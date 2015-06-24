@@ -397,7 +397,7 @@ class XALTdb(object):
     query  = "START TRANSACTION"
     conn.query(query)
     if (dbT == "xalt_account"):
-      field_of_sci = field_of_science(account)
+      field_of_sci = field_of_science(name)
       query        = "INSERT into xalt_account VALUES (NULL, '%s','%s','%s')" % (
                      name, anon, field_of_sci)
       value        = {'anon' : anon, 'field_of_sci' : field_of_sci}
