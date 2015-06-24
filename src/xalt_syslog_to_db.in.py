@@ -66,6 +66,7 @@ class CmdLineOptions(object):
                                                                                help="Name of the leftover file")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--dbname",      dest='dbname',   action="store",      default="xalt", help="Name of the database")
     args = parser.parse_args()
     return args
 
@@ -143,8 +144,6 @@ def parseSyslogV1(s):
   t['value']   = base64.b64decode(array[2])
   return t, True
 
-
-
 def parseSyslogV2(s, recordT):
   t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
 
@@ -183,7 +182,12 @@ def parseSyslogV2(s, recordT):
   # If the block is completed then grap the value, remove the entry from *recordT*
   # and return a completed table.
   if (r.completed()):
-    t['value'] = zlib.decompress(base64.b64decode(r.value())
+    
+    rv   = r.value()
+    b64v = base64.b64decode(rv)
+    #vv   = zlib.decompress(b64v)
+
+    t['value'] = b64v
     recordT.pop(uuid)
     return t, True
 
@@ -276,8 +280,9 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt, ", badCnt: ", badCnt)
         
+  leftover = args.leftover
   if (os.path.isfile(leftover)):
-    os.rename(leftover, leftover .. ".old")
+    os.rename(leftover, leftover + ".old")
   
   # if there is anything left in recordT file write it out to the leftover file.
 

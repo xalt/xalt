@@ -3,7 +3,7 @@ AC_PREFIX_DEFAULT(/usr/local)
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog) [[file]]]),
+    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb,syslogV2) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission")dnl
@@ -74,7 +74,6 @@ if test "$HAVE_PYMOD_PSUTIL" = yes; then
 
 else
    AC_PATH_PROG(pstree_prog, pstree, [])
-
 
    PATH_TO_PSTREE=$pstree_prog
 
