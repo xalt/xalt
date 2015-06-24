@@ -184,6 +184,7 @@ def parseSyslogV2(s, recordT):
   if (r.completed()):
     
     rv   = r.value()
+    print("syslog->db: key: ",key,", value:", rv, file=sys.stderr)
     b64v = base64.b64decode(rv)
     #vv   = zlib.decompress(b64v)
 
@@ -290,7 +291,7 @@ def main():
     f = open(leftover, "w")
     for key in recordT:
       r = recordT[key]
-      s = r.prt("XALT_LOGGING V=2", uuid)
+      s = r.prt("XALT_LOGGING V=2", key)
       f.write(s)
     f.close()
 
