@@ -142,11 +142,6 @@ class Syslog_V2(XALT_transmission_factory):
     jsonStr = json.dumps(resultT)
     b       = base64.b64encode(jsonStr)
 
-    s       = base64.b64decode(b)
-    if (s != jsonStr):
-      print("s != jsonStr", file=sys.stderr)
-      raise Exception
-
     blkSz   = 32768
     nBlks   = (len(b) - 1)//blkSz + 1
     istart  = 0
