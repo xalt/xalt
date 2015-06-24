@@ -149,7 +149,6 @@ class Syslog_V2(XALT_transmission_factory):
 
     blkSz   = 32768
     nBlks   = (len(b) - 1)//blkSz + 1
-    bA      = []
     istart  = 0
     iend    = blkSz
     for i in xrange(nBlks):

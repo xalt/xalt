@@ -101,7 +101,7 @@ class Record(object):
   def value(self):
     return "".join(self.__blkA)
 
-  def prt(self, prefix, uuid):
+  def prt(self, prefix, key):
     sA    = []
     nblks = self.__nblks
     blkA  = self.__blkA
@@ -112,8 +112,8 @@ class Record(object):
     sPA.append(self.__kind)
     sPA.append(" syshost=")
     sPA.append(self.__syshost)
-    sPA.append(" uuid=")
-    sPA.append(uuid)
+    sPA.append(" key=")
+    sPA.append(key)
     sPA.append(" nb=")
     sPA.append(str(nblks))
     ss = "".join(sPA)
@@ -169,15 +169,15 @@ def parseSyslogV2(s, recordT):
     pass
   
 
-  # get the uuid from the input, then place an entry in the *recordT* table.
+  # get the key from the input, then place an entry in the *recordT* table.
   # or just add the block to the current record.
-  uuid = t['uuid']
-  r    = recordT.get(uuid, None)
+  key = t['key']
+  r    = recordT.get(key, None)
   if (r):
     r.addBlk(t)
   else:
     r  = Record(t)
-    recordT[uuid] = r
+    recordT[key] = r
 
   # If the block is completed then grap the value, remove the entry from *recordT*
   # and return a completed table.
@@ -188,7 +188,7 @@ def parseSyslogV2(s, recordT):
     #vv   = zlib.decompress(b64v)
 
     t['value'] = b64v
-    recordT.pop(uuid)
+    recordT.pop(key)
     return t, True
 
   # Entry is not complete.
@@ -288,8 +288,8 @@ def main():
 
   if (recordT):
     f = open(leftover, "w")
-    for uuid in recordT:
-      r = recordT[uuid]
+    for key in recordT:
+      r = recordT[key]
       s = r.prt("XALT_LOGGING V=2", uuid)
       f.write(s)
     f.close()
