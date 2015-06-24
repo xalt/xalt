@@ -144,10 +144,11 @@ def main():
     resultT['wd']            = wd
     resultT['build_syshost'] = syshost
     resultT['linkA']         = sA
+    key                      = "link_" + uuid
     
     xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
                                             syshost, "link", resultFn)
-    xfer.save(resultT, uuid)
+    xfer.save(resultT, key)
 
   except Exception as e:
     print("XALT_EXCEPTION(xalt_generate_linkdata.py): ",e)

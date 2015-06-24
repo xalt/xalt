@@ -29,11 +29,11 @@ def __FILE__():
 def field_of_science(account):
   s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
   request = Request(s)
-  try:
+  answer  = '{"field_of_science":"not_found"}'                                                                                                                                                                                               try:
     response = urlopen(request)
     answer   = response.read()
   except:
-    print("Got an error code: ",e)
+    pass
 
   ansT = json.loads(answer)
   return ansT['field_of_science']
@@ -438,7 +438,6 @@ class XALTdb(object):
       nrows = result.num_rows() 
       if (nrows > 0):
         print("[")
-        nrows = 10
         endline = ","
         for j in xrange(nrows):
           row    = result.fetch_row()

@@ -364,8 +364,10 @@ def main():
     args = CmdLineOptions().execute()
     runA = json.loads(args.exec_progT[0])
     if (args.endTime > 0):
+      key_prefix = "run_fini_"
       uuidA = json.loads(args.uuidA)
     else:
+      key_prefix = "run_strt_"
       dateStr = capture("date +%Y_%m_%d_%H_%M_%S")[0:-1]
       N       = len(runA)
       uuidA   = []
@@ -405,10 +407,11 @@ def main():
       submitT['libA']      = userExec.libA()
       submitT['envT']      = EnvT().envT()
       submitT['hash_id']   = userExec.hash()
+      key                  = key_prefix + uuid
 
       xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
                                               args.syshost, "run", fn)
-      xfer.save(submitT, uuid)
+      xfer.save(submitT, key)
     if (args.endTime == 0):
       print(json.dumps(uuidA))
   except Exception as e:

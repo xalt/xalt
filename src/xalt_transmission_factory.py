@@ -99,7 +99,7 @@ class Syslog(XALT_transmission_factory):
     """
 
     super(Syslog, self).__init__(syshost, kind)
-  def save(self, resultT, uuid):
+  def save(self, resultT, key):
     """
     The json table is written to syslog with the text converted to base64.
     @param resultT: The json record table
@@ -130,7 +130,7 @@ class Syslog_V2(XALT_transmission_factory):
 
     super(Syslog_V2, self).__init__(syshost, kind)
 
-  def save(self, resultT, uuid):
+  def save(self, resultT, key):
     """
     The json table is written to syslog with the text is first compressed
     then converted to base64.
@@ -152,8 +152,8 @@ class Syslog_V2(XALT_transmission_factory):
       sA.append(self._kind())
       sA.append(" syshost=")
       sA.append(self._syshost())
-      sA.append(" uuid=")
-      sA.append(uuid)
+      sA.append(" key=")
+      sA.append(key)
       sA.append(" idx=")
       sA.append(str(i))
       sA.append(" nb=")
@@ -180,7 +180,7 @@ class File(XALT_transmission_factory):
     super(File, self).__init__(syshost, kind)
     self.__fn      = fn
 
-  def save(self, resultT, uuid):
+  def save(self, resultT, key):
     """
     The json table is written to the file specified in the ctor.
     @param resultT: The json record table
