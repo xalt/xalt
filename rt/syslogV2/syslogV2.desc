@@ -19,7 +19,6 @@ test_descript = {
 
      runMe installDB             # 1
 
-     export XALT_TRACING=yes
      export XALT_TRANSMISSION_STYLE=syslogV2
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich

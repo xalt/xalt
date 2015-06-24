@@ -47,6 +47,19 @@ from xalt_global   import *
 from progressBar   import ProgressBar
 from XALT_Rmap     import Rmap
 
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    return inspect.currentframe().f_code.co_filename
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
@@ -184,7 +197,6 @@ def parseSyslogV2(s, recordT):
   if (r.completed()):
     
     rv   = r.value()
-    print("syslog->db: key: ",key,", value:", rv, file=sys.stderr)
     b64v = base64.b64decode(rv)
     #vv   = zlib.decompress(b64v)
 
@@ -212,10 +224,9 @@ def main():
     sA.append('"'+v+'"')
   XALT_Stack.push(" ".join(sA))
 
-  args   = CmdLineOptions().execute()
-  xalt   = XALTdb(ConfigFn)
-
-  syslogFile  = args.syslog
+  args       = CmdLineOptions().execute()
+  xalt       = XALTdb(dbConfigFn(args.dbname))
+  syslogFile = args.syslog
 
   # should add a check if file exists
   num    = int(capture("cat "+syslogFile+" | wc -l"))
@@ -252,22 +263,23 @@ def main():
         continue
 
       try:
-        XALT_Stack.push("XALT_LOGGING: " + type + " " + t['syshost'])
+        XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
 
         if ( t['kind'] == "link" ):
           XALT_Stack.push("link_to_db()")
-          xalt.link_to_db(rmapT, t['value'])
+          xalt.link_to_db(rmapT, json.loads(t['value']))
           XALT_Stack.pop()
           lnkCnt += 1
         elif ( t['kind'] == "run" ):
           XALT_Stack.push("run_to_db()")
-          xalt.run_to_db(rmapT, t['value'])
+          xalt.run_to_db(rmapT, json.loads(t['value']))
           XALT_Stack.pop()
           runCnt += 1
         else:
-          print("Error in xalt_syslog_to_db")
+          print("Error in xalt_syslog_to_db", file=sys.stderr)
         XALT_Stack.pop()
-      except:
+      except Exception as e:
+        print(e, file=sys.stderr)
         badCnt += 1
 
       count += 1

@@ -33,6 +33,19 @@ from   xalt_global   import *
 from   xalt_site_pkg import translate
 warnings.filterwarnings("ignore", "Unknown table.*")
 
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    return inspect.currentframe().f_code.co_filename
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+
 def convertToInt(s):
   """
   Convert to string to int.  Protect against bad input.
@@ -136,7 +149,6 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
       
-
       query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
       conn.query(query)
       result = conn.store_result()
@@ -170,9 +182,9 @@ class XALTdb(object):
       conn.close()
 
     except Exception as e:
-      print(XALT_Stack.contents())
-      print(query)
-      print ("link_to_db(): Error ",e)
+      print(XALT_Stack.contents(), file=sys.stderr)
+      print(query, file=sys.stderr)
+      print ("link_to_db(): Error ",e, file=sys.stderr)
       sys.exit (1)
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
