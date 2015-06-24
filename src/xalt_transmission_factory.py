@@ -148,18 +148,18 @@ class Syslog_V2(XALT_transmission_factory):
     iend    = blkSz
     for i in xrange(nBlks):
       sA = []
-      sA.append("logger -t XALT_LOGGING V=2")
-      sA.append(" kind=")
+      sA.append("logger -t XALT_LOGGING V:2")
+      sA.append(" kind:")
       sA.append(self._kind())
-      sA.append(" syshost=")
+      sA.append(" syshost:")
       sA.append(self._syshost())
-      sA.append(" key=")
+      sA.append(" key:")
       sA.append(key)
-      sA.append(" idx=")
+      sA.append(" idx:")
       sA.append(str(i))
-      sA.append(" nb=")
+      sA.append(" nb:")
       sA.append(str(nBlks))
-      sA.append(" value=")
+      sA.append(" value:")
       sA.append(b[istart:iend])
       istart = iend
       iend   = istart + blkSz

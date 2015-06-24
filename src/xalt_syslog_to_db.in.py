@@ -108,13 +108,13 @@ class Record(object):
 
     sPA   = []
     sPA.append(prefix)
-    sPA.append(" kind=")
+    sPA.append(" kind:")
     sPA.append(self.__kind)
-    sPA.append(" syshost=")
+    sPA.append(" syshost:")
     sPA.append(self.__syshost)
-    sPA.append(" key=")
+    sPA.append(" key:")
     sPA.append(key)
-    sPA.append(" nb=")
+    sPA.append(" nb:")
     sPA.append(str(nblks))
     ss = "".join(sPA)
 
@@ -122,9 +122,9 @@ class Record(object):
       value = blkA[idx]
       if (value):
         sA.append(ss)
-        sA.append(" idx=")
+        sA.append(" idx:")
         sA.append(str(idx))
-        sA.append(" value=")
+        sA.append(" value:")
         sA.append(value)
         sA.append("\n")
     return "".join(sA)
@@ -147,17 +147,17 @@ def parseSyslogV1(s):
 def parseSyslogV2(s, recordT):
   t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
 
-  idx = s.find(" V=2 ")
+  idx = s.find(" V:2 ")
   if (idx  == -1):
     return t, False
 
-  # Strip off "XALT_LOGGING V=2" from string.
+  # Strip off "XALT_LOGGING V:2" from string.
   s                      = s[idx+5:]
 
   # Setup parser
   lexer                  = shlex.shlex(s)
   lexer.whitespace_split = True
-  lexer.whitespace       = ' ='
+  lexer.whitespace       = ' :'
 
   # Pick off two values at a time.
   try: 
@@ -196,7 +196,7 @@ def parseSyslogV2(s, recordT):
   return t, False
 
 def parseSyslog(s, recordT):
-  if ("XALT_LOGGING V=2 " in s):
+  if ("XALT_LOGGING V:2 " in s):
     return parseSyslogV2(s, recordT)
   return parseSyslogV1(s)
 
