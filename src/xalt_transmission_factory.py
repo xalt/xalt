@@ -140,7 +140,7 @@ class Syslog(XALT_transmission_factory):
     #b      = base64.b64encode(zlib.compress(json.dumps(resultT)))
     #b      = json.dumps(resultT)
     jsonStr  = json.dumps(resultT)
-    cmprsStr = zlib.compress(jsonStr, 9) 
+    cmprsStr = zlib.compress(jsonStr) 
     b        = base64.b64encode(cmprsStr)
 
     blkSz    = 2048
