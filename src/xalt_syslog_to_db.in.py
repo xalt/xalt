@@ -198,9 +198,9 @@ def parseSyslogV2(s, recordT):
     
     rv   = r.value()
     b64v = base64.b64decode(rv)
-    #vv   = zlib.decompress(b64v)
+    vv   = zlib.decompress(b64v)
 
-    t['value'] = b64v
+    t['value'] = vv
     recordT.pop(key)
     return t, True
 

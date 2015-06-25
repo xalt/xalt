@@ -76,7 +76,7 @@ class XALT_transmission_factory(object):
     name = name.lower()
     if (name == "syslog"):
       obj = Syslog(syshost, kind)
-    if (name == "syslogv2"):
+    elif (name == "syslogv2"):
       obj = Syslog_V2(syshost, kind)
     elif (name == "directdb"):
       obj = DirectDB(syshost, kind)
@@ -139,13 +139,14 @@ class Syslog_V2(XALT_transmission_factory):
     """
     #b      = base64.b64encode(zlib.compress(json.dumps(resultT)))
     #b      = json.dumps(resultT)
-    jsonStr = json.dumps(resultT)
-    b       = base64.b64encode(jsonStr)
+    jsonStr  = json.dumps(resultT)
+    cmprsStr = zlib.compress(jsonStr) 
+    b        = base64.b64encode(cmprsStr)
 
-    blkSz   = 32768
-    nBlks   = (len(b) - 1)//blkSz + 1
-    istart  = 0
-    iend    = blkSz
+    blkSz    = 2048
+    nBlks    = (len(b) - 1)//blkSz + 1
+    istart   = 0
+    iend     = blkSz
     for i in xrange(nBlks):
       sA = []
       sA.append("logger -t XALT_LOGGING V:2")

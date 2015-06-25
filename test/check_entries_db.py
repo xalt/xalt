@@ -96,8 +96,8 @@ def main():
   conn.close()
 
   result = 'diff'
-  if (tableT['xalt_link']     ==  1 and
-      tableT['xalt_run']      ==  1 and
+  if (tableT['xalt_link']     >=  1 and
+      tableT['xalt_run']      >=  1 and
       tableT['xalt_object']   >  10 and
       tableT['xalt_env_name'] >  50 ):
 
