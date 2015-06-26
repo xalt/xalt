@@ -285,6 +285,8 @@ def main():
       count += 1
       pbar.update(count)
 
+    f.close()
+
   pbar.fini()
 
   t2 = time.time()
