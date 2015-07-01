@@ -168,7 +168,7 @@ class XALTdb(object):
 
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
+      query = u"INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
         linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
         build_epoch,           exit_code,                exec_path)
