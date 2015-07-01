@@ -171,13 +171,14 @@ class XALTdb(object):
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
-
+      exec_path = exec_path.decode("utf8").strip()[:65536])
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
         linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-        build_epoch,           exit_code,                exec_path.decode("utf8").strip()[:65536])
+        build_epoch,           exit_code,                exec_path)
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       conn.query(query)
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
