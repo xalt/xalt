@@ -110,7 +110,7 @@ class XALTdb(object):
     n = 100
     for i in xrange(0,n+1):
       try:
-        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
+        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8")
         if (databaseName):
           cursor = self.__conn.cursor()
           
