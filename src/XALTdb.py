@@ -110,15 +110,17 @@ class XALTdb(object):
     n = 100
     for i in xrange(0,n+1):
       try:
-        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8")
+        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
         if (databaseName):
           cursor = self.__conn.cursor()
           
           # If MySQL version < 4.1, comment out the line below
           cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
           cursor.execute("USE "+xalt.db())
+          cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
+          cursor.execute("SET CHARACTER SET utf8;") #same as above
+          cursor.execute("SET character_set_connection=utf8;") #same as above
         break
-
 
       except MySQLdb.Error, e:
         if (i < n):
