@@ -178,6 +178,7 @@ class XALTdb(object):
         build_epoch,           exit_code,                exec_path)
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       conn.query(query)
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
       #query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') "
       #conn.query(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
