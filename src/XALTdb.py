@@ -169,7 +169,7 @@ class XALTdb(object):
       #paranoid conversion:  Protect DB from bad input:
       exit_code = convertToInt(linkT['exit_code'])
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
-      exec_path = patSQ.sub(r"\\'", linkT['exec_path'].encode("utf8"))
+      exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
 
@@ -177,7 +177,7 @@ class XALTdb(object):
       query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
         linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-        build_epoch,           exit_code,                exec_path)
+        build_epoch,           exit_code,                exec_path.decode("utf8"))
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       conn.query(query)
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
