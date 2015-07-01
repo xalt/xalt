@@ -143,15 +143,18 @@ class XALTdb(object):
     query = ""
 
     try:
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       conn   = self.connect()
       query  = "USE "+self.db()
       conn.query(query)
       query  = "START TRANSACTION"
       conn.query(query)
       
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
       conn.query(query)
       result = conn.store_result()
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       if (result.num_rows() > 0):
         return
 
@@ -165,16 +168,26 @@ class XALTdb(object):
 
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
-        linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
-        linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-        build_epoch,           exit_code,                exec_path)
-      conn.query(query)
+      #query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
+      #  linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
+      #  linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
+      #  build_epoch,           exit_code,                exec_path)
+      # conn.query(query
+
+      query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') "
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+      conn.query(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
+                         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
+                         build_epoch,           exit_code,                exec_path))
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+
       link_id = conn.insert_id()
 
       XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       self.load_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
                         "join_link_object", link_id)
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
       query = "COMMIT"

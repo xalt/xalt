@@ -50,6 +50,17 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 
 logger       = config_logger()
 
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    return inspect.currentframe().f_code.co_filename
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -83,13 +94,16 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
   query = ""
 
   try:
+    print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
     for fn in linkFnA:
       if (listFn):
         sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)   # push fn
       f     = open(fn,"r")
       try:
+        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
         linkT = json.loads(f.read())
+        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       except:  
         f.close()
         v = XALT_Stack.pop()
@@ -97,7 +111,9 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
         continue
 
       f.close()
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       xalt.link_to_db(reverseMapT, linkT)
+      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       num  += 1
       v     = XALT_Stack.pop()
       carp("fn",v)
