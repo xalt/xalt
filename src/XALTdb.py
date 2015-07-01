@@ -117,6 +117,8 @@ class XALTdb(object):
           # If MySQL version < 4.1, comment out the line below
           cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
           cursor.execute("USE "+xalt.db())
+
+          self.__conn.set_character_set('utf8')
           cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
           cursor.execute("SET CHARACTER SET utf8;") #same as above
           cursor.execute("SET character_set_connection=utf8;") #same as above
