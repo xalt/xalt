@@ -171,7 +171,7 @@ class XALTdb(object):
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
-      exec_path = exec_path.decode("utf8").strip()[:65536])
+      exec_path = exec_path.decode("utf8").strip()[:65536]
       print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
       # It is unique: lets store this link record
