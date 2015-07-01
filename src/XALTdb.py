@@ -168,7 +168,7 @@ class XALTdb(object):
 
       #paranoid conversion:  Protect DB from bad input:
       exit_code = convertToInt(linkT['exit_code'])
-      exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
+      exec_path = patSQ.sub(r"\\'", linkT['exec_path']).encode("utf8")
 
 
       # It is unique: lets store this link record
