@@ -23,8 +23,10 @@ test_descript = {
      module --quiet load gcc mpich
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
-     mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
+     mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
      mpirun -n 1 ./hello 
+
+     mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
 
      export XALT_USERS="$USER;$outputDir"
      xalt_file_to_db.py  --dbname $DBNAME
