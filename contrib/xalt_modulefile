@@ -8,7 +8,6 @@ proc ModulesHelp { } {
 conflict totalview
 
 prepend-path PATH           /sw/mach/xalt/0.5.3/bin
-prepend-path PATH           /sw/mach/xalt/0.5.3/libexec
 prepend-path PYTHONPATH     /sw/mach/xalt/0.5.3/libexec
 prepend-path PYTHONPATH     /sw/mach/xalt/0.5.3/site
 

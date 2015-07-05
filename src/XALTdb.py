@@ -110,15 +110,19 @@ class XALTdb(object):
     n = 100
     for i in xrange(0,n+1):
       try:
-        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
+        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8")
         if (databaseName):
           cursor = self.__conn.cursor()
           
           # If MySQL version < 4.1, comment out the line below
           cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
           cursor.execute("USE "+xalt.db())
-        break
 
+          self.__conn.set_character_set('utf8')
+          cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
+          cursor.execute("SET CHARACTER SET utf8;") #same as above
+          cursor.execute("SET character_set_connection=utf8;") #same as above
+        break
 
       except MySQLdb.Error, e:
         if (i < n):
@@ -162,7 +166,10 @@ class XALTdb(object):
       #paranoid conversion:  Protect DB from bad input:
       exit_code = convertToInt(linkT['exit_code'])
       exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
-
+      try:
+        exec_path = exec_path.decode("utf8")
+      except:
+        exec_path = "XALT_ILLEGAL_VALUE"
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
@@ -170,6 +177,12 @@ class XALTdb(object):
         linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
         build_epoch,           exit_code,                exec_path)
       conn.query(query)
+
+      #query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') "
+      #conn.query(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
+      #                   linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
+      #                   build_epoch,           exit_code,                exec_path))
+
       link_id = conn.insert_id()
 
       XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])

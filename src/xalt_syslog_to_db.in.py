@@ -45,7 +45,7 @@ from xalt_site_pkg import translate
 from xalt_util     import *
 from xalt_global   import *
 from progressBar   import ProgressBar
-from XALT_Rmap     import Rmap
+from Rmap_XALT     import Rmap
 
 import inspect
 
@@ -284,6 +284,8 @@ def main():
 
       count += 1
       pbar.update(count)
+
+    f.close()
 
   pbar.fini()
 

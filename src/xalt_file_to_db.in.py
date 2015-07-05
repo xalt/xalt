@@ -44,11 +44,22 @@ from xalt_site_pkg import translate
 from xalt_util     import *
 from xalt_global   import *
 from progressBar   import ProgressBar
-from XALT_Rmap     import Rmap
+from Rmap_XALT     import Rmap
 import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 logger       = config_logger()
+
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    return inspect.currentframe().f_code.co_filename
 
 class CmdLineOptions(object):
   """ Command line Options class """

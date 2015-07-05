@@ -29,7 +29,7 @@ except ImportError:
   XALTdb_available = False
   
   
-from XALT_Rmap   import Rmap
+from Rmap_XALT   import Rmap
 from xalt_global import *
 
 class XALT_transmission_factory(object):
@@ -76,8 +76,8 @@ class XALT_transmission_factory(object):
     name = name.lower()
     if (name == "syslog"):
       obj = Syslog(syshost, kind)
-    elif (name == "syslogv2"):
-      obj = Syslog_V2(syshost, kind)
+    elif (name == "syslogv1"):
+      obj = Syslog_V1(syshost, kind)
     elif (name == "directdb"):
       obj = DirectDB(syshost, kind)
     else:                 
@@ -86,7 +86,7 @@ class XALT_transmission_factory(object):
       
     return obj
 
-class Syslog(XALT_transmission_factory):
+class SyslogV1(XALT_transmission_factory):
   """
   This class write the json record to syslog
   """
@@ -98,7 +98,7 @@ class Syslog(XALT_transmission_factory):
     @param kind:  Type of record: link or run
     """
 
-    super(Syslog, self).__init__(syshost, kind)
+    super(SyslogV1, self).__init__(syshost, kind)
   def save(self, resultT, key):
     """
     The json table is written to syslog with the text converted to base64.
@@ -116,7 +116,7 @@ class Syslog(XALT_transmission_factory):
     s = "".join(sA)
     os.system(s)
     
-class Syslog_V2(XALT_transmission_factory):
+class Syslog(XALT_transmission_factory):
   """
   This class write the json record to syslog
   """
@@ -128,7 +128,7 @@ class Syslog_V2(XALT_transmission_factory):
     @param kind:  Type of record: link or run
     """
 
-    super(Syslog_V2, self).__init__(syshost, kind)
+    super(Syslog, self).__init__(syshost, kind)
 
   def save(self, resultT, key):
     """
