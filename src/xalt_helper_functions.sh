@@ -210,6 +210,12 @@ run_real_command()
   fi
 
   tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
+  
+  # Hand it over to the real command if there is exception and return
+  if [ "$EXEC_T" == "find_exec_exception" ]; then
+    $MY_CMD "$@"
+    return $?
+  fi
 
   # Record the run record at the start of the job.  This way if the run
   # doesn't complete there will be a record.
