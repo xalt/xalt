@@ -148,6 +148,7 @@ class XALTdb(object):
 
     try:
       conn   = self.connect()
+      cursor = conn.cursor()
       query  = "USE "+self.db()
       conn.query(query)
       query  = "START TRANSACTION"
@@ -178,11 +179,12 @@ class XALTdb(object):
         build_epoch,           exit_code,                exec_path)
       conn.query(query)
 
-      #query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') "
-      #conn.query(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
-      #                   linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-      #                   build_epoch,           exit_code,                exec_path))
+      #query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, %.2f,%d,%s) "
+      #cursor.execute(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
+      #                       linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
+      #                       build_epoch,           exit_code,                exec_path))
 
+      #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       link_id = conn.insert_id()
 
       XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])

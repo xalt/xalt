@@ -77,7 +77,7 @@ class XALT_transmission_factory(object):
     if (name == "syslog"):
       obj = Syslog(syshost, kind)
     elif (name == "syslogv1"):
-      obj = Syslog_V1(syshost, kind)
+      obj = SyslogV1(syshost, kind)
     elif (name == "directdb"):
       obj = DirectDB(syshost, kind)
     else:                 

@@ -133,27 +133,27 @@ Makefile.in,1022
 PATH_TO_SRC 22,1051
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=53,2081
 LIBEXEC 55,2216
-        tar xf psmisc-22.21.tar.gz;gz125,5258
-        ./configure --prefix=prefix127,5410
-        make CFLAGS=128,5486
-        make DESTDIR=129,5562
-        ln -s $(prefix)/psmisc/bin/pstree $(130,5638
-	   ext=148,6372
-           oext=149,6442
-           [ "$$ext" = "in.py" ] && oext=151,6589
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext174,8213
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext176,8347
-	    true;177,8424
-	@git status -s > /tmp/git_st_$$$$;git_st_$$$$181,8522
-            git push github;185,8823
-            git push --tags github;186,8900
-        fi;187,8977
-        ifneq 191,9094
-	    echo "$(TAG)" >                                      .version;version196,9405
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version197,9475
-	    git push --tags tags199,9629
-          fi;200,9699
-	$(247,12377
+        tar xf psmisc-22.21.tar.gz;gz128,5345
+        ./configure --prefix=prefix130,5497
+        make CFLAGS=131,5573
+        make DESTDIR=132,5649
+        ln -s $(prefix)/psmisc/bin/pstree $(133,5725
+	   ext=151,6459
+           oext=152,6529
+           [ "$$ext" = "in.py" ] && oext=154,6676
+                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext177,8300
+               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext179,8434
+	    true;180,8511
+	@git status -s > /tmp/git_st_$$$$;git_st_$$$$184,8609
+            git push github;188,8910
+            git push --tags github;189,8987
+        fi;190,9064
+        ifneq 194,9181
+	    echo "$(TAG)" >                                      .version;version199,9492
+            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version200,9562
+	    git push --tags tags202,9716
+          fi;203,9786
+	$(250,12464
 
 detectfunctions/StripLibs.py,20
 def convert(18,358
@@ -175,13 +175,13 @@ class NestedDict(19,354
 
 configure.ac,217
 AC_INIT(1,0
-  BUILD_PSTREE=73,2109
-     versionStr=84,2295
-       major_version=87,2441
-         BUILD_PSTREE=92,2745
-      PATH_TO_PSTREE=99,2862
-USE_CONTRIB_ARGPARSE=110,3122
-  USE_CONTRIB_ARGPARSE=117,3454
+  BUILD_PSTREE=73,2127
+     versionStr=83,2312
+       major_version=86,2458
+         BUILD_PSTREE=91,2762
+      PATH_TO_PSTREE=98,2879
+USE_CONTRIB_ARGPARSE=109,3139
+  USE_CONTRIB_ARGPARSE=116,3471
 
 altd/modulefiles/altd,39
 setenv ALTD_SELECT_USERS jones,10,369
@@ -289,12 +289,12 @@ Copyright 1,0
 contrib/build_reverseMapT_cray/merge_json_files.py,16
 def main(6,103
 
-contrib/build_reverseMapT_cray/darter_build_rmapT.sh,94
-  BASE_MODULE_PATH=17,668
-SCRIPT_DIR=46,1685
-    sn=54,1867
-    prev=59,1984
-OLD=69,2129
+contrib/build_reverseMapT_cray/cray_build_rmapT.sh,96
+  BASE_MODULE_PATH=32,1346
+  RmapDir=33,1379
+SCRIPT_DIR=55,1979
+    sn=61,2166
+OLD=75,2418
 
 contrib/getent/constants.py,25
     def c_char_p(17,460
@@ -355,6 +355,25 @@ int main(8,84
 
 contrib/TACC/load_xalt_db,24
 export MODULEPATH=2,12
+
+contrib/TACC/monthly_report,533
+import os,4,77
+import os, sys,4,77
+import os, sys, re,4,77
+import os, sys, re, MySQLdb,4,77
+import os, sys, re, MySQLdb, json,4,77
+import os, sys, re, MySQLdb, json, time,4,77
+import os, sys, re, MySQLdb, json, time, argparse,4,77
+import os, sys, re, MySQLdb, json, time, argparse, base64,4,77
+dirNm,7,157
+dirNm, execName 7,157
+compiled_patternT 211,13862
+compiled_userDirPatternT 221,14103
+    self.__host __host252,14942
+      query 390,19096
+      acctT 407,19492
+      query 408,19509
+          linkA 449,21317
 
 contrib/argparse/argparse.py,5073
     def sorted(108,3655
@@ -528,28 +547,36 @@ BASE_DIR=102,2384
 MAKE=109,2479
   MAKE=112,2546
 
-src/XALTdb.py,254
-def convertToInt(36,1556
-class XALTdb(49,1815
-  def __init__(54,1949
-  def __readFromUser(63,2194
-  def __readConfig(71,2479
-  def connect(86,3082
-  def db(120,3966
-  def link_to_db(124,4033
-  def load_objects(178,5917
-  def run_to_db(224,7781
+src/XALTdb.py,298
+def __LINE__(38,1572
+def __FILE__(44,1692
+def convertToInt(49,1839
+class XALTdb(62,2098
+  def __init__(67,2232
+  def __readFromUser(76,2477
+  def __readConfig(84,2762
+  def connect(99,3365
+  def db(137,4569
+  def link_to_db(141,4636
+  def load_objects(203,7062
+  def run_to_db(249,8926
 
-src/XALT_Rmap.py,71
-class Rmap(30,1353
-  def __init__(32,1450
-  def reverseMapT(69,2652
-
-src/xalt_syslog_to_db.in.py,95
-class CmdLineOptions(54,1942
-  def __init__(57,2010
-  def execute(61,2067
-def main(71,2599
+src/xalt_syslog_to_db.in.py,359
+def __LINE__(52,1876
+def __FILE__(58,1996
+class CmdLineOptions(67,2238
+  def __init__(70,2306
+  def execute(74,2363
+class Record(87,3241
+  def __init__(92,3353
+  def addBlk(106,3642
+  def completed(111,3768
+  def value(114,3835
+  def prt(117,3887
+def parseSyslogV1(145,4500
+def parseSyslogV2(160,4867
+def parseSyslog(210,6001
+def main(216,6128
 
 src/xalt_db.conf,10
 host 2,8
@@ -571,11 +598,14 @@ request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
       testMe=85,2806
 FIND_EXEC_PRGM=98,3085
 
+src/xalt_find_exec_mympirun.py,18
+def main(60,1995
+
 src/xalt_find_exec_openmpi.py,19
 def main(135,4727
 
 src/xalt_find_exec_ibrun.py,18
-def main(52,1675
+def main(55,1762
 
 src/xalt_which_mpi.in,69
 tracing_msg(26,1091
@@ -596,6 +626,16 @@ class ProgressBar(68,2094
   def fini(134,3944
 def main(140,4078
 
+src/mympirun.in,233
+XALT_DIR=36,1428
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1693
+    prev=69,2540
+    -*) optarg=75,2663
+    *) optarg=76,2681
+    *) optarg=; done=76,2681
+      testMe=85,2830
+FIND_EXEC_PRGM=98,3109
+
 src/xalt_generate_assembly.py,46
 def print_assembly(37,1447
 def main(81,3175
@@ -608,6 +648,25 @@ class CmdLineOptions(36,1394
   def __init__(39,1462
   def execute(43,1519
 def main(50,1804
+
+src/monthly_report.in,535
+import os,4,77
+import os, sys,4,77
+import os, sys, re,4,77
+import os, sys, re, MySQLdb,4,77
+import os, sys, re, MySQLdb, json,4,77
+import os, sys, re, MySQLdb, json, time,4,77
+import os, sys, re, MySQLdb, json, time, argparse,4,77
+import os, sys, re, MySQLdb, json, time, argparse, base64,4,77
+dirNm,7,157
+dirNm, execName 7,157
+compiled_userDirPatternT 234,15141
+    self.__host __host267,16006
+      query 406,20176
+      acctT 423,20569
+      query 424,20586
+          linkA 467,22586
+          runT[runT489,23522
 
 src/xalt_epoch.py,18
 def main(28,1142
@@ -628,14 +687,16 @@ FIND_EXEC_PRGM=106,3404
     FIND_EXEC_PRGM=117,3674
     FIND_EXEC_PRGM=120,3751
 
-src/xalt_file_to_db.in.py,185
-class CmdLineOptions(53,1957
-  def __init__(56,2025
-  def execute(60,2082
-def link_json_to_db(72,2825
-def run_json_to_db(113,3821
-def passwd_generator(153,4827
-def main(181,5557
+src/xalt_file_to_db.in.py,229
+def __LINE__(55,1973
+def __FILE__(61,2093
+class CmdLineOptions(64,2163
+  def __init__(67,2231
+  def execute(71,2288
+def link_json_to_db(83,3031
+def run_json_to_db(124,4027
+def passwd_generator(164,5033
+def main(192,5763
 
 src/xalt_find_exec_aprun.py,18
 def main(86,2927
@@ -660,21 +721,24 @@ request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
       testMe=85,2832
 FIND_EXEC_PRGM=98,3111
 
-src/xalt_transmission_factory.py,335
-class XALT_transmission_factory(34,1292
-  def __init__(38,1420
-  def _syshost(49,1689
-  def _kind(56,1818
-  def build(64,1969
-class Syslog(85,2608
-  def __init__(90,2707
-  def save(98,2947
-class File(116,3393
-  def __init__(121,3480
-  def save(131,3796
-class DirectDB(153,4358
-  def __init__(158,4468
-  def save(165,4715
+src/xalt_transmission_factory.py,407
+class XALT_transmission_factory(35,1331
+  def __init__(39,1459
+  def _syshost(50,1728
+  def _kind(57,1857
+  def build(65,2008
+class SyslogV1(89,2716
+  def __init__(94,2817
+  def save(102,3059
+class Syslog(119,3509
+  def __init__(124,3608
+  def save(133,3849
+class File(170,4886
+  def __init__(175,4973
+  def save(185,5289
+class DirectDB(207,5856
+  def __init__(212,5966
+  def save(219,6213
 
 src/xalt_working_python.py,18
 def main(27,1117
@@ -703,27 +767,27 @@ class CmdLineOptions(51,1856
   def execute(58,1981
 class ExtractXALT(77,3056
   def __init__(81,3174
-  def __extract_xalt_linux(117,4027
-  def __extract_xalt_darwin(141,4686
-  def xaltRecordT(162,5250
-class UserEnvT(167,5351
-  def __init__(169,5440
-  def userT(199,6667
-class UserExec(203,6758
-  def __init__(207,6834
-  def execName(233,7634
-  def execType(237,7730
-  def execEpoch(241,7838
-  def execModify(245,7948
-  def libA(249,8082
-  def hash(253,8194
-  def __computeHash(257,8286
-  def __parseLDD(262,8438
-class EnvT(300,9242
-  def __init__(302,9327
-  def envT(305,9430
-  def __reportUserEnv(308,9512
-def main(352,10622
+  def __extract_xalt_linux(121,4078
+  def __extract_xalt_darwin(145,4737
+  def xaltRecordT(166,5301
+class UserEnvT(171,5402
+  def __init__(173,5491
+  def userT(203,6718
+class UserExec(207,6809
+  def __init__(211,6885
+  def execName(237,7685
+  def execType(241,7781
+  def execEpoch(245,7889
+  def execModify(249,7999
+  def libA(253,8133
+  def hash(257,8245
+  def __computeHash(261,8337
+  def __parseLDD(266,8489
+class EnvT(304,9293
+  def __init__(306,9378
+  def envT(309,9481
+  def __reportUserEnv(312,9563
+def main(356,10673
 
 src/xalt_util.py,325
 def config_logger(28,1265
@@ -792,14 +856,19 @@ def main(116,3251
 
 src/xalt_helper_functions.sh,123
 XALT_DIR=33,1422
-tracing_msg(63,2260
-find_real_command(83,2912
-find_working_python(155,5250
-run_real_command(189,6206
+tracing_msg(66,2328
+find_real_command(86,2980
+find_working_python(158,5318
+run_real_command(192,6274
 
 src/xalt_find_exec_srun.py,46
-def compute_ntasks(65,2224
-def main(80,2560
+def compute_ntasks(65,2222
+def main(80,2558
+
+src/Rmap_XALT.py,71
+class Rmap(30,1343
+  def __init__(32,1440
+  def reverseMapT(69,2642
 
 src/xalt_job_id_db.conf,10
 host 2,8
@@ -821,17 +890,26 @@ class CmdLineOptions(36,1394
   def execute(43,1519
 def main(50,1804
 
+rt/syslog/syslog.desc,16
+test_name 3,18
+
+rt/syslog/bin/logger,10
+TAG=5,42
+
 rt/mpi_hello_world.c,15
 int main(3,36
 
 rt/common_funcs.sh,69
 initialize(4,36
-installXALT(18,246
-installDB(27,487
-runMe 39,768
+installXALT(18,257
+installDB(27,498
+runMe 39,779
 
 rt/end2end/end2end.desc,16
 test_name 3,18
+
+uuid/try.c,15
+int main(3,42
 
 doc/isc15/xalt-tutorial-slides.pptx,19
 Â0Dï‚ÿDï‚2,2516
@@ -839,6 +917,9 @@ doc/isc15/xalt-tutorial-slides.pptx,19
 doc/isc15/Makefile,56
 TALKS 1,0
 	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,143
+
+doc/web/xalt.txt,54
+XALT is a collaboration between PI Mark Fahey 12,355
 
 doc/SC13_BoF.pptx,607
 ¡\ÓÖêå2>fg-ðó8VËÊŸ7ç™k„ÿ2©G+]ãÀ›™Ñ÷k1ùk1ù2,960
@@ -854,18 +935,32 @@ doc/Lmod_installation,77
       CURRENT_MODULES=38,1181
           LMOD_PKG=47,1417
 
+doc/xsede15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
+
 aclocal.m4,26
 dnl AC_PYTHON_MODULE(1,0
+
+doc/xsede15/xalt_xsede15.tex,0
 
 doc/database.txt,0
 
 doc/isc15/xalt_isc.tex,0
+
+INSTALL.txt,0
+
+ACKNOWLEDGMENTS.txt,0
 
 .version,0
 
 src/xalt_global.py,0
 
 contrib/getent/libc.py,0
+
+contrib/update_object_module_name.py,0
+
+contrib/xalt_modulefile,0
 
 altd/dev/bin/check_executable.py,0
 
