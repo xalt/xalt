@@ -148,13 +148,14 @@ class XALTdb(object):
 
     try:
       conn   = self.connect()
+      cursor = conn.cursor()
       query  = "USE "+self.db()
       conn.query(query)
       query  = "START TRANSACTION"
       conn.query(query)
       
-      query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % linkT['uuid']
-      conn.query(query)
+      query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
+      cursor.execute(query,(linkT['uuid']))
       result = conn.store_result()
       if (result.num_rows() > 0):
         return
@@ -172,16 +173,10 @@ class XALTdb(object):
         exec_path = "XALT_ILLEGAL_VALUE"
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') " % (
-        linkT['uuid'],         linkT['hash_id'],         dateTimeStr,
-        linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-        build_epoch,           exit_code,                exec_path)
-      conn.query(query)
-
-      #query = "INSERT into xalt_link VALUES (NULL,'%s','%s','%s','%s','%s','%s','%.2f','%d','%s') "
-      #conn.query(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
-      #                   linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-      #                   build_epoch,           exit_code,                exec_path))
+      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, %s,%s,%s)"
+      cursor.execute(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
+                             linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
+                             build_epoch,           exit_code,                exec_path))
 
       link_id = conn.insert_id()
 
@@ -211,6 +206,7 @@ class XALTdb(object):
     @param index:        The db index for the join table.
     """
 
+    cursor = conn.cursor()
     try:
       for entryA in objA:
         object_path  = entryA[0]
@@ -218,10 +214,8 @@ class XALTdb(object):
         if (hash_id == "unknown"):
           continue
 
-        query = "SELECT obj_id, object_path FROM xalt_object WHERE hash_id='%s' AND object_path='%s' AND syshost='%s'" % (
-          hash_id, object_path, syshost)
-        
-        conn.query(query)
+        query = "SELECT obj_id, object_path FROM xalt_object WHERE hash_id=%s AND object_path=%s AND syshost=%s" 
+        cursor.execute(query,(hash_id, object_path, syshost))
         result = conn.store_result()
         if (result.num_rows() > 0):
           row    = result.fetch_row()
@@ -230,15 +224,15 @@ class XALTdb(object):
           moduleName = obj2module(object_path, reverseMapT)
           obj_kind   = obj_type(object_path)
 
-          query      = "INSERT into xalt_object VALUES (NULL,'%s','%s','%s',%s,NOW(),'%s') " % (
-                      object_path, syshost, hash_id, moduleName, obj_kind)
-          conn.query(query)
+          query      = "INSERT into xalt_object VALUES (NULL,%s,%s,%s,%s,NOW(),%s)"
+                      
+          cursor.execute(query,(object_path, syshost, hash_id, moduleName, obj_kind))
           obj_id   = conn.insert_id()
           #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
 
         # Now link libraries to xalt_link record:
-        query = "INSERT into %s VALUES (NULL,'%d','%d') " % (tableName, obj_id, index)
-        conn.query(query)
+        query = "INSERT into %s VALUES (NULL,%s,%s) "  
+        cursor.execute(query,(tableName, obj_id, index))
   
     except Exception as e:
       print(XALT_Stack.contents())
@@ -257,6 +251,7 @@ class XALTdb(object):
     query = ""
     try:
       conn   = self.connect()
+      cursor = conn.cursor()
       query  = "USE "+self.db()
       conn.query(query)
       query  = "START TRANSACTION"
@@ -276,18 +271,19 @@ class XALTdb(object):
 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
-      query = "SELECT run_id FROM xalt_run WHERE run_uuid='%s'" % runT['userT']['run_uuid']
-      conn.query(query)
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s" % 
+      cursor.execute(query,(runT['userT']['run_uuid']))
 
+      runTime = "%.2f" % runT['userT']['run_time']
+      endTime = "%.2f" % runT['userT']['end_time']
       result = conn.store_result()
       if (result.num_rows() > 0):
         #print("found")
         row    = result.fetch_row()
         run_id = int(row[0][0])
         if (runT['userT']['end_time'] > 0):
-          query  = "UPDATE xalt_run SET run_time='%.2f', end_time='%.2f' WHERE run_id='%d'" % (
-            runT['userT']['run_time'], runT['userT']['end_time'], run_id)
-          conn.query(query)
+          query  = "UPDATE xalt_run SET run_time=%s, end_time=%s WHERE run_id=%s" 
+          cursor.execute(query,(runTime, endTime, run_id))
           query = "COMMIT"
           conn.query(query)
         v = XALT_Stack.pop()
@@ -299,15 +295,16 @@ class XALTdb(object):
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = int(runT['userT'].get('exit_status',0))
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
-        query  = "INSERT INTO xalt_run VALUES (NULL,'%s','%s','%s', '%s',%s,'%s', '%s','%s','%.2f', '%.2f','%.2f','%d', '%d','%d','%d', '%s','%d','%s', '%s',%s,'%s') " % (
-          runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
-          runT['userT']['syshost'],     uuid,                         runT['hash_id'],
-          runT['userT']['account'],     runT['userT']['exec_type'],   runT['userT']['start_time'],
-          runT['userT']['end_time'],    runT['userT']['run_time'],    runT['userT']['num_cores'],
-          job_num_cores,                runT['userT']['num_nodes'],   runT['userT']['num_threads'],
-          runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
-          runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd'])
-        conn.query(query)
+        startTime     = "%.f" % runT['userT']['start_time']
+        query  = "INSERT INTO xalt_run VALUES (NULL,%s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
+        cursor.execute(query, \
+          (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
+           runT['userT']['syshost'],     uuid,                         runT['hash_id'],
+           runT['userT']['account'],     runT['userT']['exec_type'],   startTime,
+           endTime,                      runTime,                      runT['userT']['num_cores'],
+           job_num_cores,                runT['userT']['num_nodes'],   runT['userT']['num_threads'],
+           runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
+           runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd']))
         run_id   = conn.insert_id()
 
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
@@ -317,28 +314,21 @@ class XALTdb(object):
       for key in runT['envT']:
         # use the single quote pattern to protect all the single quotes in env vars.
         value = patSQ.sub(r"\\'", runT['envT'][key])
-        query = "SELECT env_id FROM xalt_env_name WHERE env_name='%s'" % key
-        conn.query(query)
+        query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
+        cursor.execute(query,(key))
         result = conn.store_result()
         if (result.num_rows() > 0):
           row    = result.fetch_row()
           env_id = int(row[0][0])
           found  = True
         else:
-          query  = "INSERT INTO xalt_env_name VALUES(NULL, '%s')" % key
-          conn.query(query)
+          query  = "INSERT INTO xalt_env_name VALUES(NULL, %s)"
+          cursor.execute(query,(key))
           env_id = conn.insert_id()
           found  = False
-
         
-        query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
-          env_id, run_id, value.encode("ascii","ignore"))
-        try:
-          conn.query(query)
-        except Exception as e:
-          query = "INSERT INTO join_run_env VALUES (NULL, '%d', '%d', '%s')" % (
-            env_id, run_id, "XALT_ILLEGAL_VALUE")
-          conn.query(query)
+        query = "INSERT INTO join_run_env VALUES (NULL, %s, %s, %s)"
+        cursor.execute(query,(env_id, run_id, value))
           
       v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)
