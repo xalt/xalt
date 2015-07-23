@@ -87,7 +87,9 @@ def main():
   """
   Find name of executable when using aprun.
   """
-
-  print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
-
+  try:
+    print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
+  except Exception:
+    print('find_exec_exception')
+  
 if ( __name__ == '__main__'): main()

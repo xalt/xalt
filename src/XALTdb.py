@@ -178,6 +178,7 @@ class XALTdb(object):
                              linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
                              build_epoch,           exit_code,                exec_path))
 
+      #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       link_id = conn.insert_id()
 
       XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])

@@ -231,7 +231,7 @@ def main():
           `field_of_science` varchar(64)    NOT NULL,
           PRIMARY KEY (`acct_id`),
           INDEX `the_account` (`account`),
-          INDEX `a_acct`   (`anon_acct`)
+          INDEX `a_acct`   (`anon_user`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
 

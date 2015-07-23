@@ -34,7 +34,7 @@
 
 import os, sys, re, base64
 import MySQLdb, ConfigParser, argparse
-from XALT_Rmap import Rmap
+from Rmap_XALT import Rmap
 from xalt_util import *
 
 XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR")
