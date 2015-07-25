@@ -24,6 +24,9 @@ test_descript = {
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
+
+     export PATSQ="I am Jose's variable!"
+
      mpirun -n 1 ./hello 
 
      mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
