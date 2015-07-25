@@ -155,10 +155,9 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
       
-      query  = "SELECT uuid FROM xalt_link WHERE uuid='%s'" % (linkT['uuid'])
-      conn.query(query)
-      result = conn.store_result()
-      if (result.num_rows() > 0):
+      query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
+      cursor.execute(query, (linkT['uuid']))
+      if (cursor.rowcount > 0):
         return
 
       build_epoch = float(linkT['build_epoch'])
@@ -167,7 +166,8 @@ class XALTdb(object):
 
       #paranoid conversion:  Protect DB from bad input:
       exit_code = convertToInt(linkT['exit_code'])
-      exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
+      #exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
+      exec_path = linkT['exec_path']
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, %s,%s,%s)"
@@ -175,7 +175,7 @@ class XALTdb(object):
                              linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
                              build_epoch,           exit_code,                exec_path))
 
-      link_id = conn.insert_id()
+      link_id = cursor.lastrowid
 
       XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])
       self.load_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
@@ -307,7 +307,8 @@ class XALTdb(object):
       # loop over env. vars.
       for key in runT['envT']:
         # use the single quote pattern to protect all the single quotes in env vars.
-        value = patSQ.sub(r"\\'", runT['envT'][key])
+        #value = patSQ.sub(r"\\'", runT['envT'][key])
+        value = runT['envT'][key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
         cursor.execute(query,(key))
         if (cursor.rowcount > 0):
