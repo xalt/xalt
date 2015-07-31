@@ -264,13 +264,11 @@ class XALTdb(object):
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
       uuid        = runT['xaltLinkT'].get('Build.UUID',"NULL")
-
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,(runT['userT']['run_uuid']))
 
-      
       if (cursor.rowcount > 0):
         #print("found")
         row    = cursor.fetchone()

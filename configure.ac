@@ -3,7 +3,7 @@ AC_PREFIX_DEFAULT(/usr/local)
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb,syslogV2) [[file]]]),
+    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission")dnl
