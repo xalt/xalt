@@ -66,7 +66,7 @@ query = "SELECT link_program, count(*) as count \
           WHERE build_syshost = '%s' \
             AND date >= '%s' AND date <= '%s' \
             AND link_program is NOT NULL \
-          GROUP BY link_program" % (args.syshost, startdate, enddate)
+          GROUP BY link_program order by count desc" % (args.syshost, startdate, enddate)
        
 cursor.execute(query)
 results = cursor.fetchall()
