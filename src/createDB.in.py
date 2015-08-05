@@ -143,7 +143,7 @@ def main():
           `uuid`          char(36)               ,
           `hash_id`       char(40)       NOT NULL,
 
-          `account`       char(11)       NOT NULL,
+          `account`       varchar(20)    NOT NULL,
           `exec_type`     char(7)        NOT NULL,
           `start_time`    double         NOT NULL,
 

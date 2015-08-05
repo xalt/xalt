@@ -87,6 +87,10 @@ SITE_PKG          := src/xalt_find_exec_hydra.py       src/xalt_find_exec_openmp
                      src/xalt_find_exec_ncar.py
 SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 
+TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
+                     contrib/TACC/check_pytas.in
+TACC_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(TACC_PKG))
+
 .PHONY:
 
 all:
@@ -120,6 +124,10 @@ Inst_sbin: $(SBIN_PKG)
 
 Inst_bin: $(BIN_PKG)
 	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+
+Inst_tacc: $(TACC_PKG)
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+
 
 Build_pstree_no:
 
