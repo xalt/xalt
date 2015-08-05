@@ -61,8 +61,8 @@ DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
 
 BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
                      src/ibrun.symm.in src/aprun.in src/srun.in                         \
-                     src/mpirun.lsf.in src/xalt_helper_functions.sh                     \
-                     src/monthly_report.in
+                     src/mpirun.lsf.in src/xalt_helper_functions.sh
+
 BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
 SBIN_PKG          := src/conf_create.in.py  	       src/createDB.in.py               \
@@ -125,7 +125,7 @@ Inst_sbin: $(SBIN_PKG)
 Inst_bin: $(BIN_PKG)
 	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
 
-Inst_tacc: $(TACC_PKG)
+Inst_TACC: $(TACC_PKG)
 	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
 
