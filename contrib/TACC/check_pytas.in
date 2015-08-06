@@ -34,17 +34,33 @@ def main():
 
   resultT = {}
 
-  for p in projectA:
-    
-    for allocationT in p['allocations']:
-        res    = allocationT['resource'] 
-        status = allocationT['status']
-        if (res == "Stampede3" and status == "Active"):
-            chargeCode = p["chargeCode"]
-            fos    = field_of_science(p["chargeCode"])
-            print("account: \""+p["chargeCode"]+"\", field: ",fos,", res: ",res," status ",status)
-
-  #print(json.dumps(projects, sort_keys=True, indent=1, separators=(',',': ')))
+  if (projectA):
+    for p in projectA:
+      for allocationT in p['allocations']:
+          res    = allocationT['resource'] 
+          status = allocationT['status']
+          if (res == "Stampede3" and status == "Active"):
+              chargeCode = p["chargeCode"]
+              fos    = field_of_science(p["chargeCode"])
+              resultT['resource']         = res
+              resultT['account']          = chargeCode
+              resultT['field_of_science'] = fos
+              resultT['status']           = status
+              break
+      if (not resultT):
+        for allocationT in p['allocations']:
+          res    = allocationT['resource'] 
+          if (res == "Stampede3"):
+              chargeCode = p["chargeCode"]
+              fos    = field_of_science(p["chargeCode"])
+              resultT['resource']         = res
+              resultT['account']          = chargeCode
+              resultT['field_of_science'] = fos
+              resultT['status']           = allocationT['status']
+              break
+          
+        
+  print(json.dumps(resultT, sort_keys=True, indent=1, separators=(',',': ')))
 
 
 
