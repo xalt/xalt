@@ -1,0 +1,40 @@
+These are some notes about things to add XALT.
+
+* Support for Blacklist Env. Vars 
+  The ignore list.
+
+* checkExec:
+   Needs three things:
+   ReverseMap
+   List of current loaded modules (__LOADEDMODULES__)
+   Configuration between compilers, MPI Stacks and modules
+
+   mvapich2 => libmpich2
+   openmpi  => libompi
+   ...
+* xalt_site_pkg.py
+
+   How to make this work better?
+
+* xalt_syshost_default.py  
+   mapping this to xalt_syshost.py?
+
+* Analysis issues:
+
+** What has changed over time?
+   follow sha1 for some users and programs
+** Field of Sci
+   Who used namd that wasn't a chemist
+
+** Compare C/F90/C++ vs. Runtime Libraries
+   (Who mixes Fortran libraries with C++ (mgf?)
+** percent use of TACC libraries
+
+** What codes are associated with each other:
+
+   namd & amber,
+   etc.
+
+** Track the use of OMP_NUM_THREADS
+
+
