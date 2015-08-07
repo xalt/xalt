@@ -85,6 +85,9 @@ if args.exclude_path is not None:
 cursor.execute(query)
 results = cursor.fetchall()
 
+if (not args.dryrun):
+  conn.query("START TRANSACTION")
+
 n_update = 0
 for obj_id, obj_path in results:
   module_name = obj2module (obj_path, reverseMapT)

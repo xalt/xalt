@@ -200,6 +200,8 @@ run_real_command()
   MY_PYTHON=$1
   shift
 
+  export XALT_MPI_STACK="$($XALT_DIR/site/xalt_which_mpi)"
+
   # Build the filename for the results.
   SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost_@site_name@.py)
   

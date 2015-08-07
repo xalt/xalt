@@ -61,8 +61,8 @@ DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
 
 BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
                      src/ibrun.symm.in src/aprun.in src/srun.in                         \
-                     src/mpirun.lsf.in src/xalt_helper_functions.sh                     \
-                     src/monthly_report.in
+                     src/mpirun.lsf.in src/xalt_helper_functions.sh
+
 BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
 SBIN_PKG          := src/conf_create.in.py  	       src/createDB.in.py               \
@@ -86,6 +86,10 @@ SITE_PKG          := src/xalt_find_exec_hydra.py       src/xalt_find_exec_openmp
 		     src/xalt_find_exec_sgimpt.py      src/xalt_find_exec_srun.py       \
                      src/xalt_find_exec_ncar.py
 SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
+
+TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
+                     contrib/TACC/check_pytas.in
+TACC_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(TACC_PKG))
 
 .PHONY:
 
@@ -120,6 +124,10 @@ Inst_sbin: $(SBIN_PKG)
 
 Inst_bin: $(BIN_PKG)
 	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+
+Inst_TACC: $(TACC_PKG)
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+
 
 Build_pstree_no:
 

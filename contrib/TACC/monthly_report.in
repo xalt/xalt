@@ -419,30 +419,30 @@ class XALTdb(object):
     """ Collect data from DB """
 
     try:
-      userT = {}
-      acctT = {}
-      query = "not set"
-      runA  = []
-      conn  = self.connect()
-      query = "USE "+self.db()
+      userT  = {}
+      acctT  = {}
+      query  = "not set"
+      runA   = []
+      conn   = self.connect()
+      cursor = conn.cursor()
+      query  = "USE "+self.db()
       conn.query(query)
 
-      query = "select date, syshost, account, start_time, run_time, num_cores,      "    + \
-              "num_nodes, num_threads, user, exec_path, module_name, run_id, job_id "    + \
-              "from xalt_run where xalt_run.date >= '%s' and xalt_run.date < '%s' " % (
-              startDate, endDate)
-      conn.query(query)
+      query = "select date, syshost, account, start_time, run_time, num_cores,       "    + \
+              "num_nodes, num_threads, user, exec_path, module_name, run_id, job_id, "    + \
+              "uuid from xalt_run where xalt_run.date >= %s and xalt_run.date < %s   "
+              
+      cursor.execute(query,(startDate, endDate))
 
-      result = conn.store_result()
-
-      nrows = result.num_rows() 
-      if (nrows > 0):
+      numRows = cursor.rowcount
+      if (numRows > 0):
         print("[")
         endline = ","
         for j in xrange(nrows):
-          row    = result.fetch_row()
-          date   = str(row[0][0])
-          run_id = row[0][11]
+          row    = cursor.fetchone()
+          date   = str(row[0])
+          run_id = row[11]
+          uuid   = row[13]
           #runT   = {'date'       : date,      'syshost'     : row[0][ 1], 'account'   : row[0][ 2],
           #          'start_time' : row[0][3], 'run_time'    : row[0][ 4], 'num_cores' : row[0][ 5],
           #          'num_nodes'  : row[0][6], 'num_threads' : row[0][ 7], 'user'      : row[0][ 8],
