@@ -53,14 +53,15 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
     module_name = obj2module(path, reverseMapT)
     if (module_name != 'NULL'):
       n_update += 1
-      query = "update "+tableName+" set module_name = '%s' where "+idName+" = '%s'" % ( 
-        module_name, idx)
       if (args.dryrun):
-        print ('obj_path: ' + obj_path)
+        print ('path    : ' + path)
+        print ('index   : ' + idx)
         print ('module  : ' + module_name)
         print ('SQL     : ' + query)
         print ('')
       else:
+        query = "update "+tableName+" set module_name = '%s' where "+idName+" = '%s'" % ( 
+          module_name, idx)
         cursor.execute(query)
   if (args.dryrun):
     print ('Found %d entries out of %d to update' % (n_update, len(resultA)))
