@@ -2,7 +2,7 @@
 # -*- python -*-
 
 from __future__ import print_function
-import os, sys, re, time, datetime, argparse, ConfigParser, MySQLdb
+import os, sys, re, time, datetime, argparse, ConfigParser, MySQLdb, base64
 from Rmap_XALT import Rmap
 from xalt_util import *
 
