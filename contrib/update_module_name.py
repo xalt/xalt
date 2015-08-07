@@ -63,10 +63,10 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
       else:
         cursor.execute(query)
   if (args.dryrun):
-    print ('Found %d entries out of %d to update' % (n_update, len(results)))
+    print ('Found %d entries out of %d to update' % (n_update, len(resultA)))
   else:
     conn.commit()
-    print ('Updated %d entries out of %d objects' % (n_update, len(results)))
+    print ('Updated %d entries out of %d objects' % (n_update, len(resultA)))
   
 
 def main():
