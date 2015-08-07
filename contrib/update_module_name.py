@@ -16,11 +16,11 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dryrun",       dest='dryrun',       action="store", default = None,          help="dryrun")
-    parser.add_argument("--dbname",       dest='dbname',       action="store", default = "xalt",        help="db name")
-    parser.add_argument("--syshost",      dest='syshost',      action="store", default = "%",           help="system host name")
-    parser.add_argument("--rmapD",        dest='rmapD',        action="store", default = "reverseMapD", help="Reverse Map Directory")
-    parser.add_argument("--exclude_path", dest='exclude_path', action="append",                         help="exclude objects whose paths partially match EXCLUDE_PATH. This option can be specified multiple times.")
+    parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
+    parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
+    parser.add_argument("--syshost",      dest='syshost',      action="store",       default = "%",           help="system host name")
+    parser.add_argument("--rmapD",        dest='rmapD',        action="store",       default = "reverseMapD", help="Reverse Map Directory")
+    parser.add_argument("--exclude_path", dest='exclude_path', action="append",                               help="exclude objects whose paths partially match EXCLUDE_PATH. This option can be specified multiple times.")
     args = parser.parse_args()
     return args
 
