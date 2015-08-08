@@ -36,7 +36,7 @@ def dbConfigFn(dbname):
 def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
 
   cursor.execute("START TRANSACTION")
-  query = "Select %s, %s from %s where module_name is NULL" % (
+  query = "Select %s, %s from %s where module_name is NULL " % (
     idName, pathName, tableName)
 
   if (args.syshost is not None):
@@ -55,18 +55,17 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
       n_update += 1
       if (args.dryrun):
         print ('path    : ' + path)
-        print ('index   : ' + idx)
+        print ('index   : ' + str(idx))
         print ('module  : ' + module_name)
         print ('SQL     : ' + query)
         print ('')
       else:
-        query = "update "+tableName+" set module_name = '%s' where "+idName+" = '%s'" % ( 
-          module_name, idx)
-        cursor.execute(query)
+        query = "update "+tableName+" set module_name = %s where "+idName+" = %s" 
+        cursor.execute(query, ( module_name, idx))
   if (args.dryrun):
     print ('Found %d entries out of %d to update' % (n_update, len(resultA)))
   else:
-    conn.commit()
+    cursor.execute("COMMIT")
     print ('Updated %d entries out of %d objects' % (n_update, len(resultA)))
   
 
