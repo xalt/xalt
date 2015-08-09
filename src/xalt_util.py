@@ -210,17 +210,23 @@ def obj2module(object_path, reverseMapT):
   @param reverseMapT: reverse map table. Paths to modules
   """
 
-
   dirNm, fn  = os.path.split(object_path)
   moduleName = 'NULL'
-  pkg         = reverseMapT.get(dirNm)
-  if (pkg):
-    flavor    = pkg['flavor'][0]
-    flavor    = defaultPat.sub('',flavor)
-    if (flavor):
-      moduleName = "'" + pkg['pkg'] + '(' + flavor + ")'"
-    else:
-      moduleName = "'" + pkg['pkg'] + "'"
+  while (True):
+    pkg         = reverseMapT.get(dirNm)
+    if (pkg):
+      flavor    = pkg['flavor'][0]
+      flavor    = defaultPat.sub('',flavor)
+      if (flavor):
+        moduleName = "'" + pkg['pkg'] + '(' + flavor + ")'"
+      else:
+        moduleName = "'" + pkg['pkg'] + "'"
+      break
+    idx = dirNm:rfind("/")
+    if (idx == 0):
+      break
+    idx = dirNm[0:idx]
+
   return moduleName
 
 
