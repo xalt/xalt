@@ -222,7 +222,7 @@ def obj2module(object_path, reverseMapT):
       else:
         moduleName = "'" + pkg['pkg'] + "'"
       break
-    idx = dirNm:rfind("/")
+    idx = dirNm.rfind("/")
     if (idx == 0):
       break
     idx = dirNm[0:idx]
