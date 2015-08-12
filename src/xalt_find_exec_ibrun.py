@@ -74,6 +74,6 @@ def main():
   """
 
   print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]),
-                  compute_ntasks=compute_ntasks))
+                  compute_ntasks=compute_ntasks)
 
 if ( __name__ == '__main__'): main()
