@@ -156,7 +156,7 @@ class XALTdb(object):
       conn.query(query)
       
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
-      cursor.execute(query, (linkT['uuid']))
+      cursor.execute(query, [linkT['uuid']])
       if (cursor.rowcount > 0):
         return
 
@@ -267,7 +267,7 @@ class XALTdb(object):
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
-      cursor.execute(query,(runT['userT']['run_uuid']))
+      cursor.execute(query,[runT['userT']['run_uuid']])
 
       if (cursor.rowcount > 0):
         #print("found")
@@ -308,14 +308,14 @@ class XALTdb(object):
         #value = patSQ.sub(r"\\'", runT['envT'][key])
         value = runT['envT'][key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
-        cursor.execute(query,(key))
+        cursor.execute(query,[key])
         if (cursor.rowcount > 0):
           row    = cursor.fetchone()
           env_id = int(row[0])
           found  = True
         else:
           query  = "INSERT INTO xalt_env_name VALUES(NULL, %s)"
-          cursor.execute(query,(key))
+          cursor.execute(query,[key])
           env_id = cursor.lastrowid
           found  = False
         
