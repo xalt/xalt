@@ -47,7 +47,6 @@ def fix_module_name(args, tableName, idName, cursor):
     n_update += 1
     mname = module_name[1:-1]
     if (args.dryrun):
-      print ('path    : ' + path)
       print ('index   : ' + str(idx))
       print ('module  : ' + module_name)
       print ('SQL     : ' + query)
