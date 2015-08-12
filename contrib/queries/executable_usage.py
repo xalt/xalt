@@ -23,12 +23,13 @@
 #                                                                            #
 #----------------------------------------------------------------------------#
 
+from __future__ import print_function
 import os, sys, re, base64, operator
 import MySQLdb, ConfigParser, argparse
 import time
 from datetime import datetime, timedelta
 
-XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR")
+XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
 ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
 
 parser = argparse.ArgumentParser \
@@ -97,20 +98,25 @@ query = "SELECT CASE \
             WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'ph.x' then 'Q-ESPRESSO*' \
             WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'pw.x' then 'Q-ESPRESSO*' \
             ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END \
-          AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, \
+          AS execname, ROUND(SUM(run_time*num_nodes*16/3600)) as totalcput, \
           COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users \
           FROM xalt_run \
          WHERE syshost = '%s' \
-           AND date >= '%s' AND date <= '%s' \
+           AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' \
          GROUP BY execname ORDER BY totalcput DESC" \
          % (args.syshost, startdate, enddate)
 cursor.execute(query)
 results = cursor.fetchall()
 
-print ""
-print "===================================================================="
-print "%35s %10s %10s %10s" % ("Exec", "CPU Time.", "# Jobs", "# Users")
-print "===================================================================="
+print ("")
+print ("====================================================================")
+print ("%35s %10s %10s %10s" % ("Exec", "CPU Time.", "# Jobs", "# Users"))
+print ("====================================================================")
 
+sum = 0.0
 for execname, totalcput, n_jobs, n_users in results:
-  print "%35s %10s %10s %10s" % (execname, totalcput, n_jobs, n_users)
+  sum += totalcput
+  print ("%35s %10s %10s %10s" % (execname, totalcput, n_jobs, n_users))
+
+print("sum:", sum, file=sys.stderr)
+
