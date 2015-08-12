@@ -53,11 +53,27 @@ npT = {
   '-np'                       : "tasks",  
   }
 
+def compute_ntasks(t):
+  tasks = t.get("tasks")
+  nodes = t.get("nodes")
+  if (not tasks):
+    if (not nodes):
+      tasks = 1
+    elif (not os.environ.get("SLURM_JOBID")):
+      tasks = 1
+    if (nodes == 1):
+      tasks = 1
+    else:
+      nodes = nodes or 1
+      tasks = os.environ.get("SLURM_CPUS_ON_NODE",1)*nodes
+  return tasks
+
 def main():
   """
   Find name of executable when using ibrun.
   """
 
-  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]))
+  print(find_exec(ignoreT, argT, npT, "-c", sys.argv[1:]),
+                  compute_ntasks=compute_ntasks))
 
 if ( __name__ == '__main__'): main()

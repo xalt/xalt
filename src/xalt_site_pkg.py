@@ -77,7 +77,7 @@ def translate(nameA, envT, userT):
     num_nodes              = int(envT.get("SLURM_NNODES",0))
     coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
     userT['job_num_cores'] = num_nodes*coresPerNode
-    sysT['num_cores']      = "SLURM_TACC_CORES"
+    sysT['num_cores']      = userT['num_tasks']
     sysT['num_nodes']      = "SLURM_NNODES"
     sysT['account']        = "SLURM_TACC_ACCOUNT"
     sysT['job_id']         = "SLURM_JOB_ID"
