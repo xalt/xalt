@@ -218,9 +218,9 @@ def obj2module(object_path, reverseMapT):
       flavor    = pkg['flavor'][0]
       flavor    = defaultPat.sub('',flavor)
       if (flavor):
-        moduleName = "'" + pkg['pkg'] + '(' + flavor + ")'"
+        moduleName = pkg['pkg'] + '(' + flavor + ')'
       else:
-        moduleName = "'" + pkg['pkg'] + "'"
+        moduleName = pkg['pkg']
       break
     idx = dirNm.rfind("/")
     if (idx == 0):
