@@ -44,12 +44,13 @@ ignoreT = {
 argT = {
   '-2'                        : 1,
   '-m'                        : 1,
-  '-n'                        : 1,  
-  '-np'                       : 1,  
   '-o'                        : 1,  
+  '-c'                        : 1,  
 }
 
 npT = {
+  '-n'                        : "tasks",  
+  '-np'                       : "tasks",  
   }
 
 def main():

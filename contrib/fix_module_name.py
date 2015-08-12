@@ -34,7 +34,7 @@ def dbConfigFn(dbname):
 def fix_module_name(args, tableName, idName, cursor):
 
   cursor.execute("START TRANSACTION")
-  query = "Select %s, module_name from %s where module_name like \"'%'\" " % (
+  query = "Select %s, module_name from %s where module_name like \"'%%'\" " % (
     idName, tableName)
 
   if (args.syshost is not None):
