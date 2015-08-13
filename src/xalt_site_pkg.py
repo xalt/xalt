@@ -67,18 +67,18 @@ def translate(nameA, envT, userT):
     queueType = "LSF"
       
   if (queueType == "SGE"):
-    sysT['num_cores']     = "NSLOTS"
-    sysT['job_num_cores'] = "NSLOTS"
-    sysT['num_nodes']     = "NHOSTS"
-    sysT['account']       = "SGE_ACCOUNT"
-    sysT['job_id']        = "JOB_ID"
-    sysT['queue']         = "QUEUE"
+    userT['num_cores']     = "NSLOTS"
+    userT['job_num_cores'] = "NSLOTS"
+    sysT['num_nodes']      = "NHOSTS"
+    sysT['account']        = "SGE_ACCOUNT"
+    sysT['job_id']         = "JOB_ID"
+    sysT['queue']          = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
     num_nodes              = int(envT.get("SLURM_NNODES",0))
     coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
     userT['job_num_cores'] = num_nodes*coresPerNode
-    sysT['num_cores']      = userT['num_tasks']
+    userT['num_cores']     = userT['num_tasks']
     sysT['num_nodes']      = "SLURM_NNODES"
     sysT['account']        = "SLURM_TACC_ACCOUNT"
     sysT['job_id']         = "SLURM_JOB_ID"
@@ -89,6 +89,7 @@ def translate(nameA, envT, userT):
     num_nodes              = int(envT.get("SLURM_NNODES",0))
     coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
     userT['job_num_cores'] = num_nodes*coresPerNode
+    userT['num_cores']     = num_nodes*coresPerNode
     sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
     sysT['job_id']         = "SLURM_JOB_ID"
     sysT['queue']          = "SLURM_QUEUE"
