@@ -191,7 +191,9 @@ def obj_type(object_path):
   Determine what object type [[object_path]] is (a, o, so)
   @param object_path: name of object.
   """
-  result = None
+  validT = { 'a' : True, 'o' : True, 'so': True, '--' : True }
+
+  result = '--'
   a      = object_path.split('.')
   for entry in reversed(a):
     m = numberPat.search(entry)
@@ -200,6 +202,10 @@ def obj_type(object_path):
     else:
       result = entry
       break
+
+  if (not (result in validT)):
+    result = '--'
+
   return result
 
 defaultPat = re.compile(r'default:?')
