@@ -438,7 +438,7 @@ class XALTdb(object):
       if (numRows > 0):
         print("[")
         endline = ","
-        for j in xrange(nrows):
+        for j in xrange(numRows):
           row    = cursor.fetchone()
           date   = str(row[0])
           run_id = row[11]
@@ -448,9 +448,9 @@ class XALTdb(object):
           #          'num_nodes'  : row[0][6], 'num_threads' : row[0][ 7], 'user'      : row[0][ 8],
           #          'exec_path'  : row[0][9], 'module_name' : row[0][10]}
 
-          user      = row[0][8]
-          account   = row[0][2]
-          exec_path = row[0][9]
+          user      = row[8]
+          account   = row[2]
+          exec_path = row[9]
           anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
           value     = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
           anon_acct = value['anon']
@@ -458,23 +458,22 @@ class XALTdb(object):
           exe       = replace_exec_path(exec_path)
 
 
-          runT   = {'date'             : date,      'host'        : row[0][ 1], 'allocation' : anon_acct,
-                    'start_time'       : row[0][3], 'run_time'    : row[0][ 4], 'num_cores'  : row[0][ 5],
-                    'num_nodes'        : row[0][6], 'num_threads' : row[0][ 7], 'user'       : anon_user,
-                    'exec_path'        : exe,       'module_name' : row[0][10], 'job_id'     : row[0][12],
+          runT   = {'date'             : date,      'host'        : row[ 1], 'allocation' : anon_acct,
+                    'start_time'       : row[3],    'run_time'    : row[ 4], 'num_cores'  : row[ 5],
+                    'num_nodes'        : row[6],    'num_threads' : row[ 7], 'user'       : anon_user,
+                    'exec_path'        : exe,       'module_name' : row[10], 'job_id'     : row[12],
                     'field_of_science' : science }
           
           linkA = []
           query = "select object_path, module_name from xalt_object, join_run_object where "      + \
-                  "join_run_object.run_id = '%s' and join_run_object.obj_id = xalt_object.obj_id" % (
-                  run_id )
-          conn.query(query)
+                  "join_run_object.run_id = '%s' and join_run_object.obj_id = xalt_object.obj_id" 
+
+          cursor.execute(query,[run_id])
           
-          r2 = conn.store_result()
-          lnk_rows = r2.num_rows()
+          lnk_rows = cursor.rowcount
           for i in xrange(lnk_rows):
-            row  = r2.fetch_row()
-            path = row[0][0]
+            row  = cursor.fetchone()
+            path = row[0]
 
             # anonymize user paths.
             for regexp, v in compiled_userDirPatternT.iteritems():
@@ -484,7 +483,7 @@ class XALTdb(object):
                 anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
                 path      = regexp.sub(os.path.join(v,anon_user),path)
                 break
-            linkA.append({'library_path' : path, 'library_module_name' : row[0][1]})
+            linkA.append({'library_path' : path, 'library_module_name' : row[1]})
 
           runT['linkA'] = linkA
 
