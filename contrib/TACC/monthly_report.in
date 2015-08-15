@@ -438,35 +438,47 @@ class XALTdb(object):
       if (numRows > 0):
         print("[")
         endline = ","
-        for j in xrange(numRows):
-          row    = cursor.fetchone()
-          date   = str(row[0])
-          run_id = row[11]
-          uuid   = row[13]
-          #runT   = {'date'       : date,      'syshost'     : row[0][ 1], 'account'   : row[0][ 2],
-          #          'start_time' : row[0][3], 'run_time'    : row[0][ 4], 'num_cores' : row[0][ 5],
-          #          'num_nodes'  : row[0][6], 'num_threads' : row[0][ 7], 'user'      : row[0][ 8],
-          #          'exec_path'  : row[0][9], 'module_name' : row[0][10]}
+        j = 0
+        for row in cursor:
+          j          = j + 1
+          #if (j > 12): break
+          date       = str(row[0])
+          run_id     = row[11]
+          uuid       = row[13]
+          user       = row[8]
+          account    = row[2]
+          exec_path  = row[9]
+          anon_user  = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
+          value      = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
+          anon_acct  = value['anon']
+          science    = value['field_of_sci']
+          exe        = replace_exec_path(exec_path)
+          build_user = "unknown"
+          build_date = "unknown"
+          link_prgm  = "unknown"
+          if (module_name):
+            build_user = "system"
+            
+          if (uuid and build_user == "unknown"):
+            query     = "select build_user, date, link_program from xalt_link where uuid = %s"
+            cursor.execute(query, [uuid])
+            if (cursor.rowcount > 0):
+              row = cursor.fetchone()
+              build_user = row[0]
+              build_date = row[1]
+              link_prgm  = row[2]
 
-          user      = row[8]
-          account   = row[2]
-          exec_path = row[9]
-          anon_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
-          value     = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
-          anon_acct = value['anon']
-          science   = value['field_of_sci']
-          exe       = replace_exec_path(exec_path)
 
-
-          runT   = {'date'             : date,      'host'        : row[ 1], 'allocation' : anon_acct,
-                    'start_time'       : row[3],    'run_time'    : row[ 4], 'num_cores'  : row[ 5],
-                    'num_nodes'        : row[6],    'num_threads' : row[ 7], 'user'       : anon_user,
-                    'exec_path'        : exe,       'module_name' : row[10], 'job_id'     : row[12],
-                    'field_of_science' : science }
+          runT   = {'date'             : date,      'host'        : row[ 1],    'allocation' : anon_acct,
+                    'start_time'       : row[3],    'run_time'    : row[ 4],    'num_cores'  : row[ 5],
+                    'num_nodes'        : row[6],    'num_threads' : row[ 7],    'user'       : anon_user,
+                    'exec_path'        : exe,       'module_name' : row[10],    'job_id'     : row[12],
+                    'field_of_science' : science    'build_user'  : build_user, 'build_date' : build_date,
+                    'link_program'     : link_prgm }
           
           linkA = []
           query = "select object_path, module_name from xalt_object, join_run_object where "      + \
-                  "join_run_object.run_id = '%s' and join_run_object.obj_id = xalt_object.obj_id" 
+                  "join_run_object.run_id = %s and join_run_object.obj_id = xalt_object.obj_id" 
 
           cursor.execute(query,[run_id])
           
@@ -487,7 +499,7 @@ class XALTdb(object):
 
           runT['linkA'] = linkA
 
-          if (j+1 >= nrows):
+          if (j+1 >= numRows):
             endline = ""
           print(json.dumps(runT),endline)
 
