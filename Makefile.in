@@ -88,7 +88,7 @@ SITE_PKG          := src/xalt_find_exec_hydra.py       src/xalt_find_exec_openmp
 SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 
 TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
-                     contrib/TACC/check_pytas.in
+                     contrib/TACC/check_pytas.in       contrib/TACC/fix_acct_record.in
 TACC_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(TACC_PKG))
 
 .PHONY:
