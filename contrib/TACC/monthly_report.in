@@ -437,17 +437,17 @@ class XALTdb(object):
       numRows = cursor.rowcount
       if (numRows > 0):
         print("[")
-        endline = ","
         j = 0
+        numRows = min(numRows, 12)
         for row in cursor:
           j          = j + 1
-          #if (j > 12): break
           date       = str(row[0])
           run_id     = row[11]
           uuid       = row[13]
-          user       = row[8]
-          account    = row[2]
-          exec_path  = row[9]
+          user       = row[ 8]
+          account    = row[ 2]
+          exec_path  = row[ 9]
+          exec_mname = row[10]
           anon_user  = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
           value      = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
           anon_acct  = value['anon']
@@ -456,17 +456,17 @@ class XALTdb(object):
           build_user = "unknown"
           build_date = "unknown"
           link_prgm  = "unknown"
-          if (module_name):
+          if (exec_mname):
             build_user = "system"
             
           if (uuid and build_user == "unknown"):
-            query     = "select build_user, date, link_program from xalt_link where uuid = %s"
+            query     = "select build_user, link_program, date from xalt_link where uuid = %s"
             cursor.execute(query, [uuid])
             if (cursor.rowcount > 0):
-              row = cursor.fetchone()
-              build_user = row[0]
-              build_date = row[1]
-              link_prgm  = row[2]
+              rowA       = cursor.fetchone()
+              build_user = self.__convert(conn, "xalt_user",   "U","anon_user", userT, rowA[0])
+              link_prgm  = rowA[1]
+              build_date = str(rowA[2])
 
 
           runT   = {'date'             : date,      'host'        : row[ 1],    'allocation' : anon_acct,
@@ -500,8 +500,9 @@ class XALTdb(object):
           runT['linkA'] = linkA
 
           if (j+1 >= numRows):
-            endline = ""
-          print(json.dumps(runT),endline)
+            print(json.dumps(runT))
+            break
+          print(json.dumps(runT),",")
 
         print("]")
 
