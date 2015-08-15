@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- python -*-
 from __future__ import print_function
-import os, sys, re, MySQLdb, json, time, argparse, base64, json
+import os, sys, re, MySQLdb, json, time, argparse, base64
 import hashlib
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
@@ -25,6 +25,11 @@ def __FILE__():
     return inspect.currentframe().f_code.co_filename
 
 #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
+
+
+
+
+
 
 def field_of_science(account):
   s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
@@ -428,6 +433,9 @@ class XALTdb(object):
       query  = "USE "+self.db()
       conn.query(query)
 
+      check_pytas = os.path.join(dirNm,"check_pytas")
+
+
       query = "select date, syshost, account, start_time, run_time, num_cores,       "    + \
               "num_nodes, num_threads, user, exec_path, module_name, run_id, job_id, "    + \
               "uuid from xalt_run where xalt_run.date >= %s and xalt_run.date < %s   "
@@ -448,6 +456,12 @@ class XALTdb(object):
           account    = row[ 2]
           exec_path  = row[ 9]
           exec_mname = row[10]
+          if (account == "unknown"):
+            resultT    = json.load(capture("%s %s" % (check_pytas, user)))
+            account    = resultT['account']
+          end
+
+          
           anon_user  = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
           value      = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
           anon_acct  = value['anon']
