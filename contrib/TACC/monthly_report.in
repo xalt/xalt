@@ -473,7 +473,7 @@ class XALTdb(object):
                     'start_time'       : row[3],    'run_time'    : row[ 4],    'num_cores'  : row[ 5],
                     'num_nodes'        : row[6],    'num_threads' : row[ 7],    'user'       : anon_user,
                     'exec_path'        : exe,       'module_name' : row[10],    'job_id'     : row[12],
-                    'field_of_science' : science    'build_user'  : build_user, 'build_date' : build_date,
+                    'field_of_science' : science,   'build_user'  : build_user, 'build_date' : build_date,
                     'link_program'     : link_prgm }
           
           linkA = []
