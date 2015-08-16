@@ -446,7 +446,7 @@ class XALTdb(object):
       if (numRows > 0):
         print("[")
         j = 0
-        numRows = min(numRows, 12)
+        #numRows = min(numRows, 12)
         for row in cursor:
           j          = j + 1
           date       = str(row[0])
