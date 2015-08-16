@@ -34,7 +34,7 @@ def fix_record(cursor, acctT, endtimeT):
   cursor.execute(query)
 
   n_update = 0
-  for run_id, job_id, account start_time, end_time in cursor:
+  for run_id, job_id, account, start_time, end_time in cursor:
     if (job_id == "unknown"):
       continue
     chargeAcct = acctT.get(job_id)
