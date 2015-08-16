@@ -459,8 +459,6 @@ class XALTdb(object):
           if (account == "unknown"):
             resultT    = json.load(capture("%s %s" % (check_pytas, user)))
             account    = resultT['account']
-          end
-
           
           anon_user  = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)
           value      = self.__convert(conn, "xalt_account","A","anon_acct", acctT, account)
