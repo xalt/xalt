@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 import os, sys, re, time, datetime, argparse, ConfigParser, base64, MySQLdb
-from xalt_util import *
+#from xalt_util import *
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -29,57 +29,21 @@ def dbConfigFn(dbname):
   return dbname + "_db.conf"
 
 
-def fix_acct_record(acctT):
-  #cursor.execute("START TRANSACTION")
-  query = "select run_id, job_id, account from xalt_run where date > '2015-08-14' limit 50"
+def fix_acct_record(cursor, acctT):
+  cursor.execute("START TRANSACTION")
+  query = "select run_id, job_id, account from xalt_run"
   cursor.execute(query)
 
   n_update = 0
   for run_id, job_id, account in cursor:
-    chargeAcct = acctT[job_id]
-    if (chargeAcct != account):
+    chargeAcct = acctT.get(job_id)
+    if (chargeAcct and chargeAcct != account):
       n_update += 1
-      print("old: ",account,"new:",chargeAcct)
+      query = "update xalt_run set account = %s where run_id = %s"
+      cursor.execute(query, (chargeAcct, run_id))
 
-      #query = "update xalt_run set account = %s where run_id = %s"
-      #cursor.execute(query, (chargeAcct, run_id))
-
-  #cursor.execute("COMMIT")
-def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
-
-  cursor.execute("START TRANSACTION")
-  query = "Select %s, %s from %s where module_name is NULL " % (
-    idName, pathName, tableName)
-
-  if (args.syshost is not None):
-    query = query + " AND syshost = '%s'" % args.syshost
-
-  if (args.exclude_path is not None):
-    for path in args.exclude_path:
-      query = query + " AND %s not like '%%%s%%'" % (pathName, path)
-  
-  cursor.execute(query)
-  resultA  = cursor.fetchall()
-  n_update = 0
-  for idx, path in resultA:
-    module_name = obj2module(path, reverseMapT)
-    if (module_name != 'NULL'):
-      n_update += 1
-      if (args.dryrun):
-        print ('path    : ' + path)
-        print ('index   : ' + str(idx))
-        print ('module  : ' + module_name)
-        print ('SQL     : ' + query)
-        print ('')
-      else:
-        query = "update "+tableName+" set module_name = %s where "+idName+" = %s" 
-        cursor.execute(query, ( module_name, idx))
-  if (args.dryrun):
-    print ('Found %d entries out of %d to update' % (n_update, len(resultA)))
-  else:
-    cursor.execute("COMMIT")
-    print ('Updated %d entries out of %d objects' % (n_update, len(resultA)))
-  
+  print("updated",n_update,"records")
+  cursor.execute("COMMIT")
 
 def read_tacc_acct_records():
   acctT = {}
@@ -112,7 +76,7 @@ def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   acctT = read_tacc_acct_records()
 
-  fix_acct_record(acctT)
+  fix_acct_record(cursor, acctT)
   
 
 if ( __name__ == '__main__'): main()
