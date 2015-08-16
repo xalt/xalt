@@ -30,6 +30,26 @@ def dbConfigFn(dbname):
 
 
 def fix_record(cursor, acctT, endtimeT):
+  """
+  This routine replaces the account name when it is unknown and it computes the run_time for the job.
+  There are two conditions to handle:
+     a) The job_id can be unknown.  This is probably due to the fact that the users script as wiped
+        all environment variables including the env var that has the job_id.
+     b) The accounting record is only written when the job completes.  However XALT writes a record
+        at the beginning of the job. So an XALT record can exist where there is no accounting record.
+     
+  When both the accounting record exists and the XALT record exists, this routine gets a charge account
+  (chargeAcct) from the accounting record and replaces the XALT account column when it differs.
+  Similarly if the end_time from XALT is 0.0 then the run_time is computed and replaced.
+
+  The XALT end_time and run_time are 0.0 on the initial record.  So if the job times out then the end
+  XALT record is not written.  This routine writes the run_time but doesn't set end_time.  This way jobs
+  that timed out can be found in the XALT db.
+  @param cursor:   database accessor object
+  @param acctT:    account name table: job_id -> charge account name
+  @param endtimeT: account end time:   job_id -> end_time from accounting.
+  """
+
   query = "select run_id, job_id, account, start_time, end_time from xalt_run"
   cursor.execute(query)
 
