@@ -34,13 +34,21 @@ def fix_acct_record(cursor, acctT):
   query = "select run_id, job_id, account from xalt_run"
   cursor.execute(query)
 
+  j        = 0
   n_update = 0
   for run_id, job_id, account in cursor:
     chargeAcct = acctT.get(job_id)
     if (chargeAcct and chargeAcct != account):
       n_update += 1
+      j        += 1
       query = "update xalt_run set account = %s where run_id = %s"
       cursor.execute(query, (chargeAcct, run_id))
+      if (j >= 10000):
+        cursor.execute("COMMIT")
+        cursor.execute("START TRANSACTION")
+        j = 0
+        
+        
 
   print("updated",n_update,"records")
   cursor.execute("COMMIT")
