@@ -217,7 +217,7 @@ def obj2module(object_path, reverseMapT):
   """
 
   dirNm, fn  = os.path.split(object_path)
-  moduleName = 'NULL'
+  moduleName = None
   while (True):
     pkg         = reverseMapT.get(dirNm)
     if (pkg):
