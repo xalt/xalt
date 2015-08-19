@@ -5,9 +5,12 @@ workstation, or high-end supercomputer to track executable information
 and linkage of static shared and dynamically linked libraries. When
 the code is executed, wrappers intercept both the GNU linker (ld) and
 code launcher (like mpirun, aprun, or ibrun) to capture linkage
-information and environmental variables. XALT compares the runtime
+information and environmental variables.
+<!---
+XALT compares the runtime
 environment at execution and compile time environment from linkage
 information. 
+-->
 
 By surveying usage, administrators can use XALT to flag jobs that
 require the attention of support staff and deliver alerts to users
