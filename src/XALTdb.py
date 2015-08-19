@@ -286,6 +286,11 @@ class XALTdb(object):
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = int(runT['userT'].get('exit_status',0))
+        if (exit_status > 128):
+          exit_status = 128
+        elif (exit_status < -127):
+          exit_status = -127
+            
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
         startTime     = "%.f" % runT['userT']['start_time']
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
