@@ -180,7 +180,7 @@ def correct_num_cores(cursor, acctT):
 
   rowA = cursor.fetchall()
 
-  pbar = ProgressBar(maxVal = cursor.rowcount, ttyOnly=false)
+  pbar = ProgressBar(maxVal = cursor.rowcount, ttyOnly=False)
 
   n_update = 0
   j = 0
