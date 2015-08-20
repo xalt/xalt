@@ -49,14 +49,15 @@ def correct_num_cores(cursor, acctT):
   @param acctT:    account record
   """
 
-  query = "select job_id from xalt_run where date >= '2015-06-05' and date < '2015-06-06'"
+  query = "select distinct(job_id) from xalt_run"
   cursor.execute(query)
 
-  jobA = cursor.fetchall()
+  rowA = cursor.fetchall()
 
   n_update = 0
-  for job_id in jobA:
-    entryT = acct.get(job_id)
+  for row in rowA:
+    job_id = row[0]
+    entryT = acctT.get(job_id)
     if (job_id == "unknown" or entryT == None):
       continue
 
@@ -70,29 +71,20 @@ def correct_num_cores(cursor, acctT):
       SUs      += run_time*num_cores
       totalT   += run_time
 
-    acctSUs = (entryT['end_time'] - entryT['start_time'])*entryT['num_cores']/3600.0
+    acctSUs = (float(entryT['end_time']) - float(entryT['start_time']))*float(entryT['num_cores'])/3600.0
 
     ratio = SUs/acctSUs
     if (ratio > 1.10):
-      n_update  += cursor.rowcount
-      num_cores  = min(1.0, int(acctSUs/totalT))
+      n_update  += 1
+      num_cores  = max(1.0, int(acctSUs/totalT))
 
-      print("For job_id: %s, new cores: %d, acctSUs: %.2f, SUs: %.2f" % (job_id, num_cores, acctSUs, totalT*num_cores))
-
-
-
-      #cursor.execute("START TRANSACTION")
-      #query = "update xalt_run set num_cores = %s where job_id = %s"
-      #cursor.execute(query, (num_cores, job_id))
-      #cursor.execute("COMMIT")
-
-    
+      cursor.execute("START TRANSACTION")
+      query = "update xalt_run set num_cores = %s where job_id = %s"
+      cursor.execute(query, (num_cores, job_id))
+      cursor.execute("COMMIT")
 
 
-      
-
-  print("updated",n_update,"records")
-  cursor.execute("COMMIT")
+  print("updated",n_update,"job_ids")
 
 def read_tacc_acct_records():
   """
@@ -117,16 +109,18 @@ def read_tacc_acct_records():
   f = open(fn,"r")
   for line in f:
     fieldA          = line.split(":")
-    if (len(fieldA) < 6):
+    if (len(fieldA) < 13):
       continue
     jobId           = fieldA[0]
     chargeAcct      = fieldA[2]
+    start_time      = fieldA[4]
     end_time        = fieldA[5]
     num_nodes       = fieldA[11]
     num_cores       = fieldA[12]
     acctT[jobId]    = { 'chargeAcct' : chargeAcct,
+                        'start_time' : start_time,
                         'end_time'   : end_time,
-                        'num_nodes'  : num_node,
+                        'num_nodes'  : num_nodes,
                         'num_cores'  : num_cores
                       }
   f.close()
