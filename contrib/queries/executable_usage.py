@@ -98,7 +98,7 @@ query = "SELECT CASE \
             WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'ph.x' then 'Q-ESPRESSO*' \
             WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'pw.x' then 'Q-ESPRESSO*' \
             ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END \
-          AS execname, ROUND(SUM(run_time*num_nodes*16/3600)) as totalcput, \
+          AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, \
           COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users \
           FROM xalt_run \
          WHERE syshost = '%s' \
