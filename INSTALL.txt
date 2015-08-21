@@ -1,9 +1,9 @@
 This is a QUICK INSTALL guide for XALT.
 
-PRE-REQUISITE: LUA and LMOD
+PRE-REQUISITE: Lua and Lmod
 ----------------------------------------------------------
-1. Install Lua from LMOD's sourceforge 
-(already include luafilesystem & luaposix needed by LMOD)
+1. Install Lua from Lmod's sourceforge 
+(already include luafilesystem & luaposix needed by Lmod)
 
 go to http://sourceforge.net/projects/lmod/files/lua-5.1.4.8.tar.gz/download
 
