@@ -52,10 +52,27 @@ npT = {
   '-n'                        : "tasks",  
   '-np'                       : "tasks",  
   }
+def mpi_size(): 
+  size = os.environ.get("PMI_SIZE",0)             + \  # MPICH and IMPI
+         os.environ.get("OMPI_COMM_WORLD_SIZE",0) + \  # OpenMPI
+         os.environ.get("MV2_COMM_WORLD_SIZE",0)       # Mvapich2
+  return size
+         
+def mpi_rank(): 
+  """
+  Do we want ibrun_o_option part of rank or not?
+  """
 
-def compute_ntasks(t):
-  tasks = t.get("tasks")
-  nodes = t.get("nodes")
+  rank = os.environ.get("PMI_RANK",0)             + \  # MPICH and IMPI
+         os.environ.get("OMPI_COMM_WORLD_RANK",0) + \  # OpenMPI
+         os.environ.get("MV2_COMM_WORLD_RANK",0)  + \  # Mvapich2
+         os.environ.get("ibrun_o_option",0)            # IBRUN offset
+  return rank
+
+
+def compute_ntasks(t): 
+  tasks = t.get("tasks",os.environ.get("SLURM_TACC_CORES",mpi_size())
+  nodes = t.get("nodes",os.environ.get("SLURM_TACC_NODES"))
   if (not tasks):
     if (not nodes):
       tasks = 1
