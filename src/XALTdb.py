@@ -47,7 +47,7 @@ def __FILE__():
 
 #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
-def convertToInt(s):
+def convertToTinyInt(s):
   """
   Convert to string to int.  Protect against bad input.
   @param s: Input string
@@ -55,6 +55,10 @@ def convertToInt(s):
   """
   try:
     value = int(s)
+    if  (value > 127):
+      value = 127
+    elif(value < -128):
+      value = -128
   except ValueError:
     value = 0
   return value
@@ -165,8 +169,7 @@ class XALTdb(object):
                                   time.localtime(float(linkT['build_epoch'])))
 
       #paranoid conversion:  Protect DB from bad input:
-      exit_code = convertToInt(linkT['exit_code'])
-      #exec_path = patSQ.sub(r"\\'", linkT['exec_path'])
+      exit_code = convertToTinyInt(linkT['exit_code'])
       exec_path = linkT['exec_path']
 
       # It is unique: lets store this link record
@@ -285,12 +288,7 @@ class XALTdb(object):
       else:
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
-        exit_status   = int(runT['userT'].get('exit_status',0))
-        if (exit_status > 128):
-          exit_status = 128
-        elif (exit_status < -127):
-          exit_status = -127
-            
+        exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
         startTime     = "%.f" % runT['userT']['start_time']
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
