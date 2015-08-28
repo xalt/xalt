@@ -166,12 +166,12 @@ def correct_num_cores(args, cursor, acctT):
   @param acctT:    account record
   """
 
-  if (type(arg.start) == type("abc")):
+  if (type(args.start) == type("abc")):
     start = args.start
   else:
     start   = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.start)))
 
-  if (type(arg.enddate) == type("abc")):
+  if (type(args.enddate) == type("abc")):
     enddate = args.enddate
   else:
     enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
