@@ -36,13 +36,12 @@ effective, and systematic way.
 
 For quick installation instructions, see [INSTALL.txt](INSTALL.txt).
 
-[The XALT Design and Installation
-Manual-0.5](XALTDesignandInstallationManual-0.5.pdf) discusses the
+[The XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf) discusses the
 prerequisites for installation, decisions and considerations regarding
 database setup, XALT testing, other transmission methods, examples,
 and knowns issues. 
 
-[The XALT Users Manual-0.5](XALTUsersManual-0.5.pdf) describes how
+[The XALT Users Manual-0.5](doc/XALTUsersManual-0.5.pdf) describes how
 XALT is used in practice with further discusssion of database options,
 data transmission, creation of reverse maps, and examples with
 accompanying results for database queries. 
@@ -61,8 +60,7 @@ XALT database.
 environment variable ALT_LINKER in the XALT modulefile must be set to
 point to the XALT wrapper. 
 
-Known issues are detailed in the [XALT Design and Installation
-Manual-0.5](XALTDesignandInstallationManual-0.5.pdf). 
+Known issues are detailed in the [XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf).
 
 
 ## Citation
@@ -78,8 +76,7 @@ Computer Center using XALT will be released for public use.
 Information about the dataset and links to the data may be found in
 the University of Texas TexasScholarWorks repository: 
 
-metadata: url
-dataset: url
+Expected data of publication is September 2015.
 
 ## Copyright
 
