@@ -177,7 +177,7 @@ def correct_num_cores(args, cursor, acctT):
     enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
 
   query = "select distinct(job_id) from xalt_run where date >= %s and date < %s"
-  cursor.execute(query,(start,end))
+  cursor.execute(query,(start,enddate))
 
   rowA = cursor.fetchall()
 
