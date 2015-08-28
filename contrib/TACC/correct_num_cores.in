@@ -118,18 +118,6 @@ class ProgressBar(object):
       return
     self.__fd.write("\n")
         
-#def main():
-#  """
-#  Test program for progress bar.
-#  """
-#
-#  num = 200
-#  pbar = ProgressBar(maxVal=num, ttyOnly=False)
-#  for i in xrange(num):
-#    pbar.update(i+1)
-#  pbar.fini()  
-#
-#if ( __name__ == '__main__'): main()
       
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -140,9 +128,12 @@ class CmdLineOptions(object):
   
   def execute(self):
     """ Specify command line arguments and parse the command line"""
+    now    = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
     parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
+    parser.add_argument("--start",        dest='start',        action="store",       default = 0.0,           help="start date")
+    parser.add_argument("--end",          dest='enddate',      action="store",       default = now,           help="end date")
     args = parser.parse_args()
     return args
 
@@ -155,7 +146,7 @@ def dbConfigFn(dbname):
   return dbname + "_db.conf"
 
 
-def correct_num_cores(cursor, acctT):
+def correct_num_cores(args, cursor, acctT):
   """
   This routine replaces the account name when it is unknown and it computes the run_time for the job.
   There are two conditions to handle:
@@ -175,8 +166,18 @@ def correct_num_cores(cursor, acctT):
   @param acctT:    account record
   """
 
-  query = "select distinct(job_id) from xalt_run"
-  cursor.execute(query)
+  if (type(args.start) == type("abc")):
+    start = args.start
+  else:
+    start   = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.start)))
+
+  if (type(args.enddate) == type("abc")):
+    enddate = args.enddate
+  else:
+    enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
+
+  query = "select distinct(job_id) from xalt_run where date >= %s and date < %s"
+  cursor.execute(query,(start,enddate))
 
   rowA = cursor.fetchall()
 
@@ -205,14 +206,17 @@ def correct_num_cores(cursor, acctT):
     acctSUs = (float(entryT['end_time']) - float(entryT['start_time']))*float(entryT['num_cores'])/3600.0
 
     ratio = SUs/acctSUs
-    if (ratio > 1.10):
+    if (SUs > acctSUs):
       n_update  += 1
       num_cores  = max(1.0, int(acctSUs/totalT))
 
-      cursor.execute("START TRANSACTION")
-      query = "update xalt_run set num_cores = %s where job_id = %s"
-      cursor.execute(query, (num_cores, job_id))
-      cursor.execute("COMMIT")
+      if (args.dryrun):
+        print("acctSUs: %.2f, Old SUs: %.2f, new SUs: %.2f" % (SUs,acctSUs, num_cores*totalT))
+      else:
+        cursor.execute("START TRANSACTION")
+        query = "update xalt_run set num_cores = %s where job_id = %s"
+        cursor.execute(query, (num_cores, job_id))
+        cursor.execute("COMMIT")
 
 
   pbar.fini()
@@ -261,9 +265,10 @@ def read_tacc_acct_records():
 
 
 def main():
-  args     = CmdLineOptions().execute()
-  config   = ConfigParser.ConfigParser()     
-  configFn = dbConfigFn(args.dbname)
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
+  args         = CmdLineOptions().execute()
+  config       = ConfigParser.ConfigParser()     
+  configFn     = dbConfigFn(os.path.join(XALT_ETC_DIR,args.dbname))
   config.read(configFn)
 
   conn = MySQLdb.connect \
@@ -273,10 +278,9 @@ def main():
           config.get("MYSQL","DB"))
   cursor = conn.cursor()
 
-  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   acctT = read_tacc_acct_records()
 
-  correct_num_cores(cursor, acctT)
+  correct_num_cores(args, cursor, acctT)
   
 
 if ( __name__ == '__main__'): main()
