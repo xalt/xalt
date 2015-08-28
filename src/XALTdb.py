@@ -289,6 +289,7 @@ class XALTdb(object):
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
+        num_threads   = convertToTinyInt(runT['userT'].get('num_threads',0))
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
         startTime     = "%.f" % runT['userT']['start_time']
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
@@ -296,7 +297,7 @@ class XALTdb(object):
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
                                runT['userT']['account'],     runT['userT']['exec_type'],   startTime,
                                endTime,                      runTime,                      runT['userT']['num_cores'],
-                               job_num_cores,                runT['userT']['num_nodes'],   runT['userT']['num_threads'],
+                               job_num_cores,                runT['userT']['num_nodes'],   num_threads,
                                runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
                                runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd']))
         run_id   = cursor.lastrowid
