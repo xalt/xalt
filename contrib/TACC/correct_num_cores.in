@@ -166,9 +166,15 @@ def correct_num_cores(args, cursor, acctT):
   @param acctT:    account record
   """
 
+  if (type(arg.start) == type("abc")):
+    start = args.start
+  else:
+    start   = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.start)))
 
-  start   = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(args.start))
-  enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(args.enddate))
+  if (type(arg.enddate) == type("abc")):
+    enddate = args.enddate
+  else:
+    enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
 
   query = "select distinct(job_id) from xalt_run where date >= %s and date < %s"
   cursor.execute(query,(start,end))
