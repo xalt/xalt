@@ -183,6 +183,7 @@ def kill_dups(args, cursor):
       if (args.dryrun):
         print("deleting run_id =",run_id,", num:",num)
       else:
+        print("deleting run_id =",run_id,", num:",num)
         cursor.execute("START TRANSACTION")
         query = "delete from join_run_env where run_id = %s"
         cursor.execute(query,[run_id])
