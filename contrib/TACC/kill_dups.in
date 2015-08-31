@@ -163,7 +163,7 @@ def kill_dups(args, cursor):
   else:
     enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
 
-  query = "select run_uuid, count(*) as num from xalt_run where where date >= %s and date < %s having num > 1 "
+  query = "select run_uuid, count(*) as num from xalt_run where date >= %s and date < %s group by run_uuid having num > 1 "
   cursor.execute(query,(start,enddate))
 
   print("number of dup run_uuid:",cursor.rowcount)
@@ -171,7 +171,8 @@ def kill_dups(args, cursor):
   rowA = cursor.fetchall()
 
   for row in rowA:
-    run_uuid = rowA[0]
+    run_uuid = row[0]
+    num      = row[1]
     query = "select run_id from xalt_run where run_uuid = %s"
     cursor.execute(query, [run_uuid])
     j = 0
@@ -180,14 +181,16 @@ def kill_dups(args, cursor):
       if (j == 1):
         continue
       if (args.dryrun):
-        print("deleting run_id =",run_id)
+        print("deleting run_id =",run_id,", num:",num)
       else:
+        cursor.execute("START TRANSACTION")
         query = "delete from join_run_env where run_id = %s"
         cursor.execute(query,[run_id])
         query = "delete from join_run_object where run_id = %s"
         cursor.execute(query,[run_id])
         query = "delete from xalt_run where run_id = %s"
         cursor.execute(query,[run_id])
+        cursor.execute("COMMIT")
 
 
 
