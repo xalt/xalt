@@ -171,12 +171,13 @@ class XALTdb(object):
       #paranoid conversion:  Protect DB from bad input:
       exit_code = convertToTinyInt(linkT['exit_code'])
       exec_path = linkT['exec_path']
+      link_prg  = linkT['link_program'][:10]
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, %s,%s,%s)"
-      cursor.execute(query, (linkT['uuid'],         linkT['hash_id'],         dateTimeStr, 
-                             linkT['link_program'], linkT['build_user'],      linkT['build_syshost'],
-                             build_epoch,           exit_code,                exec_path))
+      cursor.execute(query, (linkT['uuid'], linkT['hash_id'],     dateTimeStr, 
+                             link_prg,      linkT['build_user'],  linkT['build_syshost'],
+                             build_epoch,   exit_code,            exec_path))
 
       link_id = cursor.lastrowid
 
