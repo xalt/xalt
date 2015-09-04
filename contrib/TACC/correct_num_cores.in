@@ -249,7 +249,7 @@ def correct_num_cores(args, cursor, acctT):
 
     ratio = SUs/acctSUs
     if (SUs > acctSUs):
-      n_update  += 1
+      j_update   = 1
       num_cores  = max(1.0, int(acctSUs/totalT))
 
       if (args.dryrun):
@@ -259,7 +259,7 @@ def correct_num_cores(args, cursor, acctT):
         query = "update xalt_run set num_cores = %s where job_id = %s"
         cursor.execute(query, (num_cores, job_id))
         cursor.execute("COMMIT")
-
+    n_update += j_update
 
   pbar.fini()
   print("updated",n_update,"job_ids")
