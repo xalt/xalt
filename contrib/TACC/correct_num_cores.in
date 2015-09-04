@@ -179,6 +179,9 @@ def correct_num_cores(args, cursor, acctT):
   query = "select distinct(job_id) from xalt_run where date >= %s and date < %s"
   cursor.execute(query,(start,enddate))
 
+  print("(2) Finished finding distinct job_ids")
+  
+
   rowA = cursor.fetchall()
 
   pbar = ProgressBar(maxVal = cursor.rowcount, ttyOnly=False)
@@ -187,21 +190,60 @@ def correct_num_cores(args, cursor, acctT):
   j = 0
   for row in rowA:
     j += 1
+    j_update = 0
     pbar.update(j)
     job_id = row[0]
     entryT = acctT.get(job_id)
     if (job_id == "unknown" or entryT == None):
       continue
 
-    query = "select run_id, run_time, num_cores from xalt_run where job_id = %s"
+    query = "select run_id, run_time, num_cores, account, start_time, end_time from xalt_run where job_id = %s"
     cursor.execute(query, [job_id])
     SUs    = 0.0
     totalT = 0.0
-    for run_id, run_time, num_cores in cursor:
-      run_time  = float(run_time)/3600.0
-      num_cores = float(num_cores)
-      SUs      += run_time*num_cores
-      totalT   += run_time
+    for run_id, run_time, num_cores, account, start_time, end_time in cursor:
+
+      ##################################################################
+      # Step 1: fix account in db from TACC accounting records
+
+      chargeAcct = entryT['chargeAcct']
+      if (chargeAcct != account):
+        j_update = 1
+        if (args.dryrun):
+          print("job_id: %s, account: %s, chargeAcct: %s" % (job_id, account, chargeAcct))
+        else:
+          cursor.execute("START TRANSACTION")
+          query = "update xalt_run set account = %s where run_id = %s"
+          cursor.execute(query, (chargeAcct, run_id))
+          cursor.execute("COMMIT")
+
+      ##################################################################
+      # Step 2: Fix run_time from TACC accounting records using
+      #         accounting end_time
+
+      end_time = float(end_time)
+      acct_end = entryT['end_time']
+      if (end_time < 1.0):
+        start_time  = float(start_time)
+        acct_end    = float(acct_end)
+        j_update    = 1
+        run_time    = max(acct_end - start_time, 0.0)
+        rt_str      = "%.2f" % run_time
+        if (args.dryrun):
+          print("job_id: %s, run_time: %s" % (job_id, rt_str))
+        else:
+          cursor.execute("START TRANSACTION")
+          query = "update xalt_run set run_time = %s where run_id = %s"
+          cursor.execute(query, (rt_str, run_id))
+          cursor.execute("COMMIT")
+      
+      ##################################################################
+      # Step 3: Sum run_time from XALT
+
+      run_hrs   = float(run_time)/3600.0
+      SUs      += run_hrs*float(num_cores)
+      totalT   += run_hrs
+
 
     acctSUs = (float(entryT['end_time']) - float(entryT['start_time']))*float(entryT['num_cores'])/3600.0
 
@@ -279,9 +321,10 @@ def main():
   cursor = conn.cursor()
 
   acctT = read_tacc_acct_records()
+  print("(1) finished reading TACC account records")
 
   correct_num_cores(args, cursor, acctT)
-  
+
 
 if ( __name__ == '__main__'): main()
   
