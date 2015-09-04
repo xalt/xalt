@@ -248,7 +248,7 @@ def correct_num_cores(args, cursor, acctT):
     acctSUs = (float(entryT['end_time']) - float(entryT['start_time']))*float(entryT['num_cores'])/3600.0
 
     ratio = SUs/acctSUs
-    if ((SUs > acctSUs) or (SUs < 0.9*acctSUs)):
+    if ( (totalT > 0.0) and ((SUs > acctSUs) or (SUs < 0.9*acctSUs))):
       j_update   = 1
       num_cores  = max(1.0, int(acctSUs/totalT))
 
