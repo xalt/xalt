@@ -253,7 +253,7 @@ def correct_num_cores(args, cursor, acctT):
       num_cores  = max(1.0, int(acctSUs/totalT))
 
       if (args.dryrun):
-        print("acctSUs: %.2f, Old SUs: %.2f, new SUs: %.2f" % (acctSUs,SUs, num_cores*totalT))
+        print("job_id: %s, acctSUs: %.2f, Old SUs: %.2f, new SUs: %.2f" % (job_id, acctSUs, SUs, num_cores*totalT))
       else:
         cursor.execute("START TRANSACTION")
         query = "update xalt_run set num_cores = %s where job_id = %s"
