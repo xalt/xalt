@@ -47,6 +47,7 @@ def envReport(args, cursor):
   @param acctT:    account record
   """
 
+  resultA = []
   query = "select env_id, env_name from xalt_env_name"
   cursor.execute(query)
 
@@ -55,14 +56,17 @@ def envReport(args, cursor):
 
   idx2name  = {}
   idx2count = {}
+  ja        = 0
+
 
   for row in rowA:
+    ja               += 1
     env_id            = row[0]
     name              = row[1]
     idx2name[env_id]  = name
     idx2count[env_id] = 0
 
-  print("Finish building idx2name")
+  print("Finish building idx2name. num =",ja)
 
 
   query = "select env_id from join_run_env where join_id >= %s and join_id <= %s"
@@ -77,12 +81,13 @@ def envReport(args, cursor):
     env_id = row[0]
     if (env_id in idx2count):
       idx2count[env_id] += 1
+      print("found an idx: ",env_id)
+      return resultA
     
   print("Finish building idx2count")
 
   sortA = sorted(idx2count.items(), key=operator.itemgetter(1), reverse=True)
 
-  resultA = []
   resultA.append(["Env. Name", "Count"])
   resultA.append(["---------", "-----"])
 
