@@ -81,8 +81,6 @@ def envReport(args, cursor):
     env_id = row[0]
     if (env_id in idx2count):
       idx2count[env_id] += 1
-      print("found an idx: ",env_id)
-      return resultA
     
   print("Finish building idx2count")
 
