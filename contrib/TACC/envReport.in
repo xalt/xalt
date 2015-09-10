@@ -40,7 +40,7 @@ def dbConfigFn(dbname):
   return dbname + "_db.conf"
 
 
-def envReport(args, cursor, envT):
+def envReport(args, cursor):
   """
   @param args:     parsed command line arguments
   @param cursor:   database accessor object
