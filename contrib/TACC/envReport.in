@@ -89,8 +89,10 @@ def envReport(args, cursor):
   resultA.append(["Env. Name", "Count"])
   resultA.append(["---------", "-----"])
 
+  num = int(args.num)
+
   for i, item in enumerate(sortA):
-    if (i > args.num):
+    if (i > num):
       break
     env_id = item[0]
     count  = item[1]
