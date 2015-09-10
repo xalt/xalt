@@ -68,12 +68,17 @@ def envReport(args, cursor):
   query = "select env_id from join_run_env where join_id >= %s and join_id <= %s"
   cursor.execute(query,(args.startNum,args.endNum))
 
+
   rowA = cursor.fetchall()
+
+  print("Finish extracting env_id from join_run_env")
 
   for row in rowA:
     env_id = row[0]
-    idx2count[env_id] += 1
+    if (env_id in idx2count):
+      idx2count[env_id] += 1
     
+  print("Finish building idx2count")
 
   sortA = sorted(idx2count.items(), key=operator.itemgetter(1), reverse=True)
 
