@@ -25,9 +25,9 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
     parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
-    parser.add_argument("--start",        dest='startNum',     action="store",       default =  5000000,      help="start number")
-    parser.add_argument("--end",          dest='endNum',       action="store",       default = 25000000,      help="end number")
-    parser.add_argument("--num",          dest='num',          action="store",       default = 500,           help="number of entries to report")
+    parser.add_argument("--start",        dest='startNum',     action="store",       default =  50000000,     help="start number")
+    parser.add_argument("--end",          dest='endNum',       action="store",       default = 100000000,     help="end number")
+    parser.add_argument("--num",          dest='num',          action="store",       default = 50,            help="number of entries to report")
     args = parser.parse_args()
     return args
 
