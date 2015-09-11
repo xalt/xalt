@@ -4,7 +4,7 @@ XALT: blah blah
 
 PURPOSE
 ^^^^^^^
-
+The purpose is to document is to enlighten.
 
 OVERVIEW
 ^^^^^^^^
@@ -21,6 +21,9 @@ If you are new to XALT please read...
 
 Installing XALT
 ^^^^^^^^^^^^^^^
+.. toctree::
+   :maxdepth: 1
+     
    100_install
 
 
@@ -30,7 +33,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-   
-
