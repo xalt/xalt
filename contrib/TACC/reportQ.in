@@ -11,7 +11,7 @@ for i in $(quarter2months $1); do
   fileNm="xalt-${startD%%-01}.json"
 
 
-  monthly_report --start $startD --end $endD > 
+  monthly_report --start $startD --end $endD > $fileNm
   
   
 
