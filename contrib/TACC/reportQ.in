@@ -1,0 +1,19 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+PATH=.:$PATH
+
+
+for i in $(quarter2months $1); do
+  startD=${i%%:*}
+  endD=${i##*:}
+
+  fileNm="xalt-${startD%%-01}.json"
+
+
+  monthly_report --start $startD --end $endD > 
+  
+  
+
+done
+  
