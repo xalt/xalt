@@ -90,7 +90,8 @@ SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
 TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
                      contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
                      contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
-                     contrib/TACC/envReport.in
+                     contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
+                     contrib/TACC/quarter2months.in
 TACC_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(TACC_PKG))
 
 .PHONY:
