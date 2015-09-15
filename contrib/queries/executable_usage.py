@@ -118,5 +118,5 @@ for execname, totalcput, n_jobs, n_users in results:
   sum += totalcput
   print ("%35s %10s %10s %10s" % (execname, totalcput, n_jobs, n_users))
 
-print("sum:", sum, file=sys.stderr)
+print("(M) SUs", sum/1.0e6, file=sys.stderr)
 

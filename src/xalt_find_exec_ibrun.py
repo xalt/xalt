@@ -52,10 +52,30 @@ npT = {
   '-n'                        : "tasks",  
   '-np'                       : "tasks",  
   }
+def mpi_size(): 
+  """
+  PMI_* works for MPICH & IMPI, OMPI_* for openmpi, MV2_* for mvapich2
+  """
 
-def compute_ntasks(t):
-  tasks = t.get("tasks")
-  nodes = t.get("nodes")
+  size = os.environ.get("PMI_SIZE",0)             + \
+         os.environ.get("OMPI_COMM_WORLD_SIZE",0) + \
+         os.environ.get("MV2_COMM_WORLD_SIZE",0)  
+  return size
+         
+def mpi_rank(): 
+  """
+  PMI_* works for MPICH & IMPI, OMPI_* for openmpi, MV2_* for mvapich2
+  """
+
+  rank = os.environ.get("PMI_RANK",0)             + \
+         os.environ.get("OMPI_COMM_WORLD_RANK",0) + \
+         os.environ.get("MV2_COMM_WORLD_RANK",0)
+  return rank
+
+
+def compute_ntasks(t): 
+  tasks = t.get("tasks",os.environ.get("SLURM_TACC_CORES",mpi_size()))
+  nodes = t.get("nodes",os.environ.get("SLURM_TACC_NODES"))
   if (not tasks):
     if (not nodes):
       tasks = 1
