@@ -83,7 +83,7 @@ def main():
 
     # 1
     cursor.execute("""
-        CREATE TABLE `xalt_link` (
+        CREATE TABLE IF NOT EXISTS `xalt_link` (
           `link_id`       int(11)        NOT NULL auto_increment,
           `uuid`          char(36)       NOT NULL,
           `hash_id`       char(40)       NOT NULL,
@@ -102,7 +102,7 @@ def main():
 
     # 2
     cursor.execute("""
-        CREATE TABLE `xalt_object` (
+        CREATE TABLE IF NOT EXISTS `xalt_object` (
           `obj_id`        int(11)         NOT NULL auto_increment,
           `object_path`   varchar(1024)   NOT NULL,
           `syshost`       varchar(64)     NOT NULL,
@@ -120,7 +120,7 @@ def main():
 
     # 3
     cursor.execute("""
-        CREATE TABLE `join_link_object` (
+        CREATE TABLE IF NOT EXISTS `join_link_object` (
           `join_id`       int(11)        NOT NULL auto_increment,
           `obj_id`        int(11)        NOT NULL,
           `link_id`       int(11)        NOT NULL,
@@ -133,7 +133,7 @@ def main():
 
     # 4
     cursor.execute("""
-        CREATE TABLE `xalt_run` (
+        CREATE TABLE IF NOT EXISTS `xalt_run` (
           `run_id`        int(11)        NOT NULL auto_increment,
           `job_id`        char(11)       NOT NULL,
           `run_uuid`      char(36)       NOT NULL,
@@ -171,7 +171,7 @@ def main():
 
     # 5
     cursor.execute("""
-        CREATE TABLE `join_run_object` (
+        CREATE TABLE IF NOT EXISTS `join_run_object` (
           `join_id`       int(11)        NOT NULL auto_increment,
           `obj_id`        int(11)        NOT NULL,
           `run_id`        int(11)        NOT NULL,
@@ -186,7 +186,7 @@ def main():
 
     # 6
     cursor.execute("""
-        CREATE TABLE `xalt_env_name` (
+        CREATE TABLE IF NOT EXISTS `xalt_env_name` (
           `env_id`        int(11)       NOT NULL auto_increment,
           `env_name`      varchar(64)   NOT NULL,
           PRIMARY KEY  (`env_id`),
@@ -197,7 +197,7 @@ def main():
 
     # 7
     cursor.execute("""
-        CREATE TABLE `join_run_env` (
+        CREATE TABLE IF NOT EXISTS `join_run_env` (
           `join_id`       int(11)        NOT NULL auto_increment,
           `env_id`        int(11)        NOT NULL,
           `run_id`        int(11)        NOT NULL,
@@ -211,7 +211,7 @@ def main():
 
     # 8 
     cursor.execute("""
-        CREATE TABLE `xalt_user` (
+        CREATE TABLE IF NOT EXISTS `xalt_user` (
           `usr_id`        int(11)        NOT NULL auto_increment,
           `user`          varchar(32)    NOT NULL,
           `anon_user`     varchar(12)    NOT NULL,
@@ -224,7 +224,7 @@ def main():
 
     # 9 
     cursor.execute("""
-        CREATE TABLE `xalt_account` (
+        CREATE TABLE IF NOT EXISTS `xalt_account` (
           `acct_id`          int(11)        NOT NULL auto_increment,
           `account`          varchar(32)    NOT NULL,
           `anon_user`        varchar(10)    NOT NULL,
@@ -234,6 +234,30 @@ def main():
           INDEX `a_acct`   (`anon_user`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
+    
+    # 10
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `xalt_function` (
+          `func_id`       int(11)         NOT NULL auto_increment,
+          `function_name` varchar(64)     NOT NULL,
+          PRIMARY KEY  (`func_id`),
+          UNIQUE  KEY  `func_name` (`func_name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        """)
+    print("(%d) create xalt_function table" % idx ); idx += 1;
+    
+    # 11
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `join_link_function` (
+          `join_id`       int(11)        NOT NULL auto_increment,
+          `func_id`       int(11)        NOT NULL,
+          `link_id`       int(11)        NOT NULL,
+          PRIMARY KEY (`join_id`),
+          FOREIGN KEY (`func_id`)  REFERENCES `xalt_function`(`func_id`),
+          FOREIGN KEY (`link_id`)  REFERENCES `xalt_link`(`link_id`) 
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1 
+        """)
+    print("(%d) create join_link_function table" % idx); idx += 1
 
     cursor.close()
   except  MySQLdb.Error, e:
