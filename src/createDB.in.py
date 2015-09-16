@@ -234,6 +234,7 @@ def main():
           INDEX `a_acct`   (`anon_user`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
+    print("(%d) create xalt_account table" % idx ); idx += 1;
     
     # 10
     cursor.execute("""
@@ -241,7 +242,7 @@ def main():
           `func_id`       int(11)         NOT NULL auto_increment,
           `function_name` varchar(64)     NOT NULL,
           PRIMARY KEY  (`func_id`),
-          UNIQUE  KEY  `func_name` (`func_name`)
+          UNIQUE  KEY  `function_name` (`function_name`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_function table" % idx ); idx += 1;
