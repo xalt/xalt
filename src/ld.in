@@ -180,7 +180,7 @@ fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
+$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
