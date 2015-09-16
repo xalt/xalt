@@ -39,7 +39,10 @@ parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
 
 def readFunctionList(fn):
-  
+  """
+  read the list of tracked function
+  @param fn:  The file path that contains the function list
+  """
   f     = open(fn,"r")
   lines = f.readlines()
   d     = set()
