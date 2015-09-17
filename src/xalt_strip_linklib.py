@@ -18,33 +18,23 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
+#
+# Git Version: @git@
 
 import os
 import sys
 import json
 from   xalt_global import *
+from   Rmap_XALT   import Rmap
 from   collections import defaultdict
 
-def convert(input):
-    if isinstance(input, dict):
-        return dict([(convert(key), convert(value)) for key, value in input.iteritems()])
-    elif isinstance(input, list):
-        return [convert(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
-    else:
-        return input
-
-# Build the reference list of libraries to remove from link line
-fm = os.path.join(XALT_ETC_DIR, "funcMapLib.json")
-fp = open(fm)
-j = convert(json.load(fp))
+RMapFn = os.path.join(XALT_ETC_DIR,"reverseMapD")
+libmap = Rmap(RMapFn).libMap()
 
 refLibs = set()
-for lib in j.keys():
+for lib in libmap:
   name = lib.replace('.a','').replace('.so','')
   refLibs.add(name)
-
 
 # Remove libraries that are in reference lib
 linkline = sys.argv[1:]
