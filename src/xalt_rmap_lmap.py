@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- python -*-
+#
+# Git Version: @git@
+
 #-----------------------------------------------------------------------
 # XALT: A tool that tracks users jobs and environments on a cluster.
 # Copyright (C) 2013-2015 University of Texas at Austin
@@ -24,8 +29,6 @@
 # to be used with the function tracking feature. The RevereseMapD file
 # needs to already exist in XALT_ETC_DIR.
 #----------------------------------------------------------------------
-#
-# Git Version: @git@
 
 
 import os, sys, json
