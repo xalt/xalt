@@ -1,43 +1,97 @@
-This is a QUICK INSTALL guide for XALT.
+
+##############################################################################
+#                                                                            #
+#                      QUICK INSTALLATION GUIDE FOR XALT                     #
+#                                                                            #
+##############################################################################
+
+
+It is easiest if one installs all of the pre-requisite software (lua and lmod)
+and XALT in the same directory. In this guide, we will call this directory
+XALT_DIR.
+
+0. Set the environment variable XALT_DIR to the desired install location. We
+also need to set LMOD_DIR, XALT_ETC_DIR, and PATH to include the bin/
+directory in the install location.
+
+Bash    : "export XALT_DIR=<installation dir>"
+C-shell " "setenv XALT_DIR <installation dir>"
+
+and similarly:
+$> export XALT_ETC_DIR=$XALT_DIR/etc
+$> export LMOD_DIR=$XALT_DIR
+$> export PATH=$XALT_DIR/bin:$PATH
+
+These guarantee that various components (e.g. lua executable, Lmod
+utilities) are found in these next steps.
+
 
 PRE-REQUISITE: Lua and Lmod
 ----------------------------------------------------------
-1. Install Lua from Lmod's sourceforge 
-(already include luafilesystem & luaposix needed by Lmod)
 
-go to http://sourceforge.net/projects/lmod/files/lua-5.1.4.8.tar.gz/download
+Lua and Lmod is required to associate modulefile with the tracked library, 
+and to track the external functions (subroutines) resolved to the library. 
 
-OR
-wget 
+1. Download Lmod and  Lua version from Lmod's sourceforge page
+(http://sourceforge.net/projects/lmod/), which already include
+"luafilesystem" and "luaposix" required by Lmod. The direct link is:
 
-tar -xf lua-5.1.4.8.tar.gz
-cd lua-5.1.4.8/
-./configure --prefix=$XALT_DIR
-make && make install
+http://sourceforge.net/projects/lmod/files/
 
-2. Install Lmod (Optional, needed if wanted to track module names)
-git clone https://github.com/TACC/Lmod.git
-./configure --prefix=$XALT_DIR
-make install
+(One could use / install Lua from its upstream project, but then one would
+also need to build "luafilesystem" and "luaposix". Using Lua version from
+Lmod sourceforge page is easiest.)
 
 
+2. Un-tar, configure, and install, then add the installation to PATH
 
-INSTALLING XALT
+$> tar -xf lua-<version>.tar.gz
+$> cd lua-<version>/
+$> ./configure --prefix=$XALT_DIR
+$> make && make install
+
+
+3. Download and install Lmod
+
+$> tar -xf Lmod-<version>.tar.bz2
+$> ./configure --prefix=$XALT_DIR
+$> make install
+
+
+XALT INSTALLATION 
 -----------------------------------------------------------
 
-1. Installation
+4. Download XALT, from either its Sourceforge page:
+http://sourceforge.net/projects/xalt/files
 
-git clone https://github.com/Fahey-McLay/xalt.git
+or from its GitHub page
+https://github.com/Fahey-McLay/xalt
 
-cd xalt
-./configure --prefix=$XALT_DIR --with-etcDir=$XALT_DIR/etc
-make 
-make install
+To clone from its GitHub repository:
+$> git clone https://github.com/Fahey-McLay/xalt.git
 
-cd ../bin
-rm ibrun* mpirun mpiexec srun
 
-2. Manual configuration
+5. Change directory to XALT (after untar-ing), configure, then install
+
+$> cd xalt
+$> ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR
+$> make 
+$> make install
+
+
+6. At this point, remove job launchers which are not supported on the system.
+For example, on a Cray system, since the only supported job launcher is
+"aprun", we remove everything else:
+
+$> cd $XALT_DIR/bin
+$> rm ibrun* mpirun mpiexec srun
+
+One may remove different executable depending on what is supported on the
+platform. 
+
+
+7. The next steps involve some manual configuration that varies depending on
+the system. But the basic outline are explained below.
 
 - Modify $XALT_DIR/site/xalt_syshost_default.py
 mv site/xalt_syshost_default.py site/xalt_syshost.py 
