@@ -188,19 +188,20 @@ class XALTdb(object):
       carp("load_xalt_objects()",v)
       
       # store tracked functions
-      for func_name in linkT['function']:
-        query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
-        cursor.execute(query, (func_name))
-        if (cursor.rowcount > 0):
-          func_id = int(cursor.fetchone()[0])
-        else:
-          query = "INSERT INTO xalt_function VALUES (NULL, %s)"
+      if 'function' in linkT:
+        for func_name in linkT['function']:
+          query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
           cursor.execute(query, (func_name))
-          func_id = cursor.lastrowid
-      
-        query = "INSERT INTO join_link_function VALUES(NULL, %s, %s)"
-        cursor.execute(query, (func_id, link_id))
-      
+          if (cursor.rowcount > 0):
+            func_id = int(cursor.fetchone()[0])
+          else:
+            query = "INSERT INTO xalt_function VALUES (NULL, %s)"
+            cursor.execute(query, (func_name))
+            func_id = cursor.lastrowid
+        
+          query = "INSERT INTO join_link_function VALUES(NULL, %s, %s)"
+          cursor.execute(query, (func_id, link_id))
+        
       query = "COMMIT"
       conn.query(query)
       
