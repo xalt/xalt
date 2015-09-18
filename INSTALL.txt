@@ -25,9 +25,14 @@ $> export PATH=$XALT_DIR/bin:$PATH
 These guarantee that various components (e.g. lua executable, Lmod
 utilities) are found in these next steps.
 
+The steps are divided into three sections:
+I.   Pre-requisite steps where we install Lua and Lmod needed by XALT
+II.  XALT installation itself
+III. Post installation step to configure XALT
 
-PRE-REQUISITE: Lua and Lmod
-----------------------------------------------------------
+
+I. PRE-REQUISITE: Lua and Lmod
+------------------------------------------------------------------------------
 
 Lua and Lmod is required to associate modulefile with the tracked library, 
 and to track the external functions (subroutines) resolved to the library. 
@@ -58,8 +63,8 @@ $> ./configure --prefix=$XALT_DIR
 $> make install
 
 
-XALT INSTALLATION 
------------------------------------------------------------
+II. XALT INSTALLATION 
+------------------------------------------------------------------------------
 
 4. Download XALT, from either its Sourceforge page:
 http://sourceforge.net/projects/xalt/files
@@ -87,21 +92,60 @@ $> cd $XALT_DIR/bin
 $> rm ibrun* mpirun mpiexec srun
 
 One may remove different executable depending on what is supported on the
-platform. 
+platform.
 
 
-7. The next steps involve some manual configuration that varies depending on
-the system. But the basic outline are explained below.
+7. Build file for ReverseMap and libmap. ReverseMap associates libraries 
+/ objectfiles with modulefile that specifies them. Libmap lists the 
+library files (.a and .so) whose call to their function will be tracked by
+/ XALT. ReverseMap and Libmap are stored in the same file.
 
-- Modify $XALT_DIR/site/xalt_syshost_default.py
-mv site/xalt_syshost_default.py site/xalt_syshost.py 
+On cluster this is often as simple as:
+$> $LMOD_DIR/lmod/lmod/libexec/spider -o jsonReverseMapT $MODULEPATH \
+   > ${XALT_ETC_DIR}/reverseMapD/jsonReverseMapT.json
 
-- Modify $XALT_DIR/site/xalt_find_exec_aprun.py (likely not necessary)
+It is important to use the same filename and directory "reverseMapD" as they
+are used by convention in XALT.
 
-- Create modulefile
+On a Cray (XC, XE, XK), this is a bit more involved, so a script has been
+provided under contrib/ directory in XALT source distribution to make this
+easier. One can simply use this script and run:
 
-- Create DB config file, and put them in XALT_ETC_DIR
+$> xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
 
-python sbin/conf_create.py --> xalt_db.conf
+Once the ReverseMap file is built, add libmap to is using as:
+$> $XALT_DIR/sbin/xalt_rmap_lmap.py 
 
-python sbin/createDB.py (may need to be run from $XALT_ETC_DIR)
+
+8. Create file to hold database credentials
+$> cd $XALT_ETC_DIR
+$> python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
+
+9. Create database and tables for XALT (need to be run from $XALT_ETC_DIR)
+$> cd $XALT_ETC_DIR
+$> python $XALT_DIR/sbin/createDB.py
+In this step, make sure that the credential you created in step 8 has the
+necessary privileges to create tables, etc. If you want the database
+credential in general to be more restrictive, then redo step 8 with the less
+privilege account after this step. 
+
+
+III. POST INSTALLATION STEPS
+---------------------------------------------------------------------
+
+The next steps involve some manual configuration that varies depending on
+the system, but the basic outline are explained below. 
+are located in $XALT_DIR/site
+
+8. Modify "$XALT_DIR/site/xalt_syshost_default.py"
+The idea here is for XALT to get your syshost name. The included file can be
+used as example. The command "python $XALT_DIR/site/xalt_syshost_default.py"
+should return the name of the system as you want it recorded in XALT. 
+
+9. Modify "$XALT_DIR/site/xalt_find_exec_<launcher>.py" if necessary. If your
+MPI job launcher is already supported by XALT, most likely you do not need to 
+do anything here. 
+
+10. Create modulefile for XALT if you use modulefile environment. An example
+of a basic modulefile is provided int the source distribution: 
+xalt/contrib/xalt_modulefile
