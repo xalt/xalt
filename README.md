@@ -15,9 +15,9 @@ research. Also, by tracking shared libraries required at link time,
 and then again at run time, an administrator can track the use of the
 shared libraries by their user community and detect when changes have
 occurred over time that might point to performance differences or a
-hacked SSL library. 
+hacked SSL library.
 
-##Creators
+## Creators
 Dr. Mark Fahey  
 Dr. Robert McLay
 
@@ -30,21 +30,21 @@ collects, high-end computer administrators can answer our questons by
 tracking continuous job-level information to learn what products
 researchers do and do not need.  Drilling down to data driven usage
 statistics helps stakeholders conduct business in a more efficient,
-effective, and systematic way. 
+effective, and systematic way.
 
 ## Installation and Use of XALT
 
-For quick installation instructions, see [INSTALL.txt](INSTALL.txt).
+For quick installation instructions, see [QUICK_INSTALL_GUIDE.TXT](QUICK_INSTALL_GUIDE.TXT).
 
 [The XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf) discusses the
 prerequisites for installation, decisions and considerations regarding
 database setup, XALT testing, other transmission methods, examples,
-and knowns issues. 
+and knowns issues.
 
 [The XALT Users Manual-0.5](doc/XALTUsersManual-0.5.pdf) describes how
 XALT is used in practice with further discusssion of database options,
 data transmission, creation of reverse maps, and examples with
-accompanying results for database queries. 
+accompanying results for database queries.
 
 
 ## Known Issues and Current Solutions
@@ -54,11 +54,11 @@ with the job launcher rather than a wrapper.  Two solutions currently
 exist: unload XALT when Totalview (or similar tools) are loaded OR
 edit the debugger wrapper to interact with the renamed job
 launcher. With either solution, Totalview runs will not show up in the
-XALT database. 
+XALT database.
 
 2. Because the Cray compile wrapper uses a binutils linker, the Cray
 environment variable ALT_LINKER in the XALT modulefile must be set to
-point to the XALT wrapper. 
+point to the XALT wrapper.
 
 Known issues are detailed in the [XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf).
 
@@ -74,9 +74,13 @@ Agrawal, K., Fahey, M. R., McLay, R., & James, D. (2014). User Environment Track
 As part of the creation of XALT, data collected at the Texas Advanced
 Computer Center using XALT will be released for public use.
 Information about the dataset and links to the data may be found in
-the University of Texas TexasScholarWorks repository: 
+the University of Texas TexasScholarWorks repository:
 
-Expected data of publication is September 2015.
+  XALT data: http://web.corral.tacc.utexas.edu/XALT/  
+  metadata: http://repositories.lib.utexas.edu/handle/2152/30535
+
+To cite XALT data, please use the following:   
+  McLay, Robert; Fahey, Mark R.; (2015): Understanding the Software Needs of High End Computer Users with XALT; Texas Advanced Computing Center. http://dx.doi.org/10.15781/T2PP4P
 
 ## Copyright
 
