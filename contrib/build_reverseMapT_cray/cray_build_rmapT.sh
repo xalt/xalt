@@ -34,7 +34,7 @@
   
   echo "RmapDir=${RmapDir}"
 
-  PrgEnvA=("PrgEnv-cray"  "PrgEnv-gnu" "PrgEnv-intel")
+  PrgEnvA=("PrgEnv-cray" "PrgEnv-gnu" "PrgEnv-intel" "PrgEnv-pgi")
 
   #########################################################################
   # must define the module command and $LMOD_DIR:
