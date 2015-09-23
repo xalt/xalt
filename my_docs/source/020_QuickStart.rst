@@ -17,9 +17,30 @@ XALT may be downloaded from either sourceforge or github:
 
   http://github.com/Fahey-McLay/xalt/
 
-Decisions: Installation Location and the Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Decisions: Installation Location, Database(s), Intercepting
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**Installation Location and the Database**
+
+Choose an installation directory, the directory will be referred to as XALT_DIR
+
+**Database Decisions**
+
+For XALT on multiple machines, you need to decide if you want to have one database or multiple databases.
+
+Either mode is supported
+
+**Lmod/ReverseMap**
+
+Lmod per machine etc
+
+**Intercepting**
+
+code launchers/linkers
+
+**etc dir**
+
+location for new files
 
 Next Steps - Testing
 ^^^^^^^^^^^^^^^^^^^^
-  :doc:`040_testing`
+  :doc:`010_installation`

@@ -1,2 +1,2 @@
-User Guide for XALT
+User Manual for XALT
 ===================

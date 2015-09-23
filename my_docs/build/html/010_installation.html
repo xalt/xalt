@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quick Start Guide &mdash; XALT 1.0 documentation</title>
+    <title>Installation &mdash; XALT 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,9 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="XALT 1.0 documentation" href="index.html" />
-    <link rel="next" title="FAQ" href="030_FAQ.html" />
-    <link rel="prev" title="User Guide for XALT" href="010_user.html" /> 
+    <link rel="top" title="XALT 1.0 documentation" href="index.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -34,12 +32,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="030_FAQ.html" title="FAQ"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="010_user.html" title="User Guide for XALT"
-             accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,16 +41,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="quick-start-guide">
-<h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="prequisites">
-<h2>Prequisites<a class="headerlink" href="#prequisites" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Python 2.6 or later</li>
-<li>Python MySQLDb module</li>
-<li>Servers: MySQL with proper IP ranges opened for client machines</li>
-</ul>
-</div>
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="install-xalt">
 <h2>Install XALT<a class="headerlink" href="#install-xalt" title="Permalink to this headline">¶</a></h2>
 <p>XALT may be downloaded from either sourceforge or github:</p>
@@ -67,24 +51,26 @@
 <p><a class="reference external" href="http://github.com/Fahey-McLay/xalt/">http://github.com/Fahey-McLay/xalt/</a></p>
 </div></blockquote>
 </div>
-<div class="section" id="decisions-installation-location-database-s-intercepting">
-<h2>Decisions: Installation Location, Database(s), Intercepting<a class="headerlink" href="#decisions-installation-location-database-s-intercepting" title="Permalink to this headline">¶</a></h2>
-<p><strong>Installation Location and the Database</strong></p>
-<p>Choose an installation directory, the directory will be referred to as XALT_DIR</p>
-<p><strong>Database Decisions</strong></p>
-<p>For XALT on multiple machines, you need to decide if you want to have one database or multiple databases.</p>
-<p>Either mode is supported</p>
-<p><strong>Lmod/ReverseMap</strong></p>
-<p>Lmod per machine etc</p>
-<p><strong>Intercepting</strong></p>
-<p>code launchers/linkers</p>
-<p><strong>etc dir</strong></p>
-<p>location for new files</p>
+<div class="section" id="lmod-installation">
+<h2>Lmod Installation<a class="headerlink" href="#lmod-installation" title="Permalink to this headline">¶</a></h2>
+<p>Get Lmod-5.8rc2 or greater from:</p>
+<div class="highlight-python"><div class="highlight"><pre>git clone /Lmod.git
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>download Lmod-&lt;ver&gt;.tar.gz from github.zod
+</pre></div>
+</div>
+</div>
+<div class="section" id="automated-installation-components">
+<h2>Automated Installation Components<a class="headerlink" href="#automated-installation-components" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="manual-installation-components">
+<h2>Manual Installation Components<a class="headerlink" href="#manual-installation-components" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="next-steps-testing">
 <h2>Next Steps - Testing<a class="headerlink" href="#next-steps-testing" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><a class="reference internal" href="010_installation.html"><em>Installation</em></a></div></blockquote>
+<div><a class="reference internal" href="040_testing.html"><em>Testing</em></a></div></blockquote>
 </div>
 </div>
 
@@ -96,25 +82,20 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Quick Start Guide</a><ul>
-<li><a class="reference internal" href="#prequisites">Prequisites</a></li>
+<li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#install-xalt">Install XALT</a></li>
-<li><a class="reference internal" href="#decisions-installation-location-database-s-intercepting">Decisions: Installation Location, Database(s), Intercepting</a></li>
+<li><a class="reference internal" href="#lmod-installation">Lmod Installation</a></li>
+<li><a class="reference internal" href="#automated-installation-components">Automated Installation Components</a></li>
+<li><a class="reference internal" href="#manual-installation-components">Manual Installation Components</a></li>
 <li><a class="reference internal" href="#next-steps-testing">Next Steps - Testing</a></li>
 </ul>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="010_user.html"
-                        title="previous chapter">User Guide for XALT</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="030_FAQ.html"
-                        title="next chapter">FAQ</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/020_QuickStart.txt"
+      <li><a href="_sources/010_installation.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -141,12 +122,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="030_FAQ.html" title="FAQ"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="010_user.html" title="User Guide for XALT"
-             >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
