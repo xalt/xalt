@@ -107,7 +107,7 @@ todo_include_todos = False
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
+# a list of builtin themes. other option: sphinx_rtd_theme
 html_theme = 'nature'
 
 # Theme options are theme-specific and customize the look and feel of a theme

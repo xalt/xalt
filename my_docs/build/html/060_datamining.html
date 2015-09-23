@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Mining &mdash; XALT 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="XALT 1.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-mining">
+<h1>Data Mining<a class="headerlink" href="#data-mining" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-file-usage">
+<h2>Module File Usage<a class="headerlink" href="#module-file-usage" title="Permalink to this headline">¶</a></h2>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre>mysql&gt;
+SELECT xalt_object.module_name,
+count(xalt_run.date) AS Jobs,
+ROUND(SUM(run_time*num_cores)/3600) as TotalSUs FROM xalt_run,
+xalt_link, join_link_object, xalt_object
+WHERE xalt_run.syshost=&#39;darter’
+AND xalt_object.module_name is NOT NULL
+AND xalt_run.uuid = xalt_link.uuid
+AND xalt_link.link_id = join_link_object.link_id
+AND join_link_object.obj_id = xalt_object.obj_id
+AND xalt_run.date &gt;= &#39;2014-11-01’ AND xalt_run.date &lt;= &#39;2014-11-09’
+GROUP BY xalt_object.module_name ORDER BY Jobs DESC;
+</pre></div>
+</div>
+<p>Result</p>
+<a class="reference internal image-reference" href="_static/mysql1results.png"><img alt="alternate text" class="align-left" src="_static/mysql1results.png" style="width: 365px; height: 253px;" /></a>
+<img alt="_static/xaltinfo.jpg" src="_static/xaltinfo.jpg" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Mining</a><ul>
+<li><a class="reference internal" href="#module-file-usage">Module File Usage</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/060_datamining.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Robert McLay.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
