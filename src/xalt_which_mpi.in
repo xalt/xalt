@@ -85,19 +85,22 @@ findName()
      mpiN="openmpi"
      return
   fi
-
+  
+  
   tracing_msg "Testing for OpenMPI/IMPI"
-  mpiVerStr=$(mpiexec --version)
-  if [ $? = 0 ]; then
-    mpiStr=$(echo $mpiVerStr | head -n 1)
-    if [[ $mpiStr =~ Intel ]]; then
-      mpiN="impi"
-      mpiV=`$EXPR "$mpiStr" : '.*Version\s\+\([^ ]\+\)\s'`
-    else
-      mpiN="openmpi"
-      mpiV=`$EXPR "$mpiStr" : '.*)\s\+\(.*\)'`
+  if type -p mpiexec ; then
+    mpiVerStr=$(mpiexec --version)
+    if [ $? = 0 ]; then
+      mpiStr=$(echo $mpiVerStr | head -n 1)
+      if [[ $mpiStr =~ Intel ]]; then
+        mpiN="impi"
+        mpiV=`$EXPR "$mpiStr" : '.*Version\s\+\([^ ]\+\)\s'`
+      else
+        mpiN="openmpi"
+        mpiV=`$EXPR "$mpiStr" : '.*)\s\+\(.*\)'`
+      fi
+      return
     fi
-    return
   fi
 
   for i in mpiexec mpiexec.hydra ; do
@@ -107,11 +110,13 @@ findName()
   done
   
   tracing_msg "Testing for $MPIEXEC -info"
-  var=$($MPIEXEC -info)
-  if [ $? = 0 ]; then
-    mpiN="mvapich2"
-    mpiV=`$EXPR "$var" : '.*Version:\s\s*\([^ ]*\) '`
-    return
+  if type -p $MPIEXEC ; then
+    var=$($MPIEXEC -info)
+    if [ $? = 0 ]; then
+      mpiN="mvapich2"
+      mpiV=`$EXPR "$var" : '.*Version:\s\s*\([^ ]*\) '`
+      return
+    fi
   fi
 
   tracing_msg "Testing for $mpicc -v"
