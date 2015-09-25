@@ -81,7 +81,7 @@ the University of Texas TexasScholarWorks repository:
 
 To cite XALT data, please use the following:   
 
-McLay, Robert; Fahey, Mark R.; (2015): Understanding the Software Needs of High End Computer Users with XALT; Texas Advanced Computing Center. http://dx.doi.org/10.15781/T2PP4P
+McLay, Robert & Fahey, Mark R. (2015). Understanding the Software Needs of High End Computer Users with XALT. Texas Advanced Computing Center. http://dx.doi.org/10.15781/T2PP4P
 
 ## Copyright
 

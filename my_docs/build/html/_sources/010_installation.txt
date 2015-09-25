@@ -20,6 +20,9 @@ Get Lmod-5.8rc2 or greater from::
 
   download Lmod-<ver>.tar.gz from github.zod
 
+Installation instructions and documentation for Lmod:
+  http://lmod.readthedocs.org/
+
 Automated Installation Components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
