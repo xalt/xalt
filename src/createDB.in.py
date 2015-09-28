@@ -263,7 +263,7 @@ def main():
     # 12 
     cursor.execute("""
         ALTER TABLE `join_link_function` 
-         ADD UNIQUE `unique_func_link_id` ( `func_id`, `link_id` );
+         ADD UNIQUE `unique_func_link_id` ( `func_id`, `link_id` )
         """)
     print("(%d) create unique key on join_link_function table" % idx); idx += 1
 
