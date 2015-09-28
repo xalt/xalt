@@ -199,8 +199,9 @@ class XALTdb(object):
             cursor.execute(query, (func_name))
             func_id = cursor.lastrowid
         
-          query = "INSERT INTO join_link_function VALUES(NULL, %s, %s)"
-          cursor.execute(query, (func_id, link_id))
+          query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
+                       ON DUPLICATE KEY UPDATE func_id = %s , link_id = %s"
+          cursor.execute(query, (func_id, link_id, func_id, link_id))
         
       query = "COMMIT"
       conn.query(query)
