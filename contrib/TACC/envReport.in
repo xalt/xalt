@@ -2,7 +2,6 @@
 # -*- python -*-
 
 from __future__ import print_function, division
-from __future__ import print_function
 import os, sys, re, time, datetime, argparse, ConfigParser, base64, MySQLdb, operator
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
