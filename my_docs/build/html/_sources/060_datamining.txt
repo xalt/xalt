@@ -20,6 +20,8 @@ Example::
 
 Result
 
+How to put in images - reference
+
 .. image:: _static/mysql1results.png
     :width: 365px
     :align: left
