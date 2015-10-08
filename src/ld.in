@@ -155,7 +155,8 @@ export PYTHONPATH=$py_path_orig
 
 $MY_CMD `$MY_PYTHON $XALT_LIBEXEC_DIR/xalt_strip_linklib.py "${argA[@]}"` \
   --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
-  
+
+touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
 cat $FUNCRAW | while read line 
 do
         getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
