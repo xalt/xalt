@@ -63,10 +63,12 @@ class Rmap(object):
         tsMtime = os.stat(tsFn).st_mtime
         if (rmpMtime >= tsMtime):
           self.__rmapT  = t['reverseMapT']
-          self.__libmap = t['xlibmap']
+          if 'xlibmap' in t:
+            self.__libmap = t['xlibmap']
       else:
         self.__rmapT = t['reverseMapT']
-        self.__libmap = t['xlibmap']
+        if 'xlibmap' in t:
+          self.__libmap = t['xlibmap']
         
 
   def reverseMapT(self):
