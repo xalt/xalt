@@ -17,7 +17,7 @@ shared libraries by their user community and detect when changes have
 occurred over time that might point to performance differences or a
 hacked SSL library.
 
-##Creators
+## Creators
 Dr. Mark Fahey  
 Dr. Robert McLay
 
@@ -34,7 +34,7 @@ effective, and systematic way.
 
 ## Installation and Use of XALT
 
-For quick installation instructions, see [INSTALL.txt](INSTALL.txt).
+For quick installation instructions, see [QUICK_INSTALL_GUIDE.TXT](QUICK_INSTALL_GUIDE.TXT).
 
 [The XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf) discusses the
 prerequisites for installation, decisions and considerations regarding
