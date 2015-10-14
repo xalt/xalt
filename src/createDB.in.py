@@ -240,7 +240,7 @@ def main():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_function` (
           `func_id`       int(11)         NOT NULL auto_increment,
-          `function_name` varchar(64)     NOT NULL,
+          `function_name` varchar(255)    NOT NULL,
           PRIMARY KEY  (`func_id`),
           UNIQUE  KEY  `function_name` (`function_name`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
