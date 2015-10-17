@@ -41,7 +41,8 @@ class Rmap(object):
     
     @param rmapD: The reverse map directory
     """
-    self.__rmapT = {}
+    self.__rmapT  = {}
+    self.__libmap = {}
     if (not rmapD):
       return
     rmapA   = rmapD.split(':')
@@ -61,9 +62,13 @@ class Rmap(object):
       if (tsFn):
         tsMtime = os.stat(tsFn).st_mtime
         if (rmpMtime >= tsMtime):
-          self.__rmapT = t['reverseMapT']
+          self.__rmapT  = t['reverseMapT']
+          if 'xlibmap' in t:
+            self.__libmap = t['xlibmap']
       else:
         self.__rmapT = t['reverseMapT']
+        if 'xlibmap' in t:
+          self.__libmap = t['xlibmap']
         
 
   def reverseMapT(self):
@@ -74,4 +79,10 @@ class Rmap(object):
     """
     return self.__rmapT 
 
+  def libMap(self):
+    """
+    return the library map table found by the ctor.
 
+    @return reverseMapT 
+    """
+    return self.__libmap

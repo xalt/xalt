@@ -186,8 +186,26 @@ class XALTdb(object):
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
+      
+      # store tracked functions
+      if 'function' in linkT:
+        for func_name in linkT['function']:
+          query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
+          cursor.execute(query, (func_name))
+          if (cursor.rowcount > 0):
+            func_id = int(cursor.fetchone()[0])
+          else:
+            query = "INSERT INTO xalt_function VALUES (NULL, %s)"
+            cursor.execute(query, (func_name))
+            func_id = cursor.lastrowid
+        
+          query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
+                       ON DUPLICATE KEY UPDATE func_id = %s, link_id = %s"
+          cursor.execute(query, (func_id, link_id, func_id, link_id))
+        
       query = "COMMIT"
       conn.query(query)
+      
       conn.close()
 
     except Exception as e:

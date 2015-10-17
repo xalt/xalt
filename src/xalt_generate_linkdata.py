@@ -38,6 +38,19 @@ logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
 
+def readFunctionList(fn):
+  """
+  read the list of tracked function
+  @param fn:  The file path that contains the function list
+  """
+  f     = open(fn,"r")
+  lines = f.readlines()
+  d     = set()
+  for s in lines:
+    d.add(s.strip())
+  
+  return list(d)
+    
 def cleanup(xaltobj, fn):
   """
   cleanup the output of ld --trace 
@@ -93,7 +106,7 @@ def cleanup(xaltobj, fn):
     sB.append([lib, v])
 
   return sB
-    
+  
 def main():
   """
   Built a json output of the ld --trace data.
@@ -119,8 +132,9 @@ def main():
     execname    = sys.argv[ 5]
     xaltobj     = sys.argv[ 6]
     build_epoch = sys.argv[ 7]
-    linklineFn  = sys.argv[ 8]
-    resultFn    = sys.argv[ 9]
+    funclistFn  = sys.argv[ 8]
+    linklineFn  = sys.argv[ 9]
+    resultFn    = sys.argv[10]
 
     if (execname.find("conftest") != -1):
       return 1
@@ -129,7 +143,9 @@ def main():
     if (hash_line.find("No such file or directory") != -1):
       return 1
     hash_id     = hash_line.split()[0]
-
+    
+    sB = readFunctionList(funclistFn)
+    
     # Step one clean up linkline data
     sA = cleanup(xaltobj, linklineFn)
   
@@ -143,6 +159,7 @@ def main():
     resultT['hash_id']       = hash_id
     resultT['wd']            = wd
     resultT['build_syshost'] = syshost
+    resultT['function']      = sB
     resultT['linkA']         = sA
     key                      = "link_" + uuid
     

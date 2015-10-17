@@ -127,6 +127,8 @@ LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
+FUNCRAW=$WRKDIR/funcraw.txt
+FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ ! -d $WRKDIR ]; then
@@ -151,6 +153,18 @@ py_home_xalt=$PYTHONHOME
 export PYTHONPATH=$py_path_orig
 [ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
 
+$MY_CMD `$MY_PYTHON $XALT_LIBEXEC_DIR/xalt_strip_linklib.py "${argA[@]}"` \
+  --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+
+touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
+cat $FUNCRAW | while read line 
+do
+        getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
+        echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
+done
+
+tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
+
 tracing_msg $MY_CMD "${argA[@]}"
 
 $MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
@@ -167,7 +181,7 @@ fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$LINKLINE_OUT" "$RESULT"
+$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
