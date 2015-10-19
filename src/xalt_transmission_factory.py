@@ -141,10 +141,10 @@ class Syslog(XALT_transmission_factory):
     #b      = json.dumps(resultT)
     jsonStr  = json.dumps(resultT)
     cmprsStr = zlib.compress(jsonStr) 
-    b        = base64.b64encode(cmprsStr)
+    b64      = base64.b64encode(cmprsStr)
 
     blkSz    = 2048
-    nBlks    = (len(b) - 1)//blkSz + 1
+    nBlks    = (len(b64) - 1)//blkSz + 1
     istart   = 0
     iend     = blkSz
     for i in xrange(nBlks):
@@ -161,7 +161,7 @@ class Syslog(XALT_transmission_factory):
       sA.append(" nb:")
       sA.append(str(nBlks))
       sA.append(" value:")
-      sA.append(b[istart:iend])
+      sA.append(b64[istart:iend])
       istart = iend
       iend   = istart + blkSz
       os.system("".join(sA))
