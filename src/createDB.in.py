@@ -84,16 +84,16 @@ def main():
     # 1
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_link` (
-          `link_id`       int(11)        NOT NULL auto_increment,
-          `uuid`          char(36)       NOT NULL,
-          `hash_id`       char(40)       NOT NULL,
-          `date`          DATETIME       NOT NULL,
-          `link_program`  varchar(10)    NOT NULL,
-          `build_user`    varchar(64)    NOT NULL,
-          `build_syshost` varchar(64)    NOT NULL,
-          `build_epoch`   double         NOT NULL,
-          `exit_code`     tinyint(4)     NOT NULL,
-          `exec_path`     varchar(1024)  NOT NULL,
+          `link_id`       int(11)   unsigned NOT NULL auto_increment,
+          `uuid`          char(36)           NOT NULL,
+          `hash_id`       char(40)           NOT NULL,
+          `date`          DATETIME           NOT NULL,
+          `link_program`  varchar(10)        NOT NULL,
+          `build_user`    varchar(64)        NOT NULL,
+          `build_syshost` varchar(64)        NOT NULL,
+          `build_epoch`   double             NOT NULL,
+          `exit_code`     tinyint(4)         NOT NULL,
+          `exec_path`     varchar(1024)      NOT NULL,
           PRIMARY KEY  (`link_id`),
           UNIQUE  KEY  `uuid` (`uuid`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
@@ -103,13 +103,13 @@ def main():
     # 2
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_object` (
-          `obj_id`        int(11)         NOT NULL auto_increment,
-          `object_path`   varchar(1024)   NOT NULL,
-          `syshost`       varchar(64)     NOT NULL,
-          `hash_id`       char(40)        NOT NULL,
-          `module_name`   varchar(64)             ,  
-          `timestamp`     TIMESTAMP               ,
-          `lib_type`      char(2)         NOT NULL,
+          `obj_id`        int(11)   unsigned NOT NULL auto_increment,
+          `object_path`   varchar(1024)      NOT NULL,
+          `syshost`       varchar(64)        NOT NULL,
+          `hash_id`       char(40)           NOT NULL,
+          `module_name`   varchar(64)                ,  
+          `timestamp`     TIMESTAMP                  ,
+          `lib_type`      char(2)            NOT NULL,
           PRIMARY KEY  (`obj_id`),
           INDEX  `index_hash_id` (`hash_id`),
           INDEX  `thekey` (`object_path`(128), `hash_id`, `syshost`)
@@ -121,9 +121,9 @@ def main():
     # 3
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `join_link_object` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `obj_id`        int(11)        NOT NULL,
-          `link_id`       int(11)        NOT NULL,
+          `join_id`       int(11) unsigned   NOT NULL auto_increment,
+          `obj_id`        int(11) unsigned   NOT NULL,
+          `link_id`       int(11) unsigned   NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`link_id`) REFERENCES `xalt_link`(`link_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
@@ -134,36 +134,36 @@ def main():
     # 4
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_run` (
-          `run_id`        int(11)        NOT NULL auto_increment,
-          `job_id`        char(11)       NOT NULL,
-          `run_uuid`      char(36)       NOT NULL,
-          `date`          datetime       NOT NULL,
+          `run_id`        int(11)     unsigned NOT NULL auto_increment,
+          `job_id`        char(11)             NOT NULL,
+          `run_uuid`      char(36)             NOT NULL,
+          `date`          datetime             NOT NULL,
 
-          `syshost`       varchar(64)    NOT NULL,
-          `uuid`          char(36)               ,
-          `hash_id`       char(40)       NOT NULL,
+          `syshost`       varchar(64)          NOT NULL,
+          `uuid`          char(36)                     ,
+          `hash_id`       char(40)             NOT NULL,
 
-          `account`       varchar(20)    NOT NULL,
-          `exec_type`     char(7)        NOT NULL,
-          `start_time`    double         NOT NULL,
+          `account`       varchar(20)          NOT NULL,
+          `exec_type`     char(7)              NOT NULL,
+          `start_time`    double               NOT NULL,
 
-          `end_time`      double         NOT NULL,
-          `run_time`      double         NOT NULL,
-          `num_cores`     int(11)        NOT NULL,
-          `job_num_cores` int(11)        NOT NULL,
+          `end_time`      double               NOT NULL,
+          `run_time`      double               NOT NULL,
+          `num_cores`     int(11)     unsigned NOT NULL,
+          `job_num_cores` int(11)     unsigned NOT NULL,
 
-          `num_nodes`     int(11)        NOT NULL,
-          `num_threads`   tinyint(4)     NOT NULL,
-          `queue`         varchar(32)    NOT NULL,
-          `exit_code`     tinyint(4)     NOT NULL,
+          `num_nodes`     int(11)     unsigned NOT NULL,
+          `num_threads`   smallint(6) unsigned NOT NULL,
+          `queue`         varchar(32)          NOT NULL,
+          `exit_code`     smallint(6)          NOT NULL,
 
-          `user`          varchar(32)    NOT NULL,
-          `exec_path`     varchar(1024)  NOT NULL,
-          `module_name`   varchar(64)            ,
-          `cwd`           varchar(1024)  NOT NULL,
-          PRIMARY KEY            (`run_id`),
-          INDEX  `index_run_uuid` (`run_uuid`),
-          INDEX `thekey` (`job_id`, `syshost`)
+          `user`          varchar(32)          NOT NULL,
+          `exec_path`     varchar(1024)        NOT NULL,
+          `module_name`   varchar(64)                  ,
+          `cwd`           varchar(1024)        NOT NULL,
+          PRIMARY KEY             (`run_id`   ),
+          INDEX  `index_run_uuid` (`run_uuid` ),
+          INDEX `thekey` (`job_id`, `syshost` )
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_run table" % idx)
@@ -172,9 +172,9 @@ def main():
     # 5
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `join_run_object` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `obj_id`        int(11)        NOT NULL,
-          `run_id`        int(11)        NOT NULL,
+          `join_id`       int(11)      unsigned  NOT NULL auto_increment,
+          `obj_id`        int(11)      unsigned  NOT NULL,
+          `run_id`        int(11)      unsigned  NOT NULL,
 
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`),
@@ -187,8 +187,8 @@ def main():
     # 6
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_env_name` (
-          `env_id`        int(11)       NOT NULL auto_increment,
-          `env_name`      varchar(64)   NOT NULL,
+          `env_id`        int(20) unsigned  NOT NULL auto_increment,
+          `env_name`      varchar(64)       NOT NULL,
           PRIMARY KEY  (`env_id`),
           UNIQUE  KEY  `env_name` (`env_name`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
@@ -198,10 +198,10 @@ def main():
     # 7
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `join_run_env` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `env_id`        int(11)        NOT NULL,
-          `run_id`        int(11)        NOT NULL,
-          `env_value`     blob           NOT NULL,
+          `join_id`       bigint(20) unsigned   NOT NULL auto_increment,
+          `env_id`        int(11)    unsigned   NOT NULL,
+          `run_id`        int(11)    unsigned   NOT NULL,
+          `env_value`     blob                  NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`) 
@@ -212,9 +212,9 @@ def main():
     # 8 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_user` (
-          `usr_id`        int(11)        NOT NULL auto_increment,
-          `user`          varchar(32)    NOT NULL,
-          `anon_user`     varchar(12)    NOT NULL,
+          `usr_id`        int(11)     unsigned NOT NULL auto_increment,
+          `user`          varchar(32)          NOT NULL,
+          `anon_user`     varchar(12)          NOT NULL,
           PRIMARY KEY (`usr_id`),
           INDEX `the_user` (`user`),
           INDEX `a_user`   (`anon_user`)
@@ -225,10 +225,10 @@ def main():
     # 9 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_account` (
-          `acct_id`          int(11)        NOT NULL auto_increment,
-          `account`          varchar(32)    NOT NULL,
-          `anon_user`        varchar(10)    NOT NULL,
-          `field_of_science` varchar(64)    NOT NULL,
+          `acct_id`          int(11)      unsigned NOT NULL auto_increment,
+          `account`          varchar(32)           NOT NULL,
+          `anon_user`        varchar(10)           NOT NULL,
+          `field_of_science` varchar(64)           NOT NULL,
           PRIMARY KEY (`acct_id`),
           INDEX `the_account` (`account`),
           INDEX `a_acct`   (`anon_user`)
@@ -239,8 +239,8 @@ def main():
     # 10
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_function` (
-          `func_id`       int(11)         NOT NULL auto_increment,
-          `function_name` varchar(255)    NOT NULL,
+          `func_id`       int(11)        unsigned NOT NULL auto_increment,
+          `function_name` varchar(255)            NOT NULL,
           PRIMARY KEY  (`func_id`),
           UNIQUE  KEY  `function_name` (`function_name`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
@@ -250,9 +250,9 @@ def main():
     # 11
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `join_link_function` (
-          `join_id`       int(11)        NOT NULL auto_increment,
-          `func_id`       int(11)        NOT NULL,
-          `link_id`       int(11)        NOT NULL,
+          `join_id`       int(11)       unsigned NOT NULL auto_increment,
+          `func_id`       int(11)       unsigned NOT NULL,
+          `link_id`       int(11)       unsigned NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`func_id`)  REFERENCES `xalt_function`(`func_id`),
           FOREIGN KEY (`link_id`)  REFERENCES `xalt_link`(`link_id`) 
