@@ -95,6 +95,7 @@ def main():
           `exit_code`     tinyint(4)         NOT NULL,
           `exec_path`     varchar(1024)      NOT NULL,
           PRIMARY KEY  (`link_id`),
+          INDEX  `index_date` (`date`),
           UNIQUE  KEY  `uuid` (`uuid`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
@@ -162,6 +163,7 @@ def main():
           `module_name`   varchar(64)                  ,
           `cwd`           varchar(1024)        NOT NULL,
           PRIMARY KEY             (`run_id`   ),
+          INDEX  `index_date`     (`date`     ),
           INDEX  `index_run_uuid` (`run_uuid` ),
           INDEX `thekey` (`job_id`, `syshost` )
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1
@@ -260,7 +262,20 @@ def main():
         """)
     print("(%d) create join_link_function table" % idx); idx += 1
     
-    # 12 
+    # 12
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `xalt_total_env` (
+          `envT_id`       bigint(20) unsigned NOT NULL auto_increment,
+          `run_id`        int(11)    unsigned NOT NULL,
+          `env_blob`      blob                NOT NULL,
+          PRIMARY KEY (`envT_id`),
+          FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        """)
+    print("(%d) create xalt_env table" % idx); idx += 1
+
+
+    # 13 
     cursor.execute("""
         ALTER TABLE `join_link_function` 
          ADD UNIQUE `unique_func_link_id` ( `func_id`, `link_id` )
