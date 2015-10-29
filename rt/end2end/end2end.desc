@@ -37,7 +37,7 @@ test_descript = {
      mpirun -n 1 Ðì®/helloñ
 
      export XALT_USERS="$USER;$outputDir"
-     xalt_file_to_db.py  --dbname $DBNAME
+     xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
 
      check_entries_db.py --dbname $DBNAME --results result.csv
      removeDataBase.py   --dbname $DBNAME  

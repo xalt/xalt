@@ -11,8 +11,14 @@ initialize()
   COUNT=0
 
   rm -f  _stderr.* _stdout.* out.* err.* 
-  rm -rf .xalt.d syslog.log
+  rm -rf .xalt.d syslog.log reverseMapD
 
+}
+
+buildRmapT()
+{
+  mkdir reverseMapD
+  $LMOD_DIR/spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/jsonReverseMapT.json
 }
 
 installXALT()
