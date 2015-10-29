@@ -13,6 +13,7 @@ test_descript = {
      . $(projectDir)/rt/common_funcs.sh
 
      initialize
+     buildRmapT
      installXALT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
@@ -31,6 +32,7 @@ test_descript = {
 
      mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
 
+     rm -rf Ðì®
      mkdir Ðì®
      mv helloñ Ðì®
       

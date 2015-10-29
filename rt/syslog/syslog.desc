@@ -13,6 +13,7 @@ test_descript = {
      . $(projectDir)/rt/common_funcs.sh
 
      initialize
+     buildRmapT
      installXALT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
@@ -32,7 +33,7 @@ test_descript = {
      mpirun -n 1 ./hello.x
 
      export XALT_USERS="$USER;$outputDir"
-     xalt_syslog_to_db.py  --dbname $DBNAME --syslog_file syslog.log
+     xalt_syslog_to_db.py  --dbname $DBNAME --syslog_file syslog.log --reverseMapD $outputDir/reverseMapD
 
      check_entries_db.py --dbname $DBNAME --results result.csv
      removeDataBase.py   --dbname $DBNAME  
