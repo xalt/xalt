@@ -86,7 +86,8 @@ def main():
   conn.query(query)
 
   tableA = [ 'join_link_object', 'join_run_env', 'join_run_object', \
-             'xalt_env_name', 'xalt_link', 'xalt_object', 'xalt_run', ]
+             'xalt_env_name', 'xalt_link', 'xalt_object', 'xalt_run',
+             'xalt_function', 'join_link_function','xalt_total_env']
   tableT = {}
   for tableName in tableA:
     count = count_rows(conn, tableName)

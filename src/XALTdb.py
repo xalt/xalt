@@ -188,7 +188,7 @@ class XALTdb(object):
       carp("load_xalt_objects()",v)
       
       # store tracked functions
-      if 'function' in linkT:
+      if ('function' in linkT):
         for func_name in linkT['function']:
           query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
           cursor.execute(query, (func_name))
