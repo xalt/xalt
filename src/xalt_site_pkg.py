@@ -165,7 +165,7 @@ RejectListA = [
     re.compile(r"^MIC_TACC.*_DIR$"),
     re.compile(r"^MIC_TACC.*_INC"),
     re.compile(r"^MIC_TACC.*_LIB$"),
-    re.compile(r"^MKPATH$"),
+    re.compile(r"^MKLROOT$"),
     re.compile(r"^MODULEPATH_ROOT$"),
     re.compile(r"^MPICH_HOME$"),
     re.compile(r"^PKG_CONFIG_PATH$"),
