@@ -46,7 +46,7 @@
 # may not be useful.
 #
 from __future__ import print_function
-import os
+import os, re
 
 
 def translate(nameA, envT, userT):
