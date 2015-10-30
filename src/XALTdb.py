@@ -330,6 +330,8 @@ class XALTdb(object):
       
       # loop over env. vars.
       for key in runT['envT']:
+        if (not keep_env_var(key)):
+          continue
         value = runT['envT'][key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
         cursor.execute(query,[key])

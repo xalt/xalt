@@ -133,3 +133,59 @@ def translate(nameA, envT, userT):
   
   if (userT['job_id'] == "unknown"):
     userT['job_id'] = envT.get('JOB_ID','unknown')
+
+AcceptListA = [
+    re.compile(r"^.*PATH.*"),
+    re.compile(r"^I_MPI.*"),
+    re.compile(r"^KMP.*"),
+    re.compile(r"^LC_.*"),
+    re.compile(r"^LD.*"),
+    re.compile(r"^LOADEDMODULES$"),
+    re.compile(r"^MIC_.*"),
+    re.compile(r"^MKL.*"),
+    re.compile(r"^MPICH_.*"),
+    re.compile(r"^MV2_.*"),
+    re.compile(r"^OFFLOAD.*"),
+    re.compile(r"^OMP.*"),
+    re.compile(r"^PYTHON.*"),
+    re.compile(r"^R_*"),
+    re.compile(r"^SHELL$"),
+    re.compile(r"^SLURM_JOB_NODELIST$"),
+    re.compile(r"^TARG$"),
+    re.compile(r"^_LMFILES_$")
+  ]    
+
+RejectListA = [
+    re.compile(r"^DDTPATH$"),
+    re.compile(r"^INFOPATH$"),
+    re.compile(r"^LMOD*"),
+    re.compile(r"^MAKE_INC_PATH$"),
+    re.compile(r"^MANPATH$"),
+    re.compile(r"^MIC_ENV_PREFIX$"),
+    re.compile(r"^MIC_TACC.*_DIR$"),
+    re.compile(r"^MIC_TACC.*_INC"),
+    re.compile(r"^MIC_TACC.*_LIB$"),
+    re.compile(r"^MKPATH$"),
+    re.compile(r"^MODULEPATH_ROOT$"),
+    re.compile(r"^MPICH_HOME$"),
+    re.compile(r"^PKG_CONFIG_PATH$"),
+    re.compile(r"^__.*")
+  ]
+
+def keep_env_var(var):
+  keep = False
+  for pat in AcceptListA:
+    m = pat.search(var)
+    if (m):
+      keep = True
+      break
+  if (not keep):
+    return keep
+
+  for pat in RejectListA:
+    m = pat.search(var)
+    if (m):
+      keep = False
+      return keep
+  return keep
+    
