@@ -143,8 +143,8 @@ class Syslog(XALT_transmission_factory):
     cmprsStr = zlib.compress(jsonStr) 
     b64      = base64.b64encode(cmprsStr)
 
-    blkSz    = 2048
-    nBlks    = (len(b64) - 1)//blkSz + 1
+    blkSz    = 512
+    nBlks    = (len(b) - 1)//blkSz + 1
     istart   = 0
     iend     = blkSz
     for i in xrange(nBlks):
