@@ -21,7 +21,7 @@
 
 from __future__ import print_function
 from time       import sleep
-import os, sys, re, base64
+import os, sys, re, base64, json
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
@@ -30,7 +30,7 @@ import MySQLdb, ConfigParser, getpass, time
 import warnings
 from   xalt_util     import *
 from   xalt_global   import *
-from   xalt_site_pkg import translate
+from   xalt_site_pkg import translate, keep_env_var
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 import inspect
@@ -324,13 +324,16 @@ class XALTdb(object):
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
                         "join_run_object", run_id)
 
-      jsonStr  = json.dumps(envT)
-      query = "INSERT INTO xalt_total_env VALUES(NULL, %s, COMPRESS(%s))"
+      envT    = runT['envT']
+      jsonStr = json.dumps(envT)
+      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, COMPRESS(%s))"
       cursor.execute(query, [run_id, jsonStr])
       
       # loop over env. vars.
-      for key in runT['envT']:
-        value = runT['envT'][key]
+      for key in envT:
+        if (not keep_env_var(key)):
+          continue
+        value = envT[key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
         cursor.execute(query,[key])
         if (cursor.rowcount > 0):
