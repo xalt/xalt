@@ -144,22 +144,21 @@ class Syslog(XALT_transmission_factory):
     b64      = base64.b64encode(cmprsStr)
 
     blkSz    = 512
-    nBlks    = (len(b) - 1)//blkSz + 1
+    nBlks    = (len(b64) - 1)//blkSz + 1
     istart   = 0
     iend     = blkSz
     for i in xrange(nBlks):
       sA = []
-      sA.append("logger -t XALT_LOGGING V:2")
+      sA.append("logger -t XALT_LOGGING V:2 idx:")
+      sA.append(str(i))
+      sA.append(" nb:")
+      sA.append(str(nBlks))
       sA.append(" kind:")
       sA.append(self._kind())
       sA.append(" syshost:")
       sA.append(self._syshost())
       sA.append(" key:")
       sA.append(key)
-      sA.append(" idx:")
-      sA.append(str(i))
-      sA.append(" nb:")
-      sA.append(str(nBlks))
       sA.append(" value:")
       sA.append(b64[istart:iend])
       istart = iend
