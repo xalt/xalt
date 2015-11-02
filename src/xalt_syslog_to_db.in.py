@@ -208,7 +208,7 @@ def parseSyslogV2(s, recordT):
   return t, False
 
 def parseSyslog(s, recordT):
-  if ("XALT_LOGGING: V:2 " in s):
+  if ("XALT_LOGGING" in s) and ("V:2" in s):
     return parseSyslogV2(s, recordT)
   return parseSyslogV1(s)
 
