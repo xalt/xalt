@@ -124,7 +124,7 @@ class ExtractXALT(object):
     @param execPath: the path to the program or shared library that has (or could have) an XALT record. 
     """
 
-    outStr  = capture(["objdump", "-s", "-j", ".xalt", execPath ])
+    outStr  = capture(["@objdump@", "-s", "-j", ".xalt", execPath ])
     self.__fieldT = {}
     if (not outStr.find("Contents of section .xalt:") != -1):
       return 
@@ -147,7 +147,7 @@ class ExtractXALT(object):
     Use objdump to extract the xalt record in a linux executable.
     @param execPath: the path to the program or shared library that has (or could have) an XALT record.
     """
-    outStr = capture (["otool", "-s", ".XALT", ".xalt", execPath])
+    outStr = capture (["@otool@", "-s", ".XALT", ".xalt", execPath])
 
     outputA = outStr.split("\n")
     outputA.pop(0)
@@ -221,12 +221,12 @@ class UserExec(object):
     self.__execName = which(cmd)
     self.__libA     = []
     if (self.__execName):
-      outStr = capture(["file", self.__execName])
+      outStr = capture(["@file@", self.__execName])
       if (outStr.find("script") > 0 or outStr.find("text") > 0):
         self.__execType = "script"
       else:
         self.__execType = "binary"
-        ldd             = capture(["ldd", self.__execName])
+        ldd             = capture(["@ldd@", self.__execName])
         self.__libA     = self.__parseLDD(ldd)
 
       info = os.stat(self.__execName)
@@ -260,7 +260,7 @@ class UserExec(object):
 
   def __computeHash(self, cmd):
     """ Compute the sha1sum of the executable. """
-    fieldA = capture(["sha1sum", cmd]).split()
+    fieldA = capture(["@sha1sum@", cmd]).split()
     return fieldA[0]
 
   def __parseLDD(self,ldd):
@@ -290,7 +290,7 @@ class UserExec(object):
     
     libB = []
     for lib in libA:
-      hash_line = capture(['sha1sum', lib])
+      hash_line = capture(['@sha1sum@', lib])
       if (hash_line.find("No such file or directory") != -1):
         v = "unknown"
       else:
@@ -368,7 +368,7 @@ def main():
       uuidA = json.loads(args.uuidA)
     else:
       key_prefix = "run_strt_"
-      dateStr = capture("date +%Y_%m_%d_%H_%M_%S")[0:-1]
+      dateStr = capture("@date@ +%Y_%m_%d_%H_%M_%S")[0:-1]
       N       = len(runA)
       uuidA   = []
       for i in xrange(N):

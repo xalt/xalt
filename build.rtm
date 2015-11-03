@@ -79,6 +79,7 @@ case $SYSHOST in
   rios | mijo | jedrik | vato | vmijo | devo | lmod-test | xalt-lmod)
     SUDO="sudo"
     base="/opt/apps"
+    CONF_OPTS="--with-etcDir=/opt/moduleData"
     ;;
 
   ls4 | stampede | maverick)
@@ -118,7 +119,7 @@ fi
 
 cmdA=("-$MAKE distclean"
       "rm -f $PKG"
-      "./configure --prefix=$PKG"
+      "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE install"
       "$SUDO $MAKE Inst_TACC"
       "rm -f config.log"
