@@ -1,4 +1,9 @@
 
+README.md,97
+published by the Free Software Foundation;96,4120
+the License,97,4185
+the License, or 97,4185
+
 test/check_entries_db.py,119
 class CmdLineOptions(50,1826
   def __init__(53,1894
@@ -129,31 +134,55 @@ c_src/read_conf.c,57
 char* decode(11,147
 int main(28,457
 
-Makefile.in,1022
+my_docs/Makefile,17
+SPHINXOPTS 5,92
+
+my_docs/source/010_installation.rst,17
+Installation1,0
+
+my_docs/source/index.rst,36
+XALT: Library Tracking Software2,1
+
+my_docs/source/030_FAQ.rst,8
+FAQ1,0
+
+my_docs/source/020_QuickStart.rst,22
+Quick Start Guide1,0
+
+my_docs/source/040_testing.rst,12
+Testing1,0
+
+my_docs/source/050_production.rst,15
+Production1,0
+
+my_docs/source/060_datamining.rst,16
+Data Mining1,0
+
+Makefile.in,1026
 PATH_TO_SRC 22,1051
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=53,2081
 LIBEXEC 55,2216
-        tar xf psmisc-22.21.tar.gz;gz128,5345
-        ./configure --prefix=prefix130,5497
-        make CFLAGS=131,5573
-        make DESTDIR=132,5649
-        ln -s $(prefix)/psmisc/bin/pstree $(133,5725
-	   ext=151,6459
-           oext=152,6529
-           [ "$$ext" = "in.py" ] && oext=154,6676
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext177,8300
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext179,8434
-	    true;180,8511
-	@git status -s > /tmp/git_st_$$$$;git_st_$$$$184,8609
-            git push github;188,8910
-            git push --tags github;189,8987
-        fi;190,9064
-        ifneq 194,9181
-	    echo "$(TAG)" >                                      .version;version199,9492
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version200,9562
-	    git push --tags tags202,9716
-          fi;203,9786
-	$(250,12464
+        tar xf psmisc-22.21.tar.gz;gz140,6014
+        ./configure --prefix=prefix142,6166
+        make CFLAGS=143,6242
+        make DESTDIR=144,6318
+        ln -s $(prefix)/psmisc/bin/pstree $(145,6394
+	   ext=163,7128
+           oext=164,7198
+           [ "$$ext" = "in.py" ] && oext=166,7345
+                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext189,8969
+               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext191,9103
+	    true;192,9180
+	@git status -s > /tmp/git_st_$$$$;git_st_$$$$196,9278
+            git push github;200,9579
+            git push --tags github;201,9656
+        fi;202,9733
+        ifneq 206,9850
+	    echo "$(TAG)" >                                      .version;version211,10161
+            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version212,10231
+	    git push --tags tags214,10385
+          fi;215,10455
+	$(262,13133
 
 detectfunctions/StripLibs.py,20
 def convert(18,358
@@ -175,13 +204,13 @@ class NestedDict(19,354
 
 configure.ac,217
 AC_INIT(1,0
-  BUILD_PSTREE=73,2127
-     versionStr=83,2312
-       major_version=86,2458
-         BUILD_PSTREE=91,2762
-      PATH_TO_PSTREE=98,2879
-USE_CONTRIB_ARGPARSE=109,3139
-  USE_CONTRIB_ARGPARSE=116,3471
+  BUILD_PSTREE=73,2118
+     versionStr=83,2303
+       major_version=86,2449
+         BUILD_PSTREE=91,2753
+      PATH_TO_PSTREE=98,2870
+USE_CONTRIB_ARGPARSE=109,3130
+  USE_CONTRIB_ARGPARSE=116,3462
 
 altd/modulefiles/altd,39
 setenv ALTD_SELECT_USERS jones,10,369
@@ -292,9 +321,17 @@ def main(6,103
 contrib/build_reverseMapT_cray/cray_build_rmapT.sh,96
   BASE_MODULE_PATH=32,1346
   RmapDir=33,1379
-SCRIPT_DIR=55,1979
-    sn=61,2166
-OLD=75,2418
+SCRIPT_DIR=55,1991
+    sn=61,2178
+OLD=75,2430
+
+contrib/fix_module_name.py,143
+class CmdLineOptions(9,206
+  def __init__(12,274
+  def execute(16,331
+def dbConfigFn(26,895
+def fix_module_name(34,1025
+def main(64,1970
 
 contrib/getent/constants.py,25
     def c_char_p(17,460
@@ -350,13 +387,78 @@ class GroupStruct(84,2161
 class PasswdStruct(94,2386
 class ShadowStruct(106,2670
 
-contrib/TACC/syslogTest.c,15
-int main(8,84
+contrib/update_module_name.py,147
+class CmdLineOptions(9,206
+  def __init__(12,274
+  def execute(16,331
+def dbConfigFn(28,1256
+def update_module_name(36,1386
+def main(72,2600
 
-contrib/TACC/load_xalt_db,24
-export MODULEPATH=2,12
+contrib/TACC/correct_num_cores.in,484
+from __future__ import print_function,4,40
+import os,6,126
+import os, sys,6,126
+import os, sys, re,6,126
+import os, sys, re, time,6,126
+import os, sys, re, time, datetime,6,126
+import os, sys, re, time, datetime, argparse,6,126
+import os, sys, re, time, datetime, argparse, ConfigParser,6,126
+import os, sys, re, time, datetime, argparse, ConfigParser, base64,6,126
+  import os,14,383
+  def ioctl_GWINSZ(15,403
+  endtimeT 284,9050
+  fn 286,9067
+  f.close(close304,9680
 
-contrib/TACC/monthly_report,533
+contrib/TACC/fix_records.in,404
+import os,5,78
+import os, sys,5,78
+import os, sys, re,5,78
+import os, sys, re, time,5,78
+import os, sys, re, time, datetime,5,78
+import os, sys, re, time, datetime, argparse,5,78
+import os, sys, re, time, datetime, argparse, ConfigParser,5,78
+import os, sys, re, time, datetime, argparse, ConfigParser, base64,5,78
+    parser 17,395
+  endtimeT 102,3538
+  fn 104,3555
+  f.close(close120,4083
+
+contrib/TACC/pytas.py,833
+class client:client13,218
+    def __init__(20,422
+    def authenticate(36,961
+    def get_user(49,1453
+    def save_user(64,1979
+    def verify_user(83,2697
+    def request_password_reset(92,3046
+    def confirm_password_reset(104,3607
+    def institutions(128,4604
+    def _get_departments(146,5248
+    def get_institution(162,5735
+    def get_departments(183,6606
+    def get_department(194,7030
+    def _departments(204,7279
+    def countries(215,7509
+    def fields(232,7987
+    def projects(240,8188
+    def project(249,8566
+    def projects_for_user(255,8814
+    def create_project(281,9808
+    def edit_project(291,10242
+    def edit_allocation(301,10692
+    def get_project_users(314,11194
+    def add_project_user(322,11539
+    def del_project_user(330,11900
+    def allocation_approval(340,12298
+
+contrib/TACC/README.vm,124
+   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
+   mysql> quit;16,575
+    $ ./build_hello_executables.sh sh33,887
+
+contrib/TACC/monthly_report.in,471
 import os,4,77
 import os, sys,4,77
 import os, sys, re,4,77
@@ -364,16 +466,75 @@ import os, sys, re, MySQLdb,4,77
 import os, sys, re, MySQLdb, json,4,77
 import os, sys, re, MySQLdb, json, time,4,77
 import os, sys, re, MySQLdb, json, time, argparse,4,77
-import os, sys, re, MySQLdb, json, time, argparse, base64,4,77
-dirNm,7,157
-dirNm, execName 7,157
-compiled_patternT 211,13862
-compiled_userDirPatternT 221,14103
-    self.__host __host252,14942
-      query 390,19096
-      acctT 407,19492
-      query 408,19509
-          linkA 449,21317
+dirNm,7,151
+dirNm, execName 7,151
+compiled_userDirPatternT 239,15140
+    self.__host __host272,16005
+      query 397,19780
+      acctT 413,20139
+      query 414,20157
+          linkA 476,22817
+          runT[runT497,23699
+
+contrib/TACC/envReport.in,540
+from __future__ import print_function,4,40
+import os,5,88
+import os, sys,5,88
+import os, sys, re,5,88
+import os, sys, re, time,5,88
+import os, sys, re, time, datetime,5,88
+import os, sys, re, time, datetime, argparse,5,88
+import os, sys, re, time, datetime, argparse, ConfigParser,5,88
+import os, sys, re, time, datetime, argparse, ConfigParser, base64,5,88
+import os, sys, re, time, datetime, argparse, ConfigParser, base64, MySQLdb,5,88
+dirNm,7,175
+dirNm, execName 7,175
+  idx2count 57,1849
+  ja 58,1866
+  resultA 120,3325
+
+contrib/TACC/kill_dups.in,422
+from __future__ import print_function,4,40
+import os,6,126
+import os, sys,6,126
+import os, sys, re,6,126
+import os, sys, re, time,6,126
+import os, sys, re, time, datetime,6,126
+import os, sys, re, time, datetime, argparse,6,126
+import os, sys, re, time, datetime, argparse, ConfigParser,6,126
+import os, sys, re, time, datetime, argparse, ConfigParser, base64,6,126
+  import os,14,383
+  def ioctl_GWINSZ(15,403
+
+contrib/TACC/syslogTest.c,15
+int main(8,84
+
+contrib/TACC/load_xalt_db,24
+export MODULEPATH=2,12
+
+contrib/TACC/quarter2months.in,52
+import os,4,77
+import os, sys,4,77
+def main(6,97
+
+contrib/TACC/check_pytas.in,182
+import os,4,77
+import os, sys,4,77
+import os, sys, re,4,77
+from urllib2       import Request,7,126
+from urllib2       import Request, urlopen,7,126
+def field_of_science(11,206
+
+contrib/TACC/reportQ.in,60
+PATH=4,36
+  startD=16,200
+  endD=17,218
+  fileNm=19,235
+
+contrib/supporting_clang/README.txt,105
+    $ cd /usr/bin; rm ld;24,842
+    $ cd /usr/bin; rm ld; ln -s ld.bfd ld.x;x24,842
+   setenv(28,913
 
 contrib/argparse/argparse.py,5073
     def sorted(108,3655
@@ -547,19 +708,19 @@ BASE_DIR=102,2384
 MAKE=109,2479
   MAKE=112,2546
 
-src/XALTdb.py,298
-def __LINE__(38,1572
-def __FILE__(44,1692
-def convertToInt(49,1839
-class XALTdb(62,2098
-  def __init__(67,2232
-  def __readFromUser(76,2477
-  def __readConfig(84,2762
-  def connect(99,3365
-  def db(137,4569
-  def link_to_db(141,4636
-  def load_objects(203,7062
-  def run_to_db(249,8926
+src/XALTdb.py,303
+def __LINE__(38,1592
+def __FILE__(44,1712
+def convertToTinyInt(50,1891
+class XALTdb(66,2214
+  def __init__(71,2348
+  def __readFromUser(80,2593
+  def __readConfig(88,2878
+  def connect(103,3481
+  def db(141,4685
+  def link_to_db(145,4752
+  def load_objects(216,7425
+  def run_to_db(262,9258
 
 src/xalt_syslog_to_db.in.py,359
 def __LINE__(52,1876
@@ -581,8 +742,9 @@ def main(216,6128
 src/xalt_db.conf,10
 host 2,8
 
-src/xalt_site_pkg.py,23
-def translate(51,2345
+src/xalt_site_pkg.py,50
+def translate(52,2350
+def keep_env_var(175,6328
 
 src/nics_system_name,37
 use strict;26,1106
@@ -604,14 +766,17 @@ def main(60,1995
 src/xalt_find_exec_openmpi.py,19
 def main(135,4727
 
-src/xalt_find_exec_ibrun.py,18
-def main(55,1762
+src/xalt_find_exec_ibrun.py,90
+def mpi_size(55,1810
+def mpi_rank(65,2094
+def compute_ntasks(76,2368
+def main(91,2786
 
 src/xalt_which_mpi.in,69
 tracing_msg(26,1091
 findName(34,1210
-mpiN=128,3304
-elif 142,3526
+mpiN=133,3412
+elif 147,3634
 
 src/xalt_syshost_ncar.py,43
 def map_syshost(35,1287
@@ -649,25 +814,6 @@ class CmdLineOptions(36,1394
   def execute(43,1519
 def main(50,1804
 
-src/monthly_report.in,535
-import os,4,77
-import os, sys,4,77
-import os, sys, re,4,77
-import os, sys, re, MySQLdb,4,77
-import os, sys, re, MySQLdb, json,4,77
-import os, sys, re, MySQLdb, json, time,4,77
-import os, sys, re, MySQLdb, json, time, argparse,4,77
-import os, sys, re, MySQLdb, json, time, argparse, base64,4,77
-dirNm,7,157
-dirNm, execName 7,157
-compiled_userDirPatternT 234,15141
-    self.__host __host267,16006
-      query 406,20176
-      acctT 423,20569
-      query 424,20586
-          linkA 467,22586
-          runT[runT489,23522
-
 src/xalt_epoch.py,18
 def main(28,1142
 
@@ -698,6 +844,13 @@ def run_json_to_db(124,4027
 def passwd_generator(164,5033
 def main(192,5763
 
+src/BeautifulTbl.py,117
+class BeautifulTbl(6,88
+  def __init__(7,116
+  def __build_tbl(14,461
+  def build_tbl(57,1586
+def main(140,3736
+
 src/xalt_find_exec_aprun.py,18
 def main(86,2927
 
@@ -727,18 +880,18 @@ class XALT_transmission_factory(35,1331
   def _syshost(50,1728
   def _kind(57,1857
   def build(65,2008
-class SyslogV1(89,2716
-  def __init__(94,2817
-  def save(102,3059
-class Syslog(119,3509
-  def __init__(124,3608
-  def save(133,3849
-class File(170,4886
-  def __init__(175,4973
-  def save(185,5289
-class DirectDB(207,5856
-  def __init__(212,5966
-  def save(219,6213
+class SyslogV1(89,2715
+  def __init__(94,2816
+  def save(102,3058
+class Syslog(119,3512
+  def __init__(124,3611
+  def save(133,3852
+class File(169,4872
+  def __init__(174,4959
+  def save(184,5275
+class DirectDB(206,5842
+  def __init__(211,5952
+  def save(218,6199
 
 src/xalt_working_python.py,18
 def main(27,1117
@@ -801,8 +954,8 @@ def capture(140,4154
 def carp(157,4560
 def remove_files(176,4936
 def obj_type(189,5193
-def obj2module(206,5564
-def dbConfigFn(227,6144
+def obj2module(212,5679
+def dbConfigFn(239,6365
 
 src/xalt_find_exec_ncar.py,19
 def main(102,3374
@@ -819,9 +972,10 @@ class Stack(27,1148
   def contents(49,1653
 def main(55,1798
 
-src/xalt_generate_linkdata.py,39
-def cleanup(41,1627
-def main(97,2831
+src/xalt_generate_linkdata.py,70
+def readFunctionList(41,1627
+def cleanup(54,1888
+def main(110,3090
 
 src/ld.in,329
 XALT_DIR=37,1480
@@ -835,8 +989,8 @@ EXEC=68,2589
       prev=96,3028
 XALT_LIBEXEC_DIR=110,3308
 LINKLINE_OUT=126,3778
-EPOCH=136,3992
-  OBJ=145,4202
+EPOCH=138,4050
+  OBJ=147,4260
 
 src/srun.in,235
 XALT_DIR=36,1416
@@ -865,10 +1019,11 @@ src/xalt_find_exec_srun.py,46
 def compute_ntasks(65,2222
 def main(80,2558
 
-src/Rmap_XALT.py,71
+src/Rmap_XALT.py,93
 class Rmap(30,1343
   def __init__(32,1440
-  def reverseMapT(69,2642
+  def reverseMapT(74,2803
+  def libMap(82,2948
 
 src/xalt_job_id_db.conf,10
 host 2,8
@@ -899,11 +1054,12 @@ TAG=5,42
 rt/mpi_hello_world.c,15
 int main(3,36
 
-rt/common_funcs.sh,69
+rt/common_funcs.sh,88
 initialize(4,36
-installXALT(18,257
-installDB(27,498
-runMe 39,779
+buildRmapT(18,269
+installXALT(24,416
+installDB(33,657
+runMe 45,938
 
 rt/end2end/end2end.desc,16
 test_name 3,18
@@ -939,8 +1095,15 @@ doc/xsede15/Makefile,56
 TALKS 1,0
 	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
 
+doc/README.vm.txt,124
+   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
+   mysql> quit;16,575
+    $ ./build_hello_executables.sh sh33,887
+
 aclocal.m4,26
 dnl AC_PYTHON_MODULE(1,0
+
+doc/ideas/xalt.org,0
 
 doc/xsede15/xalt_xsede15.tex,0
 
@@ -948,13 +1111,25 @@ doc/database.txt,0
 
 doc/isc15/xalt_isc.tex,0
 
-INSTALL.txt,0
-
 ACKNOWLEDGMENTS.txt,0
 
 .version,0
 
 src/xalt_global.py,0
+
+src/xalt_rmap_lmap.in.py,0
+
+src/xalt_strip_linklib.py,0
+
+contrib/supporting_clang/ld.sh,0
+
+contrib/queries/software_lastusage.py,0
+
+contrib/queries/compiler_usage.py,0
+
+contrib/queries/library_usage.py,0
+
+contrib/queries/executable_usage.py,0
 
 contrib/getent/libc.py,0
 
@@ -971,5 +1146,11 @@ detectfunctions/ParseFuncList.py,0
 detectfunctions/dirs.xml,0
 
 detectfunctions/libmap.json,0
+
+QUICK_INSTALL_GUIDE.TXT,0
+
+my_docs/source/conf.py,0
+
+my_docs/source/010_user.rst,0
 
 Themis.py,0
