@@ -172,6 +172,7 @@ __installMe:
            oext=;                                                          \
 	   : echo "bareN: $$bareN, ext: $$ext";                            \
            [ "$$ext" = "in.py" ] && oext=".py";                            \
+           [ "$$ext" = "in.c" ]  && oext=".c";                             \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \

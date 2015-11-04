@@ -150,7 +150,6 @@ AcceptListA = [
     re.compile(r"^PYTHON.*"),
     re.compile(r"^R_*"),
     re.compile(r"^SHELL$"),
-    re.compile(r"^SLURM_JOB_NODELIST$"),
     re.compile(r"^TARG$"),
     re.compile(r"^_LMFILES_$")
   ]    
