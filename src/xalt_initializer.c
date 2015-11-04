@@ -36,6 +36,10 @@ void myinit(int argc, char **argv, char **envp)
 
   uuid_t uuid;
 
+  char * v = getenv("XALT_EXECUTABLE_TRACKING");
+  if (! v)
+    return;
+
   my_rank = compute_size(rankA);
   if (my_rank > 0L)
     return;
@@ -62,7 +66,7 @@ void myinit(int argc, char **argv, char **envp)
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
   
-  sprintf(cmdline, "%s %s --start \"%.3f\" --end 0 --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntask\": %ld}]",
+  sprintf(cmdline, "%s -E %s --start \"%.3f\" --end 0 --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntask\": %ld}]",
 	  "/usr/local/bin/python","xalt_run_submission.py", start_time, uuid_str, path, my_size);
 
   printf("cmd: %s\n\n",cmdline);
@@ -71,6 +75,10 @@ void myinit(int argc, char **argv, char **envp)
 void myfini()
 {
   struct timeval tv;
+
+  char * v = getenv("XALT_EXECUTABLE_TRACKING");
+  if (! v)
+    return;
 
   if (my_rank > 0L)
     return;
