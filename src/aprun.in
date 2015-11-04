@@ -44,6 +44,7 @@ source $MY_DIR/xalt_helper_functions.sh
 # Check for user requested tracing.
 request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
 
+tracing_msg "Starting aprun"
 
 ##########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -115,5 +116,8 @@ FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_aprun.py
 
 # This function sets the $status variable.
 run_real_command "$FIND_EXEC_PRGM" "$MY_PYTHON" "${argA[@]}"
+
+tracing_msg "Ending aprun"
+
 
 exit $status
