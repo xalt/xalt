@@ -98,7 +98,7 @@ def cleanup(xaltobj, fn):
 
   sB = []
   for lib in sA:
-    hash_line = capture(['sha1sum', lib])
+    hash_line = capture(['@sha1sum@', lib])
     if (hash_line.find("No such file or directory") != -1):
       continue
     else:
@@ -139,7 +139,7 @@ def main():
     if (execname.find("conftest") != -1):
       return 1
   
-    hash_line   = capture(['sha1sum', execname])  
+    hash_line   = capture(['@sha1sum@', execname])  
     if (hash_line.find("No such file or directory") != -1):
       return 1
     hash_id     = hash_line.split()[0]

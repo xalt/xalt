@@ -30,6 +30,7 @@
 
 ########################################################################
 #  Global variables:
+LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
 RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
 UUIDGEN=@path_to_uuidgen@
@@ -142,38 +143,18 @@ find_real_command()
 }
 
 ########################################################################
-# Make sure that the python setup is valid. This returns a valid python
-# or "broken" if no working python is found
-#
-# The logic is as follows. Check for at each step.  If pass then stop
-# checking, otherwise continue.  
-#   1. Check for working python with no changes
-#   2. Check for working python with PYTHONHOME unset
-#   3. Check for working python with PYTHONPATH unset
-#      and system python.
-#   4. Report python broken.
-#
+# Do not mess around.  Use the python and the value of LD_LIBRARY_PATH
+# that existed at configure time.  Assume that it is possible that the
+# user will do something to mess things up.
+
 # Note that the xalt_working_program.py just prints "GOOD" if it works.
 
 find_working_python()
 {
-  py_home_orig=$PYTHONHOME
-  py_path_orig=$PYTHONPATH
-  MY_PYTHON=python
-  XALT_DIR=@xalt_dir@
-  WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-  WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+  MY_PYTHON="@python@"
+  WORKING=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E  $WORKING_PYTHON 2> /dev/null)
   if [ "$WORKING" != "GOOD" ]; then
-    unset PYTHONHOME
-    WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-    if [ "$WORKING" != "GOOD" ]; then
-      unset PYTHONPATH
-      MY_PYTHON=@python@
-      WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
-      if [ "$WORKING" != "GOOD" ]; then
-	MY_PYTHON="broken"
-      fi
-    fi
+     MY_PYTHON="broken"
   fi
 
   tracing_msg "find_working_python: Setting MY_PYTHON to $MY_PYTHON"
@@ -195,18 +176,18 @@ run_real_command()
   # This will leave "$@" to be the same as the original in
   # user's call to the wrapper.
 
-  FIND_EXEC_PRGM=$1
+  FIND_EXEC_PRGM="$1"
   shift
-  MY_PYTHON=$1
+  MY_PYTHON="$1"
   shift
 
   # Build the filename for the results.
-  SYSHOST=$($MY_PYTHON $XALT_DIR/site/xalt_syshost_@site_name@.py)
+  SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_DIR/site/xalt_syshost_@site_name@.py)
   
   # Find the user executable by walking the original command line.
   EXEC_T='[{"exec_prog": "unknown", "ntask": 1} ]'
   if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
-    EXEC_T=$($MY_PYTHON $FIND_EXEC_PRGM "$@")
+    EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
   fi
 
   tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
@@ -221,35 +202,25 @@ run_real_command()
   # doesn't complete there will be a record.
 
   tracing_msg "run_real_command: XALT Start Record"
-  sTime=$($MY_PYTHON $EPOCH)
-  UUID_A=$($MY_PYTHON $RUN_SUBMIT --start "$sTime" --end 0 --uuidgen "$UUIDGEN" --syshost "$SYSHOST" -- "$EXEC_T")
+  sTime=$( LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $EPOCH)
+  UUID_A=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0 --uuidgen "$UUIDGEN" --syshost "$SYSHOST" -- "$EXEC_T")
 
   tracing_msg "UUID_A: $UUID_A"
 
   status=0
   if [ -z "${testMe:-}" ]; then
 
-    # restore python state to what the user originally had
-    py_home_xalt=$PYTHONHOME
-    py_path_xalt=$PYTHONPATH
-    export PYTHONPATH=$py_path_orig
-    [ -n "${py_home_orig:-}" ] && export PYTHONHOME=$py_home_orig
-
     tracing_msg "run_real_command: Running: $MY_CMD"
     # Run the real command and save the status
     $MY_CMD "$@"
     status="$?"
 
-    # return python state back to XALT
-    unset  PYTHONHOME
-    [ -n "${py_home_xalt:-}" ] && export PYTHONHOME=$py_home_xalt
-    export PYTHONPATH=$py_path_xalt
   fi
 
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
-  eTime=$($MY_PYTHON $EPOCH)
-  $MY_PYTHON $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuidA "$UUID_A" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
+  eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH= MY_PYTHON -E $EPOCH)
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuidA "$UUID_A" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"

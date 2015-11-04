@@ -34,6 +34,7 @@
 #
 ##########################################################################
 
+LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
@@ -112,7 +113,7 @@ XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
-SYSHOST=$($MY_PYTHON $SYS_HOST_CMD)
+SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $SYS_HOST_CMD)
 UUIDGEN=@path_to_uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
@@ -135,7 +136,7 @@ if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
 fi
 
-EPOCH=$($MY_PYTHON "$GEN_ASSEMBLY" "$UUID" "$SYSHOST" "$ARGSRC")
+EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
 
 #
 # If the $ARGSRC exists then build it
@@ -147,13 +148,7 @@ else
   OBJ=""
 fi
 
-#Save python state
-py_path_xalt=$PYTHONPATH
-py_home_xalt=$PYTHONHOME
-export PYTHONPATH=$py_path_orig
-[ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
-
-$MY_CMD `$MY_PYTHON $XALT_LIBEXEC_DIR/xalt_strip_linklib.py "${argA[@]}"` \
+$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py "${argA[@]}"` \
   --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 
 touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
@@ -170,18 +165,13 @@ tracing_msg $MY_CMD "${argA[@]}"
 $MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
 status=$?
 
-#Return python state
-export PYTHONPATH=$py_path_xalt
-unset  PYTHONHOME
-[ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
-
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ
 fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
+LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
