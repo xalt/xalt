@@ -48,6 +48,7 @@ source $MY_DIR/xalt_helper_functions.sh
 # Check for user requested tracing.
 request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
 
+tracing_msg "Starting ld"
 
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
@@ -108,6 +109,12 @@ do
 
 done
 
+
+if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
+  XALT_INIT_ROUTINE_OBJ=$XALT_LIBEXEC_DIR/xalt_initialize.o
+fi
+
+
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
@@ -162,11 +169,11 @@ tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-$MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -t > $LINKLINE_OUT 
 status=$?
 
 if [ -n "$USER_TRACE" ]; then
-  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ
+  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ | $GREP -v $X
 fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
@@ -183,5 +190,7 @@ if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
 fi
 
 $RM -rf $WRKDIR
+
+tracing_msg "Ending ld"
 
 exit $status
