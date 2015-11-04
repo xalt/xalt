@@ -219,7 +219,7 @@ run_real_command()
 
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
-  eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH= MY_PYTHON -E $EPOCH)
+  eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH= $MY_PYTHON -E $EPOCH)
   LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuidA "$UUID_A" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
