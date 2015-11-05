@@ -12,6 +12,10 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
+
      initialize
      buildRmapT
      installXALT
@@ -19,10 +23,6 @@ test_descript = {
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
      runMe installDB             # 1
-
-     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
-     module --quiet load gcc mpich
-     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
 
      export XALT_TRANSMISSION_STYLE=syslog
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c

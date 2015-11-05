@@ -46,6 +46,7 @@ PATH_TO_CAT       := @PATH_TO_CAT@
 PATH_TO_DATE      := @PATH_TO_DATE@
 PATH_TO_CAT       := @PATH_TO_CAT@
 PATH_TO_LDD       := @PATH_TO_LDD@
+PATH_TO_LOGGER    := @PATH_TO_LOGGER@
 PATH_TO_MKDIR     := @PATH_TO_MKDIR@
 PATH_TO_AS        := @PATH_TO_AS@
 PATH_TO_BASENAME  := @PATH_TO_BASENAME@
@@ -180,34 +181,35 @@ __installMe:
            [ "$$ext" = "in.py" ] && oext=".py";                            \
            [ "$$ext" = "in.c" ]  && oext=".c";                             \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
+	        -e 's|@date@|$(PATH_TO_DATE)|g'                            \
+	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
+	        -e 's|@file@|$(PATH_TO_FILE)|g'                            \
+	        -e 's|@git@|$(GIT_VERSION)|g'                              \
+	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \
+	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
+	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              \
+	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        \
+	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      \
+	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          \
+	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
+	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            \
+	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      \
+	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              \
+	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
+	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            \
+	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        \
+	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
+	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      \
+	        -e 's|@site_name@|$(SITE_NAME)|g'                          \
+	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              \
+	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
+	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      \
+	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           \
-	        -e 's|@site_name@|$(SITE_NAME)|g'                          \
-	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        \
-	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
-	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            \
-	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            \
-	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              \
-	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      \
-	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      \
-	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          \
-	        -e 's|@file@|$(PATH_TO_FILE)|g'                            \
-	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              \
-	        -e 's|@date@|$(PATH_TO_DATE)|g'                            \
-	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              \
-	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  \
-	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      \
-	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
                 -e 's|@have_pymod_psutil@|$(HAVE_PYMOD_PSUTIL)|g'          \
-	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
-	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
-	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
-	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \
-	        -e 's|@version@|$(VERSION)|g'                              \
-	        -e 's|@git@|$(GIT_VERSION)|g'                              \
-	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
-	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] && \
                chmod +x $(DIRLOC)/$$fn$$oext;                              \
