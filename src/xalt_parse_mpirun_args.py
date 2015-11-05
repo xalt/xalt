@@ -24,7 +24,7 @@ import os, re, sys, json
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 
-from xalt_util  import which
+from xalt_util  import which, capture
 
 
 def find_cmd(ignoreT, i, argA):
@@ -97,7 +97,8 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
     if (not path):
       path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
     ntasks  = compute_ntasks(t)
-    resultA.append({'exec_prog':path, 'ntasks':ntasks})
+    uuid    = capture("@uuidgen@")
+    resultA.append({'exec_prog':path, 'ntasks':ntasks, 'uuid': uuid})
 
     # Loop for colons
     done = True

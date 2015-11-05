@@ -76,7 +76,6 @@ class CmdLineOptions(object):
     parser.add_argument("--end",      dest='endTime',   action="store", type=float, default="0.0", help="end time")
     parser.add_argument("--status",   dest='status',    action="store", default = "0",             help="return status from run")
     parser.add_argument("--syshost",  dest='syshost',   action="store", default = syshost(),       help="system host name")
-    parser.add_argument("--uuid",     dest='uuid',      action="store", default = "0.0",           help="uuid string")
 
     parser.add_argument("exec_progT", nargs='+',        help="user program")
 
@@ -376,41 +375,38 @@ def main():
     # parse command line options:
     args    = CmdLineOptions().execute()
     runA    = json.loads(args.exec_progT[0])
-    uuid    = args.uuid
     dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(args.startTime))
 
     # build output file name (it is only use by the file transmission method)
     if (args.endTime > 0):
       key_prefix = "run_fini_"
+      suffix     = "aaa"
     else:
       key_prefix = "run_strt_"
+      suffix     = "zzz"
 
-    uuidA   = []
-    N       = len(runA)
-    for i in xrange(N):
+    for run in runA:
       fnA     = []
       fnA.append(os.environ.get("HOME","/"))
-      fnA.append("/.xalt.d/")
-      fnA.append(key_prefix)
-      fnA.append(".")
-      fnA.append(str(i))
+      fnA.append("/.xalt.d/run")
       fnA.append(".")
       fnA.append(args.syshost)
       fnA.append(".")
       fnA.append(dateStr)
       fnA.append(".")
-      fnA.append(uuid)
+      fnA.append(suffix)
+      fnA.append(".")
+      fnA.append(run['uuid'])
       fnA.append(".json")
-      fn = "".join(fnA)
-      uuidA.append({'uuid' : uuid, 'fn' : fn})
+      run['fn'] = "".join(fnA)
 
     tracing = os.environ.get("XALT_TRACING")
     if (tracing == "yes"):
-      print ("XALT_TRANSMISSION_STYLE: ",XALT_TRANSMISSION_STYLE, file=sys.stderr)
+      print ("XALT_TRANSMISSION_STYLE: ",XALT_TRANSMISSION_STYLE,"\n", file=sys.stderr)
 
     for i, run in enumerate(runA):
-      uuid = uuidA[i]['uuid']
-      fn   = uuidA[i]['fn']
+      uuid = run['uuid']
+      fn   = run['fn']
       userExec = UserExec(run['exec_prog'])
       if (not userExec.execName()):
         if (tracing == "yes"):

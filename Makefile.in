@@ -116,7 +116,8 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
 
 build_initize: $(INIT_SRC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFILES) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC)  __installMe
-	gcc -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c
+	[ -f $(DESTDIR)$(SITE)/xalt_syshost.py ] && MYFLAGS=-DHAVE_SYSHOST_CMD; \
+	gcc $$MYFLAGS -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c
 
 echo:
 	@echo CURDIR: $(CURDIR)
@@ -131,6 +132,7 @@ $(DIRLIST) :
 
 Inst_site: $(SITE_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
+	[ -f $(DESTDIR)$(SITE)/xalt_syshost_$(SITE_NAME).py ] && ln -s xalt_syshost_$(SITE_NAME).py $(DESTDIR)$(SITE)/xalt_syshost.py
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
@@ -205,7 +207,7 @@ __installMe:
 	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
-	        -e 's|@path_to_uuidgen@|$(PATH_TO_UUIDGEN)|g'              \
+	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] && \
                chmod +x $(DIRLOC)/$$fn$$oext;                              \

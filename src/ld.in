@@ -117,7 +117,7 @@ GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
 SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $SYS_HOST_CMD)
-UUIDGEN=@path_to_uuidgen@
+UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
 CAT=@path_to_cat@
