@@ -76,8 +76,7 @@ class CmdLineOptions(object):
     parser.add_argument("--end",      dest='endTime',   action="store", type=float, default="0.0", help="end time")
     parser.add_argument("--status",   dest='status',    action="store", default = "0",             help="return status from run")
     parser.add_argument("--syshost",  dest='syshost',   action="store", default = syshost(),       help="system host name")
-    parser.add_argument("--uuidgen",  dest='uuidgen',   action="store", default = None,            help="uuidgen program")
-    parser.add_argument("--uuidA",    dest='uuidA',     action="store", default = None,            help="An array of uuid")
+    parser.add_argument("--uuid",     dest='uuid',      action="store", default = "0.0",           help="uuid string")
 
     parser.add_argument("exec_progT", nargs='+',        help="user program")
 
@@ -375,29 +374,35 @@ def main():
 
   try:
     # parse command line options:
-    args = CmdLineOptions().execute()
-    runA = json.loads(args.exec_progT[0])
+    args    = CmdLineOptions().execute()
+    runA    = json.loads(args.exec_progT[0])
+    uuid    = args.uuid
+    dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(arg.startTime))
+
+    # build output file name (it is only use by the file transmission method)
     if (args.endTime > 0):
       key_prefix = "run_fini_"
-      uuidA = json.loads(args.uuidA)
     else:
       key_prefix = "run_strt_"
-      dateStr = capture("@date@ +%Y_%m_%d_%H_%M_%S")[0:-1]
-      N       = len(runA)
-      uuidA   = []
-      for i in xrange(N):
-        fnA     = []
-        uuid = capture(args.uuidgen)[0:-1]
-        fnA.append(os.environ.get("HOME","/"))
-        fnA.append("/.xalt.d/run.")
-        fnA.append(args.syshost)
-        fnA.append(".")
-        fnA.append(dateStr)
-        fnA.append(".")
-        fnA.append(uuid)
-        fnA.append(".json")
-        fn = "".join(fnA)
-        uuidA.append({'uuid' : uuid, 'fn' : fn})
+
+    uuidA   = []
+    N       = len(runA)
+    for i in xrange(N):
+      fnA     = []
+      fnA.append(os.environ.get("HOME","/"))
+      fnA.append("/.xalt.d/")
+      fnA.append(key_prefix)
+      fnA.append(".")
+      fnA.append(str(i))
+      fnA.append(".")
+      fnA.append(args.syshost)
+      fnA.append(".")
+      fnA.append(dateStr)
+      fnA.append(".")
+      fnA.append(uuid)
+      fnA.append(".json")
+      fn = "".join(fnA)
+      uuidA.append({'uuid' : uuid, 'fn' : fn})
 
     tracing = os.environ.get("XALT_TRACING")
     if (tracing == "yes"):
@@ -427,8 +432,6 @@ def main():
                                               args.syshost, "run", fn)
       xfer.save(submitT, key)
 
-    if (args.endTime == 0):
-      print(json.dumps(uuidA))
   except Exception as e:
     print("XALT_EXCEPTION(xalt_run_submission.py): ",e, file=sys.stderr)
     logger.exception("XALT_EXCEPTION:xalt_run_submission.py")

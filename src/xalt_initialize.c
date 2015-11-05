@@ -66,7 +66,7 @@ void myinit(int argc, char **argv, char **envp)
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
   
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s --start \"%.3f\" --end 0 --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld}]'",
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s --start \"%.3f\" --end 0 --uuid \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld}]'",
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", start_time, uuid_str, path, my_size);
 
   if (strcmp(getenv("XALT_TRACING"),"yes") == 0)
@@ -90,7 +90,7 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s --start \"%.3f\" --end \"%.3f\" --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld}]'",
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s --start \"%.3f\" --end \"%.3f\" --uuid \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld}]'",
 	  "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", start_time, end_time, uuid_str, path, my_size);
   if (strcmp(getenv("XALT_TRACING"),"yes") == 0)
     printf("\nEnd Tracking: %s\n",cmdline);

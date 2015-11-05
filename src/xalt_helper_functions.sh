@@ -202,10 +202,9 @@ run_real_command()
   # doesn't complete there will be a record.
 
   tracing_msg "run_real_command: XALT Start Record"
-  sTime=$( LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $EPOCH)
-  UUID_A=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0 --uuidgen "$UUIDGEN" --syshost "$SYSHOST" -- "$EXEC_T")
-
-  tracing_msg "UUID_A: $UUID_A"
+  uuid=$($UUIDGEN)
+  sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $EPOCH)
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0        --uuid "$uuid" --syshost "$SYSHOST" -- "$EXEC_T"
 
   status=0
   if [ -z "${testMe:-}" ]; then
@@ -220,7 +219,7 @@ run_real_command()
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH= $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuidA "$UUID_A" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --uuid "$uuid" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"
