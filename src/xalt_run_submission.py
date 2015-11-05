@@ -36,6 +36,20 @@ from xalt_global               import *
 
 import subprocess, time, socket, json, argparse, platform
 
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    fnA = os.path.split(inspect.currentframe().f_code.co_filename)
+    return fnA[1]
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+
 logger = config_logger()
 
 def syshost():
@@ -412,6 +426,7 @@ def main():
       xfer  = XALT_transmission_factory.build(XALT_TRANSMISSION_STYLE,
                                               args.syshost, "run", fn)
       xfer.save(submitT, key)
+
     if (args.endTime == 0):
       print(json.dumps(uuidA))
   except Exception as e:
