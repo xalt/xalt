@@ -23,9 +23,9 @@ buildRmapT()
 
 installXALT()
 {
-  rm -rf XALT
+  rm -rf XALT build
   mkdir build
-  (cd build; ./configure --prefix $outputDir/XALT --with-etcDir=$outputDir > /dev/null ; \
+  (cd build; $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir > /dev/null ; \
   make -f makefile PATH_TO_SRC=$projectDir install > /dev/null )
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin
