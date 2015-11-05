@@ -116,7 +116,7 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
 
 build_initize: $(INIT_SRC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFILES) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC)  __installMe
-	gcc -o $(DESTDIR)$(LIBEXEC)xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)xalt_initialize.c
+	gcc -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c
 
 echo:
 	@echo CURDIR: $(CURDIR)
