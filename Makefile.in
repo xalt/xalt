@@ -102,6 +102,8 @@ TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py    
                      contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
                      contrib/TACC/quarter2months.in
 TACC_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(TACC_PKG))
+INIT_SRC          := src/xalt_initialize.c
+INIT_SRC          := $(patsubst %, $(PATH_TO_SRC)/%, $(INIT_SRC))
 
 .PHONY:
 
@@ -110,9 +112,11 @@ all:
 
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
-          Build_pstree_$(BUILD_PSTREE)
+          Build_pstree_$(BUILD_PSTREE) build_initize
 
-
+build_initize: $(INIT_SRC)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFILES) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC)  __installMe
+	gcc -o $(DESTDIR)$(LIBEXEC)xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)xalt_initialize.c
 
 echo:
 	@echo CURDIR: $(CURDIR)

@@ -169,11 +169,11 @@ tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -t > $LINKLINE_OUT 
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
 status=$?
 
 if [ -n "$USER_TRACE" ]; then
-  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ | $GREP -v $X
+  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE

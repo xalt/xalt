@@ -4,14 +4,13 @@
 #include <uuid/uuid.h>
 #include <time.h>
 
-#define PATHMAX 4096
+#define PATH_MAX 4096
 static char   uuid_str[37];
 static double start_time = 0.0;
 static double end_time   = 0.0;
 static long   my_rank    = 0L;
 static long   my_size    = 1L;
-static char   path[4096];
-static char   cmdline[16384];
+static char   path[PATH_MAX];
 
 long compute_size(const char **envA)
 {
@@ -29,6 +28,7 @@ long compute_size(const char **envA)
 
 void myinit(int argc, char **argv, char **envp)
 {
+  char * cmdline;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   const char ** p;
@@ -53,7 +53,7 @@ void myinit(int argc, char **argv, char **envp)
   else
     {
       int len;
-      getcwd(path, PATHMAX);
+      getcwd(path, PATH_MAX);
       len = strlen(path);
       path[len] = '/';
       strcpy(&path[len+1], argv[0]);
@@ -66,14 +66,16 @@ void myinit(int argc, char **argv, char **envp)
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
   
-  sprintf(cmdline, "%s -E %s --start \"%.3f\" --end 0 --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntask\": %ld}]",
-	  "/usr/local/bin/python","xalt_run_submission.py", start_time, uuid_str, path, my_size);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s --start \"%.3f\" --end 0 --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntask\": %ld}]",
+	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", start_time, uuid_str, path, my_size);
 
   printf("cmd: %s\n\n",cmdline);
+  free(cmdline);
 }
 
 void myfini()
 {
+  char * cmdline;
   struct timeval tv;
 
   char * v = getenv("XALT_EXECUTABLE_TRACKING");
@@ -86,9 +88,10 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  sprintf(cmdline, "%s %s --start \"%.3f\" --end \"%.3f\" --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntask\": %ld}]",
-	  "/usr/local/bin/python","xalt_run_submission.py", start_time, end_time, uuid_str, path, my_size);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s --start \"%.3f\" --end \"%.3f\" --uuidgen \"%s\" -- '[{\"exec_prog\": \"%s\", \"ntask\": %ld}]",
+	  "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", start_time, end_time, uuid_str, path, my_size);
   printf("cmd: %s\n\n",cmdline);
+  free(cmdline);
 }
 
 #ifdef __MACH__
