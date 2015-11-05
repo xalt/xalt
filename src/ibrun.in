@@ -52,10 +52,11 @@ tracing_msg "Starting ibrun"
 find_real_command $0  # this command sets $MY_CMD
 
 if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
-  tracing_msg "Starting $MY_CMD"
+  tracing_msg "  Starting $MY_CMD"
   $MY_CMD "${argA[@]}"
   status="$?"
-  tracing_msg "Endinging $MY_CMD"
+  tracing_msg "  Ending $MY_CMD"
+  tracing_msg "Ending ibrun"
   exit $status
 fi
 

@@ -110,10 +110,6 @@ do
 done
 
 
-if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
-  XALT_INIT_ROUTINE_OBJ=$XALT_LIBEXEC_DIR/xalt_initialize.o
-fi
-
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
@@ -138,6 +134,11 @@ ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
+
+if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
+  XALT_INIT_ROUTINE_OBJ=$XALT_LIBEXEC_DIR/xalt_initialize.o
+fi
+
 
 if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
