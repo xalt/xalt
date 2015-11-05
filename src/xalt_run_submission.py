@@ -377,7 +377,7 @@ def main():
     args    = CmdLineOptions().execute()
     runA    = json.loads(args.exec_progT[0])
     uuid    = args.uuid
-    dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(arg.startTime))
+    dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(args.startTime))
 
     # build output file name (it is only use by the file transmission method)
     if (args.endTime > 0):
