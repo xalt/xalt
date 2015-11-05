@@ -185,7 +185,7 @@ run_real_command()
   SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_DIR/site/xalt_syshost_@site_name@.py)
   
   # Find the user executable by walking the original command line.
-  EXEC_T='[{"exec_prog": "unknown", "ntask": 1} ]'
+  EXEC_T='[{"exec_prog": "unknown", "ntasks": 1} ]'
   if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
     EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
   fi
