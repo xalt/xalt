@@ -24,8 +24,10 @@ How to put in images - reference
 
 .. image:: _static/mysql1results.png
     :width: 365px
-    :align: left
+    :align: center
     :height: 253px
-    :alt: alternate text
+    :alt: sql results
+    
+SQL 
 
-.. image:: _static/xaltinfo.jpg
+

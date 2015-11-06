@@ -27,19 +27,32 @@ Choose an installation directory, the directory will be referred to as XALT_DIR
 
 For XALT on multiple machines, you need to decide if you want to have one database or multiple databases.
 
-Either mode is supported
+Either mode is supported.
 
 **Lmod/ReverseMap**
 
-Lmod per machine etc
+Lmod on multiple machines
+- Machines have different software installations (module lists) AND you want ReverseMAP support.
+- Machines with different architectures.
+Lmod provides the spider utility which creates the map. TLC module system does not need to be replaced.
 
-**Intercepting**
+**Intercepting: linkers and launchers**
+If you have multiple code launchers and linkers, you must choose a method to intercept them. There are currently three options for wrapping.
+	#. Aliasing  
+	#. XALT modulefile
+	#. Move the launcher
+	
+	:doc:`070_interception`
 
-code launchers/linkers
+**File Location**
 
-**etc dir**
+Choose a location for files the following files: xalt_db.conf and the reverse MapD directory. We recommend they go in XALT_DIR/etc, but
+In the case that you want the xalt_db.conf file hidden or secured, by overrunning at runtime with XALT_ETC_DIR or with the configuration option*::
 
-location for new files
+	--with-etcDir=ans 
+
+Note: you will need to have an XALT_ETC_DIR directory for each machine.
+
 
 Next Steps - Testing
 ^^^^^^^^^^^^^^^^^^^^

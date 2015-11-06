@@ -9,8 +9,10 @@ XALT may be downloaded from either sourceforge or github:
 
   http://github.com/Fahey-McLay/xalt/
 
+.. _Lmod:
+
 Lmod Installation
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^
 
 Get Lmod-5.8rc2 or greater from::
 

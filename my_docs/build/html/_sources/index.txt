@@ -8,8 +8,7 @@ This guide is written to explain the benefits of XALT, installation, and give ex
 
 OVERVIEW
 ^^^^^^^^
-What is XALT, who should use it, and why should they use it.
-
+XALT is a lightweight software tool for any Linux cluster, workstation, or high-end supercomputer to track executable information and linkage of static shared and dynamically linked libraries. When the code is executed, wrappers intercept both the GNU linker (ld) and code launcher (like mpirun, aprun, or ibrun) to capture linkage information and environmental variables.
 
 Installing XALT - Getting Started
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -26,6 +25,8 @@ Topics covered as part of Quick Start include:
   :doc:`040_testing` |
   :doc:`050_production` |
   :doc:`060_datamining`
+
+
 
 User Guide for  XALT
 ^^^^^^^^^^^^^^^^^^^^^

@@ -73,13 +73,29 @@
 <p>Choose an installation directory, the directory will be referred to as XALT_DIR</p>
 <p><strong>Database Decisions</strong></p>
 <p>For XALT on multiple machines, you need to decide if you want to have one database or multiple databases.</p>
-<p>Either mode is supported</p>
+<p>Either mode is supported.</p>
 <p><strong>Lmod/ReverseMap</strong></p>
-<p>Lmod per machine etc</p>
-<p><strong>Intercepting</strong></p>
-<p>code launchers/linkers</p>
-<p><strong>etc dir</strong></p>
-<p>location for new files</p>
+<p>Lmod on multiple machines
+- Machines have different software installations (module lists) AND you want ReverseMAP support.
+- Machines with different architectures.
+Lmod provides the spider utility which creates the map. TLC module system does not need to be replaced.</p>
+<p><strong>Intercepting: linkers and launchers</strong>
+If you have multiple code launchers and linkers, you must choose a method to intercept them. There are currently three options for wrapping.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Aliasing</li>
+<li>XALT modulefile</li>
+<li>Move the launcher</li>
+</ol>
+<p><a class="reference internal" href="070_interception.html"><em>Interception Options</em></a></p>
+</div></blockquote>
+<p><strong>File Location</strong></p>
+<p>Choose a location for files the following files: xalt_db.conf and the reverse MapD directory. We recommend they go in XALT_DIR/etc, but
+In the case that you want the xalt_db.conf file hidden or secured, by overrunning at runtime with XALT_ETC_DIR or with the configuration option*:</p>
+<div class="highlight-python"><div class="highlight"><pre>--with-etcDir=ans
+</pre></div>
+</div>
+<p>Note: you will need to have an XALT_ETC_DIR directory for each machine.</p>
 </div>
 <div class="section" id="next-steps-testing">
 <h2>Next Steps - Testing<a class="headerlink" href="#next-steps-testing" title="Permalink to this headline">¶</a></h2>
