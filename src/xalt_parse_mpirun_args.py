@@ -97,7 +97,7 @@ def find_exec(ignoreT, argT, npT, cmdArg, argA, *n, **kw):
     if (not path):
       path    = which(find_cmd(ignoreT, i, argA)) or "unknown"
     ntasks  = compute_ntasks(t)
-    uuid    = capture("@uuidgen@")
+    uuid    = capture("@uuidgen@").rstrip('\n')
     resultA.append({'exec_prog':path, 'ntasks':ntasks, 'uuid': uuid})
 
     # Loop for colons
