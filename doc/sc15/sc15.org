@@ -1,0 +1,90 @@
+Notes for XALT talk at SC 15 and Hackathon
+
+* What is XALT?
+
+Joint project between Mark Fahey and Robert McLay
+
+Funded by NSF
+
+See other slide sets
+
+* Where are we?
+
+The hardest thing is protecting XALT from What users do to the their
+environment.
+
+** Ways users can affect programs:
+*** Setting PYTHONHOME to something that doesn't exist
+*** B
+
+
+** Protecting Python programs from users:
+
+   The four ways that python can be affected: 
+
+      LD_LIBRARY_PATH, PATH, PYTHONPATH, PYTHONHOME
+
+
+  LD_LIBRARY_PATH="@ld_lib_path@" PATH= @python@ -E python-script ...
+
+** Configuring XALT this way means that there must be a unique install for each operating system.
+
+   In other words, if you have a shared file system between multiple
+   cluster, you'll need one installation per cluster. not shared.
+
+   => This is the cost of protecting XALT from what users can do to
+   it.
+
+* Database changes:
+
+   * Show size of table on stampede from August;
+
+   * New design of DB w.r.t. Environment variables.
+      => save all as a json table in a blob that is compressed.
+         - means all env vars can be retrieved but a much smaller set
+           can be used for SQL tests.
+
+* New trick: Track all executables.
+
+  * use init_array, fini_array to register functions that are called
+    before and after main.
+
+  * Works with ELF binaries, Works with MACH binaries.
+  => works with C/C++/Fortran.
+
+  * Will show with Demo
+
+* Upside: can now track scalar & Openmp pgrms
+
+* Upside: no-longer need to write a parser for every site job launcher
+   ibrun, aprun, mpirun, mympirun, srun, etc.
+
+* Upside: no-longer need to walk the mpirun/aprun etc command line
+
+   ** This is difficult to do
+
+   ibrun tacc_affinity  <user_program>  O.K.
+
+   ibrun env -u foo <user_program>  Not O.K.
+
+
+* Downside:
+
+  * Only track MPI jobs from task 0.
+
+  * MPMD pgrms will only record the executable tied to task 0 and the
+    other(s) will be missed.
+  * Could be handled by reporting results from all tasks
+
+  * We lose the ability to return the exit status.
+
+* Not yet ready for release.
+
+  * Now just linking it.  In other words, this won't track anything
+    that is older than this new install of XALT.
+
+  * The new release will 
+
+
+
+
