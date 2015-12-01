@@ -26,3 +26,4 @@ We have been running XALT at TACC, one of the largest supercomputers
 in the world and it has become mission critical for us to know what
 programs to benchmark for new systems.  It has also told us what
 programs that shouldn't be running in on the large memory nodes.
+We will also describe using analytics on the big data generated.
