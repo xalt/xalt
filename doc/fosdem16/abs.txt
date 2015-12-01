@@ -1,0 +1,28 @@
+Title: XALT: Tracking User Jobs and Environments on a Cluster
+
+
+Let's talk real, no-kiddin' supercomputer analytics, aimed at moving
+beyond monitoring the machine as a whole or even its individual
+hardware components. We're interested in drilling down to the level of
+individual tasks, users, and binaries. We’re after ready
+answers to the "what, where, how, when and why" that stakeholders are
+clamoring for: everything from which libraries (or individual
+functions!) are in demand, to preventing the problems that get in the
+way of successful science. This talk will show how XALT can provide
+this type of job-level insight.  
+
+XALT can provide a wide range of metrics and measures of
+job-level activity. There are benefits to both users and stakeholders:
+sponsoring institutions interested in strategic priorities;
+organizations concerned about meeting users' needs; and those seeking
+to study user activity to improve value and effectiveness.
+
+We will show how this tool provides high value to centers and
+their users as it can provide documentation on how an application was
+built to provide reproducibility by reporting the exact environment in
+which jobs were run.
+
+We have been running XALT at TACC, one of the largest supercomputers
+in the world and it has become mission critical for us to know what
+programs to benchmark for new systems.  It has also told us what
+programs that shouldn't be running in on the large memory nodes.
