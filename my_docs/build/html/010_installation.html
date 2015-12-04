@@ -43,6 +43,7 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Though not required, installation an operation of XALT is easier with pre-requisite software: lua and lmod.</p>
 <div class="section" id="install-xalt">
 <h2>Install XALT<a class="headerlink" href="#install-xalt" title="Permalink to this headline">¶</a></h2>
 <p>XALT may be downloaded from either sourceforge or github:</p>
@@ -53,7 +54,11 @@
 </div>
 <div class="section" id="lmod-installation">
 <span id="lmod"></span><h2>Lmod Installation<a class="headerlink" href="#lmod-installation" title="Permalink to this headline">¶</a></h2>
-<p>Get Lmod-5.8rc2 or greater from:</p>
+<p>Get Lmod-5.8rc2 or greater from from sourceforge:</p>
+<div class="highlight-python"><div class="highlight"><pre>http://sourceforge.net/projects/lmod/files/
+</pre></div>
+</div>
+<p>Or get Lmod-5.8rc2 or greater from:</p>
 <div class="highlight-python"><div class="highlight"><pre>git clone /Lmod.git
 </pre></div>
 </div>
@@ -65,11 +70,21 @@
 <dd><a class="reference external" href="http://lmod.readthedocs.org/">http://lmod.readthedocs.org/</a></dd>
 </dl>
 </div>
-<div class="section" id="automated-installation-components">
-<h2>Automated Installation Components<a class="headerlink" href="#automated-installation-components" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation-steps">
+<h2>Installation Steps<a class="headerlink" href="#installation-steps" title="Permalink to this headline">¶</a></h2>
+<p>First, untar the XALT file, change the directory to XALT, configure, then install:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ &gt; cd xalt
+$ &gt; ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR
+$ &gt; make
+$ &gt; make install
+</pre></div>
 </div>
-<div class="section" id="manual-installation-components">
-<h2>Manual Installation Components<a class="headerlink" href="#manual-installation-components" title="Permalink to this headline">¶</a></h2>
+<p>Next, remove job launchers that are not supported on your system. Launchers currently on XALT include LIST LAUNCHERS HERE.</p>
+<p>For removing launchers on a Cray, which only supports &#8216;aprun&#8217;:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; cd $XALT_DIR/bin
+$&gt; rm ibrun* mpirun mpiexec srun
+</pre></div>
+</div>
 </div>
 <div class="section" id="next-steps-testing">
 <h2>Next Steps - Testing<a class="headerlink" href="#next-steps-testing" title="Permalink to this headline">¶</a></h2>
@@ -89,8 +104,7 @@
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#install-xalt">Install XALT</a></li>
 <li><a class="reference internal" href="#lmod-installation">Lmod Installation</a></li>
-<li><a class="reference internal" href="#automated-installation-components">Automated Installation Components</a></li>
-<li><a class="reference internal" href="#manual-installation-components">Manual Installation Components</a></li>
+<li><a class="reference internal" href="#installation-steps">Installation Steps</a></li>
 <li><a class="reference internal" href="#next-steps-testing">Next Steps - Testing</a></li>
 </ul>
 </li>
