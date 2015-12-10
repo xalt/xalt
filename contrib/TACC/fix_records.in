@@ -2,8 +2,11 @@
 # -*- python -*-
 
 from __future__ import print_function
-import os, sys, re, time, datetime, argparse, ConfigParser, base64, MySQLdb
-#from xalt_util import *
+import os, sys, re, time, datetime, argparse, base64, MySQLdb
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -124,7 +127,7 @@ def read_tacc_acct_records():
 
 def main():
   args     = CmdLineOptions().execute()
-  config   = ConfigParser.ConfigParser()     
+  config   = configparser.ConfigParser()     
   configFn = dbConfigFn(args.dbname)
   config.read(configFn)
 

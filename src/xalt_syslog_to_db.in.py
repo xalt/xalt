@@ -97,7 +97,7 @@ class Record(object):
     self.__blkCnt  = 0
 
     blkA = []
-    for i in xrange(nblks):
+    for i in range(nblks):
       blkA.append(False)
 
     self.__blkA    = blkA
@@ -131,7 +131,7 @@ class Record(object):
     sPA.append(str(nblks))
     ss = "".join(sPA)
 
-    for idx in xrange(nblks):
+    for idx in range(nblks):
       value = blkA[idx]
       if (value):
         sA.append(ss)
@@ -178,7 +178,7 @@ def parseSyslogV2(s, recordT):
       key    = next(lexer)
       value  = next(lexer)
       t[key] = value
-  except StopIteration:
+  except StopIteration as e:
     pass
   
 

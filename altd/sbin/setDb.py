@@ -23,7 +23,7 @@ def readConfig():
         USER=config.get("MYSQL","USER")
         PASSWD=base64.b64decode(config.get("MYSQL","PASSWD"))
         DB=config.get("MYSQL","DB")
-    except ConfigParser.NoOptionError, err:
+    except ConfigParser.NoOptionError as err:
         sys.stderr.write("\nCannot parse the config file\n")
         sys.stderr.write("Switch to user input mode...\n\n")
         readFromUser()
@@ -60,7 +60,7 @@ MACHINE=raw_input("Machine name:")
 # connect to the MySQL server
 try:
     conn = MySQLdb.connect (HOST,USER,PASSWD)
-except MySQLdb.Error, e:
+except MySQLdb.Error as e:
     print "Error %d: %s" % (e.args[0], e.args[1])
     sys.exit (1)
 
@@ -115,7 +115,7 @@ try:
     writeConfig()
     
     
-except MySQLdb.Error, e:
+except MySQLdb.Error as e:
     print "Error %d: %s" % (e.args[0], e.args[1])
     sys.exit (1)
 

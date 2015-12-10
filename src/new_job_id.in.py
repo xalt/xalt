@@ -48,7 +48,7 @@ def main():
   xalt = XALTdb(ConfigFn)
   try:
     conn   = xalt.connect()
-  except MySQLdb.Error, e:
+  except MySQLdb.Error as e:
     print("-1")
     sys.exit(1)
     
@@ -72,7 +72,7 @@ def main():
 
 
 
-  except MySQLdb.Error, e:
+  except MySQLdb.Error as e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 

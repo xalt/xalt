@@ -17,9 +17,13 @@
 #----------------------------------------------------------------------------#
 
 import os, sys, re, base64, operator
-import MySQLdb, ConfigParser, argparse
+import MySQLdb, argparse
 import time
 from datetime import datetime, timedelta
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 
 XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR")
 ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
@@ -50,7 +54,7 @@ startdate = (datetime.strptime(enddate, "%Y-%m-%d") - timedelta(90)) \
 if args.startdate is not None:
   startdate = args.startdate
   
-config = ConfigParser.ConfigParser()     
+config = configparser.ConfigParser()     
 config.read(ConfigFn)
 
 conn = MySQLdb.connect \

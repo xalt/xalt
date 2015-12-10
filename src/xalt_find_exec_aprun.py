@@ -89,7 +89,7 @@ def main():
   """
   try:
     print(find_exec(ignoreT, argT, npT, None, sys.argv[1:], dot=True))
-  except Exception:
+  except Exception as e:
     print('find_exec_exception')
   
 if ( __name__ == '__main__'): main()

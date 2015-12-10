@@ -71,7 +71,7 @@ def extract_compiler():
         result = p_parent_name()
         break
       p=p_parent()
-  except ImportError:
+  except ImportError as e:
     ignore_programs = ['pstree', 'ld', 'collect2', 'python', 'sh']
     pstree_bin = "@path_to_pstree@"
     pstree = capture("%s -l -s %d" % (pstree_bin, os.getpid())).strip()

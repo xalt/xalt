@@ -2,9 +2,14 @@
 # -*- python -*-
 
 from __future__ import print_function
-import os, sys, re, time, datetime, argparse, ConfigParser, MySQLdb, base64
+import os, sys, re, time, datetime, argparse, MySQLdb, base64
 from Rmap_XALT import Rmap
 from xalt_util import *
+
+try
+  import configparser
+except:
+  import ConfigParser as configparser
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -71,7 +76,7 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
 
 def main():
   args     = CmdLineOptions().execute()
-  config   = ConfigParser.ConfigParser()     
+  config   = configparser.ConfigParser()     
   configFn = dbConfigFn(args.dbname)
   config.read(configFn)
 

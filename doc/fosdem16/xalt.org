@@ -1,0 +1,17 @@
+Notes for XALT talk at FOSDEM 16
+
+* This is a HPC tool and Big Data.
+
+What makes it big data?  Well, we are certainly creating a lot of it.
+Big data analysis tools can be used to analyze the data.
+
+Describe Weija stuff: Rule base edge detection.
+
+* XALT is a application and library census taker
+
+we know from accounting on how much a user uses but not what they run.
+
+* Hijacks linker
+** LD_PRELOAD
+** xalt_initialize.o
+

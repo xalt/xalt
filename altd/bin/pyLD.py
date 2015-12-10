@@ -54,7 +54,7 @@ try:
     else:
         log=logging.getLogger("altd_ld")
     log.debug("Verbose:"+str(VERBOSE))    
-except IOError, err:
+except IOError as err:
     sys.stderr.write("Cannot load log config file! Program aborted...")
     sys.exit(3)
 try:
@@ -68,14 +68,14 @@ try:
    
     MYSQL_DB=config.get("MYSQL","DB")
     cFile.close()
-except ConfigParser.NoOptionError, err:    
+except ConfigParser.NoOptionError as err:    
     log.exception(err)
-except IOError, err:
+except IOError as err:
     log.critical("Cannot load db config file! Program aborted...")
     sys.exit(3)
 try:
     import MySQLdb
-except ImportError, err:
+except ImportError as err:
     log.critical("No python MySQL module found")
     log.critical("Need to install python MySQLdb module...")
     sys.exit(3)
@@ -120,7 +120,7 @@ class ALTD_LD(object):
             self.isConnected = True
             log.info("MySQLdb is connected")
             return True
-        except MySQLdb.Error, err:
+        except MySQLdb.Error as err:
             log.exception(err)
             self.isConnected = False
             return False
@@ -147,7 +147,7 @@ class ALTD_LD(object):
                 inc_id = self.conn.insert_id()
                 log.info("username=%s hostname=%s pos=%ld LD_SUC_INFO" %
                          (self.username, self.machine, inc_id))
-            except MySQLdb.Error, err:
+            except MySQLdb.Error as err:
                 log.exception(err)
         # Write to stderr for ld script to read in
         sys.stderr.write(str(inc_id))
@@ -220,7 +220,7 @@ class ALTD_LD(object):
                 query = "UPDATE altd_%s_link_tags SET linkline_id=%ld, exit_code=%d WHERE tag_id=%ld" % (self.machine,inc_id,ecode,tag_id)
                 self.conn.query(query)
                 
-            except MySQLdb.Error, err:
+            except MySQLdb.Error as err:
                 log.exception(err)
 
     def mysql_db_disconnect(self):
@@ -236,7 +236,7 @@ class ALTD_LD(object):
             try:
                 self.conn.close()
                 self.isConnected = False
-            except MySQLdb.Error, err:
+            except MySQLdb.Error as err:
                 log.exception(err)
                 
     def main(self):

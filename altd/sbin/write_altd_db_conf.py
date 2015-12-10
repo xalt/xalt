@@ -2,10 +2,13 @@
 
 import sys,os
 import MySQLdb
-import ConfigParser
 import base64
 import time
 import getpass
+try
+  import configparser
+except ImportError:
+  import ConfigParser as configparser
 
 def readFromUser():
     global HOST,USER,PASSWD,DB
@@ -18,20 +21,20 @@ def readFromUser():
 def readConfig():
     try:
         global HOST,USER,PASSWD,DB
-        config=ConfigParser.ConfigParser()
+        config=configparser.ConfigParser()
         config.read("altd_db.conf")
         HOST=config.get("MYSQL","HOST")
         USER=config.get("MYSQL","USER")
         PASSWD=base64.b64decode(config.get("MYSQL","PASSWD"))
         DB=config.get("MYSQL","DB")
-    except ConfigParser.NoOptionError, err:
+    except configparser.NoOptionError as err:
         sys.stderr.write("\nCannot parse the config file\n")
         sys.stderr.write("Switch to user input mode...\n\n")
         readFromUser()
 
 
 def writeConfig():
-    config=ConfigParser.ConfigParser()
+    config=configparser.ConfigParser()
     config.add_section("MYSQL")
     config.set("MYSQL","HOST",HOST)
     config.set("MYSQL","USER",USER)
@@ -66,7 +69,7 @@ try:
     conn = MySQLdb.connect (HOST,USER,PASSWD)
     cursor = conn.cursor()
     cursor.close()
-except MySQLdb.Error, e:
+except MySQLdb.Error as e:
     print "Error %d: %s" % (e.args[0], e.args[1])
     sys.exit (1)
 

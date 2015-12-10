@@ -3,7 +3,11 @@
 
 from __future__ import print_function, division
 from __future__ import print_function
-import os, sys, re, time, datetime, argparse, ConfigParser, base64, MySQLdb
+import os, sys, re, time, datetime, argparse, base64, MySQLdb
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 
 def getTerminalSize():
   """
@@ -198,7 +202,7 @@ def kill_dups(args, cursor):
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
-  config       = ConfigParser.ConfigParser()     
+  config       = configparser.ConfigParser()     
   configFn     = dbConfigFn(os.path.join(XALT_ETC_DIR,args.dbname))
   config.read(configFn)
 

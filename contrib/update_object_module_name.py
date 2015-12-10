@@ -33,9 +33,13 @@
 #
 
 import os, sys, re, base64
-import MySQLdb, ConfigParser, argparse
+import MySQLdb, argparse
 from Rmap_XALT import Rmap
 from xalt_util import *
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 
 XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR")
 ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
@@ -57,7 +61,7 @@ parser.add_argument \
 args = parser.parse_args()
 
 
-config = ConfigParser.ConfigParser()     
+config = configparser.ConfigParser()     
 config.read(ConfigFn)
 
 conn = MySQLdb.connect \
