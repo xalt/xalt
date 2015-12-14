@@ -85,6 +85,39 @@ $ &gt; make install
 $&gt; rm ibrun* mpirun mpiexec srun
 </pre></div>
 </div>
+<p>Next, build a file for ReverseMap and libmap.</p>
+<p>ReverseMap associates libraries and object files with the modulefile that specifies them.</p>
+<p>Libmap lists the library files (.a and .so) whose call to their function will be tracked by XALT.</p>
+<p>ReverseMap and Libmap are stored in the same file.</p>
+<p>On a cluster:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ &gt; $LMOD_DIR/lmod/lmod/libexec/spider -o jsonReverseMapT $MODULEPATH
+$ &gt; {XALT_ETC_DIR}/reverseMapD/jsonReverseMapT.json
+</pre></div>
+</div>
+<p>It is important to use the same filename and directory &#8220;reverseMapD&#8221; as they
+are used by conventions in XALT.</p>
+<p>On a Cray (XC, XE, XK), the process is a bit more involved, so a script has been
+provided under contrib/ directory in the XALT source distribution to make it
+easier. Use this script and run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
+</pre></div>
+</div>
+<p>Once the ReverseMap file is built, add libmap to is using as:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; $XALT_DIR/sbin/xalt_rmap_lmap.py
+</pre></div>
+</div>
+<p>Finally, create the database and tables to hold the data.</p>
+<p>Create the file to hold database credentials:</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; cd $XALT_ETC_DIR
+$&gt; python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
+</pre></div>
+</div>
+<p>In this step, make sure that the credential you created have the necessary privileges to create tables, etc. If you want the database credential to be more restrictive,recreate the file to hold database credentials with the desired privilege account.</p>
+<p>Create the database and tables for XALT (need to be run from $XALT_ETC_DIR):</p>
+<div class="highlight-python"><div class="highlight"><pre>$&gt; cd $XALT_ETC_DIR
+$&gt; python $XALT_DIR/sbin/createDB.py
+</pre></div>
+</div>
 </div>
 <div class="section" id="next-steps-testing">
 <h2>Next Steps - Testing<a class="headerlink" href="#next-steps-testing" title="Permalink to this headline">¶</a></h2>

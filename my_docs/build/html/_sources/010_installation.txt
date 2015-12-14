@@ -54,7 +54,47 @@ For removing launchers on a Cray, which only supports 'aprun'::
 	$> rm ibrun* mpirun mpiexec srun
 	
 
+Next, build a file for ReverseMap and libmap. 
 
+ReverseMap associates libraries and object files with the modulefile that specifies them. 
+
+Libmap lists the library files (.a and .so) whose call to their function will be tracked by XALT. 
+
+ReverseMap and Libmap are stored in the same file.
+
+On a cluster::
+
+
+	$ > $LMOD_DIR/lmod/lmod/libexec/spider -o jsonReverseMapT $MODULEPATH
+	$ > {XALT_ETC_DIR}/reverseMapD/jsonReverseMapT.json
+
+It is important to use the same filename and directory "reverseMapD" as they
+are used by conventions in XALT.
+
+On a Cray (XC, XE, XK), the process is a bit more involved, so a script has been
+provided under contrib/ directory in the XALT source distribution to make it
+easier. Use this script and run::
+
+	$> xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
+
+Once the ReverseMap file is built, add libmap to is using as::
+
+	$> $XALT_DIR/sbin/xalt_rmap_lmap.py 
+
+Finally, create the database and tables to hold the data. 
+
+Create the file to hold database credentials::
+
+	$> cd $XALT_ETC_DIR
+	$> python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
+In this step, make sure that the credential you created have the necessary privileges to create tables, etc. If you want the database credential to be more restrictive,recreate the file to hold database credentials with the desired privilege account. 
+
+
+Create the database and tables for XALT (need to be run from $XALT_ETC_DIR)::
+
+	$> cd $XALT_ETC_DIR
+	$> python $XALT_DIR/sbin/createDB.py
+	
 
 Next Steps - Testing
 ^^^^^^^^^^^^^^^^^^^^
