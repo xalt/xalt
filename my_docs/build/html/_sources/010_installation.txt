@@ -46,12 +46,14 @@ First, untar the XALT file, change the directory to XALT, configure, then instal
 	$ > make
 	$ > make install
 
-Next, remove job launchers that are not supported on your system. Launchers currently on XALT include LIST LAUNCHERS HERE.
+Next, remove job launchers that are not supported on your system. Launchers currently on XALT include: aprun, ibrun, mpirun, mpiexec, srun.
 
 For removing launchers on a Cray, which only supports 'aprun'::
 
 	$> cd $XALT_DIR/bin
 	$> rm ibrun* mpirun mpiexec srun
+	
+
 
 
 Next Steps - Testing
