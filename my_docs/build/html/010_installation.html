@@ -79,15 +79,21 @@ $ &gt; make
 $ &gt; make install
 </pre></div>
 </div>
+<div class="section" id="remove-job-launchers">
+<h3>Remove Job Launchers<a class="headerlink" href="#remove-job-launchers" title="Permalink to this headline">¶</a></h3>
 <p>Next, remove job launchers that are not supported on your system. Launchers currently on XALT include: aprun, ibrun, mpirun, mpiexec, srun.</p>
 <p>For removing launchers on a Cray, which only supports &#8216;aprun&#8217;:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; cd $XALT_DIR/bin
 $&gt; rm ibrun* mpirun mpiexec srun
 </pre></div>
 </div>
-<p>Next, build a file for ReverseMap and libmap.</p>
+</div>
+<div class="section" id="reversemap-libmap">
+<h3>ReverseMap &amp; Libmap<a class="headerlink" href="#reversemap-libmap" title="Permalink to this headline">¶</a></h3>
+<p>Build a file for ReverseMap and libmap.</p>
 <p>ReverseMap associates libraries and object files with the modulefile that specifies them.</p>
 <p>Libmap lists the library files (.a and .so) whose call to their function will be tracked by XALT.</p>
+<p>The reverse map needs to be created or updated per machine every time a new modulefile or package is installed. So, it either has to become part of the software installation process, or run as a cron job on a routine basis.</p>
 <p>ReverseMap and Libmap are stored in the same file.</p>
 <p>On a cluster:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ &gt; $LMOD_DIR/lmod/lmod/libexec/spider -o jsonReverseMapT $MODULEPATH
@@ -106,7 +112,9 @@ easier. Use this script and run:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; $XALT_DIR/sbin/xalt_rmap_lmap.py
 </pre></div>
 </div>
-<p>Finally, create the database and tables to hold the data.</p>
+</div>
+<div class="section" id="database-creation">
+<h3>Database Creation<a class="headerlink" href="#database-creation" title="Permalink to this headline">¶</a></h3>
 <p>Create the file to hold database credentials:</p>
 <div class="highlight-python"><div class="highlight"><pre>$&gt; cd $XALT_ETC_DIR
 $&gt; python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
@@ -117,6 +125,7 @@ $&gt; python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
 <div class="highlight-python"><div class="highlight"><pre>$&gt; cd $XALT_ETC_DIR
 $&gt; python $XALT_DIR/sbin/createDB.py
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="next-steps-testing">
@@ -137,7 +146,12 @@ $&gt; python $XALT_DIR/sbin/createDB.py
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#install-xalt">Install XALT</a></li>
 <li><a class="reference internal" href="#lmod-installation">Lmod Installation</a></li>
-<li><a class="reference internal" href="#installation-steps">Installation Steps</a></li>
+<li><a class="reference internal" href="#installation-steps">Installation Steps</a><ul>
+<li><a class="reference internal" href="#remove-job-launchers">Remove Job Launchers</a></li>
+<li><a class="reference internal" href="#reversemap-libmap">ReverseMap &amp; Libmap</a></li>
+<li><a class="reference internal" href="#database-creation">Database Creation</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#next-steps-testing">Next Steps - Testing</a></li>
 </ul>
 </li>

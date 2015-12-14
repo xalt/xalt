@@ -8,12 +8,6 @@ Set transmission style to file for initial testing and load your new XALT module
 
 To test with multiple MPIs, keep XALT first in the path.
 
-Optional Setup
-^^^^^^^^^^^^^^^
-
-Create reverse map with lmod
-
-Run the spider tool that comes with lmod
 
 Testing
 ^^^^^^^
