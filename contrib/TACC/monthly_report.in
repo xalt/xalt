@@ -8,7 +8,10 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
-import ConfigParser
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 from xalt_util     import *
 from xalt_global   import *
 from urllib2       import Request, urlopen, URLError
@@ -278,13 +281,13 @@ class XALTdb(object):
     """ Read database access info from config file. (private)"""
     confFn = self.__confFn
     try:
-      config=ConfigParser.ConfigParser()
+      config=configparser.ConfigParser()
       config.read(confFn)
       self.__host    = config.get("MYSQL","HOST")
       self.__user    = config.get("MYSQL","USER")
       self.__passwd  = base64.b64decode(config.get("MYSQL","PASSWD"))
       self.__db      = config.get("MYSQL","DB")
-    except ConfigParser.NoOptionError, err:
+    except configparser.NoOptionError as err:
       sys.stderr.write("\nCannot parse the config file\n")
       sys.stderr.write("Switch to user input mode...\n\n")
       self.__readFromUser()
@@ -301,7 +304,7 @@ class XALTdb(object):
       self.__readFromUser()
 
     n = 100
-    for i in xrange(0,n+1):
+    for i in range(0,n+1):
       try:
         self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd)
         if (databaseName):
@@ -313,7 +316,7 @@ class XALTdb(object):
         break
 
 
-      except MySQLdb.Error, e:
+      except MySQLdb.Error as e:
         if (i < n):
           sleep(i*0.1)
           pass
@@ -480,7 +483,7 @@ class XALTdb(object):
           cursor.execute(query,[run_id])
           
           lnk_rows = cursor.rowcount
-          for i in xrange(lnk_rows):
+          for i in range(lnk_rows):
             row  = cursor.fetchone()
             path = row[0]
 

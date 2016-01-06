@@ -14,7 +14,7 @@ def main():
   istrt = 3*(int(sA[1]) - 1) + 1
   iend  = istrt + 3
 
-  for month in xrange(istrt,iend):
+  for month in range(istrt,iend):
     strtD = "%d-%02d-01" % (year, month)
     if (month+1 > 12):
       endD  = "%d-%02d-01" % (year+1, 1)

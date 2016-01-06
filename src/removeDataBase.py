@@ -76,7 +76,7 @@ def main():
     cursor.execute("DROP DATABASE IF EXISTS %s " % xalt.db())
 
     cursor.close()
-  except  MySQLdb.Error, e:
+  except  MySQLdb.Error as e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 

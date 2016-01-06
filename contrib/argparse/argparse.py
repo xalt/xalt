@@ -92,18 +92,18 @@ from gettext import gettext as _
 
 try:
     set
-except NameError:
+except NameError as e:
     # for python < 2.4 compatibility (sets module is there since 2.3):
     from sets import Set as set
 
 try:
     basestring
-except NameError:
+except NameError as e:
     basestring = str
 
 try:
     sorted
-except NameError:
+except NameError as e:
     # for python < 2.4 compatibility:
     def sorted(iterable, reverse=False):
         result = list(iterable)
@@ -182,7 +182,7 @@ class HelpFormatter(object):
         if width is None:
             try:
                 width = int(_os.environ['COLUMNS'])
-            except (KeyError, ValueError):
+            except (KeyError, ValueError) as e:
                 width = 80
             width -= 2
 
@@ -407,7 +407,7 @@ class HelpFormatter(object):
         for group in groups:
             try:
                 start = actions.index(group._group_actions[0])
-            except ValueError:
+            except ValueError as e:
                 continue
             else:
                 end = start + len(group._group_actions)
@@ -624,7 +624,7 @@ class HelpFormatter(object):
     def _iter_indented_subactions(self, action):
         try:
             get_subactions = action._get_subactions
-        except AttributeError:
+        except AttributeError as e:
             pass
         else:
             self._indent()
@@ -1100,7 +1100,7 @@ class _SubParsersAction(Action):
         # select the parser
         try:
             parser = self._name_parser_map[parser_name]
-        except KeyError:
+        except KeyError as e:
             tup = parser_name, ', '.join(self._name_parser_map)
             msg = _('unknown parser %r (choices: %s)' % tup)
             raise ArgumentError(self, msg)
@@ -1441,7 +1441,7 @@ class _ActionsContainer(object):
         handler_func_name = '_handle_conflict_%s' % self.conflict_handler
         try:
             return getattr(self, handler_func_name)
-        except AttributeError:
+        except AttributeError as e:
             msg = _('invalid conflict_resolution value: %r')
             raise ValueError(msg % self.conflict_handler)
 
@@ -1625,7 +1625,7 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
             self._add_container_actions(parent)
             try:
                 defaults = parent._defaults
-            except AttributeError:
+            except AttributeError as e:
                 pass
             else:
                 self._defaults.update(defaults)
@@ -1737,7 +1737,7 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
                 args.extend(getattr(namespace, _UNRECOGNIZED_ARGS_ATTR))
                 delattr(namespace, _UNRECOGNIZED_ARGS_ATTR)
             return namespace, args
-        except ArgumentError:
+        except ArgumentError as e:
             err = _sys.exc_info()[1]
             self.error(str(err))
 
@@ -1998,7 +1998,7 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
                         new_arg_strings.extend(arg_strings)
                     finally:
                         args_file.close()
-                except IOError:
+                except IOError as e:
                     err = _sys.exc_info()[1]
                     self.error(str(err))
 
@@ -2248,13 +2248,13 @@ class ArgumentParser(_AttributeHolder, _ActionsContainer):
             result = type_func(arg_string)
 
         # ArgumentTypeErrors indicate errors
-        except ArgumentTypeError:
+        except ArgumentTypeError as e:
             name = getattr(action.type, '__name__', repr(action.type))
             msg = str(_sys.exc_info()[1])
             raise ArgumentError(action, msg)
 
         # TypeErrors or ValueErrors also indicate errors
-        except (TypeError, ValueError):
+        except (TypeError, ValueError) as e:
             name = getattr(action.type, '__name__', repr(action.type))
             msg = _('invalid %s value: %r')
             raise ArgumentError(action, msg % (name, arg_string))

@@ -144,7 +144,7 @@ def main():
 
   num = 200
   pbar = ProgressBar(maxVal=num, ttyOnly=False)
-  for i in xrange(num):
+  for i in range(num):
     pbar.update(i+1)
   pbar.fini()  
 

@@ -2,7 +2,11 @@
 # -*- python -*-
 
 from __future__ import print_function, division
-import os, sys, re, time, datetime, argparse, ConfigParser, base64, MySQLdb, operator
+import os, sys, re, time, datetime, argparse, base64, MySQLdb, operator
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -104,7 +108,7 @@ def envReport(args, cursor):
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
-  config       = ConfigParser.ConfigParser()     
+  config       = configparser.ConfigParser()     
   configFn     = dbConfigFn(os.path.join(XALT_ETC_DIR,args.dbname))
   config.read(configFn)
 

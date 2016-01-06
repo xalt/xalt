@@ -26,11 +26,16 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
-import MySQLdb, ConfigParser, getpass, time
+import MySQLdb, getpass, time
 import warnings
 from   xalt_util     import *
 from   xalt_global   import *
 from   xalt_site_pkg import translate, keep_env_var
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
+
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 import inspect
@@ -59,7 +64,7 @@ def convertToTinyInt(s):
       value = 127
     elif(value < -128):
       value = -128
-  except ValueError:
+  except ValueError as e:
     value = 0
   return value
 
@@ -89,13 +94,13 @@ class XALTdb(object):
     """ Read database access info from config file. (private)"""
     confFn = self.__confFn
     try:
-      config=ConfigParser.ConfigParser()
+      config=configparser.ConfigParser()
       config.read(confFn)
       self.__host    = config.get("MYSQL","HOST")
       self.__user    = config.get("MYSQL","USER")
       self.__passwd  = base64.b64decode(config.get("MYSQL","PASSWD"))
       self.__db      = config.get("MYSQL","DB")
-    except ConfigParser.NoOptionError, err:
+    except configparser.NoOptionError as err:
       sys.stderr.write("\nCannot parse the config file\n")
       sys.stderr.write("Switch to user input mode...\n\n")
       self.__readFromUser()
@@ -112,7 +117,7 @@ class XALTdb(object):
       self.__readFromUser()
 
     n = 100
-    for i in xrange(0,n+1):
+    for i in range(0,n+1):
       try:
         self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8")
         if (databaseName):
@@ -128,7 +133,7 @@ class XALTdb(object):
           cursor.execute("SET character_set_connection=utf8;") #same as above
         break
 
-      except MySQLdb.Error, e:
+      except MySQLdb.Error as e:
         if (i < n):
           sleep(i*0.1)
           pass

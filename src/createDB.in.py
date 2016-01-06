@@ -286,7 +286,7 @@ def main():
     print("(%d) create unique key on join_link_function table" % idx); idx += 1
 
     cursor.close()
-  except  MySQLdb.Error, e:
+  except  MySQLdb.Error as e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 

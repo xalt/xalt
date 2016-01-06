@@ -24,9 +24,13 @@
 #----------------------------------------------------------------------------#
 
 import os, sys, re, base64, operator
-import MySQLdb, ConfigParser, argparse
+import MySQLdb, argparse
 import time
 from datetime import datetime, timedelta
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
 
 XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR")
 ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
@@ -68,7 +72,7 @@ excludePatterns = None
 if args.patterns is not None:
   excludePatterns = [x.strip() for x in args.patterns.split(',')]
   
-config = ConfigParser.ConfigParser()     
+config = configparser.ConfigParser()     
 config.read(ConfigFn)
 
 conn = MySQLdb.connect \

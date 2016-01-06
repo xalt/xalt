@@ -185,7 +185,7 @@ void myinit(int argc, char **argv)
   p_dbg = getenv("XALT_TRACING");
 
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
-    printf("Start Tracking: %s\n",cmdline);
+    printf("xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
   system(cmdline);
   free(cmdline);
 }

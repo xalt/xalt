@@ -2,7 +2,14 @@
 # -*- python -*-
 
 from __future__ import print_function
-import os, sys, re, time, datetime, argparse, ConfigParser, MySQLdb, base64
+import os, sys, re, time, datetime, argparse, MySQLdb, base64
+
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
+
+
 from Rmap_XALT import Rmap
 from xalt_util import *
 
@@ -63,7 +70,7 @@ def fix_module_name(args, tableName, idName, cursor):
 
 def main():
   args     = CmdLineOptions().execute()
-  config   = ConfigParser.ConfigParser()     
+  config   = configparser.ConfigParser()     
   configFn = dbConfigFn(args.dbname)
   config.read(configFn)
 

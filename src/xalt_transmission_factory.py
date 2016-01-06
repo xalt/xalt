@@ -25,7 +25,7 @@ import os, sys, json, base64, zlib
 try:
   from XALTdb      import XALTdb
   XALTdb_available = True
-except ImportError:
+except ImportError as e:
   XALTdb_available = False
   
   
@@ -146,7 +146,7 @@ class Syslog(XALT_transmission_factory):
     nBlks    = (len(b64) - 1)//blkSz + 1
     istart   = 0
     iend     = blkSz
-    for i in xrange(nBlks):
+    for i in range(nBlks):
       sA = []
       sA.append("@logger@ -t XALT_LOGGING V:2 idx:")
       sA.append(str(i))
