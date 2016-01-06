@@ -84,16 +84,18 @@ def main():
     # 1
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_link` (
-          `link_id`       int(11)   unsigned NOT NULL auto_increment,
-          `uuid`          char(36)           NOT NULL,
-          `hash_id`       char(40)           NOT NULL,
-          `date`          DATETIME           NOT NULL,
-          `link_program`  varchar(10)        NOT NULL,
-          `build_user`    varchar(64)        NOT NULL,
-          `build_syshost` varchar(64)        NOT NULL,
-          `build_epoch`   double             NOT NULL,
-          `exit_code`     tinyint(4)         NOT NULL,
-          `exec_path`     varchar(1024)      NOT NULL,
+          `link_id`          int(11)   unsigned NOT NULL auto_increment,
+          `uuid`             char(36)           NOT NULL,
+          `hash_id`          char(40)           NOT NULL,
+          `date`             DATETIME           NOT NULL,
+          `link_program`     varchar(64)        NOT NULL,
+          `link_path`        varchar(1024)      NOT NULL,
+          `link_module_name` varchar(64)                ,
+          `build_user`       varchar(64)        NOT NULL,
+          `build_syshost`    varchar(64)        NOT NULL,
+          `build_epoch`      double             NOT NULL,
+          `exit_code`        tinyint(4)         NOT NULL,
+          `exec_path`        varchar(1024)      NOT NULL,
           PRIMARY KEY  (`link_id`),
           INDEX  `index_date` (`date`),
           UNIQUE  KEY  `uuid` (`uuid`)
@@ -192,7 +194,8 @@ def main():
           `env_id`        int(20) unsigned  NOT NULL auto_increment,
           `env_name`      varchar(64)       NOT NULL,
           PRIMARY KEY  (`env_id`),
-          UNIQUE  KEY  `env_name` (`env_name`)
+          UNIQUE  KEY  `env_name` (`env_name`),
+          INDEX        `a_env_name` (`env_name`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_env_name table" % idx); idx += 1

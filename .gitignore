@@ -46,3 +46,4 @@ makefile
 config.status
 testreports
 t1
+src/xalt_regex.h

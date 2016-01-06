@@ -34,7 +34,7 @@ from xalt_util  import config_logger, extract_compiler
 
 logger = config_logger()
 
-def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
+def print_assembly(uuid, fn, version, syshost, compiler, full_path_cmplr, epochStr):
   """
   Build the XALT assembly code
 
@@ -43,6 +43,7 @@ def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
   @param version:  Current XALT version
   @param syshost:  System name (darter, stampede), not login1.stampede.tacc.utexas.edu
   @param compiler: the name of the linking compiler
+  @param full_path_cmplr: full_path to compiler.
   @param epochStr: Current Timestamp
   """
   user    = os.environ.get("USER","unknown")
@@ -66,6 +67,7 @@ def print_assembly(uuid, fn, version, syshost, compiler, epochStr):
     f.writelines("\t.asciz \"<XALT_Version>%%"+version+"%%\"\n")
     f.writelines("\t.asciz \"<Build.Syshost>%%"+syshost+"%%\"\n")
     f.writelines("\t.asciz \"<Build.compiler>%%"+compiler+"%%\"\n")
+    f.writelines("\t.asciz \"<Build.compilerPath>%%"+full_path_cmplr+"%%\"\n")
     f.writelines("\t.asciz \"<Build.OS>%%"+osName+"%%\"\n")
     f.writelines("\t.asciz \"<Build.User>%%"+user+"%%\"\n")
     f.writelines("\t.asciz \"<Build.UUID>%%"+uuid+"%%\"\n")
@@ -87,9 +89,9 @@ def main():
     version  = "@version@"
     epochStr = str(time.time())
 
-    compiler = extract_compiler()
+    compiler, full_path_cmplr = extract_compiler()
 
-    print_assembly(uuid, fn, version, syshost, compiler, epochStr)
+    print_assembly(uuid, fn, version, syshost, compiler, full_path_cmplr, epochStr)
 
     print(epochStr)
   except:

@@ -113,12 +113,13 @@ all:
 
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
-          Build_pstree_$(BUILD_PSTREE) build_initize
+          Build_pstree_$(BUILD_PSTREE) build_initialize
 
-build_initize: $(INIT_SRC)
+build_initialize: $(INIT_SRC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFILES) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC)  __installMe
 	[ -f $(DESTDIR)$(SITE)/xalt_syshost.py ] && MYFLAGS=-DHAVE_SYSHOST_CMD; \
-	gcc $$MYFLAGS -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c
+	gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c
+	gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=LD_PRELOAD -fPIC -shared -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c -luuid
 
 echo:
 	@echo CURDIR: $(CURDIR)

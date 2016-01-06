@@ -168,15 +168,20 @@ class XALTdb(object):
                                   time.localtime(float(linkT['build_epoch'])))
 
       #paranoid conversion:  Protect DB from bad input:
-      exit_code = convertToTinyInt(linkT['exit_code'])
-      exec_path = linkT['exec_path']
-      link_prg  = linkT['link_program'][:10]
+      exit_code   = convertToTinyInt(linkT['exit_code'])
+      exec_path   = linkT['exec_path']
+      link_prg    = linkT['link_program'][:64]
+      link_path   = linkT['link_path']
+      link_mname  = obj2module(link_path,reverseMapT)
+      build_user  = linkT['build_user']
+      build_shost = linkT['build_syshost']
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, %s,%s,%s)"
+      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s)"
       cursor.execute(query, (linkT['uuid'], linkT['hash_id'],     dateTimeStr, 
-                             link_prg,      linkT['build_user'],  linkT['build_syshost'],
-                             build_epoch,   exit_code,            exec_path))
+                             link_prg,      linkT['link_path'],   link_mname,
+                             build_user,    build_shost,          build_epoch,
+                             exit_code,     exec_path))
 
       link_id = cursor.lastrowid
 
@@ -190,12 +195,12 @@ class XALTdb(object):
       if ('function' in linkT):
         for func_name in linkT['function']:
           query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
-          cursor.execute(query, (func_name))
+          cursor.execute(query, [func_name])
           if (cursor.rowcount > 0):
             func_id = int(cursor.fetchone()[0])
           else:
             query = "INSERT INTO xalt_function VALUES (NULL, %s)"
-            cursor.execute(query, (func_name))
+            cursor.execute(query, [func_name])
             func_id = cursor.lastrowid
         
           query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \

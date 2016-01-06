@@ -1,11 +1,23 @@
+#define  _GNU_SOURCE
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <uuid/uuid.h>
 #include <time.h>
+#include <limits.h>
+#include <regex.h>
+#include "xalt_regex.h"
+#include <errno.h>
+#ifdef __MACH__
+#  include <libproc.h>
+#endif
 
-#define PATH_MAX 4096
-#define SZ       256
+
+
+#define STR(x)  STR2(x)
+#define STR2(x) #x
+#define SZ      256
 static char   uuid_str[37];
 static double start_time = 0.0;
 static double end_time   = 0.0;
@@ -14,22 +26,91 @@ static long   my_size    = 1L;
 static char   path[PATH_MAX];
 static char   syshost[SZ];
 static char * syshost_option;
+static int    reject_flag = 0;
 
 #define HERE printf("%s:%d\n",__FILE__,__LINE__)
 
-long compute_size(const char **envA)
+int reject(const char *path)
 {
-  long          sz = 0L;
+  int     i;
+  regex_t regex;
+  int     iret;
+  char    msgbuf[100];
+
+  for (i = 0; i < acceptSz; i++)
+    {
+      iret = regcomp(&regex, acceptA[i], 0);
+      if (iret)
+	{
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  exit(1);
+	}
+
+      iret = regexec(&regex, path, 0, NULL, 0);
+      if (iret == 0)
+	return 0;
+      else if (iret != REG_NOMATCH)
+	{
+	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	  fprintf(stderr, "Accept Regex match failed: %s\n", msgbuf);
+	  exit(1);
+	}
+      regfree(&regex);
+    }
+  
+  for (i = 0; i < ignoreSz; i++)
+    {
+      iret = regcomp(&regex, ignoreA[i], 0);
+      if (iret)
+	{
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  exit(1);
+	}
+
+      iret = regexec(&regex, path, 0, NULL, 0);
+      if (iret == 0)
+	return 1;
+      else if (iret != REG_NOMATCH)
+	{
+	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	  fprintf(stderr, "Ignore Regex match failed: %s\n", msgbuf);
+	  exit(1);
+	}
+      regfree(&regex);
+    }
+  return 0;
+}
+
+long compute_value(const char **envA)
+{
+  long          value = 0L;
   const char ** p;
   for (p = &envA[0]; *p; ++p)
     {
       char *v = getenv(*p);
       if (v)
-        sz += strtol(v, (char **) NULL, 10);
+        value += strtol(v, (char **) NULL, 10);
     }
 
-  return sz;
+  return value;
 }
+
+/* Get full absolute path to executable */
+/* works for Linux and Mac OS X */
+void abspath(char * path, int sz)
+{
+  #ifdef __MACH__
+    int iret = proc_pidpath(getpid(), path, sz-1);
+    if (iret <= 0)
+      {
+	fprintf(stderr,"PID %d: proc_pid();\n",getpid());
+	fprintf(stderr,"    %s:\n", strerror(errno));
+      }
+  #else
+    readlink("/proc/self/exe",path,sz-1);
+  #endif
+}
+
 
 void myinit(int argc, char **argv)
 {
@@ -44,29 +125,32 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
-  char * v = getenv("XALT_EXECUTABLE_TRACKING");
-  if (! v)
+  /* Stop tracking if XALT is turned off */
+  if (! getenv("XALT_EXECUTABLE_TRACKING"))
     return;
 
-  my_rank = compute_size(rankA);
+  /* Stop tracking if any myinit routine has been called */
+  if (getenv("__XALT_INITIAL_STATE__"))
+    return;
+  setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
+
+
+  /* Stop tracking if my mpi rank is not zero */
+  my_rank = compute_value(rankA);
   if (my_rank > 0L)
     return;
 
-  my_size = compute_size(sizeA);
+  my_size = compute_value(sizeA);
   if (my_size < 1L)
     my_size = 1L;
 
-  if (argv[0][0] == '/')
-    strcpy(path,argv[0]);
-  else
-    {
-      int len;
-      getcwd(path, PATH_MAX);
-      len = strlen(path);
-      path[len] = '/';
-      strcpy(&path[len+1], argv[0]);
-    }
-  
+  /* Get full absolute path to executable */
+  abspath(path,sizeof(path));
+
+  /* Stop tracking if path is rejected. */
+  reject_flag = reject(path);
+  if (reject_flag)
+    return;
 
   asprintf(&syshost_option,"%s"," ");
 #ifdef HAVE_SYSHOST_CMD
@@ -92,6 +176,7 @@ void myinit(int argc, char **argv)
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
+  /* Stop tracking if path is rejected. */
   
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str);
@@ -107,15 +192,22 @@ void myinit(int argc, char **argv)
 
 void myfini()
 {
+  char * v;
   char * p_dbg;
   char * cmdline;
   struct timeval tv;
 
-  char * v = getenv("XALT_EXECUTABLE_TRACKING");
-  if (! v)
+  /* Stop tracking if my mpi rank is not zero or the path was rejected. */
+  if (reject_flag || my_rank > 0L)
     return;
 
-  if (my_rank > 0L)
+  /* Stop tracking if XALT is turned off */
+  if (! getenv("XALT_EXECUTABLE_TRACKING"))
+    return;
+
+  /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
+  v = getenv("__XALT_INITIAL_STATE__");
+  if (!v || strcmp(v,STR(STATE)) != 0)
     return;
 
   gettimeofday(&tv,NULL);

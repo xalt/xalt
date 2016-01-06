@@ -66,11 +66,20 @@ def extract_compiler():
       """
       return (callable(p.parent) and p.parent().name()) or p.parent.name()
 
+    def p_parent_exe():
+      """
+      Determine the absolute path of the executable.
+      Check whether parent is a function (psutil > v2) or a property (psutil < v2)
+      """
+      return (callable(p.parent) and p.parent().exe()) or p.parent.exe()
+
     while p_parent():
       if p_parent_name() not in ignore_programs:
+        path   = p_parent_exe()
         result = p_parent_name()
         break
       p=p_parent()
+
   except ImportError:
     ignore_programs = ['pstree', 'ld', 'collect2', 'python', 'sh']
     pstree_bin = "@path_to_pstree@"
@@ -83,9 +92,10 @@ def extract_compiler():
     for cmd in reversed(a):
       if cmd not in ignore_programs:
         result = cmd
+        path   = 'unknown'
         break
 
-  return result
+  return result, path
 
 def files_in_tree(path, pattern):
   """
