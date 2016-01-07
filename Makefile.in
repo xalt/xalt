@@ -26,6 +26,12 @@ ifeq ($(PATH_TO_SRC),@$(path_to_src)@)
 endif
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
+OS_NAME           := $(shell uname -s)
+LIB_OPTIONS       := -fPIC -shared
+ifeq ($(OS_NAME),Darwin)
+  LIB_OPTIONS     := -bundle -undefined dynamic_lookup
+endif
+
 package           := xalt
 VERSION           := $(shell cat $(PATH_TO_SRC)/.version)
 TRANSMISSION      := @TRANSMISSION@
@@ -120,8 +126,9 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
 build_initialize: $(INIT_SRC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFILES) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC)  __installMe
 	[ -f $(DESTDIR)$(SITE)/xalt_syshost.py ] && MYFLAGS=-DHAVE_SYSHOST_CMD; \
-	XALT_EXECUTABLE_TRACKING= gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c
-	XALT_EXECUTABLE_TRACKING= gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=LD_PRELOAD -fPIC -shared -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.c -luuid
+	XALT_EXECUTABLE_TRACKING= gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=REGULAR    -fPIC -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c; \
+	XALT_EXECUTABLE_TRACKING= gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=LD_PRELOAD $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -luuid; \
+	XALT_EXECUTABLE_TRACKING= gcc $$MYFLAGS -I$(PATH_TO_SRC)/src -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(DESTDIR)$(LIBEXEC)/xalt_initialize.c; 
 
 echo:
 	@echo CURDIR: $(CURDIR)
