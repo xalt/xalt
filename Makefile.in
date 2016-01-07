@@ -68,9 +68,11 @@ SBIN              := $(prefix)/sbin
 DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
                      $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
 
-BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
-                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
-                     src/mpirun.lsf.in src/xalt_helper_functions.sh
+#BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
+#                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
+#                     src/mpirun.lsf.in src/xalt_helper_functions.sh
+
+BIN_PKG           := src/ld.in src/xalt_helper_functions.sh
 
 BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
