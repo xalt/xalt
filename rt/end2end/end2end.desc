@@ -12,6 +12,8 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
+     unset LD_PRELOAD
+
      initialize
      buildRmapT
      installXALT
@@ -40,10 +42,13 @@ test_descript = {
       
      mpirun -n 1 Ðì®/helloñ
 
+     export LD_PRELOAD=$outputDir/XALT/libexec/libxalt_init.so
+     ./hello
+
      export XALT_USERS="$USER;$outputDir"
      xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results result.csv
+     check_entries_db.py --dbname $DBNAME --results result.csv --runs 3
      removeDataBase.py   --dbname $DBNAME  
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,

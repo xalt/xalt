@@ -37,6 +37,9 @@ int reject(const char *path)
   int     iret;
   char    msgbuf[100];
 
+  if (path[0] == '\0')
+    return 1;
+  
   for (i = 0; i < acceptSz; i++)
     {
       iret = regcomp(&regex, acceptA[i], 0);
@@ -99,6 +102,7 @@ long compute_value(const char **envA)
 /* works for Linux and Mac OS X */
 void abspath(char * path, int sz)
 {
+  path[0] = '\0';
   #ifdef __MACH__
     int iret = proc_pidpath(getpid(), path, sz-1);
     if (iret <= 0)
@@ -144,8 +148,12 @@ void myinit(int argc, char **argv)
   if (my_size < 1L)
     my_size = 1L;
 
+  p_dbg = getenv("XALT_TRACING");
+
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
+
+  
 
   /* Stop tracking if path is rejected. */
   reject_flag = reject(path);
@@ -178,12 +186,10 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if path is rejected. */
   
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
+  asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str);
 
   
-  p_dbg = getenv("XALT_TRACING");
-
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     printf("xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
   system(cmdline);
@@ -198,7 +204,7 @@ void myfini()
   struct timeval tv;
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
-  if (reject_flag || my_rank > 0L)
+  if (reject_flag || my_rank > 0L || start_time < 0.01)
     return;
 
   /* Stop tracking if XALT is turned off */
@@ -213,7 +219,7 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
+  asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, end_time, path, my_size, uuid_str);
 
   

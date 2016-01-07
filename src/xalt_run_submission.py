@@ -380,10 +380,10 @@ def main():
     # build output file name (it is only use by the file transmission method)
     if (args.endTime > 0):
       key_prefix = "run_fini_"
-      suffix     = "aaa"
+      suffix     = "zzz"
     else:
       key_prefix = "run_strt_"
-      suffix     = "zzz"
+      suffix     = "aaa"
 
     for run in runA:
       fnA     = []

@@ -34,6 +34,7 @@
 #
 ##########################################################################
 
+unset LD_PRELOAD
 LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
