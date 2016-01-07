@@ -162,7 +162,7 @@ void myinit(int argc, char **argv)
 
   asprintf(&syshost_option,"%s"," ");
 #ifdef HAVE_SYSHOST_CMD
-  asprintf(&cmdline,"LD_LIBRARY_PATH=%s PATH= %s -E %s",
+  asprintf(&cmdline,"LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s",
 	   "@sys_ld_lib_path@", "@python@",
 	   "@PREFIX@/site/xalt_syshost.py");
   fp = popen(cmdline, "r");
