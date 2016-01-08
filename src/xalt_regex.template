@@ -4,11 +4,14 @@
 
 #define N_ELEMENTS(a) (sizeof(a)/sizeof((a)[0]))
 
-const char* acceptA[] = { @accept_list@ };
-const char* ignoreA[] = { @ignore_list@ };
+const char* acceptA[] 	= { @accept_list@ };
+const char* ignoreA[] 	= { @ignore_list@ };
+const char* hostnameA[] = { @hostname_list@ };
 
-const int   acceptSz = N_ELEMENTS(acceptA);
-const int   ignoreSz = N_ELEMENTS(ignoreA);
+
+const int   acceptSz    = N_ELEMENTS(acceptA);
+const int   ignoreSz    = N_ELEMENTS(ignoreA);
+const int   hostnameSz  = N_ELEMENTS(hostNameA);
 
 #endif
 
