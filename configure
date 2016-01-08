@@ -4279,14 +4279,6 @@ echo "... $USE_CONTRIB_ARGPARSE"
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/src/xalt_regex.template --output $ac_confdir/src/xalt_regex.h
 
-
-echo "IGNORE_LIST: $IGNORE_LIST"
-echo "ac_top_srcdir: $ac_top_srcdir"
-echo "ac_srcdir: $ac_srcdir"
-echo "ac_confdir: $ac_confdir"
-
-
-
 ac_config_files="$ac_config_files makefile:Makefile.in"
 
 cat >confcache <<\_ACEOF

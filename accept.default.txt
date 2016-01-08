@@ -1,0 +1,16 @@
+# This is a accept file:
+# `#' are comments to the end of line.
+# The format is one pattern per line
+# blank lines are ignored as well as leading and trailing blanks.
+# Remember to put a leading '^' to match the beginning of the path:
+
+# Acceptance is done before the ignore list so put in here the
+# absolute path of program you want to run that would otherwise
+# be in ignore list.  For example /usr/bin/ddt might be a program
+# your site would like to track but all other programs in /usr/bin
+# are ignored:
+
+# /usr/bin/ddt
+
+
+  
