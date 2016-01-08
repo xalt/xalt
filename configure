@@ -658,6 +658,9 @@ PATH_TO_CAT
 PATH_TO_BASENAME
 PATH_TO_AS
 SYS_LD_LIB_PATH
+HOSTNAME_LIST
+IGNORE_LIST
+ACCEPT_LIST
 ETC_DIR
 SITE
 TRANSMISSION
@@ -705,6 +708,9 @@ enable_option_checking
 with_transmission
 with_site
 with_etcDir
+with_acceptList
+with_ignoreList
+with_hostnameList
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1324,6 +1330,12 @@ Optional Packages:
   --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
   --with-site=ans         Site name [[default]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
+                          found [[.]]
+  --with-acceptList=ans   Filename that contains the list of acceptable paths
+                          [[accept.default.txt]]
+  --with-ignoreList=ans   Directory where xalt_db.conf and reverseMapD can be
+                          found [[.]]
+  --with-hostnameList=ans Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
 
 Some influential environment variables:
@@ -2066,6 +2078,72 @@ $as_echo "ETC_DIR=$withval" >&6; }
     ETC_DIR="$withval"
     cat >>confdefs.h <<_ACEOF
 #define ETC_DIR "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-acceptList was given.
+if test "${with_acceptList+set}" = set; then :
+  withval=$with_acceptList; ACCEPT_LIST="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ACCEPT_LIST=$with_acceptList" >&5
+$as_echo "ACCEPT_LIST=$with_acceptList" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define ACCEPT_LIST "$with_acceptList"
+_ACEOF
+
+else
+  withval="$ac_confdir/accept.default.txt"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ACCEPT_LIST=$withval" >&5
+$as_echo "ACCEPT_LIST=$withval" >&6; }
+    ACCEPT_LIST="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define ACCEPT_LIST "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-ignoreList was given.
+if test "${with_ignoreList+set}" = set; then :
+  withval=$with_ignoreList; IGNORE_LIST="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: IGNORE_LIST=$with_ignoreList" >&5
+$as_echo "IGNORE_LIST=$with_ignoreList" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define IGNORE_LIST "$with_ignoreList"
+_ACEOF
+
+else
+  withval="$ac_confdir/ignore.default.txt"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: IGNORE_LIST=$withval" >&5
+$as_echo "IGNORE_LIST=$withval" >&6; }
+    IGNORE_LIST="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define IGNORE_LIST "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-hostnameList was given.
+if test "${with_hostnameList+set}" = set; then :
+  withval=$with_hostnameList; HOSTNAME_LIST="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: HOSTNAME_LIST=$with_hostnameList" >&5
+$as_echo "HOSTNAME_LIST=$with_hostnameList" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define HOSTNAME_LIST "$with_hostnameList"
+_ACEOF
+
+else
+  withval="$ac_confdir/hostname.default.txt"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: HOSTNAME_LIST=$withval" >&5
+$as_echo "HOSTNAME_LIST=$withval" >&6; }
+    HOSTNAME_LIST="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define HOSTNAME_LIST "$withval"
 _ACEOF
 
 fi
@@ -4198,6 +4276,11 @@ if test $version -lt $contrib_version ; then
   USE_CONTRIB_ARGPARSE=yes
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
+
+echo "IGNORE_LIST: $IGNORE_LIST"
+echo "ac_top_srcdir: $ac_top_srcdir"
+echo "ac_srcdir: $ac_srcdir"
+echo "ac_confdir: $ac_confdir"
 
 
 

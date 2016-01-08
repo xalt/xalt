@@ -20,6 +20,7 @@
 #define STR2(x) #x
 #define SZ      256
 static char   uuid_str[37];
+static int    errfd      = -1;
 static double start_time = 0.0;
 static double end_time   = 0.0;
 static long   my_rank    = 0L;
@@ -195,6 +196,8 @@ void myinit(int argc, char **argv)
   if (reject_flag)
     return;
 
+  errfd = dup(STDERR_FILENO);
+
   asprintf(&syshost_option,"%s"," ");
 #ifdef HAVE_SYSHOST_CMD
   asprintf(&cmdline,"LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s",
@@ -226,13 +229,14 @@ void myinit(int argc, char **argv)
 
   
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
-    printf("xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
+    fprintf(stderr, "xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
   system(cmdline);
   free(cmdline);
 }
 
 void myfini()
 {
+  FILE * my_stderr;
   char * v;
   char * p_dbg;
   char * cmdline;
@@ -251,6 +255,7 @@ void myfini()
   if (!v || strcmp(v,STR(STATE)) != 0)
     return;
 
+  my_stderr = fdopen(errfd,"w");
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
@@ -260,7 +265,7 @@ void myfini()
   
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
-    printf("\nEnd Tracking: %s\n",cmdline);
+    fprintf(my_stderr,"\nEnd Tracking: %s\n",cmdline);
   system(cmdline);
   free(cmdline);
   free(syshost_option);
