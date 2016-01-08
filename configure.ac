@@ -37,6 +37,42 @@ AC_ARG_WITH(etcDir,
     ETC_DIR="$withval"
     AC_DEFINE_UNQUOTED(ETC_DIR, "$withval"))dnl
 
+AC_SUBST(ACCEPT_LIST)
+AC_ARG_WITH(acceptList,
+    AC_HELP_STRING([--with-acceptList=ans],[Filename that contains the list of acceptable paths [[accept.default.txt]]]),
+    ACCEPT_LIST="$withval"
+    AC_MSG_RESULT([ACCEPT_LIST=$with_acceptList])
+    AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$with_acceptList")dnl
+    ,
+    withval="accept.default.txt"
+    AC_MSG_RESULT([ACCEPT_LIST=$withval])
+    ACCEPT_LIST="$withval"
+    AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$withval"))dnl
+
+AC_SUBST(IGNORE_LIST)
+AC_ARG_WITH(ignoreList,
+    AC_HELP_STRING([--with-ignoreList=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
+    IGNORE_LIST="$withval"
+    AC_MSG_RESULT([IGNORE_LIST=$with_ignoreList])
+    AC_DEFINE_UNQUOTED(IGNORE_LIST, "$with_ignoreList")dnl
+    ,
+    withval="ignore.default.txt"
+    AC_MSG_RESULT([IGNORE_LIST=$withval])
+    IGNORE_LIST="$withval"
+    AC_DEFINE_UNQUOTED(IGNORE_LIST, "$withval"))dnl
+
+AC_SUBST(HOSTNAME_LIST)
+AC_ARG_WITH(hostnameList,
+    AC_HELP_STRING([--with-hostnameList=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
+    HOSTNAME_LIST="$withval"
+    AC_MSG_RESULT([HOSTNAME_LIST=$with_hostnameList])
+    AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$with_hostnameList")dnl
+    ,
+    withval="hostname.default.txt"
+    AC_MSG_RESULT([HOSTNAME_LIST=$withval])
+    HOSTNAME_LIST="$withval"
+    AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$withval"))dnl
+
 
 AC_SUBST(SYS_LD_LIB_PATH)
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
@@ -141,6 +177,7 @@ if test $version -lt $contrib_version ; then
   USE_CONTRIB_ARGPARSE=yes
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
+
 
 
 
