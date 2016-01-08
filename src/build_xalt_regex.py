@@ -83,7 +83,7 @@ def convert_template(a, inputFn, outputFn):
       idx     = line.find(fromStr)
       if (idx != -1):
         my_len = len(fromStr)
-        line   = line[:idx-1] + toStr + line[idx+my_len:]
+        line   = line[:idx] + toStr + line[idx+my_len:]
       
     outA.append(line)
 
