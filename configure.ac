@@ -168,7 +168,7 @@ fi
 
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
-versionStr=$(python --version 2>&1 | head -1)
+versionStr=$($PATH_TO_PYTHON --version 2>&1 | head -1)
 major_version=`expr "$versionStr" : 'Python \+\([[0-9]]\+\)\.'`
 minor_version=`expr "$versionStr" : 'Python \+[[0-9]]\+\.\([[0-9]]\+\)'`
 version=`expr $major_version \* 100000 + $minor_version`
@@ -178,11 +178,6 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-echo "IGNORE_LIST: $IGNORE_LIST"
-echo "ac_top_srcdir: $ac_top_srcdir"
-echo "ac_srcdir: $ac_srcdir"
-echo "ac_confdir: $ac_confdir"
-
-
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/src/xalt_regex.template --output $ac_confdir/src/xalt_regex.h
 
 AC_OUTPUT(makefile:Makefile.in)
