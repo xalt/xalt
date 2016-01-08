@@ -9,6 +9,7 @@
 #include <regex.h>
 #include "xalt_regex.h"
 #include <errno.h>
+#include <sys/utsname.h>
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
@@ -30,16 +31,44 @@ static int    reject_flag = 0;
 
 #define HERE printf("%s:%d\n",__FILE__,__LINE__)
 
-int reject(const char *path)
+int reject(const char *path, const char * hostname)
 {
   int     i;
   regex_t regex;
   int     iret;
+  int     rejected_host = 1;
   char    msgbuf[100];
 
   if (path[0] == '\0')
     return 1;
   
+  for (i = 0; i < hostnameSz, i++)
+    {
+      iret = regcomp(&regex, hostnameA[i], 0);
+      if (iret)
+	{
+	  fprintf(stderr,"Could not compile regex: \"%s\n", hostnameA[i]);
+	  exit(1);
+	}
+
+      iret = regexec(&regex, path, 0, NULL, 0);
+      if (iret == 0)
+	{
+	  rejected_host = 0;
+	  break;
+	}
+      else if (iret != REG_NOMATCH)
+	{
+	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	  fprintf(stderr, "HostnameA Regex match failed: %s\n", msgbuf);
+	  exit(1);
+	}
+      regfree(&regex);
+    }
+
+  if (rejected_host)
+    return 1;
+
   for (i = 0; i < acceptSz; i++)
     {
       iret = regcomp(&regex, acceptA[i], 0);
@@ -55,7 +84,7 @@ int reject(const char *path)
       else if (iret != REG_NOMATCH)
 	{
 	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "Accept Regex match failed: %s\n", msgbuf);
+	  fprintf(stderr, "AcceptA Regex match failed: %s\n", msgbuf);
 	  exit(1);
 	}
       regfree(&regex);
@@ -76,7 +105,7 @@ int reject(const char *path)
       else if (iret != REG_NOMATCH)
 	{
 	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "Ignore Regex match failed: %s\n", msgbuf);
+	  fprintf(stderr, "IgnoreA Regex match failed: %s\n", msgbuf);
 	  exit(1);
 	}
       regfree(&regex);
@@ -126,6 +155,7 @@ void myinit(int argc, char **argv)
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   const char ** p;
   struct timeval tv;
+  struct utsname u;
 
   uuid_t uuid;
 
@@ -153,16 +183,21 @@ void myinit(int argc, char **argv)
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
 
-  
+  errno = 0;
+  if (uname(&u) != 0)
+    {
+      perror("uname");
+      exit(EXIT_FAILURE);
+    }
 
   /* Stop tracking if path is rejected. */
-  reject_flag = reject(path);
+  reject_flag = reject(path, u.nodename);
   if (reject_flag)
     return;
 
   asprintf(&syshost_option,"%s"," ");
 #ifdef HAVE_SYSHOST_CMD
-  asprintf(&cmdline,"LD_LIBRARY_PATH=%s PATH= %s -E %s",
+  asprintf(&cmdline,"LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s",
 	   "@sys_ld_lib_path@", "@python@",
 	   "@PREFIX@/site/xalt_syshost.py");
   fp = popen(cmdline, "r");

@@ -35,10 +35,11 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--accept",  dest='accept', action="store", default="accept.default.txt",  help="accept list file")
-    parser.add_argument("--ignore",  dest='ignore', action="store", default="ignore.default.txt",  help="ignore list file")
-    parser.add_argument("--input",   dest='input',  action="store", default="xalt_regex.template", help="input template file")
-    parser.add_argument("--output",  dest='output', action="store", default="xalt_regex.h",        help="output header file")
+    parser.add_argument("--accept",   dest='accept',   action="store", default="accept.default.txt",   help="accept list file")
+    parser.add_argument("--ignore",   dest='ignore',   action="store", default="ignore.default.txt",   help="ignore list file")
+    parser.add_argument("--hostname", dest='hostname', action="store", default="hostname.default.txt", help="hostname acceptable list file")
+    parser.add_argument("--input",    dest='input',    action="store", default="xalt_regex.template",  help="input template file")
+    parser.add_argument("--output",   dest='output',   action="store", default="xalt_regex.h",         help="output header file")
     args = parser.parse_args()
     
     return args
@@ -104,8 +105,15 @@ def main():
 
   ignoreStr = convert_file_to_string(args.ignore)
   acceptStr = convert_file_to_string(args.accept)
+  hostStr   = convert_file_to_string(args.hostname)
 
-  convert_template([['@accept_list@', acceptStr], ['@ignore_list@', ignoreStr]], args.input, args.output)
+  pattA = [
+    ['@accept_list@',   acceptStr],
+    ['@ignore_list@',   ignoreStr],
+    ['@hostname_list@', hostStr],
+  ]
+
+  convert_template(pattA, args.input, args.output)
 
 
 if ( __name__ == '__main__'): main()
