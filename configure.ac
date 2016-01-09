@@ -131,39 +131,11 @@ fi
 
 
 if test "$HAVE_PYMOD_PSUTIL" = yes; then
-  BUILD_PSTREE=no
-
-else
-   AC_PATH_PROG(pstree_prog, pstree, [])
-
-   PATH_TO_PSTREE=$pstree_prog
-
-   printf "Use contrib pstree"
-   BUILD_PSTREE=yes
-   if test x$pstree_prog != x; then
-     versionStr=$($pstree_prog --version 2>&1 | head -1)
-     name=`expr "$versionStr" : '.*(\(PSmisc\))'`
-     if test x$name = "xPSmisc" ; then
-       major_version=`expr "$versionStr" : '.*(PSmisc) \([[0-9]]\+\)\.'`
-       minor_version=`expr "$versionStr" : '.*(PSmisc) \+[[0-9]]\+\.\([[0-9]]\+\)'`
-       version=`expr $major_version \* 100000 + $minor_version`
-       contrib_version=2200020
-       if test $version -ge $contrib_version ; then
-         BUILD_PSTREE=no
-       fi
-     fi
-   fi
-   echo "... $BUILD_PSTREE"
-
-   if test x$BUILD_PSTREE = xyes; then
-      PATH_TO_PSTREE=$prefix/libexec/pstree
-      AC_CHECK_HEADERS(curses.h)
-      if test x$ac_cv_header_curses_h != xyes; then
-         echo "Error: must have curses.h before building psmisc"
-         exit 1
-      fi
-   fi
+   echo "You must have the python module: psutil in order to use xalt.
+   exit 1
 fi
+  
+
 
 
 printf "Use contrib argparse"
