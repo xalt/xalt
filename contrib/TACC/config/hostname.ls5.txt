@@ -1,0 +1,10 @@
+# This is the acceptable hostname pattern file.
+# `#' are comments to the end of line.
+# The format is one pattern per line
+# blank lines are ignored as well as leading and trailing blanks.
+# Remember to put a leading '^' to match the beginning of the path:
+
+^nid[:digit:][:digit:][:digit:][:digit:][:digit:]$
+
+
+
