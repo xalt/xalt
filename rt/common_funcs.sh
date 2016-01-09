@@ -5,6 +5,9 @@ initialize()
 {
   PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
+  unset LD_PRELOAD
+  export XALT_EXECUTABLE_TRACKING=yes
+
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
   numStep=0
