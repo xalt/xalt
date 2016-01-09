@@ -12,14 +12,11 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
-     unset LD_PRELOAD
-
      initialize
      buildRmapT
      installXALT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
-     export XALT_EXECUTABLE_TRACKING=yes
 
 
      runMe installDB             # 1

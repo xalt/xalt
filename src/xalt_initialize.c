@@ -43,7 +43,7 @@ int reject(const char *path, const char * hostname)
   if (path[0] == '\0')
     return 1;
   
-  for (i = 0; i < hostnameSz, i++)
+  for (i = 0; i < hostnameSz; i++)
     {
       iret = regcomp(&regex, hostnameA[i], 0);
       if (iret)
