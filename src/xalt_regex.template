@@ -11,7 +11,7 @@ const char* hostnameA[] = { @hostname_list@ };
 
 const int   acceptSz    = N_ELEMENTS(acceptA);
 const int   ignoreSz    = N_ELEMENTS(ignoreA);
-const int   hostnameSz  = N_ELEMENTS(hostNameA);
+const int   hostnameSz  = N_ELEMENTS(hostnameA);
 
 #endif
 
