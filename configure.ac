@@ -136,6 +136,7 @@ if test "$HAVE_PYMOD_PSUTIL" = no; then
    echo "To install it do: pip install psutil"
    exit 1
 fi
+BUILD_PSTREE=no
 
 
 printf "Use contrib argparse"
