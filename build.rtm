@@ -87,7 +87,15 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    REMOVE="mpirun srun aprun mpiexec"
+    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.tacc.txt --with-hostnameList=./contrib/TACC/config/hostname.tacc.txt"
+    ;;
+
+  ls5 )
+    base="$HOME/l/pkg"
+    if [ $SYSHOST == "stampede" ]; then
+      base="$base/$(uname -m)"
+    fi
+    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt"
     ;;
 
   kfs|xc30)

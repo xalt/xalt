@@ -13,8 +13,8 @@
 ^/opt/apps/git/
 ^/opt/apps/xalt/
 ^/opt/apps/intel[0-9.-]\{1,\}/cray_mpich/  # /opt/apps/intel15/mvapich2/
-^/opt/apps/intel[0-9.-]\{1,\}/mvapich2/  # /opt/apps/intel15/mvapich2/
-^/opt/apps/intel[0-9.-]\{1,\}/impi/      # /opt/apps/intel15/impi/
+^/opt/apps/intel[0-9.-]\{1,\}/mvapich2/    # /opt/apps/intel15/mvapich2/
+^/opt/apps/intel[0-9.-]\{1,\}/impi/        # /opt/apps/intel15/impi/
 ^/opt/apps/autotools/
 ^/opt/apps/lmod/
 
