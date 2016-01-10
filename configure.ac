@@ -44,7 +44,7 @@ AC_ARG_WITH(acceptList,
     AC_MSG_RESULT([ACCEPT_LIST=$with_acceptList])
     AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$with_acceptList")dnl
     ,
-    withval="$ac_confdir/accept.default.txt"
+    withval="accept.default.txt"
     AC_MSG_RESULT([ACCEPT_LIST=$withval])
     ACCEPT_LIST="$withval"
     AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$withval"))dnl
@@ -56,7 +56,7 @@ AC_ARG_WITH(ignoreList,
     AC_MSG_RESULT([IGNORE_LIST=$with_ignoreList])
     AC_DEFINE_UNQUOTED(IGNORE_LIST, "$with_ignoreList")dnl
     ,
-    withval="$ac_confdir/ignore.default.txt"
+    withval="ignore.default.txt"
     AC_MSG_RESULT([IGNORE_LIST=$withval])
     IGNORE_LIST="$withval"
     AC_DEFINE_UNQUOTED(IGNORE_LIST, "$withval"))dnl
@@ -68,7 +68,7 @@ AC_ARG_WITH(hostnameList,
     AC_MSG_RESULT([HOSTNAME_LIST=$with_hostnameList])
     AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$with_hostnameList")dnl
     ,
-    withval="$ac_confdir/hostname.default.txt"
+    withval="hostname.default.txt"
     AC_MSG_RESULT([HOSTNAME_LIST=$withval])
     HOSTNAME_LIST="$withval"
     AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$withval"))dnl
@@ -127,20 +127,20 @@ AC_PYTHON_MODULE([MySQLdb])
 if test "$HAVE_PYMOD_MYSQLDB" = no; then
    echo "unable to install XALT without the python module: MySQLdb"
    echo "To install it do: pip install MySQL-python"
-fi
-
-
-if test "$HAVE_PYMOD_PSUTIL" = yes; then
-   echo "You must have the python module: psutil in order to use xalt.
    exit 1
 fi
-  
 
+
+if test "$HAVE_PYMOD_PSUTIL" = no; then
+   echo "unable to install XALT without the python module: psutil"
+   echo "To install it do: pip install psutil"
+   exit 1
+fi
 
 
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
-versionStr=$($PATH_TO_PYTHON --version 2>&1 | head -1)
+versionStr=$(python --version 2>&1 | head -1)
 major_version=`expr "$versionStr" : 'Python \+\([[0-9]]\+\)\.'`
 minor_version=`expr "$versionStr" : 'Python \+[[0-9]]\+\.\([[0-9]]\+\)'`
 version=`expr $major_version \* 100000 + $minor_version`
@@ -151,5 +151,6 @@ fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/src/xalt_regex.template --output $ac_confdir/src/xalt_regex.h
+
 
 AC_OUTPUT(makefile:Makefile.in)
