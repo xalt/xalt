@@ -4,7 +4,7 @@
 # blank lines are ignored as well as leading and trailing blanks.
 # Remember to put a leading '^' to match the beginning of the path:
 
-^/bin
+^/s?bin
 ^/etc
 ^/usr
 ^/opt/apps/tacc/bin
