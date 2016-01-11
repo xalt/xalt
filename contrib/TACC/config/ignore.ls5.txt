@@ -17,5 +17,13 @@
 ^/opt/apps/intel[0-9-][0-9.-]*/impi/        # /opt/apps/intel15/impi/
 ^/opt/apps/autotools/
 ^/opt/apps/lmod/
-
-
+^/opt/apps/lua/
+^/opt/apps/cuda/
+^/opt/cray
+^/opt/admin-pe
+^/opt/gcc/
+^/opt/intel/
+^/opt/java/
+^/opt/kde3/
+^/opt/nvidia/
+^/opt/slurm/
