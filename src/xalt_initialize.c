@@ -37,7 +37,7 @@ int reject(const char *path, const char * hostname)
   int     i;
   regex_t regex;
   int     iret;
-  int     rejected_host = 1;
+  int     rejected_host = (hostnameSz != 0);
   char    msgbuf[100];
 
   if (path[0] == '\0')
@@ -179,8 +179,6 @@ void myinit(int argc, char **argv)
   if (my_size < 1L)
     my_size = 1L;
 
-  p_dbg = getenv("XALT_TRACING");
-
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
 
@@ -228,6 +226,8 @@ void myinit(int argc, char **argv)
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str);
 
   
+  p_dbg = getenv("XALT_TRACING");
+
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     fprintf(stderr, "xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
   system(cmdline);

@@ -1792,7 +1792,7 @@ $as_echo "ACCEPT_LIST=$with_acceptList" >&6; }
 _ACEOF
 
 else
-  withval="accept.default.txt"
+  withval="$ac_confdir/accept.default.txt"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ACCEPT_LIST=$withval" >&5
 $as_echo "ACCEPT_LIST=$withval" >&6; }
     ACCEPT_LIST="$withval"
@@ -1814,7 +1814,7 @@ $as_echo "IGNORE_LIST=$with_ignoreList" >&6; }
 _ACEOF
 
 else
-  withval="ignore.default.txt"
+  withval="$ac_confdir/ignore.default.txt"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: IGNORE_LIST=$withval" >&5
 $as_echo "IGNORE_LIST=$withval" >&6; }
     IGNORE_LIST="$withval"
@@ -1836,7 +1836,7 @@ $as_echo "HOSTNAME_LIST=$with_hostnameList" >&6; }
 _ACEOF
 
 else
-  withval="hostname.default.txt"
+  withval="$ac_confdir/hostname.default.txt"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: HOSTNAME_LIST=$withval" >&5
 $as_echo "HOSTNAME_LIST=$withval" >&6; }
     HOSTNAME_LIST="$withval"

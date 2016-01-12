@@ -148,12 +148,13 @@ def main():
     
     # Step one clean up linkline data
     sA = cleanup(xaltobj, linklineFn)
-    link_program, link_path  = extract_compiler()
+    link_program, link_path, link_line  = extract_compiler()
   
     resultT                  = {}
     resultT['uuid']          = uuid
     resultT['link_program']  = link_program
     resultT['link_path']     = link_path
+    resultT['link_line']     = link_line
     resultT['build_user']    = User
     resultT['exit_code']     = int(status)
     resultT['build_epoch']   = float(build_epoch)

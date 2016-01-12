@@ -89,7 +89,7 @@ def main():
     version  = "@version@"
     epochStr = str(time.time())
 
-    compiler, full_path_cmplr = extract_compiler()
+    compiler, full_path_cmplr, link_line = extract_compiler()
 
     print_assembly(uuid, fn, version, syshost, compiler, full_path_cmplr, epochStr)
 

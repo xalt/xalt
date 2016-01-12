@@ -91,6 +91,7 @@ def main():
           `link_program`     varchar(64)        NOT NULL,
           `link_path`        varchar(1024)      NOT NULL,
           `link_module_name` varchar(64)                ,
+          `link_line`        blob                       ,
           `build_user`       varchar(64)        NOT NULL,
           `build_syshost`    varchar(64)        NOT NULL,
           `build_epoch`      double             NOT NULL,
