@@ -164,6 +164,7 @@ def main():
           `exec_path`     varchar(1024)        NOT NULL,
           `module_name`   varchar(64)                  ,
           `cwd`           varchar(1024)        NOT NULL,
+          `cmdline`       blob                 NOT NULL,
           PRIMARY KEY             (`run_id`   ),
           INDEX  `index_date`     (`date`     ),
           INDEX  `index_run_uuid` (`run_uuid` ),

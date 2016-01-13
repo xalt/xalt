@@ -148,7 +148,6 @@ void abspath(char * path, int sz)
 
 void myinit(int argc, char **argv)
 {
-  FILE * fp;
   int    status;
   char * p_dbg;
   char * cmdline;
@@ -203,7 +202,7 @@ void myinit(int argc, char **argv)
   asprintf(&cmdline,"LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s",
 	   "@sys_ld_lib_path@", "@python@",
 	   "@PREFIX@/site/xalt_syshost.py");
-  fp = popen(cmdline, "r");
+  FILE* fp = popen(cmdline, "r");
   if (fp)
     {
       int len;
