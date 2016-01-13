@@ -3,8 +3,6 @@
 
 initialize()
 {
-  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
-
   unset LD_PRELOAD
   export XALT_EXECUTABLE_TRACKING=yes
 
@@ -32,6 +30,7 @@ installXALT()
   make -f makefile PATH_TO_SRC=$projectDir install > /dev/null )
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin
+  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 }
 
 installDB()

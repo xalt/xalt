@@ -44,7 +44,7 @@ AC_ARG_WITH(acceptList,
     AC_MSG_RESULT([ACCEPT_LIST=$with_acceptList])
     AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$with_acceptList")dnl
     ,
-    withval="accept.default.txt"
+    withval="$ac_confdir/accept.default.txt"
     AC_MSG_RESULT([ACCEPT_LIST=$withval])
     ACCEPT_LIST="$withval"
     AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$withval"))dnl
@@ -56,7 +56,7 @@ AC_ARG_WITH(ignoreList,
     AC_MSG_RESULT([IGNORE_LIST=$with_ignoreList])
     AC_DEFINE_UNQUOTED(IGNORE_LIST, "$with_ignoreList")dnl
     ,
-    withval="ignore.default.txt"
+    withval="$ac_confdir/ignore.default.txt"
     AC_MSG_RESULT([IGNORE_LIST=$withval])
     IGNORE_LIST="$withval"
     AC_DEFINE_UNQUOTED(IGNORE_LIST, "$withval"))dnl
@@ -68,7 +68,7 @@ AC_ARG_WITH(hostnameList,
     AC_MSG_RESULT([HOSTNAME_LIST=$with_hostnameList])
     AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$with_hostnameList")dnl
     ,
-    withval="hostname.default.txt"
+    withval="$ac_confdir/hostname.default.txt"
     AC_MSG_RESULT([HOSTNAME_LIST=$withval])
     HOSTNAME_LIST="$withval"
     AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$withval"))dnl

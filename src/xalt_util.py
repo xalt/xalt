@@ -46,7 +46,8 @@ def extract_compiler():
   """
   Take the output of psutil (if available) or pstree and find the compiler
   """
-  result = "unknown"
+  result  = "unknown"
+  cmdline = "unknown"
   try:
     from psutil import Process
     p = Process(pid=int(os.getpid()))
@@ -73,10 +74,18 @@ def extract_compiler():
       """
       return (callable(p.parent) and p.parent().exe()) or p.parent.exe()
 
+    def p_parent_cmdline():
+      """
+      Determine the command line of the the parent process.
+      Check whether parent is a function (psutil > v2) or a property (psutil < v2)
+      """
+      return (callable(p.parent) and p.parent().cmdline()) or p.parent.cmdline()
+
     while p_parent():
       if p_parent_name() not in ignore_programs:
-        path   = p_parent_exe()
-        result = p_parent_name()
+        path    = p_parent_exe()
+        result  = p_parent_name()
+        cmdline = p_parent_cmdline()
         break
       p=p_parent()
   except ImportError as e:
@@ -94,7 +103,7 @@ def extract_compiler():
         path   = 'unknown'
         break
 
-  return result, path
+  return result, path, cmdline
 
 def files_in_tree(path, pattern):
   """
