@@ -92,16 +92,12 @@ case $SYSHOST in
 
   ls5 )
     base="$HOME/l/pkg"
-    if [ $SYSHOST == "stampede" ]; then
-      base="$base/$(uname -m)"
-    fi
     CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt"
     ;;
 
   kfs|xc30)
     base="$HOME/l/pkg"
     EXTRA="/$SYSHOST"
-    REMOVE="srun ibrun"
     ;;
 
   *)
@@ -121,10 +117,6 @@ if [ "$?" = 0 ]; then
   MAKE=remake
 fi
 
-
-
-
-
 cmdA=("-$MAKE distclean"
       "rm -f $PKG"
       "./configure --prefix=$PKG $CONF_OPTS"
@@ -132,7 +124,6 @@ cmdA=("-$MAKE distclean"
       "$SUDO $MAKE Inst_TACC"
       "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
-      "removeList $PKG $REMOVE"
       "ld_repair"
       )
 
