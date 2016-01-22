@@ -20,18 +20,34 @@
 #define STR2(x) #x
 #define SZ      256
 static char   uuid_str[37];
-static int    errfd      = -1;
-static double start_time = 0.0;
-static double end_time   = 0.0;
-static long   my_rank    = 0L;
-static long   my_size    = 1L;
+static int    errfd	   = -1;
+static double start_time   = 0.0;
+static double end_time	   = 0.0;
+static long   my_rank	   = 0L;
+static long   my_size	   = 1L;
+static int    xalt_tracing = 0;
+static int    reject_flag  = 0;
 static char   path[PATH_MAX];
 static char   syshost[SZ];
 static char * syshost_option;
-static int    reject_flag = 0;
 static char   usr_cmdline[65535];
-
 #define HERE printf("%s:%d\n",__FILE__,__LINE__)
+
+
+#define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf(fp,s,(x1))
+#define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf(fp,s,(x1),(x2))
+#define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf(fp,s,(x1),(x2),(x3))
+
+#ifdef FULL_TRACING
+#  define FULL_DEBUG1(fp,s,x1)       DEBUG1(fp,s,(x1))
+#  define FULL_DEBUG2(fp,s,x1,x2)    DEBUG2(fp,s,(x1),(x2))
+#  define FULL_DEBUG3(fp,s,x1,x2,x3) DEBUG3(fp,s,(x1),(x2),(x3))
+#else
+#  define FULL_DEBUG1(fp,s,x1)    
+#  define FULL_DEBUG2(fp,s,x1,x2) 
+#  define FULL_DEBUG3(fp,s,x1,x2,x3) 
+#endif
+
 
 int reject(const char *path, const char * hostname)
 {
@@ -165,13 +181,19 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if XALT is turned off */
   
+  p_dbg = getenv("XALT_TRACING");
+  if (p_dbg && strcmp(p_dbg,"yes") == 0)
+    xalt_tracing = 1;
+  
+
   value = getenv("XALT_EXECUTABLE_TRACKING");
-  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (value != NULL) ? value : "(NULL)");
+  FULL_DEBUG1(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (value != NULL) ? value : "(NULL)");
+
   if (! value)
     return;
 
   value = getenv("__XALT_INITIAL_STATE__");
-  fprintf(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n", (value != NULL) ? value : "(NULL)");
+  FULL_DEBUG1(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n", (value != NULL) ? value : "(NULL)");
   /* Stop tracking if any myinit routine has been called */
   if (value)
     return;
@@ -180,7 +202,7 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
-  fprintf(stderr,"Test for rank == 0, rank: %d\n",my_rank);
+  FULL_DEBUG1(stderr,"Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     return;
 
@@ -199,8 +221,8 @@ void myinit(int argc, char **argv)
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
 
-  fprintf(stderr,"Test for path and hostname, hostname: %s, path: %s\n", u.nodename, path);
   reject_flag = reject(path, u.nodename);
+  FULL_DEBUG3(stderr,"Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
     return;
 
@@ -264,10 +286,8 @@ void myinit(int argc, char **argv)
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
 
   
-  p_dbg = getenv("XALT_TRACING");
-
-  if (p_dbg && strcmp(p_dbg,"yes") == 0)
-    fprintf(stderr, "xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
+  
+  DEBUG1(stderr, "xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
   system(cmdline);
   free(cmdline);
 }
@@ -280,29 +300,37 @@ void myfini()
   char * cmdline;
   struct timeval tv;
 
+  if (xalt_tracing)
+    my_stderr = fdopen(errfd,"w");
+
+  FULL_DEBUG3(my_stderr,"Starting myfini: reject_flag: %d, my_rank: %ld, start_time: %f",reject_flag, my_rank, start_time);
+
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag || my_rank > 0L || start_time < 0.01)
     return;
 
+
   /* Stop tracking if XALT is turned off */
-  if (! getenv("XALT_EXECUTABLE_TRACKING"))
+  v = getenv("XALT_EXECUTABLE_TRACKING");
+  FULL_DEBUG1(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  if (! v)
     return;
 
   /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
   v = getenv("__XALT_INITIAL_STATE__");
+  FULL_DEBUG1(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG1(stderr,"STATE: \"%s\"\n", STR(STATE));
   if (!v || strcmp(v,STR(STATE)) != 0)
     return;
 
-  my_stderr = fdopen(errfd,"w");
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
   asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
 
-  p_dbg = getenv("XALT_TRACING");
-  if (p_dbg && strcmp(p_dbg,"yes") == 0)
-    fprintf(my_stderr,"\nEnd Tracking: %s\n",cmdline);
+  DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
+
   system(cmdline);
   free(cmdline);
   free(syshost_option);
