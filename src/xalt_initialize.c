@@ -151,6 +151,7 @@ void myinit(int argc, char **argv)
   int    status;
   char * p_dbg;
   char * cmdline;
+  char * value;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   const char ** p;
@@ -166,15 +167,18 @@ void myinit(int argc, char **argv)
       exit(EXIT_FAILURE);
     }
 
-  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING\n");
 
   /* Stop tracking if XALT is turned off */
-  if (! getenv("XALT_EXECUTABLE_TRACKING"))
+  
+  value = getenv("XALT_EXECUTABLE_TRACKING");
+  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", value || "(NULL)");
+  if (! value)
     return;
 
-  fprintf(stderr,"Test for __XALT_INITIAL_STATE__\n");
+  value = getenv("__XALT_INITIAL_STATE__");
+  fprintf(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n",value || "(NULL)");
   /* Stop tracking if any myinit routine has been called */
-  if (getenv("__XALT_INITIAL_STATE__"))
+  if (value)
     return;
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
 
