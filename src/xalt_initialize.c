@@ -52,7 +52,7 @@ int reject(const char *path, const char * hostname)
 	  exit(1);
 	}
 
-      iret = regexec(&regex, path, 0, NULL, 0);
+      iret = regexec(&regex, hostname, 0, NULL, 0);
       if (iret == 0)
 	{
 	  rejected_host = 0;
@@ -171,12 +171,12 @@ void myinit(int argc, char **argv)
   /* Stop tracking if XALT is turned off */
   
   value = getenv("XALT_EXECUTABLE_TRACKING");
-  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", value || "(NULL)");
+  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (value != NULL) ? value : "(NULL)");
   if (! value)
     return;
 
   value = getenv("__XALT_INITIAL_STATE__");
-  fprintf(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n",value || "(NULL)");
+  fprintf(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n", (value != NULL) ? value : "(NULL)");
   /* Stop tracking if any myinit routine has been called */
   if (value)
     return;
