@@ -150,7 +150,6 @@ void abspath(char * path, int sz)
 
 void myinit(int argc, char **argv)
 {
-  FILE * fp;
   int    status, i;
   char * p;
   char * p_dbg;
