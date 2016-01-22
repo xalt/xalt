@@ -29,6 +29,7 @@ static char   path[PATH_MAX];
 static char   syshost[SZ];
 static char * syshost_option;
 static int    reject_flag = 0;
+static char   usr_cmdline[65535];
 
 #define HERE printf("%s:%d\n",__FILE__,__LINE__)
 
@@ -39,6 +40,7 @@ int reject(const char *path, const char * hostname)
   int     iret;
   int     rejected_host = (hostnameSz != 0);
   char    msgbuf[100];
+  char *  p;
 
   if (path[0] == '\0')
     return 1;
@@ -148,13 +150,15 @@ void abspath(char * path, int sz)
 
 void myinit(int argc, char **argv)
 {
-  int    status;
+  FILE * fp;
+  int    status, i;
+  char * p;
   char * p_dbg;
   char * cmdline;
   char * value;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
-  const char ** p;
+  
   struct timeval tv;
   struct utsname u;
 
@@ -222,6 +226,34 @@ void myinit(int argc, char **argv)
     }
 #endif
 
+  /* Build a json version of the command line.  There is special treatment of " and \\ */
+  p = &usr_cmdline[0];
+  *p++ = '[';
+  for (i = 0; i < argc; i++)
+    {
+      char* s   = argv[i];
+      int   len = strcspn(s,"\"\\");
+      *p++ = '"';
+
+      while(1)
+	{
+	  char c = s[len];
+	  memcpy(p,s,len);
+	  p += len;
+	  s += len+1;
+	  if (c == '\0')
+	    break;
+	  *p++ = '\\';
+	  *p++ = c;
+	  
+	  len = strcspn(s,"\"\\");
+	}
+      *p++= '"';
+      *p++= ',';
+    }
+  *--p = ']'; p++;
+  *p = '\0';
+  
   uuid_generate(uuid);
   uuid_unparse_lower(uuid,uuid_str);
   gettimeofday(&tv,NULL);
@@ -229,8 +261,8 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if path is rejected. */
   
-  asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
-	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str);
+  asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
+	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
 
   
   p_dbg = getenv("XALT_TRACING");
@@ -266,10 +298,9 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]'",
-	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, end_time, path, my_size, uuid_str);
+  asprintf(&cmdline, "LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
+	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
 
-  
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     fprintf(my_stderr,"\nEnd Tracking: %s\n",cmdline);
