@@ -213,7 +213,7 @@ void myinit(int argc, char **argv)
   
 
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG1(stderr,"myinit():\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG2(stderr,"myinit(%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),(v != NULL) ? v : "(NULL)");
 
   if (! v)
     return;
