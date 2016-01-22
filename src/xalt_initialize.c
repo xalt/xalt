@@ -159,10 +159,20 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
+  errno = 0;
+  if (uname(&u) != 0)
+    {
+      perror("uname");
+      exit(EXIT_FAILURE);
+    }
+
+  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING\n");
+
   /* Stop tracking if XALT is turned off */
   if (! getenv("XALT_EXECUTABLE_TRACKING"))
     return;
 
+  fprintf(stderr,"Test for __XALT_INITIAL_STATE__\n");
   /* Stop tracking if any myinit routine has been called */
   if (getenv("__XALT_INITIAL_STATE__"))
     return;
@@ -171,6 +181,7 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
+  fprintf(stderr,"Test for rank == 0, rank: %d\n",my_rank);
   if (my_rank > 0L)
     return;
 
@@ -181,14 +192,7 @@ void myinit(int argc, char **argv)
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
 
-  errno = 0;
-  if (uname(&u) != 0)
-    {
-      perror("uname");
-      exit(EXIT_FAILURE);
-    }
-
-  /* Stop tracking if path is rejected. */
+  fprintf(stderr,"Test for path and hostname, hostname: %s, path: %s\n", u.nodename, path);
   reject_flag = reject(path, u.nodename);
   if (reject_flag)
     return;

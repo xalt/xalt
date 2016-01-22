@@ -92,7 +92,7 @@ case $SYSHOST in
 
   ls5 )
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt"
+    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt --with-etcDir=/home1/moduleData/all"
     ;;
 
   kfs|xc30)
@@ -118,7 +118,7 @@ if [ "$?" = 0 ]; then
 fi
 
 cmdA=("-$MAKE distclean"
-      "rm -f $PKG"
+      "-rm -rf $PKG"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE install"
       "$SUDO $MAKE Inst_TACC"
