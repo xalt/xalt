@@ -60,15 +60,18 @@ static char   usr_cmdline[65535];
 #define HERE printf("%s:%d\n",__FILE__,__LINE__)
 
 
+#define DEBUG0(fp,s)          if (xalt_tracing) fprintf(fp,s)
 #define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf(fp,s,(x1))
 #define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf(fp,s,(x1),(x2))
 #define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf(fp,s,(x1),(x2),(x3))
 
 #ifdef FULL_TRACING
+#  define FULL_DEBUG0(fp,s)          DEBUG0(fp,s)
 #  define FULL_DEBUG1(fp,s,x1)       DEBUG1(fp,s,(x1))
 #  define FULL_DEBUG2(fp,s,x1,x2)    DEBUG2(fp,s,(x1),(x2))
 #  define FULL_DEBUG3(fp,s,x1,x2,x3) DEBUG3(fp,s,(x1),(x2),(x3))
 #else
+#  define FULL_DEBUG0(fp,s)
 #  define FULL_DEBUG1(fp,s,x1)    
 #  define FULL_DEBUG2(fp,s,x1,x2) 
 #  define FULL_DEBUG3(fp,s,x1,x2,x3) 
@@ -216,13 +219,19 @@ void myinit(int argc, char **argv)
   FULL_DEBUG2(stderr,"myinit(%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),(v != NULL) ? v : "(NULL)");
 
   if (! v)
-    return;
+    {
+      FULL_DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n");
+      return;
+    }
 
   v = getenv("__XALT_INITIAL_STATE__");
   FULL_DEBUG1(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   /* Stop tracking if any myinit routine has been called */
   if (v)
-    return;
+    {
+      FULL_DEBUG0(stderr," __XALT_INITIAL_STATE__ has a value -> exiting\n");
+      return;
+    }
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
 
 
@@ -230,7 +239,10 @@ void myinit(int argc, char **argv)
   my_rank = compute_value(rankA);
   FULL_DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
-    return;
+    {
+      FULL_DEBUG0(stderr," MPI Rank is not zero -> exiting\n");
+      return;
+    }
 
   my_size = compute_value(sizeA);
   if (my_size < 1L)
@@ -250,7 +262,10 @@ void myinit(int argc, char **argv)
   reject_flag = reject(path, u.nodename);
   FULL_DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
-    return;
+    {
+      FULL_DEBUG0(stderr,"  reject_flag is true -> exiting\n");
+      return;
+    }
 
   errfd = dup(STDERR_FILENO);
 
@@ -313,7 +328,7 @@ void myinit(int argc, char **argv)
 
   
   
-  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()",cmdline);
+  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
   system(cmdline);
   free(cmdline);
 }
