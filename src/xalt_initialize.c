@@ -1,3 +1,29 @@
+/*
+ * This is free and unencumbered software released into the public domain.
+ * 
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a compiled
+ * binary, for any purpose, commercial or non-commercial, and by any
+ * means.
+ * 
+ * In jurisdictions that recognize copyright laws, the author or authors
+ * of this software dedicate any and all copyright interest in the
+ * software to the public domain. We make this dedication for the benefit
+ * of the public at large and to the detriment of our heirs and
+ * successors. We intend this dedication to be an overt act of
+ * relinquishment in perpetuity of all present and future rights to this
+ * software under copyright law.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+
 #define  _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
@@ -170,7 +196,7 @@ void myinit(int argc, char **argv)
   char * p;
   char * p_dbg;
   char * cmdline;
-  char * value;
+  char * v;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   
@@ -186,23 +212,23 @@ void myinit(int argc, char **argv)
     xalt_tracing = 1;
   
 
-  value = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG1(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (value != NULL) ? value : "(NULL)");
+  v = getenv("XALT_EXECUTABLE_TRACKING");
+  FULL_DEBUG1(stderr,"myinit():\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
 
-  if (! value)
+  if (! v)
     return;
 
-  value = getenv("__XALT_INITIAL_STATE__");
-  FULL_DEBUG1(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n", (value != NULL) ? value : "(NULL)");
+  v = getenv("__XALT_INITIAL_STATE__");
+  FULL_DEBUG1(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   /* Stop tracking if any myinit routine has been called */
-  if (value)
+  if (v)
     return;
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
 
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
-  FULL_DEBUG1(stderr,"Test for rank == 0, rank: %ld\n",my_rank);
+  FULL_DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     return;
 
@@ -222,7 +248,7 @@ void myinit(int argc, char **argv)
   abspath(path,sizeof(path));
 
   reject_flag = reject(path, u.nodename);
-  FULL_DEBUG3(stderr,"Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
+  FULL_DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
     return;
 
@@ -287,7 +313,7 @@ void myinit(int argc, char **argv)
 
   
   
-  DEBUG1(stderr, "xalt_initialize.c:\nStart Tracking: %s\n",cmdline);
+  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()",cmdline);
   system(cmdline);
   free(cmdline);
 }
