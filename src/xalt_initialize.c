@@ -160,14 +160,6 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
-  errno = 0;
-  if (uname(&u) != 0)
-    {
-      perror("uname");
-      exit(EXIT_FAILURE);
-    }
-
-
   /* Stop tracking if XALT is turned off */
   
   value = getenv("XALT_EXECUTABLE_TRACKING");
@@ -192,6 +184,14 @@ void myinit(int argc, char **argv)
   my_size = compute_value(sizeA);
   if (my_size < 1L)
     my_size = 1L;
+
+  errno = 0;
+  if (uname(&u) != 0)
+    {
+      perror("uname");
+      exit(EXIT_FAILURE);
+    }
+
 
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
