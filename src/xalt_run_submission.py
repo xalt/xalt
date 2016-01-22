@@ -77,7 +77,7 @@ class CmdLineOptions(object):
     parser.add_argument("--status",   dest='status',    action="store", default = "0",             help="return status from run")
     parser.add_argument("--syshost",  dest='syshost',   action="store", default = syshost(),       help="system host name")
 
-    parser.add_argument("exec_progT", nargs='+',        help="user program")
+    parser.add_argument("execA",       nargs='+',        help="user program")
 
     args = parser.parse_args()
     
@@ -373,9 +373,10 @@ def main():
 
   try:
     # parse command line options:
-    args    = CmdLineOptions().execute()
-    runA    = json.loads(args.exec_progT[0])
-    dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(args.startTime))
+    args     = CmdLineOptions().execute()
+    runA     = json.loads(args.execA[0])
+    usr_cmdA = json.loads(args.execA[1])
+    dateStr  = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(args.startTime))
 
     # build output file name (it is only use by the file transmission method)
     if (args.endTime > 0):
@@ -417,6 +418,7 @@ def main():
       userT    = UserEnvT(args, uuid, run['ntasks'], userExec).userT()
   
       submitT              = {}
+      submitT['cmdlineA']  = usr_cmdA
       submitT['userT']     = userT
       submitT['xaltLinkT'] = ExtractXALT(userExec.execName()).xaltRecordT()
       submitT['libA']      = userExec.libA()
