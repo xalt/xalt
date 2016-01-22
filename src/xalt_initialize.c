@@ -155,6 +155,7 @@ void myinit(int argc, char **argv)
   char * p;
   char * p_dbg;
   char * cmdline;
+  char * value;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   
@@ -163,18 +164,32 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
+  errno = 0;
+  if (uname(&u) != 0)
+    {
+      perror("uname");
+      exit(EXIT_FAILURE);
+    }
+
+
   /* Stop tracking if XALT is turned off */
-  if (! getenv("XALT_EXECUTABLE_TRACKING"))
+  
+  value = getenv("XALT_EXECUTABLE_TRACKING");
+  fprintf(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", value || "(NULL)");
+  if (! value)
     return;
 
+  value = getenv("__XALT_INITIAL_STATE__");
+  fprintf(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n",value || "(NULL)");
   /* Stop tracking if any myinit routine has been called */
-  if (getenv("__XALT_INITIAL_STATE__"))
+  if (value)
     return;
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
 
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
+  fprintf(stderr,"Test for rank == 0, rank: %d\n",my_rank);
   if (my_rank > 0L)
     return;
 
@@ -185,14 +200,7 @@ void myinit(int argc, char **argv)
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
 
-  errno = 0;
-  if (uname(&u) != 0)
-    {
-      perror("uname");
-      exit(EXIT_FAILURE);
-    }
-
-  /* Stop tracking if path is rejected. */
+  fprintf(stderr,"Test for path and hostname, hostname: %s, path: %s\n", u.nodename, path);
   reject_flag = reject(path, u.nodename);
   if (reject_flag)
     return;
@@ -204,7 +212,7 @@ void myinit(int argc, char **argv)
   asprintf(&cmdline,"LD_PRELOAD= LD_LIBRARY_PATH=%s PATH= %s -E %s",
 	   "@sys_ld_lib_path@", "@python@",
 	   "@PREFIX@/site/xalt_syshost.py");
-  fp = popen(cmdline, "r");
+  FILE* fp = popen(cmdline, "r");
   if (fp)
     {
       int len;

@@ -14,4 +14,13 @@ we know from accounting on how much a user uses but not what they run.
 * Hijacks linker
 ** LD_PRELOAD
 ** xalt_initialize.o
+* Database issues
+
+How to deal with very large join tables
+=> shard, partition
+
+Partition leads to stored procedure to create a a new partition every
+month.
+
+
 
