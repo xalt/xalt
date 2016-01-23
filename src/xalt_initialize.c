@@ -354,14 +354,14 @@ void myfini()
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG1(stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG1(my_stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   if (! v)
     return;
 
   /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
   v = getenv("__XALT_INITIAL_STATE__");
-  FULL_DEBUG1(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
-  FULL_DEBUG1(stderr,"  STATE: \"%s\"\n", STR(STATE));
+  FULL_DEBUG1(my_stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
   if (!v || strcmp(v,STR(STATE)) != 0)
     return;
 
