@@ -208,17 +208,21 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
-  /* Stop tracking if XALT is turned off */
   
+  unsetenv("LD_PRELOAD");
+
+  /* Stop tracking if XALT is turned off */
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     xalt_tracing = 1;
   
-  unsetenv("LD_PRELOAD");
 
-  abspath(path,sizeof(path));
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
+  if (xalt_tracing)
+    {
+      abspath(path,sizeof(path));
+      FULL_DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
+    }
 
   if (! v)
     {
@@ -259,7 +263,7 @@ void myinit(int argc, char **argv)
 
 
   /* Get full absolute path to executable */
-
+  abspath(path,sizeof(path));
   reject_flag = reject(path, u.nodename);
   FULL_DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
