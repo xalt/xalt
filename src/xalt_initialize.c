@@ -215,8 +215,9 @@ void myinit(int argc, char **argv)
     xalt_tracing = 1;
   
 
+  abspath(path,sizeof(path));
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG2(stderr,"myinit(%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),(v != NULL) ? v : "(NULL)");
+  FULL_DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
 
   if (! v)
     {
