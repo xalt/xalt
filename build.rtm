@@ -87,12 +87,12 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.tacc.txt --with-hostnameList=./contrib/TACC/config/hostname.tacc.txt"
+    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.tacc.txt --with-hostnameList=./contrib/TACC/config/hostname.tacc.txt --with-site=TACC"
     ;;
 
   ls5 )
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt --with-etcDir=/home1/moduleData/all"
+    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt --with-etcDir=/home1/moduleData/all --with-site=TACC"
     ;;
 
   kfs|xc30)
