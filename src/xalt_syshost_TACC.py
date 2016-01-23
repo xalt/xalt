@@ -27,7 +27,7 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 from __future__ import print_function
-import socket, platform
+import socket, platform, re
 
 # must set this to True or False depending on your naming scheme
 # unless you plan to do a manual mapping of all your machine names
