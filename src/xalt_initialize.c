@@ -214,6 +214,7 @@ void myinit(int argc, char **argv)
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     xalt_tracing = 1;
   
+  unsetenv("LD_PRELOAD");
 
   abspath(path,sizeof(path));
   v = getenv("XALT_EXECUTABLE_TRACKING");
@@ -258,7 +259,6 @@ void myinit(int argc, char **argv)
 
 
   /* Get full absolute path to executable */
-  abspath(path,sizeof(path));
 
   reject_flag = reject(path, u.nodename);
   FULL_DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
