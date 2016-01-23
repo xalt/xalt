@@ -90,6 +90,9 @@ int reject(const char *path, const char * hostname)
   if (path[0] == '\0')
     return 1;
   
+  // explain why reject happenned!!!
+
+
   for (i = 0; i < hostnameSz; i++)
     {
       iret = regcomp(&regex, hostnameA[i], 0);
@@ -115,8 +118,12 @@ int reject(const char *path, const char * hostname)
     }
 
   if (rejected_host)
-    return 1;
+    {
+      FULL_DEBUG1(stderr,"  hostname: \"%s\" is rejected\n",hostname);
+      return 1;
+    }
 
+  FULL_DEBUG1(stderr,"  hostname: \"%s\" is accepted\n",hostname);
   for (i = 0; i < acceptSz; i++)
     {
       iret = regcomp(&regex, acceptA[i], 0);
@@ -128,7 +135,10 @@ int reject(const char *path, const char * hostname)
 
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
-	return 0;
+	{
+	  FULL_DEBUG1(stderr,"path: \"%s\" is accepted because of the accept list\n",path);
+	  return 0;
+	}
       else if (iret != REG_NOMATCH)
 	{
 	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
@@ -149,7 +159,10 @@ int reject(const char *path, const char * hostname)
 
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
-	return 1;
+	{
+	  FULL_DEBUG1(stderr,"path: \"%s\" is rejected because of the ignore list\n",path);
+	  return 1;
+	}
       else if (iret != REG_NOMATCH)
 	{
 	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
@@ -158,6 +171,7 @@ int reject(const char *path, const char * hostname)
 	}
       regfree(&regex);
     }
+  FULL_DEBUG1(stderr,"path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
   return 0;
 }
 
@@ -326,8 +340,6 @@ void myinit(int argc, char **argv)
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  /* Stop tracking if path is rejected. */
-  
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
 	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
 
