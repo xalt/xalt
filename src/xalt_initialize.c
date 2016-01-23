@@ -345,7 +345,7 @@ void myfini()
   if (xalt_tracing)
     my_stderr = fdopen(errfd,"w");
 
-  FULL_DEBUG3(my_stderr,"Starting myfini: reject_flag: %d, my_rank: %ld, start_time: %f",reject_flag, my_rank, start_time);
+  FULL_DEBUG3(my_stderr,"\nmyfini(): reject_flag: %d, my_rank: %ld, start_time: %f",reject_flag, my_rank, start_time);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag || my_rank > 0L || start_time < 0.01)
@@ -354,14 +354,14 @@ void myfini()
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG1(stderr,"Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG1(stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   if (! v)
     return;
 
   /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
   v = getenv("__XALT_INITIAL_STATE__");
-  FULL_DEBUG1(stderr,"Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
-  FULL_DEBUG1(stderr,"STATE: \"%s\"\n", STR(STATE));
+  FULL_DEBUG1(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG1(stderr,"  STATE: \"%s\"\n", STR(STATE));
   if (!v || strcmp(v,STR(STATE)) != 0)
     return;
 
