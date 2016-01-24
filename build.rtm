@@ -117,6 +117,8 @@ if [ "$?" = 0 ]; then
   MAKE=remake
 fi
 
+unset LD_PRELOAD
+
 cmdA=("-$MAKE distclean"
       "-rm -rf $PKG"
       "./configure --prefix=$PKG $CONF_OPTS"

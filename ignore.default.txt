@@ -4,12 +4,18 @@
 # blank lines are ignored as well as leading and trailing blanks.
 # Remember to put a leading '^' to match the beginning of the path:
 
-^/bin
+^/sbin/
+^/bin/
 ^/etc
 ^/usr
 ^/opt/apps/intel/
 ^/opt/apps/gcc/
-^/opt/ofed/s?bin   # ignore both /opt/ofed/bin and /opt/ofed/sbin
-
-
-
+^/opt/apps/lua
+^/opt/apps/lmod/
+^/opt/apps/icon/
+^/opt/apps/noweb/
+^/opt/apps/shell_startup_debug/
+^/opt/apps/xalt/
+^/opt/apps/intel-[0-9][0-9_]*/mpich/
+^/opt/apps/intel-[0-9][0-9_]*/openmpi/
+^/opt/VBoxGuestAdditions
