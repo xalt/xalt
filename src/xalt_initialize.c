@@ -119,11 +119,11 @@ int reject(const char *path, const char * hostname)
 
   if (rejected_host)
     {
-      FULL_DEBUG1(stderr,"  hostname: \"%s\" is rejected\n",hostname);
+      FULL_DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
       return 1;
     }
 
-  FULL_DEBUG1(stderr,"  hostname: \"%s\" is accepted\n",hostname);
+  FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
   for (i = 0; i < acceptSz; i++)
     {
       iret = regcomp(&regex, acceptA[i], 0);
@@ -136,7 +136,7 @@ int reject(const char *path, const char * hostname)
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
 	{
-	  FULL_DEBUG1(stderr,"path: \"%s\" is accepted because of the accept list\n",path);
+	  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
 	  return 0;
 	}
       else if (iret != REG_NOMATCH)
@@ -160,7 +160,7 @@ int reject(const char *path, const char * hostname)
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
 	{
-	  FULL_DEBUG1(stderr,"path: \"%s\" is rejected because of the ignore list\n",path);
+	  FULL_DEBUG1(stderr,"    path: \"%s\" is rejected because of the ignore list\n",path);
 	  return 1;
 	}
       else if (iret != REG_NOMATCH)
@@ -171,7 +171,7 @@ int reject(const char *path, const char * hostname)
 	}
       regfree(&regex);
     }
-  FULL_DEBUG1(stderr,"path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
+  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
   return 0;
 }
 
@@ -228,7 +228,10 @@ void myinit(int argc, char **argv)
   /* Stop tracking if XALT is turned off */
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
-    xalt_tracing = 1;
+    {
+      xalt_tracing = 1;
+      errfd = dup(STDERR_FILENO);
+    }
   
 
   v = getenv("XALT_EXECUTABLE_TRACKING");
@@ -240,7 +243,7 @@ void myinit(int argc, char **argv)
 
   if (! v)
     {
-      FULL_DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n");
+      FULL_DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
       return;
     }
 
@@ -249,7 +252,7 @@ void myinit(int argc, char **argv)
   /* Stop tracking if any myinit routine has been called */
   if (v)
     {
-      FULL_DEBUG0(stderr," __XALT_INITIAL_STATE__ has a value -> exiting\n");
+      FULL_DEBUG0(stderr," __XALT_INITIAL_STATE__ has a value -> exiting\n\n");
       return;
     }
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
@@ -260,7 +263,7 @@ void myinit(int argc, char **argv)
   FULL_DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     {
-      FULL_DEBUG0(stderr," MPI Rank is not zero -> exiting\n");
+      FULL_DEBUG0(stderr," MPI Rank is not zero -> exiting\n\n");
       return;
     }
 
@@ -282,7 +285,7 @@ void myinit(int argc, char **argv)
   FULL_DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
     {
-      FULL_DEBUG0(stderr,"  reject_flag is true -> exiting\n");
+      FULL_DEBUG0(stderr,"  reject_flag is true -> exiting\n\n");
       return;
     }
 
@@ -352,6 +355,7 @@ void myinit(int argc, char **argv)
 
 void myfini()
 {
+  FILE * fp;
   FILE * my_stderr;
   char * v;
   char * p_dbg;
@@ -361,25 +365,34 @@ void myfini()
   if (xalt_tracing)
     my_stderr = fdopen(errfd,"w");
 
-  FULL_DEBUG3(my_stderr,"\nmyfini(): reject_flag: %d, my_rank: %ld, start_time: %f",reject_flag, my_rank, start_time);
+  FULL_DEBUG3(my_stderr,"\nmyfini():\n  reject_flag: %d, my_rank: %ld, start_time: %f\n",reject_flag, my_rank, start_time);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag || my_rank > 0L || start_time < 0.01)
-    return;
+    {
+      FULL_DEBUG0(my_stderr,"    -> exiting\n\n");
+      return;
+    }
 
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
   FULL_DEBUG1(my_stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   if (! v)
-    return;
+    {
+      FULL_DEBUG0(my_stderr,"   XALT_EXECUTABLE_TRACKING is turned off -> exiting \n\n");
+      return;
+    }
 
   /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
   v = getenv("__XALT_INITIAL_STATE__");
   FULL_DEBUG1(my_stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   FULL_DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
   if (!v || strcmp(v,STR(STATE)) != 0)
-    return;
+    {
+      FULL_DEBUG0(my_stderr,    "STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
+      return;
+    }
 
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
