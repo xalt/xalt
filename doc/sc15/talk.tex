@@ -207,15 +207,15 @@
 void myinit(int argc, char **argv)
 \{
   /* ... */
-
 \}
 void myfini()
 \{
   /* ... */
-
 \}
-  __attribute__((section(".init_array"))) typeof(myinit) *__init = myinit;
-  __attribute__((section(".fini_array"))) typeof(myfini) *__fini = myfini;
+  __attribute__((section(".init_array")))
+       typeof(myinit) *__init = myinit;
+  __attribute__((section(".fini_array")))
+       typeof(myfini) *__fini = myfini;
     \end{alltt}
 }
 \end{frame}
