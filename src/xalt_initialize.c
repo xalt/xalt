@@ -40,6 +40,12 @@
 #  include <libproc.h>
 #endif
 
+int reject(const char *path, const char * hostname);
+long compute_value(const char **envA);
+void abspath(char * path, int sz);
+void myinit(int argc, char **argv);
+void myfini();
+
 
 
 #define STR(x)  STR2(x)
@@ -76,136 +82,6 @@ static char   usr_cmdline[65535];
 #  define FULL_DEBUG2(fp,s,x1,x2) 
 #  define FULL_DEBUG3(fp,s,x1,x2,x3) 
 #endif
-
-
-int reject(const char *path, const char * hostname)
-{
-  int     i;
-  regex_t regex;
-  int     iret;
-  int     rejected_host = (hostnameSz != 0);
-  char    msgbuf[100];
-  char *  p;
-
-  if (path[0] == '\0')
-    return 1;
-  
-  // explain why reject happenned!!!
-
-
-  for (i = 0; i < hostnameSz; i++)
-    {
-      iret = regcomp(&regex, hostnameA[i], 0);
-      if (iret)
-	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", hostnameA[i]);
-	  exit(1);
-	}
-
-      iret = regexec(&regex, hostname, 0, NULL, 0);
-      if (iret == 0)
-	{
-	  rejected_host = 0;
-	  break;
-	}
-      else if (iret != REG_NOMATCH)
-	{
-	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "HostnameA Regex match failed: %s\n", msgbuf);
-	  exit(1);
-	}
-      regfree(&regex);
-    }
-
-  if (rejected_host)
-    {
-      FULL_DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
-      return 1;
-    }
-
-  FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
-  for (i = 0; i < acceptSz; i++)
-    {
-      iret = regcomp(&regex, acceptA[i], 0);
-      if (iret)
-	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
-	  exit(1);
-	}
-
-      iret = regexec(&regex, path, 0, NULL, 0);
-      if (iret == 0)
-	{
-	  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
-	  return 0;
-	}
-      else if (iret != REG_NOMATCH)
-	{
-	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "AcceptA Regex match failed: %s\n", msgbuf);
-	  exit(1);
-	}
-      regfree(&regex);
-    }
-  
-  for (i = 0; i < ignoreSz; i++)
-    {
-      iret = regcomp(&regex, ignoreA[i], 0);
-      if (iret)
-	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
-	  exit(1);
-	}
-
-      iret = regexec(&regex, path, 0, NULL, 0);
-      if (iret == 0)
-	{
-	  FULL_DEBUG1(stderr,"    path: \"%s\" is rejected because of the ignore list\n",path);
-	  return 1;
-	}
-      else if (iret != REG_NOMATCH)
-	{
-	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "IgnoreA Regex match failed: %s\n", msgbuf);
-	  exit(1);
-	}
-      regfree(&regex);
-    }
-  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
-  return 0;
-}
-
-long compute_value(const char **envA)
-{
-  long          value = 0L;
-  const char ** p;
-  for (p = &envA[0]; *p; ++p)
-    {
-      char *v = getenv(*p);
-      if (v)
-        value += strtol(v, (char **) NULL, 10);
-    }
-
-  return value;
-}
-
-/* Get full absolute path to executable */
-/* works for Linux and Mac OS X */
-void abspath(char * path, int sz)
-{
-  path[0] = '\0';
-  #ifdef __MACH__
-    int iret = proc_pidpath(getpid(), path, sz-1);
-    if (iret <= 0)
-      {
-	fprintf(stderr,"PID %d: proc_pid();\n",getpid());
-	fprintf(stderr,"    %s:\n", strerror(errno));
-      }
-  #else
-    readlink("/proc/self/exe",path,sz-1);
-  #endif
-}
-
 
 void myinit(int argc, char **argv)
 {
@@ -352,7 +228,6 @@ void myinit(int argc, char **argv)
   system(cmdline);
   free(cmdline);
 }
-
 void myfini()
 {
   FILE * fp;
@@ -405,6 +280,134 @@ void myfini()
   system(cmdline);
   free(cmdline);
   free(syshost_option);
+}
+
+int reject(const char *path, const char * hostname)
+{
+  int     i;
+  regex_t regex;
+  int     iret;
+  int     rejected_host = (hostnameSz != 0);
+  char    msgbuf[100];
+  char *  p;
+
+  if (path[0] == '\0')
+    return 1;
+  
+  // explain why reject happenned!!!
+
+
+  for (i = 0; i < hostnameSz; i++)
+    {
+      iret = regcomp(&regex, hostnameA[i], 0);
+      if (iret)
+	{
+	  fprintf(stderr,"Could not compile regex: \"%s\n", hostnameA[i]);
+	  exit(1);
+	}
+
+      iret = regexec(&regex, hostname, 0, NULL, 0);
+      if (iret == 0)
+	{
+	  rejected_host = 0;
+	  break;
+	}
+      else if (iret != REG_NOMATCH)
+	{
+	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	  fprintf(stderr, "HostnameA Regex match failed: %s\n", msgbuf);
+	  exit(1);
+	}
+      regfree(&regex);
+    }
+
+  if (rejected_host)
+    {
+      FULL_DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
+      return 1;
+    }
+
+  FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
+  for (i = 0; i < acceptSz; i++)
+    {
+      iret = regcomp(&regex, acceptA[i], 0);
+      if (iret)
+	{
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  exit(1);
+	}
+
+      iret = regexec(&regex, path, 0, NULL, 0);
+      if (iret == 0)
+	{
+	  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
+	  return 0;
+	}
+      else if (iret != REG_NOMATCH)
+	{
+	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	  fprintf(stderr, "AcceptA Regex match failed: %s\n", msgbuf);
+	  exit(1);
+	}
+      regfree(&regex);
+    }
+  
+  for (i = 0; i < ignoreSz; i++)
+    {
+      iret = regcomp(&regex, ignoreA[i], 0);
+      if (iret)
+	{
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  exit(1);
+	}
+
+      iret = regexec(&regex, path, 0, NULL, 0);
+      if (iret == 0)
+	{
+	  FULL_DEBUG1(stderr,"    path: \"%s\" is rejected because of the ignore list\n",path);
+	  return 1;
+	}
+      else if (iret != REG_NOMATCH)
+	{
+	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	  fprintf(stderr, "IgnoreA Regex match failed: %s\n", msgbuf);
+	  exit(1);
+	}
+      regfree(&regex);
+    }
+  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
+  return 0;
+}
+
+long compute_value(const char **envA)
+{
+  long          value = 0L;
+  const char ** p;
+  for (p = &envA[0]; *p; ++p)
+    {
+      char *v = getenv(*p);
+      if (v)
+        value += strtol(v, (char **) NULL, 10);
+    }
+
+  return value;
+}
+
+/* Get full absolute path to executable */
+/* works for Linux and Mac OS X */
+void abspath(char * path, int sz)
+{
+  path[0] = '\0';
+  #ifdef __MACH__
+    int iret = proc_pidpath(getpid(), path, sz-1);
+    if (iret <= 0)
+      {
+	fprintf(stderr,"PID %d: proc_pid();\n",getpid());
+	fprintf(stderr,"    %s:\n", strerror(errno));
+      }
+  #else
+    readlink("/proc/self/exe",path,sz-1);
+  #endif
 }
 
 #ifdef __MACH__
