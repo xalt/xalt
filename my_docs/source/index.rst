@@ -10,6 +10,12 @@ OVERVIEW
 ^^^^^^^^
 XALT is a lightweight software tool for any Linux cluster, workstation, or high-end supercomputer to track executable information and linkage of static shared and dynamically linked libraries. When the code is executed, wrappers intercept both the GNU linker (ld) and code launcher (like mpirun, aprun, or ibrun) to capture linkage information and environmental variables.
 
+New in Version X.XX
+^^^^^^^^^^^^^^^^^^^^
+
+The big change for version X.XX of XALT is the change to linker only.  XALT can now caputure non-MPI jobs, single thread, and open MPI.
+With the ability to track additional information comes additional challenges.  Now that XALT tracks every executable, ignoring information will be site dependent.
+
 Installing XALT - Getting Started
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -22,6 +28,7 @@ Installing XALT - Getting Started
 Topics covered as part of Quick Start include:
 
   :doc:`010_installation` |
+  :doc:`080_Database` |
   :doc:`040_testing` |
   :doc:`050_production` |
   :doc:`060_datamining`

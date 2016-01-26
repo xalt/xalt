@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="XALT 1.0 documentation" href="#" />
-    <link rel="next" title="Quick Start Guide" href="020_QuickStart.html" /> 
+    <link rel="next" title="Quick Start Guide - Prerequistes and Decisions" href="020_QuickStart.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -34,7 +34,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="020_QuickStart.html" title="Quick Start Guide"
+          <a href="020_QuickStart.html" title="Quick Start Guide - Prerequistes and Decisions"
              accesskey="N">next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">XALT 1.0 documentation</a> &raquo;</li> 
       </ul>
@@ -55,17 +55,23 @@
 <h2>OVERVIEW<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>XALT is a lightweight software tool for any Linux cluster, workstation, or high-end supercomputer to track executable information and linkage of static shared and dynamically linked libraries. When the code is executed, wrappers intercept both the GNU linker (ld) and code launcher (like mpirun, aprun, or ibrun) to capture linkage information and environmental variables.</p>
 </div>
+<div class="section" id="new-in-version-x-xx">
+<h2>New in Version X.XX<a class="headerlink" href="#new-in-version-x-xx" title="Permalink to this headline">¶</a></h2>
+<p>The big change for version X.XX of XALT is the change to linker only.  XALT can now caputure non-MPI jobs, single thread, and open MPI.
+With the ability to track additional information comes additional challenges.  Now that XALT tracks every executable, ignoring information will be site dependent.</p>
+</div>
 <div class="section" id="installing-xalt-getting-started">
 <h2>Installing XALT - Getting Started<a class="headerlink" href="#installing-xalt-getting-started" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="020_QuickStart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="020_QuickStart.html">Quick Start Guide - Prerequistes and Decisions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="030_FAQ.html">FAQ</a></li>
 </ul>
 </div>
 <p>Topics covered as part of Quick Start include:</p>
 <blockquote>
 <div><a class="reference internal" href="010_installation.html"><em>Installation</em></a> |
+<a class="reference internal" href="080_Database.html"><em>Database Set Up</em></a> |
 <a class="reference internal" href="040_testing.html"><em>Testing</em></a> |
 <a class="reference internal" href="050_production.html"><em>Production</em></a> |
 <a class="reference internal" href="060_datamining.html"><em>Data Mining</em></a></div></blockquote>
@@ -100,6 +106,7 @@
 <li><a class="reference internal" href="#">XALT: Library Tracking Software</a><ul>
 <li><a class="reference internal" href="#purpose">PURPOSE</a></li>
 <li><a class="reference internal" href="#overview">OVERVIEW</a></li>
+<li><a class="reference internal" href="#new-in-version-x-xx">New in Version X.XX</a></li>
 <li><a class="reference internal" href="#installing-xalt-getting-started">Installing XALT - Getting Started</a></li>
 <li><a class="reference internal" href="#user-guide-for-xalt">User Guide for  XALT</a></li>
 </ul>
@@ -109,7 +116,7 @@
 
   <h4>Next topic</h4>
   <p class="topless"><a href="020_QuickStart.html"
-                        title="next chapter">Quick Start Guide</a></p>
+                        title="next chapter">Quick Start Guide - Prerequistes and Decisions</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -141,7 +148,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="020_QuickStart.html" title="Quick Start Guide"
+          <a href="020_QuickStart.html" title="Quick Start Guide - Prerequistes and Decisions"
              >next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">XALT 1.0 documentation</a> &raquo;</li> 
       </ul>

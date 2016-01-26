@@ -1,8 +1,8 @@
-Quick Start Guide
-=================
+Quick Start Guide - Prerequistes and Decisions
+==============================================
 
-Prequisites
-^^^^^^^^^^^
+Prerequisites
+^^^^^^^^^^^^^
 - Python 2.6 or later
 
 - Python MySQLDb module
@@ -29,6 +29,8 @@ For XALT on multiple machines, you need to decide if you want to have one databa
 
 Either mode is supported.
 
+You will need a file/syslog to datbase scripts for each machine for both options.
+
 **Lmod/ReverseMap**
 
 Lmod on multiple machines
@@ -54,6 +56,6 @@ In the case that you want the xalt_db.conf file hidden or secured, by overrunnin
 Note: you will need to have an XALT_ETC_DIR directory for each machine.
 
 
-Next Steps - Testing
-^^^^^^^^^^^^^^^^^^^^
+Next Steps - Installation
+^^^^^^^^^^^^^^^^^^^^^^^^^
   :doc:`010_installation`

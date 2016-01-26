@@ -3,7 +3,8 @@ Installation
 
 Though not required, installation an operation of XALT is easier with pre-requisite software: lua and lmod.
 
-Lmod provides the spider utility which creates the map, but can be added later.  A script is available to update table entreis with ReverseMap.
+For running XALT on multiple machines, decide if you want to have one database for all machines or multiple databases. 
+Either way, there needs to be file/syslog to database scripts for each machine.
 
 Install XALT
 ^^^^^^^^^^^^
@@ -37,12 +38,8 @@ Or get Lmod-5.8rc2 or greater from::
 Installation instructions and documentation for Lmod:
   http://lmod.readthedocs.org/
 
-If machines had different architectures, then each machine needs a build of Lmod. 
-
 Installation Steps
 ^^^^^^^^^^^^^^^^^^
-
-In the documentation, we install everything to $XALT_DIR.
 
 First, untar the XALT file, change the directory to XALT, configure, then install::
 
@@ -60,23 +57,7 @@ For removing launchers on a Cray, which only supports 'aprun'::
 
 	$> cd $XALT_DIR/bin
 	$> rm ibrun* mpirun mpiexec srun
-
-For job launchers not part of XALT, you will ned to develop your own launcher which involves creating site/xalt_find_exec_xxxx.py. If you complete this step, please submit your launcher to the XALT team.
-
 	
-Manual Steps
-------------
-
-To return the names/names of the hosts you want stored in the database you must modify the site/xalt_syshost_default.py file
-
-We suggest one name for an entire machine, but you could go with a name for each compute node/partition. 
-
-Depending on your installation and batch schedulers, you may need to edit site/xalt_site_pkg.py.
-
-XALT currently provides support for LSF, SGE, SLURM, and PBS hooks.
- 
-
-
 
 ReverseMap & Libmap
 --------------------
@@ -126,6 +107,6 @@ Create the database and tables for XALT (need to be run from $XALT_ETC_DIR)::
 	$> python $XALT_DIR/sbin/createDB.py
 	
 
-Next Steps - Database Set Up
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  :doc:`080_Database`
+Next Steps - Testing
+^^^^^^^^^^^^^^^^^^^^
+  :doc:`040_testing`
