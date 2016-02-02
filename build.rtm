@@ -75,6 +75,8 @@ if [ -z "$SYSHOST" ]; then
   export SYSHOST=${myhost#*.}
 fi
 
+SETUP_CMD=
+
 case $SYSHOST in
   rios | mijo | jedrik | vato | vmijo | devo | lmod-test | xalt-lmod)
     SUDO="sudo"
@@ -99,6 +101,13 @@ case $SYSHOST in
     base="$HOME/l/pkg"
     EXTRA="/$SYSHOST"
     ;;
+
+  
+  gligar.os)
+    base="$HOME/l/pkg"
+    SETUP_CMD="module load MySQLdb/1.2.5-intel-2016a-Python-2.7.11 psutil/3.4.2-intel-2016a-Python-2.7.11 libuuid/1.0.3-intel-2016a"
+    ;;
+
 
   *)
     base="$HOME/l/pkg"

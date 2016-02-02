@@ -78,7 +78,10 @@ AC_SUBST(SYS_LD_LIB_PATH)
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 
 
-AC_CHECK_HEADER(uuid/uuid.h)
+AC_CHECK_HEADER(uuid/uuid.h,
+    [],
+    [AC_MSG_ERROR([XALT cannot be built without uuid/uuid.h])]
+    )
 
 
 AC_SUBST(PATH_TO_AS)

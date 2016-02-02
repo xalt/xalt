@@ -3342,6 +3342,9 @@ done
 ac_fn_c_check_header_mongrel "$LINENO" "uuid/uuid.h" "ac_cv_header_uuid_uuid_h" "$ac_includes_default"
 if test "x$ac_cv_header_uuid_uuid_h" = xyes; then :
 
+else
+  as_fn_error $? "XALT cannot be built without uuid/uuid.h" "$LINENO" 5
+
 fi
 
 
