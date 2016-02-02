@@ -238,6 +238,8 @@ class UserExec(object):
         self.__execType = "script"
       else:
         self.__execType = "binary"
+        # ldd is a shell script so it must do path resolution!
+        os.environ['PATH'] = '/usr/bin:/bin'
         ldd             = capture(["@ldd@", self.__execName])
         self.__libA     = self.__parseLDD(ldd)
 
