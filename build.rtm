@@ -106,8 +106,8 @@ case $SYSHOST in
   gligar.os)
     base="$HOME/l/pkg"
     SETUP_CMD="module load MySQLdb/1.2.5-intel-2016a-Python-2.7.11 psutil/3.4.2-intel-2016a-Python-2.7.11 libuuid/1.0.3-intel-2016a"
+    CONF_OPTS="--with-etcDir=/"
     ;;
-
 
   *)
     base="$HOME/l/pkg"
