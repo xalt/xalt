@@ -130,6 +130,7 @@ unset LD_PRELOAD
 
 cmdA=("-$MAKE distclean"
       "-rm -rf $PKG"
+      "$SETUP_CMD"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE install"
       "$SUDO $MAKE Inst_TACC"
