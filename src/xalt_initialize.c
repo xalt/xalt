@@ -63,7 +63,7 @@ static char   path[PATH_MAX];
 static char   syshost[SZ];
 static char * syshost_option;
 static char   usr_cmdline[65535];
-#define HERE printf("%s:%d\n",__FILE__,__LINE__)
+#define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
 #define DEBUG0(fp,s)          if (xalt_tracing) fprintf(fp,s)
@@ -109,7 +109,6 @@ void myinit(int argc, char **argv)
       errfd = dup(STDERR_FILENO);
     }
   
-
   v = getenv("XALT_EXECUTABLE_TRACKING");
   if (xalt_tracing)
     {
@@ -117,22 +116,20 @@ void myinit(int argc, char **argv)
       FULL_DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
     }
 
-  if (! v)
+  if (!v || strcmp(v,"yes") != 0)
     {
       FULL_DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
       return;
     }
 
   v = getenv("__XALT_INITIAL_STATE__");
-  FULL_DEBUG1(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  FULL_DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
-  if (v)
+  if (v && (strcmp(v,STR(STATE)) != 0))
     {
-      FULL_DEBUG0(stderr," __XALT_INITIAL_STATE__ has a value -> exiting\n\n");
+      FULL_DEBUG2(stderr," __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
       return;
     }
-  setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
-
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
@@ -154,7 +151,6 @@ void myinit(int argc, char **argv)
       exit(EXIT_FAILURE);
     }
 
-
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
   reject_flag = reject(path, u.nodename);
@@ -165,6 +161,7 @@ void myinit(int argc, char **argv)
       return;
     }
 
+  setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
   errfd = dup(STDERR_FILENO);
 
   asprintf(&syshost_option,"%s"," ");
