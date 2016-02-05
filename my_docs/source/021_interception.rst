@@ -25,3 +25,5 @@ Issue: you must address any change to the MPI library be a module swap will not 
 
 Each launcher can be moved by renaming it. This is not our suggested option because it requires modifications to our wrapper. See user guide for an example and additional documentation. 
 
+:doc:`020_QuickStart`
+

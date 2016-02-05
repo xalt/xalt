@@ -94,7 +94,7 @@ Application Usage
 Provenance and Reproducibility
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This query will return the necessary information for ::
+This example query returned the necessary information for building a project ::
 
 	mysql> SELECT object_path, timestamp
 	FROM xalt_object, join_link_object

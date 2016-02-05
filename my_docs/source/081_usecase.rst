@@ -37,3 +37,7 @@ RESULT HERE
 	FROM xalt_object, join_link_object
 	WHERE join_link_object.link_id="4" AND
 	join_link_object.obj_id=xalt_object.obj_id;
+	
+RESULTS HERE
+
+

@@ -25,24 +25,24 @@ Installing XALT - Getting Started
    020_QuickStart
    030_FAQ
 
-Topics covered as part of Quick Start include:
+Topics covered as part of the Quick Start include:
 
   :doc:`010_installation` |
   :doc:`080_Database` |
   :doc:`040_testing` |
   :doc:`050_production` |
-  :doc:`060_datamining`
+  :doc:`060_datamining` |
+  :doc:`081_usecase`
 
 
 
 User Guide for  XALT
 ^^^^^^^^^^^^^^^^^^^^^
-For the complete user manual of XALT, see the User Manual.
+For the complete user manual of XALT, see the `User Manual`_.
 
-.. toctree::
-      :maxdepth: 1
+.. _User Manual: https://github.com/Fahey-McLay/xalt/blob/master/doc/XALTUsersManual-0.5.pdf
 
-      010_user
+
 
 Indices and tables
 ==================

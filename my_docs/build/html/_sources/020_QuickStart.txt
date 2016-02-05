@@ -44,7 +44,7 @@ If you have multiple code launchers and linkers, you must choose a method to int
 	#. XALT modulefile
 	#. Move the launcher
 	
-	:doc:`070_interception`
+	:doc:`021_interception`
 
 **File Location**
 
