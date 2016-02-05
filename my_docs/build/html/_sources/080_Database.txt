@@ -5,7 +5,9 @@ New for Version x.xx
 ^^^^^^^^^^^^^^^^^^^^
 
 For version x.xx of XALT, there are a few changes.
+
 1. The schema has changed to increase speed, change storage, and track more (MPI/non-MPI)
+
 2. The join tables have been partitioned and are divided by month.
 
 For users with an older version of XALT, we recommend migrating to the new database structure.
