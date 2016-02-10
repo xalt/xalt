@@ -31,6 +31,9 @@ def main():
   if ("@have_pymod_psutil@" == "yes"):
      from psutil import Process
 
+  #-- Test for working MySQLdb
+  if (os.environ.get("XALT_TRANSMISSION_STYLE") == 'directdb'):
+    import MySQLdb
 
   print ("GOOD")
 
