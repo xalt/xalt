@@ -4,7 +4,7 @@ XALT: Library Tracking Software
 
 PURPOSE
 ^^^^^^^
-This guide is written to explain the benefits of XALT, installation, and give examples of use.
+This guide is written to provide installation instructions and give examples of use for XALT.
 
 OVERVIEW
 ^^^^^^^^
@@ -23,16 +23,16 @@ Installing XALT - Getting Started
    :maxdepth: 1
 
    020_QuickStart
-   030_FAQ
+   090_FAQ
 
 Topics covered as part of the Quick Start include:
 
-  :doc:`010_installation` |
-  :doc:`080_Database` |
-  :doc:`040_testing` |
-  :doc:`050_production` |
-  :doc:`060_datamining` |
-  :doc:`081_usecase`
+  :doc:`030_installation` |
+  :doc:`040_Database` |
+  :doc:`050_testing` |
+  :doc:`060_production` |
+  :doc:`070_datamining` |
+  :doc:`080_usecase`
 
 
 
@@ -48,5 +48,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

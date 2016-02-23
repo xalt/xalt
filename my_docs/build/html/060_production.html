@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Production &mdash; XALT 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="XALT 1.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="production">
+<h1>Production<a class="headerlink" href="#production" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reversemap">
+<h2>reverseMap<a class="headerlink" href="#reversemap" title="Permalink to this headline">¶</a></h2>
+<p>Lmod asissted mapping of libraries back to modulefiles.</p>
+<p>When modulefiles are set up with a one-to-one mapping of modules to package installations, Lmods can (usually) create reverse maps without issues.
+But, when moduelfiles point to a variety of installations and set environment variables, a reverse map will have many-to-one relationships (i.e. Cray&#8217;s provided modulefile system). On systems like Cray, for the spider work, it must be run multiple times resulting in muliple reverse maps, which then must be combined to crease a master reverse map.</p>
+<p>Reverse maps need to be created/updated everytime a new modulefile or package is installed.
+Integrations for reverse map creation include
+1. Part of the software installation process
+2. Run a a cron job on a set interval, using a script provided in the XALT software package to update the module name entries in the database.</p>
+<p>As mentioned in installation, if you have mulitple machines and one XALT installation, you will need to have a reverse map for each machine.</p>
+<p>Simple command to create reverse map:</p>
+<div class="highlight-python"><div class="highlight"><pre>spider -o jsonReverseMapT
+$LMOD_MODULEPATH &gt; rmapD/jsonReverseMapT.json
+</pre></div>
+</div>
+<p>Cray script, found in the contrib/build_reverseMapT_cray/ (this example, XC30 using Lmod spider utility):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">darter_build_rmapT</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wrappers">
+<h2>Wrappers<a class="headerlink" href="#wrappers" title="Permalink to this headline">¶</a></h2>
+<p>Some tools have issues with wrappers (i.e. Totalview), and it is easy to unload xalt automatically when loading wrappers with issues. The alternative, automatically loading xalt when wrappers are not being used is much harder.
+As a result, a small percentage of links and runs are missed.</p>
+</div>
+<div class="section" id="syslog">
+<h2>syslog<a class="headerlink" href="#syslog" title="Permalink to this headline">¶</a></h2>
+<p>Syslog is the preferred method for production.  All records first go to the syslog and then are parsed later to go into the database.</p>
+<p>Set rsyslog settings and set up a configuration file for syslog and place it in /etc/rsyslog.d/ that we have called xalt_syslog.conf:</p>
+<div class="highlight-python"><div class="highlight"><pre>example of how to set this up
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-parse-syslog-file">
+<h2>Testing Parse syslog file<a class="headerlink" href="#testing-parse-syslog-file" title="Permalink to this headline">¶</a></h2>
+<p>Use xalt_syslog_to_db.py to collect data from syslog:</p>
+<div class="highlight-python"><div class="highlight"><pre>python xalt_syslog_to_database.py -reverseMapD=$BASE/etc/reverseMApD /var/log/xalt.log.1
+</pre></div>
+</div>
+<p>This may be rerun without producing duplicate entries.</p>
+<p>To set up rotation on the /var/log/xalt.log file with a log rotate configuration:</p>
+<div class="highlight-python"><div class="highlight"><pre>HOW TO HERE
+</pre></div>
+</div>
+<p>The command above sets a 4 day rotation, minimum recommended rotation is a 2 day rotation. The above command creates a log file that can be read by all non-root users.  Decisions about access to log files must be made on a site-by-site basis.</p>
+</div>
+<div class="section" id="next-steps-data-mining">
+<h2>Next Steps - Data Mining<a class="headerlink" href="#next-steps-data-mining" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><a class="reference internal" href="070_datamining.html"><em>Data Mining</em></a></div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Production</a><ul>
+<li><a class="reference internal" href="#reversemap">reverseMap</a></li>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
+<li><a class="reference internal" href="#syslog">syslog</a></li>
+<li><a class="reference internal" href="#testing-parse-syslog-file">Testing Parse syslog file</a></li>
+<li><a class="reference internal" href="#next-steps-data-mining">Next Steps - Data Mining</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/060_production.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Robert McLay.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

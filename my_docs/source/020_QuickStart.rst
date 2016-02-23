@@ -58,4 +58,4 @@ Note: you will need to have an XALT_ETC_DIR directory for each machine.
 
 Next Steps - Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-  :doc:`010_installation`
+  :doc:`030_installation`

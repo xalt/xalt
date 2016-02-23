@@ -111,4 +111,7 @@ Usage Statstics
 Restoring the Program Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 
+Next
+^^^^^
+ :doc:`080_usecase`
 

@@ -128,4 +128,4 @@ Create the database and tables for XALT (need to be run from $XALT_ETC_DIR)::
 
 Next Steps - Database Set Up
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  :doc:`080_Database`
+  :doc:`040_Database`

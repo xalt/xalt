@@ -60,4 +60,4 @@ The command above sets a 4 day rotation, minimum recommended rotation is a 2 day
 
 Next Steps - Data Mining
 ^^^^^^^^^^^^^^^^^^^^^^^^
-  :doc:`060_datamining`
+  :doc:`070_datamining`
