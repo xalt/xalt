@@ -132,9 +132,10 @@ def main():
     execname    = sys.argv[ 5]
     xaltobj     = sys.argv[ 6]
     build_epoch = sys.argv[ 7]
-    funclistFn  = sys.argv[ 8]
-    linklineFn  = sys.argv[ 9]
-    resultFn    = sys.argv[10]
+    compiler    = sys.argv[ 8]
+    funclistFn  = sys.argv[ 9]
+    linklineFn  = sys.argv[10]
+    resultFn    = sys.argv[11]
 
     if (execname.find("conftest") != -1):
       return 1
@@ -151,7 +152,7 @@ def main():
   
     resultT                  = {}
     resultT['uuid']          = uuid
-    resultT['link_program']  = extract_compiler()
+    resultT['link_program']  = compiler
     resultT['build_user']    = User
     resultT['exit_code']     = int(status)
     resultT['build_epoch']   = float(build_epoch)

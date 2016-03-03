@@ -254,3 +254,13 @@ run_real_command()
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"
 }
+
+########################################################################
+# Find compiler calling ld to be passed to as arguments to $GEN_LINDATA 
+# later (in a subshell)
+
+find_compiler()
+{
+  COMPILER=$($MY_PYTHON -c "from xalt_util import *; print(extract_compiler())")
+  tracing_msg "find_compiler: Setting COMPILER to $COMPILER"
+}

@@ -60,6 +60,11 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 find_working_python  # This function sets MY_PYTHON
 
 ########################################################################
+# Find compiler calling this ld
+
+find_compiler  # This function sets COMPILER
+
+########################################################################
 # Loop over command line arguments to ld. This code is used instead of
 # getopt and others because this wrapper script should not try to know
 # all the options to ld. Instead we are just "cherry-picking" the options
@@ -195,7 +200,7 @@ fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
+$MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$COMPILER" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
