@@ -37,8 +37,7 @@ for lib in libmap:
   refLibs.add(name)
 
 # Remove libraries that are in reference lib
-workdir  = sys.argv[1]
-linkline = sys.argv[2:]
+linkline = sys.argv[1:]
 aLibs    = []
 for iLib in linkline:
   testLib = os.path.basename(iLib.replace("-l", "lib") \
@@ -46,10 +45,6 @@ for iLib in linkline:
   if testLib in refLibs:
     continue
     
-  # Replace /tmp/*.o object with our copy in WRKDIR
-  if (iLib[:4] == '/tmp'):
-    iLib = os.path.join("%s/obj/"%workdir, os.path.basename(iLib))
-  
   aLibs.append(iLib)
     
 print " ".join(aLibs)
