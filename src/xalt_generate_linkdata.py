@@ -137,7 +137,7 @@ def main():
     linklineFn  = sys.argv[10]
     resultFn    = sys.argv[11]
 
-    if (execname.find("conftest") != -1):
+    if (execname == "conftest"):
       return 1
   
     hash_line   = capture(['sha1sum', execname])  

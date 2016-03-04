@@ -176,6 +176,11 @@ unset  PYTHONHOME
 [ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
 
 ( # start asynchronous subshell while the 'main' can return to user
+
+if [ $EXEC == "conftest" ]; then
+  exit 0
+fi
+
 touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
 
 cat $FUNCRAW | while read line 
@@ -191,7 +196,6 @@ fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-STARTTIME=$(date +%s)
 $MY_PYTHON "$GEN_LINKDATA" "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" \
   "$ARGOBJ" "$EPOCH" "$COMPILER" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
@@ -203,7 +207,6 @@ if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
 
    $CAT  $LINKLINE >> $RESULT
 fi
-ENDTIME=$(date +%s)
 
 $RM -rf $WRKDIR
 ) & # end subshell
