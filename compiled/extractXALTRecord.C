@@ -1,4 +1,5 @@
 #include "run_submission.h"
+#include "xalt_config.h"
 
 void extractXALTRecord(std::string& exec, std::unordered_map<std::string, std::string>& recordT)
 {
@@ -6,7 +7,7 @@ void extractXALTRecord(std::string& exec, std::unordered_map<std::string, std::s
   std::vector<std::string> result;
 
   // Capture the XALT record (if it exists) into result.
-  cmd  = "objdump -s -j .xalt ";
+  cmd  = OBJDUMP " -s -j .xalt ";
   cmd += exec;
   cmd += " 2> /dev/null";
     

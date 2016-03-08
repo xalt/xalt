@@ -4210,10 +4210,10 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/src/xalt_regex.template --output $ac_confdir/src/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
 
 
-ac_config_files="$ac_config_files makefile:Makefile.in"
+ac_config_files="$ac_config_files makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4921,6 +4921,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "makefile") CONFIG_FILES="$CONFIG_FILES makefile:Makefile.in" ;;
+    "compiled/xalt_config.h") CONFIG_FILES="$CONFIG_FILES compiled/xalt_config.h:compiled/xalt_config.h.in" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

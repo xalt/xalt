@@ -1,5 +1,6 @@
-#include "run_submission.h"
 #include <iostream>
+#include "run_submission.h"
+#include "xalt_config.h"
 
 void parseLDD(std::string& exec, std::vector<Libpair>& libA)
 {
@@ -7,7 +8,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA)
   std::vector<std::string> result;
 
   // Capture the result from running ldd on the executable
-  cmd  = "ldd " + exec + " 2> /dev/null";
+  cmd  = LDD " " + exec + " 2> /dev/null";
   capture(cmd, result);
 
   /*
@@ -39,8 +40,11 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA)
       lib = s.substr(s1+3, s2-(s1+3)); 
 
       // Find sha1sum of the library just found.
+      // The output of sha1sum looks like:
+      //   % sha1sum /lib/x86_64-linux-gnu/libm.so.6
+      //   3dfbedb82b999ae7bb14a873439810a0a7cf94a0  /lib/x86_64-linux-gnu/libm.so.6
 
-      cmd = "sha1sum " + lib;
+      cmd = SHA1SUM " " + lib;
       capture(cmd, sha1_result);
       s1 = sha1_result[0].find(" ");
       sha1 = sha1_result[0].substr(0, s1);

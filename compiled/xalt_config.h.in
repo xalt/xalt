@@ -1,0 +1,9 @@
+#ifndef XALT_CONFIG_H
+#define XALT_CONFIG_H
+
+#define OBJDUMP           "@PATH_TO_OBJDUMP@"
+#define PATH_TO_PRGM_FILE "@PATH_TO_FILE@"
+#define LDD               "@PATH_TO_LDD@"
+#define SHA1SUM           "@PATH_TO_SHA1SUM@"
+
+#endif /* XALT_CONFIG_H */

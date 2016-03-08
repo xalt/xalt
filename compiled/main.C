@@ -3,6 +3,7 @@
 #include <time.h>
 #include "Options.h"
 #include "Json.h"
+#include "xalt_config.h"
 
 #define DATESZ 100
 
@@ -56,8 +57,7 @@ int main(int argc, char* argv[], char* env[])
   // Take sha1sum of the executable
   std::vector<std::string> result;
   std::string              cmd;
-  cmd  = "sha1sum ";
-  cmd += options.exec();
+  cmd  = SHA1SUM " " + options.exec();
   capture(cmd, result);
   std::string sha1_exec = result[0].substr(0, result[0].find(" "));
   

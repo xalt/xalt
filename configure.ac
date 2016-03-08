@@ -157,7 +157,7 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/src/xalt_regex.template --output $ac_confdir/src/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
 
 
-AC_OUTPUT(makefile:Makefile.in)
+AC_OUTPUT(makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in)

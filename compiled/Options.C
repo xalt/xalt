@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include "Options.h"
 #include "run_submission.h"
+#include "xalt_config.h"
 
 double convert_double(const char* name, const char* s)
 {
@@ -97,7 +98,7 @@ Options::Options(int argc, char** argv)
       std::vector<std::string> result;
       std::string              cmd;
 
-      cmd = "file " + m_exec;
+      cmd = PATH_TO_PRGM_FILE " " + m_exec;
       capture(cmd, result);
       if (result[0].find("script") != std::string::npos ||
           result[0].find("text")   != std::string::npos)
