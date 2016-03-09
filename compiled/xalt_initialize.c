@@ -64,6 +64,7 @@ static int    reject_flag  = 0;
 static char   path[PATH_MAX];
 static char   syshost[SZ];
 static char * syshost_option;
+static char * usr_cmdline;
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
@@ -91,7 +92,6 @@ void myinit(int argc, char **argv)
   char * p_dbg;
   char * cmdline;
   char * v;
-  char * usr_cmdline;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   
@@ -215,7 +215,12 @@ void myinit(int argc, char **argv)
     }
   *--p = ']';
   *++p = '\0';
-  if (
+  if (p > &usr_cmdline[sz])
+    {
+      fprintf(stderr,"XALT: Failure in building user command line json string!\n");
+      reject_flag = 1;
+      return;
+    }
 
   uuid_generate(uuid);
   uuid_unparse_lower(uuid,uuid_str);
