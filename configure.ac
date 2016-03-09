@@ -74,6 +74,18 @@ AC_ARG_WITH(hostnameList,
     AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$withval"))dnl
 
 
+AC_SUBST(SYSHOST_CONFIG)
+AC_ARG_WITH(syshostConfig,
+    AC_HELP_STRING([--with-syshostConfig=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
+    SYSHOST_CONFIG="$withval"
+    AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
+    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig")dnl
+    ,
+    withval="$ac_confdir/hostname.default.txt"
+    AC_MSG_RESULT([SYSHOST_CONFIG=$withval])
+    SYSHOST_CONFIG="$withval"
+    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval"))dnl
+
 AC_SUBST(SYS_LD_LIB_PATH)
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 
@@ -158,6 +170,5 @@ fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
-
 
 AC_OUTPUT(makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in)
