@@ -308,3 +308,12 @@ dist:
 
 makefile: $(PATH_TO_SRC)/Makefile.in $(PATH_TO_SRC)/config.status
 	$(PATH_TO_SRC)/config.status $@
+
+neat:
+	$(RM) *~ src/*~
+	cd compiled ; $(MAKE) $@
+clean:  neat
+	cd compiled ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
+clobber: clean
+
+

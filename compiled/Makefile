@@ -37,10 +37,8 @@ run:
 
 neat:
 	$(RM) *~
-clean: neat $
-	$(RM) -r *.o $(EXEC).dSYM
-clobber: clean
-	$(RM) $(EXEC)
+clean: 
+	$(RM) -r *.o $(notdir $(EXEC)).dSYM
 
 main.o: main.C Options.h run_submission.h
 Json.o: Json.C run_submission.h Json.h quotestring.h
