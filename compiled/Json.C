@@ -1,4 +1,5 @@
 #include "Json.h"
+#include "quotestring.h"
 
 
 void Json::fini()

@@ -39,6 +39,8 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
+#include "quotestring.h"
+#include "xalt_config.h"
 
 int reject(const char *path, const char * hostname);
 long compute_value(const char **envA);
@@ -62,7 +64,6 @@ static int    reject_flag  = 0;
 static char   path[PATH_MAX];
 static char   syshost[SZ];
 static char * syshost_option;
-static char   usr_cmdline[65535];
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
@@ -90,6 +91,7 @@ void myinit(int argc, char **argv)
   char * p_dbg;
   char * cmdline;
   char * v;
+  char * usr_cmdline;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   
@@ -167,8 +169,8 @@ void myinit(int argc, char **argv)
   asprintf(&syshost_option,"%s"," ");
 #ifdef HAVE_SYSHOST_CMD
   asprintf(&cmdline,"LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s -E %s",
-	   "@sys_ld_lib_path@", "@python@",
-	   "@PREFIX@/site/xalt_syshost.py");
+	   SYS_LD_LIB_PATH, PYTHON,
+	   PREFIX "/site/xalt_syshost.py");
   FILE* fp = popen(cmdline, "r");
   if (fp)
     {
@@ -183,41 +185,45 @@ void myinit(int argc, char **argv)
     }
 #endif
 
-  /* Build a json version of the command line.  There is special treatment of " and \\ */
-  p = &usr_cmdline[0];
-  *p++ = '[';
-  for (i = 0; i < argc; i++)
-    {
-      char* s   = argv[i];
-      int   len = strcspn(s,"\"\\");
-      *p++ = '"';
+  /* Build a json version of the user's command line. */
 
-      while(1)
-	{
-	  char c = s[len];
-	  memcpy(p,s,len);
-	  p += len;
-	  s += len+1;
-	  if (c == '\0')
-	    break;
-	  *p++ = '\\';
-	  *p++ = c;
-	  
-	  len = strcspn(s,"\"\\");
-	}
+  /* Calculate size of buffer*/
+  int sz = 0;
+  for (i = 0; i < argc; ++i)
+    sz += strlen(argv[i]);
+
+  /* this size formula uses 3 facts:
+   *   1) if every character was a utf-16 character that is four bytes converts to 12 (sz*3)
+   *   2) Each entry has two quotes and a comma (argc*3)
+   *   3) There are two square brackets and a null byte (+3)
+   */
+
+  sz = sz*3 + argc*3 + 3;
+
+  usr_cmdline = (char *) malloc(sz);
+  p	      = &usr_cmdline[0];
+  *p++        = '[';
+  for (i = 0; i < argc; ++i)
+    {
+      *p++ = '"';
+      const char* qs  = quotestring(argv[i]);
+      int         len = strlen(qs);
+      memcpy(p,qs,len);
+      p += len;
       *p++= '"';
       *p++= ',';
     }
-  *--p = ']'; p++;
-  *p = '\0';
-  
+  *--p = ']';
+  *++p = '\0';
+  if (
+
   uuid_generate(uuid);
   uuid_unparse_lower(uuid,uuid_str);
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
-	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s %s --start \"%.3f\" --end 0 --exec_prog \"%s\" --ntasks %ld, --uuid \"%s\" '%s'",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
 
   
   
@@ -269,8 +275,8 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
-	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s %s --start \"%.3f\" --end \"%.3f\" --exec_prog \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost_option, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 

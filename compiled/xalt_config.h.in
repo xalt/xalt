@@ -5,5 +5,9 @@
 #define PATH_TO_PRGM_FILE "@PATH_TO_FILE@"
 #define LDD               "@PATH_TO_LDD@"
 #define SHA1SUM           "@PATH_TO_SHA1SUM@"
+#define SYS_LD_LIB_PATH   "@SYS_LD_LIB_PATH@"
+#define PYTHON            "@PYTHON@"
+#define PREFIX            "@PREFIX@"
+
 
 #endif /* XALT_CONFIG_H */

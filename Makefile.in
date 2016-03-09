@@ -27,10 +27,6 @@ endif
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
 OS_NAME           := $(shell uname -s)
-LIB_OPTIONS       := -fPIC -shared
-ifeq ($(OS_NAME),Darwin)
-  LIB_OPTIONS     := -bundle -undefined dynamic_lookup
-endif
 
 package           := xalt
 VERSION           := $(shell cat $(PATH_TO_SRC)/.version)
@@ -118,7 +114,12 @@ all:
 
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
-          Build_pstree_$(BUILD_PSTREE) build_initialize
+          Build_pstree_$(BUILD_PSTREE) build_compiled
+
+build_compiled:
+	cd $(PATH_TO_SRC)/compiled; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
+
+
 
 build_initialize: $(INIT_SRC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFILES) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC)  __installMe
@@ -142,7 +143,7 @@ $(DIRLIST) :
 
 Inst_site: $(SITE_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
-	[ -f $(DESTDIR)$(SITE)/xalt_syshost_$(SITE_NAME).py ] && ln -s xalt_syshost_$(SITE_NAME).py $(DESTDIR)$(SITE)/xalt_syshost.py
+	[ -f $(DESTDIR)$(SITE)/xalt_syshost_$(SITE_NAME).py ] && ln -sf xalt_syshost_$(SITE_NAME).py $(DESTDIR)$(SITE)/xalt_syshost.py
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe

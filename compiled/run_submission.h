@@ -23,9 +23,5 @@ void capture(std::string& cmd, std::vector<std::string>& result);
 void extractXALTRecord(std::string& exec, table& recordT);
 void parseLDD(std::string& exec, std::vector<Libpair>& lddA);
 
-extern "C" {
-  const char* quotestring(const char* input);
-}
-
 
 #endif //RUN_SUBMISSION_H
