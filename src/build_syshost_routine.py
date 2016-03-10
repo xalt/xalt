@@ -24,18 +24,33 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
+from pprint import pprint
 import os, sys, re, argparse, json
+
+def xalt_syshost_main(sA):
+  sA.append("#ifdef HAVE_MAIN")
+  sA.append("int main()")
+  sA.append("{")
+  sA.append("  printf(\"%s\\n\",xalt_syshost());")
+  sA.append("  return 0;")
+  sA.append("}")
+  sA.append("#endif")
+  sA.append("")
 
 def hardcode(name,output):
   sA = []
+  sA.append("#include <stdio.h>")
   sA.append("const char * xalt_syshost() {")
   sA.append("  return \"" + name + "\";")
   sA.append("}")
+  xalt_syshost_main(sA)
 
   s   = "\n".join(sA)
   f   = open(output,"w")
   f.write(s)
   f.close()
+
+
 
 def add_hostname_routine(sA):
   sA.append("#include <stdio.h>")
@@ -120,6 +135,7 @@ def read_file(fname,output):
   sA.append("  my_syshost[len-1] = '\\0'; // overwrite trailing newline")
   sA.append("  return my_syshost;")
   sA.append("}")
+  xalt_syshost_main(sA)
 
   s   = "\n".join(sA)
   f   = open(output,"w")
@@ -162,6 +178,7 @@ def nth_name(nth,output):
   sA.append("  w[len] = '\\0';")
   sA.append("  return w;")
   sA.append("}")
+  xalt_syshost_main(sA)
 
   s   = "\n".join(sA)
   f   = open(output,"w")
@@ -171,9 +188,63 @@ def nth_name(nth,output):
 
 def mapping(file,output):
   sA = []
-  add_hostname_routine(sA)
+  with open(file) as json_file:
+    pairs = json.load(json_file)
 
-  print("mapping")
+  
+  sA.append("#include <regex.h>")
+  add_hostname_routine(sA)
+  
+  sA.append("struct Pair")
+  sA.append("{")
+  sA.append("  const char * key;")
+  sA.append("  const char * syshost;")
+  sA.append("};")
+  sA.append("")
+
+  sA.append("struct Pair pair[] = {")
+  for entry in pairs:
+    sA.append("  {\"" + entry[0] + "\", \"" + entry[1] + "\"},")
+  sA.append("};")
+
+
+  sA.append("const char * xalt_syshost()")
+  sA.append("{")
+  sA.append("  char        msgbuf[100];")
+  sA.append("  regex_t     regex;")
+  sA.append("  int         iret;")
+  sA.append("  int         i;")
+  sA.append("  int         sz = sizeof(pair)/sizeof(pair[0]);")
+  sA.append("  const char* my_hostname = hostname();")
+  sA.append("")
+  sA.append("  for (i = 0; i < sz; ++i)")
+  sA.append("    {")
+  sA.append("      iret = regcomp(&regex, pair[i].key, 0);")
+  sA.append("      if (iret)")
+  sA.append("        {")
+  sA.append("          fprintf(stderr,\"Could not compile regex: %s\\n\", pair[i].key);")
+  sA.append("          exit(1);")
+  sA.append("        }")
+  sA.append("")
+  sA.append("      iret = regexec(&regex, my_hostname, 0, NULL, 0);")
+  sA.append("      if (iret == 0)")
+  sA.append("        return pair[i].syshost;")
+  sA.append("      else if (iret != REG_NOMATCH)")
+  sA.append("        {")
+  sA.append("          regerror(iret, &regex, msgbuf, sizeof(msgbuf));")
+  sA.append("          fprintf(stderr, \"pair[i].key Regex match failed: %s\\n\", msgbuf);")
+  sA.append("          exit(1);")
+  sA.append("        }")
+  sA.append("      regfree(&regex);")
+  sA.append("    }")
+  sA.append("  return my_hostname;")
+  sA.append("}")
+  xalt_syshost_main(sA)
+
+  s   = "\n".join(sA)
+  f   = open(output,"w")
+  f.write(s)
+  f.close()
   
 
 class CmdLineOptions(object):
@@ -228,8 +299,7 @@ def main():
     sys.exit(1)
 
 
-  # 
-
+  # Build the user requested xalt_syshost.c routine
   func(opt, args.output)
 
 if ( __name__ == '__main__'): main()

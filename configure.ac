@@ -170,5 +170,6 @@ fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output $ac_confdir/compiled/xalt_syshost.c
 
 AC_OUTPUT(makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in)

@@ -1,0 +1,5 @@
+[
+    ["^ys.*"      , "yellowstone"],
+    ["^geyser.*"  , "geyser"     ],
+    ["^caldera.*" , "caldera"    ]
+]
