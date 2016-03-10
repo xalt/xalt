@@ -81,7 +81,7 @@ AC_ARG_WITH(syshostConfig,
     AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig")dnl
     ,
-    withval="$ac_confdir/hostname.default.txt"
+    withval="no"
     AC_MSG_RESULT([SYSHOST_CONFIG=$withval])
     SYSHOST_CONFIG="$withval"
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval"))dnl
@@ -143,19 +143,35 @@ AC_PYTHON_MODULE([psutil])
 AC_PYTHON_MODULE([MySQLdb])
 
 if test "$HAVE_PYMOD_MYSQLDB" = no; then
+   echo
+   echo "======================================================="
    echo "unable to install XALT without the python module: MySQLdb"
    echo "To install it do: pip install MySQL-python"
+   echo "======================================================="
    exit 1
 fi
 
 
 if test "$HAVE_PYMOD_PSUTIL" = no; then
+   echo
+   echo "======================================================="
    echo "unable to install XALT without the python module: psutil"
    echo "To install it do: pip install psutil"
+   echo "======================================================="
    exit 1
 fi
 BUILD_PSTREE=no
 
+if test "$SYSHOST_CONFIG" = no; then
+   echo
+   echo "======================================================="
+   echo "unable to install XALT without setting --with-syshostConfig=..."
+   echo "Your choices are hardcode, nth_name, read_file and mapping."
+   echo "See the manual for details."
+   echo "======================================================="
+   exit 1
+fi
+   
 
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no

@@ -116,8 +116,8 @@ XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
-SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $SYS_HOST_CMD)
+SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
+SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
@@ -139,7 +139,7 @@ FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
-  XALT_INIT_ROUTINE_OBJ=$XALT_LIBEXEC_DIR/xalt_initialize.o
+  XALT_INIT_ROUTINE_OBJ=$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o
 fi
 
 

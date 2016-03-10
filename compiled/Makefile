@@ -14,20 +14,21 @@ SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnv
 C_SRC 	    := quotestring.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
-all: $(EXEC) build_init
+all: $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost
 
 $(EXEC) : $(OBJS)
 	$(LINK.C) -o $@ $^
 
+$(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost.c
+	gcc -DHAVE_MAIN -O2 -o $@ $<
 
-build_init:
-	[ -f $(DESTDIR)$(SITE)/xalt_syshost.py ] && MYFLAGS=-DHAVE_SYSHOST_CMD; \
-	gcc $(CF_INIT) $$MYFLAGS -DSTATE=LD_PRELOAD -fPIC -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; \
-	gcc $(CF_INIT) $$MYFLAGS $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -luuid; \
-	gcc $(CF_INIT) -g -O0 $$MYFLAGS -DSTATE=LD_PRELOAD -DFULL_TRACING -fPIC -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; \
-	gcc $(CF_INIT) -g -O0 $$MYFLAGS $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -luuid; \
-	gcc $(CF_INIT) $$MYFLAGS -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
-
+build_init: 
+	gcc $(CF_INIT) -fPIC -o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -c xalt_syshost.c
+	gcc $(CF_INIT) -DSTATE=LD_PRELOAD -fPIC -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
+	gcc $(CF_INIT) $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -luuid; 
+	gcc $(CF_INIT) -g -O0 -DSTATE=LD_PRELOAD -DFULL_TRACING -fPIC -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
+	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -luuid; 
+	gcc $(CF_INIT) -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
 
 run:
 	./$(EXEC) --start 1456589662.2041 --end 1456589672.3041 --syshost mijo --exec $(EXEC) --ntasks 1 --uuid $$(uuidgen) '[ "./parse", "--start", "1.0"]' >  Run.json

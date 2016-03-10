@@ -42,6 +42,7 @@
 #include "quotestring.h"
 #include "xalt_config.h"
 
+const char* xalt_syshost();
 int reject(const char *path, const char * hostname);
 long compute_value(const char **envA);
 void abspath(char * path, int sz);
@@ -52,7 +53,6 @@ void myfini();
 
 #define STR(x)  STR2(x)
 #define STR2(x) #x
-#define SZ      256
 static char   uuid_str[37];
 static int    errfd	   = -1;
 static double start_time   = 0.0;
@@ -62,9 +62,8 @@ static long   my_size	   = 1L;
 static int    xalt_tracing = 0;
 static int    reject_flag  = 0;
 static char   path[PATH_MAX];
-static char   syshost[SZ];
-static char * syshost_option;
 static char * usr_cmdline;
+static const char * syshost;
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
@@ -166,24 +165,7 @@ void myinit(int argc, char **argv)
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
   errfd = dup(STDERR_FILENO);
 
-  asprintf(&syshost_option,"%s"," ");
-#ifdef HAVE_SYSHOST_CMD
-  asprintf(&cmdline,"LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s -E %s",
-	   SYS_LD_LIB_PATH, PYTHON,
-	   PREFIX "/site/xalt_syshost.py");
-  FILE* fp = popen(cmdline, "r");
-  if (fp)
-    {
-      int len;
-      while(fgets(syshost,SZ, fp) != NULL)
-	;
-      len = strlen(syshost);
-      if(syshost[len-1] == '\n')
-	syshost[len-1] = '\0';
-      asprintf(&syshost_option,"--syshost %s",syshost);
-      fclose(fp);
-    }
-#endif
+  syshost = xalt_syshost();
 
   /* Build a json version of the user's command line. */
 
@@ -227,8 +209,8 @@ void myinit(int argc, char **argv)
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s %s --start \"%.3f\" --end 0 --exec_prog \"%s\" --ntasks %ld, --uuid \"%s\" '%s'",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec_prog \"%s\" --ntasks %ld, --uuid \"%s\" '%s'",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline);
 
   
   
@@ -280,14 +262,13 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s %s --start \"%.3f\" --end \"%.3f\" --exec_prog \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost_option, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec_prog \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
   system(cmdline);
   free(cmdline);
-  free(syshost_option);
 }
 
 int reject(const char *path, const char * hostname)

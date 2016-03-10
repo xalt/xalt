@@ -657,6 +657,7 @@ LDFLAGS
 CFLAGS
 CC
 SYS_LD_LIB_PATH
+SYSHOST_CONFIG
 HOSTNAME_LIST
 IGNORE_LIST
 ACCEPT_LIST
@@ -710,6 +711,7 @@ with_etcDir
 with_acceptList
 with_ignoreList
 with_hostnameList
+with_syshostConfig
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1335,6 +1337,9 @@ Optional Packages:
   --with-ignoreList=ans   Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
   --with-hostnameList=ans Directory where xalt_db.conf and reverseMapD can be
+                          found [[.]]
+  --with-syshostConfig=ans
+                          Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
 
 Some influential environment variables:
@@ -2147,6 +2152,28 @@ _ACEOF
 
 fi
 
+
+
+
+# Check whether --with-syshostConfig was given.
+if test "${with_syshostConfig+set}" = set; then :
+  withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$with_syshostConfig" >&5
+$as_echo "SYSHOST_CONFIG=$with_syshostConfig" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$with_syshostConfig"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$withval" >&5
+$as_echo "SYSHOST_CONFIG=$withval" >&6; }
+    SYSHOST_CONFIG="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$withval"
+_ACEOF
+
+fi
 
 
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
@@ -4184,18 +4211,34 @@ $as_echo "no" >&6; }
 
 
 if test "$HAVE_PYMOD_MYSQLDB" = no; then
+   echo
+   echo "======================================================="
    echo "unable to install XALT without the python module: MySQLdb"
    echo "To install it do: pip install MySQL-python"
+   echo "======================================================="
    exit 1
 fi
 
 
 if test "$HAVE_PYMOD_PSUTIL" = no; then
+   echo
+   echo "======================================================="
    echo "unable to install XALT without the python module: psutil"
    echo "To install it do: pip install psutil"
+   echo "======================================================="
    exit 1
 fi
 BUILD_PSTREE=no
+
+if test "$SYSHOST_CONFIG" = no; then
+   echo
+   echo "======================================================="
+   echo "unable to install XALT without setting --with-syshostConfig=..."
+   echo "Your choices are hardcode, nth_name, read_file and mapping."
+   echo "See the manual for details."
+   echo "======================================================="
+   exit 1
+fi
 
 
 printf "Use contrib argparse"
@@ -4211,7 +4254,7 @@ fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
-
+$PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output $ac_confdir/compiled/xalt_syshost.c
 
 ac_config_files="$ac_config_files makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in"
 
