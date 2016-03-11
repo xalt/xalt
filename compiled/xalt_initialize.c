@@ -39,7 +39,7 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
-#include "quotestring.h"
+#include "xalt_quotestring.h"
 #include "xalt_config.h"
 
 const char* xalt_syshost();
@@ -188,7 +188,7 @@ void myinit(int argc, char **argv)
   for (i = 0; i < argc; ++i)
     {
       *p++ = '"';
-      const char* qs  = quotestring(argv[i]);
+      const char* qs  = xalt_quotestring(argv[i]);
       int         len = strlen(qs);
       memcpy(p,qs,len);
       p += len;
@@ -211,8 +211,6 @@ void myinit(int argc, char **argv)
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec_prog \"%s\" --ntasks %ld, --uuid \"%s\" '%s'",
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline);
-
-  
   
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
   system(cmdline);

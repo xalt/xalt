@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-  const char* quotestring(const char* input);
+  const char* xalt_quotestring(const char* input);
 
 #ifdef __cplusplus
 }

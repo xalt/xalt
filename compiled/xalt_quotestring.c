@@ -12,7 +12,7 @@ static char * buff;
 static unsigned int sz = 0;
 
 
-const char* quotestring(const char* input)
+const char* xalt_quotestring(const char* input)
 {
   const char   *p = input;
   char         *s;

@@ -1,5 +1,5 @@
 #include "Json.h"
-#include "quotestring.h"
+#include "xalt_quotestring.h"
 
 
 void Json::fini()
@@ -50,7 +50,7 @@ void Json::add(const char* name, table& t)
       m_s += "\"";
       m_s += k;
       m_s += "\":\"";
-      m_s += quotestring(v.c_str());
+      m_s += xalt_quotestring(v.c_str());
       m_s += "\",";
     }
   if (m_s.back() == ',')
@@ -72,7 +72,7 @@ void Json::add(const char* name, std::vector<Libpair>&     libA)
         lib.replace(idx,2,"\\\"");
 
       m_s += "[\"";
-      m_s += quotestring(lib.c_str());
+      m_s += xalt_quotestring(lib.c_str());
       m_s += "\",\"";
       m_s += (*it).sha1;
       m_s += "\"],";
