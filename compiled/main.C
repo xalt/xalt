@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <time.h>
 #include "Options.h"
 #include "Json.h"
@@ -70,7 +71,11 @@ int main(int argc, char* argv[], char* env[])
   json.add("libA",libA);
 
   json.fini();
-  std::cout << json.result() << std::endl;
+
+  ofstream myfile;
+  myfile.open(sstream.str());
+  myfile << json.result();
+  myfile.close();
 
   return 0;
 }
