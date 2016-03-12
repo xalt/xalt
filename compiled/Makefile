@@ -26,9 +26,9 @@ build_init:
 	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -c xalt_quotestring.c
 	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -c xalt_syshost.c
 	gcc $(CF_INIT) -DSTATE=LD_PRELOAD -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
-	gcc $(CF_INIT) $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -luuid; 
+	gcc $(CF_INIT) $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -luuid; 
 	gcc $(CF_INIT) -g -O0 -DSTATE=LD_PRELOAD -DFULL_TRACING -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
-	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -luuid; 
+	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -luuid; 
 	gcc $(CF_INIT) -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
 
 run:

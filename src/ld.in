@@ -139,7 +139,7 @@ FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
-  XALT_INIT_ROUTINE_OBJ=$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o"
 fi
 
 
