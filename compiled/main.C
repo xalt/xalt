@@ -18,7 +18,7 @@ int main(int argc, char* argv[], char* env[])
 
   //*********************************************************************
   // Print the user command line.
-  json.add_json_string("cmdline:",options.userCmdLine());
+  json.add_json_string("cmdlineA",options.userCmdLine());
 
   //*********************************************************************
   // Build file name for xalt json record.  It is only used when the
@@ -72,7 +72,7 @@ int main(int argc, char* argv[], char* env[])
 
   json.fini();
 
-  ofstream myfile;
+  std::ofstream myfile;
   myfile.open(sstream.str());
   myfile << json.result();
   myfile.close();

@@ -33,7 +33,7 @@ void buildUserT(Options& options, table& userT)
   userT["syshost"]      = options.syshost();
 
   // run_uuid
-  userT["uuid"]         = options.uuid();
+  userT["run_uuid"]         = options.uuid();
 
   // exit status
   userT["exit_status"]  = "0";
