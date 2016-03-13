@@ -5,8 +5,11 @@
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
+#include "base64.h"
+#include "zstring.h"
 
 #define DATESZ 100
+const int syslog_msg_sz = 512;
 
 int main(int argc, char* argv[], char* env[])
 {
@@ -33,7 +36,6 @@ int main(int argc, char* argv[], char* env[])
   std::ostringstream sstream;
   sstream << home << "/.xalt.d/run." << options.syshost() << ".";
   sstream << dateStr << "." << suffix << "." << options.uuid() << ".json";
-  //std::cout << sstream.str() << "\n";
 
   //*********************************************************************
   // Build the env table:
@@ -72,10 +74,45 @@ int main(int argc, char* argv[], char* env[])
 
   json.fini();
 
-  std::ofstream myfile;
-  myfile.open(sstream.str());
-  myfile << json.result();
-  myfile.close();
+  char * transmission = getenv("XALT_TRANSMISSION_STYLE");
+  if (transmission == NULL)
+    transmission = TRANSMISSION;
 
+  if (strcasecmp(transmission, "file") == 0)
+    {
+      std::ofstream myfile;
+      myfile.open(sstream.str());
+      myfile << json.result();
+      myfile.close();
+      return 0;
+    }
+
+  if (strcasecmp(transmission, "syslog") == 0)
+    {
+      std::stringstreams cmd;
+      std::string zs    = compress_string(json.result());
+      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
+      int         sz    = b64.size();
+      int         blkSz = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
+      int         nBlks = (sz -  1)/blkSz + 1;
+      int         istrt = 0;
+      int         iend  = blkSz;
+
+      std::string key   = ((options.endTime() > 0.0) ? "run_fini_" : "run_strt_") +
+                          options.uuid()
+
+      for (int i = 0; i < nBlks, ++i)
+        {
+          cmd << LOGGER " -t XALT_LOGGING V:2 kind:run idx:" << i;
+          cmd << " nb:"  << nBlks << " syshost:" << options.syshost();
+          cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt);
+          system(cmd.str().c_str());
+          istrt = iend;
+          iend  = istrt + blkSz;
+          if (iend > sz)
+            iend = sz;
+        }
+      return 0;
+    }
   return 0;
 }
