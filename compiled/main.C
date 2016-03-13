@@ -88,6 +88,16 @@ int main(int argc, char* argv[], char* env[])
       return 0;
     }
 
+  if (strcasecmp(transmission, "syslogv1") == 0)
+    {
+      std::ostringstream cmd;
+      std::string jsonStr = json.result();
+      std::string b64     = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
+      cmd << LOGGER " -t XALT_LOGGING \"run:" << options.syshost();
+      cmd << ":" << b64 << "\"";
+      system(cmd.str().c_str());
+    }
+
   if (strcasecmp(transmission, "syslog") == 0)
     {
       std::ostringstream cmd;

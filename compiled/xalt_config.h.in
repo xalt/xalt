@@ -8,7 +8,7 @@
 #define SYS_LD_LIB_PATH   "@SYS_LD_LIB_PATH@"
 #define PREFIX            "@prefix@"
 #define TRANSMISSION      "@TRANSMISSION@"
-#define LOGGER            "@LOGGER@"
+#define LOGGER            "@PATH_TO_LOGGER@"
 
 
 #endif /* XALT_CONFIG_H */

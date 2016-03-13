@@ -57,6 +57,14 @@ tracing_msg "Starting ld"
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
 
+
+if [ "$XALT_EXECUTABLE_TRACKING" != yes ]; then
+  $MY_CMD "${argA[@]}"
+  status=$?
+  exit $status
+fi
+
+
 ########################################################################
 # Make sure that the python setup is valid. 
 
@@ -117,6 +125,7 @@ XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
+LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD
 SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
 RM=@path_to_rm@
@@ -137,10 +146,7 @@ ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
-
-if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o"
-fi
+XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o"
 
 
 if [ ! -d $WRKDIR ]; then

@@ -14,7 +14,10 @@ SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnv
 C_SRC 	    := xalt_quotestring.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
-all: $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost
+all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost
+
+ECHO:
+	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 $(EXEC) : $(OBJS)
 	$(LINK.C) -o $@ $^ -lz
@@ -42,7 +45,7 @@ neat:
 clean: 
 	$(RM) -r *.o $(notdir $(EXEC)).dSYM
 
-main.o: main.C Options.h run_submission.h base64.h zstring.h
+main.o: main.C Options.h run_submission.h base64.h zstring.h $(THIS_DIR)/compiled/xalt_config.h
 Json.o: Json.C run_submission.h Json.h xalt_quotestring.h
 Options.o: Options.C Options.h  $(THIS_DIR)/compiled/xalt_config.h
 buildEnvT.o: buildEnvT.C run_submission.h

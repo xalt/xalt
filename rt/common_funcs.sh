@@ -4,7 +4,7 @@
 initialize()
 {
   unset LD_PRELOAD
-  export XALT_EXECUTABLE_TRACKING=
+  export XALT_EXECUTABLE_TRACKING=no
 
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`

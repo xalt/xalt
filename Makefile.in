@@ -117,7 +117,7 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Build_pstree_$(BUILD_PSTREE) build_compiled
 
 build_compiled:
-	cd $(PATH_TO_SRC)/compiled; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) THIS_DIR=$(CURDIR) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
+	cd $(PATH_TO_SRC)/compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= THIS_DIR=$(CURDIR) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
 
 
 
