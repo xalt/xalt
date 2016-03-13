@@ -6,6 +6,7 @@
 #include "Json.h"
 #include "xalt_config.h"
 #include "base64.h"
+#include <strings.h>
 #include "zstring.h"
 
 #define DATESZ 100
@@ -74,7 +75,7 @@ int main(int argc, char* argv[], char* env[])
 
   json.fini();
 
-  char * transmission = getenv("XALT_TRANSMISSION_STYLE");
+  const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
 
@@ -89,7 +90,7 @@ int main(int argc, char* argv[], char* env[])
 
   if (strcasecmp(transmission, "syslog") == 0)
     {
-      std::stringstreams cmd;
+      std::ostringstream cmd;
       std::string zs    = compress_string(json.result());
       std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
       int         sz    = b64.size();
@@ -99,9 +100,9 @@ int main(int argc, char* argv[], char* env[])
       int         iend  = blkSz;
 
       std::string key   = ((options.endTime() > 0.0) ? "run_fini_" : "run_strt_") +
-                          options.uuid()
+        options.uuid();
 
-      for (int i = 0; i < nBlks, ++i)
+      for (int i = 0; i < nBlks; ++i)
         {
           cmd << LOGGER " -t XALT_LOGGING V:2 kind:run idx:" << i;
           cmd << " nb:"  << nBlks << " syshost:" << options.syshost();

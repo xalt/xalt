@@ -17,7 +17,7 @@ OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 all: $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost
 
 $(EXEC) : $(OBJS)
-	$(LINK.C) -o $@ $^
+	$(LINK.C) -o $@ $^ -lz
 
 $(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost.c
 	gcc -DHAVE_MAIN -O2 -o $@ $<
