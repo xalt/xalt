@@ -7,6 +7,7 @@ class Options
 {
 public:
   Options(int argc, char **argv);
+  ~Options() {}
   long          ntasks()      { return m_ntasks;      }
   double        startTime()   { return m_start;       }
   double        endTime()     { return m_end;         }
@@ -15,6 +16,7 @@ public:
   std::string&  uuid()        { return m_uuid;        }
   std::string&  userCmdLine() { return m_userCmdLine; }
   std::string&  exec_type()   { return m_exec_type;   }
+  std::string&  confFn()      { return m_confFn;      }
 
 private:
   double      m_start;
@@ -25,6 +27,7 @@ private:
   std::string m_exec;
   std::string m_userCmdLine;
   std::string m_exec_type;
+  std::string m_confFn;
 };
 
 

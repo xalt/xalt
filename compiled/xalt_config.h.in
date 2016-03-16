@@ -9,6 +9,7 @@
 #define PREFIX            "@prefix@"
 #define TRANSMISSION      "@TRANSMISSION@"
 #define LOGGER            "@PATH_TO_LOGGER@"
+#define XALT_ETC_DIR      "@ETC_DIR@"
 
 
 #endif /* XALT_CONFIG_H */

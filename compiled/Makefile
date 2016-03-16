@@ -10,7 +10,8 @@ CF_INIT     := -I$(THIS_DIR)/compiled/ -fPIC
 CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/
 CFLAGS      := -g -O0
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
-SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnvT.C buildUserT.C Json.C base64.C zstring.C
+SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnvT.C buildUserT.C Json.C \
+              base64.C zstring.C direct2db.C ConfigParser.C
 C_SRC 	    := xalt_quotestring.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
@@ -56,3 +57,6 @@ parseLDD.o: parseLDD.C run_submission.h $(THIS_DIR)/compiled/xalt_config.h
 xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 base64.o: base64.C base64.h
 zstring.o: zstring.C zstring.h
+direct2db.o: direct2db.C run_submission.h ConfigParser.h
+ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h base64.h
+

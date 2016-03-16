@@ -37,7 +37,7 @@ Options::Options(int argc, char** argv)
   : m_start(0.0), m_end(0.0), m_ntasks(1L),
     m_syshost("unknown"),     m_uuid("unknown"),
     m_exec("unknown"),        m_userCmdLine("[]"),
-    m_exec_type("unknown")
+    m_exec_type("unknown"),   m_confFn("xalt_db.conf")
 {
   int   c;
   char *p;
@@ -52,10 +52,11 @@ Options::Options(int argc, char** argv)
         {"exec",    required_argument, NULL, 'x'},
         {"ntasks",  required_argument, NULL, 'n'},
         {"uuid",    required_argument, NULL, 'u'},
+        {"confFn",  optional_argument, NULL, 'c'},
         {0,         0,                 0,     0 }
       };
       
-      c = getopt_long(argc, argv, "s:e:h:x:n:u:",
+      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -68,6 +69,9 @@ Options::Options(int argc, char** argv)
 	  break;
 	case 'e':
 	  m_end = convert_double("end", optarg);
+	  break;
+	case 'c':
+	  m_confFn = optarg;
 	  break;
 	case 'h':
 	  m_syshost = optarg;
