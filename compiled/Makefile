@@ -61,5 +61,6 @@ direct2db.o: direct2db.C run_submission.h ConfigParser.h
 ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h base64.h
 fgets_alloc.o: fgets_alloc.c fgets_alloc.h
 jsmn.o: jsmn.c jsmn.h
-buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h
+buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h fgets_alloc.h
+
 

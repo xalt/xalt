@@ -1,6 +1,6 @@
 #include "run_submission.h"
 #include <sstream>
-inline std::string safe_get(table& envT, const char* key, const char* defaultValue)
+std::string& safe_get(table& envT, const char* key, const char* defaultValue)
 {
   if (envT.count(key) == 0)
     return defaultValue;

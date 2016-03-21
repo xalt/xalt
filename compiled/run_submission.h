@@ -22,10 +22,10 @@ void buildUserT(Options& options, table& userT);
 void capture(std::string& cmd, std::vector<std::string>& result);
 void extractXALTRecord(std::string& exec, table& recordT);
 void parseLDD(std::string& exec, std::vector<Libpair>& lddA);
-void direct2db(std::string& confFn, std::string& usr_cmdline, table& envT, table& userT,
+void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_id, table& envT, table& userT,
                table& recordT, std::vector<Libpair>& lddA);
 void translate(table& envT, table& userT);
-void buildRmapT(table& rmapT);
-
+void buildRmapT(table& rmapT, std::vector<std::string> xlibmap);
+std::string& safe_get(table& envT, const char* key, const char* defaultValue)
 
 #endif //RUN_SUBMISSION_H
