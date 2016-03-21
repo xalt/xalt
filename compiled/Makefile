@@ -12,7 +12,7 @@ CFLAGS      := -g -O0
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnvT.C buildUserT.C Json.C \
               base64.C zstring.C direct2db.C ConfigParser.C
-C_SRC 	    := xalt_quotestring.c
+C_SRC 	    := xalt_quotestring.c fgets_alloc.c jsmn.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
 all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost
@@ -59,4 +59,7 @@ base64.o: base64.C base64.h
 zstring.o: zstring.C zstring.h
 direct2db.o: direct2db.C run_submission.h ConfigParser.h
 ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h base64.h
+fgets_alloc.o: fgets_alloc.c fgets_alloc.h
+jsmn.o: jsmn.c jsmn.h
+buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h
 

@@ -8,7 +8,10 @@ const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0
 		       	 "\\u0018","\\u0019","\\u001a","\\u001b","\\u001c","\\u001d","\\u001e","\\u001f",		       
 		       	 " "      ,      "!",     "\\\""};
 
-static char * buff;
+const char escCharA[] = {'a', '\b', 'c','d','e','\f','g','h','i','j','k','l','m','\n','o','p','q','\r','s',
+                         '\t'}
+
+static char * buff = NULL;
 static unsigned int sz = 0;
 
 
@@ -23,6 +26,8 @@ const char* xalt_quotestring(const char* input)
   if (sz < currSz)
     {
       sz = currSz;
+      if (buff)
+	free(buff);
       buff = (char *) malloc(sz);
     }
   s = buff;
@@ -72,5 +77,107 @@ const char* xalt_quotestring(const char* input)
         }
     }
   *s = '\0';
+  return buff;
+}
+
+const char * xalt_unquotestring(const char * input)
+{
+  const char *p = input;
+  const char *start;
+  char       c;
+  char       *s;
+  int        len, slen;
+  int        currSz;
+  char       numBuff[5];
+  long       value, value2;
+    
+    
+  len    = strlen(input);
+  currSz = 2*len+1;
+
+  if (sz < currSz)
+    {
+      sz = currSz;
+      if (buff)
+	free(buff);
+      buff = (char *) malloc(sz);
+    }
+  s = buff;
+
+  while (1)
+    {
+      start = p;
+      p = strchr(p,'\\');
+      if (p == NULL)
+	{
+	  strcpy(s,start);
+	  break;
+	}
+      else
+	{
+	  slen = p - start;
+	  memcpy(s, p, slen);
+          ++p;
+          c = tolower(*p);
+          if (c = '"')
+            *s++ = '"';
+          else if (c == '\\')
+            *s++ = '\\';
+          else if (c != 'u')
+            {
+              int idx = c - a;
+              if (idx > 19) {
+                fprintf(stderr,"Unknown character sequence \\%c\n",c);
+                exit(1);
+              }
+              *s++ = escCharA[idx];   
+            }
+          else
+            {
+              // c == u so find value first. 
+              ++p;
+              memcpy(&numBuff[0], p, 4);
+              numBuff[4] = '\0';
+              p += 4;
+              value = strtol(numBuff, (char *) NULL, 16);
+              if (0xD800 <= value &&  value <= 0xDBFF)
+                {
+                  // We have the high surrogate of a UTF-16 character. Find low surrogate.
+                  memcpy(&numBuf[0],p+7,4);
+                  p += 11;
+                  numBuff[4] = '\0';
+                  value2 = strtol(numBuff, (char *) NULL, 16);
+                  if (value2 > 0 && 0xDC00 <= value2 && value2 <= 0xDFFF)
+                    value = (value - 0xD800)  * 0x400 + (value2 - 0xDC00) + 0x10000;
+                }
+              if (value <= 0x007F)
+                *s++ = (char) value;
+              else if (value <= 0x07FF)
+                {
+                  *s++ = (char) (0x00C0 + (value / 0x0040));
+                  *s++ = (char) (0x0080 + (value % 0x0040));
+                }
+              else if (value <= 0xFFFF)
+                {
+                  *s++ = (char) (0x00E0 + (value/0x1000));
+                  *s++ = (char) (0x0080 + ((value/0x0040) % 0x0040));
+                  *s++ = (char) (0x0080 + (value % 0x40));
+                }
+              else if (value <= 0x10FFFF)
+                {
+                  *s++ = (char) (0x00F0 + (value/0x40000));
+                  *s++ = (char) (0x0080 + ((value/0x1000) % 0x0040));
+                  *s++ = (char) (0x0080 + ((value/0x0040) % 0x0040));
+                  *s++ = (char) (0x0080 + (value % 0x0040));
+                }
+            }
+        }
+      ++p;
+      if (*p == '\0')
+        {
+          *s = '\0';
+          break;
+        }
+    } 
   return buff;
 }

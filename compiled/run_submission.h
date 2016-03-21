@@ -25,7 +25,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& lddA);
 void direct2db(std::string& confFn, std::string& usr_cmdline, table& envT, table& userT,
                table& recordT, std::vector<Libpair>& lddA);
 void translate(table& envT, table& userT);
-
+void buildRmapT(table& rmapT);
 
 
 #endif //RUN_SUBMISSION_H
