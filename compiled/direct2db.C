@@ -464,8 +464,25 @@ void insert_objects(MYSQL* conn, const char* table_name, unsigned int run_id, st
   param_i[3].length        = &len_module_name;
 
   // TIMESTAMP PARAM_I[4] timestamp
+  MYSQL_TIME my_datetime;
+  time_t clock;
+  (void ) time(&clock);
+  struct tm* curr_time    = localtime(&clock);
+  my_datetime.year        = curr_time->tm_year + 1900;
+  my_datetime.month       = curr_time->tm_mon  + 1;
+  my_datetime.day         = curr_time->tm_mday;
+  my_datetime.hour        = curr_time->tm_hour;
+  my_datetime.min         = curr_time->tm_min;
+  my_datetime.second      = curr_time->tm_sec;
+  my_datetime.second_part = 0;
+  param_i[4].buffer_type  = MYSQL_TYPE_DATETIME;
+  param_i[4].buffer       = &my_datetime;
+  param_i[4].is_null      = 0;
 
   // STRING PARAM_I[5] lib_type
+  
+
+
 
   if (mysql_stmt_bind_param(stmt, param_s))
     {
