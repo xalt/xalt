@@ -48,6 +48,34 @@ bool path2module(std:string& path, table& rmapT, std::string& result)
   return false
 }
 
+std::string& object_type(std::string& path)
+{
+  std::string s(path);
+  std::string extA[] = {"a", "o", "so", "--"};
+  int nExtA = sizeof(extA)/sizeof(extA[0]);
+
+  std::string result = "--";
+
+  while (1)
+    {
+      size_t idx = s.rfind(".");
+      if (idx == std::string::npos)
+        break;
+      std::string ext(s, idx+1, std::string::npos);
+      
+      for (int i = 0; i < nExtA; ++i)
+        {
+          if (ext == extA[i])
+            {
+              result = ext;
+              return result;
+            }
+        }
+      path.erase(idx, std::string::npos);
+    }
+  return result;
+}
+
 
 int select_run_id(MYSQL* conn, std::string& run_uuid, unsigned int* run_id)
 {
@@ -70,7 +98,7 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, unsigned int* run_id)
   memset((void *) param,  0, sizeof(param));
   memset((void *) result, 0, sizeof(result));
 
-  // STRING PARAM run_uuid;
+  // STRING PARAM[0] run_uuid;
   std::string::size_type len_uuid = run_uuid.size();
   param[0].buffer_type   = MYSQL_TYPE_STRING;
   param[0].buffer        = run_uuid.c_str();
@@ -84,7 +112,7 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, unsigned int* run_id)
       exit(1);
     }
       
-  // UNSIGNED INT RESULT run_id;
+  // UNSIGNED INT RESULT[0] run_id;
   result[0].buffer_type   = MYSQL_TYPE_LONG;
   result[0].buffer        = (void *) run_id;
   result[0].is_unsigned   = 1;
@@ -109,6 +137,7 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, unsigned int* run_id)
       exit(1);
     }
 
+  mysql_stmt_free_result(stmt);
   return iret;
 }
 
@@ -336,7 +365,7 @@ void insert_xalt_run_record(MYSQL* conn, table& rmapT, table& userT, table& xalt
     }
 }
 
-void insert_objects(MYSQL* conn, const char* table_name, unsigned int run_id, std::vector<Libpair>& lddA, std::string& syshost,
+void insert_objects(MYSQL* conn, const char* table_name, unsigned int index, std::vector<Libpair>& lddA, std::string& syshost,
                     table& rmapT)
 {
   //************************************************************
@@ -389,9 +418,9 @@ void insert_objects(MYSQL* conn, const char* table_name, unsigned int run_id, st
   param_s[2].is_null       = 0;
   param_s[2].length        = &len_syshost;
 
-  if (mysql_stmt_bind_param(stmt, param_s))
+  if (mysql_stmt_bind_param(stmt_s, param_s))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting obj_id(1)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)");
       exit(1);
     }
       
@@ -446,6 +475,9 @@ void insert_objects(MYSQL* conn, const char* table_name, unsigned int run_id, st
   param_s[1].length        = &len_syshost;
 
   // STRING PARAM_I[2] hash_id
+  std::string::size_type     len_hash_id = 0;
+  std::string                hash_id;
+  hash_id.reserve(41);
   param_s[2].buffer_type   = MYSQL_TYPE_STRING;
   param_s[2].buffer        = hash_id.c_str();
   param_s[2].buffer_length = hash_id.capacity();
@@ -480,36 +512,124 @@ void insert_objects(MYSQL* conn, const char* table_name, unsigned int run_id, st
   param_i[4].is_null      = 0;
 
   // STRING PARAM_I[5] lib_type
-  
+  std::string::size_type len_lib_type = 0;
+  std::string            lib_type;
+  lib_type.reverse(10);
+  param_i[5].buffer_type   = MYSQL_TYPE_STRING;
+  param_i[5].buffer        = lib_type.c_str();
+  param_i[5].buffer_length = lib_type.capacity();
+  param_i[5].is_null       = 0;
+  param_i[5].length        = &len_lib_type;
 
-
-
-  if (mysql_stmt_bind_param(stmt, param_s))
+  if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting obj_id(1)");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
       exit(1);
     }
       
 
+  //************************************************************
+  // "INSERT into <TABLE_NAME> VALUES (NULL, ?, ?)"
+  //************************************************************
 
+  std::string s2          = "INSERT into " + table_name + " VALUES (NULL,?,?)";
+  const char* stmt_sql_ii = s2.c_str();
 
-
-
-
-
-  if (mysql_stmt_execute(stmt))
+  MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
+  if (!stmt_ii)
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting obj_id");
+      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)");
       exit(1);
     }
-  int iret = mysql_stmt_fetch(stmt);
 
-  if (mysql_stmt_close(stmt))
+  if (mysql_stmt_prepare(stmt_ii, stmt_sql_ii, strlen(stmt_sql_ii)))
     {
-      print_stmt_error(stmt, "Could not close stmt for selecting obj_id");
+      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into <table_name>");
       exit(1);
     }
+
+  MYSQL_BIND param_ii[2];
+  memset((void *) param_ii,  0, sizeof(param_ii));
+
+  // STRING PARAM_II[0] obj_id
+  param_ii[0].buffer_type   = MYSQL_TYPE_LONG;
+  param_ii[0].buffer        = (void *) &obj_id;
+  param_ii[0].buffer_length = 0;
+  param_ii[0].is_unsigned   = 1;
+  param_ii[0].is_null       = 0;
+
+  // STRING PARAM_II[1] index
+  param_ii[1].buffer_type   = MYSQL_TYPE_LONG;
+  param_ii[1].buffer        = (void *) &index;
+  param_ii[1].buffer_length = 0;
+  param_ii[1].is_unsigned   = 1;
+  param_ii[1].is_null       = 0;
+
+  if (mysql_stmt_bind_param(stmt_ii, param_ii))
+    {
+      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object");
+      exit(1);
+    }
+      
   
+  for ( auto it = lddA.begin(); it != lddA.end(); ++it)
+    {
+      object_path = (*it).lib;
+      hash_id     = (*it).sha1;
+
+
+      // "SELECT obj_id ..."
+      if (mysql_stmt_execute(stmt_s))
+        {
+          print_stmt_error(stmt, "Could not execute stmt for selecting run_id");
+          exit(1);
+        }
+      
+      if (mysql_stmt_fetch(stmt_s) != 0)  // This defines obj_id if iret is true.
+        {
+          if (path2module(object_path, rmapT, module_name))
+            len_module_name = module_name.size();
+          else
+            {
+              len_module_name    = 0;
+              param_i[3].is_null = 0;
+            }
+          lib_type     = object_type(object_path);
+          len_lib_type = lib_type.size();
+
+          // "INSERT into xalt_object ..."
+          if (mysql_stmt_execute(stmt_i))
+            {
+              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object");
+              exit(1);
+            }
+          obj_id = (unsigned int)  mysql_stmt_insert_id(stmt_i);
+        }
+
+      // "INSERT into <table_name>"
+      if (mysql_stmt_execute(stmt_ii))
+        {
+          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into <table_name>");
+          exit(1);
+        }
+    }
+          
+  mysql_stmt_free_result(stmt_s);
+  if (mysql_stmt_close(stmt_s))
+    {
+      print_stmt_error(stmt_s, "Could not close stmt for selecting obj_id");
+      exit(1);
+    }
+  if (mysql_stmt_close(stmt_i))
+    {
+      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_object");
+      exit(1);
+    }
+  if (mysql_stmt_close(stmt_ii))
+    {
+      print_stmt_error(stmt_ii, "Could not close stmt for inserting into <table_name>");
+      exit(1);
+    }
 }
 
 void insert_envT(MYSQL* conn, int run_id, table& envT)
@@ -588,7 +708,7 @@ void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_
 
   MYSQL *conn = mysql_init(NULL);
 
-  if (con == NULL)
+  if (conn == NULL)
     {
       fprintf(stderr, "mysql_init() failed\n");
       exit(1);
@@ -605,7 +725,7 @@ void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_
   translate(envT, userT);
   
   unsigned int run_id;
-  if (select_run_id(conn, userT["run_uuid"], &run_id))
+  if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id return 0 if it found [[run_id]].
     {
       // if here there was no previous record found (and run_id is unset!).
       insert_xalt_run_record(conn, rmapT, userT, recordT, usr_cmdline, hash_id, &run_id);
@@ -619,6 +739,8 @@ void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_
   else
     // There was a previous record with this run_uuid, update end time (if positive)
     update_xalt_run_record(conn, run_id, userT);
+
+  mysql_close(conn);
 
   return;
 }
