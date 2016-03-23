@@ -4,7 +4,11 @@ hostname_patterns = [
   '.*'                    # match  all hosts
   ]
 
-ignore_dir_patterns = [
+accept_path_patterns = [
+  '^/usr/bin/ddt'
+  ]
+
+ignore_path_patterns = [
   '^/sbin/',
   '^/bin/',
   '^/etc',
@@ -22,6 +26,40 @@ ignore_dir_patterns = [
   '^/opt/VBoxGuestAdditions'
   ]
 
- 
-  
+accept_env_patterns = [
+  '^.*PATH.*',
+  '^I_MPI.*',
+  '^KMP.*',
+  '^LC_.*',
+  '^LD.*',
+  '^LOADEDMODULES$',
+  '^MIC_.*',
+  '^MKL.*',
+  '^MPICH_.*',
+  '^MV2_.*',
+  '^OFFLOAD.*',
+  '^OMP.*',
+  '^PYTHON.*',
+  '^R_*',
+  '^SHELL$',
+  '^TARG$',
+  '^_LMFILES_$'
+  ] 
+
+ignore_env_patterns = [
+  '^DDTPATH$',
+  '^INFOPATH$',
+  '^LMOD*',
+  '^MAKE_INC_PATH$',
+  '^MANPATH$',
+  '^MIC_ENV_PREFIX$',
+  '^MIC_TACC.*_DIR$',
+  '^MIC_TACC.*_INC',
+  '^MIC_TACC.*_LIB$',
+  '^MKLROOT$',
+  '^MODULEPATH_ROOT$',
+  '^MPICH_HOME$',
+  '^PKG_CONFIG_PATH$',
+  '^__.*'
+  ]  
   
