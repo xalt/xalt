@@ -13,18 +13,6 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
-AC_SUBST(SITE)
-AC_ARG_WITH(site,
-    AC_HELP_STRING([--with-site=ans],[Site name [[default]]]),
-    SITE="$withval"
-    AC_MSG_RESULT([SITE=$with_site])
-    AC_DEFINE_UNQUOTED(SITE, "$with_site")dnl
-    ,
-    withval="default"
-    AC_MSG_RESULT([SITE=$withval])
-    SITE="$withval"
-    AC_DEFINE_UNQUOTED(SITE, "$withval"))dnl
-
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
     AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
@@ -37,42 +25,29 @@ AC_ARG_WITH(etcDir,
     ETC_DIR="$withval"
     AC_DEFINE_UNQUOTED(ETC_DIR, "$withval"))dnl
 
-AC_SUBST(ACCEPT_LIST)
-AC_ARG_WITH(acceptList,
-    AC_HELP_STRING([--with-acceptList=ans],[Filename that contains the list of acceptable paths [[accept.default.txt]]]),
-    ACCEPT_LIST="$withval"
-    AC_MSG_RESULT([ACCEPT_LIST=$with_acceptList])
-    AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$with_acceptList")dnl
+AC_SUBST(XALT_CONFIG_PY)
+AC_ARG_WITH(config,
+    AC_HELP_STRING([--with-config=ans],[A python file defining the accept, ignore, hostname pattern lists [[NO DEFAULT]]]),
+    XALT_CONFIG_PY="$withval"
+    AC_MSG_RESULT([XALT_CONFIG_PY=$with_config])
+    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$with_config")dnl
     ,
-    withval="$ac_confdir/accept.default.txt"
-    AC_MSG_RESULT([ACCEPT_LIST=$withval])
-    ACCEPT_LIST="$withval"
-    AC_DEFINE_UNQUOTED(ACCEPT_LIST, "$withval"))dnl
+    withval="no"
+    AC_MSG_RESULT([XALT_CONFIG_PY=$withval])
+    XALT_CONFIG_PY="$withval"
+    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$withval"))dnl
 
-AC_SUBST(IGNORE_LIST)
-AC_ARG_WITH(ignoreList,
-    AC_HELP_STRING([--with-ignoreList=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
-    IGNORE_LIST="$withval"
-    AC_MSG_RESULT([IGNORE_LIST=$with_ignoreList])
-    AC_DEFINE_UNQUOTED(IGNORE_LIST, "$with_ignoreList")dnl
+AC_SUBST(SYSTEM_PATH)
+AC_ARG_WITH(systemPath,
+    AC_HELP_STRING([--with-systemPath=ans],[]),
+    SYSTEM_PATH="$withval"
+    AC_MSG_RESULT([SYSTEM_PATH=$with_systemPath])
+    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$with_systemPath")dnl
     ,
-    withval="$ac_confdir/ignore.default.txt"
-    AC_MSG_RESULT([IGNORE_LIST=$withval])
-    IGNORE_LIST="$withval"
-    AC_DEFINE_UNQUOTED(IGNORE_LIST, "$withval"))dnl
-
-AC_SUBST(HOSTNAME_LIST)
-AC_ARG_WITH(hostnameList,
-    AC_HELP_STRING([--with-hostnameList=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
-    HOSTNAME_LIST="$withval"
-    AC_MSG_RESULT([HOSTNAME_LIST=$with_hostnameList])
-    AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$with_hostnameList")dnl
-    ,
-    withval="$ac_confdir/hostname.default.txt"
-    AC_MSG_RESULT([HOSTNAME_LIST=$withval])
-    HOSTNAME_LIST="$withval"
-    AC_DEFINE_UNQUOTED(HOSTNAME_LIST, "$withval"))dnl
-
+    withval="/usr/bin:/bin"
+    AC_MSG_RESULT([SYSTEM_PATH=$withval])
+    SYSTEM_PATH="$withval"
+    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"))dnl
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
@@ -142,10 +117,21 @@ AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([psutil])
 AC_PYTHON_MODULE([MySQLdb])
 
+
+
+if test "$XALT_CONFIG_PY" = no; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without setting --with-config=..."
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
+
 if test "$HAVE_PYMOD_MYSQLDB" = no; then
    echo
    echo "======================================================="
-   echo "unable to install XALT without the python module: MySQLdb"
+   echo "Unable to install XALT without the python module: MySQLdb"
    echo "To install it do: pip install MySQL-python"
    echo "======================================================="
    exit 1
@@ -155,7 +141,7 @@ fi
 if test "$HAVE_PYMOD_PSUTIL" = no; then
    echo
    echo "======================================================="
-   echo "unable to install XALT without the python module: psutil"
+   echo "Unable to install XALT without the python module: psutil"
    echo "To install it do: pip install psutil"
    echo "======================================================="
    exit 1
@@ -165,7 +151,7 @@ BUILD_PSTREE=no
 if test "$SYSHOST_CONFIG" = no; then
    echo
    echo "======================================================="
-   echo "unable to install XALT without setting --with-syshostConfig=..."
+   echo "Unable to install XALT without setting --with-syshostConfig=..."
    echo "Your choices are hardcode, nth_name, read_file and mapping."
    echo "See the manual for details."
    echo "======================================================="
@@ -185,7 +171,7 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output $ac_confdir/compiled/xalt_syshost.c
 
 AC_OUTPUT(makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in)
