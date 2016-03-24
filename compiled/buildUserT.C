@@ -10,7 +10,7 @@
 #include <sys/time.h>
 #define  DATESZ 100
 
-void buildUserT(Options& options, table& userT)
+void buildUserT(Options& options, Table& userT)
 {
   
   time_t mtime;

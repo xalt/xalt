@@ -40,20 +40,20 @@ int main(int argc, char* argv[], char* env[])
 
   //*********************************************************************
   // Build the env table:
-  std::unordered_map<std::string, std::string> envT;
+  Table envT;
   buildEnvT(env, envT);
   json.add("envT",envT);
 
 
   //*********************************************************************
   // Build userT
-  std::unordered_map<std::string, std::string> userT;
+  Table userT;
   buildUserT(options, userT);
   json.add("userT",userT);
 
   //*********************************************************************
   // Extract the xalt record stored in the executable (possibly)
-  std::unordered_map<std::string, std::string> recordT;
+  Table recordT;
   extractXALTRecord(options.exec(), recordT);
   json.add("xaltLinkT",recordT);
 

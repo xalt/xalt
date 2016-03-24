@@ -15,17 +15,17 @@ struct Libpair
   std::string sha1;
 };
 
-typedef std::unordered_map<std::string,std::string> table;
+typedef std::unordered_map<std::string,std::string> Table;
+typedef unsigned int uint;
 
-void buildEnvT(char* env[], table& envT);
-void buildUserT(Options& options, table& userT);
+void buildEnvT(char* env[], Table& envT);
+void buildUserT(Options& options, Table& userT);
 void capture(std::string& cmd, std::vector<std::string>& result);
-void extractXALTRecord(std::string& exec, table& recordT);
+void extractXALTRecord(std::string& exec, Table& recordT);
 void parseLDD(std::string& exec, std::vector<Libpair>& lddA);
-void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_id, table& envT, table& userT,
-               table& recordT, std::vector<Libpair>& lddA);
-void translate(table& envT, table& userT);
-void buildRmapT(table& rmapT, std::vector<std::string> xlibmap);
-std::string& safe_get(table& envT, const char* key, const char* defaultValue)
+void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_id, Table& envT, Table& userT,
+               Table& recordT, std::vector<Libpair>& lddA);
+void translate(Table& envT, Table& userT);
+void buildRmapT(Table& rmapT, std::vector<std::string> xlibmap);
 
 #endif //RUN_SUBMISSION_H

@@ -1,7 +1,7 @@
 #include "run_submission.h"
 #include <string.h>
 
-void buildEnvT(char* env[], table& envT)
+void buildEnvT(char* env[], Table& envT)
 {
   std::string n, v;
   std::string::size_type s1, s2, s3, s4;

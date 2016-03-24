@@ -317,10 +317,10 @@ int reject(const char *path, const char * hostname)
   FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
   for (i = 0; i < acceptSz; i++)
     {
-      iret = regcomp(&regex, acceptA[i], 0);
+      iret = regcomp(&regex, acceptPathA[i], 0);
       if (iret)
 	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
 	  exit(1);
 	}
 
@@ -341,10 +341,10 @@ int reject(const char *path, const char * hostname)
   
   for (i = 0; i < ignoreSz; i++)
     {
-      iret = regcomp(&regex, ignoreA[i], 0);
+      iret = regcomp(&regex, ignorePathA[i], 0);
       if (iret)
 	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
 	  exit(1);
 	}
 

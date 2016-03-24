@@ -28,7 +28,7 @@ void Json::add_json_string(const char* name, std::string& value)
   m_s += ",";
 }
 
-void Json::add(const char* name, table& t)
+void Json::add(const char* name, Table& t)
 {
   m_s += "\"";
   m_s += name;

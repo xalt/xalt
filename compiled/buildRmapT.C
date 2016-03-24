@@ -5,7 +5,7 @@
 #include "jsmn.h"
 #include "fget_alloc.h"
 
-void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, table& rmapT)
+void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, Table& rmapT)
 {
   if (tokens[i].type != JSMN_OBJECT)
     {
@@ -69,7 +69,7 @@ void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens,
     }
 }
 
-void buildRmapT(table& rmapT, std::vector<std::string> xlibmap)
+void buildRmapT(Table& rmapT, std::vector<std::string> xlibmap)
 {
   static char *extA[]  = {".json", ".old.json"};
   static int   nExt    = sizeof(extA)/sizeof(extA[0]);

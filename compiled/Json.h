@@ -9,7 +9,7 @@ public:
   Json() { m_s = "{"; }
   ~Json() {};
   void fini();
-  void add(const char* name, table& t);
+  void add(const char* name, Table& t);
   void add(const char* name, std::string& value);
   void add(const char* name, std::vector<std::string>& a);
   void add(const char* name, std::vector<Libpair>&     lddA);

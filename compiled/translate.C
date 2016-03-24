@@ -1,13 +1,14 @@
 #include "run_submission.h"
 #include <sstream>
-std::string& safe_get(table& envT, const char* key, const char* defaultValue)
+std::string& safe_get(Table& t, const char* key, const char* defaultValue)
 {
-  if (envT.count(key) == 0)
+  Table::const_iterator got = t.find(key);
+  if (got == t.end())
     return defaultValue;
-  return envT[key];
+  return got->second;
 }
 
-void translate(table& envT, table& userT)
+void translate(Table& envT, Table& userT)
 {
 
   enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF };

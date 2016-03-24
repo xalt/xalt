@@ -53,7 +53,7 @@ ignore_path_patterns = [
 # followed by the reject list.  To be saved a variables name must be 
 # found in the accept list and not found in the ignore list.
 # For example, the accept list might allow for any variables that contain
-# 'PATH' but the ignore list causes variables named DDTPATH to be ignored.
+# 'PATH' but the ignore list causes a variable named DDTPATH to be ignored.
 
 accept_env_patterns = [
   '^.*PATH.*',
@@ -91,4 +91,3 @@ ignore_env_patterns = [
   '^PKG_CONFIG_PATH$',
   '^__.*'
   ]  
-  
