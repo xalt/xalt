@@ -912,6 +912,7 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
       envValue = it->second;
       env_id   = findEnvNameIdx(conn, envName, envNameT);
 
+      // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))
         {
           print_stmt_error(stmt, "Could not execute stmt for insert xalt_run");
