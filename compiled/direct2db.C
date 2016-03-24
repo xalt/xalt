@@ -887,7 +887,7 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
   param[11].is_unsigned = 1;
   param[11].is_null     = 0;
 
-  // STRING PARAM[2] 
+  // STRING PARAM[2] env_value
   std::string env_value;
   env_value.reserve(65536);
   std::string::size_type   len_env_value;
