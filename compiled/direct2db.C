@@ -256,7 +256,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& xalt
   param[10].is_null     = 0;
 
   // INT PARAM[11] num_cores
-  int num_cores         = (int) strtol(userT["num_cores"], NULL, 10);
+  uint num_cores         = (uint) strtol(userT["num_cores"], NULL, 10);
   param[11].buffer_type = MYSQL_TYPE_LONG;
   param[11].buffer      = (void *) &num_cores;
   param[11].is_unsigned = 1;
@@ -861,25 +861,69 @@ uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
 }
 
 
-void insert_envT(MYSQL* conn, int run_id, Table& envT)
+void insert_envT(MYSQL* conn, uint run_id, Table& envT)
 {
 
   // Remember to store the entire env. vars in a table.
   TableI envNameT;
-  
   buildEnvNameT(conn, envNameT);
 
+
+  const char* stmt_sql = "INSERT INTO join_run_env VALUES (NULL, ?,?,?)";
+  
+  MYSQL_BIND param[3];
+  memset((void *) param,  0, sizeof(param));
+
+  // INT PARAM[0] env_id
+  uint env_id;
+  param[0].buffer_type = MYSQL_TYPE_LONG;
+  param[0].buffer      = (void *) &env_id
+  param[0].is_unsigned = 1;
+  param[0].is_null     = 0;
+
+  // INT PARAM[1] run_id
+  param[11].buffer_type = MYSQL_TYPE_LONG;
+  param[11].buffer      = (void *) &run_id;
+  param[11].is_unsigned = 1;
+  param[11].is_null     = 0;
+
+  // STRING PARAM[2] 
+  std::string env_value;
+  env_value.reserve(65536);
+  std::string::size_type   len_env_value;
+  param[2].buffer_type   = MYSQL_TYPE_STRING;
+  param[2].buffer        = env_value.c_str();
+  param[2].buffer_length = env_value.capacity();
+  param[2].is_null       = 0;
+  param[2].length        = &len_env_value;
+
+  if (mysql_stmt_bind_param(stmt, param))
+    {
+      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_run");
+      exit(1);
+    }
+  
   for (auto it = envT.begin(); it != envT.end() ++it)
     {
-      const std::string& envName  = it->first;
-      if (reject_env_name(envName)) continue;
+      const std::string& env_name  = it->first;
+      if (reject_env_name(env_name)) continue;
       
 
-      const std::string& envValue = it->second;
+      envValue = it->second;
+      env_id   = findEnvNameIdx(conn, envName, envNameT);
 
-      uint env_id = findEnvNameIdx(conn, envName, envNameT);
+      if (mysql_stmt_execute(stmt))
+        {
+          print_stmt_error(stmt, "Could not execute stmt for insert xalt_run");
+          exit(1);
+        }
+    }
 
-      //INSERT INTO join_run_env
+  // clean up.
+  if (mysql_stmt_close(stmt))
+    {
+      print_stmt_error(stmt, "Could not close stmt for insert xalt_run");
+      exit(1);
     }
 }
 
