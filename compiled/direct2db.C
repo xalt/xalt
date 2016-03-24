@@ -6,6 +6,7 @@
 
 #include "run_submission.h"
 #include "ConfigParser.h"
+#include "xalt_regex.h"
 #define  DATESZ 100
 
 static int issueWarning = 1;
@@ -634,7 +635,12 @@ void insert_objects(MYSQL* conn, const char* table_name, unsigned int index, std
 
 void insert_envT(MYSQL* conn, int run_id, table& envT)
 {
+
+  // Remember to store the entire env. vars in a table.
   
+  
+
+    
 
 }
 
