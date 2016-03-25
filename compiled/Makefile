@@ -6,9 +6,10 @@ ifeq ($(OS_NAME),Darwin)
   LIB_OPTIONS     := -bundle -undefined dynamic_lookup
 endif
 
+CXX_LDFLAGS := $(shell mysql_config --libs)
 CF_INIT     := -I$(THIS_DIR)/compiled/ -fPIC
-CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/
-CFLAGS      := -g -O0
+CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --cflags)
+CFLAGS      := -g -O0 
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnvT.C buildUserT.C Json.C \
               base64.C zstring.C direct2db.C ConfigParser.C
@@ -21,7 +22,7 @@ ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 $(EXEC) : $(OBJS)
-	$(LINK.C) -o $@ $^ -lz
+	$(LINK.C) -o $@ $^ -lz $(CXX_LDFLAGS)
 
 $(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost.c
 	gcc -DHAVE_MAIN -O2 -o $@ $<

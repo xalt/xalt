@@ -658,11 +658,9 @@ CFLAGS
 CC
 SYS_LD_LIB_PATH
 SYSHOST_CONFIG
-HOSTNAME_LIST
-IGNORE_LIST
-ACCEPT_LIST
+SYSTEM_PATH
+XALT_CONFIG_PY
 ETC_DIR
-SITE
 TRANSMISSION
 target_alias
 host_alias
@@ -706,11 +704,9 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_transmission
-with_site
 with_etcDir
-with_acceptList
-with_ignoreList
-with_hostnameList
+with_config
+with_systemPath
 with_syshostConfig
 '
       ac_precious_vars='build_alias
@@ -1329,15 +1325,11 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
-  --with-site=ans         Site name [[default]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
-  --with-acceptList=ans   Filename that contains the list of acceptable paths
-                          [[accept.default.txt]]
-  --with-ignoreList=ans   Directory where xalt_db.conf and reverseMapD can be
-                          found [[.]]
-  --with-hostnameList=ans Directory where xalt_db.conf and reverseMapD can be
-                          found [[.]]
+  --with-config=ans       A python file defining the accept, ignore, hostname
+                          pattern lists [[NO DEFAULT]]
+  --with-systemPath=ans
   --with-syshostConfig=ans
                           Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -2044,28 +2036,6 @@ fi
 
 
 
-# Check whether --with-site was given.
-if test "${with_site+set}" = set; then :
-  withval=$with_site; SITE="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE=$with_site" >&5
-$as_echo "SITE=$with_site" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define SITE "$with_site"
-_ACEOF
-
-else
-  withval="default"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE=$withval" >&5
-$as_echo "SITE=$withval" >&6; }
-    SITE="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define SITE "$withval"
-_ACEOF
-
-fi
-
-
-
 # Check whether --with-etcDir was given.
 if test "${with_etcDir+set}" = set; then :
   withval=$with_etcDir; ETC_DIR="$withval"
@@ -2088,70 +2058,47 @@ fi
 
 
 
-# Check whether --with-acceptList was given.
-if test "${with_acceptList+set}" = set; then :
-  withval=$with_acceptList; ACCEPT_LIST="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ACCEPT_LIST=$with_acceptList" >&5
-$as_echo "ACCEPT_LIST=$with_acceptList" >&6; }
+# Check whether --with-config was given.
+if test "${with_config+set}" = set; then :
+  withval=$with_config; XALT_CONFIG_PY="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$with_config" >&5
+$as_echo "XALT_CONFIG_PY=$with_config" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define ACCEPT_LIST "$with_acceptList"
+#define XALT_CONFIG_PY "$with_config"
 _ACEOF
 
 else
-  withval="$ac_confdir/accept.default.txt"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ACCEPT_LIST=$withval" >&5
-$as_echo "ACCEPT_LIST=$withval" >&6; }
-    ACCEPT_LIST="$withval"
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$withval" >&5
+$as_echo "XALT_CONFIG_PY=$withval" >&6; }
+    XALT_CONFIG_PY="$withval"
     cat >>confdefs.h <<_ACEOF
-#define ACCEPT_LIST "$withval"
+#define XALT_CONFIG_PY "$withval"
 _ACEOF
 
 fi
 
 
 
-# Check whether --with-ignoreList was given.
-if test "${with_ignoreList+set}" = set; then :
-  withval=$with_ignoreList; IGNORE_LIST="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: IGNORE_LIST=$with_ignoreList" >&5
-$as_echo "IGNORE_LIST=$with_ignoreList" >&6; }
+# Check whether --with-systemPath was given.
+if test "${with_systemPath+set}" = set; then :
+  withval=$with_systemPath; SYSTEM_PATH="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$with_systemPath" >&5
+$as_echo "SYSTEM_PATH=$with_systemPath" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define IGNORE_LIST "$with_ignoreList"
+#define SYSTEM_PATH "$with_systemPath"
 _ACEOF
 
 else
-  withval="$ac_confdir/ignore.default.txt"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: IGNORE_LIST=$withval" >&5
-$as_echo "IGNORE_LIST=$withval" >&6; }
-    IGNORE_LIST="$withval"
+  withval="/usr/bin:/bin"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$withval" >&5
+$as_echo "SYSTEM_PATH=$withval" >&6; }
+    SYSTEM_PATH="$withval"
     cat >>confdefs.h <<_ACEOF
-#define IGNORE_LIST "$withval"
+#define SYSTEM_PATH "$withval"
 _ACEOF
 
 fi
-
-
-
-# Check whether --with-hostnameList was given.
-if test "${with_hostnameList+set}" = set; then :
-  withval=$with_hostnameList; HOSTNAME_LIST="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: HOSTNAME_LIST=$with_hostnameList" >&5
-$as_echo "HOSTNAME_LIST=$with_hostnameList" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define HOSTNAME_LIST "$with_hostnameList"
-_ACEOF
-
-else
-  withval="$ac_confdir/hostname.default.txt"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: HOSTNAME_LIST=$withval" >&5
-$as_echo "HOSTNAME_LIST=$withval" >&6; }
-    HOSTNAME_LIST="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define HOSTNAME_LIST "$withval"
-_ACEOF
-
-fi
-
 
 
 
@@ -4210,10 +4157,21 @@ $as_echo "no" >&6; }
 	fi
 
 
+
+
+if test "$XALT_CONFIG_PY" = no; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without setting --with-config=..."
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
+
 if test "$HAVE_PYMOD_MYSQLDB" = no; then
    echo
    echo "======================================================="
-   echo "unable to install XALT without the python module: MySQLdb"
+   echo "Unable to install XALT without the python module: MySQLdb"
    echo "To install it do: pip install MySQL-python"
    echo "======================================================="
    exit 1
@@ -4223,7 +4181,7 @@ fi
 if test "$HAVE_PYMOD_PSUTIL" = no; then
    echo
    echo "======================================================="
-   echo "unable to install XALT without the python module: psutil"
+   echo "Unable to install XALT without the python module: psutil"
    echo "To install it do: pip install psutil"
    echo "======================================================="
    exit 1
@@ -4233,7 +4191,7 @@ BUILD_PSTREE=no
 if test "$SYSHOST_CONFIG" = no; then
    echo
    echo "======================================================="
-   echo "unable to install XALT without setting --with-syshostConfig=..."
+   echo "Unable to install XALT without setting --with-syshostConfig=..."
    echo "Your choices are hardcode, nth_name, read_file and mapping."
    echo "See the manual for details."
    echo "======================================================="
@@ -4253,7 +4211,7 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --accept $ACCEPT_LIST --ignore $IGNORE_LIST --hostname $HOSTNAME_LIST --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output $ac_confdir/compiled/xalt_syshost.c
 
 ac_config_files="$ac_config_files makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in"

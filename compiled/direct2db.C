@@ -2,6 +2,7 @@
 #include <my_global.h>
 #include <mysql.h>
 #include <string>
+#include <string.h>
 #include <stdlib.h>
 #include <regex.h>
 
@@ -36,7 +37,7 @@ void print_stmt_error(MYSQL_STMT *stmt, const char *message)
     }
 }
 
-bool path2module(std:string& path, Table& rmapT, std::string& result)
+bool path2module(std::string& path, Table& rmapT, std::string& result)
 {
   std::string p = path;
 
@@ -49,10 +50,10 @@ bool path2module(std:string& path, Table& rmapT, std::string& result)
           return true;
         }
     }
-  return false
+  return false;
 }
 
-std::string& object_type(std::string& path)
+std::string object_type(std::string& path)
 {
   std::string s(path);
   std::string extA[] = {"a", "o", "so", "--"};
@@ -105,9 +106,8 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
   // STRING PARAM[0] run_uuid;
   std::string::size_type len_run_uuid = run_uuid.size();
   param[0].buffer_type   = MYSQL_TYPE_STRING;
-  param[0].buffer        = run_uuid.c_str();
+  param[0].buffer        = (void *) run_uuid.c_str();
   param[0].buffer_length = run_uuid.capacity();
-  param[0].is_null       = 0;
   param[0].length        = &len_run_uuid;
 
   if (mysql_stmt_bind_param(stmt, param))
@@ -120,7 +120,6 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
   result[0].buffer_type   = MYSQL_TYPE_LONG;
   result[0].buffer        = (void *) &run_id;
   result[0].is_unsigned   = 1;
-  result[0].is_null       = 0;
 
   if (mysql_stmt_bind_result(stmt, result))
     {
@@ -148,207 +147,202 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
   return iret;
 }
 
-void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& xaltLinkT, std::string& usr_cmdline,
+void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& recordT, std::string& usr_cmdline,
                             std::string& hash_id, unsigned int* run_id)
 {
 
   const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, COMPRESS(?))";
-  
+  MYSQL_STMT *stmt = mysql_stmt_init(conn);
+  if (!stmt)
+    {
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      exit(1);
+    }
+
+  if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
+    {
+      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      exit(1);
+    }
+
   MYSQL_BIND param[22];
   memset((void *) param,  0, sizeof(param));
 
   // STRING PARAM[0] job_id
   std::string& job_id    = userT["job_id"];
-  std::string::size_type len_jobid = job_id.size()
+  std::string::size_type len_jobid = job_id.size();
   param[0].buffer_type   = MYSQL_TYPE_STRING;
-  param[0].buffer        = job_id.c_str();
+  param[0].buffer        = (void *) job_id.c_str();
   param[0].buffer_length = job_id.capacity();
-  param[0].is_null       = 0;
   param[0].length        = &len_jobid;
     
   // STRING PARAM[1] run_uuid
   std::string& run_uuid  = userT["run_uuid"];
-  std::string::size_type len_run_uuid = run_uuid.size()
+  std::string::size_type len_run_uuid = run_uuid.size();
   param[1].buffer_type   = MYSQL_TYPE_STRING;
-  param[1].buffer        = run_uuid.c_str();
+  param[1].buffer        = (void *) run_uuid.c_str();
   param[1].buffer_length = run_uuid.capacity();
-  param[1].is_null       = 0;
   param[1].length        = &len_run_uuid;
   
   // DATETIME PARAM[2] date 
   MYSQL_TIME my_datetime;
   double     sTimeD       = strtod(userT["start_time"].c_str(), NULL);
   time_t     sTimeI       = (time_t) sTimeI;
-  struct tm* sTime        = localtime(sTimeI);
+  struct tm* sTime        = localtime(&sTimeI);
   my_datetime.year        = sTime->tm_year + 1900;
   my_datetime.month       = sTime->tm_mon  + 1;
   my_datetime.day         = sTime->tm_mday;
   my_datetime.hour        = sTime->tm_hour;
-  my_datetime.min         = sTime->tm_min;
+  my_datetime.minute      = sTime->tm_min;
   my_datetime.second      = sTime->tm_sec;
   my_datetime.second_part = 0;
   param[2].buffer_type    = MYSQL_TYPE_DATETIME;
   param[2].buffer         = &my_datetime;
-  param[2].is_null        = 0;
   
   // STRING PARAM[3] syshost
   std::string& syshost   = userT["syshost"];
-  std::string::size_type len_syshost = syshost.size()
+  std::string::size_type len_syshost = syshost.size();
   param[3].buffer_type   = MYSQL_TYPE_STRING;
-  param[3].buffer        = syshost.c_str();
+  param[3].buffer        = (void *) syshost.c_str();
   param[3].buffer_length = syshost.capacity();
-  param[3].is_null       = 0;
   param[3].length        = &len_syshost;
   
   // STRING PARAM[4] build_uuid (it can be NULL!)
   param[4].buffer_type    = MYSQL_TYPE_STRING;
   std::string::size_type len_build_uuid = 0;
   std::string            build_uuid;
+  build_uuid.reserve(41);
+  my_bool                build_uuid_null_flag;
+  param[4].buffer        = (void *) build_uuid.c_str();
+  param[4].buffer_length = build_uuid.capacity();
+  param[4].is_null       = &build_uuid_null_flag;
+  param[4].length        = &len_build_uuid;
   if (recordT.count("Build.UUID") == 0)
-    param[4].is_null       = 1;
+    {
+      build_uuid_null_flag   = 1;
+    }
   else
     {
       build_uuid             = recordT["Build.UUID"];
       len_build_uuid         = build_uuid.size();
-      param[4].buffer        = build_uuid.c_str();
-      param[4].buffer_length = build_uuid.capacity();
-      param[4].is_null       = 0;
-      param[4].length        = &len_build_uuid;
     }
   
   // STRING PARAM[5] hash_id (sha1sum of executable)
-  std::string::size_type len_hash_id = hash_id.size()
+  std::string::size_type len_hash_id = hash_id.size();
   param[5].buffer_type   = MYSQL_TYPE_STRING;
-  param[5].buffer        = hash_id.c_str();
+  param[5].buffer        = (void *) hash_id.c_str();
   param[5].buffer_length = hash_id.capacity();
-  param[5].is_null       = 0;
   param[5].length        = &len_hash_id;
 
   // STRING PARAM[6] account
   std::string& account   = userT["account"];
-  std::string::size_type len_account = account.size()
+  std::string::size_type len_account = account.size();
   param[6].buffer_type   = MYSQL_TYPE_STRING;
-  param[6].buffer        = account.c_str();
+  param[6].buffer        = (void *) account.c_str();
   param[6].buffer_length = account.capacity();
-  param[6].is_null       = 0;
   param[6].length        = &len_account;
 
   // STRING PARAM[7] exec_type
   std::string& exec_type = userT["exec_type"];
-  std::string::size_type len_exec_type = exec_type.size()
+  std::string::size_type len_exec_type = exec_type.size();
   param[7].buffer_type   = MYSQL_TYPE_STRING;
-  param[7].buffer        = exec_type.c_str();
+  param[7].buffer        = (void *) exec_type.c_str();
   param[7].buffer_length = exec_type.capacity();
-  param[7].is_null       = 0;
   param[7].length        = &len_exec_type;
 
   // DOUBLE PARAM[8] start_time
   param[8].buffer_type   = MYSQL_TYPE_DOUBLE;
-  param[8].buffer        = (void *) &sTimeD
-  param[8].is_null       = 0;
+  param[8].buffer        = (void *) &sTimeD;
 
   // DOUBLE PARAM[9] end_time
-  double eTimeD          = strtod(userT["end_time"], NULL);
+  double eTimeD          = strtod(userT["end_time"].c_str(), NULL);
   param[9].buffer_type   = MYSQL_TYPE_DOUBLE;
-  param[9].buffer        = (void *) &eTimeD
-  param[9].is_null       = 0;
+  param[9].buffer        = (void *) &eTimeD;
 
   // DOUBLE PARAM[10] run_time
-  double rTimeD         = strtod(userT["run_time"], NULL);
+  double rTimeD         = strtod(userT["run_time"].c_str(), NULL);
   param[10].buffer_type = MYSQL_TYPE_DOUBLE;
-  param[10].buffer      = (void *) &rTimeD
-  param[10].is_null     = 0;
+  param[10].buffer      = (void *) &rTimeD;
 
   // INT PARAM[11] num_cores
-  uint num_cores         = (uint) strtol(userT["num_cores"], NULL, 10);
+  uint num_cores         = (uint) strtol(userT["num_cores"].c_str(), NULL, 10);
   param[11].buffer_type = MYSQL_TYPE_LONG;
   param[11].buffer      = (void *) &num_cores;
   param[11].is_unsigned = 1;
-  param[11].is_null     = 0;
 
   // INT PARAM[12] job_num_cores  // think about removing this!
   param[12].buffer_type = MYSQL_TYPE_LONG;
   param[12].buffer      = (void *) &num_cores;
   param[12].is_unsigned = 1;
-  param[12].is_null     = 0;
 
   // INT PARAM[13] num_nodes
-  int num_nodes         = (int) strtol(userT["num_nodes"], NULL, 10);
+  int num_nodes         = (int) strtol(userT["num_nodes"].c_str(), NULL, 10);
   param[13].buffer_type = MYSQL_TYPE_LONG;
   param[13].buffer      = (void *) &num_nodes;
   param[13].is_unsigned = 1;
-  param[13].is_null     = 0;
 
   // SHORT PARAM[14] num_threads
-  short int num_threads = (short int) strtol(userT["num_threads"], NULL, 10);
+  short int num_threads = (short int) strtol(userT["num_threads"].c_str(), NULL, 10);
   param[14].buffer_type = MYSQL_TYPE_SHORT;
   param[14].buffer      = (void *) &num_threads;
   param[14].is_unsigned = 1;
-  param[14].is_null     = 0;
 
   // STRING PARAM[15] queue
   std::string& queue      = userT["queue"];
-  std::string::size_type len_queue = queue.size()
+  std::string::size_type len_queue = queue.size();
   param[15].buffer_type   = MYSQL_TYPE_STRING;
-  param[15].buffer        = queue.c_str();
+  param[15].buffer        = (void *) queue.c_str();
   param[15].buffer_length = queue.capacity();
-  param[15].is_null       = 0;
   param[15].length        = &len_account;
 
   // SHORT PARAM[16] exit_code // Think about removing this!
-  short int exit_code   = (short int) strtol(userT["exit_status"], NULL, 10);
+  short int exit_code   = 0;
   param[16].buffer_type = MYSQL_TYPE_SHORT;
   param[16].buffer      = (void *) &exit_code;
-  param[16].is_null     = 0;
 
   // STRING PARAM[17] user
   std::string& user       = userT["user"];
-  std::string::size_type len_user = user.size()
+  std::string::size_type len_user = user.size();
   param[17].buffer_type   = MYSQL_TYPE_STRING;
-  param[17].buffer        = user.c_str();
+  param[17].buffer        = (void *) user.c_str();
   param[17].buffer_length = user.capacity();
-  param[17].is_null       = 0;
   param[17].length        = &len_user;
 
   // STRING PARAM[18] exec_path
   std::string& exec_path  = userT["exec_path"];
-  std::string::size_type len_exec_path = exec_path.size()
+  std::string::size_type len_exec_path = exec_path.size();
   param[18].buffer_type   = MYSQL_TYPE_STRING;
-  param[18].buffer        = exec_path.c_str();
+  param[18].buffer        = (void *) exec_path.c_str();
   param[18].buffer_length = exec_path.capacity();
-  param[18].is_null       = 0;
   param[18].length        = &len_exec_path;
 
   // STRING PARAM[19] module_name
   param[19].buffer_type    = MYSQL_TYPE_STRING;
   std::string::size_type len_module_name = 0;
   std::string            module_name;
+  my_bool                module_name_null_flag = 0;
+  param[19].buffer        = (void *) module_name.c_str();
+  param[19].buffer_length = module_name.capacity();
+  param[19].is_null       = &module_name_null_flag;
+  param[19].length        = &len_module_name;
   if (path2module(exec_path, rmapT, module_name))
-    {
-      len_module_name         = module_name.size();
-      param[19].buffer        = module_name.c_str();
-      param[19].buffer_length = module_name.capacity();
-      param[19].is_null       = 0;
-      param[19].length        = &len_module_name;
-    }
+    len_module_name         = module_name.size();
   else
-    param[19].is_null       = 1;
+    module_name_null_flag = 1;
 
   // STRING PARAM[20] cwd
   std::string& cwd        = userT["cwd"];
-  std::string::size_type len_cwd = cwd.size()
+  std::string::size_type len_cwd = cwd.size();
   param[20].buffer_type   = MYSQL_TYPE_STRING;
-  param[20].buffer        = cwd.c_str();
+  param[20].buffer        = (void *) cwd.c_str();
   param[20].buffer_length = cwd.capacity();
-  param[20].is_null       = 0;
   param[20].length        = &len_cwd;
 
   // BLOB PARAM[21] cmdline
   std::string::size_type len_cmdline = usr_cmdline.size();
   param[21].buffer_type   = MYSQL_TYPE_BLOB;
-  param[21].buffer        = usr_cmdline.c_str();
+  param[21].buffer        = (void *) usr_cmdline.c_str();
   param[21].buffer_length = usr_cmdline.capacity();
-  param[21].is_null       = 0;
   param[21].length        = &len_cmdline;
 
   if (mysql_stmt_bind_param(stmt, param))
@@ -379,7 +373,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   // build SELECT obj_id INTO xalt_object stmt
   //************************************************************
 
-  const char* stmt_sql_s = "SELECT obj_id FROM xalt_object WHERE hash_id=? AND object_path=? AND syshost=? limit 1"
+  const char* stmt_sql_s = "SELECT obj_id FROM xalt_object WHERE hash_id=? AND object_path=? AND syshost=? limit 1";
 
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
@@ -404,25 +398,22 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   // STRING PARAM_S[0] hash_id;
   std::string::size_type len_hash_id = 0;          // set length later in loop.
   param_s[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[0].buffer        = hash_id.c_str();
+  param_s[0].buffer        = (void *) hash_id.c_str();
   param_s[0].buffer_length = hash_id.capacity();
-  param_s[0].is_null       = 0;
   param_s[0].length        = &len_hash_id;
 
   // STRING PARAM_S[1] object_path
   std::string::size_type len_object_path = 0;      // set length later in loop.
   param_s[1].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[1].buffer        = object_path.c_str();
+  param_s[1].buffer        = (void *) object_path.c_str();
   param_s[1].buffer_length = object_path.capacity();
-  param_s[1].is_null       = 0;
   param_s[1].length        = &len_object_path;
 
   // STRING PARAM_S[2] syshost
   std::string::size_type len_syshost = syshost.size();
   param_s[2].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[2].buffer        = syshost.c_str();
+  param_s[2].buffer        = (void *) syshost.c_str();
   param_s[2].buffer_length = syshost.capacity();
-  param_s[2].is_null       = 0;
   param_s[2].length        = &len_syshost;
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
@@ -432,16 +423,15 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
     }
       
   // UNSIGNED INT RESULT_S obj_id;
-  unsigned int obj_id
+  unsigned int obj_id;
   result_s[0].buffer_type   = MYSQL_TYPE_LONG;
   result_s[0].buffer        = (void *) &obj_id;
   result_s[0].is_unsigned   = 1;
-  result_s[0].is_null       = 0;
   result_s[0].length        = 0;
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting obj_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)");
       exit(1);
     }
 
@@ -449,7 +439,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   // build INSERT into xalt_object stmt
   //************************************************************
 
-  const char* stmt_sql_i = "INSERT INTO xalt_object VALUES (NULL,?,?,?,?,?,?)"
+  const char* stmt_sql_i = "INSERT INTO xalt_object VALUES (NULL,?,?,?,?,?,?)";
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
@@ -468,35 +458,33 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
 
   // STRING PARAM_I[0] object_path
   param_i[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[0].buffer        = object_path.c_str();
+  param_i[0].buffer        = (void *) object_path.c_str();
   param_i[0].buffer_length = object_path.capacity();
-  param_i[0].is_null       = 0;
   param_i[0].length        = &len_object_path;
 
   // STRING PARAM_I[1] syshost
   param_i[1].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[1].buffer        = syshost.c_str();
+  param_i[1].buffer        = (void *) syshost.c_str();
   param_i[1].buffer_length = syshost.capacity();
-  param_i[1].is_null       = 0;
   param_i[1].length        = &len_syshost;
 
   // STRING PARAM_I[2] hash_id
   hash_id.reserve(41);
   param_i[2].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[2].buffer        = hash_id.c_str();
+  param_i[2].buffer        = (void *) hash_id.c_str();
   param_i[2].buffer_length = hash_id.capacity();
-  param_i[2].is_null       = 0;
   param_i[2].length        = &len_hash_id;
 
   // STRING PARAM_I[3] module_name
   param_i[3].buffer_type   = MYSQL_TYPE_STRING;
   std::string::size_type len_module_name = 0;      // set length in loop
+  my_bool                module_name_null_flag;
   std::string            module_name;
   module_name.reserve(2048);
   len_module_name          = module_name.size();
-  param_i[3].buffer        = module_name.c_str();
+  param_i[3].buffer        = (void *) module_name.c_str();
   param_i[3].buffer_length = module_name.capacity();
-  param_i[3].is_null       = 0;
+  param_i[3].is_null       = &module_name_null_flag;
   param_i[3].length        = &len_module_name;
 
   // TIMESTAMP PARAM_I[4] timestamp
@@ -508,21 +496,19 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   my_datetime.month       = curr_time->tm_mon  + 1;
   my_datetime.day         = curr_time->tm_mday;
   my_datetime.hour        = curr_time->tm_hour;
-  my_datetime.min         = curr_time->tm_min;
+  my_datetime.minute      = curr_time->tm_min;
   my_datetime.second      = curr_time->tm_sec;
   my_datetime.second_part = 0;
   param_i[4].buffer_type  = MYSQL_TYPE_DATETIME;
   param_i[4].buffer       = &my_datetime;
-  param_i[4].is_null      = 0;
 
   // STRING PARAM_I[5] lib_type
   std::string::size_type len_lib_type = 0;      // set length in loop.
   std::string            lib_type;
-  lib_type.reverse(10);
+  lib_type.reserve(10);
   param_i[5].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[5].buffer        = lib_type.c_str();
+  param_i[5].buffer        = (void *) lib_type.c_str();
   param_i[5].buffer_length = lib_type.capacity();
-  param_i[5].is_null       = 0;
   param_i[5].length        = &len_lib_type;
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
@@ -536,7 +522,9 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   // "INSERT into <TABLE_NAME> VALUES (NULL, ?, ?)"
   //************************************************************
 
-  std::string s2          = "INSERT INTO " + table_name + " VALUES (NULL,?,?)";
+  std::string s2("INSERT INTO ");
+  s2.append(table_name);
+  s2.append(" VALUES (NULL,?,?)");
   const char* stmt_sql_ii = s2.c_str();
 
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
@@ -560,14 +548,12 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_ii[0].buffer        = (void *) &obj_id;
   param_ii[0].buffer_length = 0;
   param_ii[0].is_unsigned   = 1;
-  param_ii[0].is_null       = 0;
 
   // STRING PARAM_II[1] index
   param_ii[1].buffer_type   = MYSQL_TYPE_LONG;
   param_ii[1].buffer        = (void *) &index;
   param_ii[1].buffer_length = 0;
   param_ii[1].is_unsigned   = 1;
-  param_ii[1].is_null       = 0;
 
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
@@ -580,13 +566,13 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
     {
       object_path     = (*it).lib;
       hash_id         = (*it).sha1;
-      len_object_path = object_path.size()
-      len_hash_id     = hash_id.size()
+      len_object_path = object_path.size();
+      len_hash_id     = hash_id.size();
 
       // "SELECT obj_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
-          print_stmt_error(stmt, "Could not execute stmt for selecting run_id");
+          print_stmt_error(stmt_s, "Could not execute stmt for selecting run_id");
           exit(1);
         }
       
@@ -597,10 +583,8 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
           if (path2module(object_path, rmapT, module_name))
             len_module_name = module_name.size();
           else
-            {
-              len_module_name    = 0;
-              param_i[3].is_null = 1;
-            }
+            module_name_null_flag = 1;
+
           lib_type     = object_type(object_path);
           len_lib_type = lib_type.size();
 
@@ -663,16 +647,15 @@ void buildEnvNameT(MYSQL* conn, TableI& envNameT)
   result[0].buffer_type   = MYSQL_TYPE_LONG;
   result[0].buffer        = (void *) &env_id;
   result[0].is_unsigned   = 1;
-  result[0].is_null       = 0;
   
   // (C)STRING RESULT[1] env_name
-  const size_t len_env_name = 128;
-  char env_name[len_env_name+1];
+  const size_t env_name_sz = 128;
+  char env_name[env_name_sz+1];
 
+  size_t len_env_name;
   result[1].buffer_type   = MYSQL_TYPE_STRING;
-  result[1].buffer        = &env_name[0];
-  result[1].buffer_length = len_env_name+1
-  result[1].is_null       = 0;
+  result[1].buffer        = (void *) &env_name[0];
+  result[1].buffer_length = len_env_name+1;
   result[1].length        = &len_env_name;
 
   if (mysql_stmt_bind_result(stmt, result))
@@ -699,7 +682,7 @@ void buildEnvNameT(MYSQL* conn, TableI& envNameT)
   mysql_stmt_free_result(stmt);
 }
 
-bool reject_env_name(std::string& env_name)
+bool reject_env_name(const std::string& env_name)
 {
   regex_t regex;
   char    msgbuf[100];
@@ -712,13 +695,13 @@ bool reject_env_name(std::string& env_name)
           fprintf(stderr,"Could not compile regex \"%s\"\n", acceptEnvA[i]);
           exit(1);
         }
-      int iret = regexec(&regex, env_name, 0, NULL, 0);
+      int iret = regexec(&regex, env_name.c_str(), 0, NULL, 0);
       if (iret == 0)
         {
           ret = false;
           break;
         }
-      else if (iretr != REG_NOMATCH)
+      else if (iret != REG_NOMATCH)
         {
           regerror(iret, &regex, msgbuf, sizeof(msgbuf));
           fprintf(stderr, "acceptEnvA Regex match failed: %s\n", msgbuf);
@@ -737,10 +720,10 @@ bool reject_env_name(std::string& env_name)
           fprintf(stderr,"Could not compile regex \"%s\"\n", ignoreEnvA[i]);
           exit(1);
         }
-      int iret = regexec(&regex, env_name, 0, NULL, 0);
+      int iret = regexec(&regex, env_name.c_str(), 0, NULL, 0);
       if (iret == 0)
         return true;
-      else if (iretr != REG_NOMATCH)
+      else if (iret != REG_NOMATCH)
         {
           regerror(iret, &regex, msgbuf, sizeof(msgbuf));
           fprintf(stderr, "ignoreEnvA Regex match failed: %s\n", msgbuf);
@@ -754,12 +737,12 @@ bool reject_env_name(std::string& env_name)
 uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
 {
   uint env_id = 0;
-  TableI::const_iterator got = envEnvT.find(env_name);
-  if (got != envEnvT.end())
+  TableI::const_iterator got = envNameT.find(env_name);
+  if (got != envNameT.end())
     return got->second;      // return env_id
 
   
-  const char* stmt_sql_i = "INSERT INTO xalt_env_name VALUES (NULL,?)"
+  const char* stmt_sql_i = "INSERT INTO xalt_env_name VALUES (NULL,?)";
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
@@ -779,9 +762,8 @@ uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
   // STRING PARAM_I[0] env_name
   std::string::size_type     len_env_name;
   param_i[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[0].buffer        = env_name.c_str();
+  param_i[0].buffer        = (void *) env_name.c_str();
   param_i[0].buffer_length = env_name.capacity();
-  param_i[0].is_null       = 0;
   param_i[0].length        = &len_env_name;
   
   if (mysql_stmt_bind_param(stmt_i, param_i))
@@ -794,9 +776,9 @@ uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
     env_id = (uint) mysql_stmt_insert_id(stmt_i);
 
   // Clean up stmt_i
-  if (mysql_stmt_close(stmt))
+  if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt, "Could not close stmt for insert xalt_run");
+      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_run");
       exit(1);
     }
   
@@ -808,7 +790,7 @@ uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
   
   // If here then the insert failed because another process has already assigned
   // env_name to an env_id;  So go find it with a SELECT
-  const char* stmt_sql_s = "SELECT env_id FROM xalt_env_name WHERE env_name=? limit 1"
+  const char* stmt_sql_s = "SELECT env_id FROM xalt_env_name WHERE env_name=? limit 1";
 
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
@@ -829,9 +811,8 @@ uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
 
   // STRING PARAM_S[0] env_name
   param_s[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[0].buffer        = env_name.c_str();
+  param_s[0].buffer        = (void *) env_name.c_str();
   param_s[0].buffer_length = env_name.capacity();
-  param_s[0].is_null       = 0;
   param_s[0].length        = &len_env_name;
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
@@ -844,29 +825,24 @@ uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
   result_s[0].buffer_type   = MYSQL_TYPE_LONG;
   result_s[0].buffer        = (void *) &env_id;
   result_s[0].is_unsigned   = 1;
-  result_s[0].is_null       = 0;
   result_s[0].length        = 0;
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting env_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting env_id(2)");
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt_s))
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting env_id");
+      print_stmt_error(stmt_s, "Could not execute stmt for selecting env_id");
       exit(1);
     }
-  mysql_stmt_free_result(stmt);
+  mysql_stmt_free_result(stmt_s);
 
   envNameT[env_name] = env_id;
   return env_id;
 }
-
-
-
-
 
 void insert_envT(MYSQL* conn, uint run_id, Table& envT)
 {
@@ -876,6 +852,18 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
   std::string jsonStr = json.result();
 
   const char* stmt_sql = "INSERT INTO xalt_total_env VALUES (NULL, ?,COMPRESS(?))";
+  MYSQL_STMT *stmt = mysql_stmt_init(conn);
+  if (!stmt)
+    {
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      exit(1);
+    }
+
+  if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
+    {
+      print_stmt_error(stmt, "Could not prepare stmt_s for INSERT INTO xalt_total_env");
+      exit(1);
+    }
   
   MYSQL_BIND param[2];
   memset((void *) param,  0, sizeof(param));
@@ -884,14 +872,12 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
   param[0].buffer_type = MYSQL_TYPE_LONG;
   param[0].buffer      = (void *) &run_id;
   param[0].is_unsigned = 1;
-  param[0].is_null     = 0;
 
   // STRING PARAM[1] jsonStr
   std::string::size_type   len_jsonStr = jsonStr.size();
   param[1].buffer_type   = MYSQL_TYPE_STRING;
-  param[1].buffer        = jsonStr.c_str();
+  param[1].buffer        = (void *) jsonStr.c_str();
   param[1].buffer_length = jsonStr.capacity();
-  param[1].is_null       = 0;
   param[1].length        = &len_jsonStr;
 
   if (mysql_stmt_bind_param(stmt, param))
@@ -920,6 +906,18 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
   buildEnvNameT(conn, envNameT);
 
   const char* stmt_sql = "INSERT INTO join_run_env VALUES (NULL, ?,?,?)";
+  MYSQL_STMT *stmt = mysql_stmt_init(conn);
+  if (!stmt)
+    {
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      exit(1);
+    }
+
+  if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
+    {
+      print_stmt_error(stmt, "Could not prepare stmt_s for INSERT INTO join_run_env");
+      exit(1);
+    }
   
   MYSQL_BIND param[3];
   memset((void *) param,  0, sizeof(param));
@@ -927,24 +925,21 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
   // INT PARAM[0] env_id
   uint env_id;
   param[0].buffer_type = MYSQL_TYPE_LONG;
-  param[0].buffer      = (void *) &env_id
+  param[0].buffer      = (void *) &env_id;
   param[0].is_unsigned = 1;
-  param[0].is_null     = 0;
 
   // INT PARAM[1] run_id
   param[1].buffer_type = MYSQL_TYPE_LONG;
   param[1].buffer      = (void *) &run_id;
   param[1].is_unsigned = 1;
-  param[1].is_null     = 0;
 
   // STRING PARAM[2] env_value
   std::string env_value;
   env_value.reserve(65536);
   std::string::size_type   len_env_value = 0;   // set length in loop.
   param[2].buffer_type   = MYSQL_TYPE_STRING;
-  param[2].buffer        = env_value.c_str();
+  param[2].buffer        = (void *) env_value.c_str();
   param[2].buffer_length = env_value.capacity();
-  param[2].is_null       = 0;
   param[2].length        = &len_env_value;
 
   if (mysql_stmt_bind_param(stmt, param))
@@ -953,7 +948,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
       exit(1);
     }
   
-  for (auto it = envT.begin(); it != envT.end() ++it)
+  for (auto it = envT.begin(); it != envT.end(); ++it)
     {
       const std::string& env_name  = it->first;
       if (reject_env_name(env_name)) continue;
@@ -1009,21 +1004,18 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
   param[0].buffer_type   = MYSQL_TYPE_DOUBLE;
   param[0].buffer        = (void *) &run_time;
   param[0].is_unsigned   = 0;
-  param[0].is_null       = 0;
   param[0].length        = 0;
 
   // DOUBLE PARAM[1] end_time
   param[1].buffer_type   = MYSQL_TYPE_DOUBLE;
   param[1].buffer        = (void *) &end_time;
   param[1].is_unsigned   = 0;
-  param[1].is_null       = 0;
   param[1].length        = 0;
 
   // UINT PARAM[2] run_id
   param[2].buffer_type   = MYSQL_TYPE_LONG;
   param[2].buffer        = (void *) &run_id;
   param[2].is_unsigned   = 1;
-  param[2].is_null       = 0;
   param[2].length        = 0;
 
   if (mysql_stmt_bind_param(stmt, param))
@@ -1075,7 +1067,7 @@ void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_
       insert_xalt_run_record(conn, rmapT, userT, recordT, usr_cmdline, hash_id, &run_id);
       
       // Store objects
-      insert_objects(conn, "join_run_object", run_id, lddA, userT['syshost'], reverseMapT);
+      insert_objects(conn, "join_run_object", run_id, lddA, userT["syshost"], reverseMapT);
 
       // Store environment
       insert_envT(         conn, run_id, envT);
