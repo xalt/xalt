@@ -30,9 +30,12 @@ void Json::add_json_string(const char* name, std::string& value)
 
 void Json::add(const char* name, Table& t)
 {
-  m_s += "\"";
-  m_s += name;
-  m_s += "\":{";
+  if (name)
+    {
+      m_s += "\"";
+      m_s += name;
+      m_s += "\":{";
+    }
   for ( auto it = t.begin(); it != t.end(); ++it )
     {
       const std::string& k = it->first;
@@ -53,12 +56,14 @@ void Json::add(const char* name, Table& t)
       m_s += xalt_quotestring(v.c_str());
       m_s += "\",";
     }
-  if (m_s.back() == ',')
-    m_s.replace(m_s.size()-1,2,"},");
-  else
-    m_s += "},";
+  if (name)
+    {
+      if (m_s.back() == ',')
+        m_s.replace(m_s.size()-1,2,"},");
+      else
+        m_s += "},";
+    }
 }
-
 void Json::add(const char* name, std::vector<Libpair>&     libA)
 {
   m_s += "\"";

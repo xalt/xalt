@@ -57,7 +57,7 @@ parseLDD.o: parseLDD.C run_submission.h $(THIS_DIR)/compiled/xalt_config.h
 xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 base64.o: base64.C base64.h
 zstring.o: zstring.C zstring.h
-direct2db.o: direct2db.C run_submission.h ConfigParser.h
+direct2db.o: direct2db.C run_submission.h ConfigParser.h xalt_regex.h Json.h
 ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h base64.h
 fgets_alloc.o: fgets_alloc.c fgets_alloc.h
 jsmn.o: jsmn.c jsmn.h
