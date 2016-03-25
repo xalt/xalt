@@ -81,7 +81,7 @@ case $SYSHOST in
   rios | mijo | jedrik | vato | vmijo | devo | lmod-test | xalt-lmod)
     SUDO="sudo"
     base="/opt/apps"
-    CONF_OPTS="--with-etcDir=/opt/moduleData"
+    CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --config=Config/rtm_config.py"
     ;;
 
   ls4 | stampede | maverick)
