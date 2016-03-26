@@ -315,7 +315,7 @@ int reject(const char *path, const char * hostname)
     }
 
   FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
-  for (i = 0; i < acceptSz; i++)
+  for (i = 0; i < acceptPathSz; i++)
     {
       iret = regcomp(&regex, acceptPathA[i], 0);
       if (iret)
@@ -339,7 +339,7 @@ int reject(const char *path, const char * hostname)
       regfree(&regex);
     }
   
-  for (i = 0; i < ignoreSz; i++)
+  for (i = 0; i < ignorePathSz; i++)
     {
       iret = regcomp(&regex, ignorePathA[i], 0);
       if (iret)

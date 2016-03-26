@@ -734,7 +734,7 @@ bool reject_env_name(const std::string& env_name)
   return false;
 }  
 
-uint findEnvNameIdx(MYSQL* conn, std::string& env_name, TableI& envNameT)
+uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableI& envNameT)
 {
   uint env_id = 0;
   TableI::const_iterator got = envNameT.find(env_name);
@@ -956,7 +956,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
 
       env_value     = it->second;
       env_id        = findEnvNameIdx(conn, env_name, envNameT);
-      len_env_value = env_value.size()
+      len_env_value = env_value.size();
 
       // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))
@@ -976,7 +976,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
 
 void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
 {
-  double end_time = strtod(userT["end_time"],NULL);
+  double end_time = strtod(userT["end_time"].c_str(),NULL);
   if (end_time <= 0.0)
     return;
   
@@ -995,7 +995,7 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
     }
 
   
-  double run_time = strtod(userT["run_time"],NULL);
+  double run_time = strtod(userT["run_time"].c_str(),NULL);
 
   MYSQL_BIND param[3];
   memset((void *) param,  0, sizeof(param));
@@ -1067,7 +1067,7 @@ void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_
       insert_xalt_run_record(conn, rmapT, userT, recordT, usr_cmdline, hash_id, &run_id);
       
       // Store objects
-      insert_objects(conn, "join_run_object", run_id, lddA, userT["syshost"], reverseMapT);
+      insert_objects(conn, "join_run_object", run_id, lddA, userT["syshost"], rmapT);
 
       // Store environment
       insert_envT(         conn, run_id, envT);

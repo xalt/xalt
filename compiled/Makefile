@@ -12,7 +12,7 @@ CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --
 CFLAGS      := -g -O0 
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnvT.C buildUserT.C Json.C \
-              base64.C zstring.C direct2db.C ConfigParser.C
+              base64.C zstring.C direct2db.C ConfigParser.C translate.C
 C_SRC 	    := xalt_quotestring.c fgets_alloc.c jsmn.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
@@ -63,5 +63,5 @@ ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h
 fgets_alloc.o: fgets_alloc.c fgets_alloc.h
 jsmn.o: jsmn.c jsmn.h
 buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h fgets_alloc.h
-
+translate.o: translate.C run_submission.h
 

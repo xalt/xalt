@@ -5,35 +5,7 @@
 #include "ConfigParser.h"
 #include "xalt_config.h"
 #include "base64.h"
-
-char* fgets_alloc(FILE *fp)
-{
-  char* buf = NULL;
-  size_t size = 0;
-  size_t used = 0;
-  do {
-    size += SZ;
-    char *buf_new = realloc(buf, size);
-    if (buf_new == NULL) {
-      // Out-of-memory
-      free(buf);
-      return NULL;
-    }
-    buf = buf_new;
-    if (fgets(&buf[used], (int) (size - used), fp) == NULL) {
-      // feof or ferror
-      if (used == 0 || ferror(fp)) {
-        free(buf);
-        buf = NULL;
-      }
-      return buf;
-    }
-    size_t length = strlen(&buf[used]);
-    if (length + 1 != size - used) break;
-    used += length;
-  } while (buf[used - 1] != '\n');
-  return buf;
-}
+#include "fgets_alloc.h"
 
 void trim(char * s)
 {
@@ -55,7 +27,11 @@ ConfigParser::ConfigParser(const char * fn)
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
-  std::string confFn = xalt_etc_dir + "/" + fn;
+  std::string confFn(xalt_etc_dir);
+  confFn.append("/");
+  confFn.append(fn);
+  char * buf;
+  
 
   FILE* fp = fopen(confFn.c_str(),"r");
   if (fp == NULL)

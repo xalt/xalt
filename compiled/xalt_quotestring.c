@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__);fflush(stderr)
 const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0005","\\u0006","\\u0007",
 		       	 "\\b"    ,"\\t"    ,"\\n"    ,"\\u000b","\\f"    ,"\\r"    ,"\\u000e","\\u000f",
@@ -9,7 +10,7 @@ const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0
 		       	 " "      ,      "!",     "\\\""};
 
 const char escCharA[] = {'a', '\b', 'c','d','e','\f','g','h','i','j','k','l','m','\n','o','p','q','\r','s',
-                         '\t'}
+                         '\t'};
 
 static char * buff = NULL;
 static unsigned int sz = 0;
@@ -88,7 +89,7 @@ const char * xalt_unquotestring(const char * input)
   char       *s;
   int        len, slen;
   int        currSz;
-  char       numBuff[5];
+  char       numBuf[5];
   long       value, value2;
     
     
@@ -125,7 +126,7 @@ const char * xalt_unquotestring(const char * input)
             *s++ = '\\';
           else if (c != 'u')
             {
-              int idx = c - a;
+              int idx = c - 'a';
               if (idx > 19) {
                 fprintf(stderr,"Unknown character sequence \\%c\n",c);
                 exit(1);
@@ -136,17 +137,17 @@ const char * xalt_unquotestring(const char * input)
             {
               // c == u so find value first. 
               ++p;
-              memcpy(&numBuff[0], p, 4);
-              numBuff[4] = '\0';
+              memcpy(&numBuf[0], p, 4);
+              numBuf[4] = '\0';
               p += 4;
-              value = strtol(numBuff, (char *) NULL, 16);
+              value = strtol(numBuf, (char **) NULL, 16);
               if (0xD800 <= value &&  value <= 0xDBFF)
                 {
                   // We have the high surrogate of a UTF-16 character. Find low surrogate.
                   memcpy(&numBuf[0],p+7,4);
                   p += 11;
-                  numBuff[4] = '\0';
-                  value2 = strtol(numBuff, (char *) NULL, 16);
+                  numBuf[4] = '\0';
+                  value2 = strtol(numBuf, (char **) NULL, 16);
                   if (value2 > 0 && 0xDC00 <= value2 && value2 <= 0xDFFF)
                     value = (value - 0xD800)  * 0x400 + (value2 - 0xDC00) + 0x10000;
                 }

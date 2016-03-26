@@ -1,11 +1,11 @@
 #include "run_submission.h"
 #include <sstream>
-std::string& safe_get(Table& t, const char* key, const char* defaultValue)
+const char * safe_get(Table& t, const char* key, const char* defaultValue)
 {
   Table::const_iterator got = t.find(key);
   if (got == t.end())
     return defaultValue;
-  return got->second;
+  return got->second.c_str();
 }
 
 void translate(Table& envT, Table& userT)
@@ -68,11 +68,11 @@ void translate(Table& envT, Table& userT)
       idx = 0;
       while (1)
         {
-          idx = s.find(" ",idx);
+          idx = mcpuA.find(" ",idx);
           if (idx == std::string::npos)
             break;
           count++;
-          idx = s.find_first_not_of(" ",idx+1);
+          idx = mcpuA.find_first_not_of(" ",idx+1);
         }
       count /= 2;
       std::ostringstream sstream;
