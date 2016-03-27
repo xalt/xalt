@@ -117,6 +117,9 @@ AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([psutil])
 AC_PYTHON_MODULE([MySQLdb])
 
+AC_SUBST(VERSION)
+
+VERSION=$(cat $ac_confdir/.version)
 
 
 if test "$XALT_CONFIG_PY" = no; then

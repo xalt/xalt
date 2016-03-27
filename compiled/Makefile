@@ -12,11 +12,11 @@ CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --
 CFLAGS      := -g -O0 
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := main.C Options.C capture.C extractXALTRecord.C parseLDD.C buildEnvT.C buildUserT.C Json.C \
-              base64.C zstring.C direct2db.C ConfigParser.C translate.C
+              base64.C zstring.C direct2db.C ConfigParser.C translate.C Process.C
 C_SRC 	    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
-all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost
+all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly
 
 ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
@@ -24,8 +24,12 @@ ECHO:
 $(EXEC) : $(OBJS)
 	$(LINK.C) -o $@ $^ -lz $(CXX_LDFLAGS)
 
-$(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost.c
+$(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost.o xalt_fgets_alloc.o
 	gcc -DHAVE_MAIN -O2 -o $@ $<
+
+$(DESTDIR)$(LIBEXEC)/xalt_generate_assembly: xalt_generate_assembly.o Process.o
+	gcc -O2 -o $@ $<
+
 
 build_init: 
 	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -c xalt_quotestring.c
@@ -65,4 +69,7 @@ xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 jsmn.o: jsmn.c jsmn.h
 buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h xalt_fgets_alloc.h
 translate.o: translate.C run_submission.h
+Process.o: Process.C Process.h xalt_fgets_alloc.h 
+xalt_syshost.o: xalt_syshost.c xalt_fgets_alloc.h
+xalt_generate_assembly.o: xalt_generate_assembly.C $(THIS_DIR)/compiled/xalt_config.h Process.h
 
