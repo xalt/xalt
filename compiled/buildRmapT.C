@@ -3,7 +3,7 @@
 #include "xalt_config.h"
 #include "xalt_quotestring.h"
 #include "jsmn.h"
-#include "fget_alloc.h"
+#include "xalt_fgets_alloc.h"
 
 void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, Table& rmapT)
 {
@@ -106,8 +106,12 @@ void buildRmapT(Table& rmapT, std::vector<std::string> xlibmap)
 
   std::string jsonStr = "";
 
-  while((buf = fgets_alloc(fp)) != NULL)
+  char*  buf = NULL;
+  size_t sz  = 0;
+
+  while(xalt_fgets_alloc(fp, &buf, &sz))
     jsonStr += buf;
+  free(buf);
 
   jsmn_parser parser;
   jsmntok_t*  tokens;

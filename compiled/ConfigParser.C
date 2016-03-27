@@ -5,7 +5,7 @@
 #include "ConfigParser.h"
 #include "xalt_config.h"
 #include "base64.h"
-#include "fgets_alloc.h"
+#include "xalt_fgets_alloc.h"
 
 void trim(char * s)
 {
@@ -40,7 +40,10 @@ ConfigParser::ConfigParser(const char * fn)
       exit(1);
     }
 
-  while ((buf = fgets_alloc(fp)) != NULL)
+  char* buf  = NULL;
+  size_t sz = 0;
+
+  while (xalt_fgets_alloc(fp, &buf, &sz))
     {
       char * key;
       char * value;
@@ -59,4 +62,5 @@ ConfigParser::ConfigParser(const char * fn)
       else if (strcmp(key,"passwd") == 0) m_passwd = base64_decode(value);
       else if (strcmp(key,"db")     == 0) m_db     = value;
     }
+  free(buf);
 }
