@@ -28,11 +28,14 @@ void Json::add_json_string(const char* name, std::string& value)
   m_s += ",";
 }
 
-void Json::add_json_string(const char* name, std::vector<std::string>& v)
+void Json::add_json_string(const char* name, Vstring& v)
 {
-  m_s += "\"";
-  m_s += name;
-  m_s += "\":[";
+  if (name)
+    {
+      m_s += "\"";
+      m_s += name;
+      m_s += "\":[";
+    }
 
   for ( auto it = v.begin(); it != v.end(); ++it)
     {
@@ -41,10 +44,13 @@ void Json::add_json_string(const char* name, std::vector<std::string>& v)
       m_s += "\",";
     }
       
-  if (m_s.back() == ',')
-    m_s.replace(m_s.size()-1,2,"],");
-  else
-    m_s += "],";
+  if (name)
+    {
+      if (m_s.back() == ',')
+        m_s.replace(m_s.size()-1,2,"],");
+      else
+        m_s += "],";
+    }
 }
 
 void Json::add_json_string(const char* name, Set& set)

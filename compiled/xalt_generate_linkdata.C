@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
   if (transmission == "direct2db")
     {
-      // fix me
+      link_direct2db(linklineA, resultT, libA, funcSet);
       return 0;
     }
   

@@ -53,7 +53,6 @@ int main(int argc, char* argv[])
   for (auto it = resultA.begin(); it != result.end() ++it)
     printf(" %s",*it);
   printf("\n");
-  
 
   return 0;
 }

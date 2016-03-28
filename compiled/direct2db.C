@@ -170,11 +170,11 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
 
   // STRING PARAM[0] job_id
   std::string& job_id    = userT["job_id"];
-  std::string::size_type len_jobid = job_id.size();
+  std::string::size_type len_job_id = job_id.size();
   param[0].buffer_type   = MYSQL_TYPE_STRING;
   param[0].buffer        = (void *) job_id.c_str();
   param[0].buffer_length = job_id.capacity();
-  param[0].length        = &len_jobid;
+  param[0].length        = &len_job_id;
     
   // STRING PARAM[1] run_uuid
   std::string& run_uuid  = userT["run_uuid"];
@@ -187,7 +187,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   // DATETIME PARAM[2] date 
   MYSQL_TIME my_datetime;
   double     sTimeD       = strtod(userT["start_time"].c_str(), NULL);
-  time_t     sTimeI       = (time_t) sTimeI;
+  time_t     sTimeI       = (time_t) sTimeD;
   struct tm* sTime        = localtime(&sTimeI);
   my_datetime.year        = sTime->tm_year + 1900;
   my_datetime.month       = sTime->tm_mon  + 1;
@@ -423,7 +423,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
     }
       
   // UNSIGNED INT RESULT_S obj_id;
-  unsigned int obj_id;
+  uint obj_id;
   result_s[0].buffer_type   = MYSQL_TYPE_LONG;
   result_s[0].buffer        = (void *) &obj_id;
   result_s[0].is_unsigned   = 1;
@@ -543,13 +543,13 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   MYSQL_BIND param_ii[2];
   memset((void *) param_ii,  0, sizeof(param_ii));
 
-  // STRING PARAM_II[0] obj_id
+  // UINT PARAM_II[0] obj_id
   param_ii[0].buffer_type   = MYSQL_TYPE_LONG;
   param_ii[0].buffer        = (void *) &obj_id;
   param_ii[0].buffer_length = 0;
   param_ii[0].is_unsigned   = 1;
 
-  // STRING PARAM_II[1] index
+  // UINT PARAM_II[1] index
   param_ii[1].buffer_type   = MYSQL_TYPE_LONG;
   param_ii[1].buffer        = (void *) &index;
   param_ii[1].buffer_length = 0;
@@ -583,7 +583,10 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
           if (path2module(object_path, rmapT, module_name))
             len_module_name = module_name.size();
           else
-            module_name_null_flag = 1;
+            {
+              module_name_null_flag = 1;
+              len_module_name = 0;
+            }
 
           lib_type     = object_type(object_path);
           len_lib_type = lib_type.size();
