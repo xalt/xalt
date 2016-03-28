@@ -52,23 +52,23 @@ neat:
 clean: 
 	$(RM) -r *.o $(notdir $(EXEC)).dSYM
 
-main.o: main.C Options.h run_submission.h base64.h zstring.h $(THIS_DIR)/compiled/xalt_config.h
-Json.o: Json.C run_submission.h Json.h xalt_quotestring.h
+main.o: main.C Options.h run_submission.h base64.h zstring.h $(THIS_DIR)/compiled/xalt_config.h capture.h
+Json.o: Json.C run_submission.h Json.h xalt_quotestring.h  capture.h
 Options.o: Options.C Options.h  $(THIS_DIR)/compiled/xalt_config.h
-buildEnvT.o: buildEnvT.C run_submission.h
-buildUserT.o: buildUserT.C run_submission.h
-capture.o: capture.C run_submission.h
-extractXALTRecord.o: extractXALTRecord.C run_submission.h $(THIS_DIR)/compiled/xalt_config.h
-parseLDD.o: parseLDD.C run_submission.h $(THIS_DIR)/compiled/xalt_config.h
+buildEnvT.o: buildEnvT.C run_submission.h  capture.h
+buildUserT.o: buildUserT.C run_submission.h  capture.h
+capture.o: capture.C run_submission.h  capture.h
+extractXALTRecord.o: extractXALTRecord.C run_submission.h $(THIS_DIR)/compiled/xalt_config.h  capture.h
+parseLDD.o: parseLDD.C run_submission.h $(THIS_DIR)/compiled/xalt_config.h  capture.h
 xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 base64.o: base64.C base64.h
 zstring.o: zstring.C zstring.h
-direct2db.o: direct2db.C run_submission.h ConfigParser.h xalt_regex.h Json.h
+direct2db.o: direct2db.C run_submission.h ConfigParser.h xalt_regex.h Json.h  capture.h
 ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h base64.h
 xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 jsmn.o: jsmn.c jsmn.h
-buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h xalt_fgets_alloc.h
-translate.o: translate.C run_submission.h
+buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h run_submission.h xalt_quotestring.h xalt_fgets_alloc.h  capture.h
+translate.o: translate.C run_submission.h  capture.h
 Process.o: Process.C Process.h xalt_fgets_alloc.h 
 xalt_syshost.o: xalt_syshost.c xalt_fgets_alloc.h
 xalt_generate_assembly.o: xalt_generate_assembly.C $(THIS_DIR)/compiled/xalt_config.h Process.h

@@ -1,22 +1,9 @@
 #ifndef RUN_SUBMISSION_H
 #define RUN_SUBMISSION_H
 
-#include <string>
-#include <vector>
-#include <unordered_map>
 #include "Options.h"
-
-struct Libpair
-{
-  Libpair(std::string libIn, std::string sha1In)
-    : lib(libIn), sha1(sha1In) {}
-
-  std::string lib;
-  std::string sha1;
-};
-
-typedef std::unordered_map<std::string,std::string> Table;
-typedef unsigned int uint;
+#include "capture.h"
+#include "xalt_types.h"
 
 void buildEnvT(char* env[], Table& envT);
 void buildUserT(Options& options, Table& userT);
