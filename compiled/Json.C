@@ -28,6 +28,46 @@ void Json::add_json_string(const char* name, std::string& value)
   m_s += ",";
 }
 
+void Json::add_json_string(const char* name, std::vector<std::string>& v)
+{
+  m_s += "\"";
+  m_s += name;
+  m_s += "\":[";
+
+  for ( auto it = v.begin(); it != v.end(); ++it)
+    {
+      m_s += "\"";
+      m_s += xalt_quotestring((*it).c_str());
+      m_s += "\",";
+    }
+      
+  if (m_s.back() == ',')
+    m_s.replace(m_s.size()-1,2,"],");
+  else
+    m_s += "],";
+}
+
+void Json::add_json_string(const char* name, Set& set)
+{
+  m_s += "\"";
+  m_s += name;
+  m_s += "\":[";
+
+  for ( auto it = set.begin(); it != set.end(); ++it)
+    {
+      m_s += "\"";
+      m_s += xalt_quotestring((*it).c_str());
+      m_s += "\",";
+    }
+      
+  if (m_s.back() == ',')
+    m_s.replace(m_s.size()-1,2,"],");
+  else
+    m_s += "],";
+}
+
+
+
 void Json::add(const char* name, Table& t)
 {
   if (name)

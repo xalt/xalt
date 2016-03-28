@@ -6,6 +6,7 @@
 #include "xalt_config.h"
 #include "base64.h"
 #include "xalt_fgets_alloc.h"
+#include "xalt_util.h"
 
 void trim(char * s)
 {
@@ -23,20 +24,11 @@ void trim(char * s)
 ConfigParser::ConfigParser(const char * fn)
 {
 
-  const char * xalt_etc_dir = getenv("XALT_ETC_DIR");
-  if (xalt_etc_dir == NULL)
-    xalt_etc_dir = XALT_ETC_DIR;
+  FILE* fp = xalt_file_open(fn);
 
-  std::string confFn(xalt_etc_dir);
-  confFn.append("/");
-  confFn.append(fn);
-  char * buf;
-  
-
-  FILE* fp = fopen(confFn.c_str(),"r");
   if (fp == NULL)
     {
-      fprintf(stderr,"XALT Failure Cannot open %s\n", confFn.c_str());
+      fprintf(stderr,"XALT Failure Cannot open %s\n", fn);
       exit(1);
     }
 

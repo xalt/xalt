@@ -58,13 +58,7 @@ int main(int argc, char* argv[], char* env[])
 
   if (transmission == "direct2db")
     {
-      const char * xalt_etc_dir = getenv("XALT_ETC_DIR");
-      if (xalt_etc_dir == NULL)
-        xalt_etc_dir = XALT_ETC_DIR;
-      std::string confFn(xalt_etc_dir);
-      confFn("/xalt_db.conf");
-
-      direct2db(confFn, usr_cmdline, hash_id, rmapT, envT, userT, recordT, lddA);
+      direct2db(usr_cmdline, hash_id, rmapT, envT, userT, recordT, lddA);
       return 0;
     }
   
@@ -102,10 +96,8 @@ int main(int argc, char* argv[], char* env[])
       myfile.open(sstream.str());
       myfile << json.result();
       myfile.close();
-      return 0;
     }
-
-  if (strcasecmp(transmission, "syslogv1") == 0)
+  else if (strcasecmp(transmission, "syslogv1") == 0)
     {
       std::ostringstream cmd;
       std::string jsonStr = json.result();
@@ -114,8 +106,7 @@ int main(int argc, char* argv[], char* env[])
       cmd << ":" << b64 << "\"";
       system(cmd.str().c_str());
     }
-
-  if (strcasecmp(transmission, "syslog") == 0)
+  else if (strcasecmp(transmission, "syslog") == 0)
     {
       std::ostringstream cmd;
       std::string zs    = compress_string(json.result());
@@ -140,7 +131,6 @@ int main(int argc, char* argv[], char* env[])
           if (iend > sz)
             iend = sz;
         }
-      return 0;
     }
   return 0;
 }

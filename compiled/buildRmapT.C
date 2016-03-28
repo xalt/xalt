@@ -71,34 +71,8 @@ void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens,
 
 void buildRmapT(Table& rmapT, std::vector<std::string> xlibmap)
 {
-  static char *extA[]  = {".json", ".old.json"};
-  static int   nExt    = sizeof(extA)/sizeof(extA[0]);
-  std::string rmapFn;
-  char * xalt_etc_dir = getenv("XALT_ETC_DIR");
-  if (xalt_etc_dir == NULL)
-    xalt_etc_dir = XALT_ETC_DIR;
-
-  FILE *fp = NULL;
-  char* start = xalt_etc_dir;
-  while(1)
-    {
-      char * p = strchr(start,':');
-      if (p)
-        rmapFn.assign(start, p - start);  
-      else
-        rmapFn.assign(start);
-
-      for (int i = 0; i < nExt; ++i)
-        {
-          rmapFn += "/xalt_rmapT";
-          rmapFn += extA[i];
-          fp      = fopen(rmapFn.c_str(), "r");
-          if (fp)
-            break;
-        }
-      start = ++p;
-    } 
-         
+  
+  FILE *fp = xalt_file_open("xalt_rmapT");
   if (fp == NULL)
     return;
   

@@ -1037,10 +1037,10 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
     }
 }
 
-void direct2db(std::string& confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
+void direct2db(std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
                Table& recordT, std::vector<Libpair>& lddA)
 {
-  ConfigParser cp(confFn.c_str());
+  ConfigParser cp("xalt_db.conf");
 
   MYSQL *conn = mysql_init(NULL);
 
