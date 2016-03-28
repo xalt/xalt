@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "capture.h"
+#include "Json.h"
 #include "xalt_config.h"
 #include "xalt_types.h"
 
@@ -46,20 +47,33 @@ int main(int argc, char* argv[])
 
   const char* user = getenv("USER");
   if (user == NULL)
-    user = "unknown"
+    user = "unknown";
 
+  char* my_realpath = canonicalize_file_name(execname);
+  std::vector<std::string> result;
+  std::string cmd = SHA1SUM " ";
+  cmd.append(my_realpath);
+  capture(cmd,result);
+  std::string sha1 = result[0].substr(0, result[0].find(" "));
 
   resultT["uuid"]          = uuid;
   resultT["link_program"]  = compiler;
   resultT["link_path"]     = compilerPath;
   resultT["build_user"]    = user
-  resultT["build_syshost"] = uuid;
   resultT["build_epoch"]   = build_epoch;
   resultT["exit_code"]     = status;
-  resultT["exec_path"]     = status;
+  resultT["exec_path"]     = my_realpath;
+  resultT["hash_id"]       = sha1;
+  resultT["wd"]            = wd;
+  resultT["build_syshost"] = syshost;
+
+  Json json;
+  
+
   
   
-  
+
+  free(my_realpath);
 
   return 0;
 }
