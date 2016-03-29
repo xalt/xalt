@@ -8,6 +8,7 @@
 #include "link_submission.h"
 #include "ConfigParser.h"
 #include "Json.h"
+#include "xalt_mysql_utils.h"
 
 uint select_link_id(MYSQL* conn, std::string& link_uuid)
 {

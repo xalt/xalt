@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,6 +8,7 @@
 #include "base64.h"
 #include "zstring.h"
 #include "capture.h"
+#include "link_submission.h"
 
 int main(int argc, char* argv[])
 {
@@ -30,13 +30,15 @@ int main(int argc, char* argv[])
   
 
   Vstring     result;
-  std::string cmd = SHA1SUM " " + execname;
+  std::string cmd = SHA1SUM " ";
+  cmd.append(execname);
+  
   capture(cmd, result);
   std::string sha1_exec = result[0].substr(0, result[0].find(" "));
 
   
   std::vector<Libpair> libA;
-  parseLDTrace(linklineFn, libA);
+  parseLDTrace(xaltobj, linklineFn, libA);
 
   Set funcSet;
   readFunctionList(funclistFn, funcSet);
@@ -53,8 +55,7 @@ int main(int argc, char* argv[])
     user = "unknown";
 
   char* my_realpath = canonicalize_file_name(execname);
-  Vstring     result;
-  std::string cmd = SHA1SUM " ";
+  cmd = SHA1SUM " ";
   cmd.append(my_realpath);
   capture(cmd,result);
   std::string sha1 = result[0].substr(0, result[0].find(" "));
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
   resultT["uuid"]          = uuid;
   resultT["link_program"]  = compiler;
   resultT["link_path"]     = compilerPath;
-  resultT["build_user"]    = user
+  resultT["build_user"]    = user;
   resultT["build_epoch"]   = build_epoch;
   resultT["exit_code"]     = status;
   resultT["exec_path"]     = my_realpath;
@@ -71,13 +72,11 @@ int main(int argc, char* argv[])
   resultT["wd"]            = wd;
   resultT["build_syshost"] = syshost;
 
-  const char * trans = getenv("XALT_TRANSMISSION_STYLE");
-  if (trans == NULL)
-    trans = TRANSMISSION;
-  std::string transmission(trans);
-  std::transform(transmission.begin(), transmission.end(), transmission.begin(), ::tolower);
+  const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
+  if (transmission == NULL)
+    transmission = TRANSMISSION;
 
-  if (transmission == "direct2db")
+  if (strcasecmp(transmission,"direct2db") == 0)
     {
       link_direct2db(linklineA, resultT, libA, funcSet);
       return 0;

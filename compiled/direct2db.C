@@ -11,6 +11,7 @@
 #include "xalt_regex.h"
 #include "Json.h"
 #include "xalt_utils.h"
+#include "xalt_mysql_utils.h"
 #define  DATESZ 100
 
 typedef std::unordered_map<std::string, uint> TableI;
