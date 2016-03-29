@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <vector>
 #include "Options.h"
-#include "run_submission.h"
+#include "capture.h"
 #include "xalt_config.h"
 
 double convert_double(const char* name, const char* s)

@@ -1,18 +1,19 @@
-#include "xalt_config.h"
 #include "sys/time.h"
 #include <string>
 #include <stdio.h>
 #include <sys/utsname.h>
+
 #include "extract_linker.h"
+#include "xalt_config.h"
 
 double epoch()
 {
   struct timeval tm;
-  gettimeofday(&tm);
+  gettimeofday(&tm, NULL);
   return tm.tv_sec + 1.0e-6*tm.tv_usec;
 }
 
-int main(int argc; char* argv[])
+int main(int argc, char* argv[])
 {
   const char * uuid    = argv[1];
   const char * syshost = argv[2];
@@ -34,7 +35,9 @@ int main(int argc; char* argv[])
   char year[5];
   strftime(year,5,"%Y",t);
   
-  std::vector<std::string> linklineA;
+  std::string compiler;
+  std::string compilerPath;
+  Vstring     linklineA;
   extract_linker(compiler, compilerPath, linklineA);
   
   //--------------------------------------------------
@@ -42,22 +45,22 @@ int main(int argc; char* argv[])
   struct utsname u;
   uname(&u);
 
-  char * user = getenv("USER");
+  const char * user = getenv("USER");
   if (user == NULL)
     user = "unknown";
 
-  std::osName = u.sysname;
-  std::osName.append("_%_%_");
-  std::osName.append(u.release);
+  std::string osName = u.sysname;
+  osName.append("_%_%_");
+  osName.append(u.release);
   
-  std::system = u.sysname;
+  std::string system = u.sysname;
 
   FILE* fp = fopen(fn,"w");
 
   //--------------------------------------------------
   // Write assembly code
   fprintf(fp,"# This generated assembly code (%s) is free and unencumbered software released into the public domain\n",fn);
-  fprintf(fp,"# Anyone is free to copy, modify, publish, use, compile, sell, or\n")
+  fprintf(fp,"# Anyone is free to copy, modify, publish, use, compile, sell, or\n");
   fprintf(fp,"# distribute this software, either in source code form or as a compiled\n");
   fprintf(fp,"# binary, for any purpose, commercial or non-commercial, and by any\n");
   fprintf(fp,"# means.\n");
@@ -88,7 +91,7 @@ int main(int argc; char* argv[])
   // Print cushion
   fprintf(fp,"\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"<XALT_Version>%%%%%s%%%%\"\n",version);
-  fprintf(fp,"\t.asciz \"<Build.Syshost>%%%%%s%%%%\"\n",syshost;
+  fprintf(fp,"\t.asciz \"<Build.Syshost>%%%%%s%%%%\"\n",syshost);
   fprintf(fp,"\t.asciz \"<Build.compiler>%%%%%s%%%%\"\n",compiler.c_str());
   fprintf(fp,"\t.asciz \"<Build.compilerPath>%%%%%s%%%%\"\n",compilerPath.c_str());
   fprintf(fp,"\t.asciz \"<Build.OS>%%%%%s%%%%\"\n",osName.c_str());

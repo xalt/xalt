@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "xalt_quotestring.h"
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__);fflush(stderr)
 const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0005","\\u0006","\\u0007",
 		       	 "\\b"    ,"\\t"    ,"\\n"    ,"\\u000b","\\f"    ,"\\r"    ,"\\u000e","\\u000f",

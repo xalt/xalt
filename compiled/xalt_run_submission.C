@@ -6,9 +6,12 @@
 #include "Json.h"
 #include "xalt_config.h"
 #include "base64.h"
+#include "capture.h"
 #include <strings.h>
 #include "zstring.h"
 #include <algorithm>
+#include "buildRmapT.h"
+#include "run_submission.h"
 
 #define DATESZ 100
 const int syslog_msg_sz = 512;
@@ -49,16 +52,17 @@ int main(int argc, char* argv[], char* env[])
   std::vector<Libpair> libA;
   parseLDD(options.exec(), libA);
 
+  const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
+  if (transmission == NULL)
+    transmission = TRANSMISSION;
 
-  const char * trans = getenv("XALT_TRANSMISSION_STYLE");
-  if (trans == NULL)
-    trans = TRANSMISSION;
-  std::string transmission(trans);
-  std::transform(transmission.begin(), transmission.end(), transmission.begin(), ::tolower);
-
-  if (transmission == "direct2db")
+  if (strcasecmp(transmission, "direct2db") == 0)
     {
-      direct2db(usr_cmdline, hash_id, rmapT, envT, userT, recordT, lddA);
+      Vstring xlibmapA;
+      Table   rmapT;
+      buildRmapT(rmapT, xlibmapA);
+
+      direct2db(options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
       return 0;
     }
   

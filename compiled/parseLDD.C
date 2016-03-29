@@ -1,11 +1,12 @@
 #include <iostream>
 #include "run_submission.h"
+#include "capture.h"
 #include "xalt_config.h"
 
 void parseLDD(std::string& exec, std::vector<Libpair>& libA)
 {
-  std::string              cmd;
-  std::vector<std::string> result;
+  std::string  cmd;
+  Vstring      result;
 
   // Capture the result from running ldd on the executable
   cmd  = LDD " " + exec + " 2> /dev/null";
@@ -30,7 +31,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA)
   int sz = result.size();
   for (int i = 0; i < sz; ++i)
     {
-      std::vector<std::string> sha1_result;
+      Vstring      sha1_result;
       
       std::string& s = result[i];
       s1 = s.find("=> /");

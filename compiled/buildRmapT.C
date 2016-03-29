@@ -1,9 +1,10 @@
 #include <stdlib.h>
-#include "run_submission.h"
 #include "xalt_config.h"
+#include "buildRmapT.h"
 #include "xalt_quotestring.h"
 #include "jsmn.h"
 #include "xalt_fgets_alloc.h"
+#include "xalt_utils.h"
 
 void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, Table& rmapT)
 {
@@ -31,14 +32,13 @@ void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, Table
         }
       std::string key(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      key   = json_unquotestring(key);
-      value = json_unquotestring(value);
+      key   = xalt_unquotestring(key.c_str());
+      value = xalt_unquotestring(value.c_str());
       rmapT[key] = value;
     }
 }
 
-void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens,
-                    std::vector<std::string>& xlibmapA)
+void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& xlibmapA)
 {
   if (tokens[i].type != JSMN_ARRAY)
     {
@@ -64,20 +64,18 @@ void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens,
           exit(1);
         }
       std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      value = json_unquotestring(value);
+      value = xalt_unquotestring(value.c_str());
       xlibmapA.push_back(value);
     }
 }
 
-void buildRmapT(Table& rmapT, std::vector<std::string> xlibmap)
+void buildRmapT(Table& rmapT, Vstring xlibmapA)
 {
   
   FILE *fp = xalt_file_open("xalt_rmapT");
   if (fp == NULL)
     return;
   
-  char* buf;
-
   std::string jsonStr = "";
 
   char*  buf = NULL;

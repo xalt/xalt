@@ -28,7 +28,7 @@ void Json::add_json_string(const char* name, std::string& value)
   m_s += ",";
 }
 
-void Json::add_json_string(const char* name, Vstring& v)
+void Json::add(const char* name, Vstring& v)
 {
   if (name)
     {
@@ -53,7 +53,7 @@ void Json::add_json_string(const char* name, Vstring& v)
     }
 }
 
-void Json::add_json_string(const char* name, Set& set)
+void Json::add(const char* name, Set& set)
 {
   m_s += "\"";
   m_s += name;

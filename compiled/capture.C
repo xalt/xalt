@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "run_submission.h"
+#include "capture.h"
 #define DATA_SIZE 1024
 
-void capture(std::string& cmd, std::vector<std::string>& result)
+void capture(std::string& cmd, Vstring& result)
 {
   FILE* fp;
 

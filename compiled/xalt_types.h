@@ -16,8 +16,8 @@ struct Libpair
 };
 
 typedef std::vector<std::string>                    Vstring;
-typedef std::unordered_map<std::string>             Set;
+typedef std::unordered_set<std::string>             Set;
 typedef std::unordered_map<std::string,std::string> Table;
-typedef unsigned int uint;
+typedef unsigned int                                uint;
 
 #endif //XALT_TYPES_H

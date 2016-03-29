@@ -1,7 +1,7 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include "run_submission.h"
+#include "xalt_types.h"
 
 class Json
 {
@@ -11,7 +11,8 @@ public:
   void fini();
   void add(const char* name, Table& t);
   void add(const char* name, std::string& value);
-  void add(const char* name, std::vector<std::string>& a);
+  void add(const char* name, Vstring&     v);
+  void add(const char* name, Set&         s);
   void add(const char* name, std::vector<Libpair>&     lddA);
   void add_json_string(const char* name, std::string& value);
   std::string& result();

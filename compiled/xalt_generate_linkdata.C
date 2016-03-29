@@ -2,10 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "capture.h"
+#include "xalt_types.h"
 #include "Json.h"
 #include "xalt_config.h"
-#include "xalt_types.h"
+#include "extract_linker.h"
+#include "base64.h"
+#include "zstring.h"
+#include "capture.h"
 
 int main(int argc, char* argv[])
 {
@@ -26,7 +29,7 @@ int main(int argc, char* argv[])
 
   
 
-  std::vector<std::string> result;
+  Vstring     result;
   std::string cmd = SHA1SUM " " + execname;
   capture(cmd, result);
   std::string sha1_exec = result[0].substr(0, result[0].find(" "));
@@ -40,7 +43,7 @@ int main(int argc, char* argv[])
 
   std::string compiler;
   std::string compilerPath;
-  std::vector<std::string> linklineA;
+  Vstring     linklineA;
   extract_linker(compiler, compilerPath, linklineA);
 
   Table resultT;
@@ -50,7 +53,7 @@ int main(int argc, char* argv[])
     user = "unknown";
 
   char* my_realpath = canonicalize_file_name(execname);
-  std::vector<std::string> result;
+  Vstring     result;
   std::string cmd = SHA1SUM " ";
   cmd.append(my_realpath);
   capture(cmd,result);

@@ -6,7 +6,7 @@
 #include "xalt_config.h"
 #include "base64.h"
 #include "xalt_fgets_alloc.h"
-#include "xalt_util.h"
+#include "xalt_utils.h"
 
 void trim(char * s)
 {

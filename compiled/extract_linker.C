@@ -1,23 +1,23 @@
-#include "link_submission.h"
+#include "extract_linker.h"
 #include "Process.h"
 
-void extract_linker(std::string& compiler, std::string& compilerPath, std::vector<std::string>& linklineA)
+void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& linklineA)
 {
 
   //--------------------------------------------------
   // Walk process tree to find compiler name and path
 
-  std::string ignorePrgA  = {"ld", "collect2","bash","Python", "python", "sh" };
-  int         ignorePrgSz = sizeof(ignorePrgA)/sizeof(ignorePrgA[0]);
+  std::string ignorePrgA[] = {"ld", "collect2","bash","Python", "python", "sh" };
+  int         ignorePrgSz  = sizeof(ignorePrgA)/sizeof(ignorePrgA[0]);
 
-  std::string compiler     = "unknown";
-  std::string compilerPath = "unknown";
+  compiler     = "unknown";
+  compilerPath = "unknown";
 
   pid_t my_pid = getpid();
   while(1)
     {
       Process proc(my_pid);
-      pid_t parent = proc.parent()
+      pid_t parent = proc.parent();
       if (parent == 1) break;
 
       std::string name = proc.name();

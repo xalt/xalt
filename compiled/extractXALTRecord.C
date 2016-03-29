@@ -1,10 +1,11 @@
 #include "run_submission.h"
+#include "capture.h"
 #include "xalt_config.h"
 
-void extractXALTRecord(std::string& exec, std::unordered_map<std::string, std::string>& recordT)
+void extractXALTRecord(std::string& exec, Table& recordT)
 {
   std::string n, v, cmd;
-  std::vector<std::string> result;
+  Vstring     result;
 
   // Capture the XALT record (if it exists) into result.
   cmd  = OBJDUMP " -s -j .xalt ";

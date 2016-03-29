@@ -1,12 +1,12 @@
-#include "Process.h"
 #include <stdio.h>
 #include <unistd.h>
-#include "xalt_fgets_alloc.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "xalt_fgets_alloc.h"
+#include "Process.h"
 Process::Process(pid_t pid)
 {
 

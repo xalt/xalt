@@ -1,4 +1,6 @@
-#include "link_submission.h"
+#include <string.h>
+#include "buildRmapT.h"
+
 
 int main(int argc, char* argv[])
 {
@@ -27,8 +29,6 @@ int main(int argc, char* argv[])
       reflibSet.insert(libname);
     }
 
-  // 
-
   for (int i = 1; i < argc; ++i)
     {
       char *p = argv[i];
@@ -50,12 +50,10 @@ int main(int argc, char* argv[])
         resultA.push_back(argv[i]);
     }
 
-  for (auto it = resultA.begin(); it != result.end() ++it)
-    printf(" %s",*it);
+
+  for (auto it = resultA.begin(); it != resultA.end(); ++it)
+    printf(" %s",(*it).c_str());
   printf("\n");
 
   return 0;
 }
-
-
-
