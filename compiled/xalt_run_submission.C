@@ -9,7 +9,6 @@
 #include "capture.h"
 #include <strings.h>
 #include "zstring.h"
-#include <algorithm>
 #include "buildRmapT.h"
 #include "run_submission.h"
 

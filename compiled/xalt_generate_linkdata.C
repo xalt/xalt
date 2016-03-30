@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sstream>
+#include <fstream>
 #include "xalt_types.h"
 #include "Json.h"
 #include "xalt_config.h"
@@ -8,8 +10,10 @@
 #include "base64.h"
 #include "zstring.h"
 #include "capture.h"
+#include "buildRmapT.h"
 #include "link_submission.h"
 
+const int syslog_msg_sz = 512;
 int main(int argc, char* argv[])
 {
   const char* uuid        = argv[ 1];
@@ -78,7 +82,11 @@ int main(int argc, char* argv[])
 
   if (strcasecmp(transmission,"direct2db") == 0)
     {
-      link_direct2db(linklineA, resultT, libA, funcSet);
+      Vstring xlibmapA;
+      Table   rmapT;
+      buildRmapT(rmapT, xlibmapA);
+
+      link_direct2db(linklineA, resultT, libA, funcSet, rmapT);
       return 0;
     }
   
@@ -91,23 +99,8 @@ int main(int argc, char* argv[])
 
   if (strcasecmp(transmission, "file") == 0)
     {
-      //*********************************************************************
-      // Build file name for xalt json record.  It is only used when the
-      // file transmission style is used;
-      p = getenv("HOME");
-      if (p == NULL)
-        return 0;     
-      std::string home   = p;
-  
-      time = options.startTime();
-      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
-
-      std::ostringstream sstream;
-      sstream << home << "/.xalt.d/link." << options.syshost() << ".";
-      sstream << dateStr << "." << options.uuid() << ".json";
-
       std::ofstream myfile;
-      myfile.open(sstream.str());
+      myfile.open(resultFn);
       myfile << json.result();
       myfile.close();
     }
@@ -116,7 +109,7 @@ int main(int argc, char* argv[])
       std::ostringstream cmd;
       std::string jsonStr = json.result();
       std::string b64     = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
-      cmd << LOGGER " -t XALT_LOGGING \"link:" << options.syshost();
+      cmd << LOGGER " -t XALT_LOGGING \"link:" << syshost;
       cmd << ":" << b64 << "\"";
       system(cmd.str().c_str());
     }
@@ -131,12 +124,13 @@ int main(int argc, char* argv[])
       int         istrt = 0;
       int         iend  = blkSz;
 
-      std::string key   = "link_" + options.uuid();
+      std::string key("link_");
+      key.append(uuid);
 
       for (int i = 0; i < nBlks; ++i)
         {
           cmd << LOGGER " -t XALT_LOGGING V:2 kind:link idx:" << i;
-          cmd << " nb:"  << nBlks << " syshost:" << options.syshost();
+          cmd << " nb:"  << nBlks << " syshost:" << syshost;
           cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt);
           system(cmd.str().c_str());
           istrt = iend;

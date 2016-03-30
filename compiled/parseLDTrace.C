@@ -1,9 +1,9 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include "link_submission.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
+#include "capture.h"
 
 void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpair>& libA)
 {

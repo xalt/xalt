@@ -9,6 +9,7 @@
 #include "ConfigParser.h"
 #include "Json.h"
 #include "xalt_mysql_utils.h"
+#include "xalt_utils.h"
 
 uint select_link_id(MYSQL* conn, std::string& link_uuid)
 {
@@ -76,10 +77,10 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
   return iret == 0 ? 0 : link_id;
 }
 
-void insert_xalt_link(MYSQL* conn, Table& resultT, Vstring& linklineA, uint* link_id)
+void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linklineA, uint* link_id)
 {
 
-  const char* stmt_sql = "INSERT into xalt_link VALUES (NULL,?,?,?, ?,?,?, COMPRESS(?),?,?, ?,?,?)"
+  const char* stmt_sql = "INSERT into xalt_link VALUES (NULL,?,?,?, ?,?,?, COMPRESS(?),?,?, ?,?,?)";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
@@ -190,7 +191,7 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Vstring& linklineA, uint* lin
   param[9].buffer        = (void *) &build_epoch;
 
   // TINYINT PARAM[10] exit_code
-  char exit_code        = (char ) strtol(resultT["exit_code"],(char**) NULL, 10);
+  char exit_code        = (char ) strtol(resultT["exit_code"].c_str(),(char**) NULL, 10);
   param[10].buffer_type = MYSQL_TYPE_TINY;
   param[10].buffer      = (void *) &exit_code;
 
@@ -229,7 +230,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   // build SELECT obj_id INTO xalt_object stmt
   //************************************************************
 
-  const char* stmt_sql_s = "SELECT func_id FROM xalt_function WHERE function_name=?"
+  const char* stmt_sql_s = "SELECT func_id FROM xalt_function WHERE function_name=?";
 
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
@@ -313,7 +314,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   //************************************************************
 
   const char* stmt_sql_ii = "INSERT INTO join_link_function VALUES(NULL, ?, ?) "
-                       "ON DUPLICATE KEY UPDATE func_id = ?, link_id = ?"
+                            "ON DUPLICATE KEY UPDATE func_id = ?, link_id = ?";
 
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
   if (!stmt_ii)
@@ -360,7 +361,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   for (auto it = funcSet.begin(); it != funcSet.end(); ++it)
     {
       funcName     = *it;
-      len_funcName = funcName.size()
+      len_funcName = funcName.size();
 
       // "SELECT func_id ..."
       if (mysql_stmt_execute(stmt_s))
@@ -430,7 +431,8 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
   if (select_link_id(conn, link_uuid) == 0)
     return;
   
-  insert_xalt_link(conn, resultT, linklineA, &link_id);
+  uint link_id;
+  insert_xalt_link(conn, resultT, rmapT, linklineA, &link_id);
   insert_objects(conn, "join_link_object", link_id, libA, resultT["syshost"], rmapT);
   insert_functions(conn, funcSet, link_id);
 }
