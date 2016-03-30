@@ -35,6 +35,7 @@
   echo "RmapDir=${RmapDir}"
 
   PrgEnvA=("PrgEnv-cray" "PrgEnv-gnu" "PrgEnv-intel" "PrgEnv-pgi")
+  GccA=("gcc/4.9.3" "gcc/5.1.0" "gcc/4.6.1" "gcc/4.7.0")
 
   #########################################################################
   # must define the module command and $LMOD_DIR:
@@ -63,11 +64,25 @@ for m in "${PrgEnvA[@]}"; do
     module unload $prev  2> /dev/null
     module load $m       2> /dev/null
     prev=$m
-
-    echo -n '-'
-    spider --preload -o jsonReverseMapT $BASE_MODULE_PATH >  ${RmapDir}/rmapT_${m}.JSON
-    echo -n '*'
-
+    
+    if [ $m = "PrgEnv-gnu" ]
+    then
+    	iC=0
+        for c in "${GccA[@]}"; do
+            module swap gcc $c
+    
+            echo -n '-'
+            spider --preload -o jsonReverseMapT \
+              $BASE_MODULE_PATH > ${RmapDir}/rmapT_${m}_${iC}.JSON
+            echo -n '*'
+            iC=$((iC+1))
+        done;
+    else
+        echo -n '-'
+        spider --preload -o jsonReverseMapT \
+              $BASE_MODULE_PATH >  ${RmapDir}/rmapT_${m}.JSON
+        echo -n '*'
+    fi
 done
 
 echo "*"
@@ -84,5 +99,3 @@ if [ "$?" = 0 ]; then
   fi
   mv $NEW $RESULT
 fi
-
-
