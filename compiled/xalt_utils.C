@@ -1,6 +1,17 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <string.h>
 #include "xalt_utils.h"
 #include "xalt_config.h"
+
+int isDirectory(const char *path)
+{
+  struct stat statbuf;
+  if (stat(path, &statbuf) != 0)
+    return 0;
+  return S_ISDIR(statbuf.st_mode);
+}
 
 bool path2module(std::string& path, Table& rmapT, std::string& result)
 {

@@ -27,6 +27,10 @@ endif
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
 OS_NAME           := $(shell uname -s)
+LIB_OPTIONS       := -fPIC -shared
+ifeq ($(OS_NAME),Darwin)
+  LIB_OPTIONS     := -bundle -undefined dynamic_lookup
+endif
 
 package           := xalt
 VERSION           := $(shell cat $(PATH_TO_SRC)/.version)
@@ -93,6 +97,10 @@ LIBEXEC_PKG       := src/xalt_generate_assembly.py     src/xalt_generate_linkdat
 
 LIBEXEC_PKG       := $(patsubst %, $(PATH_TO_SRC)/%, $(LIBEXEC_PKG))
 
+SITE_PKG          := src/new_job_id.in.py src/xalt_site_pkg.py             
+
+SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
+
 TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
                      contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
                      contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
@@ -107,7 +115,7 @@ INIT_SRC          := $(patsubst %, $(PATH_TO_SRC)/%, $(INIT_SRC))
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_sbin Inst_bin Inst_libexec \
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
           Build_pstree_$(BUILD_PSTREE) build_compiled
 
@@ -129,6 +137,9 @@ $(DIRLIST) :
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+
+Inst_site: $(SITE_PKG)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
 
 Inst_sbin: $(SBIN_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe

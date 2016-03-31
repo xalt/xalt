@@ -622,6 +622,7 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+VERSION
 HAVE_PYMOD_MYSQLDB
 HAVE_PYMOD_PSUTIL
 PATH_TO_PYTHON
@@ -4157,6 +4158,10 @@ $as_echo "no" >&6; }
 	fi
 
 
+
+
+VERSION=$(cat $ac_confdir/.version)
+echo "VERSION=$VERSION"
 
 
 if test "$XALT_CONFIG_PY" = no; then

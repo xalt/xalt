@@ -83,7 +83,7 @@ parseLDTrace.o: parseLDTrace.C link_submission.h xalt_types.h xalt_fgets_alloc.h
 translate.o: translate.C run_submission.h Options.h xalt_types.h
 xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 xalt_generate_assembly.o: xalt_generate_assembly.C extract_linker.h $(THIS_DIR)/compiled/xalt_config.h
-xalt_generate_linkdata.o: xalt_generate_linkdata.C link_submission.h extract_linker.h $(THIS_DIR)/compiled/xalt_config.h xalt_types.h base64.h zstring.h capture.h buildRmapT.h
+xalt_generate_linkdata.o: xalt_generate_linkdata.C link_submission.h extract_linker.h $(THIS_DIR)/compiled/xalt_config.h xalt_types.h base64.h zstring.h capture.h buildRmapT.h  xalt_utils.h
 xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 xalt_run_submission.o: xalt_run_submission.C run_submission.h Options.h xalt_types.h base64.h zstring.h $(THIS_DIR)/compiled/xalt_config.h capture.h buildRmapT.h
 xalt_strip_linklib.o: xalt_strip_linklib.C xalt_types.h buildRmapT.h

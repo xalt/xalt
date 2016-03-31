@@ -13,7 +13,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& l
   compiler     = "unknown";
   compilerPath = "unknown";
 
-  pid_t my_pid = getpid();
+  pid_t my_pid = getppid();  // start with parent!
   while(1)
     {
       Process proc(my_pid);
@@ -21,6 +21,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& l
       if (parent == 1) break;
 
       std::string name = proc.name();
+      
       bool found = false;
       for (int i = 0; i < ignorePrgSz; ++i)
         {
@@ -31,6 +32,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& l
             }
         }
       
+      my_pid = parent;
       if (found)
         continue;
 

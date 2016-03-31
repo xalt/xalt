@@ -27,6 +27,7 @@ test_descript = {
 
      export XALT_EXECUTABLE_TRACKING=yes
 
+     echo mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
 
      export PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"

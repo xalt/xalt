@@ -11,7 +11,10 @@
 #include "zstring.h"
 #include "capture.h"
 #include "buildRmapT.h"
+#include "xalt_utils.h"
 #include "link_submission.h"
+#include <sys/stat.h>
+#include <sys/types.h>
 
 const int syslog_msg_sz = 512;
 int main(int argc, char* argv[])
@@ -28,10 +31,8 @@ int main(int argc, char* argv[])
   const char* resultFn    = argv[10];
 
 
-  if (strstr(execname,"conftest") == NULL)
+  if (strstr(execname,"conftest") != NULL)
     return 1;
-
-  
 
   Vstring     result;
   std::string cmd = SHA1SUM " ";
@@ -99,6 +100,12 @@ int main(int argc, char* argv[])
 
   if (strcasecmp(transmission, "file") == 0)
     {
+
+      std::string dirname(resultFn);
+      dirname.erase(dirname.rfind('/'), std::string::npos);
+      if (! isDirectory(dirname.c_str()))
+        mkdir (dirname.c_str(),0700);
+      
       std::ofstream myfile;
       myfile.open(resultFn);
       myfile << json.result();

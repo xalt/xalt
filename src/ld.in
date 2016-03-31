@@ -122,10 +122,11 @@ done
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
-GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
-GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
+GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly
+GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
+STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
-LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD
+LD_LIBRARY_PATH=$LD_LIB_PATH
 SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
 RM=@path_to_rm@
@@ -153,7 +154,7 @@ if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
 fi
 
-EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
+EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
 
 #
 # If the $ARGSRC exists then build it
@@ -165,7 +166,7 @@ else
   OBJ=""
 fi
 
-$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py "${argA[@]}"` \
+$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}"` \
   --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 
 touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
@@ -188,7 +189,7 @@ fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
+LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT

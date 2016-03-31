@@ -120,6 +120,7 @@ AC_PYTHON_MODULE([MySQLdb])
 AC_SUBST(VERSION)
 
 VERSION=$(cat $ac_confdir/.version)
+echo "VERSION=$VERSION"
 
 
 if test "$XALT_CONFIG_PY" = no; then
