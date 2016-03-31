@@ -5,6 +5,7 @@
 #include "xalt_config.h"
 #include "capture.h"
 
+#define HERE fprintf(stderr,"%s:%d\n", __FILE__, __LINE__)
 void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpair>& libA)
 {
   std::string path;
@@ -30,21 +31,36 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
       char * p = strstr(buf,"/tmp/");
       if (buf == p)
         continue;
+      
+      if (strstr(buf,"/xalt_syshost.o"))
+        continue;
+          
+      if (strstr(buf,"/xalt_fgets_alloc.o"))
+        continue;
 
-      if (*buf == '-')
+      if (strstr(buf,"/xalt_quotestring.o"))
+        continue;
+
+      if (strstr(buf,"/xalt_initialize.o"))
+        continue;
+
+      char * start = strchr(buf,'(');
+      if (start)
         {
           // Capture the library name in the parens:
-          // -lgcc_s (/usr/lib/gcc/x86_64-linux-gnu/4.8/libgcc_s.so)
-          char * start = strchr(buf,'(');
+          //    -lgcc_s (/usr/lib/gcc/x86_64-linux-gnu/4.8/libgcc_s.so)
+          // or 
+          //    (/usr/lib/x86_64-linux-gnu/libc_nonshared.a)elf-init.oS
           char * p     = strchr(start+1,')');
           if ( start == NULL || p == NULL)
             continue;
 
-          path.assign(start+1, p-1);
+          path.assign(start+1, p);
           char* my_realpath = canonicalize_file_name(path.c_str());
           path.assign(my_realpath);
           set.insert(path);
           free(my_realpath);
+          continue;
         }
 
       // Save everything else (and get rid of the trailing newline!)
@@ -80,6 +96,7 @@ void readFunctionList(const char* fn, Set& funcSet)
 
   while(xalt_fgets_alloc(fp, &buf, &sz))
     {
+      fprintf(stderr,"buf: %s\n",buf);
       funcName.assign(buf, strlen(buf) - 1);
       funcSet.insert(funcName);
     }

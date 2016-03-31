@@ -16,6 +16,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#define HERE fprintf(stderr,"%s:%d\n", __FILE__, __LINE__)
+
 const int syslog_msg_sz = 512;
 int main(int argc, char* argv[])
 {
@@ -100,7 +102,6 @@ int main(int argc, char* argv[])
 
   if (strcasecmp(transmission, "file") == 0)
     {
-
       std::string dirname(resultFn);
       dirname.erase(dirname.rfind('/'), std::string::npos);
       if (! isDirectory(dirname.c_str()))

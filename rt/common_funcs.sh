@@ -18,8 +18,11 @@ initialize()
 
 buildRmapT()
 {
+  echo "build xalt_rmapT.json and jsonReverseMapT.json files"
   mkdir reverseMapD
+  $LMOD_DIR/spider -o xalt_rmapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/xalt_rmapT.json
   $LMOD_DIR/spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/jsonReverseMapT.json
+  echo "finish"
 }
 
 installXALT()
@@ -36,6 +39,7 @@ installXALT()
 
 installDB()
 {
+  echo "create db"
   DBNAME=testxalt
   DBUSER=xaltTest
   PASSWD=kutwgbh
@@ -44,6 +48,7 @@ installDB()
                      --passwd $PASSWD   --dbname $DBNAME
   removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
   createDB.py        --dbname $DBNAME
+  echo "end create db"
 }
 
 runMe ()

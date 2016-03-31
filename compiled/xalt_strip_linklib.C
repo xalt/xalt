@@ -1,7 +1,6 @@
 #include <string.h>
 #include "buildRmapT.h"
 
-
 int main(int argc, char* argv[])
 {
   Table   rmapT;
@@ -13,8 +12,11 @@ int main(int argc, char* argv[])
   std::string libname;
   std::string::size_type idx;
 
+  fprintf(stderr,"\nstart of xalt_strip_linklib\n");
+
   for (auto it = xlibmapA.begin(); it != xlibmapA.end(); ++it)
     {
+      fprintf(stderr,"xlib element: %s\n", (*it).c_str());
       idx = (*it).rfind(".a");
       if (idx != std::string::npos)
         libname = (*it).substr(idx);  // from trailing "." to end of string
@@ -26,6 +28,7 @@ int main(int argc, char* argv[])
           else
             libname = *it;
         }
+      fprintf(stderr,"inserting into set: %s\n", libname.c_str());
       reflibSet.insert(libname);
     }
 
@@ -44,6 +47,7 @@ int main(int argc, char* argv[])
       else
         libname = p;
 
+      fprintf(stderr,"argv[%d]: \"%s\", libname: %s\n",i, argv[i], libname.c_str());
       
       Set::const_iterator got = reflibSet.find(libname);
       if ( got == reflibSet.end() )

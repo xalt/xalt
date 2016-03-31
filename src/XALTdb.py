@@ -156,6 +156,13 @@ class XALTdb(object):
     query = ""
 
     try:
+      link_lineA = linkT.get('link_line',[])
+      linkA      = linkT.get('linkA',[])
+      functionA  = linkT.get('function',[])
+      resultT    = linkT.get("resultT")
+      if (resultT == None):
+        resultT    = linkT
+
       conn   = self.connect()
       cursor = conn.cursor()
       query  = "USE "+self.db()
@@ -163,55 +170,56 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
       
+      uuid   = resultT['uuid']
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
-      cursor.execute(query, [linkT['uuid']])
+      cursor.execute(query, [uuid])
       if (cursor.rowcount > 0):
         return
 
-      build_epoch = float(linkT['build_epoch'])
+      build_epoch = float(resultT['build_epoch'])
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                  time.localtime(float(linkT['build_epoch'])))
+                                  time.localtime(float(resultT['build_epoch'])))
 
       #paranoid conversion:  Protect DB from bad input:
-      exit_code   = convertToTinyInt(linkT['exit_code'])
-      exec_path   = linkT['exec_path']
-      link_prg    = linkT['link_program'][:64]
-      link_path   = linkT['link_path']
+      exit_code   = convertToTinyInt(resultT['exit_code'])
+      exec_path   = resultT['exec_path']
+      link_prg    = resultT['link_program'][:64]
+      link_path   = resultT['link_path']
       link_mname  = obj2module(link_path,reverseMapT)
-      link_line   = json.dumps(linkT['link_line'])
-      build_user  = linkT['build_user']
-      build_shost = linkT['build_syshost']
+      link_line   = json.dumps(link_lineA)
+      build_user  = resultT['build_user']
+      build_shost = resultT['build_syshost']
+      hash_id     = resultT['hash_id']
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
-      cursor.execute(query, (linkT['uuid'], linkT['hash_id'],     dateTimeStr, 
-                             link_prg,      linkT['link_path'],   link_mname,
-                             link_line,     build_user,           build_shost,
-                             build_epoch,   exit_code,            exec_path))
+      cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
+                             link_prg,    link_path,   link_mname,
+                             link_line,   build_user,  build_shost,
+                             build_epoch, exit_code,   exec_path))
 
       link_id = cursor.lastrowid
 
-      XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])
-      self.load_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
+      XALT_Stack.push("load_xalt_objects():"+resultT['exec_path'])
+      self.load_objects(conn, linkA, reverseMapT, resultT['build_syshost'],
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
       
       # store tracked functions
-      if ('function' in linkT):
-        for func_name in linkT['function']:
-          query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
+      for func_name in functionA:
+        query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
+        cursor.execute(query, [func_name])
+        if (cursor.rowcount > 0):
+          func_id = int(cursor.fetchone()[0])
+        else:
+          query = "INSERT INTO xalt_function VALUES (NULL, %s)"
           cursor.execute(query, [func_name])
-          if (cursor.rowcount > 0):
-            func_id = int(cursor.fetchone()[0])
-          else:
-            query = "INSERT INTO xalt_function VALUES (NULL, %s)"
-            cursor.execute(query, [func_name])
-            func_id = cursor.lastrowid
-        
-          query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
-                       ON DUPLICATE KEY UPDATE func_id = %s, link_id = %s"
-          cursor.execute(query, (func_id, link_id, func_id, link_id))
+          func_id = cursor.lastrowid
+      
+        query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
+                     ON DUPLICATE KEY UPDATE func_id = %s, link_id = %s"
+        cursor.execute(query, (func_id, link_id, func_id, link_id))
         
       query = "COMMIT"
       conn.query(query)
