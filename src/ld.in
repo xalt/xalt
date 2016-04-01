@@ -166,11 +166,6 @@ else
   OBJ=""
 fi
 
-echo argA: "${argA[@]}"
-RESULTS=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
-echo "RESULTS: $RESULTS"
-
-
 $MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}"` \
   --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 

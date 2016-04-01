@@ -60,7 +60,6 @@ FILE* xalt_file_open(const char* name)
           fn += "/";
           fn += name;
           fn += extA[i];
-          fprintf(stderr,"Trying to open: %s\n", fn.c_str());
           fp  = fopen(fn.c_str(), "r");
           if (fp)
             break;

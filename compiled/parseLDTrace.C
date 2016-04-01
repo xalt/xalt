@@ -96,7 +96,6 @@ void readFunctionList(const char* fn, Set& funcSet)
 
   while(xalt_fgets_alloc(fp, &buf, &sz))
     {
-      fprintf(stderr,"buf: %s\n",buf);
       funcName.assign(buf, strlen(buf) - 1);
       funcSet.insert(funcName);
     }

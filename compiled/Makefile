@@ -7,8 +7,8 @@ ifeq ($(OS_NAME),Darwin)
 endif
 
 CXX_LDFLAGS := $(shell mysql_config --libs)
-CF_INIT     := -I$(THIS_DIR)/compiled/ -fPIC -DJSMN_PARENT_LINKS
-CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --cflags) -DJSMN_PARENT_LINKS
+CF_INIT     := -I$(THIS_DIR)/compiled/ -fPIC 
+CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --cflags)
 CFLAGS      := -g -O0 
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C          \

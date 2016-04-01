@@ -65,7 +65,6 @@ void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstr
           exit(1);
         }
       std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      fprintf(stderr,"xlibmap value: %s\n",value.c_str());
       value = xalt_unquotestring(value.c_str());
       xlibmapA.push_back(value);
     }
@@ -74,7 +73,6 @@ void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstr
 void buildRmapT(Table& rmapT, Vstring& xlibmapA)
 {
   
-  fprintf(stderr,"start buildRmapT\n");
   FILE *fp = xalt_file_open("reverseMapD/xalt_rmapT");
   if (fp == NULL)
     {
@@ -83,8 +81,6 @@ void buildRmapT(Table& rmapT, Vstring& xlibmapA)
         return;
     }
   
-  fprintf(stderr,"xalt_rmapT.json openned\n");
-
   std::string jsonStr = "";
 
   char*  buf = NULL;
@@ -126,6 +122,7 @@ void buildRmapT(Table& rmapT, Vstring& xlibmapA)
       fprintf(stderr,"(5) Bad xalt_rmapT.json file\n");
       exit(1);
     }
+
 
   int i = 1;
   while (i < ntokens)

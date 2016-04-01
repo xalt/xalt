@@ -18,28 +18,28 @@ initialize()
 
 buildRmapT()
 {
-  echo "build xalt_rmapT.json and jsonReverseMapT.json files"
+  echo "<build xalt_rmapT.json and jsonReverseMapT.json files>"
   mkdir reverseMapD
   $LMOD_DIR/spider -o xalt_rmapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/xalt_rmapT.json
   $LMOD_DIR/spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/jsonReverseMapT.json
-  echo "finish"
+  echo "<finish>"
 }
 
 installXALT()
 {
   rm -rf XALT build
   mkdir build
-  (cd build; echo configure;$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 --with-config=$projectDir/Config/rtm_config.py >& /dev/null ; \
-  echo make; make -f makefile PATH_TO_SRC=$projectDir install >& /dev/null;  )
+  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 --with-config=$projectDir/Config/rtm_config.py >& /dev/null ; \
+  echo "<make>"; make -f makefile PATH_TO_SRC=$projectDir install >& /dev/null;  )
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin
   PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
-  echo "end make"
+  echo "<end make>"
 }
 
 installDB()
 {
-  echo "create db"
+  echo "<create db>"
   DBNAME=testxalt
   DBUSER=xaltTest
   PASSWD=kutwgbh
@@ -48,7 +48,7 @@ installDB()
                      --passwd $PASSWD   --dbname $DBNAME
   removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
   createDB.py        --dbname $DBNAME
-  echo "end create db"
+  echo "<end create db>"
 }
 
 runMe ()
