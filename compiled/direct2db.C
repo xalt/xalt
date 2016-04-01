@@ -1,6 +1,9 @@
 #include <time.h>
 #include <my_global.h>
 #include <mysql.h>
+#undef min
+#undef max
+#undef test
 #include <string>
 #include <string.h>
 #include <stdlib.h>

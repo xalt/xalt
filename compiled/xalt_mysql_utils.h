@@ -3,6 +3,9 @@
 
 #include <my_global.h>
 #include <mysql.h>
+#undef min
+#undef max
+#undef test
 #include <string>
 #include "xalt_types.h"
 

@@ -34,6 +34,7 @@ FILE* xalt_file_open(const char* name)
   static const char *extA[]       = {".json", ".old.json"};
   static int         nExt         = sizeof(extA)/sizeof(extA[0]);
   const char*        xalt_etc_dir = getenv("XALT_ETC_DIR");
+  std::string        dirNm;
   std::string        fn;
 
   if (xalt_etc_dir == NULL)
@@ -46,18 +47,20 @@ FILE* xalt_file_open(const char* name)
     {
       char * p = strchr((char *) start,':');
       if (p)
-        fn.assign(start, p - start);  
+        dirNm.assign(start, p - start);  
       else
         {
-          fn.assign(start);
+          dirNm.assign(start);
           done = true;
         }
 
       for (int i = 0; i < nExt; ++i)
         {
+          fn.assign(dirNm);
           fn += "/";
           fn += name;
           fn += extA[i];
+          fprintf(stderr,"Trying to open: %s\n", fn.c_str());
           fp  = fopen(fn.c_str(), "r");
           if (fp)
             break;
