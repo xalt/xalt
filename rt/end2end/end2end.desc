@@ -48,7 +48,7 @@ test_descript = {
      export XALT_USERS="$USER;$outputDir"
      xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results result.csv --runs 3
+     check_entries_db.py --dbname $DBNAME --results result.csv --runs 3 --functions 4
      removeDataBase.py   --dbname $DBNAME  
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,

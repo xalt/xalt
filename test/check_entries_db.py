@@ -57,9 +57,10 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dbname",      dest='dbname',   action="store",      default="xalt",       help="Name of the database")
-    parser.add_argument("--results",     dest='resultFn', action="store",      default="result.csv", help="result filename")
-    parser.add_argument("--runs",        dest='runs',     action="store",      default="2",          help="number of runs required to pass")
+    parser.add_argument("--dbname",    dest='dbname',   action="store", default="xalt",       help="Name of the database")
+    parser.add_argument("--results",   dest='resultFn', action="store", default="result.csv", help="result filename")
+    parser.add_argument("--runs",      dest='runs',     action="store", default="2",          help="number of runs required to pass")
+    parser.add_argument("--functions", dest='nfuncs',   action="store", default="0",          help="number of functions required to pass")
     
     args = parser.parse_args()
     return args
@@ -100,10 +101,13 @@ def main():
 
   result = 'diff'
   num    = int(args.runs)
-  if (tableT['xalt_link']     >    1 and
-      tableT['xalt_run']      == num and
-      tableT['xalt_object']   >   10 and
-      tableT['xalt_env_name'] >   15 ):
+  nfuncs = int(args.nfuncs)
+  if (tableT['xalt_link']       >    1    and
+      tableT['xalt_run']        == num    and
+      tableT['xalt_total_env']  == num    and
+      tableT['xalt_function']   >= nfuncs and
+      tableT['xalt_object']     >   10    and
+      tableT['xalt_env_name']   >   15 ):
 
     result = "passed"
   f = open(args.resultFn,"w")

@@ -59,7 +59,7 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
 
       for (int i = 0; i < nBlks; ++i)
         {
-          cmd << LOGGER " -t XALT_LOGGING V:2 kind:" << key << " idx:" << i;
+          cmd << LOGGER " -t XALT_LOGGING V:2 kind:" << kind << " idx:" << i;
           cmd << " nb:"  << nBlks << " syshost:" << syshost;
           cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt);
           system(cmd.str().c_str());
