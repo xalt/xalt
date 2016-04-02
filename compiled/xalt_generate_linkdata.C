@@ -17,7 +17,6 @@
 
 #define HERE fprintf(stderr,"%s:%d\n", __FILE__, __LINE__)
 
-const int syslog_msg_sz = 512;
 int main(int argc, char* argv[])
 {
   const char* uuid        = argv[ 1];
@@ -110,7 +109,7 @@ int main(int argc, char* argv[])
     resultFn == NULL;
 
   // transmit results to anything that is not "direct2db"
-  transmit(transmission, jsonStr, "link", key, resultFn);
+  transmit(transmission, jsonStr, "link", key, syshost, resultFn);
 
   return 0;
 }

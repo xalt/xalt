@@ -13,7 +13,7 @@ CFLAGS      := -g -O0
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C          \
                buildEnvT.C buildRmapT.C buildUserT.C capture.C direct2db.C extractXALTRecord.C   \
-               parseLDD.C translate.C xalt_mysql_utils.C xalt_utils.C zstring.C 
+               parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C zstring.C 
 C_SRC 	    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
 
@@ -37,7 +37,7 @@ xalt_syshost.o: xalt_syshost.c xalt_fgets_alloc.h
 $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly: xalt_generate_assembly.o extract_linker.o Process.o xalt_fgets_alloc.o
 	g++ -O2 -o $@ $?
 
-$(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o xalt_quotestring.o buildRmapT.o jsmn.o xalt_mysql_utils.o xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o zstring.o  ConfigParser.o
+$(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o xalt_quotestring.o buildRmapT.o jsmn.o xalt_mysql_utils.o xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o zstring.o  ConfigParser.o transmit.o
 	g++ -O2 -o $@ $? $(CXX_LDFLAGS) -lz
 
 $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib: xalt_strip_linklib.o xalt_quotestring.o buildRmapT.o jsmn.o xalt_utils.o xalt_fgets_alloc.o
@@ -62,7 +62,7 @@ run:
 neat:
 	$(RM) *~
 clean: 
-	$(RM) -r *.o $(notdir $(EXEC)).dSYM
+	$(RM) -r *.o $(notdir $(EXEC)).dSYM xalt_config.h
 
 ConfigParser.o: ConfigParser.C ConfigParser.h $(THIS_DIR)/compiled/xalt_config.h base64.h xalt_fgets_alloc.h xalt_utils.h
 Json.o: Json.C Json.h xalt_quotestring.h xalt_types.h 
@@ -80,7 +80,7 @@ jsmn.o: jsmn.c jsmn.h
 link_direct2db.o: link_direct2db.C link_submission.h xalt_types.h ConfigParser.h Json.h xalt_mysql_utils.h
 parseLDD.o: parseLDD.C run_submission.h Options.h xalt_types.h $(THIS_DIR)/compiled/xalt_config.h capture.h
 parseLDTrace.o: parseLDTrace.C link_submission.h xalt_types.h xalt_fgets_alloc.h $(THIS_DIR)/compiled/xalt_config.h capture.h
-translate.o: translate.C run_submission.h Options.h xalt_types.h
+translate.o: translate.C run_submission.h Options.h xalt_types.h $(THIS_DIR)/compiled/xalt_config.h xalt_utils.h base64.h zstring.h
 transmit.o: transmit.C transmit.h base64.h zstring.h
 xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 xalt_generate_assembly.o: xalt_generate_assembly.C extract_linker.h $(THIS_DIR)/compiled/xalt_config.h

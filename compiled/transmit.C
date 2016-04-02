@@ -1,26 +1,36 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "transmit.h"
 #include "base64.h"
 #include "xalt_types.h"
 #include "zstring.h"
+#include "xalt_utils.h"
+#include "xalt_config.h"
 
-void transmit(const char* transmission, std::string jsonStr, const char* kind, std::string key, const char* resultFn)
+const int syslog_msg_sz = 512;
+
+#define HERE fprintf(stderr,"%s:%d\n",__FILE__, __LINE__)
+
+void transmit(const char* transmission, std::string& jsonStr, const char* kind, std::string& key, const char* syshost, const char* resultFn)
 {
-    if (strcasecmp(transmission, "file") == 0)
+  if (strcasecmp(transmission, "file") == 0)
     {
       //*********************************************************************
       // Build file name for xalt json record.  It is only used when the
       // file transmission style is used;
       if (resultFn == NULL)
-        return;        
+        return;
 
       std::string dirname(resultFn);
-      dirname.erase(dirname.rfind('/'), std::string::npos);
+
+      std::string::size_type idx = dirname.rfind('/');
+      dirname.erase(idx, std::string::npos);
       if (! isDirectory(dirname.c_str()))
         mkdir (dirname.c_str(),0700);
-
 
       std::ofstream myfile;
       myfile.open(resultFn);
@@ -39,7 +49,7 @@ void transmit(const char* transmission, std::string jsonStr, const char* kind, s
   else if (strcasecmp(transmission, "syslog") == 0)
     {
       std::ostringstream cmd;
-      std::string zs    = compress_string(json.result());
+      std::string zs    = compress_string(jsonStr);
       std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
       int         sz    = b64.size();
       int         blkSz = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
@@ -50,7 +60,7 @@ void transmit(const char* transmission, std::string jsonStr, const char* kind, s
       for (int i = 0; i < nBlks; ++i)
         {
           cmd << LOGGER " -t XALT_LOGGING V:2 kind:" << key << " idx:" << i;
-          cmd << " nb:"  << nBlks << " syshost:" << options.syshost();
+          cmd << " nb:"  << nBlks << " syshost:" << syshost;
           cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt);
           system(cmd.str().c_str());
           istrt = iend;

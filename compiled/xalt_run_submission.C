@@ -12,7 +12,6 @@
 #include "run_submission.h"
 
 #define DATESZ 100
-const int syslog_msg_sz = 512;
 
 int main(int argc, char* argv[], char* env[])
 {
@@ -77,9 +76,10 @@ int main(int argc, char* argv[], char* env[])
   json.fini();
 
   std::string jsonStr = json.result();
-  
-
+  std::string fn;
   const char* resultFn = NULL;
+
+
   std::string key   = ((options.endTime() > 0.0) ? "run_fini_" : "run_strt_");
   key.append(options.uuid());
 
@@ -101,10 +101,11 @@ int main(int argc, char* argv[], char* env[])
           sstream << home << "/.xalt.d/run." << options.syshost() << ".";
           sstream << dateStr << "." << suffix << "." << options.uuid() << ".json";
 
-          resultFn = sstream.str().c_str();
+          fn = sstream.str();
+          resultFn = fn.c_str();
         }
     }
 
-  transmit(transmission, jsonStr, "run", key, resultFn);
+  transmit(transmission, jsonStr, "run", key, options.syshost().c_str(), resultFn);
   return 0;
 }

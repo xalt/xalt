@@ -1,6 +1,8 @@
 #ifndef XALT_TYPES_H
 #define XALT_TYPES_H
 
+#define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
+
 #include <string>
 #include <vector>
 #include <unordered_map>
