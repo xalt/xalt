@@ -5,10 +5,9 @@
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
-#include "base64.h"
 #include "capture.h"
 #include <strings.h>
-#include "zstring.h"
+#include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
 
@@ -77,63 +76,35 @@ int main(int argc, char* argv[], char* env[])
   json.add("libA",libA);
   json.fini();
 
+  std::string jsonStr = json.result();
+  
+
+  const char* resultFn = NULL;
+  std::string key   = ((options.endTime() > 0.0) ? "run_fini_" : "run_strt_");
+  key.append(options.uuid());
+
   if (strcasecmp(transmission, "file") == 0)
     {
       //*********************************************************************
       // Build file name for xalt json record.  It is only used when the
       // file transmission style is used;
       p = getenv("HOME");
-      if (p == NULL)
-        return 0;     
-      std::string home   = p;
-      std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
-  
-      time = options.startTime();
-      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
-
-      std::ostringstream sstream;
-      sstream << home << "/.xalt.d/run." << options.syshost() << ".";
-      sstream << dateStr << "." << suffix << "." << options.uuid() << ".json";
-
-      std::ofstream myfile;
-      myfile.open(sstream.str());
-      myfile << json.result();
-      myfile.close();
-    }
-  else if (strcasecmp(transmission, "syslogv1") == 0)
-    {
-      std::ostringstream cmd;
-      std::string jsonStr = json.result();
-      std::string b64     = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
-      cmd << LOGGER " -t XALT_LOGGING \"run:" << options.syshost();
-      cmd << ":" << b64 << "\"";
-      system(cmd.str().c_str());
-    }
-  else if (strcasecmp(transmission, "syslog") == 0)
-    {
-      std::ostringstream cmd;
-      std::string zs    = compress_string(json.result());
-      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
-      int         sz    = b64.size();
-      int         blkSz = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
-      int         nBlks = (sz -  1)/blkSz + 1;
-      int         istrt = 0;
-      int         iend  = blkSz;
-
-      std::string key   = ((options.endTime() > 0.0) ? "run_fini_" : "run_strt_") +
-        options.uuid();
-
-      for (int i = 0; i < nBlks; ++i)
+      if (p != NULL)
         {
-          cmd << LOGGER " -t XALT_LOGGING V:2 kind:run idx:" << i;
-          cmd << " nb:"  << nBlks << " syshost:" << options.syshost();
-          cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt);
-          system(cmd.str().c_str());
-          istrt = iend;
-          iend  = istrt + blkSz;
-          if (iend > sz)
-            iend = sz;
+          std::string home   = p;
+          std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
+  
+          time = options.startTime();
+          strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
+
+          std::ostringstream sstream;
+          sstream << home << "/.xalt.d/run." << options.syshost() << ".";
+          sstream << dateStr << "." << suffix << "." << options.uuid() << ".json";
+
+          resultFn = sstream.str().c_str();
         }
     }
+
+  transmit(transmission, jsonStr, "run", key, resultFn);
   return 0;
 }

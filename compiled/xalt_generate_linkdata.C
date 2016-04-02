@@ -7,8 +7,7 @@
 #include "Json.h"
 #include "xalt_config.h"
 #include "extract_linker.h"
-#include "base64.h"
-#include "zstring.h"
+#include "transmit.h"
 #include "capture.h"
 #include "buildRmapT.h"
 #include "xalt_utils.h"
@@ -100,52 +99,18 @@ int main(int argc, char* argv[])
   json.add("link_line",linklineA);
   json.fini();
 
-  if (strcasecmp(transmission, "file") == 0)
-    {
-      std::string dirname(resultFn);
-      dirname.erase(dirname.rfind('/'), std::string::npos);
-      if (! isDirectory(dirname.c_str()))
-        mkdir (dirname.c_str(),0700);
-      
-      std::ofstream myfile;
-      myfile.open(resultFn);
-      myfile << json.result();
-      myfile.close();
-    }
-  else if (strcasecmp(transmission, "syslogv1") == 0)
-    {
-      std::ostringstream cmd;
-      std::string jsonStr = json.result();
-      std::string b64     = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
-      cmd << LOGGER " -t XALT_LOGGING \"link:" << syshost;
-      cmd << ":" << b64 << "\"";
-      system(cmd.str().c_str());
-    }
-  else if (strcasecmp(transmission, "syslog") == 0)
-    {
-      std::ostringstream cmd;
-      std::string zs    = compress_string(json.result());
-      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
-      int         sz    = b64.size();
-      int         blkSz = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
-      int         nBlks = (sz -  1)/blkSz + 1;
-      int         istrt = 0;
-      int         iend  = blkSz;
+  std::string jsonStr = json.result();
+  std::string key("link_");
+  key.append(uuid);
 
-      std::string key("link_");
-      key.append(uuid);
 
-      for (int i = 0; i < nBlks; ++i)
-        {
-          cmd << LOGGER " -t XALT_LOGGING V:2 kind:link idx:" << i;
-          cmd << " nb:"  << nBlks << " syshost:" << syshost;
-          cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt);
-          system(cmd.str().c_str());
-          istrt = iend;
-          iend  = istrt + blkSz;
-          if (iend > sz)
-            iend = sz;
-        }
-    }
+  // if user has wiped out $HOME then set resultFn to NULL so that file transmission will do nothing!
+  const char* home = getenv("HOME");
+  if (home == NULL)
+    resultFn == NULL;
+
+  // transmit results to anything that is not "direct2db"
+  transmit(transmission, jsonStr, "link", key, resultFn);
+
   return 0;
 }
