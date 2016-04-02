@@ -12,7 +12,7 @@ CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --
 CFLAGS      := -g -O0 
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C          \
-               buildEnvT.C buildRmapT.C buildUserT.C capture.C direct2db.C extractXALTRecord.C   \
+               buildEnvT.C buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C   \
                parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C zstring.C 
 C_SRC 	    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
@@ -73,7 +73,7 @@ buildEnvT.o: buildEnvT.C run_submission.h Options.h xalt_types.h
 buildRmapT.o: buildRmapT.C $(THIS_DIR)/compiled/xalt_config.h buildRmapT.h Options.h xalt_types.h xalt_quotestring.h jsmn.h xalt_fgets_alloc.h xalt_utils.h
 buildUserT.o: buildUserT.C run_submission.h Options.h xalt_types.h
 capture.o: capture.C  capture.h xalt_types.h
-direct2db.o: direct2db.C run_submission.h Options.h xalt_types.h ConfigParser.h xalt_regex.h Json.h xalt_mysql_utils.h xalt_utils.h
+run_direct2db.o: run_direct2db.C run_submission.h Options.h xalt_types.h ConfigParser.h xalt_regex.h Json.h xalt_mysql_utils.h xalt_utils.h
 extract_linker.o: extract_linker.C extract_linker.h xalt_types.h Process.h
 extractXALTRecord.o: extractXALTRecord.C run_submission.h Options.h xalt_types.h $(THIS_DIR)/compiled/xalt_config.h capture.h
 jsmn.o: jsmn.c jsmn.h

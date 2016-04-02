@@ -59,7 +59,7 @@ int main(int argc, char* argv[], char* env[])
       Table   rmapT;
       buildRmapT(rmapT, xlibmapA);
 
-      direct2db(options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
+      run_direct2db(options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
       return 0;
     }
   
