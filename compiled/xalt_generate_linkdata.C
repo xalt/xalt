@@ -15,7 +15,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define HERE fprintf(stderr,"%s:%d\n", __FILE__, __LINE__)
+//FILE* xalt_log;
 
 int main(int argc, char* argv[])
 {
@@ -30,6 +30,8 @@ int main(int argc, char* argv[])
   const char* linklineFn  = argv[ 9];
   const char* resultFn    = argv[10];
 
+
+  //xalt_log = fopen("xalt_link.log","w");
 
   if (strstr(execname,"conftest") != NULL)
     return 1;
@@ -64,7 +66,6 @@ int main(int argc, char* argv[])
   cmd.append(my_realpath);
   capture(cmd,result);
   std::string sha1 = result[0].substr(0, result[0].find(" "));
-  free(my_realpath);
 
   resultT["uuid"]          = uuid;
   resultT["link_program"]  = compiler;
@@ -76,6 +77,7 @@ int main(int argc, char* argv[])
   resultT["hash_id"]       = sha1;
   resultT["wd"]            = wd;
   resultT["build_syshost"] = syshost;
+  free(my_realpath);
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)

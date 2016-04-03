@@ -1,7 +1,9 @@
 #include <string.h>
 #include "buildRmapT.h"
+#include <stdio.h>
 
-#define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
+//FILE* xalt_log;
+
 int main(int argc, char* argv[])
 {
   Table   rmapT;

@@ -16,7 +16,7 @@
 
 uint select_link_id(MYSQL* conn, std::string& link_uuid)
 {
-  const char* stmt_sql = "SELECT `link_uuid` FROM `xalt_link` WHERE `uuid` = ? limit 1";
+  const char* stmt_sql = "SELECT `link_id` FROM `xalt_link` WHERE `uuid` = ? LIMIT 1";
 
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
@@ -35,7 +35,7 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
   memset((void *) param,  0, sizeof(param));
   memset((void *) result, 0, sizeof(result));
 
-  // STRING PARAM[0] run_uuid;
+  // STRING PARAM[0] link_uuid;
   std::string::size_type len_link_uuid = link_uuid.size();
   param[0].buffer_type   = MYSQL_TYPE_STRING;
   param[0].buffer        = (void *) link_uuid.c_str();
@@ -48,7 +48,7 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
       exit(1);
     }
       
-  // UNSIGNED INT RESULT[0] run_id;
+  // UNSIGNED INT RESULT[0] link_id;
   uint                    link_id;
   result[0].buffer_type   = MYSQL_TYPE_LONG;
   result[0].buffer        = (void *) &link_id;
@@ -148,16 +148,20 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
   param[4].length        = &len_link_path;
   
   // STRING PARAM[5] link_module_name
-  param[5].buffer_type    = MYSQL_TYPE_STRING;
-  std::string::size_type len_module_name = 0;
-  std::string            module_name;
-  my_bool                module_name_null_flag = 0;
-  param[5].buffer        = (void *) module_name.c_str();
-  param[5].buffer_length = module_name.capacity();
+  const int                  module_name_sz = 64;
+  char                       module_name[module_name_sz];
+  std::string::size_type     len_module_name = 0;      // set length in loop
+  my_bool                    module_name_null_flag;
+  param[5].buffer_type   = MYSQL_TYPE_STRING;
+  param[5].buffer        = (void *) &module_name[0];
+  param[5].buffer_length = module_name_sz;
   param[5].is_null       = &module_name_null_flag;
   param[5].length        = &len_module_name;
-  if (path2module(link_path, rmapT, module_name))
-    len_module_name         = module_name.size();
+  if (path2module(link_path.c_str(), rmapT, module_name,module_name_sz))
+    {
+      module_name_null_flag = 0;
+      len_module_name       = strlen(module_name);
+    }
   else
     module_name_null_flag = 1;
 
@@ -167,10 +171,10 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
   json.fini();
   std::string linkline   = json.result();
   std::string::size_type len_linkline = linkline.size();
-  param[4].buffer_type   = MYSQL_TYPE_STRING;
-  param[4].buffer        = (void *) linkline.c_str();
-  param[4].buffer_length = linkline.capacity();
-  param[4].length        = &len_linkline;
+  param[6].buffer_type   = MYSQL_TYPE_STRING;
+  param[6].buffer        = (void *) linkline.c_str();
+  param[6].buffer_length = linkline.capacity();
+  param[6].length        = &len_linkline;
   
   // STRING PARAM[7] build_user
   std::string& build_user = resultT["build_user"];
@@ -198,8 +202,8 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
   param[10].buffer_type = MYSQL_TYPE_TINY;
   param[10].buffer      = (void *) &exit_code;
 
-  // STRING PARAM[11] build_syshost
-  std::string& exec_path = resultT["exec_path"];
+  // STRING PARAM[11] exec_path
+  std::string& exec_path   = resultT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
   param[11].buffer_type   = MYSQL_TYPE_STRING;
   param[11].buffer        = (void *) exec_path.c_str();
@@ -233,7 +237,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   // build SELECT obj_id INTO xalt_object stmt
   //************************************************************
 
-  const char* stmt_sql_s = "SELECT func_id FROM xalt_function WHERE function_name=?";
+  const char* stmt_sql_s = "SELECT func_id FROM xalt_function WHERE function_name=? LIMIT 1";
 
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
@@ -252,13 +256,14 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   memset((void *) param_s,  0, sizeof(param_s));
   memset((void *) result_s, 0, sizeof(result_s));
 
-  std::string funcName;      funcName.reserve(512);
+  const int funcNameSz = 512;
+  char funcName[funcNameSz];
 
   // STRING PARAM_S[0] funcName;
   std::string::size_type len_funcName = 0;          // set length later in loop.
   param_s[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[0].buffer        = (void *) funcName.c_str();
-  param_s[0].buffer_length = funcName.capacity();
+  param_s[0].buffer        = (void *) &funcName;
+  param_s[0].buffer_length = funcNameSz;
   param_s[0].length        = &len_funcName;
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
@@ -302,8 +307,8 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
 
   // STRING PARAM_I[0] funcName
   param_i[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[0].buffer        = (void *) funcName.c_str();
-  param_i[0].buffer_length = funcName.capacity();
+  param_i[0].buffer        = (void *) &funcName;
+  param_i[0].buffer_length = funcNameSz;
   param_i[0].length        = &len_funcName;
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
@@ -363,13 +368,18 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
 
   for (auto it = funcSet.begin(); it != funcSet.end(); ++it)
     {
-      funcName     = *it;
-      len_funcName = funcName.size();
+      len_funcName = (*it).size();
+      strcpy(&funcName[0], (*it).c_str());
 
       // "SELECT func_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
           print_stmt_error(stmt_s, "Could not execute stmt for selecting func_id");
+          exit(1);
+        }
+      if (mysql_stmt_store_result(stmt_s))
+        {
+          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting func_id");
           exit(1);
         }
       
@@ -436,7 +446,6 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
   
   uint link_id;
   insert_xalt_link(conn, resultT, rmapT, linklineA, &link_id);
-  insert_objects(conn, "join_link_object", link_id, libA, resultT["syshost"], rmapT);
+  insert_objects(conn, "join_link_object", link_id, libA, resultT["build_syshost"], rmapT);
   insert_functions(conn, funcSet, link_id);
 }
-

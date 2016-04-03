@@ -48,6 +48,7 @@ installDB()
                      --passwd $PASSWD   --dbname $DBNAME
   removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
   createDB.py        --dbname $DBNAME
+  ln -s testxalt_db.conf xalt_db.conf 
   echo "<end create db>"
 }
 

@@ -13,8 +13,6 @@
 
 const int syslog_msg_sz = 512;
 
-#define HERE fprintf(stderr,"%s:%d\n",__FILE__, __LINE__)
-
 void transmit(const char* transmission, std::string& jsonStr, const char* kind, std::string& key, const char* syshost, const char* resultFn)
 {
   if (strcasecmp(transmission, "file") == 0)

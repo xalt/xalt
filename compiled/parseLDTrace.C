@@ -5,7 +5,6 @@
 #include "xalt_config.h"
 #include "capture.h"
 
-#define HERE fprintf(stderr,"%s:%d\n", __FILE__, __LINE__)
 void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpair>& libA)
 {
   std::string path;

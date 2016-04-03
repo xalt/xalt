@@ -13,6 +13,8 @@
 
 #define DATESZ 100
 
+//FILE* xalt_log;
+
 int main(int argc, char* argv[], char* env[])
 {
   Options options(argc, argv);
@@ -58,8 +60,8 @@ int main(int argc, char* argv[], char* env[])
       Vstring xlibmapA;
       Table   rmapT;
       buildRmapT(rmapT, xlibmapA);
-
       run_direct2db(options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
+
       return 0;
     }
   

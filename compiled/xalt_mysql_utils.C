@@ -1,6 +1,7 @@
 #include <string.h>
 #include "xalt_utils.h"
 #include "xalt_mysql_utils.h"
+#include "xalt_types.h"
 
 static const int issueWarning = 1;
 
@@ -26,13 +27,13 @@ void print_stmt_error(MYSQL_STMT *stmt, const char *message)
     }
 }
 
-std::string object_type(std::string& path)
+void object_type(const char* path, char* result)
 {
   std::string s(path);
   std::string extA[] = {"a", "o", "so", "--"};
   int nExtA = sizeof(extA)/sizeof(extA[0]);
 
-  std::string result = "--";
+  int resultIdx = 3;
 
   while (1)
     {
@@ -45,18 +46,20 @@ std::string object_type(std::string& path)
         {
           if (ext == extA[i])
             {
-              result = ext;
-              return result;
+              resultIdx = i;
+              goto done;
             }
         }
-      path.erase(idx, std::string::npos);
+      s.erase(idx, std::string::npos);
     }
-  return result;
+ done:
+  strcpy(result, extA[resultIdx].c_str());
 }
 
 void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector<Libpair>& lddA,
                     std::string& syshost, Table& rmapT)
 {
+
   //************************************************************
   // build SELECT obj_id INTO xalt_object stmt
   //************************************************************
@@ -80,21 +83,24 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   memset((void *) param_s,  0, sizeof(param_s));
   memset((void *) result_s, 0, sizeof(result_s));
 
-  std::string hash_id;       hash_id.reserve(41);
-  std::string object_path;   object_path.reserve(2048);
+  const int hash_id_sz = 41;
+  char hash_id[hash_id_sz];
+
+  const int objSz = 2048;
+  char object_path[objSz];
 
   // STRING PARAM_S[0] hash_id;
   std::string::size_type len_hash_id = 0;          // set length later in loop.
   param_s[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[0].buffer        = (void *) hash_id.c_str();
-  param_s[0].buffer_length = hash_id.capacity();
+  param_s[0].buffer        = (void *) &hash_id[0];
+  param_s[0].buffer_length = hash_id_sz;
   param_s[0].length        = &len_hash_id;
 
   // STRING PARAM_S[1] object_path
   std::string::size_type len_object_path = 0;      // set length later in loop.
   param_s[1].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[1].buffer        = (void *) object_path.c_str();
-  param_s[1].buffer_length = object_path.capacity();
+  param_s[1].buffer        = (void *) &object_path[0];
+  param_s[1].buffer_length = objSz;
   param_s[1].length        = &len_object_path;
 
   // STRING PARAM_S[2] syshost
@@ -146,8 +152,8 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
 
   // STRING PARAM_I[0] object_path
   param_i[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[0].buffer        = (void *) object_path.c_str();
-  param_i[0].buffer_length = object_path.capacity();
+  param_i[0].buffer        = (void *) &object_path[0];
+  param_i[0].buffer_length = objSz;
   param_i[0].length        = &len_object_path;
 
   // STRING PARAM_I[1] syshost
@@ -157,21 +163,19 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_i[1].length        = &len_syshost;
 
   // STRING PARAM_I[2] hash_id
-  hash_id.reserve(41);
   param_i[2].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[2].buffer        = (void *) hash_id.c_str();
-  param_i[2].buffer_length = hash_id.capacity();
+  param_i[2].buffer        = (void *) &hash_id[0];
+  param_i[2].buffer_length = hash_id_sz;
   param_i[2].length        = &len_hash_id;
 
   // STRING PARAM_I[3] module_name
+  const int                  module_name_sz = 64;
+  char                       module_name[module_name_sz];
+  std::string::size_type     len_module_name = 0;      // set length in loop
+  my_bool                    module_name_null_flag;
   param_i[3].buffer_type   = MYSQL_TYPE_STRING;
-  std::string::size_type len_module_name = 0;      // set length in loop
-  my_bool                module_name_null_flag;
-  std::string            module_name;
-  module_name.reserve(2048);
-  len_module_name          = module_name.size();
-  param_i[3].buffer        = (void *) module_name.c_str();
-  param_i[3].buffer_length = module_name.capacity();
+  param_i[3].buffer        = (void *) &module_name[0];
+  param_i[3].buffer_length = module_name_sz;
   param_i[3].is_null       = &module_name_null_flag;
   param_i[3].length        = &len_module_name;
 
@@ -191,12 +195,13 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_i[4].buffer       = &my_datetime;
 
   // STRING PARAM_I[5] lib_type
+  const int lib_type_sz = 3;
+  char lib_type[lib_type_sz];
+
   std::string::size_type len_lib_type = 0;      // set length in loop.
-  std::string            lib_type;
-  lib_type.reserve(10);
   param_i[5].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[5].buffer        = (void *) lib_type.c_str();
-  param_i[5].buffer_length = lib_type.capacity();
+  param_i[5].buffer        = (void *) &lib_type[0];
+  param_i[5].buffer_length = lib_type_sz;
   param_i[5].length        = &len_lib_type;
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
@@ -250,34 +255,47 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
     }
       
   
+  
+  
   for ( auto it = lddA.begin(); it != lddA.end(); ++it)
     {
-      object_path     = (*it).lib;
-      hash_id         = (*it).sha1;
-      len_object_path = object_path.size();
-      len_hash_id     = hash_id.size();
+      len_object_path = (*it).lib.size();
+      strcpy(object_path,(*it).lib.c_str());
+
+      len_hash_id     = (*it).sha1.size();
+      strcpy(hash_id,(*it).sha1.c_str());
 
       // "SELECT obj_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not execute stmt for selecting run_id");
+          print_stmt_error(stmt_s, "Could not execute stmt for selecting obj_id");
+          exit(1);
+        }
+      if (mysql_stmt_store_result(stmt_s))
+        {
+          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting obj_id");
           exit(1);
         }
       
+
+
       // mysql_stmt_fetch(stmt_s) will return 0 if successful.  That means it found obj_id
       if (mysql_stmt_fetch(stmt_s) != 0)  
         {
           // If here then the object is NOT in the db so store it and compute obj_id
-          if (path2module(object_path, rmapT, module_name))
-            len_module_name = module_name.size();
+          if (path2module(object_path, rmapT, module_name, module_name_sz))
+            {
+              module_name_null_flag = 0;
+              len_module_name = strlen(module_name);
+            }
           else
             {
               module_name_null_flag = 1;
               len_module_name = 0;
             }
 
-          lib_type     = object_type(object_path);
-          len_lib_type = lib_type.size();
+          object_type(object_path, &lib_type[0]);
+          len_lib_type = strlen(lib_type);
 
           // "INSERT INTO xalt_object ..."
           if (mysql_stmt_execute(stmt_i))

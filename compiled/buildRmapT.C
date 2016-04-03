@@ -73,10 +73,10 @@ void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstr
 void buildRmapT(Table& rmapT, Vstring& xlibmapA)
 {
   
-  FILE *fp = xalt_file_open("reverseMapD/xalt_rmapT");
+  FILE *fp = xalt_json_file_open("reverseMapD/xalt_rmapT");
   if (fp == NULL)
     {
-      FILE *fp = xalt_file_open("xalt_rmapT");
+      FILE *fp = xalt_json_file_open("xalt_rmapT");
       if (fp == NULL)
         return;
     }
