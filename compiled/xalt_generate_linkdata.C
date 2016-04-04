@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include "xalt_types.h"
 #include "Json.h"
 #include "xalt_config.h"
@@ -12,10 +15,6 @@
 #include "buildRmapT.h"
 #include "xalt_utils.h"
 #include "link_submission.h"
-#include <sys/stat.h>
-#include <sys/types.h>
-
-//FILE* xalt_log;
 
 int main(int argc, char* argv[])
 {
@@ -30,8 +29,6 @@ int main(int argc, char* argv[])
   const char* linklineFn  = argv[ 9];
   const char* resultFn    = argv[10];
 
-
-  //xalt_log = fopen("xalt_link.log","w");
 
   if (strstr(execname,"conftest") != NULL)
     return 1;

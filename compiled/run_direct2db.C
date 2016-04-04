@@ -328,20 +328,24 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
   memset((void *) result,  0, sizeof(result));
 
   //UNSIGNED INT RESULT[0] env_id;
-  uint env_id;
+  uint env_id = 0;
+  my_bool                   env_id_null_flag = 0;
   result[0].buffer_type   = MYSQL_TYPE_LONG;
   result[0].buffer        = (void *) &env_id;
   result[0].is_unsigned   = 1;
+  result[0].is_null       = &env_id_null_flag;
   
   // (C)STRING RESULT[1] env_name
   const size_t env_name_sz = 128;
   char env_name[env_name_sz+1];
 
   size_t len_env_name;
+  my_bool env_name_null_flag = 0;
   result[1].buffer_type   = MYSQL_TYPE_STRING;
   result[1].buffer        = (void *) &env_name[0];
   result[1].buffer_length = len_env_name+1;
   result[1].length        = &len_env_name;
+  result[1].is_null       = &env_name_null_flag;
 
   if (mysql_stmt_bind_result(stmt, result))
     {
@@ -355,9 +359,20 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
       exit(1);
     }
 
-  while (mysql_stmt_fetch(stmt) == 0)
-    envNameT[env_name] = env_id;
+  
 
+
+
+  HERE;
+  int iret; 
+  while ((iret = mysql_stmt_fetch(stmt)) == 0)
+    {
+      fprintf(stderr, "env_id: %d, env_name: %s\n", env_id, env_name);
+      envNameT[env_name] = env_id;
+    }
+
+  fprintf(stderr,"iret: %d\n",iret);
+  HERE;
   if (mysql_stmt_close(stmt))
     {
       print_stmt_error(stmt, "Could not close stmt for selecting run_id");
@@ -642,6 +657,8 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
       env_id        = findEnvNameIdx(conn, env_name, envNameT);
       len_env_value =   (*it).second.size();
       strcpy(env_value, (*it).second.c_str());
+
+      fprintf(stderr,"env_id: %d, env_name: %s\n", env_id, env_name.c_str());
 
       // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))

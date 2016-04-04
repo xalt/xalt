@@ -1,7 +1,6 @@
 #ifndef XALT_TYPES_H
 #define XALT_TYPES_H
 
-//extern FILE* xalt_log;
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
 
 #include <string>

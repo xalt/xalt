@@ -1,7 +1,8 @@
-#include "zstring.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "zstring.h"
 
 /** Compress a STL string using zlib with given compression level and return
   * the binary data. */

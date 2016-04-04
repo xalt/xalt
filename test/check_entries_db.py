@@ -60,6 +60,7 @@ class CmdLineOptions(object):
     parser.add_argument("--dbname",    dest='dbname',   action="store", default="xalt",       help="Name of the database")
     parser.add_argument("--results",   dest='resultFn', action="store", default="result.csv", help="result filename")
     parser.add_argument("--runs",      dest='runs',     action="store", default="2",          help="number of runs required to pass")
+    parser.add_argument("--links",     dest='links',    action="store", default="1",          help="number of links required to pass")
     parser.add_argument("--functions", dest='nfuncs',   action="store", default="0",          help="number of functions required to pass")
     
     args = parser.parse_args()
@@ -102,7 +103,8 @@ def main():
   result = 'diff'
   num    = int(args.runs)
   nfuncs = int(args.nfuncs)
-  if (tableT['xalt_link']       >    1    and
+  nlinks = int(args.links)
+  if (tableT['xalt_link']       == nlinks and
       tableT['xalt_run']        == num    and
       tableT['xalt_total_env']  == num    and
       tableT['xalt_function']   >= nfuncs and

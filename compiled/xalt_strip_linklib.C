@@ -1,8 +1,7 @@
 #include <string.h>
-#include "buildRmapT.h"
 #include <stdio.h>
 
-//FILE* xalt_log;
+#include "buildRmapT.h"
 
 int main(int argc, char* argv[])
 {

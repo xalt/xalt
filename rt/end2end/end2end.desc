@@ -27,31 +27,32 @@ test_descript = {
 
      export XALT_EXECUTABLE_TRACKING=yes
 
-     export XALT_TRANSMISSION_STYLE=direct2db
-     echo mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
-     check_entries_db.py --dbname $DBNAME --results result.csv --runs 3 --functions 4
 
-     #export PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
-     #
-     #mpirun -n 1 ./hello 
-     #
-     #mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
-     #
-     #rm -rf Ðì®
-     #mkdir Ðì®
-     #mv helloñ Ðì®
-     # 
-     #mpirun -n 1 Ðì®/helloñ
-     #
-     #export LD_PRELOAD=$outputDir/XALT/libexec/libxalt_init.so
-     #./hello
-     #
-     #export XALT_USERS="$USER;$outputDir"
-     #xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
-     #
-     #check_entries_db.py --dbname $DBNAME --results result.csv --runs 3 --functions 4
-     removeDataBase.py   --dbname $DBNAME  
+     export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
+     
+     mpirun -n 1 ./hello 
+     
+     mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
+     
+     rm -rf Ðì®
+     mkdir Ðì®
+     mv helloñ Ðì®
+      
+     mpirun -n 1 Ðì®/helloñ
+     
+     export LD_PRELOAD=$outputDir/XALT/libexec/libxalt_init.so
+     ./hello
+     
+     export XALT_USERS="$USER;$outputDir"
+     xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
+     
+     export XALT_TRANSMISSION_STYLE=direct2db
+     mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
+     
+     mpirun -n 1 ./helloññ
+
+     check_entries_db.py --dbname $DBNAME --results result.csv --runs 4 --functions 4 --links 3
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,
 

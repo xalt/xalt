@@ -2,18 +2,17 @@
 #include <sstream>
 #include <fstream>
 #include <time.h>
+#include <strings.h>
+
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
 #include "capture.h"
-#include <strings.h>
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
 
 #define DATESZ 100
-
-//FILE* xalt_log;
 
 int main(int argc, char* argv[], char* env[])
 {
