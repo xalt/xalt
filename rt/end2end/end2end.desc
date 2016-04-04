@@ -50,6 +50,7 @@ test_descript = {
      export XALT_TRANSMISSION_STYLE=direct2db
      mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
      
+     export RTM_PATH="RTM path FOO"
      mpirun -n 1 ./helloññ
 
      check_entries_db.py --dbname $DBNAME --results result.csv --runs 4 --functions 4 --links 3

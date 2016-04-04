@@ -359,28 +359,10 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
       exit(1);
     }
 
-  if (mysql_stmt_store_result(stmt) != 0)
-    {
-      print_stmt_error(stmt,"Could not buffer result set");
-      exit(1);
-    }
-  else
-    {
-      fprintf(stderr,"Number of row retrieved %lu\n",
-              (unsigned long) mysql_stmt_num_rows(stmt));
-    }
-        
-
-  HERE;
   int iret; 
   while ((iret = mysql_stmt_fetch(stmt)) == 0)
-    {
-      fprintf(stderr, "env_id: %d, env_name: %s\n", env_id, env_name);
-      envNameT[env_name] = env_id;
-    }
+    envNameT[env_name] = env_id;
 
-  fprintf(stderr,"iret: %d\n",iret);
-  HERE;
   if (mysql_stmt_close(stmt))
     {
       print_stmt_error(stmt, "Could not close stmt for selecting run_id");
@@ -665,8 +647,6 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
       env_id        = findEnvNameIdx(conn, env_name, envNameT);
       len_env_value =   (*it).second.size();
       strcpy(env_value, (*it).second.c_str());
-
-      fprintf(stderr,"env_id: %d, env_name: %s\n", env_id, env_name.c_str());
 
       // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))
