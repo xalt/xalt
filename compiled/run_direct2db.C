@@ -336,7 +336,7 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
   result[0].is_null       = &env_id_null_flag;
   
   // (C)STRING RESULT[1] env_name
-  const size_t env_name_sz = 128;
+  const size_t env_name_sz = 64;
   char env_name[env_name_sz+1];
 
   size_t len_env_name;
