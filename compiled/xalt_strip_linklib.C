@@ -50,14 +50,16 @@ int main(int argc, char* argv[])
         }
       else
         {
-
-          // check for libname.so or libname.a
-          char* e = strrchr(p,'.');
-          if (e && ((*(e+1) == 'a') || (*(e+1) == 's'  && *(e+2) == 'o')))
-            libname.append(p, e-p);
-          else
-            // take it.
-            libname = p;
+          if (argv[i][0] != '-')
+            {
+              // check for libname.so or libname.a
+              char* e = strrchr(p,'.');
+              if (e && ((*(e+1) == 'a') || (*(e+1) == 's'  && *(e+2) == 'o')))
+                libname.append(p, e-p);
+              else
+                // take it.
+                libname = p;
+            }
         }
 
       Set::const_iterator got = reflibSet.find(libname);
