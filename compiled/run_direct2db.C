@@ -320,7 +320,7 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting env_id");
       exit(1);
     }
 
@@ -349,19 +349,27 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
 
   if (mysql_stmt_bind_result(stmt, result))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting run_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting env_id");
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not execute stmt for selecting env_id");
       exit(1);
     }
 
-  
-
-
+  if (mysql_stmt_store_result(stmt) != 0)
+    {
+      print_stmt_error(stmt,"Could not buffer result set");
+      exit(1);
+    }
+  else
+    {
+      fprintf(stderr,"Number of row retrieved %lu\n",
+              (unsigned long) mysql_stmt_num_rows(stmt));
+    }
+        
 
   HERE;
   int iret; 
