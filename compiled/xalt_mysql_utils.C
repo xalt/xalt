@@ -2,6 +2,7 @@
 #include "xalt_utils.h"
 #include "xalt_mysql_utils.h"
 #include "xalt_types.h"
+#include <time.h>   // for nanosleep
 
 static const int issueWarning = 1;
 
@@ -331,3 +332,28 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
       exit(1);
     }
 }
+
+// This routine opens the socket connection to the db.  It tries 100 times and waits i*50 milliseconds
+// before quiting.
+
+MYSQL* xalt_open_mysql_connection(MYSQL* conn, ConfigParser& cp)
+{
+  int N    = 100;
+  int msec = 50;
+
+  for (int i = 1; i < N; ++i)
+    {
+      if (mysql_real_connect(conn, cp.host().c_str(), cp.user().c_str(), cp.passwd().c_str(), cp.db().c_str(), 3306, NULL, 0) != NULL)
+        return conn;
+      
+      int milliseconds = i*msec;
+
+      // convert milliseconds to ts and then sleep!
+      struct timespec ts;
+      ts.tv_sec = milliseconds / 1000;
+      ts.tv_nsec = (milliseconds % 1000) * 1000000;
+      nanosleep(&ts, NULL);
+    }
+  return conn;
+}
+

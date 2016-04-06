@@ -7,6 +7,7 @@
 #undef max
 #undef test
 #include <string>
+#include "ConfigParser.h"
 #include "xalt_types.h"
 
 void finish_with_error(MYSQL *conn);
@@ -14,5 +15,6 @@ void print_stmt_error(MYSQL_STMT *stmt, const char *message);
 void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector<Libpair>& lddA,
                     std::string& syshost, Table& rmapT);
 
+MYSQL* xalt_open_mysql_connection(MYSQL* conn, ConfigParser& cp);
 
 #endif //XALT_MYSQL_UTILS_H

@@ -436,7 +436,7 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
   // Note the interface is in autocommit mode.  This should probably change to transaction for the entire link record.
 
   /* (1) Open DB */
-  if (mysql_real_connect(conn, cp.host().c_str(), cp.user().c_str(), cp.passwd().c_str(), cp.db().c_str(), 3306, NULL, 0) == NULL) 
+  if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
 
   // Check to see if we have already stored this link record.  If so then return.
