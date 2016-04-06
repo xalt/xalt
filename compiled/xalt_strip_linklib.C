@@ -1,3 +1,12 @@
+// /usr/bin/ld --sysroot=/ --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -z relro -o helloññ
+// /usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crti.o
+// /usr/lib/gcc/x86_64-linux-gnu/4.8/crtbegin.o -L/opt/apps/gcc-4_8/mpich/3.1.2/lib -L/usr/lib/gcc/x86_64-linux-gnu/4.8
+// -L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../lib
+// -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../.. /tmp/ccb8pYsD.o
+// -rpath /opt/apps/gcc-4_8/mpich/3.1.2/lib --enable-new-dtags -lmpi -lrt -lpthread -lgcc --as-needed -lgcc_s --no-as-needed -lc
+// -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-linux-gnu/4.8/crtend.o /usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crtn.o
+
+
 #include <string.h>
 #include <stdio.h>
 
@@ -32,15 +41,8 @@ int main(int argc, char* argv[])
 
   for (int i = 1; i < argc; ++i)
     {
-      // Find ``basename'' for argv[i]
-      char *p = strrchr(argv[i],'/');
+      char *p = argv[i];
 
-      // reset p if there is no trailing '/' or bump past it.
-      if (p == NULL)
-        p = argv[i];
-      else
-        ++p;
-      
       // look for -lname => convert to libname
       if (*p == '-' && *(p+1) == 'l')
         {
@@ -48,24 +50,33 @@ int main(int argc, char* argv[])
           libname.assign("lib");
           libname.append(p);
         }
+      else if (*p != '/')
+        {
+          resultA.push_back(argv[i]);
+          continue;
+        }
       else
         {
-          if (argv[i][0] != '-')
+          // if here there is a leading '/'
+          // find the basename of this path
+          p = strrchr(p,'/');  
+          ++p;
+
+          // check for libname.so or libname.a
+          char* e = strrchr(p,'.');
+          if (e && ((*(e+1) == 'a') || (*(e+1) == 's'  && *(e+2) == 'o')))
+            libname.append(p, e-p);
+          else
             {
-              // check for libname.so or libname.a
-              char* e = strrchr(p,'.');
-              if (e && ((*(e+1) == 'a') || (*(e+1) == 's'  && *(e+2) == 'o')))
-                libname.append(p, e-p);
-              else
-                // take it.
-                libname = p;
+              resultA.push_back(argv[i]);
+              continue;
             }
         }
-
+            
       Set::const_iterator got = reflibSet.find(libname);
       if ( got == reflibSet.end() )
         resultA.push_back(argv[i]);
-    }
+    }          
 
   for (auto it = resultA.begin(); it != resultA.end(); ++it)
     fprintf(stdout," %s",(*it).c_str());
