@@ -149,9 +149,10 @@ find_real_command()
 # checking, otherwise continue.  
 #   1. Check for working python with no changes
 #   2. Check for working python with PYTHONHOME unset
-#   3. Check for working python with PYTHONPATH unset
+#   3. Check for working system python (leaving PYTHOPATH as is)
+#   4. Check for working python with PYTHONPATH unset
 #      and system python.
-#   4. Report python broken.
+#   5. Report python broken.
 #
 # Note that the xalt_working_program.py just prints "GOOD" if it works.
 
@@ -167,16 +168,22 @@ find_working_python()
     unset PYTHONHOME
     WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
     if [ "$WORKING" != "GOOD" ]; then
-      unset PYTHONPATH
       MY_PYTHON=@python@
       WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
       if [ "$WORKING" != "GOOD" ]; then
-	MY_PYTHON="broken"
+        unset PYTHONPATH
+        MY_PYTHON=@python@
+        WORKING=$($MY_PYTHON $WORKING_PYTHON 2> /dev/null)
+        if [ "$WORKING" != "GOOD" ]; then
+          MY_PYTHON="broken"
+        fi
       fi
     fi
   fi
 
   tracing_msg "find_working_python: Setting MY_PYTHON to $MY_PYTHON"
+  tracing_msg "find_working_python: with PYTHONPATH=$PYTHONPATH"
+  tracing_msg "find_working_python: and  PYTHONHOME=$PYTHONHOME"
 
   if [ "$MY_PYTHON" = "broken" ]; then
     builtin echo "XALT: Error in users' python setup.  Please report this error!"
