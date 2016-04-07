@@ -117,7 +117,7 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Build_pstree_$(BUILD_PSTREE) build_compiled
 
 build_compiled:
-	cd $(srcdir)/compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= THIS_DIR=$(CURDIR) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
 
 
 
@@ -301,9 +301,9 @@ makefile: $(srcdir)/Makefile.in $(srcdir)/config.status
 
 neat:
 	$(RM) *~ src/*~
-	cd compiled ; $(MAKE) $@
+	cd compiled ; $(MAKE) PARENT_DIR=$(srcdir) $@
 clean:  neat
-	cd compiled ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
+	cd compiled ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
 clobber: clean
 
 
