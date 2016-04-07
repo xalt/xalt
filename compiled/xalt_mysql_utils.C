@@ -4,6 +4,8 @@
 #include "xalt_types.h"
 #include <time.h>   // for nanosleep
 
+#ifdef HAVE_MYSQL
+
 static const int issueWarning = 1;
 
 void finish_with_error(MYSQL *conn)
@@ -357,3 +359,4 @@ MYSQL* xalt_open_mysql_connection(MYSQL* conn, ConfigParser& cp)
   return conn;
 }
 
+#endif //HAVE_MYSQL

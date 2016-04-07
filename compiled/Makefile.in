@@ -1,14 +1,17 @@
+srcdir := @srcdir@
+VPATH = @srcdir@
 CXX := g++
 CC  := gcc
-
-LIB_OPTIONS       := -fPIC -shared
-ifeq ($(OS_NAME),Darwin)
-  LIB_OPTIONS     := -bundle -undefined dynamic_lookup
+MYSQL_CONFIG := @MYSQL_CONFIG@
+ifneq ($(MYSQL_CONFIG),UNKNOWN)
+  MYSQL_CFLAGS  := $(shell $(MYSQL_CONFIG) --cflags) -DHAVE_MYSQL
+  MYSQL_LDFLAGS := $(shell $(MYSQL_CONFIG) --libs)  
 endif
 
-CXX_LDFLAGS := $(shell mysql_config --libs)
-CF_INIT     := -I$(THIS_DIR)/compiled/ -fPIC 
-CXXFLAGS    := -g -O0 -std=c++11 -I$(THIS_DIR)/compiled/ $(shell mysql_config --cflags)
+LIB_OPTIONS       := -fPIC -shared
+
+CF_INIT     := -I. -fPIC 
+CXXFLAGS    := -g -O0 -std=c++11 -I. $(MYSQL_CFLAGS)
 CFLAGS      := -g -O0 
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C          \

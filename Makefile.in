@@ -19,11 +19,8 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
-PATH_TO_SRC       := @PATH_TO_SRC@
-path_to_src       := PATH_TO_SRC
-ifeq ($(PATH_TO_SRC),@$(path_to_src)@)
-  PATH_TO_SRC     := .
-endif
+srcdir            := @srcdir@
+VPATH             := @srcdir@
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
 OS_NAME           := $(shell uname -s)
@@ -33,7 +30,7 @@ ifeq ($(OS_NAME),Darwin)
 endif
 
 package           := xalt
-VERSION           := $(shell cat $(PATH_TO_SRC)/.version)
+VERSION           := $(shell cat $(srcdir)/.version)
 TRANSMISSION      := @TRANSMISSION@
 SITE_NAME         := @SITE@
 ETC_DIR           := @ETC_DIR@
@@ -80,12 +77,12 @@ DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
 
 BIN_PKG           := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
 
-BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
+BIN_PKG           := $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
 SBIN_PKG          := src/conf_create.in.py  	       src/createDB.in.py               \
                      src/xalt_db.conf                  src/xalt_file_to_db.in.py        \
                      src/xalt_syslog_to_db.in.py       src/xalt_rmap_lmap.in.py
-SBIN_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SBIN_PKG))
+SBIN_PKG          := $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG       := src/xalt_generate_assembly.py     src/xalt_generate_linkdata.py    \
                      src/xalt_run_submission.py        src/xalt_util.py                 \
@@ -95,20 +92,20 @@ LIBEXEC_PKG       := src/xalt_generate_assembly.py     src/xalt_generate_linkdat
                      src/xalt_stack.py                 src/Rmap_XALT.py                 \
                      src/xalt_global.py                src/BeautifulTbl.py              
 
-LIBEXEC_PKG       := $(patsubst %, $(PATH_TO_SRC)/%, $(LIBEXEC_PKG))
+LIBEXEC_PKG       := $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
 SITE_PKG          := src/new_job_id.in.py src/xalt_site_pkg.py             
 
-SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
+SITE_PKG          := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
 
 TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
                      contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
                      contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
                      contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
                      contrib/TACC/quarter2months.in
-TACC_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(TACC_PKG))
+TACC_PKG          := $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 INIT_SRC          := src/xalt_initialize.c
-INIT_SRC          := $(patsubst %, $(PATH_TO_SRC)/%, $(INIT_SRC))
+INIT_SRC          := $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 
 .PHONY:
 
@@ -120,13 +117,13 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Build_pstree_$(BUILD_PSTREE) build_compiled
 
 build_compiled:
-	cd $(PATH_TO_SRC)/compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= THIS_DIR=$(CURDIR) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
+	cd $(srcdir)/compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= THIS_DIR=$(CURDIR) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
 
 
 
 echo:
 	@echo CURDIR: $(CURDIR)
-	@echo PATH_TO_SRC: $(PATH_TO_SRC)
+	@echo srcdir: $(srcdir)
 	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
@@ -164,14 +161,14 @@ Build_pstree_yes:
 	cd ..; rm -rf psmisc-22.21
 
 Use_getent_yes:
-	cd $(PATH_TO_SRC)/contrib;                                        \
+	cd $(srcdir)/contrib;                                        \
         mkdir -p  $(DESTDIR)$(prefix)/libexec/getent;                     \
         cp getent/*.py $(DESTDIR)$(prefix)/libexec/getent
 
 
 Use_argparse_no:
 
-Use_argparse_yes: $(PATH_TO_SRC)/contrib/argparse/argparse.py
+Use_argparse_yes: $(srcdir)/contrib/argparse/argparse.py
 	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
 __installMe:
@@ -299,8 +296,8 @@ dist:
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION);           	   \
 	cd ..; $(RM) -rf DIST
 
-makefile: $(PATH_TO_SRC)/Makefile.in $(PATH_TO_SRC)/config.status
-	$(PATH_TO_SRC)/config.status $@
+makefile: $(srcdir)/Makefile.in $(srcdir)/config.status
+	$(srcdir)/config.status $@
 
 neat:
 	$(RM) *~ src/*~

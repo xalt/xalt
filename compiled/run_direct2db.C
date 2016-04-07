@@ -1,9 +1,4 @@
 #include <time.h>
-#include <my_global.h>
-#include <mysql.h>
-#undef min
-#undef max
-#undef test
 #include <string>
 #include <string.h>
 #include <stdlib.h>
@@ -17,8 +12,9 @@
 #include "xalt_mysql_utils.h"
 #define  DATESZ 100
 
-typedef std::unordered_map<std::string, uint> TableIdx;
+#ifdef HAVE_MYSQL
 
+typedef std::unordered_map<std::string, uint> TableIdx;
 
 int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
 {
@@ -772,3 +768,14 @@ void run_direct2db(std::string& usr_cmdline, std::string& hash_id, Table& rmapT,
   mysql_close(conn);
   return;
 }
+
+#else
+void run_direct2db(std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
+               Table& recordT, std::vector<Libpair>& lddA)
+{
+  fprintf(stderr,"This version of XALT was not built with MySQL support.\n"
+          "You can not use the direct2db transmission style.  Aborting!\n");
+  exit(1);
+}
+
+#endif //HAVE_MYSQL

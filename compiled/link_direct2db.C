@@ -1,9 +1,4 @@
 #include <time.h>
-#include <my_global.h>
-#include <mysql.h>
-#undef min
-#undef max
-#undef test
 #include <string>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +8,8 @@
 #include "Json.h"
 #include "xalt_mysql_utils.h"
 #include "xalt_utils.h"
+
+#ifdef HAVE_MYSQL
 
 uint select_link_id(MYSQL* conn, std::string& link_uuid)
 {
@@ -449,3 +446,12 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
   insert_objects(conn, "join_link_object", link_id, libA, resultT["build_syshost"], rmapT);
   insert_functions(conn, funcSet, link_id);
 }
+
+#else
+void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
+{
+  fprintf(stderr,"This version of XALT was not built with MySQL support.\n"
+          "You can not use the direct2db transmission style.  Aborting!\n");
+  exit(1);
+}
+#endif //HAVE_MYSQL
