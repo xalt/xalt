@@ -18,7 +18,11 @@ SRC   	    := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C ba
                buildEnvT.C buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C   \
                parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C zstring.C 
 C_SRC 	    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
+
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
+
+F2DB_SRC    := f2db_Options.C 
+
 
 all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost           \
                              $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly \
