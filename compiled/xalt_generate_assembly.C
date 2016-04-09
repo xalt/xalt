@@ -3,15 +3,9 @@
 #include <stdio.h>
 #include <sys/utsname.h>
 
+#include "epoch.h"
 #include "extract_linker.h"
 #include "xalt_config.h"
-
-double epoch()
-{
-  struct timeval tm;
-  gettimeofday(&tm, NULL);
-  return tm.tv_sec + 1.0e-6*tm.tv_usec;
-}
 
 int main(int argc, char* argv[])
 {

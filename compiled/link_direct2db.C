@@ -445,6 +445,7 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
   insert_xalt_link(conn, resultT, rmapT, linklineA, &link_id);
   insert_objects(conn, "join_link_object", link_id, libA, resultT["build_syshost"], rmapT);
   insert_functions(conn, funcSet, link_id);
+  mysql_close(conn);
 }
 
 #else

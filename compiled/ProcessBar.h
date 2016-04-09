@@ -6,15 +6,18 @@ class ProgressBar
 public:
   ProgessBar(int maxVal, int barWidth = 0);
   ~ProgessBar() {}
+  void update(int i);
+  void fini();
   
 private:
-  int m_maxVal;
-  int m_barWidth;
-  int m_unit;
-  int m_fence;
-  int m_mark;
-  int m_count
-  char m_symbolA[10];
+  bool   m_active;
+  int    m_barWidth;
+  int    m_count
+  int    m_mark;
+  double m_maxVal;
+  double m_unit;
+  double m_fence;
+  char   m_symbolA[10];
 };
 
 
