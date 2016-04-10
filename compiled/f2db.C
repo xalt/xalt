@@ -95,9 +95,9 @@ int link_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
         jsonStr.append(buf);
       free(buf);
 
-      parseJsonLinkStr(jsonStr, linklineA, resultT, libA, funcSet);
+      parseLinkJsonStr(jsonStr, linklineA, resultT, libA, funcSet);
 
-      link_direct2db(Options.confFn(), linklineA, resultT, libA, funcSet, rmapT);
+      link_direct2db(Options.confFn().c_str(), linklineA, resultT, libA, funcSet, rmapT);
       num++;
     }
   return num;
@@ -133,9 +133,9 @@ int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
         jsonStr.append(buf);
       free(buf);
 
-      parseJsonRunStr(jsonStr, usr_cmdline, hash_id, envT, userT, recordT, libA);
+      parseRunJsonStr(jsonStr, usr_cmdline, hash_id, envT, userT, recordT, libA);
 
-      run_direct2db(Options.confFn(), usr_cmdline, hash_id, rmapT, envT, userT, recordT, libA);
+      run_direct2db(Options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, recordT, libA);
       num++;
     }
   return num;

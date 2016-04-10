@@ -723,10 +723,10 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
     }
 }
 
-void run_direct2db(std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
+void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
                Table& recordT, std::vector<Libpair>& lddA)
 {
-  ConfigParser cp("xalt_db.conf");
+  ConfigParser cp(confFn);
 
   MYSQL *conn = mysql_init(NULL);
 
@@ -770,7 +770,7 @@ void run_direct2db(std::string& usr_cmdline, std::string& hash_id, Table& rmapT,
 }
 
 #else
-void run_direct2db(std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
+void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
                Table& recordT, std::vector<Libpair>& lddA)
 {
   fprintf(stderr,"This version of XALT was not built with MySQL support.\n"

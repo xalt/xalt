@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
       Table   rmapT;
       buildRmapT(rmapT, xlibmapA);
 
-      link_direct2db(linklineA, resultT, libA, funcSet, rmapT);
+      link_direct2db("xalt_db.conf", linklineA, resultT, libA, funcSet, rmapT);
       return 0;
     }
   

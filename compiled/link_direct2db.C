@@ -418,9 +418,9 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
     }
 }
 
-void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
+void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
 {
-  ConfigParser cp("xalt_db.conf");
+  ConfigParser cp(confFn);
 
   MYSQL *conn = mysql_init(NULL);
 
@@ -449,7 +449,7 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
 }
 
 #else
-void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
+void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
 {
   fprintf(stderr,"This version of XALT was not built with MySQL support.\n"
           "You can not use the direct2db transmission style.  Aborting!\n");
