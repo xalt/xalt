@@ -16,7 +16,8 @@ CFLAGS      := -g -O0
 EXEC  	    := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 SRC   	    := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C              \
                buildEnvT.C buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C   \
-               parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C zstring.C 
+               parseJsonStr.C parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C      \
+               zstring.C 
 C_SRC 	    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
 
 OBJS  	    := $(patsubst %.C, %.o, $(SRC)) $(patsubst %.c, %.o, $(C_SRC))
@@ -44,24 +45,24 @@ xalt_syshost.o: xalt_syshost.c xalt_fgets_alloc.h
 $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly: xalt_generate_assembly.o extract_linker.o Process.o xalt_fgets_alloc.o epoch.o
 	g++ -O2 -o $@ $?
 
-$(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o xalt_quotestring.o buildRmapT.o jsmn.o xalt_mysql_utils.o xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o zstring.o  ConfigParser.o transmit.o
+$(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_mysql_utils.o xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o zstring.o  ConfigParser.o transmit.o
 	g++ -O2 -o $@ $? $(MYSQL_LDFLAGS) -lz
 
-$(DESTDIR)$(LIBEXEC)/xalt_strip_linklib: xalt_strip_linklib.o xalt_quotestring.o buildRmapT.o jsmn.o xalt_utils.o xalt_fgets_alloc.o
+$(DESTDIR)$(LIBEXEC)/xalt_strip_linklib: xalt_strip_linklib.o xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_utils.o xalt_fgets_alloc.o
 	g++ -O2 -o $@ $?
 
 build_init: 
-	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -c $(THIS_DIR)/xalt_quotestring.c
+	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -c xalt_quotestring.c
 	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -c xalt_syshost.c
-	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o -c $(THIS_DIR)/xalt_fgets_alloc.c
-	gcc $(CF_INIT) -DSTATE=LD_PRELOAD -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(THIS_DIR)/xalt_initialize.c; 
+	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o -c xalt_fgets_alloc.c
+	gcc $(CF_INIT) -DSTATE=LD_PRELOAD -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
 	gcc $(CF_INIT) $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -luuid; 
-	gcc $(CF_INIT) -g -O0 -DSTATE=LD_PRELOAD -DFULL_TRACING -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(THIS_DIR)/xalt_initialize.c; 
+	gcc $(CF_INIT) -g -O0 -DSTATE=LD_PRELOAD -DFULL_TRACING -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
 	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -luuid; 
-	gcc $(CF_INIT) -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c $(THIS_DIR)/xalt_initialize.c; 
+	gcc $(CF_INIT) -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
 
-makefile: $(THIS_DIR)/Makefile.in $(THIS_DIR)/config.status
-	$(THIS_DIR)/config.status $@
+makefile: Makefile.in config.status
+	./config.status $@
 
 
 neat:
@@ -84,7 +85,7 @@ extract_linker.o: extract_linker.C extract_linker.h xalt_types.h Process.h
 extractXALTRecord.o: extractXALTRecord.C run_submission.h Options.h xalt_types.h xalt_config.h capture.h
 jsmn.o: jsmn.c jsmn.h
 link_direct2db.o: link_direct2db.C link_submission.h xalt_types.h ConfigParser.h Json.h xalt_mysql_utils.h ConfigParser.h
-parseJsonStr.o: parseJsonStr.C parseJsonStr.h
+parseJsonStr.o: parseJsonStr.C parseJsonStr.h jsmn.h xalt_quotestring.h
 parseLDD.o: parseLDD.C run_submission.h Options.h xalt_types.h xalt_config.h capture.h
 parseLDTrace.o: parseLDTrace.C link_submission.h xalt_types.h xalt_fgets_alloc.h xalt_config.h capture.h
 run_direct2db.o: run_direct2db.C run_submission.h Options.h xalt_types.h ConfigParser.h xalt_regex.h Json.h xalt_mysql_utils.h xalt_utils.h ConfigParser.h

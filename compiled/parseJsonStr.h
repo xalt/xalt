@@ -2,6 +2,7 @@
 #define PARSEJSONSTR_H
 
 #include "xalt_types.h"
+#include "jsmn.h"
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA);
 void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Set& set);
 void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Table& t);

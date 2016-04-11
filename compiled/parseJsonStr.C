@@ -3,7 +3,7 @@
 
 #include "parseJsonStr.h"
 #include "xalt_fgets_alloc.h"
-#include "jsmn.h"
+#include "xalt_quotestring.h"
 
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
 {

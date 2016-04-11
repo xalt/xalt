@@ -137,7 +137,7 @@ void buildRmapT(Table& rmapT, Vstring& xlibmapA)
       if (mapName == "reverseMapT")
         processTable("xalt_rmapT.json",js, i, ntokens, tokens, rmapT);
       else if (mapName == "xlibmap")
-        processArray"xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
+        processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
       
     }
 }
