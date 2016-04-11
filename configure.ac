@@ -185,11 +185,11 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-if ! test -d compiled; then
-  mkdir compiled
+if ! test -d compiled/build_h; then
+  mkdir -p compiled/build_h
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build_h/xalt_regex.h
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
 
-AC_OUTPUT(makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in)
+AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in)

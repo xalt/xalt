@@ -83,7 +83,8 @@ makefile: Makefile.in config.status
 neat:
 	$(RM) *~
 clean: 
-	$(RM) -r *.o xalt_config.h xalt_regex.h
+	$(RM) -r *.o build_h/xalt_config.h build_h/xalt_regex.h
+	rmdir build_h
 
 ConfigParser.o: ConfigParser.C ConfigParser.h xalt_config.h base64.h xalt_fgets_alloc.h xalt_utils.h xalt_types.h
 Json.o: Json.C Json.h xalt_quotestring.h xalt_types.h 
