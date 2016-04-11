@@ -5,20 +5,136 @@
 #include "xalt_fgets_alloc.h"
 #include "jsmn.h"
 
-void processArray(
-
-
-
-void parseRunJsonStr(std::string& jsonStr, std::string& usr_cmdline, std::string& hash_id, Table& envT, Table& userT,
-                     Table& recordT, std::vector<Libpair>& libA)
+void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
 {
-  
+  if (tokens[i].type != JSMN_ARRAY)
+    {
+      fprintf(stderr,"processArray for: %s, token type is not an array\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        {
+          --i;
+          return;
+        }
+
+      if (tokens[i].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processArray for: %s, token type is not a string\n",name);
+          exit(1);
+        }
+      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
+      value = xalt_unquotestring(value.c_str());
+      vA.push_back(value);
+    }
+}
+
+void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Set& set)
+{
+  if (tokens[i].type != JSMN_ARRAY)
+    {
+      fprintf(stderr,"processSet for: %s, token type is not an array\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        {
+          --i;
+          return;
+        }
+
+      if (tokens[i].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processSet for: %s, token type is not a string\n",name);
+          exit(1);
+        }
+      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
+      value = xalt_unquotestring(value.c_str());
+      set.insert(value);
+    }
+}
+void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Table& t)
+{
+  if (tokens[i].type != JSMN_OBJECT)
+    {
+      fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        {
+          --i;
+          return;
+        }
+
+      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
+          exit(1);
+        }
+      std::string key(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
+      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
+      key    = xalt_unquotestring(key.c_str());
+      value  = xalt_unquotestring(value.c_str());
+      t[key] = value;
+    }
+}
+
+void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::vector<Libpair>& libA)
+{
+  if (tokens[i].type != JSMN_OBJECT)
+    {
+      fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        {
+          --i;
+          return;
+        }
+
+      // do something here.
+
+    }
+}
+
+
+
+void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cmdline, std::string& hash_id,
+                     Table& envT, Table& userT, Table& recordT, std::vector<Libpair>& libA)
+{
 }
 
 
 
 
-void parseLinkJsonStr(std::string& jsonStr, Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet)
+void parseLinkJsonStr(const char* name, std::string& jsonStr, Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -63,12 +179,12 @@ void parseLinkJsonStr(std::string& jsonStr, Vstring& linklineA, Table& resultT, 
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "function")
-        processFuncSet(js, i, ntokens, tokens, funcSet);
+        processSet(name, js, i, ntokens, tokens, funcSet);
       else if (mapName == "linkA")
-        processLibA(js, i, ntokens, tokens, libA);
+        processLibA(name, js, i, ntokens, tokens, libA);
       else if (mapName == "link_line")
-        processArray(js, i, ntokens, tokens, linklineA);
+        processArray(name,js, i, ntokens, tokens, linklineA);
       else if (mapName == "resultT")
-        processTable(js, i, ntokens, tokens, resultT);
+        processTable(name,js, i, ntokens, tokens, resultT);
     }
 }

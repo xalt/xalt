@@ -6,6 +6,7 @@
 #include "jsmn.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_utils.h"
+#include "parseJsonStr.h"
 
 void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, Table& rmapT)
 {
@@ -134,9 +135,9 @@ void buildRmapT(Table& rmapT, Vstring& xlibmapA)
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "reverseMapT")
-        processRmapT(js, i, ntokens, tokens, rmapT);
+        processTable("xalt_rmapT.json",js, i, ntokens, tokens, rmapT);
       else if (mapName == "xlibmap")
-        processXlibmap(js, i, ntokens, tokens, xlibmapA);
+        processArray"xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
       
     }
 }
