@@ -37,7 +37,7 @@ $(EXEC) : $(OBJS)
 	$(LINK.C) -o $@ $^ -lz $(MYSQL_LDFLAGS)
 
 $(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
-	gcc -O2 -o $@ $<
+	gcc -O2 -o $@ $^
 
 xalt_syshost_main.o: $(CURDIR)/xalt_syshost.c xalt_fgets_alloc.h
 	gcc -c -DHAVE_MAIN -O2 -o $@ $<
