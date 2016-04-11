@@ -178,6 +178,7 @@ unset  PYTHONHOME
 ( # start asynchronous subshell while the 'main' can return to user
 
 if [ $EXEC == "conftest" ]; then
+  $RM -rf $WRKDIR
   exit 0
 fi
 
