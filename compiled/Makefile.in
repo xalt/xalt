@@ -75,7 +75,8 @@ Options.o: Options.C Options.h capture.h xalt_config.h xalt_types.h
 Process.o: Process.C Process.h xalt_fgets_alloc.h 
 base64.o: base64.C base64.h
 buildEnvT.o: buildEnvT.C run_submission.h Options.h xalt_types.h
-buildRmapT.o: buildRmapT.C xalt_config.h buildRmapT.h Options.h xalt_types.h xalt_quotestring.h jsmn.h xalt_fgets_alloc.h xalt_utils.h
+buildRmapT.o: buildRmapT.C xalt_config.h buildRmapT.h Options.h xalt_types.h xalt_quotestring.h jsmn.h \
+              xalt_fgets_alloc.h xalt_utils.h parseJsonStr.h
 buildUserT.o: buildUserT.C run_submission.h Options.h xalt_types.h
 capture.o: capture.C  capture.h xalt_types.h
 epoch.o: epoch.C epoch.h
@@ -83,6 +84,7 @@ extract_linker.o: extract_linker.C extract_linker.h xalt_types.h Process.h
 extractXALTRecord.o: extractXALTRecord.C run_submission.h Options.h xalt_types.h xalt_config.h capture.h
 jsmn.o: jsmn.c jsmn.h
 link_direct2db.o: link_direct2db.C link_submission.h xalt_types.h ConfigParser.h Json.h xalt_mysql_utils.h ConfigParser.h
+parseJsonStr.o: parseJsonStr.C parseJsonStr.h
 parseLDD.o: parseLDD.C run_submission.h Options.h xalt_types.h xalt_config.h capture.h
 parseLDTrace.o: parseLDTrace.C link_submission.h xalt_types.h xalt_fgets_alloc.h xalt_config.h capture.h
 run_direct2db.o: run_direct2db.C run_submission.h Options.h xalt_types.h ConfigParser.h xalt_regex.h Json.h xalt_mysql_utils.h xalt_utils.h ConfigParser.h
