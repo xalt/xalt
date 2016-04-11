@@ -1,5 +1,5 @@
 THIS_DIR := $(PARENT_DIR)/compiled
-VPATH = $(THIS_DIR)
+VPATH = .:$(THIS_DIR)
 CXX := g++
 CC  := gcc
 MYSQL_CONFIG := @MYSQL_CONFIG@
@@ -45,13 +45,19 @@ xalt_syshost.o: xalt_syshost.c xalt_fgets_alloc.h
 $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly: xalt_generate_assembly.o extract_linker.o Process.o xalt_fgets_alloc.o epoch.o
 	g++ -O2 -o $@ $^
 
-$(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_mysql_utils.o xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o zstring.o  ConfigParser.o transmit.o
+$(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o   \
+                                             xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_mysql_utils.o \
+                                             xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o   \
+                                             zstring.o  ConfigParser.o transmit.o
 	g++ -O2 -o $@ $^ $(MYSQL_LDFLAGS) -lz
 
 $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib: xalt_strip_linklib.o xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_utils.o xalt_fgets_alloc.o
 	g++ -O2 -o $@ $^
 
-build_init: $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o 
+build_init: $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o            \
+            $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o \
+            $(DESTDIR)$(LIBEXEC)/libxalt_init.so    $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o     \
+            $(DESTDIR)$(LIBEXEC)/xalt_initialize.o 
 
 $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 	gcc $(CF_INIT) -o $@ -c $<
@@ -115,5 +121,6 @@ xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 xalt_run_submission.o: xalt_run_submission.C run_submission.h Options.h Json.h xalt_types.h transmit.h xalt_config.h capture.h buildRmapT.h
 xalt_strip_linklib.o: xalt_strip_linklib.C xalt_types.h buildRmapT.h
 xalt_utils.o: xalt_utils.C xalt_utils.h xalt_types.h xalt_config.h
+	env; g++ -o $@ -c -std=c++11 -I. $<
 zstring.o: zstring.C zstring.h
 
