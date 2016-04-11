@@ -70,13 +70,13 @@ $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CF_INIT) -Ibuild_h -DSTATE=LD_PRELOAD -o $@ -c $<
 
-$(DESTDIR)$(LIBEXEC)/libxalt_init.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o 
+$(DESTDIR)$(LIBEXEC)/libxalt_init.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o
 	gcc $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -luuid
 
 $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CF_INIT) -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
 
-$(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o
+$(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o
 	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -luuid; 
 
 $(DESTDIR)$(LIBEXEC)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
