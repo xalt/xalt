@@ -43,23 +43,38 @@ xalt_syshost.o: xalt_syshost.c xalt_fgets_alloc.h
 	gcc -c -DHAVE_MAIN -O2 -o $@ $<
 
 $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly: xalt_generate_assembly.o extract_linker.o Process.o xalt_fgets_alloc.o epoch.o
-	g++ -O2 -o $@ $?
+	g++ -O2 -o $@ $^
 
 $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata: xalt_generate_linkdata.o extract_linker.o Process.o xalt_fgets_alloc.o xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_mysql_utils.o xalt_utils.o Json.o base64.o parseLDTrace.o capture.o link_direct2db.o zstring.o  ConfigParser.o transmit.o
-	g++ -O2 -o $@ $? $(MYSQL_LDFLAGS) -lz
+	g++ -O2 -o $@ $^ $(MYSQL_LDFLAGS) -lz
 
 $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib: xalt_strip_linklib.o xalt_quotestring.o parseJsonStr.o buildRmapT.o jsmn.o xalt_utils.o xalt_fgets_alloc.o
-	g++ -O2 -o $@ $?
+	g++ -O2 -o $@ $^
 
-build_init: 
-	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -c xalt_quotestring.c
-	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o -c xalt_syshost.c
-	gcc $(CF_INIT) -o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o -c xalt_fgets_alloc.c
-	gcc $(CF_INIT) -DSTATE=LD_PRELOAD -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
-	gcc $(CF_INIT) $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -luuid; 
-	gcc $(CF_INIT) -g -O0 -DSTATE=LD_PRELOAD -DFULL_TRACING -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
-	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so $(DESTDIR)$(LIBEXEC)/xalt_initialize.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o -luuid; 
-	gcc $(CF_INIT) -DSTATE=REGULAR    -o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o -c xalt_initialize.c; 
+build_init: $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o $(DESTDIR)$(LIBEXEC)/libxalt_init.so $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o $(DESTDIR)$(LIBEXEC)/xalt_initialize.o 
+
+$(DESTDIR)$(LIBEXEC)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
+	gcc $(CF_INIT) -o $@ -c $<
+
+$(DESTDIR)$(LIBEXEC)/xalt_syshost.o: xalt_syshost.c
+	gcc $(CF_INIT) -o $@ -c $< 
+$(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
+	gcc $(CF_INIT) -o $@ -c $<
+
+$(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h xalt_config.h 
+	gcc $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+
+$(DESTDIR)$(LIBEXEC)/libxalt_init.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o 
+	gcc $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -luuid
+
+$(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h xalt_config.h 
+	gcc $(CF_INIT) -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
+
+$(DESTDIR)$(LIBEXEC)/libxalt_init_dbg.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o
+	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -luuid; 
+
+$(DESTDIR)$(LIBEXEC)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h xalt_config.h 
+	gcc $(CF_INIT) -DSTATE=REGULAR  -o $@ -c $<
 
 makefile: Makefile.in config.status
 	./config.status $@
@@ -68,7 +83,7 @@ makefile: Makefile.in config.status
 neat:
 	$(RM) *~
 clean: 
-	$(RM) -r *.o xalt_config.h
+	$(RM) -r *.o xalt_config.h xalt_regex.h
 
 ConfigParser.o: ConfigParser.C ConfigParser.h xalt_config.h base64.h xalt_fgets_alloc.h xalt_utils.h xalt_types.h
 Json.o: Json.C Json.h xalt_quotestring.h xalt_types.h 
