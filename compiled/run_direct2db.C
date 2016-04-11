@@ -339,7 +339,7 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
   my_bool env_name_null_flag = 0;
   result[1].buffer_type   = MYSQL_TYPE_STRING;
   result[1].buffer        = (void *) &env_name[0];
-  result[1].buffer_length = len_env_name+1;
+  result[1].buffer_length = env_name_sz;
   result[1].length        = &len_env_name;
   result[1].is_null       = &env_name_null_flag;
 
@@ -425,7 +425,10 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   uint env_id = 0;
   TableIdx::const_iterator got = envNameT.find(env_name);
   if (got != envNameT.end())
-    return got->second;      // return env_id
+    {
+      env_id = got->second;      // return env_id
+      return env_id;
+    }
 
   
   const char* stmt_sql_i = "INSERT INTO xalt_env_name VALUES (NULL,?)";
