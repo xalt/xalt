@@ -21,6 +21,9 @@
 
 srcdir            := @srcdir@
 VPATH             := @srcdir@
+ifeq ($(srcdir),.)
+  srcdir := $(CURDIR)
+endif
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
 OS_NAME           := $(shell uname -s)
@@ -122,12 +125,16 @@ build_compiled:
 
 
 echo:
+	@echo srcdir: $(srcdir)
 	@echo CURDIR: $(CURDIR)
 	@echo srcdir: $(srcdir)
 	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
+
+remove_genfiles:
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -302,7 +309,7 @@ makefile: $(srcdir)/Makefile.in $(srcdir)/config.status
 neat:
 	$(RM) *~ src/*~
 	cd compiled ; $(MAKE) PARENT_DIR=$(srcdir) $@
-clean:  neat
+clean:  neat remove_genfiles
 	cd compiled ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
 clobber: clean
 
