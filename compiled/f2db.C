@@ -112,7 +112,7 @@ int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
 
   for (auto it = fileA.begin(); it < fileA.end(); ++it)
     {
-      std::string          usr_cmdline;
+      Vstring              cmdlineA;
       std::string          hash_id;
       Table                envT;
       Table                userT;
@@ -133,7 +133,9 @@ int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
         jsonStr.append(buf);
       free(buf);
 
-      parseRunJsonStr(jsonStr, usr_cmdline, hash_id, envT, userT, recordT, libA);
+      parseRunJsonStr(jsonStr, cmdlineA, hash_id, envT, userT, recordT, libA);
+
+      std::string usr_cmdline = "";
 
       run_direct2db(Options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, recordT, libA);
       num++;
