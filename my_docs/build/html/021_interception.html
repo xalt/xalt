@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interception Options &mdash; XALT 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="XALT 1.0 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="interception-options">
+<h1>Interception Options<a class="headerlink" href="#interception-options" title="Permalink to this headline">¶</a></h1>
+<p><strong>Intercepting: linkers and launchers</strong>
+If you have multiple code launchers and linkers, you must choose a method to intercept them. There are currently three options for wrapping.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Aliasing</li>
+<li>XALT modulefile</li>
+<li>Move the launcher</li>
+</ol>
+</div></blockquote>
+<p><strong>Aliasing: Get in front of the code launcher</strong></p>
+<p>Each alias points to a unique python script. An analysis of the command line gives the name of the name of the original command along with parameters - name of compiler, executable or job file, requested number of processors.</p>
+<p><strong>XALT modulefile</strong></p>
+<p>Create an XALT modulefile that on loading puts the launcher first in the path.
+An example is provided with the xalt.tar file and can be used to help make XALT part of the default environment.
+Issue: you must address any change to the MPI library be a module swap will not keep the XALT wrapper in the path.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Have each MPI modulefile reload the XALT modulefile (or inline the XALT modulefile contents)</li>
+<li>Use Lmod (<a class="reference internal" href="010_installation.html#lmod"><span>Lmod Installation</span></a>) as the module system which allows one to specify priorities on the PATH setting. Set the XALT PATH priority to ensure MPI modulefile swaps will not be a problem.</li>
+</ul>
+</div></blockquote>
+<p><strong>Move the Launcher</strong></p>
+<p>Each launcher can be moved by renaming it. This is not our suggested option because it requires modifications to our wrapper. See user guide for an example and additional documentation.</p>
+<p><a class="reference internal" href="020_QuickStart.html"><em>Quick Start Guide - Prerequistes and Decisions</em></a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/021_interception.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">XALT 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Robert McLay.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

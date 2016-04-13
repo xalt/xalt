@@ -38,14 +38,13 @@ for lib in libmap:
 
 # Remove libraries that are in reference lib
 linkline = sys.argv[1:]
-xLibs    = []
+aLibs    = []
 for iLib in linkline:
   testLib = os.path.basename(iLib.replace("-l", "lib") \
                              .replace('.a','').replace('.so','').strip())
   if testLib in refLibs:
-    xLibs.append(iLib)
+    continue
     
-for iLib in xLibs:
-  linkline.remove(iLib)
-  
-print " ".join(linkline)
+  aLibs.append(iLib)
+    
+print " ".join(aLibs)

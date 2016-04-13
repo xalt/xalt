@@ -63,6 +63,11 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 find_working_python  # This function sets MY_PYTHON
 
 ########################################################################
+# Find compiler calling this ld
+
+find_compiler  # This function sets COMPILER
+
+########################################################################
 # Loop over command line arguments to ld. This code is used instead of
 # getopt and others because this wrapper script should not try to know
 # all the options to ld. Instead we are just "cherry-picking" the options
@@ -157,22 +162,44 @@ else
   OBJ=""
 fi
 
-$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py "${argA[@]}"` \
-  --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+( # start intentional fail link for function tracking
+$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py 
+  "${argA[@]}"` --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+) &
 
-touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
-cat $FUNCRAW | while read line 
-do
-        getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
-        echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
-done
-
-tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
+#Save python state
+py_path_xalt=$PYTHONPATH
+py_home_xalt=$PYTHONHOME
+export PYTHONPATH=$py_path_orig
+[ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
 
 tracing_msg $MY_CMD "${argA[@]}"
 
 $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
 status=$?
+
+wait #-- wait for subshell to finish
+
+#Return python state
+export PYTHONPATH=$py_path_xalt
+unset  PYTHONHOME
+[ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
+
+( # start asynchronous subshell while the 'main' can return to user
+
+if [ $EXEC == "conftest" ]; then
+  $RM -rf $WRKDIR
+  exit 0
+fi
+
+touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
+
+cat $FUNCRAW | while read line 
+do
+        getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
+        echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
+done
+tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
 
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
@@ -192,6 +219,7 @@ if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
 fi
 
 $RM -rf $WRKDIR
+) & # end subshell
 
 tracing_msg "Ending ld"
 

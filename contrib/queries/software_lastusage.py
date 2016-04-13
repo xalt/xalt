@@ -2,7 +2,7 @@ import os, sys, re, base64
 import MySQLdb, argparse
 import time
 from datetime import datetime, timedelta
-from XALT_Rmap import Rmap
+from Rmap_XALT import Rmap
 from xalt_util import *
 try:
   import configparser
