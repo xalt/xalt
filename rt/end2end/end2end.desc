@@ -13,19 +13,15 @@ test_descript = {
      . $(projectDir)/rt/common_funcs.sh
 
      initialize
-     buildRmapT
      installXALT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
-
 
      runMe installDB             # 1
 
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
-
-     export XALT_EXECUTABLE_TRACKING=yes
 
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
 
@@ -35,19 +31,15 @@ test_descript = {
 
      mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
 
-     rm -rf Ðì®
      mkdir Ðì®
      mv helloñ Ðì®
       
      mpirun -n 1 Ðì®/helloñ
 
-     export LD_PRELOAD=$outputDir/XALT/libexec/libxalt_init.so
-     ./hello
-
      export XALT_USERS="$USER;$outputDir"
-     xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
+     xalt_file_to_db.py  --dbname $DBNAME
 
-     check_entries_db.py --dbname $DBNAME --results result.csv --runs 3
+     check_entries_db.py --dbname $DBNAME --results result.csv
      removeDataBase.py   --dbname $DBNAME  
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,

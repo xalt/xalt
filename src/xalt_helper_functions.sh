@@ -159,8 +159,6 @@ find_working_python()
   fi
 
   tracing_msg "find_working_python: Setting MY_PYTHON to $MY_PYTHON"
-  tracing_msg "find_working_python: with PYTHONPATH=$PYTHONPATH"
-  tracing_msg "find_working_python: and  PYTHONHOME=$PYTHONHOME"
 
   if [ "$MY_PYTHON" = "broken" ]; then
     builtin echo "XALT: Error in users' python setup.  Please report this error!"

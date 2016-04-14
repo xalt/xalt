@@ -34,7 +34,6 @@
 #
 ##########################################################################
 
-unset LD_PRELOAD
 LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
@@ -56,14 +55,6 @@ tracing_msg "Starting ld"
 
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
-
-
-if [ "$XALT_EXECUTABLE_TRACKING" != yes ]; then
-  $MY_CMD "${argA[@]}"
-  status=$?
-  exit $status
-fi
-
 
 ########################################################################
 # Make sure that the python setup is valid. 
@@ -123,22 +114,19 @@ do
 
 done
 
-
-
+PyPATH="/usr/bin:/bin"
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
-LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD
-SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD)
-UUIDGEN=@uuidgen@
+SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
+SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $SYS_HOST_CMD)
+UUIDGEN=@path_to_uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
 CAT=@path_to_cat@
 MKDIR=@path_to_mkdir@
 GREP=@grep@
-PyPATH="/usr/bin:/bin"
 
 
 UUID=`$UUIDGEN`
@@ -151,8 +139,6 @@ ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
-XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o $XALT_LIBEXEC_DIR/xalt_fgets_alloc.o"
-
 
 if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
@@ -170,9 +156,9 @@ else
   OBJ=""
 fi
 
-( # start intentional fail link for function tracking
-$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py 
-  "${argA[@]}"` --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+(   # start intentional fail link for function tracking
+    $MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py 
+      "${argA[@]}"` --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 ) &
 
 #Save python state
@@ -183,8 +169,12 @@ export PYTHONPATH=$py_path_orig
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
+$MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
 status=$?
+
+if [ -n "$USER_TRACE" ]; then
+  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
+fi
 
 wait #-- wait for subshell to finish
 
@@ -193,42 +183,40 @@ export PYTHONPATH=$py_path_xalt
 unset  PYTHONHOME
 [ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
 
-( # start asynchronous subshell while the 'main' can return to user
+########################################################################
+# start asynchronous subshell while the 'main' can return to user
+( 
 
-if [ $EXEC == "conftest" ]; then
-  $RM -rf $WRKDIR
-  exit 0
-fi
+    if [ $EXEC == "conftest" ]; then
+      $RM -rf $WRKDIR
+      exit 0
+    fi
 
-touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
+    touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
 
-cat $FUNCRAW | while read line 
-do
-        getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
-        echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
-done
-tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
+    cat $FUNCRAW | while read line 
+    do
+            getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
+            echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
+    done
+    tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
 
-if [ -n "$USER_TRACE" ]; then
-  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
-fi
+    tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
+    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
 
-LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
+    if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
+       builtin echo ""                       >> $RESULT
+       builtin echo "====================="  >> $RESULT
+       builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
+       builtin echo "====================="  >> $RESULT
 
-if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
-   builtin echo ""                       >> $RESULT
-   builtin echo "====================="  >> $RESULT
-   builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
-   builtin echo "====================="  >> $RESULT
+       $CAT  $LINKLINE >> $RESULT
+    fi
 
-   $CAT  $LINKLINE >> $RESULT
-fi
+    $RM -rf $WRKDIR
+    tracing_msg "Ending ld"
 
-$RM -rf $WRKDIR
 ) & # end subshell
-
-tracing_msg "Ending ld"
 
 exit $status

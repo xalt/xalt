@@ -70,11 +70,22 @@ SBIN              := $(prefix)/sbin
 DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
                      $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
 
-#BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
-#                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
-#                     src/mpirun.lsf.in src/xalt_helper_functions.sh
+BIN_PKG           := job_launcher/mpirun.in     job_launcher/mpiexec.in   job_launcher/ibrun.in \
+                     job_launcher/ibrun.symm.in job_launcher/aprun.in     job_launcher/srun.in  \
+                     job_launcher/mpirun.lsf.in                                                 \
+	             src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
 
-BIN_PKG           := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
+#BIN_PKG          := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
+
+SITE_PKG          := job_launcher/xalt_find_exec_hydra.py       job_launcher/xalt_find_exec_openmpi.py    \
+	             job_launcher/xalt_which_mpi.in             job_launcher/xalt_syshost_$(SITE_NAME).py \
+                     job_launcher/new_job_id.in.py              job_launcher/xalt_site_pkg.py             \
+		     job_launcher/xalt_find_exec_ibrun.py       job_launcher/xalt_find_exec_aprun.py      \
+		     job_launcher/xalt_find_exec_sgimpt.py      job_launcher/xalt_find_exec_srun.py       \
+                     job_launcher/xalt_find_exec_ncar.py        
+SITE_PKG          := $(patsubst %, $(PATH_TO_SRC)/%, $(SITE_PKG))
+
+
 
 BIN_PKG           := $(patsubst %, $(PATH_TO_SRC)/%, $(BIN_PKG))
 
@@ -107,7 +118,7 @@ INIT_SRC          := $(patsubst %, $(PATH_TO_SRC)/%, $(INIT_SRC))
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_sbin Inst_bin Inst_libexec \
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
           Build_pstree_$(BUILD_PSTREE) build_compiled
 
@@ -126,6 +137,9 @@ echo:
 
 $(DIRLIST) :
 	mkdir -p $@
+
+Inst_site: $(SITE_PKG)
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe

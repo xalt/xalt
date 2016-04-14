@@ -3,8 +3,7 @@
 
 initialize()
 {
-  unset LD_PRELOAD
-  export XALT_EXECUTABLE_TRACKING=no
+  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
@@ -12,25 +11,17 @@ initialize()
   COUNT=0
 
   rm -f  _stderr.* _stdout.* out.* err.* 
-  rm -rf .xalt.d syslog.log reverseMapD
+  rm -rf .xalt.d syslog.log
 
-}
-
-buildRmapT()
-{
-  mkdir reverseMapD
-  $LMOD_DIR/spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/jsonReverseMapT.json
 }
 
 installXALT()
 {
-  rm -rf XALT build
-  mkdir build
-  (cd build; $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 > /dev/null ; \
-  make -f makefile PATH_TO_SRC=$projectDir install > /dev/null )
+  rm -rf XALT
+  make -f $projectDir/makefile prefix=$outputDir/XALT PATH_TO_SRC=$projectDir \
+    install > /dev/null
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin
-  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 }
 
 installDB()

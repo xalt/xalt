@@ -13,6 +13,18 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
+AC_SUBST(SITE)
+AC_ARG_WITH(site,
+    AC_HELP_STRING([--with-site=ans],[Site name [[default]]]),
+    SITE="$withval"
+    AC_MSG_RESULT([SITE=$with_site])
+    AC_DEFINE_UNQUOTED(SITE, "$with_site")dnl
+    ,
+    withval="default"
+    AC_MSG_RESULT([SITE=$withval])
+    SITE="$withval"
+    AC_DEFINE_UNQUOTED(SITE, "$withval"))dnl
+
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
     AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
@@ -25,142 +37,73 @@ AC_ARG_WITH(etcDir,
     ETC_DIR="$withval"
     AC_DEFINE_UNQUOTED(ETC_DIR, "$withval"))dnl
 
-AC_SUBST(XALT_CONFIG_PY)
-AC_ARG_WITH(config,
-    AC_HELP_STRING([--with-config=ans],[A python file defining the accept, ignore, hostname pattern lists [[NO DEFAULT]]]),
-    XALT_CONFIG_PY="$withval"
-    AC_MSG_RESULT([XALT_CONFIG_PY=$with_config])
-    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$with_config")dnl
-    ,
-    withval="no"
-    AC_MSG_RESULT([XALT_CONFIG_PY=$withval])
-    XALT_CONFIG_PY="$withval"
-    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$withval"))dnl
-
-AC_SUBST(SYSTEM_PATH)
-AC_ARG_WITH(systemPath,
-    AC_HELP_STRING([--with-systemPath=ans],[]),
-    SYSTEM_PATH="$withval"
-    AC_MSG_RESULT([SYSTEM_PATH=$with_systemPath])
-    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$with_systemPath")dnl
-    ,
-    withval="/usr/bin:/bin"
-    AC_MSG_RESULT([SYSTEM_PATH=$withval])
-    SYSTEM_PATH="$withval"
-    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"))dnl
-
-AC_SUBST(SYSHOST_CONFIG)
-AC_ARG_WITH(syshostConfig,
-    AC_HELP_STRING([--with-syshostConfig=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
-    SYSHOST_CONFIG="$withval"
-    AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
-    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig")dnl
-    ,
-    withval="no"
-    AC_MSG_RESULT([SYSHOST_CONFIG=$withval])
-    SYSHOST_CONFIG="$withval"
-    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval"))dnl
-
-AC_SUBST(SYS_LD_LIB_PATH)
-SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
-
-
-AC_CHECK_HEADER(uuid/uuid.h,
-    [],
-    [AC_MSG_ERROR([XALT cannot be built without uuid/uuid.h])]
-    )
-
 
 AC_SUBST(PATH_TO_AS)
-AC_SUBST(PATH_TO_BASENAME)
-AC_SUBST(PATH_TO_CAT)
-AC_SUBST(PATH_TO_DATE)
-AC_SUBST(PATH_TO_DIRNAME)
-AC_SUBST(PATH_TO_FILE)
-AC_SUBST(PATH_TO_GREP)
 AC_SUBST(PATH_TO_HEAD)
-AC_SUBST(PATH_TO_LDD)
-AC_SUBST(PATH_TO_LOGGER)
-AC_SUBST(PATH_TO_MKDIR)
-AC_SUBST(PATH_TO_OBJDUMP)
-AC_SUBST(PATH_TO_PSTREE)
+AC_SUBST(PATH_TO_BASENAME)
 AC_SUBST(PATH_TO_READLINK)
+AC_SUBST(PATH_TO_DIRNAME)
+AC_SUBST(PATH_TO_GREP)
+AC_SUBST(PATH_TO_CAT)
 AC_SUBST(PATH_TO_RM)
-AC_SUBST(PATH_TO_SHA1SUM)
+AC_SUBST(PATH_TO_MKDIR)
+AC_SUBST(PATH_TO_AS)
 AC_SUBST(PATH_TO_UUIDGEN)
-
+AC_SUBST(PATH_TO_PSTREE)
 AC_SUBST(BUILD_PSTREE)
 AC_SUBST(USE_CONTRIB_ARGPARSE)
 
+AC_PATH_PROG(PATH_TO_PYTHON, python, "")
+AC_PATH_PROG(PATH_TO_GIT, git, "")
 AC_PATH_PROG(PATH_TO_AS,as, [])
 AC_PATH_PROG(PATH_TO_BASENAME, basename, [])
-AC_PATH_PROG(PATH_TO_CAT, cat, [])
-AC_PATH_PROG(PATH_TO_DATE, date, [])
-AC_PATH_PROG(PATH_TO_DIRNAME, dirname, [])
-AC_PATH_PROG(PATH_TO_FILE, file, "")
-AC_PATH_PROG(PATH_TO_GIT, git, "")
-AC_PATH_PROG(PATH_TO_GREP, grep, [])
-AC_PATH_PROG(PATH_TO_HEAD, head, [])
-AC_PATH_PROG(PATH_TO_LDD, ldd, [])
-AC_PATH_PROG(PATH_TO_LOGGER, logger, [])
-AC_PATH_PROG(PATH_TO_MKDIR,mkdir, [])
-AC_PATH_PROG(PATH_TO_OBJDUMP, objdump, "")
-AC_PATH_PROG(PATH_TO_OTOOL, otool, "")
-AC_PATH_PROG(PATH_TO_PYTHON, python, "")
 AC_PATH_PROG(PATH_TO_READLINK, readlink, [])
+AC_PATH_PROG(PATH_TO_DIRNAME, dirname, [])
+AC_PATH_PROG(PATH_TO_MKDIR,mkdir, [])
+AC_PATH_PROG(PATH_TO_HEAD, head, [])
+AC_PATH_PROG(PATH_TO_GREP, grep, [])
+AC_PATH_PROG(PATH_TO_CAT, cat, [])
 AC_PATH_PROG(PATH_TO_RM, rm, [])
-AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
 AC_SUBST(HAVE_PYMOD_PSUTIL)
-AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([psutil])
-AC_PYTHON_MODULE([MySQLdb])
 
-AC_SUBST(VERSION)
+if test "$HAVE_PYMOD_PSUTIL" = yes; then
+  BUILD_PSTREE=no
 
-VERSION=$(cat $ac_confdir/.version)
+else
+   AC_PATH_PROG(pstree_prog, pstree, [])
 
+   PATH_TO_PSTREE=$pstree_prog
 
-if test "$XALT_CONFIG_PY" = no; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without setting --with-config=..."
-   echo "See the manual for details"
-   echo "======================================================="
-   exit 1
+   printf "Use contrib pstree"
+   BUILD_PSTREE=yes
+   if test x$pstree_prog != x; then
+     versionStr=$($pstree_prog --version 2>&1 | head -1)
+     name=`expr "$versionStr" : '.*(\(PSmisc\))'`
+     if test x$name = "xPSmisc" ; then
+       major_version=`expr "$versionStr" : '.*(PSmisc) \([[0-9]]\+\)\.'`
+       minor_version=`expr "$versionStr" : '.*(PSmisc) \+[[0-9]]\+\.\([[0-9]]\+\)'`
+       version=`expr $major_version \* 100000 + $minor_version`
+       contrib_version=2200020
+       if test $version -ge $contrib_version ; then
+         BUILD_PSTREE=no
+       fi
+     fi
+   fi
+   echo "... $BUILD_PSTREE"
+
+   if test x$BUILD_PSTREE = xyes; then
+      PATH_TO_PSTREE=$prefix/libexec/pstree
+      AC_CHECK_HEADERS(curses.h)
+      if test x$ac_cv_header_curses_h != xyes; then
+         echo "Error: must have curses.h before building psmisc"
+         exit 1
+      fi
+   fi
 fi
 
-if test "$HAVE_PYMOD_MYSQLDB" = no; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without the python module: MySQLdb"
-   echo "To install it do: pip install MySQL-python"
-   echo "======================================================="
-   exit 1
-fi
-
-
-if test "$HAVE_PYMOD_PSUTIL" = no; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without the python module: psutil"
-   echo "To install it do: pip install psutil"
-   echo "======================================================="
-   exit 1
-fi
-BUILD_PSTREE=no
-
-if test "$SYSHOST_CONFIG" = no; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without setting --with-syshostConfig=..."
-   echo "Your choices are hardcode, nth_name, read_file and mapping."
-   echo "See the manual for details."
-   echo "======================================================="
-   exit 1
-fi
-   
 
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
@@ -174,7 +117,6 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output $ac_confdir/compiled/xalt_regex.h
-$PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output $ac_confdir/compiled/xalt_syshost.c
 
-AC_OUTPUT(makefile:Makefile.in compiled/xalt_config.h:compiled/xalt_config.h.in)
+
+AC_OUTPUT(makefile:Makefile.in)
