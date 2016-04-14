@@ -204,7 +204,7 @@ run_real_command()
 
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T"
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "[]"
 
   status=0
   if [ -z "${testMe:-}" ]; then
@@ -218,8 +218,8 @@ run_real_command()
 
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
-  eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
+  eTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T" "[]"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"
@@ -231,6 +231,6 @@ run_real_command()
 
 find_compiler()
 {
-  COMPILER=$($MY_PYTHON -c "from xalt_util import *; print(extract_compiler())")
+  COMPILER=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E )
   tracing_msg "find_compiler: Setting COMPILER to $COMPILER"
 }

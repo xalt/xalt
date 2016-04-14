@@ -24,7 +24,7 @@
 #-----------------------------------------------------------------------
 
 from __future__                import print_function
-import os, sys
+import os, sys, json
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -33,6 +33,20 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 from xalt_util                 import *
 from xalt_transmission_factory import XALT_transmission_factory
 from xalt_global               import *
+
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    fnA = os.path.split(inspect.currentframe().f_code.co_filename)
+    return fnA[1]
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
 logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')
@@ -132,15 +146,17 @@ def main():
     execname    = sys.argv[ 5]
     xaltobj     = sys.argv[ 6]
     build_epoch = sys.argv[ 7]
-    compiler    = sys.argv[ 8]
-    funclistFn  = sys.argv[ 9]
-    linklineFn  = sys.argv[10]
-    resultFn    = sys.argv[11]
+    funclistFn  = sys.argv[ 8]
+    linklineFn  = sys.argv[ 9]
+    resultFn    = sys.argv[10]
+    compT       = json.loads(sys.argv[11])
 
     if (execname == "conftest"):
       return 1
   
-    hash_line   = capture(['@sha1sum@', execname])  
+    full_exec  = os.path.join(os.getcwd(), execname)
+    hash_line   = capture(['@sha1sum@', full_exec])  
+    
     if (hash_line.find("No such file or directory") != -1):
       return 1
     hash_id     = hash_line.split()[0]
@@ -149,13 +165,14 @@ def main():
     
     # Step one clean up linkline data
     sA = cleanup(xaltobj, linklineFn)
-    link_program, link_path, link_line  = extract_compiler()
+
+    #link_program, link_path, link_line  = extract_compiler()
   
     resultT                  = {}
     resultT['uuid']          = uuid
-    resultT['link_program']  = link_program
-    resultT['link_path']     = link_path
-    resultT['link_line']     = link_line
+    resultT['link_program']  = compT['compiler']
+    resultT['link_path']     = compT['full_path']
+    resultT['link_line']     = compT['link_line']
     resultT['build_user']    = User
     resultT['exit_code']     = int(status)
     resultT['build_epoch']   = float(build_epoch)

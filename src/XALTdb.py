@@ -201,12 +201,12 @@ class XALTdb(object):
       if ('function' in linkT):
         for func_name in linkT['function']:
           query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
-          cursor.execute(query, (func_name[:255]))
+          cursor.execute(query, [func_name[:255]])
           if (cursor.rowcount > 0):
             func_id = int(cursor.fetchone()[0])
           else:
             query = "INSERT INTO xalt_function VALUES (NULL, %s)"
-            cursor.execute(query, (func_name[:255]))
+            cursor.execute(query, [func_name[:255]])
             func_id = cursor.lastrowid
         
           query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \

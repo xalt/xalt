@@ -75,13 +75,10 @@ if [ -z "$SYSHOST" ]; then
   export SYSHOST=${myhost#*.}
 fi
 
-SETUP_CMD=
-
 case $SYSHOST in
   rios | mijo | jedrik | vato | vmijo | devo | lmod-test | xalt-lmod)
     SUDO="sudo"
     base="/opt/apps"
-    CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py"
     ;;
 
   ls4 | stampede | maverick)
@@ -89,24 +86,13 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.tacc.txt --with-hostnameList=./contrib/TACC/config/hostname.tacc.txt --with-site=TACC"
-    ;;
-
-  ls5 )
-    base="$HOME/l/pkg"
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt --with-etcDir=/home1/moduleData/all --with-site=TACC"
+    REMOVE="mpirun srun aprun mpiexec"
     ;;
 
   kfs|xc30)
     base="$HOME/l/pkg"
     EXTRA="/$SYSHOST"
-    ;;
-
-  
-  gligar.os)
-    base="$HOME/l/pkg"
-    SETUP_CMD="module load MySQLdb/1.2.5-intel-2016a-Python-2.7.11 psutil/3.4.2-intel-2016a-Python-2.7.11 libuuid/1.0.3-intel-2016a"
-    CONF_OPTS="--with-etcDir=/"
+    REMOVE="srun ibrun"
     ;;
 
   *)
@@ -126,16 +112,14 @@ if [ "$?" = 0 ]; then
   MAKE=remake
 fi
 
-unset LD_PRELOAD
-
 cmdA=("-$MAKE distclean"
       "-rm -rf $PKG"
-      "$SETUP_CMD"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE install"
       "$SUDO $MAKE Inst_TACC"
       "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
+      "removeList $PKG $REMOVE"
       "ld_repair"
       )
 

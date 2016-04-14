@@ -41,10 +41,13 @@ BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
+EXTRACT_COMPILER=$XALT_DIR/libexec/xalt_extract_linker.py
+
+export MY_CMD=unknown
 
 source $MY_DIR/xalt_helper_functions.sh
 
-##########################################################################
+########################################################################
 # Check for user requested tracing.
 request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
 
@@ -56,6 +59,12 @@ tracing_msg "Starting ld"
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
 
+if [ "$XALT_EXECUTABLE_TRACKING" != yes ]; then
+  $MY_CMD "${argA[@]}"
+  status=$?
+  exit $status
+fi
+
 ########################################################################
 # Make sure that the python setup is valid. 
 
@@ -64,7 +73,9 @@ find_working_python  # This function sets MY_PYTHON
 ########################################################################
 # Find compiler calling this ld
 
-find_compiler  # This function sets COMPILER
+export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EXTRACT_COMPILER)
+
+echo COMP_T: $COMP_T
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -121,7 +132,7 @@ GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
 SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $SYS_HOST_CMD)
-UUIDGEN=@path_to_uuidgen@
+UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
 CAT=@path_to_cat@
@@ -157,8 +168,8 @@ else
 fi
 
 (   # start intentional fail link for function tracking
-    $MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py 
-      "${argA[@]}"` --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py  "${argA[@]}") 
+  $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 ) &
 
 #Save python state
@@ -185,7 +196,7 @@ unset  PYTHONHOME
 
 ########################################################################
 # start asynchronous subshell while the 'main' can return to user
-( 
+#( 
 
     if [ $EXEC == "conftest" ]; then
       $RM -rf $WRKDIR
@@ -203,7 +214,7 @@ unset  PYTHONHOME
 
     tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
+    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
 
     if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
        builtin echo ""                       >> $RESULT
@@ -217,6 +228,6 @@ unset  PYTHONHOME
     $RM -rf $WRKDIR
     tracing_msg "Ending ld"
 
-) & # end subshell
+#) & # end subshell
 
 exit $status

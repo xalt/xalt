@@ -51,15 +51,6 @@ tracing_msg "Starting mympirun"
 
 find_real_command $0  # this command sets $MY_CMD
 
-if [ "$XALT_EXECUTABLE_TRACKING" = yes ]; then
-  tracing_msg "  Starting $MY_CMD"
-  $MY_CMD "${argA[@]}"
-  status="$?"
-  tracing_msg "  Ending $MY_CMD"
-  tracing_msg "Ending mympirun"
-  exit $status
-fi
-
 ########################################################################
 # Make sure that the python setup is valid.  
 

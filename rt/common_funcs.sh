@@ -3,6 +3,8 @@
 
 initialize()
 {
+  unset LD_PRELOAD
+  export XALT_EXECUTABLE_TRACKING=no
   PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
@@ -14,14 +16,26 @@ initialize()
   rm -rf .xalt.d syslog.log
 
 }
+buildRmapT()
+{
+  echo "<build xalt_rmapT.json and jsonReverseMapT.json files>"
+  rm -rf reverseMapD
+  mkdir  reverseMapD
+  $LMOD_DIR/spider -o xalt_rmapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/xalt_rmapT.json
+  $LMOD_DIR/spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/jsonReverseMapT.json
+  echo "<finish>"
+}
 
 installXALT()
 {
-  rm -rf XALT
-  make -f $projectDir/makefile prefix=$outputDir/XALT PATH_TO_SRC=$projectDir \
-    install > /dev/null
+  rm -rf XALT build
+  mkdir build
+  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT ; \
+  echo "<make>"; make install ;  )
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin
+  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+  echo "<end make>"
 }
 
 installDB()
@@ -32,8 +46,11 @@ installDB()
 
   conf_create.py     --dbhost localhost --dbuser $DBUSER \
                      --passwd $PASSWD   --dbname $DBNAME
+  echo "<remove old DB>"  1>&2
   removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
+  echo "<create DB>"      1>&2
   createDB.py        --dbname $DBNAME
+  echo "<done instalDB>"  1>&2
 }
 
 runMe ()
