@@ -1,0 +1,24 @@
+#ifndef XALT_REGEX_H
+#define XALT_REGEX_H
+
+#define N_ELEMENTS(a) (sizeof(a)/sizeof((a)[0]))
+
+const char* acceptPathA[] = { @accept_path_list@ };
+const char* ignorePathA[] = { @ignore_path_list@ };
+const char* hostnameA[]   = { @hostname_list@    };
+const char* acceptEnvA[]  = { @accept_env_list@  };
+const char* ignoreEnvA[]  = { @ignore_env_list@  };
+
+const int   acceptPathSz = N_ELEMENTS(acceptPathA);
+const int   ignorePathSz = N_ELEMENTS(ignorePathA);
+const int   hostnameSz   = N_ELEMENTS(hostnameA);
+const int   acceptEnvSz  = N_ELEMENTS(acceptEnvA);
+const int   ignoreEnvSz  = N_ELEMENTS(ignoreEnvA);
+
+
+
+#endif
+
+/* Local Variables: */
+/* mode: c */
+/* End: */

@@ -4,7 +4,7 @@
 initialize()
 {
   unset LD_PRELOAD
-  export XALT_EXECUTABLE_TRACKING=yes
+  export XALT_EXECUTABLE_TRACKING=no
 
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
@@ -26,7 +26,7 @@ installXALT()
 {
   rm -rf XALT build
   mkdir build
-  (cd build; $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir > /dev/null ; \
+  (cd build; $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 > /dev/null ; \
   make -f makefile PATH_TO_SRC=$projectDir install > /dev/null )
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin

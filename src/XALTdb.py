@@ -291,8 +291,8 @@ class XALTdb(object):
       translate(nameA, runT['envT'], runT['userT']);
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
-      runTime     = "%.2f" % runT['userT']['run_time']
-      endTime     = "%.2f" % runT['userT']['end_time']
+      runTime     = "%.2f" % float(runT['userT']['run_time'])
+      endTime     = "%.2f" % float(runT['userT']['end_time'])
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
       uuid        = runT['xaltLinkT'].get('Build.UUID',None)
@@ -319,9 +319,10 @@ class XALTdb(object):
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
         num_threads   = convertToTinyInt(runT['userT'].get('num_threads',0))
-        usr_cmdline   = json.dumps(runtT['cmdline'])
+        usr_cmdline   = json.dumps(runT['cmdlineA'])
+
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
-        startTime     = "%.f" % runT['userT']['start_time']
+        startTime     = "%.f" % float(runT['userT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],

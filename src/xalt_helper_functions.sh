@@ -38,6 +38,7 @@ WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
 EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 BASENAME=@path_to_basename@
 DIRNAME=@path_to_dirname@
+PyPATH=/usr/bin:/bin
 
 ##########################################################################
 #  Check command line arguments to see if user has requested tracing
@@ -152,7 +153,7 @@ find_real_command()
 find_working_python()
 {
   MY_PYTHON="@python@"
-  WORKING=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E  $WORKING_PYTHON 2> /dev/null)
+  WORKING=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E  $WORKING_PYTHON 2> /dev/null)
   if [ "$WORKING" != "GOOD" ]; then
      MY_PYTHON="broken"
   fi
@@ -184,12 +185,12 @@ run_real_command()
   shift
 
   # Build the filename for the results.
-  SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $XALT_DIR/site/xalt_syshost_@site_name@.py)
+  SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_DIR/site/xalt_syshost_@site_name@.py)
   
   # Find the user executable by walking the original command line.
   EXEC_T="[{\"exec_prog\": \"unknown\", \"ntasks\": 1, \"uuid\": \"$($UUIDGEN)\"} ]"
   if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
-    EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
+    EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
   fi
 
   tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
@@ -204,8 +205,8 @@ run_real_command()
   # doesn't complete there will be a record.
 
   tracing_msg "run_real_command: XALT Start Record"
-  sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T"
+  sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T"
 
   status=0
   if [ -z "${testMe:-}" ]; then
@@ -219,8 +220,8 @@ run_real_command()
 
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
-  eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH= $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH PATH= $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
+  eTime=$(LD_LIBRARY_PATH=$LD_LIBR_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
+  LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"

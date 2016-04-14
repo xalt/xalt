@@ -39,7 +39,10 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
+#include "xalt_quotestring.h"
+#include "xalt_config.h"
 
+const char* xalt_syshost();
 int reject(const char *path, const char * hostname);
 long compute_value(const char **envA);
 void abspath(char * path, int sz);
@@ -50,7 +53,6 @@ void myfini();
 
 #define STR(x)  STR2(x)
 #define STR2(x) #x
-#define SZ      256
 static char   uuid_str[37];
 static int    errfd	   = -1;
 static double start_time   = 0.0;
@@ -60,9 +62,8 @@ static long   my_size	   = 1L;
 static int    xalt_tracing = 0;
 static int    reject_flag  = 0;
 static char   path[PATH_MAX];
-static char   syshost[SZ];
-static char * syshost_option;
-static char   usr_cmdline[65535];
+static char * usr_cmdline;
+static const char * syshost;
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
@@ -164,62 +165,52 @@ void myinit(int argc, char **argv)
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
   errfd = dup(STDERR_FILENO);
 
-  asprintf(&syshost_option,"%s"," ");
-#ifdef HAVE_SYSHOST_CMD
-  asprintf(&cmdline,"LD_LIBRARY_PATH=%s PATH= %s -E %s",
-	   "@sys_ld_lib_path@", "@python@",
-	   "@PREFIX@/site/xalt_syshost.py");
-  FILE* fp = popen(cmdline, "r");
-  if (fp)
-    {
-      int len;
-      while(fgets(syshost,SZ, fp) != NULL)
-	;
-      len = strlen(syshost);
-      if(syshost[len-1] == '\n')
-	syshost[len-1] = '\0';
-      asprintf(&syshost_option,"--syshost %s",syshost);
-      fclose(fp);
-    }
-#endif
+  syshost = xalt_syshost();
 
-  /* Build a json version of the command line.  There is special treatment of " and \\ */
-  p = &usr_cmdline[0];
-  *p++ = '[';
-  for (i = 0; i < argc; i++)
+  /* Build a json version of the user's command line. */
+
+  /* Calculate size of buffer*/
+  int sz = 0;
+  for (i = 0; i < argc; ++i)
+    sz += strlen(argv[i]);
+
+  /* this size formula uses 3 facts:
+   *   1) if every character was a utf-16 character that is four bytes converts to 12 (sz*3)
+   *   2) Each entry has two quotes and a comma (argc*3)
+   *   3) There are two square brackets and a null byte (+3)
+   */
+
+  sz = sz*3 + argc*3 + 3;
+
+  usr_cmdline = (char *) malloc(sz);
+  p	      = &usr_cmdline[0];
+  *p++        = '[';
+  for (i = 0; i < argc; ++i)
     {
-      char* s   = argv[i];
-      int   len = strcspn(s,"\"\\");
       *p++ = '"';
-
-      while(1)
-	{
-	  char c = s[len];
-	  memcpy(p,s,len);
-	  p += len;
-	  s += len+1;
-	  if (c == '\0')
-	    break;
-	  *p++ = '\\';
-	  *p++ = c;
-	  
-	  len = strcspn(s,"\"\\");
-	}
+      const char* qs  = xalt_quotestring(argv[i]);
+      int         len = strlen(qs);
+      memcpy(p,qs,len);
+      p += len;
       *p++= '"';
       *p++= ',';
     }
-  *--p = ']'; p++;
-  *p = '\0';
-  
+  *--p = ']';
+  *++p = '\0';
+  if (p > &usr_cmdline[sz])
+    {
+      fprintf(stderr,"XALT: Failure in building user command line json string!\n");
+      reject_flag = 1;
+      return;
+    }
+
   uuid_generate(uuid);
   uuid_unparse_lower(uuid,uuid_str);
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end 0 -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
-	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, path, my_size, uuid_str, usr_cmdline);
-
-  
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline);
   
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
   system(cmdline);
@@ -269,14 +260,13 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH= %s -E %s %s --start \"%.3f\" --end \"%.3f\" -- '[{\"exec_prog\": \"%s\", \"ntasks\": %ld, \"uuid\": \"%s\"}]' '%s'",
-	   "@sys_ld_lib_path@", "@python@","@PREFIX@/libexec/xalt_run_submission.py", syshost_option, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
   system(cmdline);
   free(cmdline);
-  free(syshost_option);
 }
 
 int reject(const char *path, const char * hostname)
@@ -325,12 +315,12 @@ int reject(const char *path, const char * hostname)
     }
 
   FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
-  for (i = 0; i < acceptSz; i++)
+  for (i = 0; i < acceptPathSz; i++)
     {
-      iret = regcomp(&regex, acceptA[i], 0);
+      iret = regcomp(&regex, acceptPathA[i], 0);
       if (iret)
 	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
 	  exit(1);
 	}
 
@@ -349,12 +339,12 @@ int reject(const char *path, const char * hostname)
       regfree(&regex);
     }
   
-  for (i = 0; i < ignoreSz; i++)
+  for (i = 0; i < ignorePathSz; i++)
     {
-      iret = regcomp(&regex, ignoreA[i], 0);
+      iret = regcomp(&regex, ignorePathA[i], 0);
       if (iret)
 	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptA[i]);
+	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
 	  exit(1);
 	}
 

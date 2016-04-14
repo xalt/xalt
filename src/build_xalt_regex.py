@@ -35,36 +35,20 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--accept",   dest='accept',   action="store", default="accept.default.txt",   help="accept list file")
-    parser.add_argument("--ignore",   dest='ignore',   action="store", default="ignore.default.txt",   help="ignore list file")
-    parser.add_argument("--hostname", dest='hostname', action="store", default="hostname.default.txt", help="hostname acceptable list file")
-    parser.add_argument("--input",    dest='input',    action="store", default="xalt_regex.template",  help="input template file")
-    parser.add_argument("--output",   dest='output',   action="store", default="xalt_regex.h",         help="output header file")
+    parser.add_argument("--confFn",   dest='confFn',   action="store", help="python config file")
+    parser.add_argument("--input",    dest='input',    action="store", help="input template file")
+    parser.add_argument("--output",   dest='output',   action="store", help="output header file")
     args = parser.parse_args()
     
     return args
 
 
 
-def convert_file_to_string(path):
-
-  try: 
-    f = open(path,"r")
-  except IOError as e:
-    return ""
+def convert_to_string(list):
 
   a = []
-  for line in f:
-    idx  = line.find('#')
-    if (idx == 0):
-      continue
-    if (idx != -1):
-      line = line[0:idx-1]
-    line = line.rstrip()
-    if (len(line) == 0):
-      continue
-    a.append('"'+line+'"')
-  f.close()
+  for s in list:
+    a.append('"'+s+'"')
 
   return ",".join(a)
 
@@ -103,14 +87,21 @@ def main():
 
   args = CmdLineOptions().execute()
 
-  ignoreStr = convert_file_to_string(args.ignore)
-  acceptStr = convert_file_to_string(args.accept)
-  hostStr   = convert_file_to_string(args.hostname)
+  namespace = {}
+  exec(open(args.confFn).read(), namespace)
+
+  ignorePathStr = convert_to_string(namespace.get('ignore_path_patterns',{}))
+  acceptPathStr = convert_to_string(namespace.get('accept_path_patterns',{}))
+  ignoreEnvStr  = convert_to_string(namespace.get('ignore_env_patterns', {}))
+  acceptEnvStr  = convert_to_string(namespace.get('accept_env_patterns', {}))
+  hostStr       = convert_to_string(namespace.get('hostname_patterns',   {}))
 
   pattA = [
-    ['@accept_list@',   acceptStr],
-    ['@ignore_list@',   ignoreStr],
-    ['@hostname_list@', hostStr],
+    ['@accept_path_list@', acceptPathStr],
+    ['@ignore_path_list@', ignorePathStr],
+    ['@accept_env_list@',  acceptEnvStr],
+    ['@ignore_env_list@',  ignoreEnvStr],
+    ['@hostname_list@',    hostStr],
   ]
 
   convert_template(pattA, args.input, args.output)
