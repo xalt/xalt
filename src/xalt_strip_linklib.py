@@ -21,12 +21,16 @@
 #
 # Git Version: @git@
 
-import os
-import sys
-import json
+from __future__                import print_function
+import os, sys, json
+from   collections import defaultdict
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
 from   xalt_global import *
 from   Rmap_XALT   import Rmap
-from   collections import defaultdict
 
 RMapFn = os.path.join(XALT_ETC_DIR,"reverseMapD")
 libmap = Rmap(RMapFn).libMap()
@@ -47,4 +51,4 @@ for iLib in linkline:
     
   aLibs.append(iLib)
     
-print " ".join(aLibs)
+print(" ".join(aLibs))
