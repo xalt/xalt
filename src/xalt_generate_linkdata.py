@@ -132,11 +132,12 @@ def main():
     execname    = sys.argv[ 5]
     xaltobj     = sys.argv[ 6]
     build_epoch = sys.argv[ 7]
-    funclistFn  = sys.argv[ 8]
-    linklineFn  = sys.argv[ 9]
-    resultFn    = sys.argv[10]
+    compiler    = sys.argv[ 8]
+    funclistFn  = sys.argv[ 9]
+    linklineFn  = sys.argv[10]
+    resultFn    = sys.argv[11]
 
-    if (execname.find("conftest") != -1):
+    if (execname == "conftest"):
       return 1
   
     hash_line   = capture(['@sha1sum@', execname])  

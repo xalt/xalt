@@ -1,0 +1,22 @@
+--- ld.orig	2016-03-03 21:39:17.910600602 -0500
++++ ld	2016-03-03 21:43:52.529791014 -0500
+@@ -165,8 +165,18 @@
+ 
+ tracing_msg $MY_CMD "${argA[@]}"
+ 
+-$MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
++# Some lustre filesystem is slow for linking. This workaround uses /tmp
++# to build the executable and copy it back to user-specified path
++
++$MY_CMD "${argA[@]}" $OBJ -t -o ${WRKDIR}/${UUID} \
++  > $LINKLINE_OUT 2> $LINKLINE_ERR
+ status=$?
++if [ $status == 0 ]; then
++  cp ${WRKDIR}/${UUID} $EXEC
++else
++  sed -i "s|${WRKDIR}/$UUID|$EXEC|g"  $LINKLINE_ERR
++  cat $LINKLINE_ERR >&2
++fi
+ 
+ wait #-- wait for subshell to finish
+ 

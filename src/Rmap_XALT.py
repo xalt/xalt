@@ -53,6 +53,7 @@ class Rmap(object):
         rmapFn = os.path.join(dir, "jsonReverseMapT" + ext)
         if (os.access(rmapFn, os.R_OK)):
           break
+        rmapFn = None
     if (rmapFn):
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")

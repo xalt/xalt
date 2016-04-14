@@ -1,7 +1,7 @@
+#include <string>
 #include <time.h>
 #include <my_global.h>
 #include <mysql.h>
-#include <string>
 #include <string.h>
 #include <stdlib.h>
 #include <regex.h>

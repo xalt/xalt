@@ -201,12 +201,12 @@ class XALTdb(object):
       if ('function' in linkT):
         for func_name in linkT['function']:
           query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
-          cursor.execute(query, [func_name])
+          cursor.execute(query, (func_name[:255]))
           if (cursor.rowcount > 0):
             func_id = int(cursor.fetchone()[0])
           else:
             query = "INSERT INTO xalt_function VALUES (NULL, %s)"
-            cursor.execute(query, [func_name])
+            cursor.execute(query, (func_name[:255]))
             func_id = cursor.lastrowid
         
           query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
@@ -295,7 +295,7 @@ class XALTdb(object):
       endTime     = "%.2f" % float(runT['userT']['end_time'])
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
                                   time.localtime(float(runT['userT']['start_time'])))
-      uuid        = runT['xaltLinkT'].get('Build.UUID',"NULL")
+      uuid        = runT['xaltLinkT'].get('Build.UUID',None)
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
@@ -326,7 +326,7 @@ class XALTdb(object):
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
-                               runT['userT']['account'],     runT['userT']['exec_type'],   startTime,
+                               runT['userT']['account'][:20],runT['userT']['exec_type'],   startTime,
                                endTime,                      runTime,                      runT['userT']['num_cores'],
                                job_num_cores,                runT['userT']['num_nodes'],   num_threads,
                                runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
@@ -356,7 +356,7 @@ class XALTdb(object):
           found  = True
         else:
           query  = "INSERT INTO xalt_env_name VALUES(NULL, %s)"
-          cursor.execute(query,[key])
+          cursor.execute(query,[key[:64]])
           env_id = cursor.lastrowid
           found  = False
         

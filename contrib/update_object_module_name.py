@@ -95,18 +95,17 @@ if (not args.dryrun):
 n_update = 0
 for obj_id, obj_path in results:
   module_name = obj2module (obj_path, reverseMapT)
-  if module_name != 'NULL':
+  if module_name:
     n_update = n_update + 1
-    query = "UPDATE xalt_object SET module_name = %s WHERE obj_id = %s " \
-             % (module_name, obj_id)
+    query = "UPDATE xalt_object SET module_name = %s WHERE obj_id = %s "
     
     if args.dryrun:
       print 'obj_path: ' + obj_path
       print 'module  : ' + module_name
-      print 'SQL     : ' + query
+      print 'SQL     : ' + query % (module_name, obj_id)
       print ''
     else:
-      cursor.execute(query)
+      cursor.execute(query, (module_name, obj_id))
 
 if args.dryrun:
   print 'Found %d entries out of %d to update' % (n_update, len(results))

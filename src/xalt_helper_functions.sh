@@ -159,6 +159,8 @@ find_working_python()
   fi
 
   tracing_msg "find_working_python: Setting MY_PYTHON to $MY_PYTHON"
+  tracing_msg "find_working_python: with PYTHONPATH=$PYTHONPATH"
+  tracing_msg "find_working_python: and  PYTHONHOME=$PYTHONHOME"
 
   if [ "$MY_PYTHON" = "broken" ]; then
     builtin echo "XALT: Error in users' python setup.  Please report this error!"
@@ -223,4 +225,14 @@ run_real_command()
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"
+}
+
+########################################################################
+# Find compiler calling ld to be passed to as arguments to $GEN_LINDATA 
+# later (in a subshell)
+
+find_compiler()
+{
+  COMPILER=$($MY_PYTHON -c "from xalt_util import *; print(extract_compiler())")
+  tracing_msg "find_compiler: Setting COMPILER to $COMPILER"
 }
