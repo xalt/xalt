@@ -67,6 +67,7 @@ def readFunctionList(fn):
     if (m):
       d.add(m.group(1))
   
+  f.close()
   return list(d)
     
 def cleanup(xaltobj, fn):
@@ -158,8 +159,7 @@ def main():
     if (execname == "conftest"):
       return 1
   
-    full_exec  = os.path.join(os.getcwd(), execname)
-    hash_line   = capture(['@sha1sum@', full_exec])  
+    hash_line   = capture(['@sha1sum@', execname])
     
     if (hash_line.find("No such file or directory") != -1):
       return 1

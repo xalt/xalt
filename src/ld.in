@@ -194,7 +194,7 @@ unset  PYTHONHOME
 
 ########################################################################
 # start asynchronous subshell while the 'main' can return to user
-#( 
+( 
 
     if [ $EXEC == "conftest" ]; then
       $RM -rf $WRKDIR
@@ -217,6 +217,6 @@ unset  PYTHONHOME
     $RM -rf $WRKDIR
     tracing_msg "Ending ld"
 
-#) & # end subshell
+) & # end subshell
 
 exit $status
