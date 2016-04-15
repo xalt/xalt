@@ -75,8 +75,6 @@ find_working_python  # This function sets MY_PYTHON
 
 export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EXTRACT_COMPILER)
 
-echo COMP_T: $COMP_T
-
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
 # getopt and others because this wrapper script should not try to know
