@@ -54,14 +54,18 @@ tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
 
 def readFunctionList(fn):
   """
-  read the list of tracked function
-  @param fn:  The file path that contains the function list
+  read the raw list of tracked function
+  @param fn:  The file path that contains the raw function list
   """
-  f     = open(fn,"r")
-  lines = f.readlines()
-  d     = set()
+  f           = open(fn,"r")
+  lines       = f.readlines()
+  d           = set()
+  funcNamePat = re.compile(r".* undefined reference to `?(.*)'?$")
+
   for s in lines:
-    d.add(s.strip())
+    m = funcNamePat.search(s)
+    if (m):
+      d.add(m.group(1))
   
   return list(d)
     
