@@ -203,16 +203,16 @@ unset  PYTHONHOME
 
     touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
 
-    cat $FUNCRAW | while read line 
-    do
-            getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
-            echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
-    done
-    tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
+    #cat $FUNCRAW | while read line 
+    #do
+    #        getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
+    #        echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
+    #done
+    #tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
 
     tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
+    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
 
     if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
        builtin echo ""                       >> $RESULT

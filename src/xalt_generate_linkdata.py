@@ -146,7 +146,7 @@ def main():
     execname    = sys.argv[ 5]
     xaltobj     = sys.argv[ 6]
     build_epoch = sys.argv[ 7]
-    funclistFn  = sys.argv[ 8]
+    funcRawFn   = sys.argv[ 8]
     linklineFn  = sys.argv[ 9]
     resultFn    = sys.argv[10]
     compT       = json.loads(sys.argv[11])
@@ -161,7 +161,7 @@ def main():
       return 1
     hash_id     = hash_line.split()[0]
     
-    sB = readFunctionList(funclistFn)
+    sB = readFunctionList(funcRawFn)
     
     # Step one clean up linkline data
     sA = cleanup(xaltobj, linklineFn)
