@@ -46,8 +46,12 @@ installDB()
 
   conf_create.py     --dbhost localhost --dbuser $DBUSER \
                      --passwd $PASSWD   --dbname $DBNAME
+  echo "<remove old DB>"
   removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
+
+  echo "<create new DB>"
   createDB.py        --dbname $DBNAME
+  rm  xalt_db.conf 
   ln -s testxalt_db.conf xalt_db.conf 
   echo "<end create db>"
 }

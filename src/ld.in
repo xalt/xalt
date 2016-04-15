@@ -166,17 +166,9 @@ else
   OBJ=""
 fi
 
-$MY_CMD `LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}"` \
-  --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
 
-touch $FUNCLIST #-- Make sure file exist to avoid exception in $GEN_LINKDATA
-$CAT $FUNCRAW | while read line 
-do
-        getfunc=$(echo $line | awk '{print $5}' | sed s/.//1)
-        echo $getfunc | awk -F\' '{print $1}' | sed '/^$/d' >> $FUNCLIST
-done
-
-tracing_msg XALT_FUNCTION_TRACKING `cat $FUNCLIST`
+$MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 
 tracing_msg $MY_CMD "${argA[@]}"
 
@@ -189,8 +181,7 @@ fi
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCLIST" "$LINKLINE_OUT" "$RESULT"
-
+LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT"
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
    builtin echo "====================="  >> $RESULT

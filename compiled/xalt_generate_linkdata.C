@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   const char* execname    = argv[ 5];
   const char* xaltobj     = argv[ 6];
   const char* build_epoch = argv[ 7];
-  const char* funclistFn  = argv[ 8];
+  const char* funcRawFn   = argv[ 8];
   const char* linklineFn  = argv[ 9];
   const char* resultFn    = argv[10];
 
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
   parseLDTrace(xaltobj, linklineFn, libA);
 
   Set funcSet;
-  readFunctionList(funclistFn, funcSet);
+  readFunctionList(funcRawFn, funcSet);
 
   std::string compiler;
   std::string compilerPath;

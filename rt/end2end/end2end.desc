@@ -19,7 +19,7 @@ test_descript = {
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
 
-     runMe installDB             # 1
+     installDB 
 
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich

@@ -122,7 +122,7 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
           --i;
           return;
         }
-      if (token[i].type != JSMN_ARRAY)
+      if (tokens[i].type != JSMN_ARRAY)
         {
           fprintf(stderr,"processLibA for %s: token type is not an array\n",name);
           exit(1);

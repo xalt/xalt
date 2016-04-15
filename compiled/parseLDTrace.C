@@ -93,9 +93,30 @@ void readFunctionList(const char* fn, Set& funcSet)
   FILE* fp = fopen(fn,"r");
   std::string funcName;
 
+  // /tmp/ccCZTucS.o: In function `main':
+  // /home/mclay/w/xalt/rt/mpi_hello_world.c:10: undefined reference to `MPI_Comm_rank'
+  // /home/mclay/w/xalt/rt/mpi_hello_world.c:11: undefined reference to `MPI_Comm_size'
+  // /home/mclay/w/xalt/rt/mpi_hello_world.c:16: undefined reference to `MPI_Finalize'
+
+
+  const char * needle = "undefined reference to ";
+  int   len_needle    = strlen(needle);
+
   while(xalt_fgets_alloc(fp, &buf, &sz))
     {
-      funcName.assign(buf, strlen(buf) - 1);
+      // skip all lines that do not have "undefine references to "
+      char* start = strstr(buf,needle);
+      
+      if (start == NULL)
+        continue;
+
+      start += len_needle;
+
+      if (*start == '`')
+        start++;
+      char*  p   = strchr(start,'\'');
+      size_t len = (p) ? p - start: strlen(start);
+      funcName.assign(start, len);
       funcSet.insert(funcName);
     }
 }
