@@ -103,7 +103,7 @@ def main():
   if (tableT['xalt_link']     >    1 and
       tableT['xalt_run']      == num and
       tableT['xalt_object']   >   10 and
-      tableT['xalt_env_name'] >   15 ):
+      tableT['xalt_env_name'] >   5 ):
 
     result = "passed"
   f = open(args.resultFn,"w")

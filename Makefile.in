@@ -304,8 +304,8 @@ dist:
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION);           	   \
 	cd ..; $(RM) -rf DIST
 
-makefile: $(srcdir)/Makefile.in $(srcdir)/config.status
-	$(srcdir)/config.status $@
+makefile: $(srcdir)/Makefile.in config.status
+	./config.status $@
 
 neat:
 	$(RM) *~ src/*~
