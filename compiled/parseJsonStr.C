@@ -272,3 +272,58 @@ void parseLinkJsonStr(const char* name, std::string& jsonStr, Vstring& linklineA
     }
   free(tokens);
 }
+
+void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& compiler, std::string& compilerPath,
+                       Vstring& linklineA)
+{
+  jsmn_parser parser;
+  jsmntok_t*  tokens;
+  int         maxTokens = 1000;
+
+  tokens = (jsmntok_t *) malloc(sizeof(jsmntok_t)*maxTokens);
+
+  jsmn_init(&parser);
+
+  // js - pointer to JSON string
+  // tokens - an array of tokens available
+  int ntokens;
+
+  const char * js = jsonStr.c_str();
+
+  while (1)
+    {
+      ntokens = jsmn_parse(&parser, js, jsonStr.size(), tokens, maxTokens);
+      if (ntokens > 0)
+        break;
+      if (ntokens == JSMN_ERROR_NOMEM)
+        {
+          maxTokens *= 2;
+          tokens = (jsmntok_t *) realloc(tokens,sizeof(jsmntok_t)*maxTokens);
+        }
+    }      
+
+  if (tokens[0].type != JSMN_OBJECT)
+    {
+      fprintf(stderr,"(5) Bad run.*.json file: %s\n",name);
+      exit(1);
+    }
+
+  int i = 1;
+  while (i < ntokens)
+    {
+      if (tokens[i].type != JSMN_STRING )
+        {
+          fprintf(stderr,"(6) Bad file(%s): i: %d, Type: %d\n", name, i, tokens[i].type);
+          exit(1);
+        }
+      std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
+      if (mapName == "compiler")
+        processValue(name,js, i, ntokens, tokens, compiler);
+      else if (mapName == "compilerPath")
+        processValue(name,js, i, ntokens, tokens, compilerPath);
+      else if (mapName == "link_line")
+        processArray(name,js, i, ntokens, tokens, linklineA);
+    }
+  free(tokens);
+}
+

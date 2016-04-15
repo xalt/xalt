@@ -66,6 +66,8 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
   // This function sets run_id if it is successful. It also sets iret to zero if it finds link_id;
   int iret = mysql_stmt_fetch(stmt); 
 
+  fprintf(stderr,"iret: %d, link_id: %u\n",iret, link_id);
+
   if (mysql_stmt_close(stmt))
     {
       print_stmt_error(stmt, "Could not close stmt for selecting link_id");
@@ -74,7 +76,7 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   // Clean up!
   mysql_stmt_free_result(stmt);
-  return iret == 0 ? 0 : link_id;
+  return (iret == MYSQL_NO_DATA) ? 0 : link_id;
 }
 
 void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linklineA, uint* link_id)
@@ -437,8 +439,9 @@ void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std:
     finish_with_error(conn);
 
   // Check to see if we have already stored this link record.  If so then return.
+  
   std::string link_uuid = resultT["uuid"];
-  if (select_link_id(conn, link_uuid) == 0)
+  if (select_link_id(conn, link_uuid) != 0)
     return;
   
   uint link_id;

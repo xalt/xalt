@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 {
   std::string compiler;
   std::string compilerPath;
-  Vstring&    linklineA;
+  Vstring     linklineA;
 
   extract_linker(compiler, compilerPath, linklineA);
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
   json.add("link_line",    linklineA);
   json.fini();
 
-  std::string jsonStr = json.result());
+  std::string jsonStr = json.result();
   fprintf(stdout,"%s\n",jsonStr.c_str());
 
   return 0;

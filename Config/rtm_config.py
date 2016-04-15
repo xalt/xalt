@@ -37,7 +37,8 @@ ignore_path_patterns = [
   '^/opt/apps/xalt/',
   '^/opt/apps/intel-[0-9][0-9_]*/mpich/',
   '^/opt/apps/intel-[0-9][0-9_]*/openmpi/',
-  '^/opt/VBoxGuestAdditions'
+  '^/opt/VBoxGuestAdditions',
+  '^/opt/.*/mpiexec.hydra$'
   ]
 
 #------------------------------------------------------------

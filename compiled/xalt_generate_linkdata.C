@@ -9,38 +9,32 @@
 #include "xalt_types.h"
 #include "Json.h"
 #include "xalt_config.h"
-#include "extract_linker.h"
 #include "transmit.h"
 #include "capture.h"
 #include "buildRmapT.h"
 #include "xalt_utils.h"
 #include "link_submission.h"
+#include "parseJsonStr.h"
 
 int main(int argc, char* argv[])
 {
-  const char* uuid        = argv[ 1];
-  const char* status      = argv[ 2];
-  const char* wd          = argv[ 3];
-  const char* syshost     = argv[ 4];
-  const char* execname    = argv[ 5];
-  const char* xaltobj     = argv[ 6];
-  const char* build_epoch = argv[ 7];
-  const char* funcRawFn   = argv[ 8];
-  const char* linklineFn  = argv[ 9];
-  const char* resultFn    = argv[10];
-
+  int         i           = 1;
+  const char* uuid        = argv[i++];
+  const char* status      = argv[i++];
+  const char* wd          = argv[i++];
+  const char* syshost     = argv[i++];
+  const char* execname    = argv[i++];
+  const char* sha1sum     = argv[i++]; 
+  const char* xaltobj     = argv[i++];
+  const char* build_epoch = argv[i++];
+  const char* funcRawFn   = argv[i++];
+  const char* linklineFn  = argv[i++];
+  const char* resultFn    = argv[i++];
+  std::string compT       = argv[i++];
 
   if (strstr(execname,"conftest") != NULL)
     return 1;
 
-  Vstring     result;
-  std::string cmd = SHA1SUM " ";
-  cmd.append(execname);
-  
-  capture(cmd, result);
-  std::string sha1_exec = result[0].substr(0, result[0].find(" "));
-
-  
   std::vector<Libpair> libA;
   parseLDTrace(xaltobj, linklineFn, libA);
 
@@ -50,7 +44,7 @@ int main(int argc, char* argv[])
   std::string compiler;
   std::string compilerPath;
   Vstring     linklineA;
-  extract_linker(compiler, compilerPath, linklineA);
+  parseCompTJsonStr("COMP_T", compT, compiler, compilerPath, linklineA);
 
   Table resultT;
 
@@ -59,10 +53,6 @@ int main(int argc, char* argv[])
     user = "unknown";
 
   char* my_realpath = canonicalize_file_name(execname);
-  cmd = SHA1SUM " ";
-  cmd.append(my_realpath);
-  capture(cmd,result);
-  std::string sha1 = result[0].substr(0, result[0].find(" "));
 
   resultT["uuid"]          = uuid;
   resultT["link_program"]  = compiler;
@@ -71,7 +61,7 @@ int main(int argc, char* argv[])
   resultT["build_epoch"]   = build_epoch;
   resultT["exit_code"]     = status;
   resultT["exec_path"]     = my_realpath;
-  resultT["hash_id"]       = sha1;
+  resultT["hash_id"]       = sha1sum;
   resultT["wd"]            = wd;
   resultT["build_syshost"] = syshost;
   free(my_realpath);

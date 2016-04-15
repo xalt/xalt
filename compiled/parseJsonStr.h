@@ -13,6 +13,8 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
 void parseLinkJsonStr(const char* name, std::string& jsonStr, Vstring& linklineA, Table& resultT,
                       std::vector<Libpair>& libA, Set& funcSet);
 
+void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& compiler, std::string& compilerPath,
+                       Vstring& linklineA);
 
 
 #endif // PARSEJSONSTR_H

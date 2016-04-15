@@ -40,6 +40,7 @@ XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
+SHA1SUM=@sha1sum@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
 
@@ -155,7 +156,10 @@ if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
 fi
 
-EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
+# Get the compiler information
+COMP_T=$($EXTRACT_LINKER)
+
+EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
 
 #
 # If the $ARGSRC exists then build it
@@ -167,9 +171,12 @@ else
   OBJ=""
 fi
 
-STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
-
-$MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+############################################################
+# start intentional failed link for function tracking
+( 
+   STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
+   $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+)&
 
 tracing_msg $MY_CMD "${argA[@]}"
 
@@ -180,9 +187,16 @@ if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
 
+# Get the sha1sum for the executable because it might move or disappear!
+SHA1SUM_EXEC=$($SHA1SUM $EXEC)
+
+echo 
+
+wait #-- wait for subshell to finish
+
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT"
+LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
 if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
    builtin echo ""                       >> $RESULT
    builtin echo "====================="  >> $RESULT

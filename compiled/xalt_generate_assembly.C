@@ -4,14 +4,16 @@
 #include <sys/utsname.h>
 
 #include "epoch.h"
-#include "extract_linker.h"
 #include "xalt_config.h"
+#include "parseJsonStr.h"
 
 int main(int argc, char* argv[])
 {
-  const char * uuid    = argv[1];
-  const char * syshost = argv[2];
-  const char * fn      = argv[3];
+  int          i       = 1;
+  const char * uuid    = argv[i++];
+  const char * syshost = argv[i++];
+  const char * fn      = argv[i++];
+  std::string  jsonStr = argv[i++];
   const char * version = XALT_VERSION;
 
   double tt    = epoch();
@@ -32,7 +34,7 @@ int main(int argc, char* argv[])
   std::string compiler;
   std::string compilerPath;
   Vstring     linklineA;
-  extract_linker(compiler, compilerPath, linklineA);
+  parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, linklineA);
   
   //--------------------------------------------------
   // Build user, osName and system;
