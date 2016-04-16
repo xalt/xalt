@@ -44,6 +44,11 @@ SHA1SUM=@sha1sum@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
 
+if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
+   XALT_TRANSMISSION_STYLE=@transmission@
+fi
+
+
 source $MY_DIR/xalt_helper_functions.sh
 
 ##########################################################################
@@ -58,18 +63,6 @@ tracing_msg "Starting ld"
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
 
-
-if [ "$XALT_EXECUTABLE_TRACKING" != yes ]; then
-  $MY_CMD "${argA[@]}"
-  status=$?
-  exit $status
-fi
-
-
-########################################################################
-# Make sure that the python setup is valid. 
-
-find_working_python  # This function sets MY_PYTHON
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -119,7 +112,11 @@ do
 
 done
 
-
+if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$EXEC" = "conftest" ]; then
+  $MY_CMD "${argA[@]}"
+  status=$?
+  exit $status
+fi
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
@@ -171,8 +168,9 @@ else
   OBJ=""
 fi
 
-############################################################
-# start intentional failed link for function tracking
+###################################################################
+# start a subshell in the background for the intentional
+# failed link for function tracking
 ( 
    STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
    $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
@@ -190,24 +188,16 @@ fi
 # Get the sha1sum for the executable because it might move or disappear!
 SHA1SUM_EXEC=$($SHA1SUM $EXEC)
 
-echo 
-
 wait #-- wait for subshell to finish
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
-if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
-   builtin echo ""                       >> $RESULT
-   builtin echo "====================="  >> $RESULT
-   builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
-   builtin echo "====================="  >> $RESULT
+###################################################################
+# start a subshell in the background for reporting the link results
+(
+  LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
 
-   $CAT  $LINKLINE >> $RESULT
-fi
-
-#$RM -rf $WRKDIR
-
-tracing_msg "Ending ld"
+  $RM -rf $WRKDIR
+)&
 
 exit $status
