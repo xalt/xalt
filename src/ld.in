@@ -185,12 +185,18 @@ if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
 
+tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
+
+# Get the sha1sum for the executable because it might move or disappear!
+SHA1SUM_EXEC=$($SHA1SUM $EXEC)
+
 wait #-- wait for subshell to finish
 
 #Return python state
 export PYTHONPATH=$py_path_xalt
 unset  PYTHONHOME
 [ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
+
 
 ########################################################################
 # start asynchronous subshell while the 'main' can return to user
@@ -201,21 +207,9 @@ unset  PYTHONHOME
       exit 0
     fi
 
-    tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
-
-    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
-
-    if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
-       builtin echo ""                       >> $RESULT
-       builtin echo "====================="  >> $RESULT
-       builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
-       builtin echo "====================="  >> $RESULT
-
-       $CAT  $LINKLINE >> $RESULT
-    fi
+    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
 
     $RM -rf $WRKDIR
-    tracing_msg "Ending ld"
 
 ) & # end subshell
 
