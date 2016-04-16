@@ -4,13 +4,15 @@
 #include "parseJsonStr.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_quotestring.h"
+#include "Json.h"
 
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
 {
   if (tokens[i].type != JSMN_ARRAY)
     {
       fprintf(stderr,"processArray for: %s, token type is not an array\n",name);
-      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
       exit(1);
     }
 
@@ -41,7 +43,8 @@ void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t
   if (tokens[i].type != JSMN_ARRAY)
     {
       fprintf(stderr,"processSet for: %s, token type is not an array\n",name);
-      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
       exit(1);
     }
 
@@ -71,7 +74,8 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
   if (tokens[i].type != JSMN_OBJECT)
     {
       fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
-      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
       exit(1);
     }
 
@@ -100,7 +104,39 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
 }
 void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value)
 {
+  value = "[";
+  if (tokens[i].type != JSMN_ARRAY)
+    {
+      fprintf(stderr,"processA2JsonStr for: %s, token type is not an array\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
 
+  int iend = tokens[i].end;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        {
+          --i;
+          break;
+        }
+
+      if (tokens[i].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processSet for: %s, token type is not a string\n",name);
+          exit(1);
+        }
+      value.append("\"")
+      std::string value.append(&js[tokens[i].start], tokens[i].end - tokens[i].start); ++i;
+      value.append("\",")
+    }
+  if (value.back() == ',')
+    value.replace(value.size()-1,1,"]");
+  else
+    value.append("]");
 }
 
 void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::vector<Libpair>& libA)
@@ -108,7 +144,8 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
   if (tokens[i].type != JSMN_OBJECT)
     {
       fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
-      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
       exit(1);
     }
 
