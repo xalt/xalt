@@ -59,12 +59,6 @@ tracing_msg "Starting ld"
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
 
-if [ "$XALT_EXECUTABLE_TRACKING" != yes ]; then
-  $MY_CMD "${argA[@]}"
-  status=$?
-  exit $status
-fi
-
 ########################################################################
 # Make sure that the python setup is valid. 
 
@@ -170,12 +164,6 @@ fi
   $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 ) &
 
-#Save python state
-py_path_xalt=$PYTHONPATH
-py_home_xalt=$PYTHONHOME
-export PYTHONPATH=$py_path_orig
-[ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
-
 tracing_msg $MY_CMD "${argA[@]}"
 
 $MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
@@ -192,12 +180,6 @@ SHA1SUM_EXEC=$($SHA1SUM $EXEC)
 
 wait #-- wait for subshell to finish
 
-#Return python state
-export PYTHONPATH=$py_path_xalt
-unset  PYTHONHOME
-[ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
-
-
 ########################################################################
 # start asynchronous subshell while the 'main' can return to user
 ( 
@@ -207,7 +189,8 @@ unset  PYTHONHOME
       exit 0
     fi
 
-    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
+    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" \
+       "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
 
     $RM -rf $WRKDIR
 
