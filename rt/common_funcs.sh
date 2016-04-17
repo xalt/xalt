@@ -41,6 +41,7 @@ installDB()
 {
   echo "<create db>"
   DBNAME=testxalt
+  DB_CONF_FN=testxalt_db.conf
   DBUSER=xaltTest
   PASSWD=kutwgbh
 

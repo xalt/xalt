@@ -33,13 +33,14 @@ int buildUserTable(Table& users)
   while(! done)
     {
       char * p = strchr(start,':');
-      if (p)
-        value.assign(start);
-      else
+      if (p == NULL)
         {
           done = true;
-          value.assign(start, p - start);
+          value.assign(start);
         }
+      else
+        value.assign(start, p - start);
+
       size_t idx = value.find(";");
       if (idx == std::string::npos)
         {
@@ -163,13 +164,16 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 
 int main(int argc, char* argv[])
 {
+  HERE;
   f2db_Options options(argc, argv);
   struct passwd* pw;
   
+  HERE;
   double t1 = epoch();
 
   Table users;
   int   num           = buildUserTable(users);
+  fprintf(stderr,"num: %d\n", num);
   bool  haveUserTable = false;
   if (num == 0)
     {
@@ -182,11 +186,13 @@ int main(int argc, char* argv[])
   else
     haveUserTable = true;
 
+  fprintf(stderr,"Num: %d\n",num);
   ProgressBar pbar(num);
   Vstring     xlibmapA;
   Table       rmapT;
   buildRmapT(rmapT, xlibmapA);
 
+  HERE;
   int icnt   = 0;
   int iuser  = 0;
   int lnkCnt = 0;
@@ -211,17 +217,23 @@ int main(int argc, char* argv[])
       // form directory xaltDir = "$HOME/.xalt.d"
       xaltDir.append("/.xalt.d");
       
+      fprintf(stderr,"xaltDir: %s\n",xaltDir.c_str());
       if (isDirectory(xaltDir.c_str()))
         {
           Vstring linkFnA;
           int nlink  = findFilesInDir(xaltDir, "link.*.json", linkFnA);
+          HERE;
           lnkCnt    += link_json_fileA_to_db(options, rmapT, linkFnA);
+          HERE;
           if (options.deleteFn())
             removeFiles(linkFnA);
+          HERE;
 
           Vstring runFnA;
           int nrun = findFilesInDir(xaltDir, "run.*.json", runFnA);
+          HERE;
           runCnt += run_json_fileA_to_db(options, rmapT, runFnA);
+          HERE;
           if (options.deleteFn())
             removeFiles(runFnA);
       
@@ -229,9 +241,12 @@ int main(int argc, char* argv[])
             iuser++;
         }
     }
+  HERE;
   endpwent();
 
+  HERE;
   pbar.fini();
+  HERE;
   time_t rt = (time_t) (epoch() - t1);
   if (options.timer())
     {

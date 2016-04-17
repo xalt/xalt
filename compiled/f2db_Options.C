@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include "f2db_Options.h"
 
+#define HERE fprintf(stderr,"%s:%d\n",__FILE__, __LINE__)
 f2db_Options::f2db_Options(int argc, char** argv)
   : m_delete(false),          m_report(false),          m_timer(false), 
     m_rmapD("unknown"),       m_confFn("xalt_db.conf")
@@ -14,19 +15,19 @@ f2db_Options::f2db_Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
+        {"confFn",      optional_argument, NULL, 'c'},
+        {"reverseMapD", required_argument, NULL, 'R'},
         {"delete",      optional_argument, NULL, 'e'},
         {"report",      optional_argument, NULL, 'r'},
         {"timer",       optional_argument, NULL, 't'},
-        {"reverseMapD", optional_argument, NULL, 'R'},
-        {"confFn",      optional_argument, NULL, 'c'},
-        {0,         0,                 0,     0 }
+        {0,             0,                 0,     0 }
       };
       
-      c = getopt_long(argc, argv, "ertR:c:",
+      c = getopt_long(argc, argv, "c:R:ert",
 		      long_options, &option_index);
       
       if (c == -1)
-	break;
+        break;
 
       switch(c)
 	{
@@ -40,7 +41,8 @@ f2db_Options::f2db_Options(int argc, char** argv)
           m_timer  = true;
 	  break;
 	case 'c':
-	  m_confFn = optarg;
+          fprintf(stderr,"optarg: %s\n",optarg);
+	  m_confFn.assign(optarg);
 	  break;
 	case 'R':
 	  m_rmapD = optarg;

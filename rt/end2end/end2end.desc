@@ -45,7 +45,7 @@ test_descript = {
      ./hello
      
      export XALT_USERS="$USER;$outputDir"
-     xalt_file_to_db.py  --dbname $DBNAME --reverseMapD $outputDir/reverseMapD
+     xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
      
      export XALT_TRANSMISSION_STYLE=direct2db
      mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
