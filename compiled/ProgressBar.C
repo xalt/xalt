@@ -9,8 +9,7 @@ int setWidth()
   struct winsize w;
   ioctl(STDERR_FILENO, TIOCGWINSZ, &w);
   
-  cols = w.ws_col;
-  return cols
+  return w.ws_col;
 }
 
 ProgressBar::ProgressBar(int maxVal, int barWidth)
@@ -41,7 +40,7 @@ ProgressBar::ProgressBar(int maxVal, int barWidth)
   m_symbolA[9] = '|';
 }
 
-void ProcessBar::update(int i)
+void ProgressBar::update(int i)
 {
   if (! m_active)
     return;
@@ -64,7 +63,7 @@ void ProcessBar::update(int i)
     }
 }
 
-void ProcessBar::fini()
+void ProgressBar::fini()
 {
   if (! m_active)
     return;

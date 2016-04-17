@@ -41,6 +41,7 @@ autom4te.cache
 *.pyc
 *.pyo
 
+make.log
 config.log
 makefile
 config.status

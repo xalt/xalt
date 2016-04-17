@@ -129,9 +129,9 @@ void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsm
           fprintf(stderr,"processSet for: %s, token type is not a string\n",name);
           exit(1);
         }
-      value.append("\"")
-      std::string value.append(&js[tokens[i].start], tokens[i].end - tokens[i].start); ++i;
-      value.append("\",")
+      value.append("\"");
+      value.append(&js[tokens[i].start], tokens[i].end - tokens[i].start); ++i;
+      value.append("\",");
     }
   if (value.back() == ',')
     value.replace(value.size()-1,1,"]");

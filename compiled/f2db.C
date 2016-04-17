@@ -6,12 +6,18 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fnmatch.h>
+#include <string.h>
 
+#include "jsmn.h"
 #include "f2db_Options.h"
 #include "buildRmapT.h"
 #include "epoch.h"
-#include "xalt_user.h"
+#include "xalt_utils.h"
 #include "xalt_fgets_alloc.h"
+#include "parseJsonStr.h"
+#include "link_direct2db.h"
+#include "run_direct2db.h"
+#include "ProgressBar.h"
 
 int buildUserTable(Table& users)
 {
@@ -38,15 +44,15 @@ int buildUserTable(Table& users)
       if (idx == std::string::npos)
         {
           // find passwd record from systems:
-          userName         = value;
-          struct passwd pw = getpwnam(userName.c_str());
+          userName          = value;
+          struct passwd* pw = getpwnam(userName.c_str());
           if (pw)
             users[userName] = pw->pw_dir; 
         }
       else
         {
           userName.assign(value,0,idx);    
-          homeDir.assign(value,idx+1);
+          homeDir.assign(value, idx+1, std::string::npos);
           users[userName] = homeDir;
         }
       start = p+1;
@@ -81,7 +87,7 @@ void removeFiles(Vstring& fileA)
     unlink(it->c_str());
 }
 
-int link_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
+int link_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -108,15 +114,15 @@ int link_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
         jsonStr.append(buf);
       free(buf);
 
-      parseLinkJsonStr(jsonStr, linklineA, resultT, libA, funcSet);
+      parseLinkJsonStr(it->c_str(), jsonStr, linkLineA, resultT, libA, funcSet);
 
-      link_direct2db(Options.confFn().c_str(), linklineA, resultT, libA, funcSet, rmapT);
+      link_direct2db(options.confFn().c_str(), linkLineA, resultT, libA, funcSet, rmapT);
       num++;
     }
   return num;
 }
 
-int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
+int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -125,7 +131,7 @@ int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
 
   for (auto it = fileA.begin(); it < fileA.end(); ++it)
     {
-      Vstring              cmdlineA;
+      std::string          usr_cmdline;
       std::string          hash_id;
       Table                envT;
       Table                userT;
@@ -146,11 +152,10 @@ int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
         jsonStr.append(buf);
       free(buf);
 
-      parseRunJsonStr(jsonStr, cmdlineA, hash_id, envT, userT, recordT, libA);
+      parseRunJsonStr(it->c_str(), jsonStr, usr_cmdline, hash_id, envT,
+                      userT, recordT, libA);
 
-      std::string usr_cmdline = "";
-
-      run_direct2db(Options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, recordT, libA);
+      run_direct2db(options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, recordT, libA);
       num++;
     }
   return num;
@@ -158,7 +163,8 @@ int run_json_fileA_to_db(Options& options, Table& rmapT, Vstring& fileA)
 
 int main(int argc, char* argv[])
 {
-  Options options(argc, argv);
+  f2db_Options options(argc, argv);
+  struct passwd* pw;
   
   double t1 = epoch();
 
@@ -176,10 +182,9 @@ int main(int argc, char* argv[])
   else
     haveUserTable = true;
 
-  ProcessBar pbar(num);
-
-  Vstring    xlibmapA;
-  Table      rmapT;
+  ProgressBar pbar(num);
+  Vstring     xlibmapA;
+  Table       rmapT;
   buildRmapT(rmapT, xlibmapA);
 
   int icnt   = 0;
@@ -191,10 +196,10 @@ int main(int argc, char* argv[])
   setpwent();
   while ( (pw = getpwent()) != NULL )
     {
-      const char* userName = pw->pw_user;
+      std::string userName = pw->pw_name;
       if (haveUserTable)
         {
-          Set::const_iterator got = users.find(userName);
+          Table::const_iterator got = users.find(userName);
           if (got == users.end())
             continue;
           xaltDir.assign((*got).second);
@@ -209,8 +214,8 @@ int main(int argc, char* argv[])
       if (isDirectory(xaltDir.c_str()))
         {
           Vstring linkFnA;
-          int nlink = findFilesInDir(xaltDir, "link.*.json", linkFnA);
-          linkCnt += link_json_fileA_to_db(options, rmapT, linkFnA);
+          int nlink  = findFilesInDir(xaltDir, "link.*.json", linkFnA);
+          lnkCnt    += link_json_fileA_to_db(options, rmapT, linkFnA);
           if (options.deleteFn())
             removeFiles(linkFnA);
 
@@ -227,12 +232,12 @@ int main(int argc, char* argv[])
   endpwent();
 
   pbar.fini();
-  double rt = epoch() - t1;
+  time_t rt = (time_t) (epoch() - t1);
   if (options.timer())
     {
       const int dateSz = 100;
       char dateStr[dateSz];
-      strFtime(dateStr, dateSz, "%T", gmtime(&rt));
+      strftime(dateStr, dateSz, "%T", gmtime(&rt));
       printf("Time: %s\n", dateStr);
     }
 

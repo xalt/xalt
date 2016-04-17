@@ -3,7 +3,7 @@
 #include <getopt.h>
 #include "f2db_Options.h"
 
-Options::Options(int argc, char** argv)
+f2db_Options::f2db_Options(int argc, char** argv)
   : m_delete(false),          m_report(false),          m_timer(false), 
     m_rmapD("unknown"),       m_confFn("xalt_db.conf")
 {
@@ -43,7 +43,7 @@ Options::Options(int argc, char** argv)
 	  m_confFn = optarg;
 	  break;
 	case 'R':
-	  m_rmapT = optarg;
+	  m_rmapD = optarg;
 	  break;
 	case '?':
 	  printf("Huh?\n");

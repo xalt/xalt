@@ -4,15 +4,15 @@
 class ProgressBar
 {
 public:
-  ProgessBar(int maxVal, int barWidth = 0);
-  ~ProgessBar() {}
+  ProgressBar(int maxVal, int barWidth = 0);
+  ~ProgressBar() {}
   void update(int i);
   void fini();
   
 private:
   bool   m_active;
   int    m_barWidth;
-  int    m_count
+  int    m_count;
   int    m_mark;
   double m_maxVal;
   double m_unit;

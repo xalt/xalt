@@ -5,6 +5,8 @@
 #include <regex.h>
 
 #include "run_submission.h"
+#include "run_direct2db.h"
+#include "link_direct2db.h"
 #include "ConfigParser.h"
 #include "xalt_regex.h"
 #include "Json.h"
@@ -726,8 +728,8 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
     }
 }
 
-void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
-               Table& recordT, std::vector<Libpair>& lddA)
+void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT,
+                   Table& envT, Table& userT, Table& recordT, std::vector<Libpair>& lddA)
 {
   ConfigParser cp(confFn);
 

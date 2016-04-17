@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "link_submission.h"
+#include "link_direct2db.h"
 #include "ConfigParser.h"
 #include "Json.h"
 #include "xalt_mysql_utils.h"

@@ -3,11 +3,11 @@
 
 #include <string>
 
-class Options
+class f2db_Options
 {
 public:
-  Options(int argc, char **argv);
-  ~Options() {}
+  f2db_Options(int argc, char **argv);
+  ~f2db_Options() {}
   bool          deleteFn() { return m_delete; }
   bool          reportFn() { return m_report; }
   bool          timer()    { return m_timer;  }

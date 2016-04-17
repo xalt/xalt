@@ -13,6 +13,7 @@
 #include "capture.h"
 #include "buildRmapT.h"
 #include "xalt_utils.h"
+#include "link_direct2db.h"
 #include "link_submission.h"
 #include "parseJsonStr.h"
 
