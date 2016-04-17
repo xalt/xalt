@@ -13,32 +13,45 @@
 #include "xalt_user.h"
 #include "xalt_fgets_alloc.h"
 
-int buildUserSet(Set& userSet)
+int buildUserTable(Table& users)
 {
-  int count = 0;
   char* xalt_user_str = getenv("XALT_USERS");
   if (xalt_user_str == NULL)
-    return count;
+    return 0;
 
+  std::string value;
   std::string userName;
+  std::string homeDir;
   char*       start     = xalt_user_str;
   bool        done      = false;
   while(! done)
     {
       char * p = strchr(start,':');
       if (p)
-        userName.assign(start);
+        value.assign(start);
       else
         {
           done = true;
-          userName.assign(start, p - start);
+          value.assign(start, p - start);
+        }
+      size_t idx = value.find(";");
+      if (idx == std::string::npos)
+        {
+          // find passwd record from systems:
+          userName         = value;
+          struct passwd pw = getpwnam(userName.c_str());
+          if (pw)
+            users[userName] = pw->pw_dir; 
+        }
+      else
+        {
+          userName.assign(value,0,idx);    
+          homeDir.assign(value,idx+1);
+          users[userName] = homeDir;
         }
       start = p+1;
-      count++;
-      userSet(userName);
     }
-
-  return count;
+  return users.size();
 }
 
 int findFilesInDir(std::string& dir, const char* filePattern, Vstring& fileA)
@@ -149,9 +162,9 @@ int main(int argc, char* argv[])
   
   double t1 = epoch();
 
-  Set  userSet;
-  int  num         = buildUserSet(userSet);
-  bool haveUserSet = false;
+  Table users;
+  int   num           = buildUserTable(users);
+  bool  haveUserTable = false;
   if (num == 0)
     {
       // Count the number of passwd entries:
@@ -161,7 +174,7 @@ int main(int argc, char* argv[])
       endpwent();
     }
   else
-    haveUserSet = true;
+    haveUserTable = true;
 
   ProcessBar pbar(num);
 
@@ -174,20 +187,23 @@ int main(int argc, char* argv[])
   int lnkCnt = 0;
   int runCnt = 0;
 
+  std::string xaltDir;
   setpwent();
   while ( (pw = getpwent()) != NULL )
     {
       const char* userName = pw->pw_user;
-      if (haveUserSet)
+      if (haveUserTable)
         {
-          Set::const_iterator got = userSet.find(userName);
-          if (got == userSet.end())
+          Set::const_iterator got = users.find(userName);
+          if (got == users.end())
             continue;
+          xaltDir.assign((*got).second);
         }
+      else
+        xaltDir.assign(pw->pw_dir);
       pbar.update(icnt++);
 
       // form directory xaltDir = "$HOME/.xalt.d"
-      std::string xaltDir(pw->pw_dir);
       xaltDir.append("/.xalt.d");
       
       if (isDirectory(xaltDir.c_str()))
