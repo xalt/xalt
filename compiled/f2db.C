@@ -223,9 +223,7 @@ int main(int argc, char* argv[])
 
           Vstring runFnA;
           int nrun = findFilesInDir(xaltDir, "run.*.json", runFnA);
-          HERE;
           runCnt += run_json_fileA_to_db(options, rmapT, runFnA);
-          HERE;
           if (options.deleteFn())
             removeFiles(runFnA);
       
@@ -233,12 +231,9 @@ int main(int argc, char* argv[])
             iuser++;
         }
     }
-  HERE;
   endpwent();
 
-  HERE;
   pbar.fini();
-  HERE;
   time_t rt = (time_t) (epoch() - t1);
   if (options.timer())
     {

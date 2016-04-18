@@ -2,9 +2,7 @@
 #include <stdlib.h>
 
 #include "parseJsonStr.h"
-#include "xalt_fgets_alloc.h"
 #include "xalt_quotestring.h"
-#include "Json.h"
 
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
 {
@@ -22,10 +20,7 @@ void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok
   while (i < ntokens)
     {
       if (tokens[i].start > iend)
-        {
-          --i;
-          return;
-        }
+        return;
 
       if (tokens[i].type != JSMN_STRING)
         {
@@ -54,10 +49,7 @@ void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t
   while (i < ntokens)
     {
       if (tokens[i].start > iend)
-        {
-          --i;
-          return;
-        }
+        return;
 
       if (tokens[i].type != JSMN_STRING)
         {
@@ -71,7 +63,6 @@ void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t
 }
 void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Table& t)
 {
-  HERE;
   if (tokens[i].type != JSMN_OBJECT)
     {
       fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
@@ -80,33 +71,24 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
       exit(1);
     }
 
-  HERE;
   int iend = tokens[i].end;
-  HERE;
 
   ++i;
   while (i < ntokens)
     {
-      HERE;
       if (tokens[i].start > iend)
-        {
-          HERE;
-          --i;
-          return;
-        }
+        return;
 
       if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
         {
           fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
           exit(1);
         }
-      HERE;
       std::string key(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       key    = xalt_unquotestring(key.c_str());
       value  = xalt_unquotestring(value.c_str());
       t[key] = value;
-      HERE;
     }
 }
 void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value)
@@ -126,10 +108,7 @@ void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsm
   while (i < ntokens)
     {
       if (tokens[i].start > iend)
-        {
-          --i;
-          break;
-        }
+        break;
 
       if (tokens[i].type != JSMN_STRING)
         {
@@ -162,10 +141,8 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
   while (i < ntokens)
     {
       if (tokens[i].start > iend)
-        {
-          --i;
-          return;
-        }
+        return;
+
       if (tokens[i].type != JSMN_ARRAY)
         {
           fprintf(stderr,"processLibA for %s: token type is not an array\n",name);
@@ -247,35 +224,17 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "cmdlineA")
-        {
-          HERE;
-          processA2JsonStr(name, js, i, ntokens, tokens, usr_cmdline);
-        }
+        processA2JsonStr(name, js, i, ntokens, tokens, usr_cmdline);
       else if (mapName == "envT")
-        {
-          HERE;
-          processTable(name,js, i, ntokens, tokens, envT);
-        }
+        processTable(name,js, i, ntokens, tokens, envT);
       else if (mapName == "hash_id")
-        {
-          HERE;
-          processValue(name,js, i, ntokens, tokens, hash_id);
-        }
+        processValue(name,js, i, ntokens, tokens, hash_id);
       else if (mapName == "libA")
-        {
-          HERE;
-          processLibA(name, js, i, ntokens, tokens, libA);
-        }
+        processLibA(name, js, i, ntokens, tokens, libA);
       else if (mapName == "userT")
-        {
-          HERE;
-          processTable(name,js, i, ntokens, tokens, userT);
-        }
+        processTable(name,js, i, ntokens, tokens, userT);
       else if (mapName == "xaltLinkT")
-        {
-          HERE;
-          processTable(name,js, i, ntokens, tokens, recordT);
-        }
+        processTable(name,js, i, ntokens, tokens, recordT);
     }
   free(tokens);
 }
@@ -389,4 +348,3 @@ void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& comp
     }
   free(tokens);
 }
-

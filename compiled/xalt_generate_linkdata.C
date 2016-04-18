@@ -53,19 +53,16 @@ int main(int argc, char* argv[])
   if (user == NULL)
     user = "unknown";
 
-  char* my_realpath = canonicalize_file_name(execname);
-
   resultT["uuid"]          = uuid;
   resultT["link_program"]  = compiler;
   resultT["link_path"]     = compilerPath;
   resultT["build_user"]    = user;
   resultT["build_epoch"]   = build_epoch;
   resultT["exit_code"]     = status;
-  resultT["exec_path"]     = my_realpath;
+  resultT["exec_path"]     = execname;
   resultT["hash_id"]       = sha1sum;
   resultT["wd"]            = wd;
   resultT["build_syshost"] = syshost;
-  free(my_realpath);
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)

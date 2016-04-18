@@ -34,12 +34,14 @@
 #
 ##########################################################################
 
+
 unset LD_PRELOAD
 LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
+REALPATH=@realpath@
 SHA1SUM=@sha1sum@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
@@ -117,6 +119,9 @@ if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$EXEC" = "conftest" ]; then
   status=$?
   exit $status
 fi
+
+EXEC=$($REALPATH $EXEC)
+
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site

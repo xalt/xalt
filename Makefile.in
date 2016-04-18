@@ -41,27 +41,27 @@ prefix            := @prefix@
 XALT_DIR          := $(prefix)
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
 HAVE_PYMOD_PSUTIL := @HAVE_PYMOD_PSUTIL@
-PATH_TO_OBJDUMP   := @PATH_TO_OBJDUMP@
-PATH_TO_OTOOL     := @PATH_TO_OTOOL@
-PATH_TO_FILE      := @PATH_TO_FILE@
-PATH_TO_SHA1SUM   := @PATH_TO_SHA1SUM@
-PATH_TO_UUIDGEN   := @PATH_TO_UUIDGEN@
-PATH_TO_PYTHON    := @PATH_TO_PYTHON@
-PATH_TO_RM        := @PATH_TO_RM@
+PATH_TO_AS        := @PATH_TO_AS@
+PATH_TO_BASENAME  := @PATH_TO_BASENAME@
+PATH_TO_CAT       := @PATH_TO_CAT@
 PATH_TO_CAT       := @PATH_TO_CAT@
 PATH_TO_DATE      := @PATH_TO_DATE@
-PATH_TO_CAT       := @PATH_TO_CAT@
+PATH_TO_DIRNAME   := @PATH_TO_DIRNAME@
+PATH_TO_FILE      := @PATH_TO_FILE@
+PATH_TO_GREP      := @PATH_TO_GREP@
+PATH_TO_HEAD      := @PATH_TO_HEAD@
 PATH_TO_LDD       := @PATH_TO_LDD@
 PATH_TO_LOGGER    := @PATH_TO_LOGGER@
 PATH_TO_MKDIR     := @PATH_TO_MKDIR@
-PATH_TO_AS        := @PATH_TO_AS@
-PATH_TO_BASENAME  := @PATH_TO_BASENAME@
-PATH_TO_READLINK  := @PATH_TO_READLINK@
-PATH_TO_DIRNAME   := @PATH_TO_DIRNAME@
-PATH_TO_HEAD      := @PATH_TO_HEAD@
-PATH_TO_GREP      := @PATH_TO_GREP@
+PATH_TO_OBJDUMP   := @PATH_TO_OBJDUMP@
+PATH_TO_OTOOL     := @PATH_TO_OTOOL@
 PATH_TO_PSTREE    := @PATH_TO_PSTREE@
-BUILD_PSTREE      := @BUILD_PSTREE@
+PATH_TO_PYTHON    := @PATH_TO_PYTHON@
+PATH_TO_REALPATH  := @PATH_TO_REALPATH@
+PATH_TO_READLINK  := @PATH_TO_READLINK@
+PATH_TO_RM        := @PATH_TO_RM@
+PATH_TO_SHA1SUM   := @PATH_TO_SHA1SUM@
+PATH_TO_UUIDGEN   := @PATH_TO_UUIDGEN@
 USE_ARGPARSE      := @USE_CONTRIB_ARGPARSE@
 
 GIT_PROG          := @PATH_TO_GIT@
@@ -117,7 +117,7 @@ all:
 
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
           Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
-          Build_pstree_$(BUILD_PSTREE) build_compiled
+          build_compiled
 
 build_compiled:
 	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) all
@@ -154,18 +154,6 @@ Inst_bin: $(BIN_PKG)
 Inst_TACC: $(TACC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
-
-Build_pstree_no:
-
-Build_pstree_yes:
-	cd contrib;                                                       \
-        tar xf psmisc-22.21.tar.gz;                                       \
-        cd psmisc-22.21;                                                  \
-        ./configure --prefix=$(prefix)/psmisc;                            \
-        make CFLAGS="-g -O0";                                             \
-        make DESTDIR=$(DESTDIR) install;                                  \
-        ln -s $(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec;    \
-	cd ..; rm -rf psmisc-22.21
 
 Use_getent_yes:
 	cd $(srcdir)/contrib;                                        \
@@ -207,6 +195,7 @@ __installMe:
 	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            \
 	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
+                -e 's|@realpath@|$(PATH_TO_REALPATH)|g'                    \
 	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      \
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          \
 	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              \

@@ -16,6 +16,14 @@ initialize()
 
 }
 
+displayThis()
+{
+  echo 
+  echo "#==========================================================#"
+  echo " $@"
+  echo "#==========================================================#"
+}
+
 buildRmapT()
 {
   echo "<build xalt_rmapT.json and jsonReverseMapT.json files>"
