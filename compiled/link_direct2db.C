@@ -67,8 +67,6 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
   // This function sets run_id if it is successful. It also sets iret to zero if it finds link_id;
   int iret = mysql_stmt_fetch(stmt); 
 
-  fprintf(stderr,"iret: %d, link_id: %u\n",iret, link_id);
-
   if (mysql_stmt_close(stmt))
     {
       print_stmt_error(stmt, "Could not close stmt for selecting link_id");

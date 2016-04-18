@@ -66,25 +66,32 @@ Options::Options(int argc, char** argv)
       switch(c)
 	{
 	case 's':
-          m_start = convert_double("start", optarg);
+          if (optarg)
+            m_start = convert_double("start", optarg);
 	  break;
 	case 'e':
-	  m_end = convert_double("end", optarg);
+          if (optarg)
+            m_end = convert_double("end", optarg);
 	  break;
 	case 'c':
-	  m_confFn = optarg;
+          if (optarg)
+            m_confFn = optarg;
 	  break;
 	case 'h':
-	  m_syshost = optarg;
+          if (optarg)
+            m_syshost = optarg;
 	  break;
         case 'x':
-	  m_exec = optarg;
+          if (optarg)
+            m_exec = optarg;
 	  break;
 	case 'n':
-	  m_ntasks = convert_long("ntasks", optarg);
+          if (optarg)
+            m_ntasks = convert_long("ntasks", optarg);
 	  break;
         case 'u':
-	  m_uuid = optarg;
+          if (optarg)
+            m_uuid = optarg;
 	  break;
 	case '?':
 	  printf("Huh?\n");

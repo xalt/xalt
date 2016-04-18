@@ -71,6 +71,7 @@ void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t
 }
 void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Table& t)
 {
+  HERE;
   if (tokens[i].type != JSMN_OBJECT)
     {
       fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
@@ -79,13 +80,17 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
       exit(1);
     }
 
+  HERE;
   int iend = tokens[i].end;
+  HERE;
 
   ++i;
   while (i < ntokens)
     {
+      HERE;
       if (tokens[i].start > iend)
         {
+          HERE;
           --i;
           return;
         }
@@ -95,11 +100,13 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
           fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
           exit(1);
         }
+      HERE;
       std::string key(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       key    = xalt_unquotestring(key.c_str());
       value  = xalt_unquotestring(value.c_str());
       t[key] = value;
+      HERE;
     }
 }
 void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value)
@@ -141,7 +148,7 @@ void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsm
 
 void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::vector<Libpair>& libA)
 {
-  if (tokens[i].type != JSMN_OBJECT)
+  if (tokens[i].type != JSMN_ARRAY)
     {
       fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
       fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
@@ -235,21 +242,40 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
       if (tokens[i].type != JSMN_STRING )
         {
           fprintf(stderr,"(6) Bad file(%s): i: %d, Type: %d\n", name, i, tokens[i].type);
+          fprintf(stderr,"%.*s\n",tokens[i].end - tokens[i].start, &js[tokens[i].start]);
           exit(1);
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "cmdlineA")
-        processA2JsonStr(name, js, i, ntokens, tokens, usr_cmdline);
+        {
+          HERE;
+          processA2JsonStr(name, js, i, ntokens, tokens, usr_cmdline);
+        }
       else if (mapName == "envT")
-        processTable(name,js, i, ntokens, tokens, envT);
+        {
+          HERE;
+          processTable(name,js, i, ntokens, tokens, envT);
+        }
       else if (mapName == "hash_id")
-        processValue(name,js, i, ntokens, tokens, hash_id);
+        {
+          HERE;
+          processValue(name,js, i, ntokens, tokens, hash_id);
+        }
       else if (mapName == "libA")
-        processLibA(name, js, i, ntokens, tokens, libA);
+        {
+          HERE;
+          processLibA(name, js, i, ntokens, tokens, libA);
+        }
       else if (mapName == "userT")
-        processTable(name,js, i, ntokens, tokens, userT);
+        {
+          HERE;
+          processTable(name,js, i, ntokens, tokens, userT);
+        }
       else if (mapName == "xaltLinkT")
-        processTable(name,js, i, ntokens, tokens, recordT);
+        {
+          HERE;
+          processTable(name,js, i, ntokens, tokens, recordT);
+        }
     }
   free(tokens);
 }
@@ -299,13 +325,13 @@ void parseLinkJsonStr(const char* name, std::string& jsonStr, Vstring& linklineA
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "function")
-        processSet(name, js, i, ntokens, tokens, funcSet);
+         processSet(name, js, i, ntokens, tokens, funcSet);
       else if (mapName == "linkA")
         processLibA(name, js, i, ntokens, tokens, libA);
       else if (mapName == "link_line")
         processArray(name,js, i, ntokens, tokens, linklineA);
       else if (mapName == "resultT")
-        processTable(name,js, i, ntokens, tokens, resultT);
+          processTable(name,js, i, ntokens, tokens, resultT);
     }
   free(tokens);
 }

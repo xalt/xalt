@@ -33,19 +33,14 @@ test_descript = {
      
      mpirun -n 1 ./hello 
      
-     mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
+     [ -d Ðì® ] || mkdir Ðì®
+     mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c
      
-     rm -rf Ðì®
-     mkdir Ðì®
-     mv helloñ Ðì®
-      
      mpirun -n 1 Ðì®/helloñ
      
      export LD_PRELOAD=$outputDir/XALT/libexec/libxalt_init.so
      ./hello
      
-     export XALT_USERS="$USER;$outputDir"
-     xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
      
      export XALT_TRANSMISSION_STYLE=direct2db
      mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
@@ -53,7 +48,19 @@ test_descript = {
      export RTM_PATH="RTM path FOO"
      mpirun -n 1 ./helloññ
 
-     check_entries_db.py --dbname $DBNAME --results result.csv --runs 4 --functions 4 --links 3
+     unset XALT_EXECUTABLE_TRACKING
+
+     mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c
+
+     export XALT_TRANSMISSION_STYLE=file
+     export XALT_EXECUTABLE_TRACKING=yes
+     ./helloñññ
+
+     unset LD_PRELOAD
+     export XALT_USERS="$USER;$outputDir"
+     xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
+
+     check_entries_db.py --dbname $DBNAME --results result.csv --runs 5 --functions 4 --links 3
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
    """,
 

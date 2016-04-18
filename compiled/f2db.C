@@ -164,16 +164,13 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 
 int main(int argc, char* argv[])
 {
-  HERE;
   f2db_Options options(argc, argv);
   struct passwd* pw;
   
-  HERE;
   double t1 = epoch();
 
   Table users;
   int   num           = buildUserTable(users);
-  fprintf(stderr,"num: %d\n", num);
   bool  haveUserTable = false;
   if (num == 0)
     {
@@ -186,13 +183,11 @@ int main(int argc, char* argv[])
   else
     haveUserTable = true;
 
-  fprintf(stderr,"Num: %d\n",num);
   ProgressBar pbar(num);
   Vstring     xlibmapA;
   Table       rmapT;
   buildRmapT(rmapT, xlibmapA);
 
-  HERE;
   int icnt   = 0;
   int iuser  = 0;
   int lnkCnt = 0;
@@ -222,12 +217,9 @@ int main(int argc, char* argv[])
         {
           Vstring linkFnA;
           int nlink  = findFilesInDir(xaltDir, "link.*.json", linkFnA);
-          HERE;
           lnkCnt    += link_json_fileA_to_db(options, rmapT, linkFnA);
-          HERE;
           if (options.deleteFn())
             removeFiles(linkFnA);
-          HERE;
 
           Vstring runFnA;
           int nrun = findFilesInDir(xaltDir, "run.*.json", runFnA);

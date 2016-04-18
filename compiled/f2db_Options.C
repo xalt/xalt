@@ -41,11 +41,12 @@ f2db_Options::f2db_Options(int argc, char** argv)
           m_timer  = true;
 	  break;
 	case 'c':
-          fprintf(stderr,"optarg: %s\n",optarg);
-	  m_confFn.assign(optarg);
+          if (optarg)
+            m_confFn = optarg;
 	  break;
 	case 'R':
-	  m_rmapD = optarg;
+          if (optarg)
+            m_rmapD = optarg;
 	  break;
 	case '?':
 	  printf("Huh?\n");
