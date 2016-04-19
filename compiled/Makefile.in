@@ -30,6 +30,7 @@ all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost           \
                              $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib     \
                              $(DESTDIR)$(LIBEXEC)/xalt_extract_linker    \
                              $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata \
+                             $(DESTDIR)$(LIBEXEC)/xalt_realpath          \
                              $(DESTDIR)$(SBIN)/xalt_file_to_db
 
 
@@ -59,6 +60,10 @@ $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib: xalt_strip_linklib.o xalt_quotestring.o
 
 $(DESTDIR)$(LIBEXEC)/xalt_extract_linker: xalt_extract_linker.o Process.o Json.o xalt_quotestring.o xalt_fgets_alloc.o
 	g++ -O2 -o $@ $^
+
+$(DESTDIR)$(LIBEXEC)/xalt_realpath: xalt_realpath.o
+	g++ -O2 -o $@ $^
+
 
 $(DESTDIR)$(SBIN)/xalt_file_to_db: f2db.o f2db_Options.o buildRmapT.o xalt_quotestring.o jsmn.o  \
                                    parseJsonStr.o Json.o epoch.o xalt_utils.o xalt_fgets_alloc.o \
@@ -135,6 +140,7 @@ xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 xalt_generate_assembly.o: xalt_generate_assembly.C xalt_types.h jsmn.h build_h/xalt_config.h epoch.h
 xalt_generate_linkdata.o: xalt_generate_linkdata.C link_direct2db.h link_submission.h Json.h parseJsonStr.h build_h/xalt_config.h xalt_types.h transmit.h capture.h buildRmapT.h  xalt_utils.h
 xalt_mysql_utils.o: xalt_mysql_utils.C xalt_mysql_utils.h xalt_types.h xalt_utils.h ConfigParser.h
+xalt_realpath.o: xalt_realpath.c
 xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 xalt_run_submission.o: xalt_run_submission.C run_direct2db.h run_submission.h Options.h Json.h xalt_types.h transmit.h build_h/xalt_config.h capture.h buildRmapT.h
 xalt_strip_linklib.o: xalt_strip_linklib.C xalt_types.h buildRmapT.h

@@ -41,7 +41,6 @@ XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
-REALPATH=@realpath@
 SHA1SUM=@sha1sum@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
@@ -120,8 +119,6 @@ if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$EXEC" = "conftest" ]; then
   exit $status
 fi
 
-EXEC=$($REALPATH $EXEC)
-
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
@@ -130,6 +127,7 @@ GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
 STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
 SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
+REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 LD_LIBRARY_PATH=$LD_LIB_PATH
 SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
@@ -185,6 +183,10 @@ tracing_msg $MY_CMD "${argA[@]}"
 
 $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
 status=$?
+
+if [ -f $EXEC ]; then
+   EXEC=$($REALPATH $EXEC)
+fi
 
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
