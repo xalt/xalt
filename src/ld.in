@@ -184,9 +184,12 @@ tracing_msg $MY_CMD "${argA[@]}"
 $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
 status=$?
 
-if [ -f $EXEC ]; then
-   EXEC=$($REALPATH $EXEC)
+if [ ! -f $(EXEC) ]; then
+   return $status
 fi
+
+EXEC=$($REALPATH $EXEC)
+
 
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
