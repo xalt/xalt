@@ -212,7 +212,6 @@ int main(int argc, char* argv[])
       // form directory xaltDir = "$HOME/.xalt.d"
       xaltDir.append("/.xalt.d");
       
-      fprintf(stderr,"xaltDir: %s\n",xaltDir.c_str());
       if (isDirectory(xaltDir.c_str()))
         {
           Vstring linkFnA;

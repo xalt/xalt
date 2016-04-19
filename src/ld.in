@@ -184,7 +184,7 @@ tracing_msg $MY_CMD "${argA[@]}"
 $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
 status=$?
 
-if [ ! -f $(EXEC) ]; then
+if [ ! -f "$EXEC" ]; then
    return $status
 fi
 

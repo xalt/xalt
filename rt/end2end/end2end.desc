@@ -13,12 +13,15 @@ test_descript = {
      . $(projectDir)/rt/common_funcs.sh
 
      initialize
-     buildRmapT
+
      installXALT
+     displayThis "buildRmapT"
+     buildRmapT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
 
+     displayThis "installDB"
      installDB 
 
      displayThis "module commands"

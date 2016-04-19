@@ -31,6 +31,7 @@ all: ECHO $(EXEC) build_init $(DESTDIR)$(LIBEXEC)/xalt_syshost           \
                              $(DESTDIR)$(LIBEXEC)/xalt_extract_linker    \
                              $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata \
                              $(DESTDIR)$(LIBEXEC)/xalt_realpath          \
+                             $(DESTDIR)$(LIBEXEC)/xalt_epoch             \
                              $(DESTDIR)$(SBIN)/xalt_file_to_db
 
 
@@ -62,6 +63,9 @@ $(DESTDIR)$(LIBEXEC)/xalt_extract_linker: xalt_extract_linker.o Process.o Json.o
 	g++ -O2 -o $@ $^
 
 $(DESTDIR)$(LIBEXEC)/xalt_realpath: xalt_realpath.o
+	g++ -O2 -o $@ $^
+
+$(DESTDIR)$(LIBEXEC)/xalt_epoch: xalt_epoch.o epoch.o
 	g++ -O2 -o $@ $^
 
 
@@ -135,6 +139,7 @@ parseLDTrace.o: parseLDTrace.C link_submission.h xalt_types.h xalt_fgets_alloc.h
 run_direct2db.o: run_direct2db.C run_direct2db.h run_submission.h Options.h xalt_types.h ConfigParser.h build_h/xalt_regex.h Json.h xalt_mysql_utils.h xalt_utils.h ConfigParser.h
 translate.o: translate.C run_submission.h Options.h xalt_types.h build_h/xalt_config.h xalt_utils.h
 transmit.o: transmit.C transmit.h base64.h zstring.h xalt_types.h xalt_utils.h build_h/xalt_config.h 
+xalt_epoch.o: xalt_epoch.C  epoch.h  
 xalt_extract_linker.o: xalt_extract_linker.C xalt_types.h Process.h Json.h
 xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 xalt_generate_assembly.o: xalt_generate_assembly.C xalt_types.h jsmn.h build_h/xalt_config.h epoch.h

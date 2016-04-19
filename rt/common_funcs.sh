@@ -13,14 +13,17 @@ initialize()
 
   rm -f  _stderr.* _stdout.* out.* err.* 
   rm -rf .xalt.d syslog.log reverseMapD
+  XALT_EPOCH_T0=$(python $projectDir/src/xalt_epoch.py)
 
 }
 
 displayThis()
 {
+  XALT_EPOCH_T1=$(LD_PRELOAD= $outputDir/XALT/libexec/xalt_epoch "$XALT_EPOCH_T0")
   echo 
   echo "#==========================================================#"
-  echo " $@"
+  echo "  $@"
+  echo "  ($XALT_EPOCH_T1)"
   echo "#==========================================================#"
 }
 
