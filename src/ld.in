@@ -75,6 +75,7 @@ EXEC="a.out"
 append=false
 prev=
 done=false
+BIT32FLAG=
 for option
 do
   if [ -n "$prev" ]; then
@@ -96,6 +97,10 @@ do
       ;;
     --trace|-t)
       USER_TRACE="true"
+      ;;
+
+    elf_i386)
+      BIT32FLAG=--32
       ;;
 
     -o)
@@ -166,7 +171,7 @@ EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" 
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
 if [ -f "$ARGSRC" ]; then
-  $AS $ARGSRC -o $OBJ
+  $AS $ARGSRC $BIT32FLAG -o $OBJ
 else
   OBJ=""
 fi
