@@ -144,34 +144,30 @@ def main():
   XALT_Stack.push(s)
 
   try:
-    uuid        = sys.argv[ 1]
-    status      = sys.argv[ 2]
-    wd          = sys.argv[ 3]
-    syshost     = sys.argv[ 4]
-    execname    = sys.argv[ 5]
-    xaltobj     = sys.argv[ 6]
-    build_epoch = sys.argv[ 7]
-    funcRawFn   = sys.argv[ 8]
-    linklineFn  = sys.argv[ 9]
-    resultFn    = sys.argv[10]
-    compT       = json.loads(sys.argv[11])
+    i           = 1
+    uuid        = sys.argv[i]; i += 1
+    status      = sys.argv[i]; i += 1
+    wd          = sys.argv[i]; i += 1
+    syshost     = sys.argv[i]; i += 1
+    execname    = sys.argv[i]; i += 1
+    hash_id     = sys.argv[i]; i += 1
+    xaltobj     = sys.argv[i]; i += 1
+    build_epoch = sys.argv[i]; i += 1
+    funcRawFn   = sys.argv[i]; i += 1
+    linklineFn  = sys.argv[i]; i += 1
+    resultFn    = sys.argv[i]; i += 1
+    compT       = json.loads(sys.argv[i])
 
     if (execname == "conftest"):
       return 1
   
-    hash_line   = capture(['@sha1sum@', execname])
-    
-    if (hash_line.find("No such file or directory") != -1):
-      return 1
-    hash_id     = hash_line.split()[0]
-    
-    sB = readFunctionList(funcRawFn)
     
     # Step one clean up linkline data
     sA = cleanup(xaltobj, linklineFn)
 
-    #link_program, link_path, link_line  = extract_compiler()
-  
+    # Step two extract functions from raw output from linker
+    sB = readFunctionList(funcRawFn)
+
     resultT                  = {}
     resultT['uuid']          = uuid
     resultT['link_program']  = compT['compiler']
