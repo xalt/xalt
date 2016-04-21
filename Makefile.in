@@ -40,6 +40,7 @@ ETC_DIR           := @ETC_DIR@
 prefix            := @prefix@
 XALT_DIR          := $(prefix)
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
+HAVE_32BIT        := @HAVE_32BIT@
 HAVE_PYMOD_PSUTIL := @HAVE_PYMOD_PSUTIL@
 PATH_TO_AS        := @PATH_TO_AS@
 PATH_TO_BASENAME  := @PATH_TO_BASENAME@

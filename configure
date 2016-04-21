@@ -652,13 +652,7 @@ PATH_TO_AS
 EGREP
 GREP
 CPP
-OBJEXT
-EXEEXT
-ac_ct_CC
-CPPFLAGS
-LDFLAGS
-CFLAGS
-CC
+HAVE_32BIT
 SYS_LD_LIB_PATH
 SYSHOST_CONFIG
 SYSTEM_PATH
@@ -666,6 +660,13 @@ XALT_CONFIG_PY
 ETC_DIR
 TRANSMISSION
 subdirs
+OBJEXT
+EXEEXT
+ac_ct_CC
+CPPFLAGS
+LDFLAGS
+CFLAGS
+CC
 target_alias
 host_alias
 build_alias
@@ -2014,155 +2015,6 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-
-ac_aux_dir=
-for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
-  if test -f "$ac_dir/install-sh"; then
-    ac_aux_dir=$ac_dir
-    ac_install_sh="$ac_aux_dir/install-sh -c"
-    break
-  elif test -f "$ac_dir/install.sh"; then
-    ac_aux_dir=$ac_dir
-    ac_install_sh="$ac_aux_dir/install.sh -c"
-    break
-  elif test -f "$ac_dir/shtool"; then
-    ac_aux_dir=$ac_dir
-    ac_install_sh="$ac_aux_dir/shtool install -c"
-    break
-  fi
-done
-if test -z "$ac_aux_dir"; then
-  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
-fi
-
-# These three variables are undocumented and unsupported,
-# and are intended to be withdrawn in a future Autoconf release.
-# They can cause serious problems if a builder's source tree is in a directory
-# whose full name contains unusual characters.
-ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
-ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
-ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
-
-
-
-
-subdirs="$subdirs compiled"
-
-
-
-
-# Check whether --with-transmission was given.
-if test "${with_transmission+set}" = set; then :
-  withval=$with_transmission; TRANSMISSION="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$with_transmission" >&5
-$as_echo "TRANSMISSION=$with_transmission" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define TRANSMISSION "$with_transmission"
-_ACEOF
-
-else
-  withval="file"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$withval" >&5
-$as_echo "TRANSMISSION=$withval" >&6; }
-    TRANSMISSION="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define TRANSMISSION "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-etcDir was given.
-if test "${with_etcDir+set}" = set; then :
-  withval=$with_etcDir; ETC_DIR="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$with_etcDir" >&5
-$as_echo "ETC_DIR=$with_etcDir" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define ETC_DIR "$with_etcDir"
-_ACEOF
-
-else
-  withval="."
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$withval" >&5
-$as_echo "ETC_DIR=$withval" >&6; }
-    ETC_DIR="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define ETC_DIR "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-config was given.
-if test "${with_config+set}" = set; then :
-  withval=$with_config; XALT_CONFIG_PY="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$with_config" >&5
-$as_echo "XALT_CONFIG_PY=$with_config" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_CONFIG_PY "$with_config"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$withval" >&5
-$as_echo "XALT_CONFIG_PY=$withval" >&6; }
-    XALT_CONFIG_PY="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_CONFIG_PY "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-systemPath was given.
-if test "${with_systemPath+set}" = set; then :
-  withval=$with_systemPath; SYSTEM_PATH="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$with_systemPath" >&5
-$as_echo "SYSTEM_PATH=$with_systemPath" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define SYSTEM_PATH "$with_systemPath"
-_ACEOF
-
-else
-  withval="/usr/bin:/bin"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$withval" >&5
-$as_echo "SYSTEM_PATH=$withval" >&6; }
-    SYSTEM_PATH="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define SYSTEM_PATH "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-syshostConfig was given.
-if test "${with_syshostConfig+set}" = set; then :
-  withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$with_syshostConfig" >&5
-$as_echo "SYSHOST_CONFIG=$with_syshostConfig" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define SYSHOST_CONFIG "$with_syshostConfig"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$withval" >&5
-$as_echo "SYSHOST_CONFIG=$withval" >&6; }
-    SYSHOST_CONFIG="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define SYSHOST_CONFIG "$withval"
-_ACEOF
-
-fi
-
-
-SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
-
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -2951,6 +2803,157 @@ ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+ac_aux_dir=
+for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
+  if test -f "$ac_dir/install-sh"; then
+    ac_aux_dir=$ac_dir
+    ac_install_sh="$ac_aux_dir/install-sh -c"
+    break
+  elif test -f "$ac_dir/install.sh"; then
+    ac_aux_dir=$ac_dir
+    ac_install_sh="$ac_aux_dir/install.sh -c"
+    break
+  elif test -f "$ac_dir/shtool"; then
+    ac_aux_dir=$ac_dir
+    ac_install_sh="$ac_aux_dir/shtool install -c"
+    break
+  fi
+done
+if test -z "$ac_aux_dir"; then
+  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
+fi
+
+# These three variables are undocumented and unsupported,
+# and are intended to be withdrawn in a future Autoconf release.
+# They can cause serious problems if a builder's source tree is in a directory
+# whose full name contains unusual characters.
+ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
+ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
+ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
+
+
+
+
+subdirs="$subdirs compiled"
+
+
+
+
+# Check whether --with-transmission was given.
+if test "${with_transmission+set}" = set; then :
+  withval=$with_transmission; TRANSMISSION="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$with_transmission" >&5
+$as_echo "TRANSMISSION=$with_transmission" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define TRANSMISSION "$with_transmission"
+_ACEOF
+
+else
+  withval="file"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$withval" >&5
+$as_echo "TRANSMISSION=$withval" >&6; }
+    TRANSMISSION="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define TRANSMISSION "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-etcDir was given.
+if test "${with_etcDir+set}" = set; then :
+  withval=$with_etcDir; ETC_DIR="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$with_etcDir" >&5
+$as_echo "ETC_DIR=$with_etcDir" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define ETC_DIR "$with_etcDir"
+_ACEOF
+
+else
+  withval="."
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$withval" >&5
+$as_echo "ETC_DIR=$withval" >&6; }
+    ETC_DIR="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define ETC_DIR "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-config was given.
+if test "${with_config+set}" = set; then :
+  withval=$with_config; XALT_CONFIG_PY="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$with_config" >&5
+$as_echo "XALT_CONFIG_PY=$with_config" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_CONFIG_PY "$with_config"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$withval" >&5
+$as_echo "XALT_CONFIG_PY=$withval" >&6; }
+    XALT_CONFIG_PY="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_CONFIG_PY "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-systemPath was given.
+if test "${with_systemPath+set}" = set; then :
+  withval=$with_systemPath; SYSTEM_PATH="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$with_systemPath" >&5
+$as_echo "SYSTEM_PATH=$with_systemPath" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSTEM_PATH "$with_systemPath"
+_ACEOF
+
+else
+  withval="/usr/bin:/bin"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$withval" >&5
+$as_echo "SYSTEM_PATH=$withval" >&6; }
+    SYSTEM_PATH="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSTEM_PATH "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-syshostConfig was given.
+if test "${with_syshostConfig+set}" = set; then :
+  withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$with_syshostConfig" >&5
+$as_echo "SYSHOST_CONFIG=$with_syshostConfig" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$with_syshostConfig"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$withval" >&5
+$as_echo "SYSHOST_CONFIG=$withval" >&6; }
+    SYSHOST_CONFIG="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$withval"
+_ACEOF
+
+fi
+
+
+SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
+
+
+AX_CHECK_COMPILE_FLAG(-m32,HAVE_32BIT=yes)
 
 
 ac_ext=c
