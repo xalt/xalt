@@ -2953,7 +2953,41 @@ fi
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 
 
-AX_CHECK_COMPILE_FLAG(-m32,HAVE_32BIT=yes)
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts -m32" >&5
+$as_echo_n "checking whether C compiler accepts -m32... " >&6; }
+if ${ax_cv_check_cflags___m32+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -m32"
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ax_cv_check_cflags___m32=yes
+else
+  ax_cv_check_cflags___m32=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___m32" >&5
+$as_echo "$ax_cv_check_cflags___m32" >&6; }
+if test "x$ax_cv_check_cflags___m32" = xyes; then :
+  HAVE_32BIT=yes
+else
+  :
+fi
 
 
 ac_ext=c
