@@ -154,8 +154,13 @@ ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
-XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o $XALT_LIBEXEC_DIR/xalt_fgets_alloc.o"
 
+if [ -z "$BIT32FLAG" ]; then
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o $XALT_LIBEXEC_DIR/xalt_fgets_alloc.o"
+else
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize_32.o $XALT_LIBEXEC_DIR/xalt_syshost_32.o $XALT_LIBEXEC_DIR/xalt_quotestring_32.o $XALT_LIBEXEC_DIR/xalt_fgets_alloc_32.o"
+fi
+  
 
 if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
