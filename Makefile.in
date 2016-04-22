@@ -132,11 +132,11 @@ Build_libuuid_64:
 Build_libuuid_32_yes:
 	rm -rf $(CURDIR)/build_uuid_32
 	mkdir  $(CURDIR)/build_uuid_32
-	cd     $(CURDIR)/build_uuid_32;                                                   \
-        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_32;    \
-        make; make install;                                                               
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;              \
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;                                          \
+	cd     $(CURDIR)/build_uuid_32;                                                               \
+        CC="gcc -m32" $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_32;  \
+        make; make install;
+	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;                          \
+	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;                                                      \
         [ -f libuuid.a ] && tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib; tar xf -)
 
 Build_libuuid_32_no:	
