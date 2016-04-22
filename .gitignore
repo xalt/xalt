@@ -49,3 +49,6 @@ testreports
 t1
 src/xalt_regex.h
 install
+build_uuid_32
+build_uuid_64
+

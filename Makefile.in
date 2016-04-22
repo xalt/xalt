@@ -119,25 +119,25 @@ install:  $(DIRLIST) Build_libuuid_64 Build_libuuid_32_$(HAVE_32BIT) Inst_site I
           Inst_bin Inst_libexec Use_getent_yes Use_argparse_$(USE_ARGPARSE)               \
           build_compiled 
 
-Build_libuuid:
+Build_libuuid_64:
 	rm -rf $(CURDIR)/build_uuid_64
 	mkdir  $(CURDIR)/build_uuid_64
 	cd     $(CURDIR)/build_uuid_64;                                                   \
         $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_64;    \
-        make; make install;                                                               \
-        [ -d $(DESTDIR)/$(LIBEXEC)/lib64 ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib64;          \
+        make; make install;                                                               
+	[ -d $(DESTDIR)/$(LIBEXEC)/lib64 ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib64;          \
 	cd $(DESTDIR)/$(LIBEXEC)/libuuid_64/lib;                                          \
-        [ -f libuuid.a ] || tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib64; tar xf -)
+        [ -f libuuid.a ] && tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib64; tar xf -)
 
 Build_libuuid_32_yes:
 	rm -rf $(CURDIR)/build_uuid_32
 	mkdir  $(CURDIR)/build_uuid_32
 	cd     $(CURDIR)/build_uuid_32;                                                   \
         $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_32;    \
-        make; make install;                                                               \
-        [ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;              \
+        make; make install;                                                               
+	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;              \
 	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;                                          \
-        [ -f libuuid.a ] || tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib; tar xf -)
+        [ -f libuuid.a ] && tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib; tar xf -)
 
 Build_libuuid_32_no:	
 
