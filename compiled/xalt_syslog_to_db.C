@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "s2db_Options.h"
 #include "epoch.h"
@@ -9,8 +10,11 @@
 #include "SyslogRecord.h"
 #include "parseSyslog.h"
 #include "buildRmapT.h"
+#include "parseJsonStr.h"
+#include "link_direct2db.h"
+#include "run_direct2db.h"
 
-void link_json_to_db(strstd::string& key, std::string confFn, Table& rmapT, std::string& jsonStr)
+void link_json_to_db(std::string& key, std::string confFn, Table& rmapT, std::string& jsonStr)
 {
   Set                  funcSet;
   std::vector<Libpair> libA;
@@ -21,7 +25,7 @@ void link_json_to_db(strstd::string& key, std::string confFn, Table& rmapT, std:
   link_direct2db(confFn.c_str(), linkLineA, resultT, libA, funcSet, rmapT);
 }
 
-void run_json_to_db(strstd::string& key, std::string confFn, Table& rmapT, std::string& jsonStr)
+void run_json_to_db(std::string& key, std::string confFn, Table& rmapT, std::string& jsonStr)
 {
   std::string          usr_cmdline;
   std::string          hash_id;
@@ -42,7 +46,7 @@ int main(int argc, char* argv[])
   FILE* fp = fopen(options.syslogFn().c_str(), "r");
   if (! fp)
     {
-      fprintf(stderr,"Unable to open syslog file: %s. Quiting!\n", options.syslogFn.c_str());
+      fprintf(stderr,"Unable to open syslog file: %s. Quiting!\n", options.syslogFn().c_str());
       exit(1);
     }
 
@@ -105,7 +109,7 @@ int main(int argc, char* argv[])
   
   pbar.fini();
 
-  if (option.timer())
+  if (options.timer())
     {
       const int dateSz = 100;
       char dateStr[dateSz];
@@ -113,13 +117,13 @@ int main(int argc, char* argv[])
       printf("Time: %s\n", dateStr);
     }
 
-  printf("num users: %d, num links: %d, num runs: %d\n", iuser, lnkCnt, runCnt);
+  printf("num links: %d, num runs: %d\n", lnkCnt, runCnt);
     
   if (access(options.leftoverFn().c_str(),F_OK) != -1)
     {
       std::string bckFn(options.leftoverFn());
       bckFn.append(".old");
-      rename(options.leftoverFn().c_str(), bck.c_str());
+      rename(options.leftoverFn().c_str(), bckFn.c_str());
     }
 
   if (recordT.size() > 0)

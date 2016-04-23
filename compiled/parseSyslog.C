@@ -8,7 +8,7 @@
 
 bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
 {
-  char *start = strstr(buf, " V:2 ");
+  char *start = strstr((char *) buf, " V:2 ");
   if (start == NULL)
     return false;
 
@@ -20,7 +20,7 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
   long        nb;
   long        idx;
 
-  while(*start != NULL)
+  while(*start != '\0')
     {
       // skip leading blanks
       while(isspace(*start))
@@ -51,7 +51,7 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
   bool                    record_stored = false;
   RecordT::const_iterator got           = recordT.find(key);
   if (got == recordT.end())
-    syslogT.init(nb, kind, syshost);
+    syslogT.init(nb, kind, syshost, key);
   else
     {
       syslogT       = got->second;

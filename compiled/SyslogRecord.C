@@ -10,14 +10,14 @@ SyslogRecord::SyslogRecord()
 
 void SyslogRecord::init(long nblks, std::string& kind, std::string& syshost, std::string& key)
 {
-  m_nblkd   = nblks;
+  m_nblks   = nblks;
   m_kind    = kind;
   m_syshost = syshost;
   m_key     = key;
-  m_blkA.reserve(nblk);
+  m_blkA.reserve(m_nblks);
 }
 
-void SyslogRecord::addblk(long idx, std::string v)
+void SyslogRecord::addblk(long idx, std::string& v)
 {
   m_blkA[idx] = v;
   m_blkcnt++;
@@ -28,7 +28,7 @@ void SyslogRecord::value(std::string& jsonStr)
   std::string b64;
 
   b64.assign(m_blkA[0]);
-  for (int i = 1; i < m_nblk; ++i)
+  for (int i = 1; i < m_nblks; ++i)
     b64.append(m_blkA[i]);
   
   std::string zs = base64_decode(b64);
@@ -48,7 +48,7 @@ void SyslogRecord::prt(const char* name, Vstring& resultA)
   prefix.append(" syshost:");
   prefix.append(m_syshost);
   prefix.append(" nb:");
-  snprintf(buf, sz, "%d",m_nblks);
+  snprintf(buf, sz, "%ld",m_nblks);
   prefix.append(buf);
 
   long idx = 0;
@@ -58,7 +58,7 @@ void SyslogRecord::prt(const char* name, Vstring& resultA)
         {
           std::string result(prefix);
           result.append(" idx:");
-          snprintf(buf, sz, "%d",idx);
+          snprintf(buf, sz, "%ld",idx);
           result.append(buf);
           result.append(" value:");
           result.append(*it);

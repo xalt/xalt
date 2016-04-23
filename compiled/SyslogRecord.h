@@ -7,7 +7,7 @@ class SyslogRecord
 {
 public:
   SyslogRecord();
-  void init(long nblks, std::string& kind, std::string& syshost)
+  void init(long nblks, std::string& kind, std::string& syshost, std::string& key);
 
   ~SyslogRecord() {}
 
@@ -16,8 +16,8 @@ public:
   std::string&  syshost()      { return m_syshost;             }
   std::string&  key()          { return m_key;                 }
   void addblk(long idx, std::string& v);
-  void value(std::string v);
-  void prt(const char* prefix, std::string& result);
+  void value(std::string& v);
+  void prt(const char* prefix, Vstring& resultA);
 
 private:
   long        m_blkcnt;

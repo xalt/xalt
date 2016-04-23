@@ -12,7 +12,7 @@ LIB_OPTIONS       := -fPIC -shared
 
 CF_INIT     := -I. -fPIC 
 CXXFLAGS    := -g -O0 -std=c++11 -Ibuild_h $(MYSQL_CFLAGS)
-CFLAGS      := -g -O0 -I$(DESTDIR)$(LIBEXEC)/libuuid_64/include
+CFLAGS      := -g -O0 -Ibuild_h -I$(DESTDIR)$(LIBEXEC)/libuuid_64/include
 
 C_SRC       := jsmn.c             	\
 	       xalt_fgets_alloc.c 	\
@@ -88,7 +88,7 @@ XSL_C_SRC    := jsmn.c  xalt_fgets_alloc.c xalt_quotestring.c
 XSL_OBJS     := $(patsubst %.C, %.o, $(XSL_CXX_SRC)) $(patsubst %.c, %.o, $(XSL_C_SRC))
 
 F2DB_EXEC    := $(DESTDIR)$(SBIN)/xalt_file_to_db
-F2DB_CXX_SRC := f2db.C f2db_Options.C buildRmapT.c parseJsonStr.C Json.C epoch.C xalt_utils.C \
+F2DB_CXX_SRC := f2db.C f2db_Options.C buildRmapT.C parseJsonStr.C Json.C epoch.C xalt_utils.C \
                 link_direct2db.C run_direct2db.C ProgressBar.C translate.C xalt_mysql_utils.C \
                 ConfigParser.C base64.C
 F2DB_C_SRC   := xalt_quotestring.c jsmn.c xalt_fgets_alloc.c
@@ -97,8 +97,9 @@ F2DB_OBJS    := $(patsubst %.C, %.o, $(F2DB_CXX_SRC)) $(patsubst %.c, %.o, $(F2D
 S2DB_EXEC    := $(DESTDIR)$(SBIN)/xalt_syslog_to_db
 S2DB_CXX_SRC := xalt_syslog_to_db.C s2db_Options.C epoch.C ProgressBar.C SyslogRecord.C       \
                 parseJsonStr.C translate.C xalt_mysql_utils.C ConfigParser.C base64.C         \
-                zstring.C
-S2DB_C_SRC   := xalt_fgets_alloc.c jsmn.c 
+                zstring.C buildRmapT.C parseSyslog.C xalt_utils.C link_direct2db.C            \
+                run_direct2db.C Json.C
+S2DB_C_SRC   := xalt_fgets_alloc.c jsmn.c xalt_quotestring.c
 S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2DB_C_SRC))
 
 %.d: %.c
@@ -114,7 +115,7 @@ S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2D
         rm -f $@.$$$$
 
 all: ECHO $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC) $(XSL_EXEC) $(F2DB_EXEC) $(S2DB_EXEC) \
-                build_init build_init_32bit_$(HAVE_32BIT) 
+                build_init build_init_32bit_$(HAVE_32BIT)       \
 	        $(DESTDIR)$(LIBEXEC)/xalt_syshost               \
                 $(DESTDIR)$(LIBEXEC)/xalt_realpath          	\
                 $(DESTDIR)$(LIBEXEC)/xalt_epoch             	
@@ -137,7 +138,10 @@ $(XEL_EXEC) : $(XEL_OBJS)
 $(XSL_EXEC) : $(XSL_OBJS)
 	g++ -O2 -o $@ $^
 
-$(F2DB_EXEC) : $(F2DB_OBJ)
+$(F2DB_EXEC) : $(F2DB_OBJS)
+	g++ -O2 -o $@ $^ -lz $(MYSQL_LDFLAGS)
+
+$(S2DB_EXEC) : $(S2DB_OBJS)
 	g++ -O2 -o $@ $^ -lz $(MYSQL_LDFLAGS)
 
 $(DESTDIR)$(LIBEXEC)/xalt_realpath: xalt_realpath.o

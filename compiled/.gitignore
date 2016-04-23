@@ -1,3 +1,4 @@
 xalt_syshost.c
 build_h
 stamp-h
+*.d
