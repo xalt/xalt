@@ -265,8 +265,11 @@ tags:
             -e 's|.*/rt/.*/t1/.*||g'                             \
             -e 's|./TAGS||g'                                     \
             -e 's|.*/epydoc/.*$$||g'                             \
-            -e 's|./makefile||g'                                 \
-            -e 's|./configure$$||g'                              \
+            -e 's|.*/old/.*$$||g'                                \
+            -e 's|.*/stamp-h1$$||g'                              \
+            -e 's|.*/stamp-h$$||g'                               \
+            -e 's|.*/makefile||g'                                \
+            -e 's|.*/configure$$||g'                             \
             -e 's|.*/.DS_Store$$||g'                             \
             -e 's|.DS_Store$$||g'                                \
             -e 's|.*\.tgz$$||g'                                  \
@@ -286,6 +289,13 @@ tags:
 	    -e 's|.*\.toc$$||g'                                  \
 	    -e 's|.*\.vrb$$||g'                                  \
 	    -e 's|.*syslogTest$$||g'                             \
+            -e 's|.*/build_uuid_32/.*$$||g'                      \
+            -e 's|.*/build_uuid_64/.*$$||g'                      \
+	    -e 's|.*\/\.libs/.*$$||g'                            \
+	    -e 's|.*\/\.deps/.*$$||g'                            \
+            -e 's|.*\.o$$||g'                                    \
+            -e 's|.*\.lo$$||g'                                   \
+            -e 's|.*\.Plo$$||g'                                  \
             -e 's|^#.*||g'                                       \
             -e 's|/#.*||g'                                       \
             -e 's|\.#.*||g'                                      \
@@ -293,7 +303,7 @@ tags:
             -e 's|.*\.used$$||g'                                 \
             -e 's|./.*\.log$$||g'                                \
             -e 's|./testreports/.*||g'                           \
-            -e 's|./config\.status$$||g'                         \
+            -e 's|.*/config\.status$$||g'                        \
             -e 's|.*\~$$||g'                                     \
             -e 's|./file_list\..*||g'                            \
             -e '/^\s*$$/d'                                       \

@@ -1,14 +1,14 @@
 #include <stdio.h>
-#include "SysLogRecord.h"
+#include "SyslogRecord.h"
 #include "base64.h"
 #include "zstring.h"
 
 
-SysLogRecord::SysLogRecord()
+SyslogRecord::SyslogRecord()
   : m_blkcnt(0), m_nblks(-1), m_kind("unknown"), m_syshost("unknown"), m_key("unknown")
 {}
 
-void SysLogRecord::init(long nblks, std::string& kind, std::string& syshost, std::string& key)
+void SyslogRecord::init(long nblks, std::string& kind, std::string& syshost, std::string& key)
 {
   m_nblkd   = nblks;
   m_kind    = kind;
@@ -17,13 +17,13 @@ void SysLogRecord::init(long nblks, std::string& kind, std::string& syshost, std
   m_blkA.reserve(nblk);
 }
 
-void SysLogRecord::addblk(long idx, std::string v)
+void SyslogRecord::addblk(long idx, std::string v)
 {
   m_blkA[idx] = v;
   m_blkcnt++;
 }
 
-void SysLogRecord::value(std::string& jsonStr)
+void SyslogRecord::value(std::string& jsonStr)
 {
   std::string b64;
 
@@ -35,7 +35,7 @@ void SysLogRecord::value(std::string& jsonStr)
   jsonStr        = decompress_string(zs);
 }
 
-void SysLogRecord::prt(const char* name, Vstring& resultA)
+void SyslogRecord::prt(const char* name, Vstring& resultA)
 {
   const int sz = 15;
   char buf[sz];

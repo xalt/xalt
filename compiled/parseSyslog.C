@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "parseSysLog.h"
-#include "SysLogRecord.h"
+#include "parseSyslog.h"
+#include "SyslogRecord.h"
 
 // XALT_LOGGING V:2 kind:kind key:key syshost:syshost nb:nb idx:idx value:value
 
-bool parseSysLog(const char* buf, SysLogRecord& syslogT, RecordT& recordT)
+bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
 {
   char *start = strstr(buf, " V:2 ");
   if (start == NULL)
@@ -22,29 +22,30 @@ bool parseSysLog(const char* buf, SysLogRecord& syslogT, RecordT& recordT)
 
   while(*start != NULL)
     {
-        
       // skip leading blanks
-      while(isspace(*start++))
-        ;
+      while(isspace(*start))
+        start++ ;
 
-      char* p = strchr(' ');
-      if (p == NULL)
-        p = start+strlen(start);
+      char* end = strchr(start,' ');
+      if (end == NULL)
+        end = start+strlen(start);
       
-      if (strcmp(start,"kind:") == 0)
-        kind.assign(start, p - start);
-      else if (strcmp(start,"key:") == 0)
-        key.assign(start, p - start);
-      else if (strcmp(start,"syslog:") == 0)
-        syshost.assign(start, p - start);
-      else if (strcmp(start,"nb:") == 0)
-        nb = strtol(start, (char **) NULL, 10);
-      else if (strcmp(start,"idx:") == 0)
-        idx = strtol(start, (char **) NULL, 10);
-      else if (strcmp(start,"value:") == 0)
-        value.assign(start, p - start);
+      char* p = strchr(start,':'); p++;
 
-      start = p;
+      if (strncmp(start,"kind:",5) == 0)
+        kind.assign(p, end - p); 
+      else if (strncmp(start,"key:",4) == 0)
+        key.assign(p, end - p);
+      else if (strncmp(start,"syshost:",8) == 0)
+        syshost.assign(p, end - p);
+      else if (strncmp(start,"nb:",3) == 0)
+        nb = strtol(p, (char **) NULL, 10);
+      else if (strncmp(start,"idx:",4) == 0)
+        idx = strtol(p, (char **) NULL, 10);
+      else if (strncmp(start,"value:",6) == 0)
+        value.assign(p, end - p);
+
+      start = end;
     }
       
   bool                    record_stored = false;

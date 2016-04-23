@@ -25,7 +25,7 @@ CXX_SRC     := ConfigParser.C         	\
                Options.C              	\
                Process.C              	\
                ProgressBar.C          	\
-               SysLogRecord.C         	\
+               SyslogRecord.C         	\
                base64.C               	\
                buildEnvT.C            	\
                buildRmapT.C           	\
@@ -39,7 +39,7 @@ CXX_SRC     := ConfigParser.C         	\
                parseJsonStr.C         	\
                parseLDD.C             	\
                parseLDTrace.C         	\
-               parseSysLog.C          	\
+               parseSyslog.C          	\
                run_direct2db.C        	\
                s2db_Options.C         	\
                translate.C            	\
