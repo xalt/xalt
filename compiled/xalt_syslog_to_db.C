@@ -6,8 +6,9 @@
 #include "xalt_fgets_alloc.h"
 #include "ProgressBar.h"
 #include "xalt_types.h"
-#include "SysLogRecord.h"
-#include "parseSysLog.h"
+#include "SyslogRecord.h"
+#include "parseSyslog.h"
+#include "buildRmapT.h"
 
 void link_json_to_db(strstd::string& key, std::string confFn, Table& rmapT, std::string& jsonStr)
 {
@@ -58,7 +59,7 @@ int main(int argc, char* argv[])
   int          lnkCnt = 0;
   int          runCnt = 0;
   ProgressBar  pbar(num);
-  SysLogRecord syslogT;
+  SyslogRecord syslogT;
   RecordT      recordT;
   Vstring      fnA;
   Vstring      xlibmapA;
@@ -78,7 +79,7 @@ int main(int argc, char* argv[])
           if (strstr(buf, "XALT_LOGGING") == NULL)
             continue;
 
-          bool done = parseSysLog(buf, syslogT, recordT);
+          bool done = parseSyslog(buf, syslogT, recordT);
           if (! done)
             continue;
 
@@ -126,7 +127,7 @@ int main(int argc, char* argv[])
       fp = fopen(options.leftoverFn().c_str(), "w");
       for (auto it = recordT.begin(); it != recordT.end(); ++it)
         {
-          SysLogRecord& syslogT = it->second;
+          SyslogRecord& syslogT = it->second;
           Vstring resultA;
           syslogT.prt("XALT_LOGGING V=2",resultA);
 
