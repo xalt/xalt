@@ -215,8 +215,6 @@ neat:
 	$(RM) *~
 clean: 
 	$(RM) *.o 
-remove_genfiles:
-	$(RM) -r $(THIS_DIR)/build_h/xalt_config.h $(THIS_DIR)/build_h/xalt_regex.h $(THIS_DIR)/build_h
 
 
 include $(patsubst %.c, %.d, $(C_SRC)) $(patsubst %.C, %.d, $(CXX_SRC))
