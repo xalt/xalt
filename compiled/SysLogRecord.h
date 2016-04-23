@@ -6,21 +6,25 @@
 class SyslogRecord
 {
 public:
-  SyslogRecord(int nblks, std::string& kind, std::string& syshost)
+  SyslogRecord();
+  void init(long nblks, std::string& kind, std::string& syshost)
+
   ~SyslogRecord() {}
 
   bool          completed()    { return (m_blkcnt >= m_nblks); }
   std::string&  kind()         { return m_kind;                }
   std::string&  syshost()      { return m_syshost;             }
-  
-  void addblk(int idx, std::string& v);
+  std::string&  key()          { return m_key;                 }
+  void addblk(long idx, std::string& v);
   void value(std::string v);
+  void prt(const char* prefix, std::string& result);
 
 private:
-  int         m_blkcnt;
-  int         m_nblks;
+  long        m_blkcnt;
+  long        m_nblks;
   std::string m_kind;
   std::string m_syshost;
+  std::string m_key;
   Vstring     m_blkA;
 };
 
