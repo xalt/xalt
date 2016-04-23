@@ -8,8 +8,8 @@ void transmit(16,292
 
 compiled/parseSyslog.h,152
 #define PARSESYSLOG_H2,22
-typedef std::unordered_map<std::string,std::string4,45
-typedef std::unordered_map<std::string, SyslogRecord> RecordT;4,45
+typedef std::unordered_map<std::string,std::string6,95
+typedef std::unordered_map<std::string, SyslogRecord> RecordT;6,95
 
 compiled/xalt_config.h.in,286
 #define XALT_CONFIG_H2,22
@@ -107,11 +107,11 @@ compiled/epoch.C,19
 double epoch(4,42
 
 compiled/SyslogRecord.C,163
-SysLogRecord::SysLogRecord(7,88
-void SysLogRecord::init(11,209
-void SysLogRecord::addblk(20,416
-void SysLogRecord::value(26,505
-void SysLogRecord::prt(38,748
+SyslogRecord::SyslogRecord(7,88
+void SyslogRecord::init(11,209
+void SyslogRecord::addblk(20,419
+void SyslogRecord::value(26,509
+void SyslogRecord::prt(38,753
 
 compiled/xalt_utils.C,112
 int isDirectory(9,136
@@ -218,8 +218,8 @@ compiled/capture.h,23
 
 compiled/Makefile.in,74
 THIS_DIR 1,0
-	@set -e; rm -f $@$105,4674
-        $(CC) -MM $(106,4729
+	@set -e; rm -f $@$106,4811
+        $(CC) -MM $(107,4866
 
 compiled/xalt_generate_assembly.C,17
 int main(10,156
@@ -231,20 +231,20 @@ compiled/parseLDTrace.C,56
 void parseLDTrace(8,145
 void readFunctionList(88,2228
 
-compiled/SyslogRecord.h,607
+compiled/SyslogRecord.h,620
 #define SYSLOGRECORD_H2,23
 class SyslogRecord6,72
-  void init(SyslogRecord::init10,119
-  bool          completed(SyslogRecord::completed14,207
-  std::string&  kind(SyslogRecord::kind15,272
-  std::string&  syshost(SyslogRecord::syshost16,337
-  std::string&  key(SyslogRecord::key17,402
-  long        m_blkcnt;SyslogRecord::m_blkcnt23,600
-  long        m_nblks;SyslogRecord::m_nblks24,624
-  std::string m_kind;SyslogRecord::m_kind25,647
-  std::string m_syshost;SyslogRecord::m_syshost26,669
-  std::string m_key;SyslogRecord::m_key27,694
-  Vstring     m_blkA;SyslogRecord::m_blkA28,715
+  ~SyslogRecord(SyslogRecord::~SyslogRecord12,204
+  bool          completed(SyslogRecord::completed14,226
+  std::string&  kind(SyslogRecord::kind15,291
+  std::string&  syshost(SyslogRecord::syshost16,356
+  std::string&  key(SyslogRecord::key17,421
+  long        m_blkcnt;SyslogRecord::m_blkcnt23,617
+  long        m_nblks;SyslogRecord::m_nblks24,641
+  std::string m_kind;SyslogRecord::m_kind25,664
+  std::string m_syshost;SyslogRecord::m_syshost26,686
+  std::string m_key;SyslogRecord::m_key27,711
+  Vstring     m_blkA;SyslogRecord::m_blkA28,732
 
 compiled/xalt_epoch.C,15
 int main(4,58
@@ -279,9 +279,9 @@ EPOCH=156,4546
     LD_LIBRARY_PATH=206,5856
 
 compiled/xalt_syslog_to_db.C,75
-void link_json_to_db(13,240
-void run_json_to_db(24,626
-int main(37,1099
+void link_json_to_db(17,341
+void run_json_to_db(28,724
+int main(41,1194
 
 compiled/s2db_Options.C,53
 #define HERE 6,86
@@ -567,54 +567,36 @@ Makefile.in,1506
 srcdir 22,1051
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=68,2540
 LIBEXEC 70,2675
-        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_64;libuuid_64126,5518
-        make;127,5610
-        make; make install;127,5610
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib64 ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib64;lib64128,5701
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_64/lib;lib129,5786
-	cd     $(CURDIR)/build_uuid_32;build_uuid_32135,6043
-        CC=136,6140
-        make;137,6244
-        make; make install;137,6244
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;lib138,6272
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;lib139,6369
-	cd compiled;146,6590
-	cd compiled; $(146,6590
-	   ext=194,8343
-           oext=195,8413
-           [ "$$ext" = "in.py" ] && oext=197,8560
-           [ "$$ext" = "in.c" ]  && oext=198,8637
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext229,10821
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext231,10955
-	    true;232,11032
-	@git status -s > /tmp/git_st_$$$$;git_st_$$$$236,11130
-            git push github;240,11431
-            git push --tags github;241,11508
-        fi;242,11585
-        ifneq 246,11702
-	    echo "$(TAG)" >                                      .version;version251,12013
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version252,12083
-	    git push --tags tags254,12237
-          fi;255,12307
-	$(312,15641
-
-detectfunctions/StripLibs.py,20
-def convert(18,358
-
-detectfunctions/ld,148
-ARGV=34,1254
-AS=47,1566
-elif 69,2290
-elif 81,2684
-SCRIPT=93,2984
-WRKDIR=113,3472
-TRACEMAP=128,3857
-STATUS=162,4701
-    EXECUTABLE=187,5312
-
-detectfunctions/CreateLibMap.py,53
-class NestedDict(19,354
-    def __getitem__(20,378
+        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_64;libuuid_64122,5110
+        make;123,5202
+        make; make install;123,5202
+	[ -d $(DESTDIR)/$(LIBEXEC)/lib64 ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib64;lib64124,5293
+	cd $(DESTDIR)/$(LIBEXEC)/libuuid_64/lib;lib125,5378
+	cd     $(CURDIR)/build_uuid_32;build_uuid_32131,5635
+        CC=132,5732
+        make;133,5836
+        make; make install;133,5836
+	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;lib134,5864
+	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;lib135,5961
+	cd compiled;142,6182
+	cd compiled; $(142,6182
+	   ext=190,7935
+           oext=191,8005
+           [ "$$ext" = "in.py" ] && oext=193,8152
+           [ "$$ext" = "in.c" ]  && oext=194,8229
+                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext225,10413
+               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext227,10547
+	    true;228,10624
+	@git status -s > /tmp/git_st_$$$$;git_st_$$$$232,10722
+            git push github;236,11023
+            git push --tags github;237,11100
+        fi;238,11177
+        ifneq 242,11294
+	    echo "$(TAG)" >                                      .version;version247,11605
+            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version248,11675
+	    git push --tags tags250,11829
+          fi;251,11899
+	$(308,15233
 
 configure.ac,100
 AC_INIT(1,0
@@ -2160,23 +2142,6 @@ class XALTdb(71,2279
   def load_objects(235,7993
   def run_to_db(281,9826
 
-src/xalt_syslog_to_db.in.py,359
-def __LINE__(52,1876
-def __FILE__(58,1996
-class CmdLineOptions(67,2238
-  def __init__(70,2306
-  def execute(74,2363
-class Record(87,3241
-  def __init__(92,3353
-  def addBlk(106,3641
-  def completed(111,3767
-  def value(114,3834
-  def prt(117,3886
-def parseSyslogV1(145,4498
-def parseSyslogV2(160,4865
-def parseSyslog(210,6004
-def main(216,6143
-
 src/xalt_db.conf,10
 host 2,8
 
@@ -2187,10 +2152,6 @@ def keep_env_var(174,6287
 src/nics_system_name,37
 use strict;26,1106
 sub main54,1693
-
-src/xalt_syshost_ncar.py,43
-def map_syshost(35,1287
-def main(54,1625
 
 src/progressBar.py,171
 def getTerminalSize(27,1158
@@ -2209,10 +2170,6 @@ def convert_to_string(47,1762
 def convert_template(55,1865
 def main(86,2514
 
-src/xalt_generate_assembly.py,46
-def print_assembly(37,1447
-def main(83,3320
-
 src/createDB.in.py,95
 class CmdLineOptions(36,1394
   def __init__(39,1462
@@ -2224,17 +2181,6 @@ def main(28,1142
 
 src/new_job_id.in.py,18
 def main(35,1369
-
-src/xalt_file_to_db.in.py,229
-def __LINE__(55,1973
-def __FILE__(61,2093
-class CmdLineOptions(64,2163
-  def __init__(67,2231
-  def execute(71,2288
-def link_json_to_db(83,3031
-def run_json_to_db(124,4027
-def passwd_generator(164,5033
-def main(192,5763
 
 src/BeautifulTbl.py,117
 class BeautifulTbl(6,88
@@ -2272,40 +2218,6 @@ class DirectDB(205,5836
   def __init__(210,5946
   def save(217,6193
 
-src/xalt_working_python.py,18
-def main(27,1117
-
-src/xalt_run_submission.py,739
-def __LINE__(41,1598
-def __FILE__(47,1718
-def syshost(55,1923
-class CmdLineOptions(65,2171
-  def __init__(68,2239
-  def execute(72,2296
-class ExtractXALT(89,3125
-  def __init__(93,3243
-  def __extract_xalt_linux(133,4147
-  def __extract_xalt_darwin(157,4808
-  def xaltRecordT(178,5374
-class UserEnvT(183,5475
-  def __init__(185,5564
-  def userT(215,6791
-class UserExec(219,6882
-  def __init__(223,6958
-  def execName(251,7870
-  def execType(255,7966
-  def execEpoch(259,8074
-  def execModify(263,8184
-  def libA(267,8318
-  def hash(271,8430
-  def __computeHash(275,8522
-  def __parseLDD(280,8676
-class EnvT(318,9482
-  def __init__(320,9567
-  def envT(323,9670
-  def __reportUserEnv(326,9752
-def main(370,10862
-
 src/xalt_util.py,390
 def config_logger(28,1265
 def extract_compiler(45,1712
@@ -2323,11 +2235,6 @@ def obj_type(207,5861
 def obj2module(230,6347
 def dbConfigFn(257,7033
 
-src/xalt_syshost_TACC.py,71
-def map_syshost(39,1501
-def level2_syshost(51,1683
-def main(77,2177
-
 src/xalt_stack.py,149
 class Stack(27,1148
   def __init__(29,1197
@@ -2336,11 +2243,6 @@ class Stack(27,1148
   def isEmpty(45,1534
   def contents(49,1653
 def main(55,1798
-
-src/xalt_generate_linkdata.py,70
-def readFunctionList(41,1627
-def cleanup(54,1888
-def main(110,3092
 
 src/ld.in,445
 LD_LIB_PATH=39,1498
@@ -2360,12 +2262,6 @@ LINKLINE_OUT=150,4162
 COMP_T=170,4856
   OBJ=181,5130
 SHA1SUM_EXEC=209,5802
-
-src/xalt_syshost_default.py,100
-def map_syshost(37,1440
-def level1_syshost(74,2372
-def level2_syshost(90,2763
-def main(116,3251
 
 src/build_syshost_routine.py,254
 def xalt_syshost_main(30,1191
@@ -2696,8 +2592,6 @@ src/xalt_global.py,0
 
 src/xalt_rmap_lmap.in.py,0
 
-src/xalt_strip_linklib.py,0
-
 src/public_domain.txt,0
 
 contrib/supporting_clang/ld.sh,0
@@ -2726,12 +2620,6 @@ contrib/libuuid-1.0.3/compile,0
 
 contrib/xalt_modulefile,0
 
-detectfunctions/ParseFuncList.py,0
-
-detectfunctions/dirs.xml,0
-
-detectfunctions/libmap.json,0
-
 QUICK_INSTALL_GUIDE.TXT,0
 
 my_docs/source/conf.py,0
@@ -2746,4 +2634,82 @@ Themis.py,0
 
 install.sh,0
 
+compiled/Process.d,0
+
+compiled/xalt_epoch.d,0
+
+compiled/f2db.d,0
+
+compiled/xalt_mysql_utils.d,0
+
+compiled/buildRmapT.d,0
+
+compiled/epoch.d,0
+
+compiled/xalt_quotestring.d,0
+
+compiled/extractXALTRecord.d,0
+
+compiled/Json.d,0
+
+compiled/jsmn.d,0
+
+compiled/parseLDTrace.d,0
+
+compiled/ProgressBar.d,0
+
+compiled/parseSyslog.d,0
+
 compiled/run.vmijo.zzz.json,0
+
+compiled/s2db_Options.d,0
+
+compiled/run_direct2db.d,0
+
+compiled/translate.d,0
+
+compiled/f2db_Options.d,0
+
+compiled/xalt_fgets_alloc.d,0
+
+compiled/link_direct2db.d,0
+
+compiled/ConfigParser.d,0
+
+compiled/zstring.d,0
+
+compiled/base64.d,0
+
+compiled/transmit.d,0
+
+compiled/xalt_utils.d,0
+
+compiled/capture.d,0
+
+compiled/xalt_run_submission.d,0
+
+compiled/xalt_strip_linklib.d,0
+
+compiled/Options.d,0
+
+compiled/xalt_generate_assembly.d,0
+
+compiled/xalt_syslog_to_db.d,0
+
+compiled/parseJsonStr.d,0
+
+compiled/xalt_extract_linker.d,0
+
+compiled/parseLDD.d,0
+
+compiled/buildUserT.d,0
+
+compiled/xalt_generate_linkdata.d,0
+
+compiled/buildEnvT.d,0
+
+compiled/SyslogRecord.d,0
+
+compiled/xalt_initialize.d,0
+
+compiled/xalt_realpath.d,0
