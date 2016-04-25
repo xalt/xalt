@@ -40,6 +40,7 @@ def xalt_syshost_main(sA):
 def hardcode(name,output):
   sA = []
   sA.append("#include <stdio.h>")
+  sA.append("#include \"xalt_function_names.h\"")
   sA.append("const char * xalt_syshost() {")
   sA.append("  return \"" + name + "\";")
   sA.append("}")
@@ -61,6 +62,7 @@ def add_hostname_routine(sA):
   sA.append("#include <sys/socket.h>")
   sA.append("#include <netdb.h>")
   sA.append("#include <string.h>")
+  sA.append("#include \"xalt_function_names.h\"")
   sA.append("")
   sA.append("char * hostname()")
   sA.append("{")
@@ -92,7 +94,8 @@ def read_file(fname,output):
   sA.append("#include <stdio.h>")
   sA.append("#include <stdlib.h>")
   sA.append("#include <string.h>")
-  sA.append("#include \"fgets_alloc.h\"")
+  sA.append("#include \"xalt_function_names.h\"")
+  sA.append("#include \"xalt_fgets_alloc.h\"")
   sA.append("")
   sA.append("const char * xalt_syshost()")
   sA.append("{")
@@ -103,7 +106,7 @@ def read_file(fname,output):
   sA.append("")
   sA.append("  size_t sz         = 0;")
   sA.append("  char * my_syshost = NULL;")
-  sA.append("  fgets_alloc(fp, &my_syshost, &sz);")
+  sA.append("  xalt_fgets_alloc(fp, &my_syshost, &sz);")
   sA.append("  int len = strlen(my_syshost);")
   sA.append("  my_syshost[len-1] = '\\0'; // overwrite trailing newline")
   sA.append("  return my_syshost;")
@@ -175,7 +178,7 @@ def mapping(file,output):
   sA.append("};")
   sA.append("")
 
-  sA.append("struct Pair pair[] = {")
+  sA.append("static struct Pair pair[] = {")
   for entry in pairs:
     sA.append("  {\"" + entry[0] + "\", \"" + entry[1] + "\"},")
   sA.append("};")

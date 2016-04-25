@@ -9,6 +9,7 @@
 #endif
 
 
+#define hostname           PASTE(XALT_hostname,HIDE)
 #define xalt_fgets_alloc   PASTE(XALT_fgets_alloc,HIDE)
 #define xalt_syshost       PASTE(XALT_syshost,HIDE)
 #define reject             PASTE(XALT_reject,HIDE)
