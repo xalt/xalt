@@ -157,10 +157,10 @@ xalt_syshost_main.o: $(CURDIR)/xalt_syshost.c xalt_fgets_alloc.h
 	gcc -c -DHAVE_MAIN -O2 -o $@ $<
 
 
-build_init: $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o     $(DESTDIR)$(LIBEXEC)/xalt_syshost.o            \
-            $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o     $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o \
-            $(DESTDIR)$(LIBEXEC)/lib64/libxalt_init.so  $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o     \
-            $(DESTDIR)$(LIBEXEC)/xalt_initialize.o      $(DESTDIR)$(LIBEXEC)/lib64/libxalt_init_dbg.so
+build_init: $(DESTDIR)$(LIBEXEC)/lib64/xalt_quotestring.o     $(DESTDIR)$(LIBEXEC)/lib64/xalt_syshost.o            \
+            $(DESTDIR)$(LIBEXEC)/lib64/xalt_fgets_alloc.o     $(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize_preload.o \
+            $(DESTDIR)$(LIBEXEC)/lib64/libxalt_init.so        $(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize_dbg.o     \
+            $(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize.o      $(DESTDIR)$(LIBEXEC)/lib64/libxalt_init_dbg.so
 
 build_init_32bit_no:
 
@@ -168,13 +168,13 @@ build_init_32bit_yes: $(DESTDIR)$(LIBEXEC)/lib/xalt_quotestring_32.o $(DESTDIR)$
                       $(DESTDIR)$(LIBEXEC)/lib/xalt_fgets_alloc_32.o $(DESTDIR)$(LIBEXEC)/lib/xalt_initialize_32.o   \
                       $(DESTDIR)$(LIBEXEC)/lib/libxalt_init.so
 
-$(DESTDIR)$(LIBEXEC)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
+$(DESTDIR)$(LIBEXEC)/lib64/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 	gcc $(CF_INIT) -o $@ -c $<
-$(DESTDIR)$(LIBEXEC)/xalt_syshost.o: $(CURDIR)/xalt_syshost.c
+$(DESTDIR)$(LIBEXEC)/lib64/xalt_syshost.o: $(CURDIR)/xalt_syshost.c
 	gcc $(CF_INIT) -o $@ -c $< 
-$(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
+$(DESTDIR)$(LIBEXEC)/lib64/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	gcc $(CF_INIT) -o $@ -c $<
-$(DESTDIR)$(LIBEXEC)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
+$(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CF_INIT) -DSTATE=REGULAR -Ibuild_h  -o $@ -c $<
 
 
@@ -194,17 +194,23 @@ $(DESTDIR)$(LIBEXEC)/lib/libxalt_init.so: $(DESTDIR)$(LIBEXEC)/lib/xalt_initiali
                                           $(DESTDIR)$(LIBEXEC)/lib/xalt_fgets_alloc_32.o
 	gcc -m32 $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -L$(DESTDIR)$(LIBEXEC)/lib -luuid
 
-$(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
+$(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CF_INIT) -Ibuild_h -DSTATE=LD_PRELOAD -o $@ -c $<
 
-$(DESTDIR)$(LIBEXEC)/lib64/libxalt_init.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_preload.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o
-	gcc $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -L$(DESTDIR)$(LIBEXEC)/lib64/ -luuid
+$(DESTDIR)$(LIBEXEC)/lib64/libxalt_init.so: $(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize_preload.o \
+                                            $(DESTDIR)$(LIBEXEC)/lib64/xalt_syshost.o            \
+                                            $(DESTDIR)$(LIBEXEC)/lib64/xalt_quotestring.o        \
+                                            $(DESTDIR)$(LIBEXEC)/lib64/xalt_fgets_alloc.o
+	gcc $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -L$(DESTDIR)$(LIBEXEC)/lib64 -luuid 
 
-$(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
+$(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CF_INIT) -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
 
-$(DESTDIR)$(LIBEXEC)/lib64/libxalt_init_dbg.so: $(DESTDIR)$(LIBEXEC)/xalt_initialize_dbg.o $(DESTDIR)$(LIBEXEC)/xalt_syshost.o $(DESTDIR)$(LIBEXEC)/xalt_quotestring.o $(DESTDIR)$(LIBEXEC)/xalt_fgets_alloc.o
-	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -L$(DESTDIR)$(LIBEXEC)/lib64 -luuid; 
+$(DESTDIR)$(LIBEXEC)/lib64/libxalt_init_dbg.so: $(DESTDIR)$(LIBEXEC)/lib64/xalt_initialize_dbg.o \
+                                                $(DESTDIR)$(LIBEXEC)/lib64/xalt_syshost.o        \
+                                                $(DESTDIR)$(LIBEXEC)/lib64/xalt_quotestring.o    \
+                                                $(DESTDIR)$(LIBEXEC)/lib64/xalt_fgets_alloc.o
+	gcc $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -L$(DESTDIR)$(LIBEXEC)/lib64 -luuid
 
 
 makefile: Makefile.in config.status

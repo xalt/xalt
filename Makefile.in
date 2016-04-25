@@ -89,7 +89,8 @@ SBIN_PKG          := $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 LIBEXEC_PKG       := src/XALTdb.py                     src/progressBar.py               \
 	             src/xalt_epoch.py                 src/BeautifulTbl.py              \
                      src/xalt_global.py                src/xalt_transmission_factory.py \
-                     src/xalt_stack.py                 src/Rmap_XALT.py
+                     src/xalt_stack.py                 src/Rmap_XALT.py                 \
+                     src/xalt_util.py
 
 LIBEXEC_PKG       := $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 

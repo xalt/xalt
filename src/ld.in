@@ -156,9 +156,11 @@ FUNCLIST=$WRKDIR/funclist.txt
 RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ -z "$BIT32FLAG" ]; then
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize.o $XALT_LIBEXEC_DIR/xalt_syshost.o $XALT_LIBEXEC_DIR/xalt_quotestring.o $XALT_LIBEXEC_DIR/xalt_fgets_alloc.o"
+  XALT_LIB_DIR=$XALT_LIBEXEC_DIR/lib64
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o"
 else
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIBEXEC_DIR/xalt_initialize_32.o $XALT_LIBEXEC_DIR/xalt_syshost_32.o $XALT_LIBEXEC_DIR/xalt_quotestring_32.o $XALT_LIBEXEC_DIR/xalt_fgets_alloc_32.o"
+  XALT_LIB_DIR=$XALT_LIBEXEC_DIR/lib
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o"
 fi
   
 
@@ -191,7 +193,7 @@ fi
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -L$XALT_LIB_DIR -Bstatic -luuid -Bdynamic -t > $LINKLINE_OUT 
 status=$?
 
 if [ ! -f "$EXEC" ]; then
