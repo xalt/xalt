@@ -10,9 +10,9 @@ endif
 
 LIB_OPTIONS       := -fPIC -shared
 
-CF_INIT     := -I. -fPIC 
+CF_INIT     := -I$(THIS_DIR) -I. -fPIC 
 CXXFLAGS    := -g -O0 -std=c++11 -Ibuild_h $(MYSQL_CFLAGS)
-CFLAGS      := -g -O0 -Ibuild_h -I$(DESTDIR)$(LIBEXEC)/libuuid_64/include
+CFLAGS      := -g -O0 -Ibuild_h -I$(DESTDIR)$(LIBEXEC)/libuuid_64/include 
 
 C_SRC       := jsmn.c             	\
 	       xalt_fgets_alloc.c 	\
@@ -151,10 +151,10 @@ $(DESTDIR)$(LIBEXEC)/xalt_epoch: xalt_epoch.o epoch.o
 	g++ -O2 -o $@ $^
 
 $(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
-	gcc -O2 -o $@ $^
+	gcc -I$(THIS_DIR) -O2 -o $@ $^
 
 xalt_syshost_main.o: $(CURDIR)/xalt_syshost.c xalt_fgets_alloc.h
-	gcc -c -DHAVE_MAIN -O2 -o $@ $<
+	gcc -I$(THIS_DIR) -c -DHAVE_MAIN -O2 -o $@ $<
 
 
 build_init: $(DESTDIR)$(LIBEXEC)/lib64/xalt_quotestring.o     $(DESTDIR)$(LIBEXEC)/lib64/xalt_syshost.o            \
