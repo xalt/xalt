@@ -2,6 +2,7 @@
 #define XALT_FGETS_ALLOC_H
 
 #include <stdio.h>
+#include "xalt_function_names.h"
 
 #ifdef __cplusplus
 extern "C" {

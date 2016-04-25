@@ -39,8 +39,10 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
+#include "xalt_function_names.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
+
 
 const char* xalt_syshost();
 int reject(const char *path, const char * hostname);
