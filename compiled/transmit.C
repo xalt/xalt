@@ -46,9 +46,9 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
 
   else if (strcasecmp(transmission, "syslog") == 0)
     {
-      //std::string zs    = compress_string(jsonStr);
-      //std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
-      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
+      std::string zs    = compress_string(jsonStr);
+      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
+      //std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
       int         sz    = b64.size();
       int         blkSz = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
       int         nBlks = (sz -  1)/blkSz + 1;

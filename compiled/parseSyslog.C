@@ -31,10 +31,10 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
       if (end == NULL)
         {
           done = true;
+          // remove any trailing whitespace at EOL
           end = start+strlen(start);
           while (isspace(*(end-1)))
             --end;
-          
         }
 
       char* p = strchr(start,':'); p++;
