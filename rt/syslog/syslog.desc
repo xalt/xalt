@@ -17,25 +17,34 @@ test_descript = {
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
 
      initialize
-     buildRmapT
      installXALT
+     displayThis "buildRmapT"
+     buildRmapT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
-     runMe installDB             # 1
+     displayThis "installDB"
+     installDB
+
+     displayThis "module commands"
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=syslog
      
+     displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
      mpirun -n 1 ./hello 
 
-     export XALT_TRANSMISSION_STYLE=syslogV1
+     displayThis  "mpicc -o hello2 $(projectDir)/rt/mpi_hello_world.c"
+     export XALT_TRANSMISSION_STYLE=syslog
      mpicc -o hello.x $(projectDir)/rt/mpi_hello_world.c
      mpirun -n 1 ./hello.x
 
      export XALT_USERS="$USER;$outputDir"
-     xalt_syslog_to_db.py  --dbname $DBNAME --syslog_file syslog.log --reverseMapD $outputDir/reverseMapD
+     xalt_syslog_to_db  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
 
      check_entries_db.py --dbname $DBNAME --results result.csv --runs 2 --functions 4 --links 2
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv

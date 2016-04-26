@@ -15,6 +15,8 @@ void SyslogRecord::init(long nblks, std::string& kind, std::string& syshost, std
   m_syshost = syshost;
   m_key     = key;
   m_blkA.reserve(m_nblks);
+  for (int i = 0; i < m_nblks; i++)
+    m_blkA.push_back("");
 }
 
 void SyslogRecord::addblk(long idx, std::string& v)
