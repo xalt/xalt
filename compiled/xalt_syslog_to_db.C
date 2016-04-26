@@ -83,6 +83,9 @@ int main(int argc, char* argv[])
           if (strstr(buf, "XALT_LOGGING") == NULL)
             continue;
 
+          //remove trailing newline from buf.
+          buf[strlen(buf)-1] = '\0';
+            
           bool done = parseSyslog(buf, syslogT, recordT);
           if (! done)
             continue;

@@ -46,9 +46,9 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
 
   else if (strcasecmp(transmission, "syslog") == 0)
     {
-      std::ostringstream cmd;
-      std::string zs    = compress_string(jsonStr);
-      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
+      //std::string zs    = compress_string(jsonStr);
+      //std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
+      std::string b64   = base64_encode(reinterpret_cast<const unsigned char*>(jsonStr.c_str()), jsonStr.size());
       int         sz    = b64.size();
       int         blkSz = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
       int         nBlks = (sz -  1)/blkSz + 1;
@@ -57,6 +57,7 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
 
       for (int i = 0; i < nBlks; ++i)
         {
+          std::ostringstream cmd;
           cmd << LOGGER " -t XALT_LOGGING V:2 kind:" << kind << " idx:" << i;
           cmd << " nb:"  << nBlks << " syshost:" << syshost;
           cmd << " key:" << key   << " value:"   << b64.substr(istrt, iend - istrt) << "\n";

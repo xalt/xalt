@@ -74,12 +74,13 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--syslog_file", dest='syslog',   action="store",      help="Location and name of syslog file")
+    parser.add_argument("--syslog", dest='syslog',   action="store",      help="Location and name of syslog file")
     parser.add_argument("--leftover_fn", dest='leftover', action="store",      default='leftover.log',
                                                                                help="Name of the leftover file")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
     parser.add_argument("--dbname",      dest='dbname',   action="store",      default="xalt", help="Name of the database")
+    parser.add_argument("--confFn",      dest='confFn',   action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
     return args
 
@@ -225,7 +226,7 @@ def main():
   XALT_Stack.push(" ".join(sA))
 
   args       = CmdLineOptions().execute()
-  xalt       = XALTdb(dbConfigFn(args.dbname))
+  xalt       = XALTdb(args.confFn)
   syslogFile = args.syslog
 
   # should add a check if file exists

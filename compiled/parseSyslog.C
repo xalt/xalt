@@ -19,8 +19,9 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
   std::string value;
   long        nb;
   long        idx;
+  bool        done = false;
 
-  while(*start != '\0')
+  while(!done)
     {
       // skip leading blanks
       while(isspace(*start))
@@ -28,8 +29,14 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
 
       char* end = strchr(start,' ');
       if (end == NULL)
-        end = start+strlen(start);
-      
+        {
+          done = true;
+          end = start+strlen(start);
+          while (isspace(*(end-1)))
+            --end;
+          
+        }
+
       char* p = strchr(start,':'); p++;
 
       if (strncmp(start,"kind:",5) == 0)

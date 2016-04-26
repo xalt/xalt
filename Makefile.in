@@ -83,7 +83,7 @@ BIN_PKG           := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
 BIN_PKG           := $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
 SBIN_PKG          := src/conf_create.in.py  	       src/createDB.in.py               \
-                     src/xalt_db.conf                  
+                     src/xalt_db.conf                  src/xalt_syslog_to_db.in.py
 SBIN_PKG          := $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG       := src/XALTdb.py                     src/progressBar.py               \
@@ -91,6 +91,7 @@ LIBEXEC_PKG       := src/XALTdb.py                     src/progressBar.py       
                      src/xalt_global.py                src/xalt_transmission_factory.py \
                      src/xalt_stack.py                 src/Rmap_XALT.py                 \
                      src/xalt_util.py
+
 
 LIBEXEC_PKG       := $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 

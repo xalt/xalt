@@ -5,8 +5,8 @@
 
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__, __LINE__)
 s2db_Options::s2db_Options(int argc, char** argv)
-  : m_timer(false),           m_syslogFn("unknown"),    m_leftoverFn("leftover.log"),
-    m_rmapD("unknown"),       m_confFn("xalt_db.conf")
+  : m_timer(false),           m_syslogFn("syslog.log"),    m_leftoverFn("leftover.log"),
+    m_rmapD("reverseMapD"),   m_confFn("xalt_db.conf")
 {
   int   c;
   char *p;
