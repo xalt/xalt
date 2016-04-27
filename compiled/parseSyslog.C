@@ -10,7 +10,7 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
 {
   char *start = strstr((char *) buf, " V:2 ");
   if (start == NULL)
-    return parseSyslogV1(buf, syslogT)
+    return parseSyslogV1(buf, syslogT);
 
   start += 5;
   std::string kind;
