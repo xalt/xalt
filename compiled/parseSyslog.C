@@ -10,7 +10,7 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
 {
   char *start = strstr((char *) buf, " V:2 ");
   if (start == NULL)
-    return false;
+    return parseSyslogV1(buf, syslogT)
 
   start += 5;
   std::string kind;
@@ -76,4 +76,48 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
   
   recordT[key] = syslogT;
   return false;
+}
+
+// XALT_LOGGING kind:syshost:value
+
+bool parseSyslogV1(const char* buf, SyslogRecord& syslogT)
+{
+  long        idx = 0L;
+  long        nb  = 1L;
+  std::string key="";
+  std::string kind;
+  std::string syshost;
+  std::string value;
+
+  const char* start = strstr((char *) buf,"XALT_LOGGING");
+  if (start == NULL)
+    return false;
+
+  start += 12;
+  while(isspace(*start))
+    start++ ;
+
+  const char* p = strchr(start,':');
+  if (p)
+    kind.assign(start, p - start);
+
+  start = p + 1;
+  p = strchr(start,':');
+  
+  if (p)
+    syshost.assign(start, p - start);
+
+  start = p + 1;
+  p     = start+strlen(start);
+
+  // remove any trailing spaces.
+  while (isspace(*(p-1)))
+    --p;
+
+  value.assign(start, p - start);
+
+  syslogT.init(nb, kind, syshost, key);
+  syslogT.addblk(idx, value);
+
+  return true;
 }
