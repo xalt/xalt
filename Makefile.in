@@ -39,6 +39,7 @@ SITE_NAME         := @SITE@
 ETC_DIR           := @ETC_DIR@
 prefix            := @prefix@
 XALT_DIR          := $(prefix)
+SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
 HAVE_32BIT        := @HAVE_32BIT@
 HAVE_PYMOD_PSUTIL := @HAVE_PYMOD_PSUTIL@
@@ -197,6 +198,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
 	        -e 's|@date@|$(PATH_TO_DATE)|g'                            \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
+	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  \
 	        -e 's|@file@|$(PATH_TO_FILE)|g'                            \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              \
 	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \

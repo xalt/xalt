@@ -655,6 +655,7 @@ CPP
 HAVE_32BIT
 SYS_LD_LIB_PATH
 SYSHOST_CONFIG
+SYSLOG_MSG_SZ
 SYSTEM_PATH
 XALT_CONFIG_PY
 ETC_DIR
@@ -712,6 +713,7 @@ with_transmission
 with_etcDir
 with_config
 with_systemPath
+with_syslogMsgSz
 with_syshostConfig
 '
       ac_precious_vars='build_alias
@@ -1335,6 +1337,7 @@ Optional Packages:
   --with-config=ans       A python file defining the accept, ignore, hostname
                           pattern lists [[NO DEFAULT]]
   --with-systemPath=ans
+  --with-syslogMsgSz=ans
   --with-syshostConfig=ans
                           Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -2841,6 +2844,8 @@ subdirs="$subdirs compiled"
 
 
 
+
+
 # Check whether --with-transmission was given.
 if test "${with_transmission+set}" = set; then :
   withval=$with_transmission; TRANSMISSION="$withval"
@@ -2929,6 +2934,28 @@ fi
 
 
 
+# Check whether --with-syslogMsgSz was given.
+if test "${with_syslogMsgSz+set}" = set; then :
+  withval=$with_syslogMsgSz; SYSLOG_MSG_SZ="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$with_syslogMsgSz" >&5
+$as_echo "SYSLOG_MSG_SZ=$with_syslogMsgSz" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSLOG_MSG_SZ "$with_syslogMsgSz"
+_ACEOF
+
+else
+  withval="512"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$withval" >&5
+$as_echo "SYSLOG_MSG_SZ=$withval" >&6; }
+    SYSLOG_MSG_SZ="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSLOG_MSG_SZ "$withval"
+_ACEOF
+
+fi
+
+
+
 # Check whether --with-syshostConfig was given.
 if test "${with_syshostConfig+set}" = set; then :
   withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
@@ -2951,6 +2978,7 @@ fi
 
 
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
+
 
 
 
@@ -2986,7 +3014,7 @@ $as_echo "$ax_cv_check_cflags___m32" >&6; }
 if test "x$ax_cv_check_cflags___m32" = xyes; then :
   HAVE_32BIT=yes
 else
-  :
+  HAVE_32BIT=no
 fi
 
 

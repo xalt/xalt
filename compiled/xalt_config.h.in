@@ -11,5 +11,6 @@
 #define LOGGER            "@PATH_TO_LOGGER@"
 #define XALT_ETC_DIR      "@ETC_DIR@"
 #define XALT_VERSION      "@VERSION@"
+#define SYSLOG_MSG_SZ     "@SYSLOG_MSG_SZ@"
 
 #endif /* XALT_CONFIG_H */

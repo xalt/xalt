@@ -11,7 +11,7 @@
 #include "xalt_utils.h"
 #include "xalt_config.h"
 
-const int syslog_msg_sz = 512;
+const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
 void transmit(const char* transmission, std::string& jsonStr, const char* kind, std::string& key, const char* syshost, const char* resultFn)
 {

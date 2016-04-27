@@ -3,6 +3,8 @@ AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SUBDIRS(compiled)
 
+
+
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb) [[file]]]),
@@ -50,6 +52,18 @@ AC_ARG_WITH(systemPath,
     AC_MSG_RESULT([SYSTEM_PATH=$withval])
     SYSTEM_PATH="$withval"
     AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"))dnl
+
+AC_SUBST(SYSLOG_MSG_SZ)
+AC_ARG_WITH(syslogMsgSz,
+    AC_HELP_STRING([--with-syslogMsgSz=ans],[]),
+    SYSLOG_MSG_SZ="$withval"
+    AC_MSG_RESULT([SYSLOG_MSG_SZ=$with_syslogMsgSz])
+    AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$with_syslogMsgSz")dnl
+    ,
+    withval="512"
+    AC_MSG_RESULT([SYSLOG_MSG_SZ=$withval])
+    SYSLOG_MSG_SZ="$withval"
+    AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
