@@ -4,7 +4,7 @@
 #include <time.h>
 #include "epoch.h"
 
-const int dateSZ=100
+const int dateSZ=100;
 
 int main(int argc, char* argv[])
 {
