@@ -84,20 +84,13 @@ AC_SUBST(HAVE_32BIT)
 
 AX_CHECK_COMPILE_FLAG(-m32,HAVE_32BIT=yes,HAVE_32BIT=no)
 
-AC_CHECK_HEADER(uuid/uuid.h,
-    [],
-    [AC_MSG_ERROR([XALT cannot be built without uuid/uuid.h])]
-    )
-
-
-
-
 AC_SUBST(PATH_TO_AS)
 AC_SUBST(PATH_TO_BASENAME)
 AC_SUBST(PATH_TO_CAT)
 AC_SUBST(PATH_TO_DATE)
 AC_SUBST(PATH_TO_DIRNAME)
 AC_SUBST(PATH_TO_FILE)
+AC_SUBST(PATH_TO_GIT)
 AC_SUBST(PATH_TO_GREP)
 AC_SUBST(PATH_TO_HEAD)
 AC_SUBST(PATH_TO_LDD)
@@ -114,6 +107,7 @@ AC_SUBST(BUILD_PSTREE)
 AC_SUBST(USE_CONTRIB_ARGPARSE)
 AC_SUBST(MYSQL_CONFIG)
 
+AC_PATH_PROG(PATH_TO_GIT,git, [])
 AC_PATH_PROG(PATH_TO_AS,as, [])
 AC_PATH_PROG(PATH_TO_BASENAME, basename, [])
 AC_PATH_PROG(PATH_TO_CAT, cat, [])
@@ -147,7 +141,11 @@ AC_SUBST(VERSION)
 
 VERSION=$(cat $ac_confdir/.version)
 echo "VERSION=$VERSION"
-
+if test -n "$PATH_TO_GIT" -a -d $(srcdir)/.git ; then
+  xaltV=(cd $srcdir; $($PATH_TO_GIT describe))
+else
+  xaltV="@git@"
+fi
 
 if test "$XALT_CONFIG_PY" = no; then
    echo
@@ -211,3 +209,4 @@ $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --i
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
 
 AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in)
+AX_SUMMARIZE_CONFIG
