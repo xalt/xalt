@@ -3,13 +3,14 @@
 #include <iostream>
 #include <time.h>
 #include "epoch.h"
-#define DATESZ 100
+
+const int dateSZ=100
 
 int main(int argc, char* argv[])
 {
-  char    dateStr[DATESZ];
+  char    dateStr[dateSZ];
   time_t  now = (time_t) epoch();
-  strftime(dateStr,DATESZ, "%c", localtime(&now));
+  strftime(dateStr,dateSZ, "%c", localtime(&now));
   
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "                      XALT Configuration Report\n";
