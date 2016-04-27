@@ -38,6 +38,7 @@ TRANSMISSION      := @TRANSMISSION@
 SITE_NAME         := @SITE@
 ETC_DIR           := @ETC_DIR@
 prefix            := @prefix@
+XALT_V            := compiled/xalt_version.h
 XALT_DIR          := $(prefix)
 SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
@@ -67,6 +68,7 @@ USE_ARGPARSE      := @USE_CONTRIB_ARGPARSE@
 
 GIT_PROG          := @PATH_TO_GIT@
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "@git@"; fi)
+VDATE		  := $(shell date +'%F %H:%M')
 
 LIBEXEC           := $(prefix)/libexec
 SITE              := $(prefix)/site
@@ -244,15 +246,16 @@ world_update:
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/git_st_$$$$;                               \
-          if [ -s /tmp/git_st_$$$$ ]; then                                 \
-	    echo "All files not checked in => try again";                  \
-	  else                                                             \
-	    echo "$(TAG)" >                                      .version; \
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version; \
-            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'         ; \
-	    git push --tags                                              ; \
-          fi;                                                              \
+	  @git status -s > /tmp/git_st_$$$$;                               	   \
+          if [ -s /tmp/git_st_$$$$ ]; then                                 	   \
+	    echo "All files not checked in => try again";                  	   \
+	  else                                                             	   \
+	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V); \
+	    echo "$(TAG)"                                            >  .version;  \
+            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version;  \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                ;  \
+	    git push --tags                                                     ;  \
+          fi;                                                                      \
           rm -f /tmp/git_st_$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
