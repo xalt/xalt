@@ -138,14 +138,16 @@ AC_PYTHON_MODULE([psutil])
 AC_PYTHON_MODULE([MySQLdb])
 
 AC_SUBST(VERSION)
+AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version)
 echo "VERSION=$VERSION"
-if test -n "$PATH_TO_GIT" -a -d $(srcdir)/.git ; then
-  xaltV=(cd $srcdir; $($PATH_TO_GIT describe))
+if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
+  xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`
 else
   xaltV="@git@"
 fi
+XALT_GIT_VERSION=$xaltV
 
 if test "$XALT_CONFIG_PY" = no; then
    echo
@@ -209,4 +211,5 @@ $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --i
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
 
 AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in)
+
 AX_SUMMARIZE_CONFIG

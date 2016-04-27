@@ -7,10 +7,16 @@
 #define SHA1SUM           "@PATH_TO_SHA1SUM@"
 #define SYS_LD_LIB_PATH   "@SYS_LD_LIB_PATH@"
 #define PREFIX            "@prefix@"
-#define TRANSMISSION      "@TRANSMISSION@"
 #define LOGGER            "@PATH_TO_LOGGER@"
+
+#define TRANSMISSION      "@TRANSMISSION@"
 #define XALT_ETC_DIR      "@ETC_DIR@"
+#define XALT_CONFIG_PY    "@XALT_CONFIG_PY@"
+#define XALT_SYSTEM_PATH  "@SYSTEM_PATH@"
+#define SYSLOG_MSG_SZ      @SYSLOG_MSG_SZ@
+#define SYSHOST_CONFIG    "@SYSHOST_CONFIG@"
+#define HAVE_32BIT        "@HAVE_32BIT@"
 #define XALT_VERSION      "@VERSION@"
-#define SYSLOG_MSG_SZ     "@SYSLOG_MSG_SZ@"
+#define XALT_GIT_VERSION  "XALT @XALT_GIT_VERSION@"
 
 #endif /* XALT_CONFIG_H */

@@ -45,14 +45,13 @@ echo "Package version............................." : XALT-$VERSION
 echo "Package version (git) ......................" : $xaltV
 echo
 echo "Prefix......................................" : $prefix
-echo "Actual Install dir.........................." : $prefix/xalt/$VERSION
 echo
 echo "XALT_TRANSMISSION_STYLE....................." : $TRANSMISSION
 echo "XALT_ETC_DIR................................" : $ETC_DIR
 echo "XALT Config.py file........................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH............................" : $SYSTEM_PATH
 echo "XALT SYSLOG Message Size...................." : $SYSLOG_MSG_SZ
-echo "XALT SYSHOST CONFIG Style".................." : $SYSHOST_CONFIG
+echo "XALT SYSHOST CONFIG Style..................." : $SYSHOST_CONFIG
 echo "XALT 32bit support.........................." : $HAVE_32BIT
 echo
 echo '------------------------------------------------------------------------------'
