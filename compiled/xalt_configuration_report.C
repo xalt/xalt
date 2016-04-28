@@ -1,10 +1,25 @@
 #include "xalt_config.h"
+#include "xalt_regex.h"
 #include "xalt_version.h"
 #include <iostream>
+#include <iomanip>
 #include <time.h>
 #include "epoch.h"
 
 const int dateSZ=100;
+
+void displayArray(const char *name, int n, const char **A)
+{
+  std::cout << "*----------------------*\n";
+  std::cout << " Array: " << name << "\n";
+  std::cout << "*----------------------*\n";
+
+  for (int i = 0; i < n; ++i)
+    std::cout << std::setw(4) << i << ": " << A[i] << "\n";
+  std::cout << "\n";
+
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -26,6 +41,13 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSTEM_PATH:          " << XALT_SYSTEM_PATH   << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ      << "\n";
   std::cout << "HAVE_32BIT:                " << HAVE_32BIT         << "\n";
+  std::cout << "*------------------------------------------------------------------------------*\n\n";
+
+  displayArray("acceptPathA", acceptPathSz, acceptPathA);
+  displayArray("ignorePathA", ignorePathSz, ignorePathA);
+  displayArray("hostnameA",   hostnameSz,   hostnameA);
+  displayArray("acceptEnvA",  acceptEnvSz,  acceptEnvA);
+  displayArray("ignoreEnvA",  ignoreEnvSz,  ignoreEnvA);
 
   return 0;
 }
