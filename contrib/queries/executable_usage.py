@@ -266,23 +266,23 @@ equiv_patternA = [
     [ r'^ymir_'                         , 'ymir*'                          ],
     ]
 
-  sA = []
-  sA.append("SELECT CASE \\")
-  for entry in equiv_patternA:
-    left  = entry[0].lower()
-    right = entry[1]
-    s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' \\" % (left, right)
-    sA.append(s)
+sA = []
+sA.append("SELECT CASE ")
+for entry in equiv_patternA:
+  left  = entry[0].lower()
+  right = entry[1]
+  s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
+  sA.append(s)
 
-  sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END \\")
-  sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, \\")
-  sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users \\")
-  sA.append("   FROM xalt_run \\")
-  sA.append("  WHERE syshost = '%s' \\")
-  sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' \\")
-  sA.append("  GROUP BY execname ORDER BY totalcput DESC")
+sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
+sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
+sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
+sA.append("   FROM xalt_run ")
+sA.append("  WHERE syshost = '%s' ")
+sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' ")
+sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-  query = "\n".join(sA) % (args.syshost, startdate, enddate)
+query = "".join(sA) % (args.syshost, startdate, enddate)
 
 #query = "SELECT CASE \
 #       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^1690'             then '1690*.x*'              \
@@ -357,7 +357,7 @@ print ("====================================================================")
 sum = 0.0
 for execname, totalcput, n_jobs, n_users in results:
   sum += totalcput
-  print ("%35s %10s %10s %10s" % (totalcput, n_jobs, n_users,execname))
+  print ("%10s %10s %10s %35s" % (totalcput, n_jobs, n_users,execname))
 
 print("(M) SUs", sum/1.0e6, file=sys.stderr)
 
