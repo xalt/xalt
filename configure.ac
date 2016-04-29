@@ -158,6 +158,25 @@ if test "$XALT_CONFIG_PY" = no; then
    exit 1
 fi
 
+if ! test -f $XALT_CONFIG_PY; then
+   echo
+   echo "======================================================="
+   echo "Unable to find the file: $XALT_CONFIG_PY"
+   echo "quitting!"
+   echo "======================================================="
+   exit 1
+fi
+
+if test "$MYSQL_CONFIG" = UNKNOWN; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without the program mysql_config"
+   echo "This program is used to find the MySQL installation"
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
+
 if test "$HAVE_PYMOD_MYSQLDB" = no; then
    echo
    echo "======================================================="
