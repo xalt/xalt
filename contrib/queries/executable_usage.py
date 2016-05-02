@@ -90,6 +90,7 @@ equiv_patternA = [
     [ r'^a01'                           , 'A0*'                            ],
     [ r'^abinit'                        , 'Abinit*'                        ],
     [ r'^adcirc'                        , 'ADCIRC*'                        ],
+    [ r'^padcswan'                      , 'ADCIRC*'                        ],
     [ r'^padcirc'                       , 'ADCIRC*'                        ],
     [ r'^ahf-v1\.0'                     , 'AHF-v1.0*'                      ],
     [ r'^arps'                          , 'ARPS*'                          ],
@@ -108,6 +109,7 @@ equiv_patternA = [
     [ r'^sigma\.cplx\.x'                , 'BerkeleyGW*'                    ],
     [ r'^CAMx'                          , 'CAMx*'                          ],
     [ r'^cfs_ncep_post'                 , 'CFSv2*'                         ],
+    [ r'^cesm.exe'                      , 'CESM*'                          ],
     [ r'^c37b1'                         , 'CHARMM*'                        ],
     [ r'^charmm'                        , 'CHARMM*'                        ],
     [ r'^CHNS'                          , 'CHNS*'                          ],
@@ -143,18 +145,20 @@ equiv_patternA = [
     [ r'^gigapowers'                    , 'GigaPOWERS*'                    ],
     [ r'^graph500'                      , 'Graph500*'                      ],
     [ r'^mdrun'                         , 'Gromacs*'                       ],
+    [ r'^gmx_mpi'                       , 'Gromacs*'                       ],
     [ r'^hf'                            , 'HF*'                            ],
-    [ r'^hoodmd'                        , 'HOOMD*'                         ],
-    [ r'^HOPSPACK_-'                    , 'HOPSPACK*'                      ],
+    [ r'^hoomd'                         , 'HOOMD*'                         ],
+    [ r'^hopspack_-'                    , 'HOPSPACK*'                      ],
     [ r'^xhpcg'                         , 'HPCG*'                          ],
     [ r'^xhpl'                          , 'HPL*'                           ],
     [ r'^IMB-'                          , 'IMB*'                           ],
-    [ r'^IceNine'                       , 'IceNine*'                       ],
+    [ r'^icenine'                       , 'IceNine*'                       ],
     [ r'^lmp_'                          , 'LAMMPS*'                        ],
-    [ r'^LESPDFISAT'                    , 'LESPDFISAT*'                    ],
+    [ r'^lespdfisat'                    , 'LESPDFISAT*'                    ],
     [ r'^lulesh'                        , 'LULESH*'                        ],
-    [ r'^Longitudinal-'                 , 'Longitudinal*'                  ],
-    [ r'^MHDAM3d_'                      , 'MHDAM3d*'                       ],
+    [ r'^longitudinal-'                 , 'Longitudinal*'                  ],
+    [ r'^meep-mpi'                      , 'MEEP*'                          ],
+    [ r'^mhdam3d_'                      , 'MHDAM3d*'                       ],
     [ r'^su3_'                          , 'MILC*'                          ],
     [ r'^mitgcmuv'                      , 'MITGCM*'                        ],
     [ r'^charmrun'                      , 'NAMD*'                          ],
@@ -162,8 +166,8 @@ equiv_patternA = [
     [ r'^nektar'                        , 'NEKTAR*'                        ],
     [ r'^nrlmol'                        , 'NRLMol*'                        ],
     [ r'^NVT_'                          , 'NVT*'                           ],
-    [ r'^[Nn][Ww][Cc]hem'               , 'NWChem*'                        ],
-    [ r'^NavStk_'                       , 'NavStk*'                        ],
+    [ r'^nwchem'                        , 'NWChem*'                        ],
+    [ r'^navstk_'                       , 'NavStk*'                        ],
     [ r'^NewAlgorithm'                  , 'NewAlgorithm*'                  ],
     [ r'^O2case'                        , 'O2case*'                        ],
     [ r'^octopus_mpi'                   , 'Octopus*'                       ],
@@ -175,6 +179,7 @@ equiv_patternA = [
     [ r'^pvserver'                      , 'Paraview*'                      ],
     [ r'^parsec.mpi'                    , 'PARSEC*'                        ],
     [ r'^P_merge_LD'                    , 'P_merge_LD*'                    ],
+    [ r'^plascomcm'                     , 'PlasComCM*'                     ],
     [ r'^i?python'                      , 'Python*'                        ],
     [ r'^qcprog'                        , 'QCHEM*'                         ],
     [ r'^bands.x'                       , 'QE*'                            ],
@@ -182,8 +187,10 @@ equiv_patternA = [
     [ r'^projwfc.x'                     , 'QE*'                            ],
     [ r'^ph.x'                          , 'QE*'                            ],
     [ r'^pw.x'                          , 'QE*'                            ],
+    [ r'^relion_refine_mpi'             , 'Relion*'                        ],
     [ r'^runrsqsim'                     , 'RSQSim*'                        ],
     [ r'^rscript'                       , 'Rstats*'                        ],
+    [ r'^rosetta'                       , 'Rosetta*'                       ],
     [ r'^rmpisnow'                      , 'Rstats*'                        ],
     [ r'^minirosetta\.mpi\.linux'       , 'Rosetta*'                       ],
     [ r'^docking_protocol\.mpi\.linux'  , 'Rosetta*'                       ],
@@ -197,10 +204,12 @@ equiv_patternA = [
     [ r'^Sept1'                         , 'Sept1*'                         ],
     [ r'^siesta'                        , 'Siesta*'                        ],
     [ r'^Spacing'                       , 'Spacing*'                       ],
+    [ r'^xmeshfem3D'                    , 'SpecFEM3D*'                     ],
     [ r'^xspecfem3D'                    , 'SpecFEM3D*'                     ],
     [ r'^Splotch'                       , 'Splotch*'                       ],
     [ r'^Stratified_'                   , 'Stratified*'                    ],
     [ r'^ttmmd'                         , 'TTMMD*'                         ],
+    [ r'^md.exe'                        , 'TTMMD*'                         ],
     [ r'^TADDI'                         , 'TADDI*'                         ],
     [ r'^T_Matrix'                      , 'T_Matrix*'                      ],
     [ r'^Trispectrum'                   , 'Trispectrum*'                   ],
@@ -302,98 +311,36 @@ equiv_patternA = [
     [ r'^ymir_'                         , 'ymir*'                          ],
     ]
 
-  sA = []
-  sA.append("SELECT CASE \\")
-  for entry in equiv_patternA:
-    left  = entry[0].lower()
-    right = entry[1]
-    s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' \\" % (left, right)
-    sA.append(s)
+sA = []
+sA.append("SELECT CASE ")
+for entry in equiv_patternA:
+  left  = entry[0].lower()
+  right = entry[1]
+  s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
+  sA.append(s)
 
-  sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END \\")
-  sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, \\")
-  sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users \\")
-  sA.append("   FROM xalt_run \\")
-  sA.append("  WHERE syshost = '%s' \\")
-  sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' \\")
-  sA.append("  GROUP BY execname ORDER BY totalcput DESC")
+sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
+sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
+sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
+sA.append("   FROM xalt_run ")
+sA.append("  WHERE syshost = '%s' ")
+sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' ")
+sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-  query = "\n".join(sA) % (args.syshost, startdate, enddate)
+query = "".join(sA) % (args.syshost, startdate, enddate)
 
-#query = "SELECT CASE \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^1690'             then '1690*.x*'              \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^2d_needle'        then '2D_needle*'            \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^3d_needle'        then '3D_needle*'            \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^a01'              then 'A0*'                   \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^adcirc'           then 'ADCIRC*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^padcirc'          then 'ADCIRC*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^ahf-v1\.0'        then 'AHF-v1.0*'             \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^arps'             then 'ARPS*'                 \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^pmemd'            then 'AMBER*'                \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^sander'           then 'AMBER*'                \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^amber'            then 'AMBER*'                \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^analysis016'      then 'Analysis016*'          \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^baddi3'           then 'BADDI3*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^camx'             then 'CAMx*'                 \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^c37b1'            then 'CHARMM*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^charm'            then 'CHARMM*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^chns'             then 'CHNS*'                 \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^run\.cctm'        then 'CMAQ_CCTM*'            \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^cactus_'          then 'Cactus*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^chroma'           then 'Chroma*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^harom\.parscalar' then 'Chroma*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^sm_chroma'        then 'Chroma*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^citcoms'          then 'CitcomS*'              \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^comd-'            then 'CoMD*'                 \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^compute_'         then 'Compute_Weather_Code*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^daddi_'           then 'DADDI*'                \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^mpi_dbscan'       then 'DDScan*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^dcmip'            then 'DCMIP*'                \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^dlpoly'           then 'DL_POLY*'              \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^dns2d'            then 'DNS2d*'                \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^enzo'             then 'ENZO*'                 \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^fin'              then 'FIN*'                  \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^fphc'             then 'FPHC*'                 \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^flash'            then 'Flash4*'               \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^floating_jinhui'  then 'Floating_Jinhui*'      \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^FractionalVaporSaturationTime' then 'FractionalVaporSaturationTime*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^frankwolfe'       then 'FrankWolfe*'           \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '^gizmo'            then 'GIZMO*'                \
-#
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'wrf' then 'WRF*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'chim' then 'CHIMERA*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'vasp' then 'VASP*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'namd' then 'NAMD*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'lmp' then 'LAMMPS*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'gromacs' then 'GROMACS*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'cp2k' then 'CP2K*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'nwchem' then 'NWCHEM*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'ttmmd' then 'TTMMD*' \
-#       WHEN LOWER(xalt_run.exec_path)  REGEXP 'genasis' then 'GENASIS*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'engine_par' then 'VISIT*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'foam' then 'OPENFOAM*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'ph.x' then 'Q-ESPRESSO*' \
-#       WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP 'pw.x' then 'Q-ESPRESSO*' \
-#       ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END \
-#     AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, \
-#     COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users \
-#     FROM xalt_run \
-#    WHERE syshost = '%s' \
-#      AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' \
-#    GROUP BY execname ORDER BY totalcput DESC" \
-#    % (args.syshost, startdate, enddate)
 cursor.execute(query)
 results = cursor.fetchall()
 
 print ("")
 print ("====================================================================")
-print ("%10s %10s %10s %35s" % ("CPU Time.", "# Jobs", "# Users","Exec"))
+print ("%10s %10s %10s %s" % ("CPU Time.", "# Jobs", "# Users","Exec"))
 print ("====================================================================")
 
 sum = 0.0
 for execname, totalcput, n_jobs, n_users in results:
   sum += totalcput
-  print ("%35s %10s %10s %10s" % (totalcput, n_jobs, n_users,execname))
+  print ("%10s %10s %10s %s" % (totalcput, n_jobs, n_users,execname))
 
-print("(M) SUs", sum/1.0e6, file=sys.stderr)
+print("(M) SUs", sum/1.0e6)
 
