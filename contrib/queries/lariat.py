@@ -355,6 +355,18 @@ class ExecRun
     return resultA, sumCH
 
 
+class Libraries:
+
+  def __init__(self, cursor):
+    self.__libA  = []
+    self.__cursor = cursor
+
+  def build(self, args, startdate, enddate):
+    
+    query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path, t1.module_name as module from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is not NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by corehours desc"
+
+    q2 = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by corehours desc"
+
 def kinds_of_jobs(cursor, startdate, enddate):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
@@ -363,9 +375,10 @@ def kinds_of_jobs(cursor, startdate, enddate):
                   from xalt_run where date >= %s and date < %s and exec_type = %s"
 
 
-  execKindA = [ ["system", "binary", "and module_name is not NULL"]
-                ["user"  , "binary", "and module_name is NULL"    ]
-                ["script", "script", ""                           ]
+  execKindA = [ ["system",     "binary", "and module_name is not NULL"]
+                ["user"  ,     "binary", "and module_name is NULL"    ]
+                ["sys-script", "script", "and module_name is not NULL"]
+                ["usr-script", "script", "and module_name is NULL"    ]
               ]
 
   resultT = {}
@@ -414,6 +427,56 @@ def kinds_of_jobs(cursor, startdate, enddate):
                  
 
   resultA.append(["Total", totalT['corehours'], 100.0, totalT['n_runs'], 100.0, totalT['n_jobs'], 100.0, totalT['n_users'], 100.0 ])
+  return resultA
+
+def running_other_exec(cursor, startdate, enddate):
+
+  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time)) as corehours, \
+           COUNT(t1.date) as n_runs,                                 \
+           COUNT(DISTINCT(t1.user)) as n_users                       \
+           FROM xalt_run AS t1, xalt_link AS t2                      \
+           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid and       \
+           t1.user != t2.build_user and t1.module_name is NULL       \
+           t1.date >= %s and t1.date < %s"
+
+  resultT = {}
+  cursor.execute(query, (startdate, enddate));
+  if (cursor.rowcount == 0):
+    print("Unable to get the number of user != build_user: Quitting!")
+    sys.exit(1)
+    
+  row = cursor.fetchall()[0]
+  resultT['diff'] = {'corehours' : row[0],
+                     'n_runs'    : row[1],
+                     'n_users'   : row[2]
+                    }
+
+  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time)) as corehours, \
+           COUNT(t1.date) as n_runs,                                 \
+           COUNT(DISTINCT(t1.user)) as n_users                       \
+           FROM xalt_run AS t1, xalt_link AS t2                      \
+           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid and       \
+           t1.user = t2.build_user and                               \
+           t1.date >= %s and t1.date < %s"
+  
+  cursor.execute(query, (startdate, enddate));
+  if (cursor.rowcount == 0):
+    print("Unable to get the number of user != build_user: Quitting!")
+    sys.exit(1)
+    
+  row = cursor.fetchall()[0]
+  resultT['same'] = {'corehours' : row[0],
+                     'n_runs'    : row[1],
+                     'n_users'   : row[2]
+                    }
+
+  resultA = []
+  resultA.append(["Kind", "Core Hours", "# Runs", "# Jobs", "# Users"])
+  resultA.append(["----", "----------", "------", "------", "-------"])
+
+  resultA.append(["diff user",resultT['diff']['corehours'], resultT['diff']['n_runs'], resultT['diff']['n_users']])
+  resultA.append(["same user",resultT['same']['corehours'], resultT['same']['n_runs'], resultT['same']['n_users']])
+
   return resultA
 
 def main():
