@@ -358,18 +358,63 @@ class ExecRun
 def kinds_of_jobs(cursor, startdate, enddate):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
-                  COUNT(*) as n_jobs, COUNT(DISTINCT(user)) as n_users             \
+                  COUNT(*) as n_runs, COUNT(DISTINCT(job_id)) as n_jobs,           \
+                  COUNT(DISTINCT(user)) as n_users                                 \
                   from xalt_run where date >= %s and date < %s and exec_type = %s"
-  cursor.execute(query,(startdate, enddate, "binary"))
+
+
+  execKindA = [ ["system", "binary", "and module_name is not NULL"]
+                ["user"  , "binary", "and module_name is NULL"    ]
+                ["script", "script", ""                           ]
+              ]
+
+  resultT = {}
+
+  
+  totalT  = {'corehours' : 0.0,
+             'n_jobs'    : 0.0,
+             'n_users'   : 0.0}
+
+  for entryA in execKindA:
+    name   = entryA[0]
+    kind   = entryA[1]
+    query += entryA[2]
+    cursor.execute(query,(startdate, enddate, kind))
+
+    if (cursor.rowcount == 0):
+      print("Unable to get the number of", kind," jobs: Quitting!")
+      sys.exit(1)
+    
+    row = cursor.fetchall()[0]
+    resultT[kind] = {'corehours' : row[0],
+                     'n_runs'    : row[1],
+                     'n_jobs'    : row[2],
+                     'n_users'   : row[3],
+                     'name'      : name
+                     }
+
+    totalT['corehours'] += row[0]
+    totalT['n_runs'   ] += row[1]
+    totalT['n_jobs'   ] += row[2]
+    totalT['n_users'  ] += row[3]
+
 
   resultA = []
+  resultA.append(["Kind", "Core Hours", "% Core hours", "# Runs", "% Runs", "# Jobs", "% Jobs", "# Users", "% Users"])
+  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------", "-------"])
+  
 
-  if (cursor.rowcount == 0):
-    print("Unable to get the number of binary jobs: Quitting!")
-    sys.exit(1)
+  for entryT in resultT:
+    pSU = 100.0 * entryT['corehours']/totalT['corehours']
+    pR  = 100.0 * entryT['n_runs']   /totalT['n_runs']
+    pJ  = 100.0 * entryT['n_jobs']   /totalT['n_jobs']
+    pU  = 100.0 * entryT['n_users']  /totalT['n_users']
 
-  resultA.append
+    resultA.append([entryT['name'], entryT['corehours'], pSU, entryT['n_runs'], pR, entryT['n_jobs'], pJ, entryT['n_users'], pU ])
                  
+
+  resultA.append(["Total", totalT['corehours'], 100.0, totalT['n_runs'], 100.0, totalT['n_jobs'], 100.0, totalT['n_users'], 100.0 ])
+  return resultA
 
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
@@ -378,7 +423,7 @@ def main():
   configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
   config.read(configFn)
 
-  conn = MySQLdb.connect \
+  conn = MySQLdb.connect              \
          (config.get("MYSQL","HOST"), \
           config.get("MYSQL","USER"), \
           base64.b64decode(config.get("MYSQL","PASSWD")), \
@@ -393,40 +438,29 @@ def main():
   if (args.startdate is not None):
     startdate = args.startdate
 
+  resultA = kind_of_jobs(cursor, startdate, enddate)
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
+  print("\nOverall Job Counts\n")
+  print(bt.build_tbl())
+
   execA = ExecRun(cursor)
   execA.build(args, startdate, enddate)
   
   resultA, sumCH = execA.report_by(args,"corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, " executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
+  print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
 
   resultA = execA.report_by(args,"n_jobs")
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, " executables sorted by # Jobs\n")
+  print("\nTop ",args.num, "Executables sorted by # Jobs\n")
   print(bt.build_tbl())
 
   resultA = execA.report_by(args,"n_users")
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, " executables sorted by # Users\n")
+  print("\nTop ",args.num, "Executables sorted by # Users\n")
   print(bt.build_tbl())
-
   
-
-
-
 if ( __name__ == '__main__'): main()
 
-
-print ("")
-print ("====================================================================")
-print ("%10s %10s %10s %s" % ("CPU Time.", "# Jobs", "# Users","Exec"))
-print ("====================================================================")
-
-sum = 0.0
-for execname, totalcput, n_jobs, n_users in results:
-  sum += totalcput
-  print ("%10s %10s %10s %s" % (totalcput, n_jobs, n_users,execname))
-
-print("(M) SUs", sum/1.0e6)
 
