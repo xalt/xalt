@@ -3,7 +3,7 @@
 # Total CPU time used, number of jobs, and number of users of the exec are   #
 # shown. Executable with "known" names are shown as all CAPS and grouped     #
 # together even if they have different actual exec name / version, other     #
-# executables are only grouped by their name.                                #            #
+# executables are only grouped by their name.                                #
 #                                                                            #
 # Examples:                                                                  #
 #                                                                            #
@@ -27,61 +27,39 @@ from __future__ import print_function
 import os, sys, re, base64, operator
 import MySQLdb, argparse
 import time
+from operator import itemgetter
 from datetime import datetime, timedelta
 try:
   import configparser
 except:
   import ConfigParser as configparser
 
-XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
-ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
-parser = argparse.ArgumentParser \
-          (description='Get library usage on SYSHOST grouped by module name.\
-           The number of linking instances and unique user for each library \
-           is displayed. A second table where library version (module name \
-           versions) has been agregated is also displayed (assuming module \
-           name version is in the form <module_name/version>).')
-parser.add_argument \
-          ("syshost", metavar="SYSHOST", action="store", \
-           help="The syshost for this query.")
-parser.add_argument \
-          ("--startdate", dest='startdate', action="store", \
-           help="exclude everything before STARTDATE (in YYYY-MM-DD). \
-                 If not specified, defaults to ENDDATE - 90 days.")
-parser.add_argument \
-          ("--enddate", dest='enddate', action="store", \
-           help="exclude everything after ENDDATE (in YYYY-MM-DD). \
-                 If not specified, defaults to today.")
-parser.add_argument \
-          ("--exclude", dest='patterns', action="store", \
-           help="comma separated PATTERN to ignore module name whose \
-                 substring matches any of the PATTERNS.")
+from BeautifulTbl import BeautifulTbl
 
-args = parser.parse_args()
+class CmdLineOptions(object):
+  """ Command line Options class """
 
-enddate = time.strftime('%Y-%m-%d')
-if args.enddate is not None:
-  enddate = args.enddate
-
-startdate = (datetime.strptime(enddate, "%Y-%m-%d") - timedelta(90)) \
-             .strftime('%Y-%m-%d');
-if args.startdate is not None:
-  startdate = args.startdate
+  def __init__(self):
+    """ Empty Ctor """
+    pass
   
-excludePatterns = None
-if args.patterns is not None:
-  excludePatterns = [x.strip() for x in args.patterns.split(',')]
-  
-config = configparser.ConfigParser()     
-config.read(ConfigFn)
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    now    = time.time()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dryrun",  dest='dryrun',    action="store_true",  default = None,           help="dryrun")
+    parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
+    parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
+    parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
+    parser.add_argument("--syshost", dest='syshost',   action="store",       default = None,           help="syshost")
+    parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
+    args = parser.parse_args()
+    return args
 
-conn = MySQLdb.connect \
-         (config.get("MYSQL","HOST"), \
-          config.get("MYSQL","USER"), \
-          base64.b64decode(config.get("MYSQL","PASSWD")), \
-          config.get("MYSQL","DB"))
-cursor = conn.cursor()
 
 equiv_patternA = [
     [ r'^1690'                          , '1690*.x*'                       ],
@@ -323,26 +301,122 @@ equiv_patternA = [
     [ r'^ymir_'                         , 'ymir*'                          ],
     ]
 
-sA = []
-sA.append("SELECT CASE ")
-for entry in equiv_patternA:
-  left  = entry[0].lower()
-  right = entry[1]
-  s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
-  sA.append(s)
+class ExecRun
+  """ Holds the executables for a given date range """
+  def __init__(self, cursor):
+    self.__execA  = []
+    self.__cursor = cursor
 
-sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
-sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
-sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
-sA.append("   FROM xalt_run ")
-sA.append("  WHERE syshost = '%s' ")
-sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' ")
-sA.append("  GROUP BY execname ORDER BY totalcput DESC")
+  def build(self, args, startdate, enddate):
+    sA = []
+    sA.append("SELECT CASE ")
+    for entry in equiv_patternA:
+      left  = entry[0].lower()
+      right = entry[1]
+      s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
+      sA.append(s)
 
-query = "".join(sA) % (args.syshost, startdate, enddate)
+    sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
+    sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
+    sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
+    sA.append("   FROM xalt_run ")
+    sA.append("  WHERE syshost = '%s' ")
+    sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' ")
+    sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-cursor.execute(query)
-results = cursor.fetchall()
+    query  = "".join(sA) % (args.syshost, startdate, enddate)
+    cursor = self.__cursor
+
+    cursor.execute(query)
+    results = cursor.fetchall()
+    
+    execA = self.__execA
+    for execname, corehours, n_jobs, n_users in results:
+      entryT = {'execname'  : execname,
+                'corehours' : corehours,
+                'n_jobs'    : n_jobs,
+                'n_users'   : n_users}
+      execA.append(entryT)
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append["Core Hours", "# Jobs","# Users", "Exec"])
+    resultA.append["----------", "------","-------", "----"])
+
+    execA = self.__execA
+    sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
+    num = min(args.num, len(sortA))
+    sumCH = 0.0
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append([ entryT['corehours'],  entryT['n_jobs'], entryT['n_users'], entryT['execname']])
+      sumCH += entryT['corehours']
+    
+    return resultA, sumCH
+
+
+def kinds_of_jobs(cursor, startdate, enddate):
+
+  query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
+                  COUNT(*) as n_jobs, COUNT(DISTINCT(user)) as n_users             \
+                  from xalt_run where date >= %s and date < %s and exec_type = %s"
+  cursor.execute(query,(startdate, enddate, "binary"))
+
+  resultA = []
+
+  if (cursor.rowcount == 0):
+    print("Unable to get the number of binary jobs: Quitting!")
+    sys.exit(1)
+
+  resultA.append
+                 
+
+def main():
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
+  args         = CmdLineOptions().execute()
+  config       = configparser.ConfigParser()     
+  configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
+  config.read(configFn)
+
+  conn = MySQLdb.connect \
+         (config.get("MYSQL","HOST"), \
+          config.get("MYSQL","USER"), \
+          base64.b64decode(config.get("MYSQL","PASSWD")), \
+          config.get("MYSQL","DB"))
+  cursor = conn.cursor()
+
+  enddate = time.strftime('%Y-%m-%d')
+  if (args.enddate is not None):
+    enddate = args.enddate
+  
+  startdate = (datetime.strptime(enddate, "%Y-%m-%d") - timedelta(90)).strftime('%Y-%m-%d');
+  if (args.startdate is not None):
+    startdate = args.startdate
+
+  execA = ExecRun(cursor)
+  execA.build(args, startdate, enddate)
+  
+  resultA, sumCH = execA.report_by(args,"corehours")
+  bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  print("\nTop ",args.num, " executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
+  print(bt.build_tbl())
+
+  resultA = execA.report_by(args,"n_jobs")
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  print("\nTop ",args.num, " executables sorted by # Jobs\n")
+  print(bt.build_tbl())
+
+  resultA = execA.report_by(args,"n_users")
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  print("\nTop ",args.num, " executables sorted by # Users\n")
+  print(bt.build_tbl())
+
+  
+
+
+
+if ( __name__ == '__main__'): main()
+
 
 print ("")
 print ("====================================================================")
