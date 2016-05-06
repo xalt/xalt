@@ -51,7 +51,6 @@ class CmdLineOptions(object):
     """ Specify command line arguments and parse the command line"""
     now    = time.time()
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dryrun",  dest='dryrun',    action="store_true",  default = None,           help="dryrun")
     parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
     parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
