@@ -54,7 +54,7 @@ class CmdLineOptions(object):
     parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
     parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
-    parser.add_argument("--syshost", dest='syshost',   action="store",       default = None,           help="syshost")
+    parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
     parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
     args = parser.parse_args()
     return args
@@ -300,7 +300,7 @@ equiv_patternA = [
     [ r'^ymir_'                         , 'ymir*'                          ],
     ]
 
-class ExecRun
+class ExecRun:
   """ Holds the executables for a given date range """
   def __init__(self, cursor):
     self.__execA  = []
@@ -319,7 +319,7 @@ class ExecRun
     sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
     sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
     sA.append("   FROM xalt_run ")
-    sA.append("  WHERE syshost = '%s' ")
+    sA.append("  WHERE syshost like '%s' ")
     sA.append("    AND date >= '%s' AND date < '%s' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
@@ -339,8 +339,8 @@ class ExecRun
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append["Core Hours", "# Jobs","# Users", "Exec"])
-    resultA.append["----------", "------","-------", "----"])
+    resultA.append(["Core Hours", "# Jobs","# Users", "Exec"])
+    resultA.append(["----------", "------","-------", "----"])
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
@@ -348,7 +348,7 @@ class ExecRun
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append([entryT['corehours'],  entryT['n_jobs'], entryT['n_users'], entryT['execname']])
+      resultA.append(["%.1f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -367,13 +367,14 @@ class Libraries:
                     COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, \
                     t1.object_path, t1.module_name as module                        \
                     from xalt_object as t1, join_run_object as t2, xalt_run as t3   \
-                    where t1.module_name is not NULL and                            \
-                    t1.obj_id = t2.obj_id and t2.run_id = t3.run_id                 \
+                    where ( t1.module_name is not NULL and t1.module_name != 'NULL')\
+                    and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id             \
+                    and t3.syshost like %s                                          \
                     and t3.date >= %s and t3.date < %s                              \
                     group by t1.object_path order by corehours desc"
 
     cursor  = self.__cursor
-    cursor.execute(query,(startdate, enddate))
+    cursor.execute(query,(args.syshost, startdate, enddate))
     resultA = cursor.fetchall()
 
     libA = self.__libA
@@ -400,29 +401,31 @@ class Libraries:
     for entryT in libA:
       module = entryT['module']
       if (module in libT):
-        if (entryT['corehours'] > libT[module]['corehours'])
+        if (entryT['corehours'] > libT[module]['corehours']):
           libT[module] = entryT
       else:
         libT[module] = entryT
     
         
-    for entryT in sorted(libT.iteritems(), key=lambda(x,y): y[sort_key], reverse=true):
-      resultA.append([entryT['corehours'], entryT['n_users'], entryT['n_runs'],
-                      entryT['n_jobs'], entryT['module']])
+    for k, entryT in sorted(libT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+      resultA.append(["%.1f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+                      "%d" % (entryT['n_jobs']), entryT['module']])
 
     return resultA
 
-def kinds_of_jobs(cursor, startdate, enddate):
+def kinds_of_jobs(cursor, args, startdate, enddate):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
                   COUNT(*) as n_runs, COUNT(DISTINCT(job_id)) as n_jobs,           \
                   COUNT(DISTINCT(user)) as n_users                                 \
-                  from xalt_run where date >= %s and date < %s and exec_type = %s"
+                  from xalt_run where syshost like %s                              \
+                  and date >= %s and date < %s and exec_type = %s "
 
 
-  execKindA = [ ["system",     "binary", "and module_name is not NULL"]
-                ["user"  ,     "binary", "and module_name is NULL"    ]
-                ["sys-script", "script", "and module_name is not NULL"]
+
+  execKindA = [ ["sys",        "binary", "and module_name is not NULL"],
+                ["usr"  ,      "binary", "and module_name is NULL"    ],
+                ["sys-script", "script", "and module_name is not NULL"],
                 ["usr-script", "script", "and module_name is NULL"    ]
               ]
 
@@ -431,30 +434,31 @@ def kinds_of_jobs(cursor, startdate, enddate):
   
   totalT  = {'corehours' : 0.0,
              'n_jobs'    : 0.0,
+             'n_runs'    : 0.0,
              'n_users'   : 0.0}
 
   for entryA in execKindA:
     name   = entryA[0]
     kind   = entryA[1]
-    query += entryA[2]
-    cursor.execute(query,(startdate, enddate, kind))
+    q2     = query + entryA[2]
+    cursor.execute(q2,(args.syshost, startdate, enddate, kind))
 
     if (cursor.rowcount == 0):
       print("Unable to get the number of", kind," jobs: Quitting!")
       sys.exit(1)
     
     row = cursor.fetchall()[0]
-    resultT[kind] = {'corehours' : row[0],
-                     'n_runs'    : row[1],
-                     'n_jobs'    : row[2],
-                     'n_users'   : row[3],
+    resultT[name] = {'corehours' : float(row[0]),
+                     'n_runs'    : int(row[1]),
+                     'n_jobs'    : int(row[2]),
+                     'n_users'   : int(row[3]),
                      'name'      : name
                      }
 
-    totalT['corehours'] += row[0]
-    totalT['n_runs'   ] += row[1]
-    totalT['n_jobs'   ] += row[2]
-    totalT['n_users'  ] += row[3]
+    totalT['corehours'] += float(row[0])
+    totalT['n_runs'   ] += int(row[1])
+    totalT['n_jobs'   ] += int(row[2])
+    totalT['n_users'  ] += int(row[3])
 
 
   resultA = []
@@ -462,62 +466,66 @@ def kinds_of_jobs(cursor, startdate, enddate):
   resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------", "-------"])
   
 
-  for entryT in resultT:
-    pSU = 100.0 * entryT['corehours']/totalT['corehours']
-    pR  = 100.0 * entryT['n_runs']   /totalT['n_runs']
-    pJ  = 100.0 * entryT['n_jobs']   /totalT['n_jobs']
-    pU  = 100.0 * entryT['n_users']  /totalT['n_users']
+     
+  for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['corehours'], reverse=True):
+    pSU = "%.1f" % (100.0 * entryT['corehours']/totalT['corehours'])
+    pR  = "%.1f" % (100.0 * entryT['n_runs']   /float(totalT['n_runs']))
+    pJ  = "%.1f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
+    pU  = "%.1f" % (100.0 * entryT['n_users']  /float(totalT['n_users']))
 
-    resultA.append([entryT['name'], entryT['corehours'], pSU, entryT['n_runs'], pR, entryT['n_jobs'], pJ, entryT['n_users'], pU ])
+    resultA.append([k, entryT['corehours'], pSU, entryT['n_runs'], pR, entryT['n_jobs'], pJ, entryT['n_users'], pU ])
                  
 
-  resultA.append(["Total", totalT['corehours'], 100.0, totalT['n_runs'], 100.0, totalT['n_jobs'], 100.0, totalT['n_users'], 100.0 ])
+  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------", "-------"])
+  resultA.append(["Total", totalT['corehours'], "100.0", totalT['n_runs'], "100.0", totalT['n_jobs'], "100.0", totalT['n_users'], "100.0" ])
   return resultA
 
-def running_other_exec(cursor, startdate, enddate):
+def running_other_exec(cursor, args, startdate, enddate):
 
-  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time)) as corehours, \
+  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time/3600.0)) as corehours, \
            COUNT(t1.date) as n_runs,                                 \
            COUNT(DISTINCT(t1.user)) as n_users                       \
            FROM xalt_run AS t1, xalt_link AS t2                      \
-           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid and       \
-           t1.user != t2.build_user and t1.module_name is NULL       \
-           t1.date >= %s and t1.date < %s"
+           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid           \
+           and t1.syshost like %s                                    \
+           and t1.user != t2.build_user and t1.module_name is NULL   \
+           and t1.date >= %s and t1.date < %s"
 
   resultT = {}
-  cursor.execute(query, (startdate, enddate));
+  cursor.execute(query, (args.syshost, startdate, enddate));
   if (cursor.rowcount == 0):
     print("Unable to get the number of user != build_user: Quitting!")
     sys.exit(1)
     
   row = cursor.fetchall()[0]
-  resultT['diff'] = {'corehours' : row[0],
-                     'n_runs'    : row[1],
-                     'n_users'   : row[2]
+  resultT['diff'] = {'corehours' : float(row[0]),
+                     'n_runs'    : float(row[1]),
+                     'n_users'   : float(row[2])
                     }
 
-  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time)) as corehours, \
+  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time/3600.0)) as corehours, \
            COUNT(t1.date) as n_runs,                                 \
            COUNT(DISTINCT(t1.user)) as n_users                       \
            FROM xalt_run AS t1, xalt_link AS t2                      \
-           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid and       \
-           t1.user = t2.build_user and                               \
-           t1.date >= %s and t1.date < %s"
+           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid           \
+           and t1.syshost like %s                                    \
+           and t1.user = t2.build_user                               \
+           and t1.date >= %s and t1.date < %s"
   
-  cursor.execute(query, (startdate, enddate));
+  cursor.execute(query, (args.syshost, startdate, enddate));
   if (cursor.rowcount == 0):
     print("Unable to get the number of user != build_user: Quitting!")
     sys.exit(1)
     
   row = cursor.fetchall()[0]
-  resultT['same'] = {'corehours' : row[0],
-                     'n_runs'    : row[1],
-                     'n_users'   : row[2]
+  resultT['same'] = {'corehours' : float(row[0]),
+                     'n_runs'    : float(row[1]),
+                     'n_users'   : float(row[2])
                     }
 
   resultA = []
-  resultA.append(["Kind", "Core Hours", "# Runs", "# Jobs", "# Users"])
-  resultA.append(["----", "----------", "------", "------", "-------"])
+  resultA.append(["Kind", "Core Hours", "# Runs", "# Users"])
+  resultA.append(["----", "----------", "------", "-------"])
 
   resultA.append(["diff user",resultT['diff']['corehours'], resultT['diff']['n_runs'], resultT['diff']['n_users']])
   resultA.append(["same user",resultT['same']['corehours'], resultT['same']['n_runs'], resultT['same']['n_users']])
@@ -539,27 +547,27 @@ def main():
   cursor = conn.cursor()
 
   enddate = time.strftime('%Y-%m-%d')
-  if (args.enddate is not None):
-    enddate = args.enddate
+  if (args.endD is not None):
+    enddate = args.endD
   
   startdate = (datetime.strptime(enddate, "%Y-%m-%d") - timedelta(90)).strftime('%Y-%m-%d');
-  if (args.startdate is not None):
-    startdate = args.startdate
+  if (args.startD is not None):
+    startdate = args.startD
 
   ############################################################
   #  Over all job counts
-  resultA = kind_of_jobs(cursor, startdate, enddate)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
-  print("\nOverall Job Counts\n")
-  print(bt.build_tbl())
+  #resultA = kinds_of_jobs(cursor, args, startdate, enddate)
+  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
+  #print("\nOverall Job Counts\n")
+  #print(bt.build_tbl())
 
 
   ############################################################
   #  Self-build vs. BuildU != RunU
-  resultA = running_other_exec(cursor, startdate, enddate)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
-  print("\nComparing Self-build vs. Running apps built by other users\n")
-  print(bt.build_tbl())
+  #resultA = running_other_exec(cursor, args, startdate, enddate)
+  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
+  #print("\nComparing Self-build vs. Running apps built by other users\n")
+  #print(bt.build_tbl())
 
   
   
@@ -571,10 +579,10 @@ def main():
   
   ############################################################
   #  Report of Top EXEC by Core Hours
-  resultA, sumCH = execA.report_by(args,"corehours")
-  bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
-  print(bt.build_tbl())
+  #resultA, sumCH = execA.report_by(args,"corehours")
+  #bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  #print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
+  #print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Num Jobs
@@ -585,18 +593,18 @@ def main():
 
   ############################################################
   #  Report of Top EXEC by Users
-  resultA = execA.report_by(args,"n_users")
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, "Executables sorted by # Users\n")
-  print(bt.build_tbl())
+  #resultA = execA.report_by(args,"n_users")
+  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  #print("\nTop ",args.num, "Executables sorted by # Users\n")
+  #print(bt.build_tbl())
   
   ############################################################
   #  Report of Library usage by Core Hours.
-  libA = Library(cursor)
-  libA.build(args, startdate, enddate)
-  resultA = execA.report_by(args,"corehours")
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
-  print(bt.build_tbl())
+  #libA = Libraries(cursor)
+  #libA.build(args, startdate, enddate)
+  #resultA = libA.report_by(args,"corehours")
+  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
+  #print(bt.build_tbl())
 
 
   
