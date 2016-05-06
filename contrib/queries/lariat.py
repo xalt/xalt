@@ -321,17 +321,17 @@ class ExecRun
     sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost = '%s' ")
-    sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' ")
+    sA.append("    AND date >= '%s' AND date < '%s' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
     query  = "".join(sA) % (args.syshost, startdate, enddate)
     cursor = self.__cursor
 
     cursor.execute(query)
-    results = cursor.fetchall()
-    
+    resultA = cursor.fetchall()
+
     execA = self.__execA
-    for execname, corehours, n_jobs, n_users in results:
+    for execname, corehours, n_jobs, n_users in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
                 'n_jobs'    : n_jobs,
@@ -349,7 +349,7 @@ class ExecRun
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append([ entryT['corehours'],  entryT['n_jobs'], entryT['n_users'], entryT['execname']])
+      resultA.append([entryT['corehours'],  entryT['n_jobs'], entryT['n_users'], entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -363,9 +363,55 @@ class Libraries:
 
   def build(self, args, startdate, enddate):
     
-    query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path, t1.module_name as module from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is not NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by corehours desc"
+    query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,       \
+                    COUNT(DISTINCT(t3.user)) as n_users,                            \
+                    COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, \
+                    t1.object_path, t1.module_name as module                        \
+                    from xalt_object as t1, join_run_object as t2, xalt_run as t3   \
+                    where t1.module_name is not NULL and                            \
+                    t1.obj_id = t2.obj_id and t2.run_id = t3.run_id                 \
+                    and t3.date >= %s and t3.date < %s                              \
+                    group by t1.object_path order by corehours desc"
 
-    q2 = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by corehours desc"
+    cursor  = self.__cursor
+    cursor.execute(query,(startdate, enddate))
+    resultA = cursor.fetchall()
+
+    libA = self.__libA
+    for corehours, n_users, n_runs, n_jobs, object_path, module in resultA:
+      entryT = { 'corehours'   : corehours,
+                 'n_users'     : n_users,
+                 'n_runs'      : n_runs,
+                 'n_jobs'      : n_jobs,
+                 'object_path' : object_path,
+                 'module'      : module
+               }
+      libA.append(entryT)
+      
+
+    #q2 = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by corehours desc"
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(['Core Hours', '# Users','# Runs','# Jobs','Library Module'])
+    resultA.append(['----------', '-------','------','------','--------------'])
+
+    libA = self.__libA
+    libT = {}
+    for entryT in libA:
+      module = entryT['module']
+      if (module in libT):
+        if (entryT['corehours'] > libT[module]['corehours'])
+          libT[module] = entryT
+      else:
+        libT[module] = entryT
+    
+        
+    for entryT in sorted(libT.iteritems(), key=lambda(x,y): y[sort_key], reverse=true):
+      resultA.append([entryT['corehours'], entryT['n_users'], entryT['n_runs'],
+                      entryT['n_jobs'], entryT['module']])
+
+    return resultA
 
 def kinds_of_jobs(cursor, startdate, enddate):
 
@@ -501,29 +547,62 @@ def main():
   if (args.startdate is not None):
     startdate = args.startdate
 
+  ############################################################
+  #  Over all job counts
   resultA = kind_of_jobs(cursor, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
   print("\nOverall Job Counts\n")
   print(bt.build_tbl())
 
+
+  ############################################################
+  #  Self-build vs. BuildU != RunU
+  resultA = running_other_exec(cursor, startdate, enddate)
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
+  print("\nComparing Self-build vs. Running apps built by other users\n")
+  print(bt.build_tbl())
+
+  
+  
+  ############################################################
+  #  Build top executable list
   execA = ExecRun(cursor)
   execA.build(args, startdate, enddate)
   
+  
+  ############################################################
+  #  Report of Top EXEC by Core Hours
   resultA, sumCH = execA.report_by(args,"corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
   print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
 
+  ############################################################
+  #  Report of Top EXEC by Num Jobs
   resultA = execA.report_by(args,"n_jobs")
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
   print("\nTop ",args.num, "Executables sorted by # Jobs\n")
   print(bt.build_tbl())
 
+  ############################################################
+  #  Report of Top EXEC by Users
   resultA = execA.report_by(args,"n_users")
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
   print("\nTop ",args.num, "Executables sorted by # Users\n")
   print(bt.build_tbl())
   
+  ############################################################
+  #  Report of Library usage by Core Hours.
+  libA = Library(cursor)
+  libA.build(args, startdate, enddate)
+  resultA = execA.report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
+  print(bt.build_tbl())
+
+
+  
+
+
 if ( __name__ == '__main__'): main()
 
 
