@@ -24,7 +24,7 @@
 #----------------------------------------------------------------------------#
 
 from __future__ import print_function
-import os, sys, re, base64, operator
+import os, sys, base64
 import MySQLdb, argparse
 import time
 from operator import itemgetter
@@ -49,7 +49,6 @@ class CmdLineOptions(object):
   
   def execute(self):
     """ Specify command line arguments and parse the command line"""
-    now    = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
     parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
@@ -344,7 +343,7 @@ class ExecRun:
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
-    num = min(args.num, len(sortA))
+    num = min(int(args.num), len(sortA))
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
@@ -556,18 +555,18 @@ def main():
 
   ############################################################
   #  Over all job counts
-  #resultA = kinds_of_jobs(cursor, args, startdate, enddate)
-  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
-  #print("\nOverall Job Counts\n")
-  #print(bt.build_tbl())
+  resultA = kinds_of_jobs(cursor, args, startdate, enddate)
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
+  print("\nOverall Job Counts\n")
+  print(bt.build_tbl())
 
 
   ############################################################
   #  Self-build vs. BuildU != RunU
-  #resultA = running_other_exec(cursor, args, startdate, enddate)
-  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
-  #print("\nComparing Self-build vs. Running apps built by other users\n")
-  #print(bt.build_tbl())
+  resultA = running_other_exec(cursor, args, startdate, enddate)
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
+  print("\nComparing Self-build vs. Running apps built by other users\n")
+  print(bt.build_tbl())
 
   
   
@@ -579,32 +578,33 @@ def main():
   
   ############################################################
   #  Report of Top EXEC by Core Hours
-  #resultA, sumCH = execA.report_by(args,"corehours")
-  #bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  #print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
-  #print(bt.build_tbl())
+  resultA, sumCH = execA.report_by(args,"corehours")
+  bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
+  print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Num Jobs
-  resultA = execA.report_by(args,"n_jobs")
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  resultA, sumCH  = execA.report_by(args,"n_jobs")
+  bt              = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
   print("\nTop ",args.num, "Executables sorted by # Jobs\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Users
-  #resultA = execA.report_by(args,"n_users")
-  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  #print("\nTop ",args.num, "Executables sorted by # Users\n")
-  #print(bt.build_tbl())
+  resultA, sumCH = execA.report_by(args,"n_users")
+  bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  print("\nTop ",args.num, "Executables sorted by # Users\n")
+  print(bt.build_tbl())
   
   ############################################################
   #  Report of Library usage by Core Hours.
-  #libA = Libraries(cursor)
-  #libA.build(args, startdate, enddate)
-  #resultA = libA.report_by(args,"corehours")
-  #bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
-  #print(bt.build_tbl())
+  libA = Libraries(cursor)
+  libA.build(args, startdate, enddate)
+  resultA = libA.report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
+  print("\nLibrary usage sorted by Core Hours\n")
+  print(bt.build_tbl())
 
 
   
