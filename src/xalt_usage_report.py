@@ -558,7 +558,7 @@ def main():
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
-  print("\nOverall Job Counts\n")
+  print("\nOverall MPI Job Counts\n")
   print(bt.build_tbl())
 
 
@@ -566,36 +566,33 @@ def main():
   #  Self-build vs. BuildU != RunU
   resultA = running_other_exec(cursor, args, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
-  print("\nComparing Self-build vs. Running apps built by other users\n")
+  print("\nComparing MPI Self-build vs. Running apps built by other users\n")
   print(bt.build_tbl())
 
-  
-  
   ############################################################
   #  Build top executable list
   execA = ExecRun(cursor)
   execA.build(args, startdate, enddate)
   
-  
   ############################################################
   #  Report of Top EXEC by Core Hours
   resultA, sumCH = execA.report_by(args,"corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, "Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
+  print("\nTop ",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Num Jobs
   resultA, sumCH  = execA.report_by(args,"n_jobs")
   bt              = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, "Executables sorted by # Jobs\n")
+  print("\nTop ",args.num, "MPI Executables sorted by # Jobs\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Users
   resultA, sumCH = execA.report_by(args,"n_users")
   bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
-  print("\nTop ",args.num, "Executables sorted by # Users\n")
+  print("\nTop ",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
   ############################################################
@@ -604,7 +601,7 @@ def main():
   libA.build(args, startdate, enddate)
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
-  print("\nLibrary usage sorted by Core Hours\n")
+  print("\nLibrary usage used by MPI Executables sorted by Core Hours\n")
   print(bt.build_tbl())
 
 
