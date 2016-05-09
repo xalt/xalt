@@ -338,8 +338,8 @@ class ExecRun:
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["Core Hours", "# Jobs","# Users", "Exec"])
-    resultA.append(["----------", "------","-------", "----"])
+    resultA.append(["CoreHrs", "# Jobs","# Users", "Exec"])
+    resultA.append(["-------", "------","-------", "----"])
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
@@ -392,8 +392,8 @@ class Libraries:
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['Core Hours', '# Users','# Runs','# Jobs','Library Module'])
-    resultA.append(['----------', '-------','------','------','--------------'])
+    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
+    resultA.append(['-------', '-------','------','------','--------------'])
 
     libA = self.__libA
     libT = {}
@@ -481,7 +481,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
                  
 
   resultA.append(["----", "----", "-----", "----", "---", "----", "---", " "])
-  resultA.append(["Total", "%.0f" % (totalT['corehours']), "100.", totalT['n_runs'], "100.", totalT['n_jobs'], "100.", " "])
+  resultA.append(["Total", "%.0f" % (totalT['corehours']), "100", totalT['n_runs'], "100", totalT['n_jobs'], "100", " "])
   return resultA
 
 def running_other_exec(cursor, args, startdate, enddate):
@@ -532,8 +532,8 @@ def running_other_exec(cursor, args, startdate, enddate):
                     }
 
   resultA = []
-  resultA.append(["Kind", "Core Hours", "# Runs", "# Users"])
-  resultA.append(["----", "----------", "------", "-------"])
+  resultA.append(["Kind", "CoreHrs", "# Runs", "# Users"])
+  resultA.append(["----", "-------", "------", "-------"])
 
   resultA.append(["diff user",resultT['diff']['corehours'], resultT['diff']['n_runs'], resultT['diff']['n_users']])
   resultA.append(["same user",resultT['same']['corehours'], resultT['same']['n_runs'], resultT['same']['n_users']])
@@ -566,22 +566,33 @@ def main():
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
-  print("\nOverall MPI Job Counts\n")
+  print("----------------------")
+  print("Overall MPI Job Counts")
+  print("----------------------")
+  print("")
   print(bt.build_tbl())
   print("\n")
   print("Where        usr: executables built by user")
-  print("             sys: built and installed at system level")
+  print("             sys: executables managed by system-level modulefiles")
   print("      usr-script: shell scripts in a user's account")
-  print("      sys-script: shell scripts installed at system level")
-  print("\n")
-  print("      sys and sys-script are in directories defined by Modules")
+  print("      sys-script: shell scripts managed by system-level modulefiles")
 
   ############################################################
   #  Self-build vs. BuildU != RunU
   resultA = running_other_exec(cursor, args, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
-  print("\nComparing MPI Self-build vs. Build User != Run User\n")
+  print("")
+  print("---------------------------------------------------")
+  print("Comparing MPI Self-build vs. Build User != Run User")
+  print("---------------------------------------------------")
+  print("")
   print(bt.build_tbl())
+
+  print("")
+  print("-------------------")
+  print("Top MPI Executables")
+  print("-------------------")
+  print("")
 
   ############################################################
   #  Build top executable list
@@ -592,21 +603,21 @@ def main():
   #  Report of Top EXEC by Core Hours
   resultA, sumCH = execA.report_by(args,"corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop ",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
+  print("\nTop",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Num Jobs
   resultA, sumCH  = execA.report_by(args,"n_jobs")
   bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop ",args.num, "MPI Executables sorted by # Jobs\n")
+  print("\nTop",args.num, "MPI Executables sorted by # Jobs\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Users
   resultA, sumCH = execA.report_by(args,"n_users")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop ",args.num, "MPI Executables sorted by # Users\n")
+  print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
   ############################################################
@@ -615,7 +626,11 @@ def main():
   libA.build(args, startdate, enddate)
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
-  print("\nLibraries used by MPI Executables sorted by Core Hours\n")
+  print("")
+  print("------------------------------------------------------")
+  print("Libraries used by MPI Executables sorted by Core Hours")
+  print("------------------------------------------------------")
+  print("")
   print(bt.build_tbl())
 
 
