@@ -446,6 +446,8 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
       sys.exit(1)
     
     row = cursor.fetchall()[0]
+    if (row[0] == None):
+      row[0] = 0.0
     resultT[name] = {'corehours' : float(row[0]),
                      'n_runs'    : int(row[1]),
                      'n_jobs'    : int(row[2]),
