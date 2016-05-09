@@ -526,7 +526,7 @@ def running_other_exec(cursor, args, startdate, enddate):
   core_hours = row[0]
   if (core_hours == None):
     core_hours = 0.0
-  resultT['same'] = {'corehours' : float(core_hours]),
+  resultT['same'] = {'corehours' : float(core_hours),
                      'n_runs'    : int(row[1]),
                      'n_users'   : int(row[2])
                     }
