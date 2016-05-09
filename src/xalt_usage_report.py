@@ -456,7 +456,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
                      'name'      : name
                      }
 
-    totalT['corehours'] += float(row[0])
+    totalT['corehours'] += float(core_hours)
     totalT['n_runs'   ] += int(row[1])
     totalT['n_jobs'   ] += int(row[2])
 
