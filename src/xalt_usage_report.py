@@ -462,9 +462,9 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
 
 
   resultA = []
-  resultA.append(["Kind", "Core", "Hours", "Runs", "   ", "Jobs", "   ", "Users"])
-  resultA.append(["Kind", " N  ", "  %  ", " N  ", " % ", " N  ", " % ", "  N  "])
-  resultA.append(["----", "----", "-----", "----", "---", "----", "---", "-----"])
+  resultA.append(["Kind", "CoreHrs", "   ", "Runs", "   ", "Jobs", "   ", "Users"])
+  resultA.append(["    ", " N     ", " % ", " N  ", " % ", " N  ", " % ", "  N  "])
+  resultA.append(["----", "-------", "---", "----", "---", "----", "---", "-----"])
   
 
      
@@ -474,14 +474,14 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
     pJ  = "%.0f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
 
     resultA.append([k,
-      entryT['corehours'], pSU,
+      "%.0f" % (entryT['corehours']), pSU,
       entryT['n_runs'], pR,
       entryT['n_jobs'], pJ,
       entryT['n_users']])
                  
 
   resultA.append(["----", "----", "-----", "----", "---", "----", "---", " "])
-  resultA.append(["Total", totalT['corehours'], "100.", totalT['n_runs'], "100.", totalT['n_jobs'], "100.", " "])
+  resultA.append(["Total", "%.0f" % (totalT['corehours']), "100.", totalT['n_runs'], "100.", totalT['n_jobs'], "100.", " "])
   return resultA
 
 def running_other_exec(cursor, args, startdate, enddate):
