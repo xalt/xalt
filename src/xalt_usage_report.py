@@ -433,8 +433,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
   
   totalT  = {'corehours' : 0.0,
              'n_jobs'    : 0.0,
-             'n_runs'    : 0.0,
-             'n_users'   : 0.0}
+             'n_runs'    : 0.0}
 
   for entryA in execKindA:
     name   = entryA[0]
@@ -457,12 +456,11 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
     totalT['corehours'] += float(row[0])
     totalT['n_runs'   ] += int(row[1])
     totalT['n_jobs'   ] += int(row[2])
-    totalT['n_users'  ] += int(row[3])
 
 
   resultA = []
-  resultA.append(["Kind", "Core Hours", "% Core hours", "# Runs", "% Runs", "# Jobs", "% Jobs", "# Users", "% Users"])
-  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------", "-------"])
+  resultA.append(["Kind", "Core Hours", "% Core hours", "# Runs", "% Runs", "# Jobs", "% Jobs", "# Users"])
+  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------"])
   
 
      
@@ -470,13 +468,16 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
     pSU = "%.1f" % (100.0 * entryT['corehours']/totalT['corehours'])
     pR  = "%.1f" % (100.0 * entryT['n_runs']   /float(totalT['n_runs']))
     pJ  = "%.1f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
-    pU  = "%.1f" % (100.0 * entryT['n_users']  /float(totalT['n_users']))
 
-    resultA.append([k, entryT['corehours'], pSU, entryT['n_runs'], pR, entryT['n_jobs'], pJ, entryT['n_users'], pU ])
+    resultA.append([k,
+      entryT['corehours'], pSU,
+      entryT['n_runs'], pR,
+      entryT['n_jobs'], pJ,
+      entryT['n_users'], " " ])
                  
 
-  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------", "-------"])
-  resultA.append(["Total", totalT['corehours'], "100.0", totalT['n_runs'], "100.0", totalT['n_jobs'], "100.0", totalT['n_users'], "100.0" ])
+  resultA.append(["----",  "----------", "------------",  "------", "------", "------",   "------", "-------", " "])
+  resultA.append(["Total", totalT['corehours'], "100.0", totalT['n_runs'], "100.0", totalT['n_jobs'], "100.0", " "])
   return resultA
 
 def running_other_exec(cursor, args, startdate, enddate):
