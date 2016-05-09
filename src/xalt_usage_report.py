@@ -347,7 +347,7 @@ class ExecRun:
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.1f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -407,7 +407,7 @@ class Libraries:
     
         
     for k, entryT in sorted(libT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
-      resultA.append(["%.1f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
     return resultA
@@ -462,25 +462,26 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
 
 
   resultA = []
-  resultA.append(["Kind", "Core Hours", "% Core hours", "# Runs", "% Runs", "# Jobs", "% Jobs", "# Users"])
-  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", "-------"])
+  resultA.append(["Kind", "Core", "Hours", "Runs", "   ", "Jobs", "   ", "Users"])
+  resultA.append(["Kind", " N  ", "  %  ", " N  ", " % ", " N  ", " % ", "  N  "])
+  resultA.append(["----", "----", "-----", "----", "---", "----", "---", "-----"])
   
 
      
   for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['corehours'], reverse=True):
-    pSU = "%.1f" % (100.0 * entryT['corehours']/totalT['corehours'])
-    pR  = "%.1f" % (100.0 * entryT['n_runs']   /float(totalT['n_runs']))
-    pJ  = "%.1f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
+    pSU = "%.0f" % (100.0 * entryT['corehours']/totalT['corehours'])
+    pR  = "%.0f" % (100.0 * entryT['n_runs']   /float(totalT['n_runs']))
+    pJ  = "%.0f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
 
     resultA.append([k,
       entryT['corehours'], pSU,
       entryT['n_runs'], pR,
       entryT['n_jobs'], pJ,
-      entryT['n_users'], " " ])
+      entryT['n_users']])
                  
 
-  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", " "])
-  resultA.append(["Total", totalT['corehours'], "100.0", totalT['n_runs'], "100.0", totalT['n_jobs'], "100.0", " "])
+  resultA.append(["----", "----", "-----", "----", "---", "----", "---", " "])
+  resultA.append(["Total", totalT['corehours'], "100.", totalT['n_runs'], "100.", totalT['n_jobs'], "100.", " "])
   return resultA
 
 def running_other_exec(cursor, args, startdate, enddate):
@@ -501,9 +502,10 @@ def running_other_exec(cursor, args, startdate, enddate):
     sys.exit(1)
     
   row = cursor.fetchall()[0]
+  
   resultT['diff'] = {'corehours' : float(row[0]),
-                     'n_runs'    : float(row[1]),
-                     'n_users'   : float(row[2])
+                     'n_runs'    : int(row[1]),
+                     'n_users'   : int(row[2])
                     }
 
   query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time/3600.0)) as corehours, \
@@ -521,9 +523,12 @@ def running_other_exec(cursor, args, startdate, enddate):
     sys.exit(1)
     
   row = cursor.fetchall()[0]
-  resultT['same'] = {'corehours' : float(row[0]),
-                     'n_runs'    : float(row[1]),
-                     'n_users'   : float(row[2])
+  core_hours = row[0]
+  if (core_hours == None):
+    core_hours = 0.0
+  resultT['same'] = {'corehours' : float(core_hours]),
+                     'n_runs'    : int(row[1]),
+                     'n_users'   : int(row[2])
                     }
 
   resultA = []
@@ -560,20 +565,21 @@ def main():
   ############################################################
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, startdate, enddate)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
   print("\nOverall MPI Job Counts\n")
   print(bt.build_tbl())
   print("\n")
-  print("Where usr:        User build binary executables")
-  print("      sys:        System build binary executables")
-  print("      usr-script: User shell scripts")
-  print("      sys-script: System shell scripts")
+  print("Where        usr: executables built by user")
+  print("             sys: built and installed at system level")
+  print("      usr-script: shell scripts in a user's account")
+  print("      sys-script: shell scripts installed at system level")
+  print("\n")
   print("      sys and sys-script are in directories defined by Modules")
 
   ############################################################
   #  Self-build vs. BuildU != RunU
   resultA = running_other_exec(cursor, args, startdate, enddate)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
   print("\nComparing MPI Self-build vs. Build User != Run User\n")
   print(bt.build_tbl())
 
@@ -585,21 +591,21 @@ def main():
   ############################################################
   #  Report of Top EXEC by Core Hours
   resultA, sumCH = execA.report_by(args,"corehours")
-  bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop ",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Num Jobs
   resultA, sumCH  = execA.report_by(args,"n_jobs")
-  bt              = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop ",args.num, "MPI Executables sorted by # Jobs\n")
   print(bt.build_tbl())
 
   ############################################################
   #  Report of Top EXEC by Users
   resultA, sumCH = execA.report_by(args,"n_users")
-  bt             = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrl")
+  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop ",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
@@ -608,7 +614,7 @@ def main():
   libA = Libraries(cursor)
   libA.build(args, startdate, enddate)
   resultA = libA.report_by(args,"corehours")
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("\nLibraries used by MPI Executables sorted by Core Hours\n")
   print(bt.build_tbl())
 
