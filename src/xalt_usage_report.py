@@ -479,7 +479,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
       entryT['n_users'], " " ])
                  
 
-  resultA.append(["----",  "----------", "------------",  "------", "------", "------",   "------", "-------", " "])
+  resultA.append(["----", "----------", "------------", "------", "------", "------", "------", " "])
   resultA.append(["Total", totalT['corehours'], "100.0", totalT['n_runs'], "100.0", totalT['n_jobs'], "100.0", " "])
   return resultA
 
@@ -604,7 +604,7 @@ def main():
   libA.build(args, startdate, enddate)
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "rrrrl")
-  print("\nLibrary usage used by MPI Executables sorted by Core Hours\n")
+  print("\nLibraries used by MPI Executables sorted by Core Hours\n")
   print(bt.build_tbl())
 
 
