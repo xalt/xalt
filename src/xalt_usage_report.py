@@ -559,13 +559,18 @@ def main():
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrr")
   print("\nOverall MPI Job Counts\n")
   print(bt.build_tbl())
-
+  print("\n")
+  print("Where usr:        User build binary executables")
+  print("      sys:        System build binary executables")
+  print("      usr-script: User shell scripts")
+  print("      sys-script: System shell scripts")
+  print("      sys and sys-script are in directories defined by Modules")
 
   ############################################################
   #  Self-build vs. BuildU != RunU
   resultA = running_other_exec(cursor, args, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrr")
-  print("\nComparing MPI Self-build vs. Running apps built by other users\n")
+  print("\nComparing MPI Self-build vs. Build User != Run User\n")
   print(bt.build_tbl())
 
   ############################################################
