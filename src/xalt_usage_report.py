@@ -480,7 +480,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
       entryT['n_users']])
                  
 
-  resultA.append(["----", "----", "-----", "----", "---", "----", "---", " "])
+  resultA.append(["----", "-------", "---", "----", "---", "----", "---", " "])
   resultA.append(["Total", "%.0f" % (totalT['corehours']), "100", "%.0f" % (totalT['n_runs']), "100", "%.0f" % (totalT['n_jobs']), "100", " "])
   return resultA
 
