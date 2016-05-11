@@ -44,3 +44,4 @@ XALT_TRANSMISSION_STYLE = os.environ.get("XALT_TRANSMISSION_STYLE","@transmissio
 #------------------------------------------------------------------------
 
 XALT_ETC_DIR            = os.environ.get("XALT_ETC_DIR","@etc_dir@")
+XALT_TRACING            = os.environ.get("XALT_TRACING")
