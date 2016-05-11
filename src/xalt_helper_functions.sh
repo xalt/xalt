@@ -69,7 +69,7 @@ tracing_msg()
 {
   if [ "${XALT_TRACING:-}" = "yes" ]; then
     builtin echo ""   1>&2
-    builtin echo "$@" 1>&2
+    builtin echo `date "+%H:%M:%S"` "$@" 1>&2
   fi
 }
 
@@ -200,11 +200,14 @@ run_real_command()
   fi
 
   # Record the run record at the start of the job.  This way if the run
-  # doesn't complete there will be a record.
+  # doesn't complete there will be a record. Use async subshell to workaround
+  # slow transmission method.
 
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
+  (
   LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "[]"
+  ) &
 
   status=0
   if [ -z "${testMe:-}" ]; then
@@ -215,7 +218,9 @@ run_real_command()
     status="$?"
 
   fi
-
+  
+  wait
+  
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
   eTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EPOCH)
