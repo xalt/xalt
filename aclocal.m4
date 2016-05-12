@@ -19,6 +19,26 @@ AC_DEFUN([AC_PYTHON_MODULE],[
 	fi
 ])
 
+dnl @synopsis C_FLAGS_CHECK [compiler flags]                                        
+dnl @summary check whether compiler supports given C flags or not                   
+AC_DEFUN([C_FLAG_CHECK],                                                            
+[dnl                                                                                  
+  AC_MSG_CHECKING([if $CC supports $1])
+  AC_LANG_PUSH([C])
+  ac_saved_cflags="$CFLAGS"                                                       
+  CFLAGS="-Werror $1"                                                               
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],                                            
+    [AC_MSG_RESULT([yes])],                                                           
+    [AC_MSG_ERROR([no])]                                                              
+  )                                                                                   
+  CFLAGS="$ac_saved_cflags"                                                       
+  AC_LANG_POP([C])
+])
+
+
+
+
+
 AC_DEFUN([AX_CHECK_COMPILE_FLAG],
 [AC_PREREQ(2.64)dnl for _AC_LANG_PREFIX and AS_VAR_IF
 AS_VAR_PUSHDEF([CACHEVAR],[ax_cv_check_[]_AC_LANG_ABBREV[]flags_$4_$1])dnl
