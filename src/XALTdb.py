@@ -40,14 +40,8 @@ warnings.filterwarnings("ignore", "Unknown table.*")
 
 # In 'directdb' transmission, print goes to syslog (for exception, etc)
 if (XALT_TRANSMISSION_STYLE == 'directdb' and not XALT_TRACING):
-  import logging, logging.handlers
-  xalt_log = logging.getLogger('XALT')
-  xalt_log.setLevel(logging.WARNING)
-  syslogH = logging.handlers.SysLogHandler(address="/dev/log")
-  syslogH.setLevel(logging.WARNING)
-  format = logging.Formatter('%(name)s: %(message)s')
-  syslogH.setFormatter(format)
-  print = xalt_log.error
+  logger = config_logger()
+  print = logger.exception
 
 import inspect
 
@@ -129,8 +123,8 @@ class XALTdb(object):
 
     try:
       self.__conn = MySQLdb.connect \
-                      (self.__host,self.__user,self.__passwd, \
-                       use_unicode=True, charset="utf8", connect_timeout=120)
+                      (self.__host,self.__user,self.__passwd, use_unicode=True, \
+                       charset="utf8", connect_timeout=120)
       if (databaseName):
         cursor = self.__conn.cursor()
         
@@ -144,10 +138,9 @@ class XALTdb(object):
         cursor.execute("SET character_set_connection=utf8;") #same as above
 
     except MySQLdb.Error as e:
-      print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]))
+      print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
       raise
     return self.__conn
-
 
   def db(self):
     """ Return name of db"""
@@ -380,3 +373,4 @@ class XALTdb(object):
       print(query.encode("ascii","ignore"))
       print ("run_to_db(): %s" % e)
       sys.exit (1)
+
