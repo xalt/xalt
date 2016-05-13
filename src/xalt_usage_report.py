@@ -43,6 +43,10 @@ from BeautifulTbl      import BeautifulTbl
 from xalt_name_mapping import name_mapping
 
 def shortName(full):
+  idx = full.find('(')
+  if (idx != -1):
+    full = full[:idx]
+
   idx = full.rfind('/')
   if (idx == -1):
     return full
