@@ -42,6 +42,12 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 from BeautifulTbl      import BeautifulTbl
 from xalt_name_mapping import name_mapping
 
+def shortName(full):
+  idx = full.rfind('/')
+  if (idx == -1):
+    return full
+  return full[:idx]
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -161,6 +167,7 @@ class Libraries:
 
     libA = self.__libA
     libT = {}
+
     for entryT in libA:
       module = entryT['module']
       if (module in libT):
@@ -171,6 +178,41 @@ class Libraries:
     
         
     for k, entryT in sorted(libT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+                      "%d" % (entryT['n_jobs']), entryT['module']])
+
+    return resultA
+
+  def group_report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
+    resultA.append(['-------', '-------','------','------','--------------'])
+
+    libA = self.__libA
+    libT = {}
+
+    for entryT in libA:
+      module = entryT['module']
+      if (module in libT):
+        if (entryT['corehours'] > libT[module]['corehours']):
+          libT[module] = entryT
+      else:
+        libT[module] = entryT
+    
+    groupT = {}
+    for module in libT
+      sn = shortName(module)
+      if (not sn in groupT):
+        groupT[sn]           = libT[module]
+        groupT[sn]['module'] = sn
+      else:
+        g_entry = groupT[sn]
+        entry   = libT[module]
+        for key in g_entry:
+          if (key != "module"):
+            g_entry[key] += entry[key]
+        
+    for k, entryT in sorted(groupT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
       resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
@@ -384,6 +426,19 @@ def main():
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
+  ############################################################
+  #  Report of Library by short module name usage by Core Hours.
+  libA = Libraries(cursor)
+  libA.build(args, startdate, enddate)
+  resultA = libA.group_report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
+  print("")
+  print("---------------------------------------------------------------------------------")
+  print("Libraries used by MPI Executables sorted by Core Hours grouped by module families")
+  print("---------------------------------------------------------------------------------")
+  print("")
+  print(bt.build_tbl())
+
   ############################################################
   #  Report of Library usage by Core Hours.
   libA = Libraries(cursor)
