@@ -59,12 +59,6 @@ tracing_msg "Starting ld"
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
 
-if [ "$XALT_EXECUTABLE_TRACKING" != yes ]; then
-  $MY_CMD "${argA[@]}"
-  status=$?
-  exit $status
-fi
-
 ########################################################################
 # Make sure that the python setup is valid. 
 
@@ -85,6 +79,7 @@ EXEC="a.out"
 append=false
 prev=
 done=false
+BIT32FLAG=
 for option
 do
   if [ -n "$prev" ]; then
@@ -106,6 +101,10 @@ do
       ;;
     --trace|-t)
       USER_TRACE="true"
+      ;;
+
+    elf_i386)
+      BIT32FLAG=--32
       ;;
 
     -o)
@@ -160,7 +159,7 @@ EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_ASSEMBLY "$
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
 if [ -f "$ARGSRC" ]; then
-  $AS $ARGSRC -o $OBJ
+  $AS $ARGSRC $BIT32FLAG -o $OBJ
 else
   OBJ=""
 fi
@@ -169,12 +168,6 @@ fi
   STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py  "${argA[@]}") 
   $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 ) &
-
-#Save python state
-py_path_xalt=$PYTHONPATH
-py_home_xalt=$PYTHONHOME
-export PYTHONPATH=$py_path_orig
-[ -n "$py_home_orig" ] && export PYTHONHOME=$py_home_orig
 
 tracing_msg $MY_CMD "${argA[@]}"
 
@@ -185,12 +178,12 @@ if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
 
-wait #-- wait for subshell to finish
+tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-#Return python state
-export PYTHONPATH=$py_path_xalt
-unset  PYTHONHOME
-[ -n "$py_home_xalt" ] && export PYTHONHOME=$py_home_xalt
+# Get the sha1sum for the executable because it might move or disappear!
+SHA1SUM_EXEC=$($SHA1SUM $EXEC)
+
+wait #-- wait for subshell to finish
 
 ########################################################################
 # start asynchronous subshell while the 'main' can return to user
@@ -201,21 +194,10 @@ unset  PYTHONHOME
       exit 0
     fi
 
-    tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
-
-    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
-
-    if [ "$?" = 0 -a -n "${XALT_LD_DEBUG:-}" ]; then
-       builtin echo ""                       >> $RESULT
-       builtin echo "====================="  >> $RESULT
-       builtin echo  $MY_CMD "$@" $ARGOBJ    >> $RESULT
-       builtin echo "====================="  >> $RESULT
-
-       $CAT  $LINKLINE >> $RESULT
-    fi
+    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" \
+       "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
 
     $RM -rf $WRKDIR
-    tracing_msg "Ending ld"
 
 ) & # end subshell
 

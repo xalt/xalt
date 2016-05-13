@@ -1,88 +1,3 @@
-#------------------------------------------------------------------------    #
-# This python script gets executable usage on SYSHOST grouped by exec name.  #
-# Total CPU time used, number of jobs, and number of users of the exec are   #
-# shown. Executable with "known" names are shown as all CAPS and grouped     #
-# together even if they have different actual exec name / version, other     #
-# executables are only grouped by their name.                                #            #
-#                                                                            #
-# Examples:                                                                  #
-#                                                                            #
-# 1. Show the help output:                                                   #
-#   python executable_usage.py -h                                            #
-#                                                                            #
-# 2. Get executable usage on Darter for the last 90 days                     #
-#   python executable_usage.py darter                                        #
-#                                                                            #
-# 3. Get executable usage on Darter for specific period                      #
-#   python executable_usage.py darter --startdate 2015-03-01 \               #
-#          --endate 2015-06-31                                               #
-#                                                                            #
-# 4. Get executable usage on Darter for the last 90 days, excluding all      #
-#    module name with 'ari', 'gcc', and 'craype' in its name                 #
-#   python executable_usage.py darter --exclude ari,gcc,craype               #
-#                                                                            #
-#----------------------------------------------------------------------------#
-
-from __future__ import print_function
-import os, sys, re, base64, operator
-import MySQLdb, argparse
-import time
-from datetime import datetime, timedelta
-try:
-  import configparser
-except:
-  import ConfigParser as configparser
-
-XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
-ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
-
-parser = argparse.ArgumentParser \
-          (description='Get library usage on SYSHOST grouped by module name.\
-           The number of linking instances and unique user for each library \
-           is displayed. A second table where library version (module name \
-           versions) has been agregated is also displayed (assuming module \
-           name version is in the form <module_name/version>).')
-parser.add_argument \
-          ("syshost", metavar="SYSHOST", action="store", \
-           help="The syshost for this query.")
-parser.add_argument \
-          ("--startdate", dest='startdate', action="store", \
-           help="exclude everything before STARTDATE (in YYYY-MM-DD). \
-                 If not specified, defaults to ENDDATE - 90 days.")
-parser.add_argument \
-          ("--enddate", dest='enddate', action="store", \
-           help="exclude everything after ENDDATE (in YYYY-MM-DD). \
-                 If not specified, defaults to today.")
-parser.add_argument \
-          ("--exclude", dest='patterns', action="store", \
-           help="comma separated PATTERN to ignore module name whose \
-                 substring matches any of the PATTERNS.")
-
-args = parser.parse_args()
-
-enddate = time.strftime('%Y-%m-%d')
-if args.enddate is not None:
-  enddate = args.enddate
-
-startdate = (datetime.strptime(enddate, "%Y-%m-%d") - timedelta(90)) \
-             .strftime('%Y-%m-%d');
-if args.startdate is not None:
-  startdate = args.startdate
-  
-excludePatterns = None
-if args.patterns is not None:
-  excludePatterns = [x.strip() for x in args.patterns.split(',')]
-  
-config = configparser.ConfigParser()     
-config.read(ConfigFn)
-
-conn = MySQLdb.connect \
-         (config.get("MYSQL","HOST"), \
-          config.get("MYSQL","USER"), \
-          base64.b64decode(config.get("MYSQL","PASSWD")), \
-          config.get("MYSQL","DB"))
-cursor = conn.cursor()
-
 equiv_patternA = [
     [ r'^1690'                          , '1690*.x*'                       ],
     [ r'^2d_needle'                     , '2D_needle*'                     ],
@@ -309,7 +224,7 @@ equiv_patternA = [
     [ r'^sssp_eval-'                    , 'sssp_eval*'                     ],
     [ r'^toascii.*ksh'                  , 'toascii*'                       ],
     [ r'^v14'                           , 'v14*'                           ],
-    [ r'^validation[a-z0-9]'            , 'validation*'                    ],
+    [ r'^validation[a-z0-9]'            , 'validation@'                    ],
     [ r'^varOmega'                      , 'varOmega*'                      ],
     [ r'^vat_2d'                        , 'vat_2d*'                        ],
     [ r'^vat_3d'                        , 'vat_3d*'                        ],
@@ -323,36 +238,5 @@ equiv_patternA = [
     [ r'^ymir_'                         , 'ymir*'                          ],
     ]
 
-sA = []
-sA.append("SELECT CASE ")
-for entry in equiv_patternA:
-  left  = entry[0].lower()
-  right = entry[1]
-  s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
-  sA.append(s)
-
-sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
-sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
-sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
-sA.append("   FROM xalt_run ")
-sA.append("  WHERE syshost = '%s' ")
-sA.append("    AND date >= '%s 00:00:00' AND date <= '%s 23:59:59' ")
-sA.append("  GROUP BY execname ORDER BY totalcput DESC")
-
-query = "".join(sA) % (args.syshost, startdate, enddate)
-
-cursor.execute(query)
-results = cursor.fetchall()
-
-print ("")
-print ("====================================================================")
-print ("%10s %10s %10s %s" % ("CPU Time.", "# Jobs", "# Users","Exec"))
-print ("====================================================================")
-
-sum = 0.0
-for execname, totalcput, n_jobs, n_users in results:
-  sum += totalcput
-  print ("%10s %10s %10s %s" % (totalcput, n_jobs, n_users,execname))
-
-print("(M) SUs", sum/1.0e6)
-
+def name_mapping():
+  return equiv_patternA
