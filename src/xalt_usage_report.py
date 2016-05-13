@@ -200,7 +200,7 @@ class Libraries:
         libT[module] = entryT
     
     groupT = {}
-    for module in libT
+    for module in libT:
       sn = shortName(module)
       if (not sn in groupT):
         groupT[sn]           = libT[module]
