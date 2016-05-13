@@ -128,7 +128,9 @@ class XALTdb(object):
       self.__readFromUser()
 
     try:
-      self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8", connect_timeout=120)
+      self.__conn = MySQLdb.connect \
+                      (self.__host,self.__user,self.__passwd, \
+                       use_unicode=True, charset="utf8", connect_timeout=120)
       if (databaseName):
         cursor = self.__conn.cursor()
         
@@ -142,7 +144,7 @@ class XALTdb(object):
         cursor.execute("SET character_set_connection=utf8;") #same as above
 
     except MySQLdb.Error as e:
-      print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
+      print ("XALTdb): Error %d: %s" % (e.args[0], e.args[1]))
       raise
     return self.__conn
 
@@ -223,9 +225,9 @@ class XALTdb(object):
       conn.close()
 
     except Exception as e:
-      print(XALT_Stack.contents(), file=sys.stderr)
-      print(query, file=sys.stderr)
-      print ("link_to_db(): Error %s" % e, file=sys.stderr)
+      print(XALT_Stack.contents())
+      print(query)
+      print ("link_to_db(): Error %s" % e)
       sys.exit (1)
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
