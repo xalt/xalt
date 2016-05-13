@@ -3,7 +3,7 @@
 # Total CPU time used, number of jobs, and number of users of the exec are   #
 # shown. Executable with "known" names are shown as all CAPS and grouped     #
 # together even if they have different actual exec name / version, other     #
-# executables are only grouped by their name.                                #            #
+# executables are only grouped by their name.                                # 
 #                                                                            #
 # Examples:                                                                  #
 #                                                                            #
