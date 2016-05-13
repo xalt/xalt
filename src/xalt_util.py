@@ -91,16 +91,27 @@ def extract_compiler():
   except ImportError as e:
     ignore_programs = ['pstree', 'ld', 'collect2', 'python', 'sh']
     pstree_bin = "@path_to_pstree@"
-    pstree = capture("%s -l -s %d" % (pstree_bin, os.getpid())).strip()
+    pstree = capture("%s -l -sp %d" % (pstree_bin, os.getpid())).strip()
     if (pstree == "unknown"):
       return result
 
     a = pstree.split("---")
 
     for cmd in reversed(a):
+      idx = cmd.find('(')
+      pid = cmd [ idx+1 : cmd.find(')') ]
+      cmd = cmd [ : idx ]
       if cmd not in ignore_programs:
         result = cmd
         path   = 'unknown'
+        proc_path = "/proc/%s/exe" % pid
+        if os.path.exists(proc_path):
+          path = os.path.realpath(proc_path)
+        try:
+          cmdline = capture("ps -o cmd -p %s" % pid).strip().split("\n")[1]
+        except:
+          cmdline = 'unknown'
+          pass
         break
 
   return result, path, cmdline
