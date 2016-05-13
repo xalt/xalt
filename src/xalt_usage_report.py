@@ -372,11 +372,18 @@ def main():
   if (args.startD is not None):
     startdate = args.startD
 
+  print("--------------------------------------------")
+  print("XALT REPORT from",startdate,"to",enddate)
+  print("--------------------------------------------")
+  print("")
+  print("")
+  
+
+
   ############################################################
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, startdate, enddate)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
-  print("----------------------")
   print("Overall MPI Job Counts")
   print("----------------------")
   print("")
