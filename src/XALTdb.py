@@ -144,7 +144,7 @@ class XALTdb(object):
         cursor.execute("SET character_set_connection=utf8;") #same as above
 
     except MySQLdb.Error as e:
-      print ("XALTdb): Error %d: %s" % (e.args[0], e.args[1]))
+      print ("XALTdb: Error %d: %s" % (e.args[0], e.args[1]))
       raise
     return self.__conn
 
