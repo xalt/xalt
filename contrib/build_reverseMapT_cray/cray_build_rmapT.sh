@@ -35,7 +35,7 @@
   echo "RmapDir=${RmapDir}"
 
   PrgEnvA=("PrgEnv-cray" "PrgEnv-gnu" "PrgEnv-intel" "PrgEnv-pgi")
-  GCC_Vers=$(module avail gcc | grep gcc | awk '{OFS=RS;$1=$1}1' \
+  GCC_Vers=$(module avail gcc 2>&1 | grep gcc | awk '{OFS=RS;$1=$1}1' \
                | sort | sed 's/(default)//')
 
   #########################################################################
