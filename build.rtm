@@ -89,7 +89,7 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    CONF_OPTS="--with-etcDir=/home/00515/mclay/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
+    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
     ;;
 
   ls5 )
