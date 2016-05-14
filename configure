@@ -2830,6 +2830,50 @@ else
   HAVE_32BIT=no
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler can build and run with -std=c++11" >&5
+$as_echo_n "checking whether C compiler can build and run with -std=c++11... " >&6; }
+if ${ax_cv_check_cflags___std_cpp11+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -std=c++11"
+  if test "$cross_compiling" = yes; then :
+  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot run test program while cross compiling
+See \`config.log' for more details" "$LINENO" 5; }
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  ax_cv_check_cflags___std_cpp11=yes
+else
+  ax_cv_check_cflags___std_cpp11=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___std_cpp11" >&5
+$as_echo "$ax_cv_check_cflags___std_cpp11" >&6; }
+if test "x$ax_cv_check_cflags___std_cpp11" = xyes; then :
+  HAVE_CXX11=yes
+else
+  HAVE_CXX11=no
+fi
+
 
 
 
@@ -3706,8 +3750,6 @@ fi
 
 
 
-
-
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking python module: psutil" >&5
 $as_echo_n "checking python module: psutil... " >&6; }
 	python -c "import psutil" > /dev/null 2>&1
@@ -3761,6 +3803,15 @@ else
   xaltV="@git@"
 fi
 XALT_GIT_VERSION=$xaltV
+
+if test "$HAVE_CXX11" = no; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without g++ supporting -std=c++11"
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
 
 if test "$XALT_CONFIG_PY" = no; then
    echo

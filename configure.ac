@@ -83,6 +83,7 @@ SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 AC_SUBST(HAVE_32BIT)
 
 AX_FULL_CHECK_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
+AX_FULL_CHECK_COMPILE_FLAG([-std=c++11],[HAVE_CXX11=yes],[HAVE_CXX11=no])
 
 AC_SUBST(PATH_TO_AS)
 AC_SUBST(PATH_TO_BASENAME)
@@ -130,8 +131,6 @@ AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
 AC_PATH_PROG(MYSQL_CONFIG,[mysql_config], UNKNOWN)
 
-
-
 AC_SUBST(HAVE_PYMOD_PSUTIL)
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([psutil])
@@ -148,6 +147,15 @@ else
   xaltV="@git@"
 fi
 XALT_GIT_VERSION=$xaltV
+
+if test "$HAVE_CXX11" = no; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without g++ supporting -std=c++11"
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
 
 if test "$XALT_CONFIG_PY" = no; then
    echo
