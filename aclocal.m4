@@ -37,7 +37,7 @@ AC_DEFUN([C_FLAG_CHECK],
 
 
 
-AC_DEFUN([AX_FULL_CHECK_COMPILE_FLAG],
+AC_DEFUN([AX_TEST_COMPILE_FLAG],
 [AC_PREREQ(2.64)dnl for _AC_LANG_PREFIX and AS_VAR_IF
 AS_VAR_PUSHDEF([CACHEVAR],[ax_cv_check_[]_AC_LANG_ABBREV[]flags_$4_$1])dnl
 AC_CACHE_CHECK([whether _AC_LANG compiler can build and run with $1], CACHEVAR, [
