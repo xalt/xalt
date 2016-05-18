@@ -6,7 +6,7 @@
 
 // XALT_LOGGING V:2 kind:kind key:key syshost:syshost nb:nb idx:idx value:value
 
-bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
+bool parseSyslog(const char* buf, std::string& clusterName, SyslogRecord& syslogT, RecordT& recordT)
 {
   char *start = strstr((char *) buf, " V:2 ");
   if (start == NULL)
@@ -55,6 +55,9 @@ bool parseSyslog(const char* buf, SyslogRecord& syslogT, RecordT& recordT)
       start = end;
     }
       
+  if (clusterName != ".*" && clusterName != syshost)
+    return false;
+
   bool                    record_stored = false;
   RecordT::const_iterator got           = recordT.find(key);
   if (got == recordT.end())
