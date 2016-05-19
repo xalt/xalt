@@ -49,7 +49,6 @@ test_descript = {
      displayThis  "sleep 0.2 guarantee that previous command finishes writing out to syslog.log"
      sleep 0.2
 
-     export XALT_USERS="$USER;$outputDir"
      displayThis  "xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
 

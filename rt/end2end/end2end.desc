@@ -73,9 +73,11 @@ test_descript = {
      export XALT_EXECUTABLE_TRACKING=yes
      ./helloñññ
 
+     sleep 0.2
      displayThis "xalt_file_to_db"
      unset LD_PRELOAD
      export XALT_USERS="$USER;$outputDir"
+
      xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
      check_entries_db.py --dbname $DBNAME --results result.csv --runs 5 --functions 4 --links 3

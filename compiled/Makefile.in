@@ -10,7 +10,7 @@ endif
 
 LIB_OPTIONS       := -fPIC -shared
 
-OPTLVL      := -g -02
+OPTLVL      := -g -O2 -Wno-unused-result
 CF_INIT     := -I$(THIS_DIR) -I. -fPIC 
 CXXFLAGS    := $(OPTLVL) -std=c++11 -Ibuild_h $(MYSQL_CFLAGS) 
 CFLAGS      := $(OPTLVL) -Ibuild_h -I$(DESTDIR)$(LIBEXEC)/libuuid_64/include 

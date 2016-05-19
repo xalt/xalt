@@ -747,7 +747,6 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
   if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
   
-
   // Use this translate routine to extract values from the environment to provide standard value in the xalt_run table in DB;
   translate(envT, userT);
   
