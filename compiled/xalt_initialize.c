@@ -63,6 +63,7 @@ static long   my_rank	   = 0L;
 static long   my_size	   = 1L;
 static int    xalt_tracing = 0;
 static int    reject_flag  = 0;
+static int    background   = 1;
 static char   path[PATH_MAX];
 static char * usr_cmdline;
 static const char * syshost;
@@ -206,13 +207,19 @@ void myinit(int argc, char **argv)
       return;
     }
 
+  v = getenv("XALT_DISABLE_BACKGROUND");
+  if (v && strcmp(v,"yes") == 0)
+    background = 0;
+
+
   uuid_generate(uuid);
   uuid_unparse_lower(uuid,uuid_str);
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' &",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline,
+           (background ? "&"," "));
   
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
   system(cmdline);
@@ -262,8 +269,9 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' &",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline,
+           (background ? "&"," "));
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 

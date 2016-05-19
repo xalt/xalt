@@ -188,10 +188,19 @@ fi
 ###################################################################
 # start a subshell in the background for the intentional
 # failed link for function tracking
-( 
+function_tracking()
+{
    STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
    $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
-)&
+}
+
+if [ "$XALT_DISABLE_BACKGROUND" = yes ]; then
+    function_tracking
+else
+    (
+       function_tracking
+    )&
+fi
 
 tracing_msg $MY_CMD "${argA[@]}"
 
@@ -218,10 +227,18 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # start a subshell in the background for reporting the link results
-(
+generate_linkdata()
+{
   LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+  $RM -rf $WRKDIR  
+}
 
-  $RM -rf $WRKDIR
-)&
+if [ "$XALT_DISABLE_BACKGROUND" = yes ]; then
+    generate_linkdata
+else
+    (
+       generate_linkdata
+    )&
+fi
 
 exit $status
