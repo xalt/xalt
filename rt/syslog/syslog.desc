@@ -33,6 +33,7 @@ test_descript = {
 
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=syslog
+     export XALT_DISABLE_BACKGROUNDING=yes
      
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
@@ -45,9 +46,6 @@ test_descript = {
      mpicc -o hello.x $(projectDir)/rt/mpi_hello_world.c
      displayThis  "mpirun -n 1 ./hello"
      mpirun -n 1 ./hello.x
-
-     displayThis  "sleep 0.2 guarantee that previous command finishes writing out to syslog.log"
-     sleep 0.2
 
      displayThis  "xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
