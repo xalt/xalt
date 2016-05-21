@@ -30,6 +30,7 @@ test_descript = {
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
      export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_DISABLE_BACKGROUNDING=yes
 
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
@@ -49,7 +50,7 @@ test_descript = {
      mpirun -n 1 Ðì®/helloñ
      
      displayThis "Setting LD_PRELOAD, ./hello"
-     export LD_LIBRARY_PATH=$outputDir/XALT/libexec/lib64:$outputDir/XALT/libexec/lib:$LD_LIBRARY_PATH
+     export LD_LIBRARY_PATH=$outputDir/XALT/lib64:$outputDir/XALT/lib:$LD_LIBRARY_PATH
      export LD_PRELOAD=libxalt_init.so
      ./hello
      
@@ -73,7 +74,6 @@ test_descript = {
      export XALT_EXECUTABLE_TRACKING=yes
      ./helloñññ
 
-     sleep 0.2
      displayThis "xalt_file_to_db"
      unset LD_PRELOAD
      export XALT_USERS="$USER;$outputDir"

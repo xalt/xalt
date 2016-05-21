@@ -194,7 +194,7 @@ function_tracking()
    $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 }
 
-if [ "$XALT_DISABLE_BACKGROUND" = yes ]; then
+if [ "$XALT_DISABLE_BACKGROUNDING" = yes ]; then
     function_tracking
 else
     (
@@ -233,7 +233,7 @@ generate_linkdata()
   $RM -rf $WRKDIR  
 }
 
-if [ "$XALT_DISABLE_BACKGROUND" = yes ]; then
+if [ "$XALT_DISABLE_BACKGROUNDING" = yes ]; then
     generate_linkdata
 else
     (

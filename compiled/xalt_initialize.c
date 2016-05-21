@@ -207,7 +207,7 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  v = getenv("XALT_DISABLE_BACKGROUND");
+  v = getenv("XALT_DISABLE_BACKGROUNDING");
   if (v && strcmp(v,"yes") == 0)
     background = 0;
 
@@ -219,7 +219,7 @@ void myinit(int argc, char **argv)
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline,
-           (background ? "&"," "));
+           (background ? "&":" "));
   
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
   system(cmdline);
@@ -271,7 +271,7 @@ void myfini()
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline,
-           (background ? "&"," "));
+           (background ? "&":" "));
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
