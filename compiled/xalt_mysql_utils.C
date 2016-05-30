@@ -252,18 +252,17 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
   param_ii[1].is_unsigned   = 1;
 
   // DATE PARAM_II[2] date
-  MYSQL_TIME my_datetime;
-  struct tm* curr_time      = localtime(&epoch);
-  my_datetime.year          = curr_time->tm_year + 1900;
-  my_datetime.month         = curr_time->tm_mon  + 1;
-  my_datetime.day           = curr_time->tm_mday;
-  my_datetime.hour          = 0;
-  my_datetime.minute        = 0;
-  my_datetime.second        = 0;
-  my_datetime.second_part   = 0;
+  MYSQL_TIME my_date;
+  curr_time                 = localtime(&epoch);
+  my_date.year              = curr_time->tm_year + 1900;
+  my_date.month             = curr_time->tm_mon  + 1;
+  my_date.day               = curr_time->tm_mday;
+  my_date.hour              = 0;
+  my_date.minute            = 0;
+  my_date.second            = 0;
+  my_date.second_part       = 0;
   param_ii[2].buffer_type   = MYSQL_TYPE_DATE;
-  param_ii[2].buffer        = &my_datetime;
-
+  param_ii[2].buffer        = &my_date;
 
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {

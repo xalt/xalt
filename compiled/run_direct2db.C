@@ -443,7 +443,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_object");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_env_name");
       exit(1);
     }
 
@@ -459,7 +459,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_env_name");
       exit(1);
     }
 
@@ -469,7 +469,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   // Clean up stmt_i
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_run");
+      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_env_name");
       exit(1);
     }
   
@@ -564,14 +564,7 @@ void insert_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
   param[0].buffer      = (void *) &run_id;
   param[0].is_unsigned = 1;
 
-  // STRING PARAM[1] jsonStr
-  std::string::size_type   len_jsonStr = jsonStr.size();
-  param[1].buffer_type   = MYSQL_TYPE_STRING;
-  param[1].buffer        = (void *) jsonStr.c_str();
-  param[1].buffer_length = jsonStr.capacity();
-  param[1].length        = &len_jsonStr;
-
-  // TIMESTAMP PARAM[2] timestamp
+  // DATE PARAM[1] date
   MYSQL_TIME my_datetime;
   struct tm* curr_time    = localtime(&epoch);
   my_datetime.year        = curr_time->tm_year + 1900;
@@ -581,8 +574,15 @@ void insert_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
   my_datetime.minute      = 0;
   my_datetime.second      = 0;
   my_datetime.second_part = 0;
-  param[2].buffer_type    = MYSQL_TYPE_DATE;
-  param[2].buffer         = &my_datetime;
+  param[1].buffer_type    = MYSQL_TYPE_DATE;
+  param[1].buffer         = &my_datetime;
+
+  // STRING PARAM[1] jsonStr
+  std::string::size_type   len_jsonStr = jsonStr.size();
+  param[2].buffer_type   = MYSQL_TYPE_STRING;
+  param[2].buffer        = (void *) jsonStr.c_str();
+  param[2].buffer_length = jsonStr.capacity();
+  param[2].length        = &len_jsonStr;
 
   if (mysql_stmt_bind_param(stmt, param))
     {
@@ -784,7 +784,7 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
       insert_xalt_run_record(conn, rmapT, userT, recordT, usr_cmdline, hash_id, &run_id);
       
       // Store objects
-      insert_objects(conn, "join_run_object", run_id, startTime, lddA, userT["syshost"], rmapT);
+      insert_objects(conn, "join_run_object", startTime, run_id, lddA, userT["syshost"], rmapT);
 
       // Store environment
       insert_envT(         conn, run_id, startTime, envT);
