@@ -229,7 +229,7 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
     }
 }
 
-void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
+void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
 {
   //************************************************************
   // build SELECT obj_id INTO xalt_object stmt
@@ -316,10 +316,10 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
     }
   
   //************************************************************
-  // "INSERT into join_link_function VALUES (NULL, ?, ?)"
+  // "INSERT into join_link_function VALUES (NULL, ?, ?, ?)"
   //************************************************************
 
-  const char* stmt_sql_ii = "INSERT INTO join_link_function VALUES(NULL, ?, ?) "
+  const char* stmt_sql_ii = "INSERT INTO join_link_function VALUES(NULL, ?, ?, ?) "
                             "ON DUPLICATE KEY UPDATE func_id = ?, link_id = ?";
 
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
@@ -335,7 +335,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
       exit(1);
     }
 
-  MYSQL_BIND param_ii[4];
+  MYSQL_BIND param_ii[5];
   memset((void *) param_ii,  0, sizeof(param_ii));
 
   // UINT PARAM_II[0] func_id
@@ -348,15 +348,28 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   param_ii[1].buffer        = (void *) &link_id;
   param_ii[1].is_unsigned   = 1;
 
-  // UINT PARAM_II[2] func_id
-  param_ii[2].buffer_type   = MYSQL_TYPE_LONG;
-  param_ii[2].buffer        = (void *) &func_id;
-  param_ii[2].is_unsigned   = 1;
+  // DATE PARAM_II[2] date
+  MYSQL_TIME my_datetime;
+  struct tm* curr_time      = localtime(&epoch);
+  my_datetime.year          = curr_time->tm_year + 1900;
+  my_datetime.month         = curr_time->tm_mon  + 1;
+  my_datetime.day           = curr_time->tm_mday;
+  my_datetime.hour          = 0;
+  my_datetime.minute        = 0;
+  my_datetime.second        = 0;
+  my_datetime.second_part   = 0;
+  param_ii[2].buffer_type   = MYSQL_TYPE_DATE;
+  param_ii[2].buffer        = &my_datetime;
 
-  // UINT PARAM_II[3] link_id
+  // UINT PARAM_II[3] func_id
   param_ii[3].buffer_type   = MYSQL_TYPE_LONG;
-  param_ii[3].buffer        = (void *) &link_id;
+  param_ii[3].buffer        = (void *) &func_id;
   param_ii[3].is_unsigned   = 1;
+
+  // UINT PARAM_II[4] link_id
+  param_ii[4].buffer_type   = MYSQL_TYPE_LONG;
+  param_ii[4].buffer        = (void *) &link_id;
+  param_ii[4].is_unsigned   = 1;
 
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
@@ -444,9 +457,10 @@ void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std:
     return;
   
   uint link_id;
+  time_t build_epoch = (time_t) strtod(resultT["build_epoch"].c_str(), NULL);
   insert_xalt_link(conn, resultT, rmapT, linklineA, &link_id);
-  insert_objects(conn, "join_link_object", link_id, libA, resultT["build_syshost"], rmapT);
-  insert_functions(conn, funcSet, link_id);
+  insert_objects(conn, "join_link_object", build_epoch, link_id, libA, resultT["build_syshost"], rmapT);
+  insert_functions(conn, build_epoch, funcSet, link_id);
   mysql_close(conn);
 }
 
