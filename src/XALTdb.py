@@ -302,7 +302,7 @@ class XALTdb(object):
       runTime     = "%.2f" % float(runT['userT']['run_time'])
       endTime     = "%.2f" % float(runT['userT']['end_time'])
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(runT['userT']['start_time'])))
-      dataStr     = time.strftime("%Y-%m-%d", time.localtime(float(runT['userT']['start_time'])))
+      dateStr     = time.strftime("%Y-%m-%d", time.localtime(float(runT['userT']['start_time'])))
       uuid        = runT['xaltLinkT'].get('Build.UUID',"NULL")
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
@@ -348,8 +348,8 @@ class XALTdb(object):
 
       envT    = runT['envT']
       jsonStr = json.dumps(envT)
-      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, COMPRESS(%s))"
-      cursor.execute(query, [run_id, jsonStr])
+      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
+      cursor.execute(query, [run_id, dateStr, jsonStr])
       
       # loop over env. vars.
       for key in envT:
