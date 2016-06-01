@@ -86,22 +86,28 @@ int main(int argc, char* argv[])
           //remove trailing newline from buf.
           buf[strlen(buf)-1] = '\0';
             
+          HERE;
           bool done = parseSyslog(buf, options.syshost(), syslogT, recordT);
           if (! done)
             continue;
 
+          HERE;
           std::string jsonStr;
           syslogT.value(jsonStr);
+          HERE;
           if (syslogT.kind() == "link")
             {
+              HERE;
               link_json_to_db(syslogT.key(), options.confFn(), rmapT, jsonStr);
               lnkCnt++;
             }
           else if (syslogT.kind() == "run")
             {
+              HERE;
               run_json_to_db(syslogT.key(), options.confFn(), rmapT, jsonStr);
               runCnt++;
             }
+          HERE;
           pbar.update(count++);
         }
       fclose(fp);
