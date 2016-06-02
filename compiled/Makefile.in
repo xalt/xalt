@@ -214,7 +214,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
 	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -Wl,-rpath,$(U64)/lib -L$(U64)/lib -luuid 
 
 $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc $(CFLAGS) $(CF_INIT) -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
+	gcc $(CFLAGS) $(CF_INIT) -DFULL_TRACING -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
 
 $(DESTDIR)$(LIB64)/libxalt_init_dbg.so: $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o \
                                         $(DESTDIR)$(LIB64)/xalt_syshost.o        \
