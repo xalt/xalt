@@ -220,7 +220,7 @@ void myinit(int argc, char **argv)
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline,
            (background ? "&":" "));
   
-  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
+  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
   system(cmdline);
   free(cmdline);
 }
