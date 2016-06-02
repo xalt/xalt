@@ -102,7 +102,6 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
-  
   unsetenv("LD_PRELOAD");
 
   /* Stop tracking if XALT is turned off */
@@ -354,14 +353,14 @@ int reject(const char *path, const char * hostname)
       iret = regcomp(&regex, ignorePathA[i], 0);
       if (iret)
 	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
+	  fprintf(stderr,"Could not compile regex: \"%s\n", ignorePathA[i]);
 	  exit(1);
 	}
 
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
 	{
-	  FULL_DEBUG1(stderr,"    path: \"%s\" is rejected because of the ignore list\n",path);
+	  FULL_DEBUG2(stderr,"    path: \"%s\" is rejected because of the ignore list: %s\n", path, ignorePathA[i]);
 	  return 1;
 	}
       else if (iret != REG_NOMATCH)
