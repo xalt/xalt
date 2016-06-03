@@ -133,7 +133,6 @@ AC_PATH_PROG(MYSQL_CONFIG,[mysql_config], UNKNOWN)
 
 AC_SUBST(HAVE_PYMOD_PSUTIL)
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
-AC_PYTHON_MODULE([psutil])
 AC_PYTHON_MODULE([MySQLdb])
 
 AC_SUBST(VERSION)
@@ -195,14 +194,6 @@ if test "$HAVE_PYMOD_MYSQLDB" = no; then
 fi
 
 
-if test "$HAVE_PYMOD_PSUTIL" = no; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without the python module: psutil"
-   echo "To install it do: pip install psutil"
-   echo "======================================================="
-   exit 1
-fi
 BUILD_PSTREE=no
 
 if test "$SYSHOST_CONFIG" = no; then
