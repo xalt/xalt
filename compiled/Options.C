@@ -53,7 +53,7 @@ Options::Options(int argc, char** argv)
         {"exec",    required_argument, NULL, 'x'},
         {"ntasks",  required_argument, NULL, 'n'},
         {"uuid",    required_argument, NULL, 'u'},
-        {"confFn",  optional_argument, NULL, 'c'},
+        {"confFn",  required_argument, NULL, 'c'},
         {0,         0,                 0,     0 }
       };
       
