@@ -74,7 +74,7 @@ def main():
     cursor = conn.cursor()
 
     # If MySQL version < 4.1, comment out the line below
-    cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+    cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
     # If the database does not exist, create it, otherwise, switch to the database.
     cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" % xalt.db())
     cursor.execute("USE "+xalt.db())
@@ -131,6 +131,7 @@ def main():
           `join_id`       int(11) unsigned   NOT NULL auto_increment,
           `obj_id`        int(11) unsigned   NOT NULL,
           `link_id`       int(11) unsigned   NOT NULL,
+          `date`          DATE               NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`link_id`) REFERENCES `xalt_link`(`link_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
@@ -184,6 +185,7 @@ def main():
           `join_id`       int(11)      unsigned  NOT NULL auto_increment,
           `obj_id`        int(11)      unsigned  NOT NULL,
           `run_id`        int(11)      unsigned  NOT NULL,
+          `date`          DATE                   NOT NULL,
 
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`),
@@ -211,6 +213,7 @@ def main():
           `join_id`       bigint(20) unsigned   NOT NULL auto_increment,
           `env_id`        int(11)    unsigned   NOT NULL,
           `run_id`        int(11)    unsigned   NOT NULL,
+          `date`          DATE                  NOT NULL,
           `env_value`     blob                  NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
@@ -263,6 +266,7 @@ def main():
           `join_id`       int(11)       unsigned NOT NULL auto_increment,
           `func_id`       int(11)       unsigned NOT NULL,
           `link_id`       int(11)       unsigned NOT NULL,
+          `date`          DATE                   NOT NULL,
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`func_id`)  REFERENCES `xalt_function`(`func_id`),
           FOREIGN KEY (`link_id`)  REFERENCES `xalt_link`(`link_id`) 
@@ -275,6 +279,7 @@ def main():
         CREATE TABLE IF NOT EXISTS `xalt_total_env` (
           `envT_id`       bigint(20) unsigned NOT NULL auto_increment,
           `run_id`        int(11)    unsigned NOT NULL,
+          `date`          DATE                NOT NULL,
           `env_blob`      blob                NOT NULL,
           PRIMARY KEY (`envT_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`)

@@ -63,6 +63,7 @@ static long   my_rank	   = 0L;
 static long   my_size	   = 1L;
 static int    xalt_tracing = 0;
 static int    reject_flag  = 0;
+static int    background   = 1;
 static char   path[PATH_MAX];
 static char * usr_cmdline;
 static const char * syshost;
@@ -101,7 +102,6 @@ void myinit(int argc, char **argv)
 
   uuid_t uuid;
 
-  
   unsetenv("LD_PRELOAD");
 
   /* Stop tracking if XALT is turned off */
@@ -206,15 +206,21 @@ void myinit(int argc, char **argv)
       return;
     }
 
+  v = getenv("XALT_DISABLE_BACKGROUNDING");
+  if (v && strcmp(v,"yes") == 0)
+    background = 0;
+
+
   uuid_generate(uuid);
   uuid_unparse_lower(uuid,uuid_str);
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline,
+           (background ? "&":" "));
   
-  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n",cmdline);
+  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
   system(cmdline);
   free(cmdline);
 }
@@ -262,8 +268,9 @@ void myfini()
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s'",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline,
+           (background ? "&":" "));
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
@@ -346,14 +353,14 @@ int reject(const char *path, const char * hostname)
       iret = regcomp(&regex, ignorePathA[i], 0);
       if (iret)
 	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
+	  fprintf(stderr,"Could not compile regex: \"%s\n", ignorePathA[i]);
 	  exit(1);
 	}
 
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
 	{
-	  FULL_DEBUG1(stderr,"    path: \"%s\" is rejected because of the ignore list\n",path);
+	  FULL_DEBUG2(stderr,"    path: \"%s\" is rejected because of the ignore list: %s\n", path, ignorePathA[i]);
 	  return 1;
 	}
       else if (iret != REG_NOMATCH)

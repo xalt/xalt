@@ -89,7 +89,7 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.tacc.txt --with-hostnameList=./contrib/TACC/config/hostname.tacc.txt --with-site=TACC"
+    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog"
     ;;
 
   ls5 )

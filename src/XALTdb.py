@@ -124,7 +124,7 @@ class XALTdb(object):
           cursor = self.__conn.cursor()
           
           # If MySQL version < 4.1, comment out the line below
-          cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+          cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
           cursor.execute("USE "+xalt.db())
 
           self.__conn.set_character_set('utf8')
@@ -177,8 +177,8 @@ class XALTdb(object):
         return
 
       build_epoch = float(resultT['build_epoch'])
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                  time.localtime(float(resultT['build_epoch'])))
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(resultT['build_epoch'])))
+      dateStr     = time.strftime("%Y-%m-%d",          time.localtime(float(resultT['build_epoch'])))
 
       #paranoid conversion:  Protect DB from bad input:
       exit_code   = convertToTinyInt(resultT['exit_code'])
@@ -201,7 +201,7 @@ class XALTdb(object):
       link_id = cursor.lastrowid
 
       XALT_Stack.push("load_xalt_objects():"+resultT['exec_path'])
-      self.load_objects(conn, linkA, reverseMapT, resultT['build_syshost'],
+      self.load_objects(conn, linkA, reverseMapT, resultT['build_syshost'], dateStr,
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
@@ -217,9 +217,9 @@ class XALTdb(object):
           cursor.execute(query, [func_name])
           func_id = cursor.lastrowid
       
-        query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
+        query = "INSERT INTO join_link_function VALUES(NULL, %s, %s, %s) \
                      ON DUPLICATE KEY UPDATE func_id = %s, link_id = %s"
-        cursor.execute(query, (func_id, link_id, func_id, link_id))
+        cursor.execute(query, (func_id, link_id, dateStr, func_id, link_id))
         
       query = "COMMIT"
       conn.query(query)
@@ -232,7 +232,7 @@ class XALTdb(object):
       print ("link_to_db(): Error ",e, file=sys.stderr)
       sys.exit (1)
 
-  def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
+  def load_objects(self, conn, objA, reverseMapT, syshost, dateStr, tableName, index):
     """
     Stores the objects that make an executable into the XALT DB.
     @param conn:         The db connection object
@@ -269,8 +269,8 @@ class XALTdb(object):
           #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
 
         # Now link libraries to xalt_link record:
-        query = "INSERT into " + tableName + " VALUES (NULL,%s,%s) "  
-        cursor.execute(query,(obj_id, index))
+        query = "INSERT into " + tableName + " VALUES (NULL,%s,%s,%s) "
+        cursor.execute(query,(obj_id, index, dateStr))
   
     except Exception as e:
       print(XALT_Stack.contents())
@@ -301,8 +301,8 @@ class XALTdb(object):
 
       runTime     = "%.2f" % float(runT['userT']['run_time'])
       endTime     = "%.2f" % float(runT['userT']['end_time'])
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                  time.localtime(float(runT['userT']['start_time'])))
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(runT['userT']['start_time'])))
+      dateStr     = time.strftime("%Y-%m-%d", time.localtime(float(runT['userT']['start_time'])))
       uuid        = runT['xaltLinkT'].get('Build.UUID',"NULL")
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
@@ -343,13 +343,13 @@ class XALTdb(object):
         run_id   = cursor.lastrowid
 
 
-      self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
+      self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
                         "join_run_object", run_id)
 
       envT    = runT['envT']
       jsonStr = json.dumps(envT)
-      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, COMPRESS(%s))"
-      cursor.execute(query, [run_id, jsonStr])
+      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
+      cursor.execute(query, [run_id, dateStr, jsonStr])
       
       # loop over env. vars.
       for key in envT:
@@ -368,8 +368,8 @@ class XALTdb(object):
           env_id = cursor.lastrowid
           found  = False
         
-        query = "INSERT INTO join_run_env VALUES (NULL, %s, %s, %s)"
-        cursor.execute(query,(env_id, run_id, value))
+        query = "INSERT INTO join_run_env VALUES (NULL, %s, %s, %s, %s)"
+        cursor.execute(query,(env_id, run_id, dateStr, value))
           
       v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)

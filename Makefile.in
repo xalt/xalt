@@ -70,12 +70,17 @@ GIT_PROG          := @PATH_TO_GIT@
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "@git@"; fi)
 VDATE		  := $(shell date +'%F %H:%M')
 
+LIB               := $(prefix)/lib
+LIB64             := $(prefix)/lib64
 LIBEXEC           := $(prefix)/libexec
 SITE              := $(prefix)/site
 BIN               := $(prefix)/bin
 SBIN              := $(prefix)/sbin
-DIRLIST           := $(DESTDIR)$(LIBEXEC)/lib64 $(DESTDIR)$(LIBEXEC)/lib $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
-                     $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
+U32               := $(prefix)/libuuid32
+U64               := $(prefix)/libuuid64
+DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
+                     $(DESTDIR)$(SITE)    $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN)             \
+                     $(DESTDIR)$(ETC_DIR) $(DESTDIR)$(U32) $(DESTDIR)$(U64) 
 
 #BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
 #                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
@@ -121,30 +126,24 @@ install:  $(DIRLIST) Build_libuuid_64 Build_libuuid_32_$(HAVE_32BIT) Inst_site I
           build_compiled 
 
 Build_libuuid_64:
-	rm -rf $(CURDIR)/build_uuid_64
-	mkdir  $(CURDIR)/build_uuid_64
-	cd     $(CURDIR)/build_uuid_64;                                                   \
-        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_64;    \
+	rm -rf $(CURDIR)/uuid_64
+	mkdir  $(CURDIR)/uuid_64
+	cd     $(CURDIR)/uuid_64;                                                         \
+        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(U64);                   \
         make; make install;                                                               
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib64 ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib64;          \
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_64/lib;                                          \
-        [ -f libuuid.a ] && tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib64; tar xf -)
 
 Build_libuuid_32_yes:
-	rm -rf $(CURDIR)/build_uuid_32
-	mkdir  $(CURDIR)/build_uuid_32
-	cd     $(CURDIR)/build_uuid_32;                                                               \
-        CC="gcc -m32" $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_32;  \
+	rm -rf $(CURDIR)/uuid_32
+	mkdir  $(CURDIR)/uuid_32
+	cd     $(CURDIR)/uuid_32;                                                         \
+        CC="gcc -m32" $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(U32);     \
         make; make install;
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;                          \
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;                                                      \
-        [ -f libuuid.a ] && tar cf - . | ( cd $(DESTDIR)/$(LIBEXEC)/lib; tar xf -)
 
 Build_libuuid_32_no:	
 
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) U32=$(U32) U64=$(U64) LIB=$(LIB) LIB64=$(LIB64) all
 
 echo:
 	@echo srcdir: $(srcdir)

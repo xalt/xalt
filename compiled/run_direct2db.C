@@ -443,7 +443,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_object");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_env_name");
       exit(1);
     }
 
@@ -459,7 +459,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_env_name");
       exit(1);
     }
 
@@ -469,7 +469,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   // Clean up stmt_i
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_run");
+      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_env_name");
       exit(1);
     }
   
@@ -535,14 +535,14 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   return env_id;
 }
 
-void insert_envT(MYSQL* conn, uint run_id, Table& envT)
+void insert_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
 {
   Json json;
   json.add(NULL,envT);
   json.fini();
   std::string jsonStr = json.result();
 
-  const char* stmt_sql = "INSERT INTO xalt_total_env VALUES (NULL, ?,COMPRESS(?))";
+  const char* stmt_sql = "INSERT INTO xalt_total_env VALUES (NULL, ?, ?, COMPRESS(?))";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
@@ -556,7 +556,7 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
       exit(1);
     }
   
-  MYSQL_BIND param[2];
+  MYSQL_BIND param[3];
   memset((void *) param,  0, sizeof(param));
 
   // INT PARAM[0] run_id
@@ -564,12 +564,25 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
   param[0].buffer      = (void *) &run_id;
   param[0].is_unsigned = 1;
 
+  // DATE PARAM[1] date
+  MYSQL_TIME my_datetime;
+  struct tm* curr_time    = localtime(&epoch);
+  my_datetime.year        = curr_time->tm_year + 1900;
+  my_datetime.month       = curr_time->tm_mon  + 1;
+  my_datetime.day         = curr_time->tm_mday;
+  my_datetime.hour        = 0;
+  my_datetime.minute      = 0;
+  my_datetime.second      = 0;
+  my_datetime.second_part = 0;
+  param[1].buffer_type    = MYSQL_TYPE_DATE;
+  param[1].buffer         = &my_datetime;
+
   // STRING PARAM[1] jsonStr
   std::string::size_type   len_jsonStr = jsonStr.size();
-  param[1].buffer_type   = MYSQL_TYPE_STRING;
-  param[1].buffer        = (void *) jsonStr.c_str();
-  param[1].buffer_length = jsonStr.capacity();
-  param[1].length        = &len_jsonStr;
+  param[2].buffer_type   = MYSQL_TYPE_STRING;
+  param[2].buffer        = (void *) jsonStr.c_str();
+  param[2].buffer_length = jsonStr.capacity();
+  param[2].length        = &len_jsonStr;
 
   if (mysql_stmt_bind_param(stmt, param))
     {
@@ -589,14 +602,14 @@ void insert_envT(MYSQL* conn, uint run_id, Table& envT)
     }
 }
 
-void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
+void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
 {
 
 
   TableIdx envNameT;
   buildEnvNameT(conn, envNameT);
 
-  const char* stmt_sql = "INSERT INTO join_run_env VALUES (NULL, ?,?,?)";
+  const char* stmt_sql = "INSERT INTO join_run_env VALUES (NULL, ?,?,?,?)";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
@@ -610,7 +623,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
       exit(1);
     }
   
-  MYSQL_BIND param[3];
+  MYSQL_BIND param[4];
   memset((void *) param,  0, sizeof(param));
 
   // INT PARAM[0] env_id
@@ -624,15 +637,27 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, Table& envT)
   param[1].buffer      = (void *) &run_id;
   param[1].is_unsigned = 1;
 
-  // STRING PARAM[2] env_value
+  // DATE PARAM[2] date
+  MYSQL_TIME my_datetime;
+  struct tm* curr_time    = localtime(&epoch);
+  my_datetime.year        = curr_time->tm_year + 1900;
+  my_datetime.month       = curr_time->tm_mon  + 1;
+  my_datetime.day         = curr_time->tm_mday;
+  my_datetime.hour        = 0;
+  my_datetime.minute      = 0;
+  my_datetime.second      = 0;
+  my_datetime.second_part = 0;
+  param[2].buffer_type  = MYSQL_TYPE_DATE;
+  param[2].buffer       = &my_datetime;
+
+  // STRING PARAM[3] env_value
   const int env_value_sz = 65536;
   char      env_value[env_value_sz];
-
   std::string::size_type   len_env_value = 0;   // set length in loop.
-  param[2].buffer_type   = MYSQL_TYPE_STRING;
-  param[2].buffer        = (void *) &env_value[0];
-  param[2].buffer_length = env_value_sz;
-  param[2].length        = &len_env_value;
+  param[3].buffer_type   = MYSQL_TYPE_STRING;
+  param[3].buffer        = (void *) &env_value[0];
+  param[3].buffer_length = env_value_sz;
+  param[3].length        = &len_env_value;
 
   if (mysql_stmt_bind_param(stmt, param))
     {
@@ -747,22 +772,23 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
   if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
   
-
   // Use this translate routine to extract values from the environment to provide standard value in the xalt_run table in DB;
   translate(envT, userT);
   
   unsigned int run_id;
   if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id return 0 if it found [[run_id]].
     {
+      time_t startTime = (time_t) strtod(userT["start_time"].c_str(), NULL);
+
       // if here there was no previous record found (and run_id is unset!).
       insert_xalt_run_record(conn, rmapT, userT, recordT, usr_cmdline, hash_id, &run_id);
       
       // Store objects
-      insert_objects(conn, "join_run_object", run_id, lddA, userT["syshost"], rmapT);
+      insert_objects(conn, "join_run_object", startTime, run_id, lddA, userT["syshost"], rmapT);
 
       // Store environment
-      insert_envT(         conn, run_id, envT);
-      insert_filtered_envT(conn, run_id, envT);
+      insert_envT(         conn, run_id, startTime, envT);
+      insert_filtered_envT(conn, run_id, startTime, envT);
     }
   else
     {

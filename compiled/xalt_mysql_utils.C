@@ -59,7 +59,7 @@ void object_type(const char* path, char* result)
   strcpy(result, extA[resultIdx].c_str());
 }
 
-void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector<Libpair>& lddA,
+void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint index, std::vector<Libpair>& lddA,
                     std::string& syshost, Table& rmapT)
 {
 
@@ -215,12 +215,12 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
       
 
   //************************************************************
-  // "INSERT into <TABLE_NAME> VALUES (NULL, ?, ?)"
+  // "INSERT into <TABLE_NAME> VALUES (NULL, ?, ?, ?)"
   //************************************************************
 
   std::string s2("INSERT INTO ");
   s2.append(table_name);
-  s2.append(" VALUES (NULL,?,?)");
+  s2.append(" VALUES (NULL,?,?,?)");
   const char* stmt_sql_ii = s2.c_str();
 
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
@@ -236,7 +236,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
       exit(1);
     }
 
-  MYSQL_BIND param_ii[2];
+  MYSQL_BIND param_ii[3];
   memset((void *) param_ii,  0, sizeof(param_ii));
 
   // UINT PARAM_II[0] obj_id
@@ -251,15 +251,25 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_ii[1].buffer_length = 0;
   param_ii[1].is_unsigned   = 1;
 
+  // DATE PARAM_II[2] date
+  MYSQL_TIME my_date;
+  curr_time                 = localtime(&epoch);
+  my_date.year              = curr_time->tm_year + 1900;
+  my_date.month             = curr_time->tm_mon  + 1;
+  my_date.day               = curr_time->tm_mday;
+  my_date.hour              = 0;
+  my_date.minute            = 0;
+  my_date.second            = 0;
+  my_date.second_part       = 0;
+  param_ii[2].buffer_type   = MYSQL_TYPE_DATE;
+  param_ii[2].buffer        = &my_date;
+
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
       print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object");
       exit(1);
     }
       
-  
-  
-  
   for ( auto it = lddA.begin(); it != lddA.end(); ++it)
     {
       len_object_path = (*it).lib.size();

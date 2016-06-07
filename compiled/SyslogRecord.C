@@ -10,6 +10,7 @@ SyslogRecord::SyslogRecord()
 
 void SyslogRecord::init(long nblks, std::string& kind, std::string& syshost, std::string& key)
 {
+  m_blkcnt  = 0;
   m_nblks   = nblks;
   m_kind    = kind;
   m_syshost = syshost;
