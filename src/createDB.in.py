@@ -43,7 +43,8 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dbname",      dest='dbname', action="store",      default = "xalt", help="xalt")
+    parser.add_argument("--dbname",      dest='dbname', action="store",      default = "xalt",         help="xalt")
+    parser.add_argument("--confFn",      dest='confFn', action="store",      default = None,           help="xalt")
     args = parser.parse_args()
     return args
 
@@ -54,6 +55,8 @@ def main():
 
   args     = CmdLineOptions().execute()
   configFn = dbConfigFn(args.dbname)
+  if (args.confFn):
+    configFn = args.confFn
 
   if (not os.path.isfile(configFn)):
     dirNm, exe = os.path.split(sys.argv[0])
