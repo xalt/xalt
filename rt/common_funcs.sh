@@ -63,8 +63,8 @@ installDB()
 
   echo "<create new DB>"
   createDB.py        --confFn $DB_CONF_FN
-  rm -f xalt_db.conf 
-  ln -s testxalt_db.conf xalt_db.conf 
+  #rm -f xalt_db.conf 
+  #ln -s testxalt_db.conf xalt_db.conf 
   echo "<end create db>"
 }
 

@@ -15,11 +15,11 @@ f2db_Options::f2db_Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
-        {"confFn",      optional_argument, NULL, 'c'},
+        {"confFn",      required_argument, NULL, 'c'},
         {"reverseMapD", required_argument, NULL, 'R'},
-        {"delete",      optional_argument, NULL, 'e'},
-        {"report",      optional_argument, NULL, 'r'},
-        {"timer",       optional_argument, NULL, 't'},
+        {"delete",      no_argument,       NULL, 'e'},
+        {"report",      no_argument,       NULL, 'r'},
+        {"timer",       no_argument,       NULL, 't'},
         {0,             0,                 0,     0 }
       };
       

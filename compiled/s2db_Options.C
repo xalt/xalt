@@ -15,12 +15,12 @@ s2db_Options::s2db_Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
-        {"confFn",      optional_argument, NULL, 'c'},
-        {"syshost",     optional_argument, NULL, 'h'},
-        {"reverseMapD", optional_argument, NULL, 'R'},
+        {"confFn",      required_argument, NULL, 'c'},
+        {"syshost",     required_argument, NULL, 'h'},
+        {"reverseMapD", required_argument, NULL, 'R'},
         {"syslog",      required_argument, NULL, 's'},
-        {"leftover",    optional_argument, NULL, 'l'},
-        {"timer",       optional_argument, NULL, 't'},
+        {"leftover",    required_argument, NULL, 'l'},
+        {"timer",       no_argument,       NULL, 't'},
         {0,             0,                 0,     0 }
       };
       
