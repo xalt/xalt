@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
   Vstring      fnA;
   Vstring      xlibmapA;
   Table        rmapT;
-  buildRmapT(rmapT, xlibmapA);
+  buildRmapT(options.rmapD(), rmapT, xlibmapA);
   fnA.push_back(options.leftoverFn());
   fnA.push_back(options.syslogFn());
 

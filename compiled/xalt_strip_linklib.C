@@ -14,9 +14,10 @@
 
 int main(int argc, char* argv[])
 {
-  Table   rmapT;
-  Vstring xlibmapA;
-  buildRmapT(rmapT, xlibmapA);
+  std::string rmapD = ""; // Must specify XALT_ETC_DIR to specify location of rmapD
+  Table       rmapT;
+  Vstring     xlibmapA;
+  buildRmapT(rmapD, rmapT, xlibmapA);
 
   Set reflibSet;
   Vstring resultA;

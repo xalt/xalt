@@ -57,9 +57,11 @@ int main(int argc, char* argv[], char* env[])
 
   if (strcasecmp(transmission, "direct2db") == 0)
     {
-      Vstring xlibmapA;
-      Table   rmapT;
-      buildRmapT(rmapT, xlibmapA);
+      std::string rmapD = ""; // must use XALT_ETC_DIR to specify where rmapD is!
+      Table       rmapT;
+      Vstring     xlibmapA;
+
+      buildRmapT(rmapD, rmapT, xlibmapA);
       run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
       return 0;
     }
