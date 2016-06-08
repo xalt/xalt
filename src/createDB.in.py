@@ -98,7 +98,6 @@ def main():
           `build_user`       varchar(64)        NOT NULL,
           `build_syshost`    varchar(64)        NOT NULL,
           `build_epoch`      double             NOT NULL,
-          `exit_code`        tinyint(4)         NOT NULL,
           `exec_path`        varchar(1024)      NOT NULL,
           PRIMARY KEY  (`link_id`),
           INDEX  `index_date` (`date`),
@@ -158,12 +157,10 @@ def main():
           `end_time`      double               NOT NULL,
           `run_time`      double               NOT NULL,
           `num_cores`     int(11)     unsigned NOT NULL,
-          `job_num_cores` int(11)     unsigned NOT NULL,
 
           `num_nodes`     int(11)     unsigned NOT NULL,
           `num_threads`   smallint(6) unsigned NOT NULL,
           `queue`         varchar(32)          NOT NULL,
-          `exit_code`     smallint(6)          NOT NULL,
 
           `user`          varchar(32)          NOT NULL,
           `exec_path`     varchar(1024)        NOT NULL,

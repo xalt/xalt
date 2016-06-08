@@ -102,7 +102,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
       exit(1);
     }
 
-  MYSQL_BIND param[22];
+  MYSQL_BIND param[20];
   memset((void *) param,  0, sizeof(param));
 
   // STRING PARAM[0] job_id
@@ -205,62 +205,52 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   param[11].buffer      = (void *) &num_cores;
   param[11].is_unsigned = 1;
 
-  // INT PARAM[12] job_num_cores  // think about removing this!
+  // INT PARAM[12] num_nodes
+  int num_nodes         = (int) strtol(userT["num_nodes"].c_str(), NULL, 10);
   param[12].buffer_type = MYSQL_TYPE_LONG;
-  param[12].buffer      = (void *) &num_cores;
+  param[12].buffer      = (void *) &num_nodes;
   param[12].is_unsigned = 1;
 
-  // INT PARAM[13] num_nodes
-  int num_nodes         = (int) strtol(userT["num_nodes"].c_str(), NULL, 10);
-  param[13].buffer_type = MYSQL_TYPE_LONG;
-  param[13].buffer      = (void *) &num_nodes;
+  // SHORT PARAM[13] num_threads
+  short int num_threads = (short int) strtol(userT["num_threads"].c_str(), NULL, 10);
+  param[13].buffer_type = MYSQL_TYPE_SHORT;
+  param[13].buffer      = (void *) &num_threads;
   param[13].is_unsigned = 1;
 
-  // SHORT PARAM[14] num_threads
-  short int num_threads = (short int) strtol(userT["num_threads"].c_str(), NULL, 10);
-  param[14].buffer_type = MYSQL_TYPE_SHORT;
-  param[14].buffer      = (void *) &num_threads;
-  param[14].is_unsigned = 1;
-
-  // STRING PARAM[15] queue
+  // STRING PARAM[14] queue
   std::string& queue      = userT["queue"];
   std::string::size_type len_queue = queue.size();
-  param[15].buffer_type   = MYSQL_TYPE_STRING;
-  param[15].buffer        = (void *) queue.c_str();
-  param[15].buffer_length = queue.capacity();
-  param[15].length        = &len_queue;
+  param[14].buffer_type   = MYSQL_TYPE_STRING;
+  param[14].buffer        = (void *) queue.c_str();
+  param[14].buffer_length = queue.capacity();
+  param[14].length        = &len_queue;
 
-  // SHORT PARAM[16] exit_code // Think about removing this!
-  short int exit_code   = 0;
-  param[16].buffer_type = MYSQL_TYPE_SHORT;
-  param[16].buffer      = (void *) &exit_code;
-
-  // STRING PARAM[17] user
+  // STRING PARAM[15] user
   std::string& user       = userT["user"];
   std::string::size_type len_user = user.size();
-  param[17].buffer_type   = MYSQL_TYPE_STRING;
-  param[17].buffer        = (void *) user.c_str();
-  param[17].buffer_length = user.capacity();
-  param[17].length        = &len_user;
+  param[15].buffer_type   = MYSQL_TYPE_STRING;
+  param[15].buffer        = (void *) user.c_str();
+  param[15].buffer_length = user.capacity();
+  param[15].length        = &len_user;
 
-  // STRING PARAM[18] exec_path
+  // STRING PARAM[16] exec_path
   std::string& exec_path  = userT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[18].buffer_type   = MYSQL_TYPE_STRING;
-  param[18].buffer        = (void *) exec_path.c_str();
-  param[18].buffer_length = exec_path.capacity();
-  param[18].length        = &len_exec_path;
+  param[16].buffer_type   = MYSQL_TYPE_STRING;
+  param[16].buffer        = (void *) exec_path.c_str();
+  param[16].buffer_length = exec_path.capacity();
+  param[16].length        = &len_exec_path;
 
-  // STRING PARAM[19] module_name
+  // STRING PARAM[17] module_name
   const int              module_name_sz = 64;
   char                   module_name[module_name_sz];
   std::string::size_type len_module_name = 0;
   my_bool                module_name_null_flag = 0;
-  param[19].buffer_type   = MYSQL_TYPE_STRING;
-  param[19].buffer        = (void *) &module_name[0];
-  param[19].buffer_length = module_name_sz;
-  param[19].is_null       = &module_name_null_flag;
-  param[19].length        = &len_module_name;
+  param[17].buffer_type   = MYSQL_TYPE_STRING;
+  param[17].buffer        = (void *) &module_name[0];
+  param[17].buffer_length = module_name_sz;
+  param[17].is_null       = &module_name_null_flag;
+  param[17].length        = &len_module_name;
   if (path2module(exec_path.c_str(), rmapT, module_name,module_name_sz))
     {
       module_name_null_flag = 0;
@@ -269,20 +259,20 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   else
     module_name_null_flag = 1;
 
-  // STRING PARAM[20] cwd
+  // STRING PARAM[18] cwd
   std::string& cwd        = userT["cwd"];
   std::string::size_type len_cwd = cwd.size();
-  param[20].buffer_type   = MYSQL_TYPE_STRING;
-  param[20].buffer        = (void *) cwd.c_str();
-  param[20].buffer_length = cwd.capacity();
-  param[20].length        = &len_cwd;
+  param[18].buffer_type   = MYSQL_TYPE_STRING;
+  param[18].buffer        = (void *) cwd.c_str();
+  param[18].buffer_length = cwd.capacity();
+  param[18].length        = &len_cwd;
 
-  // BLOB PARAM[21] cmdline
+  // BLOB PARAM[19] cmdline
   std::string::size_type len_cmdline = usr_cmdline.size();
-  param[21].buffer_type   = MYSQL_TYPE_BLOB;
-  param[21].buffer        = (void *) usr_cmdline.c_str();
-  param[21].buffer_length = usr_cmdline.capacity();
-  param[21].length        = &len_cmdline;
+  param[19].buffer_type   = MYSQL_TYPE_BLOB;
+  param[19].buffer        = (void *) usr_cmdline.c_str();
+  param[19].buffer_length = usr_cmdline.capacity();
+  param[19].length        = &len_cmdline;
 
   if (mysql_stmt_bind_param(stmt, param))
     {

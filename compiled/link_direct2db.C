@@ -95,7 +95,7 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
       exit(1);
     }
 
-  MYSQL_BIND param[12];
+  MYSQL_BIND param[11];
   memset((void *) param,  0, sizeof(param));
   
   // STRING PARAM[0] link_uuid
@@ -195,18 +195,13 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
   param[9].buffer_type   = MYSQL_TYPE_DOUBLE;
   param[9].buffer        = (void *) &build_epoch;
 
-  // TINYINT PARAM[10] exit_code
-  char exit_code        = (char ) strtol(resultT["exit_code"].c_str(),(char**) NULL, 10);
-  param[10].buffer_type = MYSQL_TYPE_TINY;
-  param[10].buffer      = (void *) &exit_code;
-
-  // STRING PARAM[11] exec_path
+  // STRING PARAM[10] exec_path
   std::string& exec_path   = resultT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[11].buffer_type   = MYSQL_TYPE_STRING;
-  param[11].buffer        = (void *) exec_path.c_str();
-  param[11].buffer_length = exec_path.capacity();
-  param[11].length        = &len_exec_path;
+  param[10].buffer_type   = MYSQL_TYPE_STRING;
+  param[10].buffer        = (void *) exec_path.c_str();
+  param[10].buffer_length = exec_path.capacity();
+  param[10].length        = &len_exec_path;
   
   if (mysql_stmt_bind_param(stmt, param))
     {
