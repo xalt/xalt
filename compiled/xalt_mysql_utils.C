@@ -18,12 +18,13 @@ void finish_with_error(MYSQL *conn)
   exit(1);        
 }
 
-void print_stmt_error(MYSQL_STMT *stmt, const char *message)
+void print_stmt_error(MYSQL_STMT *stmt, const char *message, const char file, int line)
 {
   fprintf(stderr,"%s\n", message);
   if (stmt != NULL)
     {
-      fprintf(stderr,"Error %u (%s): %s\n",
+      fprintf(stderr,"%s:%d: Error %u (%s): %s\n",
+              file, line,
               mysql_stmt_errno(stmt),
               mysql_stmt_sqlstate(stmt),
               mysql_stmt_error(stmt));
@@ -72,13 +73,13 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
     {
-      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_s, stmt_sql_s, strlen(stmt_sql_s)))
     {
-      print_stmt_error(stmt_s, "Could not prepare stmt_s for select obj_id");
+      print_stmt_error(stmt_s, "Could not prepare stmt_s for select obj_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -115,7 +116,7 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -128,7 +129,7 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -140,13 +141,13 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
-      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)");
+      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_object");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -209,7 +210,7 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -226,13 +227,13 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
   if (!stmt_ii)
     {
-      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)");
+      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_ii, stmt_sql_ii, strlen(stmt_sql_ii)))
     {
-      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into <table_name>");
+      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into <table_name>",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -266,7 +267,7 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
 
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
-      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -281,12 +282,12 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
       // "SELECT obj_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not execute stmt for selecting obj_id");
+          print_stmt_error(stmt_s, "Could not execute stmt for selecting obj_id",__FILE__,__LINE__);
           exit(1);
         }
       if (mysql_stmt_store_result(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting obj_id");
+          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting obj_id",__FILE__,__LINE__);
           exit(1);
         }
       
@@ -313,7 +314,7 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
           // "INSERT INTO xalt_object ..."
           if (mysql_stmt_execute(stmt_i))
             {
-              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object");
+              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object",__FILE__,__LINE__);
               exit(1);
             }
           obj_id = (uint)  mysql_stmt_insert_id(stmt_i);
@@ -322,7 +323,7 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
       // "INSERT INTO <table_name>"
       if (mysql_stmt_execute(stmt_ii))
         {
-          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into <table_name>");
+          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into <table_name>",__FILE__,__LINE__);
           exit(1);
         }
     }
@@ -330,17 +331,17 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
   mysql_stmt_free_result(stmt_s);
   if (mysql_stmt_close(stmt_s))
     {
-      print_stmt_error(stmt_s, "Could not close stmt for selecting obj_id");
+      print_stmt_error(stmt_s, "Could not close stmt for selecting obj_id",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_ii))
     {
-      print_stmt_error(stmt_ii, "Could not close stmt for inserting into <table_name>");
+      print_stmt_error(stmt_ii, "Could not close stmt for inserting into <table_name>",__FILE__,__LINE__);
       exit(1);
     }
 }
