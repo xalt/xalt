@@ -1,5 +1,6 @@
 #include "run_submission.h"
 #include <sstream>
+#include <stdio.h>
 const char * safe_get(Table& t, const char* key, const char* defaultValue)
 {
   Table::const_iterator got = t.find(key);
@@ -45,8 +46,7 @@ void translate(Table& envT, Table& userT)
       userT["job_id"]      = safe_get(envT,  "SLURM_JOB_ID",        "unknown");
       userT["queue"]       = safe_get(envT,  "SLURM_QUEUE",         "unknown");
       userT["submit_host"] = safe_get(envT,  "SLURM_SUBMIT_HOST",   "unknown");
-      if (queueType == SLURM_TACC)
-        userT["account"]   = safe_get(envT,  "SLURM_TACC_ACCOUNT",  "unknown");
+      userT["account"]     = safe_get(envT,  "SLURM_TACC_ACCOUNT",  "unknown");
     }
   else if (queueType == PBS)
     {

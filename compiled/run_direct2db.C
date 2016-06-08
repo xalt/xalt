@@ -228,7 +228,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   param[15].buffer_type   = MYSQL_TYPE_STRING;
   param[15].buffer        = (void *) queue.c_str();
   param[15].buffer_length = queue.capacity();
-  param[15].length        = &len_account;
+  param[15].length        = &len_queue;
 
   // SHORT PARAM[16] exit_code // Think about removing this!
   short int exit_code   = 0;
