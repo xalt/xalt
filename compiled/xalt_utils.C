@@ -81,18 +81,35 @@ FILE* xalt_file_open(const char* name)
 }
 
 
-FILE* xalt_json_file_open(const char* name)
+FILE* xalt_json_file_open(std::string rmapD, const char* name)
 {
-  static const char *extA[]       = {".json", ".old.json"};
-  static int         nExt         = sizeof(extA)/sizeof(extA[0]);
-  const char*        xalt_etc_dir = getenv("XALT_ETC_DIR");
+  FILE*              fp     = NULL;
+  static const char *extA[] = {".json", ".old.json"};
+  static int         nExt   = sizeof(extA)/sizeof(extA[0]);
   std::string        dirNm;
   std::string        fn;
 
+  // First look in rmapD if it has value.
+  if (rmapD.size() > 0)
+    {
+      for (int i = 0; i < nExt; ++i)
+        {
+          fn.assign(rmapD);
+          fn += "/";
+          fn += name;
+          fn += extA[i];
+          fp  = fopen(fn.c_str(), "r");
+          if (fp)
+            return fp;
+        }
+    }
+
+  // Otherwise search directories in XALT_ETC_DIR
+
+  const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
-  FILE*       fp    = NULL;
   const char* start = xalt_etc_dir;
   bool        done  = false;
   while(!done)

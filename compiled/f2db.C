@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
   ProgressBar pbar(num);
   Vstring     xlibmapA;
   Table       rmapT;
-  buildRmapT(rmapT, xlibmapA);
+  buildRmapT(options.rmapD(), rmapT, xlibmapA);
 
   int icnt   = 0;
   int iuser  = 0;

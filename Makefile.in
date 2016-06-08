@@ -275,6 +275,11 @@ tags:
             -e 's|.*/.DS_Store$$||g'                             \
             -e 's|.DS_Store$$||g'                                \
             -e 's|.*\.tgz$$||g'                                  \
+            -e 's|.*\.d$$||g'                                    \
+            -e 's|.*/install$$||g'                               \
+            -e 's|.*/xalt_syshost.c$$||g'                        \
+            -e 's|.*/xalt_regex.h$$||g'                          \
+            -e 's|.*/xalt_config.h$$||g'                         \
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
             -e 's|.*\.pyc$$||g'                                  \
