@@ -1,52 +1,210 @@
 
-compiled/buildEnvT.C,21
-void buildEnvT(4,49
+src/ld.in,453
+LD_LIB_PATH=39,1498
+   XALT_TRANSMISSION_STYLE=49,1754
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=57,1953
+EXEC=74,2600
+    prev=83,2720
+    -*) optarg=89,2843
+    *) optarg=90,2861
+    *) optarg=; done=90,2861
+      USER_TRACE=99,3008
+      BIT32FLAG=103,3056
+      prev=107,3095
+  status=123,3470
+LINKLINE_OUT=150,4162
+  XALT_LIB_DIR=159,4413
+COMP_T=174,4970
+  OBJ=185,5244
+status=208,5858
+SHA1SUM_EXEC=222,6091
 
-compiled/transmit.C,54
-const int syslog_msg_sz 14,260
-void transmit(16,292
+src/xalt_job_id_db.conf,10
+host 2,8
 
-compiled/parseSyslog.h,152
-#define PARSESYSLOG_H2,22
-typedef std::unordered_map<std::string,std::string6,95
-typedef std::unordered_map<std::string, SyslogRecord> RecordT;6,95
+src/Rmap_XALT.py,93
+class Rmap(30,1343
+  def __init__(32,1440
+  def reverseMapT(74,2803
+  def libMap(82,2948
 
-compiled/xalt_config.h.in,286
-#define XALT_CONFIG_H2,22
-#define OBJDUMP 4,45
-#define PATH_TO_PRGM_FILE 5,91
-#define LDD 6,134
-#define SHA1SUM 7,176
-#define SYS_LD_LIB_PATH 8,222
-#define PREFIX 9,268
-#define TRANSMISSION 10,305
-#define LOGGER 11,348
-#define XALT_ETC_DIR 12,393
-#define XALT_VERSION 13,431
+src/xalt_util.py,390
+def config_logger(28,1265
+def extract_compiler(45,1712
+    def p_parent(56,2001
+    def p_parent_name(63,2230
+    def p_parent_exe(70,2492
+    def p_parent_cmdline(77,2746
+def files_in_tree(108,3669
+def which(130,4158
+  def is_exe(136,4266
+def capture(158,4822
+def carp(175,5228
+def remove_files(194,5604
+def obj_type(207,5861
+def obj2module(230,6347
+def dbConfigFn(257,7033
 
-compiled/run_direct2db.C,466
-#define  DATESZ 15,301
-typedef std::unordered_map<std::string,std::string19,341
-typedef std::unordered_map<std::string, uint> TableIdx;19,341
-int select_run_id(21,398
-void insert_xalt_run_record(87,2249
-void buildEnvNameT(309,10374
-bool reject_env_name(373,12110
-uint findEnvNameIdx(425,13429
-void insert_envT(538,16663
-void insert_filtered_envT(592,18145
-void update_xalt_run_record(668,20218
-void run_direct2db(731,21895
-void run_direct2db(778,23372
+src/xalt_name_mapping.py,28
+def name_mapping(238,18298
 
-compiled/run_direct2db.h,29
-#define RUN_DIRECT2DB_H2,24
+src/conf_create.in.py,226
+class CmdLineOptions(40,1463
+  def __init__(41,1493
+  def execute(44,1527
+class CreateConf(54,1988
+  def __init__(55,2014
+  def __readFromUser(61,2179
+  def __writeConfig(67,2510
+  def create(81,2888
+def main(88,2967
 
-compiled/base64.C,155
-static const std::string base64_chars 31,1048
-static inline bool is_base64(37,1204
-std::string base64_encode(41,1306
-std::string base64_decode(83,2467
+src/xalt_helper_functions.sh,69
+LD_LIB_PATH=33,1393
+tracing_msg(62,2131
+find_real_command(82,2783
+
+src/xalt_stack.py,149
+class Stack(27,1148
+  def __init__(29,1197
+  def push(36,1317
+  def pop(40,1421
+  def isEmpty(45,1534
+  def contents(49,1653
+def main(55,1798
+
+src/nics_system_name,37
+use strict;26,1106
+sub main54,1693
+
+src/xalt_epoch.py,18
+def main(28,1142
+
+src/xalt.model.mwb,3321
+^r»“`◊–¿-∞ªÑäÓ ˜ÓúãyóﬁôóubÛÿíæ%·3	/hKŒ£¡≈ÖwN O¬CÖÏ —àŒF…rF…15,5015
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1bhå32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%ZòZ32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎP±É32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒjŒ32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@dsm32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@e,ˇ” ‘Å°)@ñMì@ñM32,7610
+model-schemas: mydb,35,8943
+
+src/build_xalt_regex.py,156
+class CmdLineOptions(28,1158
+  def __init__(31,1226
+  def execute(35,1283
+def convert_to_string(47,1762
+def convert_template(55,1865
+def main(86,2514
+
+src/BeautifulTbl.py,117
+class BeautifulTbl(6,88
+  def __init__(7,116
+  def __build_tbl(14,461
+  def build_tbl(57,1584
+def main(140,3732
+
+src/createDB.in.py,95
+class CmdLineOptions(36,1394
+  def __init__(39,1462
+  def execute(43,1519
+def main(51,1928
+
+src/XALTdb.py,303
+def __LINE__(43,1652
+def __FILE__(49,1772
+def convertToTinyInt(55,1951
+class XALTdb(71,2279
+  def __init__(76,2413
+  def __readFromUser(85,2658
+  def __readConfig(93,2943
+  def connect(108,3548
+  def db(146,4773
+  def link_to_db(150,4840
+  def load_objects(235,8103
+  def run_to_db(281,9955
+
+src/xalt_site_pkg.py,50
+def translate(52,2350
+def keep_env_var(174,6287
+
+src/xalt_db.conf,10
+host 2,8
+
+src/xalt_syslog_to_db.in.py,359
+def __LINE__(52,1876
+def __FILE__(58,1996
+class CmdLineOptions(67,2238
+  def __init__(70,2306
+  def execute(74,2363
+class Record(88,3368
+  def __init__(93,3480
+  def addBlk(107,3768
+  def completed(112,3894
+  def value(115,3961
+  def prt(118,4013
+def parseSyslogV1(146,4625
+def parseSyslogV2(161,4992
+def parseSyslog(211,6131
+def main(217,6270
+
+src/removeDataBase.py,95
+class CmdLineOptions(36,1394
+  def __init__(39,1462
+  def execute(43,1519
+def main(50,1804
+
+src/build_syshost_routine.py,254
+def xalt_syshost_main(30,1191
+def hardcode(40,1427
+def add_hostname_routine(56,1752
+def read_file(91,3009
+def nth_name(122,3955
+def mapping(165,5065
+class CmdLineOptions(226,6892
+  def __init__(229,6960
+  def execute(233,7017
+def main(245,7558
+
+src/progressBar.py,171
+def getTerminalSize(27,1158
+  def ioctl_GWINSZ(34,1358
+class ProgressBar(68,2094
+  def __init__(71,2161
+  def update(109,3297
+  def fini(134,3944
+def main(140,4078
+
+src/xalt_transmission_factory.py,407
+class XALT_transmission_factory(35,1336
+  def __init__(39,1464
+  def _syshost(50,1733
+  def _kind(57,1862
+  def build(65,2013
+class SyslogV1(89,2720
+  def __init__(94,2821
+  def save(102,3063
+class Syslog(118,3505
+  def __init__(123,3604
+  def save(132,3845
+class File(168,4866
+  def __init__(173,4953
+  def save(183,5269
+class DirectDB(205,5836
+  def __init__(210,5946
+  def save(217,6193
+
+src/new_job_id.in.py,18
+def main(35,1369
+
+configure.ac,136
+AC_INIT(1,0
+  xaltV=144,4432
+  xaltV=146,4483
+BUILD_PSTREE=197,6049
+USE_CONTRIB_ARGPARSE=213,6475
+  USE_CONTRIB_ARGPARSE=220,6807
 
 compiled/jsmn.h,508
 #define __JSMN_H_2,18
@@ -72,9 +230,254 @@ enum jsmnerr 27,399
 	int toksuper;59,1217
 } jsmn_parser;60,1286
 
-compiled/xalt_fgets_alloc.c,46
-const int SZ 5,71
-int xalt_fgets_alloc(7,92
+compiled/parseSyslog.h,152
+#define PARSESYSLOG_H2,22
+typedef std::unordered_map<std::string,std::string6,95
+typedef std::unordered_map<std::string, SyslogRecord> RecordT;6,95
+
+compiled/ld.master.in,358
+LD_LIB_PATH=37,1480
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=52,1906
+  status=64,2308
+    prev=92,3133
+    -*) optarg=98,3256
+    *) optarg=99,3274
+    *) optarg=; done=99,3274
+      USER_TRACE=108,3421
+      prev=112,3463
+PyPATH=126,3743
+LINKLINE_OUT=144,4274
+EPOCH=156,4546
+  OBJ=165,4799
+    LD_LIBRARY_PATH=206,5856
+
+compiled/xalt_realpath.c,41
+#define _GNU_SOURCE 1,0
+int main(5,120
+
+compiled/transmit.C,54
+const int syslog_msg_sz 14,260
+void transmit(16,302
+
+compiled/xalt_quotestring.h,27
+#define QUOTESTRING_H2,22
+
+compiled/parseJsonStr.C,257
+void processArray(7,97
+void processSet(36,980
+void processTable(64,1851
+void processA2JsonStr(94,2896
+void processLibA(128,3877
+void processValue(167,5110
+void parseRunJsonStr(181,5621
+void parseLinkJsonStr(242,7536
+void parseCompTJsonStr(298,9114
+
+compiled/parseSyslog.C,52
+bool parseSyslog(9,173
+bool parseSyslogV1(86,2028
+
+compiled/parseLDD.C,20
+void parseLDD(6,95
+
+compiled/xalt_generate_linkdata.C,17
+int main(20,385
+
+compiled/configure.ac,13
+AC_INIT(1,0
+
+compiled/link_direct2db.h,30
+#define LINK_DIRECT2DB_H2,25
+
+compiled/xalt_epoch.C,15
+int main(4,58
+
+compiled/xalt_quotestring.c,226
+#define HERE 6,108
+const char *qcharA[qcharA7,180
+const char escCharA[escCharA13,617
+static char * buff 16,758
+static unsigned int sz 17,785
+const char* xalt_quotestring(20,815
+const char * xalt_unquotestring(85,2355
+
+compiled/SyslogRecord.h,620
+#define SYSLOGRECORD_H2,23
+class SyslogRecord6,72
+  ~SyslogRecord(SyslogRecord::~SyslogRecord12,204
+  bool          completed(SyslogRecord::completed14,226
+  std::string&  kind(SyslogRecord::kind15,291
+  std::string&  syshost(SyslogRecord::syshost16,356
+  std::string&  key(SyslogRecord::key17,421
+  long        m_blkcnt;SyslogRecord::m_blkcnt23,617
+  long        m_nblks;SyslogRecord::m_nblks24,641
+  std::string m_kind;SyslogRecord::m_kind25,664
+  std::string m_syshost;SyslogRecord::m_syshost26,686
+  std::string m_key;SyslogRecord::m_key27,711
+  Vstring     m_blkA;SyslogRecord::m_blkA28,732
+
+compiled/xalt_mysql_utils.h,90
+#define XALT_MYSQL_UTILS_H2,27
+#  undef min7,119
+#  undef max8,132
+#  undef test9,145
+
+compiled/xalt_generate_assembly.C,17
+int main(10,156
+
+compiled/xalt_syslog_to_db.C,75
+void link_json_to_db(17,341
+void run_json_to_db(28,724
+int main(41,1194
+
+compiled/run_direct2db.C,466
+#define  DATESZ 15,301
+typedef std::unordered_map<std::string,std::string19,341
+typedef std::unordered_map<std::string, uint> TableIdx;19,341
+int select_run_id(21,398
+void insert_xalt_run_record(87,2249
+void buildEnvNameT(309,10374
+bool reject_env_name(373,12110
+uint findEnvNameIdx(425,13429
+void insert_envT(538,16672
+void insert_filtered_envT(605,18636
+void update_xalt_run_record(693,21184
+void run_direct2db(756,22861
+void run_direct2db(804,24448
+
+compiled/run_submission.h,30
+#define RUN_SUBMISSION_H2,25
+
+compiled/Options.C,80
+double convert_double(9,145
+long convert_long(23,390
+Options::Options(37,633
+
+compiled/epoch.h,21
+#define EPOCH_H2,16
+
+compiled/xalt_config.h.in,471
+#define XALT_CONFIG_H2,22
+#define OBJDUMP 4,45
+#define PATH_TO_PRGM_FILE 5,91
+#define LDD 6,134
+#define SHA1SUM 7,176
+#define SYS_LD_LIB_PATH 8,222
+#define PREFIX 9,268
+#define LOGGER 10,305
+#define TRANSMISSION 12,351
+#define XALT_ETC_DIR 13,394
+#define XALT_CONFIG_PY 14,432
+#define XALT_SYSTEM_PATH 15,477
+#define SYSLOG_MSG_SZ 16,519
+#define SYSHOST_CONFIG 17,562
+#define HAVE_32BIT 18,607
+#define XALT_VERSION 19,648
+#define XALT_GIT_VERSION 20,686
+
+compiled/extractXALTRecord.C,29
+void extractXALTRecord(5,75
+
+compiled/Makefile.in,74
+THIS_DIR 1,0
+	@set -e; rm -f $@$112,5173
+        $(CC) -MM $(113,5228
+
+compiled/ConfigParser.h,492
+#define CONFIGPARSER_H2,23
+class ConfigParser6,66
+  ~ConfigParser(ConfigParser::~ConfigParser10,128
+  std::string& host(ConfigParser::host12,151
+  std::string& user(ConfigParser::user13,196
+  std::string& db(ConfigParser::db14,241
+  std::string& passwd(ConfigParser::passwd15,286
+  std::string m_host;ConfigParser::m_host18,345
+  std::string m_user;ConfigParser::m_user19,367
+  std::string m_db;ConfigParser::m_db20,389
+  std::string m_passwd;ConfigParser::m_passwd21,409
+
+compiled/buildRmapT.h,26
+#define BUILDRMAPT_H2,21
+
+compiled/base64.C,155
+static const std::string base64_chars 31,1048
+static inline bool is_base64(37,1204
+std::string base64_encode(41,1306
+std::string base64_decode(83,2467
+
+compiled/s2db_Options.C,53
+#define HERE 6,86
+s2db_Options::s2db_Options(7,144
+
+compiled/link_submission.h,31
+#define LINK_SUBMISSION_H2,26
+
+compiled/run_direct2db.h,29
+#define RUN_DIRECT2DB_H2,24
+
+compiled/xalt_run_submission.C,40
+#define DATESZ 16,285
+int main(18,305
+
+compiled/f2db.C,170
+int buildUserTable(22,434
+int findFilesInDir(64,1422
+void removeFiles(85,1906
+int link_json_fileA_to_db(91,2025
+int run_json_fileA_to_db(126,3010
+int main(165,4121
+
+compiled/zstring.C,74
+std::string compress_string(9,183
+std::string decompress_string(54,1402
+
+compiled/s2db_Options.h,760
+#define S2DB_OPTIONS_H2,23
+class s2db_Options6,66
+  ~s2db_Options(s2db_Options::~s2db_Options10,134
+  bool          timer(s2db_Options::timer11,155
+  std::string&  syshost(s2db_Options::syshost12,209
+  std::string&  syslogFn(s2db_Options::syslogFn13,263
+  std::string&  leftoverFn(s2db_Options::leftoverFn14,317
+  std::string&  rmapD(s2db_Options::rmapD15,371
+  std::string&  confFn(s2db_Options::confFn16,425
+  bool        m_timer;s2db_Options::m_timer19,489
+  std::string m_syslogFn;s2db_Options::m_syslogFn20,512
+  std::string m_leftoverFn;s2db_Options::m_leftoverFn21,538
+  std::string m_rmapD;s2db_Options::m_rmapD22,566
+  std::string m_confFn;s2db_Options::m_confFn23,589
+  std::string m_syshost;s2db_Options::m_syshost24,613
+
+compiled/xalt_extract_linker.C,45
+void extract_linker(9,127
+int main(52,1206
+
+compiled/xalt_configuration_report.C,67
+const int dateSZ=9,152
+void displayArray(11,175
+int main(24,486
+
+compiled/parseJsonStr.h,28
+#define PARSEJSONSTR_H2,23
+
+compiled/build_h/xalt_config.h,474
+#define XALT_CONFIG_H2,22
+#define OBJDUMP 4,45
+#define PATH_TO_PRGM_FILE 5,90
+#define LDD 6,132
+#define SHA1SUM 7,173
+#define SYS_LD_LIB_PATH 8,218
+#define PREFIX 9,668
+#define LOGGER 10,719
+#define TRANSMISSION 12,764
+#define XALT_ETC_DIR 13,797
+#define XALT_CONFIG_PY 14,841
+#define XALT_SYSTEM_PATH 15,890
+#define SYSLOG_MSG_SZ 16,932
+#define SYSHOST_CONFIG 17,963
+#define HAVE_32BIT 18,1002
+#define XALT_VERSION 19,1033
+#define XALT_GIT_VERSION 20,1067
 
 compiled/build_h/xalt_regex.h,424
 #define XALT_REGEX_H2,21
@@ -90,28 +493,86 @@ const int   hostnameSz 14,1119
 const int   acceptEnvSz 15,1169
 const int   ignoreEnvSz 16,1220
 
-compiled/build_h/xalt_config.h,286
-#define XALT_CONFIG_H2,22
-#define OBJDUMP 4,45
-#define PATH_TO_PRGM_FILE 5,90
-#define LDD 6,132
-#define SHA1SUM 7,173
-#define SYS_LD_LIB_PATH 8,218
-#define PREFIX 9,668
-#define TRANSMISSION 10,719
-#define LOGGER 11,752
-#define XALT_ETC_DIR 12,796
-#define XALT_VERSION 13,840
+compiled/xalt_initialize.c,1286
+#define  _GNU_SOURCE27,1223
+#define STR(56,1816
+#define STR2(57,1840
+static char   uuid_str[uuid_str58,1859
+static int    errfd	59,1887
+static double start_time 60,1916
+static double end_time	61,1950
+static long   my_rank	62,1983
+static long   my_size	63,2014
+static int    xalt_tracing 64,2045
+static int    reject_flag 65,2077
+static int    background 66,2109
+static char   path[path67,2141
+static char * usr_cmdline;68,2171
+static const char * syshost;69,2198
+#define HERE 70,2227
+#define DEBUG0(73,2287
+#define DEBUG1(74,2349
+#define DEBUG2(75,2416
+#define DEBUG3(76,2488
+#  define FULL_DEBUG0(79,2586
+#  define FULL_DEBUG1(80,2636
+#  define FULL_DEBUG2(81,2691
+#  define FULL_DEBUG3(82,2751
+#  define FULL_DEBUG0(84,2822
+#  define FULL_DEBUG1(85,2850
+#  define FULL_DEBUG2(86,2885
+#  define FULL_DEBUG3(87,2920
+void myinit(90,2966
+void myfini(227,6849
+int reject(281,8634
+long compute_value(378,10877
+void abspath(394,11193
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(410,11527
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(411,11643
+  __attribute__((section(".init_array"))) typeof(413,11765
+  __attribute__((section(".fini_array"))) typeof(414,11840
 
-compiled/epoch.C,19
-double epoch(4,42
+compiled/f2db_Options.C,53
+#define HERE 6,86
+f2db_Options::f2db_Options(7,144
 
-compiled/SyslogRecord.C,163
-SyslogRecord::SyslogRecord(7,88
-void SyslogRecord::init(11,209
-void SyslogRecord::addblk(20,419
-void SyslogRecord::value(26,509
-void SyslogRecord::prt(38,753
+compiled/zstring.h,23
+#define ZSTRING_H2,18
+
+compiled/xalt_utils.h,26
+#define XALT_UTILS_H2,21
+
+compiled/xalt_types.h,487
+#define XALT_TYPES_H2,21
+#define HERE 4,43
+struct Libpair11,188
+  Libpair(13,205
+  std::string lib;Libpair::lib16,289
+  std::string sha1;Libpair::sha117,308
+typedef std::vector<std::string>                    Vstring;20,332
+typedef std::unordered_set<std::string>             Set;21,393
+typedef std::unordered_map<std::string,std::string22,450
+typedef std::unordered_map<std::string,std::string> Table;22,450
+typedef unsigned int                                uint;23,509
+
+compiled/xalt_regex.template,419
+#define XALT_REGEX_H2,21
+#define N_ELEMENTS(4,43
+const char* acceptPathA[acceptPathA6,93
+const char* ignorePathA[ignorePathA7,145
+const char* hostnameA[hostnameA8,197
+const char* acceptEnvA[acceptEnvA9,249
+const char* ignoreEnvA[ignoreEnvA10,301
+const int   acceptPathSz 12,354
+const int   ignorePathSz 13,406
+const int   hostnameSz 14,458
+const int   acceptEnvSz 15,508
+const int   ignoreEnvSz 16,559
+
+compiled/Process.C,90
+Process::Process(10,176
+void Process::cmdline(42,910
+std::string& Process::exe(67,1383
 
 compiled/xalt_utils.C,112
 int isDirectory(9,136
@@ -119,71 +580,138 @@ bool path2module(17,280
 FILE* xalt_file_open(44,955
 FILE* xalt_json_file_open(80,1640
 
-compiled/xalt_quotestring.c,226
-#define HERE 6,108
-const char *qcharA[qcharA7,180
-const char escCharA[escCharA13,617
-static char * buff 16,758
-static unsigned int sz 17,785
-const char* xalt_quotestring(20,815
-const char * xalt_unquotestring(85,2355
+compiled/parseLDTrace.C,56
+void parseLDTrace(8,145
+void readFunctionList(88,2228
+
+compiled/f2db_Options.h,634
+#define F2DB_OPTIONS_H2,23
+class f2db_Options6,66
+  ~f2db_Options(f2db_Options::~f2db_Options10,134
+  bool          deleteFn(f2db_Options::deleteFn11,155
+  bool          reportFn(f2db_Options::reportFn12,203
+  bool          timer(f2db_Options::timer13,251
+  std::string&  rmapD(f2db_Options::rmapD14,299
+  std::string&  confFn(f2db_Options::confFn15,347
+  bool        m_delete;f2db_Options::m_delete18,405
+  bool        m_report;f2db_Options::m_report19,429
+  bool        m_timer;f2db_Options::m_timer20,453
+  std::string m_rmapD;f2db_Options::m_rmapD21,476
+  std::string m_confFn;f2db_Options::m_confFn22,499
+
+compiled/epoch.C,19
+double epoch(4,42
+
+compiled/ProgressBar.h,476
+#define PROGRESSBAR_H2,22
+class ProgressBar4,45
+  ~ProgressBar(ProgressBar::~ProgressBar8,118
+  bool   m_active;ProgressBar::m_active13,187
+  int    m_barWidth;ProgressBar::m_barWidth14,206
+  int    m_count;ProgressBar::m_count15,227
+  int    m_mark;ProgressBar::m_mark16,245
+  double m_maxVal;ProgressBar::m_maxVal17,262
+  double m_unit;ProgressBar::m_unit18,281
+  double m_fence;ProgressBar::m_fence19,298
+  char   m_symbolA[ProgressBar::m_symbolA20,316
+
+compiled/xalt_syshost.c,75
+char * hostname(11,204
+const char* xalt_syshost(33,738
+int main(61,1234
+
+compiled/xalt_fgets_alloc.c,46
+const int SZ 5,71
+int xalt_fgets_alloc(7,93
+
+compiled/xalt_version.h,30
+#define XALT_VERSION_STR 1,0
+
+compiled/buildRmapT.C,24
+void buildRmapT(12,218
+
+compiled/ProgressBar.C,117
+int setWidth(7,89
+ProgressBar::ProgressBar(15,191
+void ProgressBar::update(43,746
+void ProgressBar::fini(66,1168
+
+compiled/SyslogRecord.C,163
+SyslogRecord::SyslogRecord(7,88
+void SyslogRecord::init(11,209
+void SyslogRecord::addblk(23,498
+void SyslogRecord::value(29,588
+void SyslogRecord::prt(41,832
+
+compiled/base64.h,22
+#define BASE64_H2,17
+
+compiled/ConfigParser.C,53
+void trim(11,204
+ConfigParser::ConfigParser(24,380
+
+compiled/capture.C,43
+#define DATA_SIZE 4,60
+void capture(6,84
+
+compiled/buildUserT.C,48
+#define  DATESZ 11,193
+void buildUserT(13,214
+
+compiled/Json.h,124
+#define JSON_H2,15
+class Json6,56
+  Json(Json::Json9,77
+  ~Json(Json::~Json10,101
+  std::string m_s;Json::m_s21,471
+
+compiled/xalt_function_names.h,342
+#define XALT_FUNCTION_NAMES2,28
+#define PASTE(4,57
+#define PaStE2(5,89
+#define HIDE 8,128
+#define hostname 12,160
+#define xalt_fgets_alloc 13,213
+#define xalt_syshost 14,269
+#define reject 15,321
+#define abspath 16,372
+#define myinit 17,424
+#define myfini 18,475
+#define xalt_quotestring 19,526
+#define xalt_unquotestring 20,582
+
+compiled/translate.C,536
+const char * safe_get(3,47
+void translate(11,247
+  enum QueueType 14,292
+  enum QueueType { UNKNOWN QueueType::UNKNOWN14,292
+  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF14,292
+
+compiled/Process.h,347
+#define PROCESS_H2,18
+class Process9,95
+  ~Process(Process::~Process13,141
+  pid_t        parent(Process::parent15,158
+  std::string& name(Process::name16,205
+  std::string m_exe;Process::m_exe21,345
+  std::string m_name;Process::m_name22,366
+  pid_t       m_pid;Process::m_pid23,388
+  pid_t       m_parent;Process::m_parent24,409
 
 compiled/xalt_fgets_alloc.h,32
 #define XALT_FGETS_ALLOC_H2,27
 
-compiled/link_submission.h,31
-#define LINK_SUBMISSION_H2,26
-
-compiled/epoch.h,21
-#define EPOCH_H2,16
-
-compiled/xalt_quotestring.h,27
-#define QUOTESTRING_H2,22
-
-compiled/xalt_initialize.c,1252
-#define  _GNU_SOURCE27,1223
-#define STR(54,1782
-#define STR2(55,1806
-static char   uuid_str[uuid_str56,1825
-static int    errfd	57,1853
-static double start_time 58,1882
-static double end_time	59,1916
-static long   my_rank	60,1949
-static long   my_size	61,1980
-static int    xalt_tracing 62,2011
-static int    reject_flag 63,2043
-static char   path[path64,2075
-static char * usr_cmdline;65,2105
-static const char * syshost;66,2132
-#define HERE 67,2161
-#define DEBUG0(70,2221
-#define DEBUG1(71,2283
-#define DEBUG2(72,2350
-#define DEBUG3(73,2422
-#  define FULL_DEBUG0(76,2520
-#  define FULL_DEBUG1(77,2570
-#  define FULL_DEBUG2(78,2625
-#  define FULL_DEBUG3(79,2685
-#  define FULL_DEBUG0(81,2756
-#  define FULL_DEBUG1(82,2784
-#  define FULL_DEBUG2(83,2819
-#  define FULL_DEBUG3(84,2854
-void myinit(87,2900
-void myfini(219,6647
-int reject(272,8394
-long compute_value(369,10616
-void abspath(385,10932
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(401,11266
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(402,11382
-  __attribute__((section(".init_array"))) typeof(404,11504
-  __attribute__((section(".fini_array"))) typeof(405,11579
-
-compiled/parseSyslog.C,24
-bool parseSyslog(9,173
-
-compiled/xalt_realpath.c,41
-#define _GNU_SOURCE 1,0
-int main(5,120
+compiled/jsmn.c,222
+static jsmntok_t *jsmn_alloc_token(jsmn_alloc_token6,82
+static void jsmn_fill_token(24,444
+static int jsmn_parse_primitive(35,700
+static int jsmn_parse_string(84,1856
+int jsmn_parse(151,3594
+void jsmn_init(306,7648
 
 compiled/Options.h,963
 #define OPTIONS_H2,18
@@ -208,233 +736,8 @@ class Options6,56
   std::string m_exec_type;Options::m_exec_type29,810
   std::string m_confFn;Options::m_confFn30,837
 
-compiled/Options.C,80
-double convert_double(9,145
-long convert_long(23,390
-Options::Options(37,633
-
-compiled/capture.h,23
-#define CAPTURE_H2,18
-
-compiled/Makefile.in,74
-THIS_DIR 1,0
-	@set -e; rm -f $@$106,4811
-        $(CC) -MM $(107,4866
-
-compiled/xalt_generate_assembly.C,17
-int main(10,156
-
-compiled/configure.ac,13
-AC_INIT(1,0
-
-compiled/parseLDTrace.C,56
-void parseLDTrace(8,145
-void readFunctionList(88,2228
-
-compiled/SyslogRecord.h,620
-#define SYSLOGRECORD_H2,23
-class SyslogRecord6,72
-  ~SyslogRecord(SyslogRecord::~SyslogRecord12,204
-  bool          completed(SyslogRecord::completed14,226
-  std::string&  kind(SyslogRecord::kind15,291
-  std::string&  syshost(SyslogRecord::syshost16,356
-  std::string&  key(SyslogRecord::key17,421
-  long        m_blkcnt;SyslogRecord::m_blkcnt23,617
-  long        m_nblks;SyslogRecord::m_nblks24,641
-  std::string m_kind;SyslogRecord::m_kind25,664
-  std::string m_syshost;SyslogRecord::m_syshost26,686
-  std::string m_key;SyslogRecord::m_key27,711
-  Vstring     m_blkA;SyslogRecord::m_blkA28,732
-
-compiled/xalt_epoch.C,15
-int main(4,58
-
-compiled/ProgressBar.h,476
-#define PROGRESSBAR_H2,22
-class ProgressBar4,45
-  ~ProgressBar(ProgressBar::~ProgressBar8,118
-  bool   m_active;ProgressBar::m_active13,187
-  int    m_barWidth;ProgressBar::m_barWidth14,206
-  int    m_count;ProgressBar::m_count15,227
-  int    m_mark;ProgressBar::m_mark16,245
-  double m_maxVal;ProgressBar::m_maxVal17,262
-  double m_unit;ProgressBar::m_unit18,281
-  double m_fence;ProgressBar::m_fence19,298
-  char   m_symbolA[ProgressBar::m_symbolA20,316
-
-compiled/ld.master.in,358
-LD_LIB_PATH=37,1480
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=52,1906
-  status=64,2308
-    prev=92,3133
-    -*) optarg=98,3256
-    *) optarg=99,3274
-    *) optarg=; done=99,3274
-      USER_TRACE=108,3421
-      prev=112,3463
-PyPATH=126,3743
-LINKLINE_OUT=144,4274
-EPOCH=156,4546
-  OBJ=165,4799
-    LD_LIBRARY_PATH=206,5856
-
-compiled/xalt_syslog_to_db.C,75
-void link_json_to_db(17,341
-void run_json_to_db(28,724
-int main(41,1194
-
-compiled/s2db_Options.C,53
-#define HERE 6,86
-s2db_Options::s2db_Options(7,144
-
-compiled/jsmn.c,222
-static jsmntok_t *jsmn_alloc_token(jsmn_alloc_token6,82
-static void jsmn_fill_token(24,444
-static int jsmn_parse_primitive(35,700
-static int jsmn_parse_string(84,1856
-int jsmn_parse(151,3594
-void jsmn_init(306,7648
-
-compiled/s2db_Options.h,650
-#define S2DB_OPTIONS_H2,23
-class s2db_Options6,66
-  ~s2db_Options(s2db_Options::~s2db_Options10,134
-  bool          timer(s2db_Options::timer11,155
-  std::string   syslogFn(s2db_Options::syslogFn12,209
-  std::string   leftoverFn(s2db_Options::leftoverFn13,263
-  std::string&  rmapD(s2db_Options::rmapD14,317
-  std::string&  confFn(s2db_Options::confFn15,371
-  bool        m_timer;s2db_Options::m_timer18,435
-  std::string m_syslogFn;s2db_Options::m_syslogFn19,458
-  std::string m_leftoverFn;s2db_Options::m_leftoverFn20,484
-  std::string m_rmapD;s2db_Options::m_rmapD21,512
-  std::string m_confFn;s2db_Options::m_confFn22,535
-
-compiled/ConfigParser.C,53
-void trim(11,204
-ConfigParser::ConfigParser(24,380
-
-compiled/xalt_regex.template,419
-#define XALT_REGEX_H2,21
-#define N_ELEMENTS(4,43
-const char* acceptPathA[acceptPathA6,93
-const char* ignorePathA[ignorePathA7,145
-const char* hostnameA[hostnameA8,197
-const char* acceptEnvA[acceptEnvA9,249
-const char* ignoreEnvA[ignoreEnvA10,301
-const int   acceptPathSz 12,354
-const int   ignorePathSz 13,406
-const int   hostnameSz 14,458
-const int   acceptEnvSz 15,508
-const int   ignoreEnvSz 16,559
-
-compiled/xalt_strip_linklib.C,18
-int main(15,1034
-
-compiled/zstring.h,23
-#define ZSTRING_H2,18
-
-compiled/f2db_Options.C,53
-#define HERE 6,86
-f2db_Options::f2db_Options(7,144
-
-compiled/buildUserT.C,48
-#define  DATESZ 11,193
-void buildUserT(13,214
-
-compiled/xalt_run_submission.C,40
-#define DATESZ 16,285
-int main(18,305
-
-compiled/link_direct2db.C,153
-uint select_link_id(15,252
-void insert_xalt_link(81,2142
-void insert_functions(232,7751
-void link_direct2db(422,13745
-void link_direct2db(454,14694
-
-compiled/xalt_types.h,487
-#define XALT_TYPES_H2,21
-#define HERE 4,43
-struct Libpair11,188
-  Libpair(13,205
-  std::string lib;Libpair::lib16,289
-  std::string sha1;Libpair::sha117,308
-typedef std::vector<std::string>                    Vstring;20,332
-typedef std::unordered_set<std::string>             Set;21,393
-typedef std::unordered_map<std::string,std::string22,450
-typedef std::unordered_map<std::string,std::string> Table;22,450
-typedef unsigned int                                uint;23,509
-
-compiled/link_direct2db.h,30
-#define LINK_DIRECT2DB_H2,25
-
-compiled/zstring.C,74
-std::string compress_string(9,183
-std::string decompress_string(54,1402
-
-compiled/buildRmapT.h,26
-#define BUILDRMAPT_H2,21
-
-compiled/ConfigParser.h,492
-#define CONFIGPARSER_H2,23
-class ConfigParser6,66
-  ~ConfigParser(ConfigParser::~ConfigParser10,128
-  std::string& host(ConfigParser::host12,151
-  std::string& user(ConfigParser::user13,196
-  std::string& db(ConfigParser::db14,241
-  std::string& passwd(ConfigParser::passwd15,286
-  std::string m_host;ConfigParser::m_host18,345
-  std::string m_user;ConfigParser::m_user19,367
-  std::string m_db;ConfigParser::m_db20,389
-  std::string m_passwd;ConfigParser::m_passwd21,409
-
-compiled/xalt_utils.h,26
-#define XALT_UTILS_H2,21
-
-compiled/parseLDD.C,20
-void parseLDD(6,95
-
-compiled/capture.C,43
-#define DATA_SIZE 4,60
-void capture(6,84
-
-compiled/extractXALTRecord.C,29
-void extractXALTRecord(5,75
-
-compiled/xalt_extract_linker.C,45
-void extract_linker(9,127
-int main(52,1206
-
-compiled/Process.h,347
-#define PROCESS_H2,18
-class Process9,95
-  ~Process(Process::~Process13,141
-  pid_t        parent(Process::parent15,158
-  std::string& name(Process::name16,205
-  std::string m_exe;Process::m_exe21,345
-  std::string m_name;Process::m_name22,366
-  pid_t       m_pid;Process::m_pid23,388
-  pid_t       m_parent;Process::m_parent24,409
-
-compiled/parseJsonStr.h,28
-#define PARSEJSONSTR_H2,23
-
-compiled/xalt_mysql_utils.C,197
-static const int issueWarning 9,155
-void finish_with_error(11,191
-void print_stmt_error(21,362
-void object_type(33,657
-void insert_objects(62,1274
-MYSQL* xalt_open_mysql_connection(341,10353
-
-compiled/f2db.C,170
-int buildUserTable(22,434
-int findFilesInDir(64,1422
-void removeFiles(85,1906
-int link_json_fileA_to_db(91,2025
-int run_json_fileA_to_db(126,3010
-int main(165,4121
+compiled/buildEnvT.C,21
+void buildEnvT(4,49
 
 compiled/Json.C,211
 void Json::fini(5,50
@@ -446,194 +749,466 @@ void Json::add(77,1200
 void Json::add(113,1945
 std::string& Json::result(138,2509
 
+compiled/capture.h,23
+#define CAPTURE_H2,18
+
+compiled/xalt_strip_linklib.C,18
+int main(15,1034
+
+compiled/link_direct2db.C,153
+uint select_link_id(15,252
+void insert_xalt_link(81,2142
+void insert_functions(232,7751
+void link_direct2db(435,14252
+void link_direct2db(468,15305
+
 compiled/transmit.h,24
 #define TRANSMIT_H2,19
 
-compiled/Json.h,124
-#define JSON_H2,15
-class Json6,56
-  Json(Json::Json9,77
-  ~Json(Json::~Json10,101
-  std::string m_s;Json::m_s21,471
+compiled/xalt_mysql_utils.C,197
+static const int issueWarning 9,155
+void finish_with_error(11,191
+void print_stmt_error(21,362
+void object_type(33,657
+void insert_objects(62,1274
+MYSQL* xalt_open_mysql_connection(351,10842
 
-compiled/buildRmapT.C,24
-void buildRmapT(12,218
-
-compiled/parseJsonStr.C,257
-void processArray(7,97
-void processSet(36,980
-void processTable(64,1851
-void processA2JsonStr(94,2896
-void processLibA(128,3877
-void processValue(167,5110
-void parseRunJsonStr(181,5621
-void parseLinkJsonStr(242,7536
-void parseCompTJsonStr(298,9114
-
-compiled/Process.C,90
-Process::Process(10,176
-void Process::cmdline(42,910
-std::string& Process::exe(67,1383
-
-compiled/translate.C,536
-const char * safe_get(3,47
-void translate(11,247
-  enum QueueType 14,292
-  enum QueueType { UNKNOWN QueueType::UNKNOWN14,292
-  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF14,292
-
-compiled/f2db_Options.h,634
-#define F2DB_OPTIONS_H2,23
-class f2db_Options6,66
-  ~f2db_Options(f2db_Options::~f2db_Options10,134
-  bool          deleteFn(f2db_Options::deleteFn11,155
-  bool          reportFn(f2db_Options::reportFn12,203
-  bool          timer(f2db_Options::timer13,251
-  std::string&  rmapD(f2db_Options::rmapD14,299
-  std::string&  confFn(f2db_Options::confFn15,347
-  bool        m_delete;f2db_Options::m_delete18,405
-  bool        m_report;f2db_Options::m_report19,429
-  bool        m_timer;f2db_Options::m_timer20,453
-  std::string m_rmapD;f2db_Options::m_rmapD21,476
-  std::string m_confFn;f2db_Options::m_confFn22,499
-
-compiled/ProgressBar.C,117
-int setWidth(7,89
-ProgressBar::ProgressBar(15,191
-void ProgressBar::update(43,746
-void ProgressBar::fini(66,1168
-
-compiled/xalt_generate_linkdata.C,17
-int main(20,385
-
-compiled/xalt_mysql_utils.h,90
-#define XALT_MYSQL_UTILS_H2,27
-#  undef min7,119
-#  undef max8,132
-#  undef test9,145
-
-compiled/base64.h,22
-#define BASE64_H2,17
-
-compiled/xalt_syshost.c,75
-char * hostname(10,171
-const char* xalt_syshost(32,705
-int main(60,1201
-
-compiled/run_submission.h,30
-#define RUN_SUBMISSION_H2,25
-
-README.md,97
-published by the Free Software Foundation;96,4120
-the License,97,4185
-the License, or 97,4185
-
-test/check_entries_db.py,119
-class CmdLineOptions(50,1826
-  def __init__(53,1894
-  def execute(57,1951
-def count_rows(69,2782
-def main(80,3028
-
-my_docs/Makefile,17
-SPHINXOPTS 5,92
-
-my_docs/source/010_installation.rst,17
-Installation1,0
-
-my_docs/source/index.rst,36
-XALT: Library Tracking Software2,1
-
-my_docs/source/030_FAQ.rst,8
-FAQ1,0
-
-my_docs/source/020_QuickStart.rst,22
-Quick Start Guide1,0
-
-my_docs/source/040_testing.rst,12
-Testing1,0
-
-my_docs/source/050_production.rst,15
-Production1,0
-
-my_docs/source/060_datamining.rst,16
-Data Mining1,0
-
-Makefile.in,1506
+Makefile.in,1465
 srcdir 22,1051
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=68,2540
-LIBEXEC 70,2675
-        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(LIBEXEC)/libuuid_64;libuuid_64122,5110
-        make;123,5202
-        make; make install;123,5202
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib64 ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib64;lib64124,5293
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_64/lib;lib125,5378
-	cd     $(CURDIR)/build_uuid_32;build_uuid_32131,5635
-        CC=132,5732
-        make;133,5836
-        make; make install;133,5836
-	[ -d $(DESTDIR)/$(LIBEXEC)/lib ] || mkdir $(DESTDIR)/$(LIBEXEC)/lib;lib134,5864
-	cd $(DESTDIR)/$(LIBEXEC)/libuuid_32/lib;lib135,5961
-	cd compiled;142,6182
-	cd compiled; $(142,6182
-	   ext=190,7935
-           oext=191,8005
-           [ "$$ext" = "in.py" ] && oext=193,8152
-           [ "$$ext" = "in.c" ]  && oext=194,8229
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext225,10413
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext227,10547
-	    true;228,10624
-	@git status -s > /tmp/git_st_$$$$;git_st_$$$$232,10722
-            git push github;236,11023
-            git push --tags github;237,11100
-        fi;238,11177
-        ifneq 242,11294
-	    echo "$(TAG)" >                                      .version;version247,11605
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version248,11675
-	    git push --tags tags250,11829
-          fi;251,11899
-	$(308,15233
+GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=70,2622
+GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)always70,2622
+VDATE	71,2788
+        make;133,5668
+        make; make install;133,5668
+	cd     $(CURDIR)/uuid_32;uuid_32138,5834
+        CC=139,5919
+        make;140,6011
+        make; make install;140,6011
+	cd compiled;146,6080
+	cd compiled; $(146,6080
+	   ext=194,7892
+           oext=195,7962
+           [ "$$ext" = "in.py" ] && oext=197,8109
+           [ "$$ext" = "in.c" ]  && oext=198,8186
+                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext230,10440
+               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext232,10574
+	    true;233,10651
+	@git status -s > /tmp/git_st_$$$$;git_st_$$$$237,10749
+            git push github;241,11050
+            git push --tags github;242,11127
+        fi;243,11204
+        ifneq 247,11321
+	    echo "$(TAG)"                                            >  .version;version253,11726
+            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version;version254,11804
+	    git push --tags tags256,11974
+          fi;257,12052
+	git archive --prefix=prefix317,15421
+	mkdir DIST;319,15560
+        cd DIST;320,15631
+        tar xf ../xalt-$(VERSION).tar;tar321,15709
+        $(RM) ../xalt-$(VERSION).tar;tar323,15872
+	$(331,16119
 
-configure.ac,100
-AC_INIT(1,0
-BUILD_PSTREE=165,4888
-USE_CONTRIB_ARGPARSE=181,5314
-  USE_CONTRIB_ARGPARSE=188,5646
+contrib/libuuid-1.0.3/c.h,1709
+#define UTIL_LINUX_C_H6,61
+#  define __GNUC_PREREQ(43,599
+#  define __GNUC_PREREQ(46,704
+# define __must_be_array(53,839
+# define ignore_result(56,956
+# define __must_be_array(61,1089
+# define ignore_result(63,1149
+#  define __ul_alloc_size(71,1292
+#  define __ul_alloc_size(73,1359
+#  define __ul_calloc_size(79,1455
+#  define __ul_calloc_size(81,1529
+#define UL_BUILD_BUG_ON_ZERO(90,1817
+#define BUILD_BUG_ON_NULL(91,1882
+# define ARRAY_SIZE(94,1972
+# define PATH_MAX 98,2078
+# define TRUE 102,2122
+# define FALSE 106,2160
+# define min(110,2197
+# define max(118,2372
+#define offsetof(126,2552
+#define container_of(130,2644
+#  define program_invocation_short_name 138,2926
+#   define program_invocation_short_name 141,3010
+#   define program_invocation_short_name 144,3106
+static char prog_inv_sh_nm_buf[prog_inv_sh_nm_buf147,3198
+prog_inv_sh_nm_from_file(149,3256
+errmsg(172,3667
+# define err(191,4053
+# define errx(195,4124
+# define warn(199,4196
+# define warnx(203,4266
+static inline __attribute__((const)) int is_power_of_2(208,4344
+typedef int64_t loff_t;214,4491
+static inline int dirfd(220,4673
+#define UL_CLOEXECSTR	232,4825
+#define UL_CLOEXECSTR	234,4857
+#define O_CLOEXEC 238,4908
+#define AI_ADDRCONFIG 243,4959
+#define IUTF8 247,5010
+static inline size_t get_hostname_max(253,5077
+static inline int usleep(275,5487
+#define USAGE_HEADER 289,5817
+#define USAGE_OPTIONS 290,5858
+#define USAGE_SEPARATOR 291,5901
+#define USAGE_HELP 292,5934
+#define USAGE_VERSION 293,6009
+#define USAGE_MAN_TAIL(294,6093
+#define UTIL_LINUX_VERSION 296,6165
+#define UL_SCNsA	302,6339
+#define UL_SCNsA	304,6400
+# define SEEK_DATA	311,6470
+# define SEEK_HOLE	314,6516
 
-contrib/build_reverseMapT_cray/merge_json_files.py,16
-def main(6,103
+contrib/libuuid-1.0.3/test_uuid.c,140
+#define _WIN32_WINNT 36,1629
+#define UUID 38,1678
+static int test_uuid(46,1765
+#define ATTR(64,2154
+#define ATTR(66,2193
+main(70,2221
 
-contrib/build_reverseMapT_cray/cray_build_rmapT.sh,96
-  BASE_MODULE_PATH=32,1346
-  RmapDir=33,1379
-SCRIPT_DIR=55,1991
-    sn=61,2178
-OLD=75,2430
+contrib/libuuid-1.0.3/Makefile.am,20
+check_PROGRAMS 1,0
 
-contrib/libuuid-1.0.3/uuid.h,350
-#define _UUID_UUID_H36,1627
-typedef unsigned char uuid_t[uuid_t44,1735
-#define UUID_VARIANT_NCS	47,1801
-#define UUID_VARIANT_DCE	48,1828
-#define UUID_VARIANT_MICROSOFT	49,1855
-#define UUID_VARIANT_OTHER	50,1888
-#define UUID_TYPE_DCE_TIME 53,1946
-#define UUID_TYPE_DCE_RANDOM 54,1977
-#define UUID_DEFINE(58,2066
-#define UUID_DEFINE(61,2263
+contrib/libuuid-1.0.3/install-sh,363
+scriptversion=4,62
+nl=44,1910
+  doit_exec=53,2081
+chmodprog=62,2248
+chownprog=63,2277
+cmpprog=64,2306
+cpprog=65,2329
+mkdirprog=66,2349
+mvprog=67,2378
+rmprog=68,2398
+stripprog=69,2418
+posix_glob=71,2448
+posix_mkdir=82,2614
+    -c)c133,3893
+    -C) copy_on_change=135,3905
+    -d) dir_arg=137,3936
+    -g) chgrpcmd=139,3960
+    -m) mode=144,4041
 
-contrib/libuuid-1.0.3/randutils.c,226
-#define THREAD_LOCAL 21,357
-#define THREAD_LOCAL 23,400
-#define DO_JRAND_MIX27,508
-THREAD_LOCAL unsigned short ul_jrand_seed[ul_jrand_seed28,529
-int random_get_fd(31,583
-void random_get_bytes(65,1412
-int main(112,2375
+contrib/libuuid-1.0.3/configure.ac,16
+AC_PREREQ(3,66
+
+contrib/libuuid-1.0.3/clear.c,25
+void uuid_clear(39,1624
+
+contrib/libuuid-1.0.3/config.guess,3349
+timestamp=7,244
+       echo "$timestamp" ; exit 69,2464
+       echo "$version" ; exit 71,2520
+       echo "$usage"; exit 73,2578
+       shift;75,2646
+       shift; break 75,2646
+       break 77,2699
+       exit 80,2770
+       break 82,2795
+set_cc_for_build=103,3362
+: ${$106,3562
+ { tmp=107,3581
+ { test -n "$RANDOM" && tmp=108,3689
+ { tmp=109,3774
+ { echo "$me: cannot create a temporary directory in $TMPDIR" >&2 ; exit 110,3887
+dummy=111,3968
+tmpfiles=112,3987
+case $CC_FOR_BUILD,113,4036
+case $CC_FOR_BUILD,$HOST_CC,113,4036
+case $CC_FOR_BUILD,$HOST_CC,$CC in113,4036
+ ,,)    echo "int x;" > $dummy.c c114,4071
+	     CC_FOR_BUILD=117,4194
+	     CC_FOR_BUILD="$c"; break 117,4194
+	  fi 118,4227
+	done 119,4235
+	  CC_FOR_BUILD=121,4280
+	fi122,4316
+ ,,*)   CC_FOR_BUILD=124,4324
+ ,*,*)  CC_FOR_BUILD=125,4352
+esac 126,4385
+esac ; set_cc_for_build=126,4385
+	PATH=131,4580
+UNAME_MACHINE=134,4619
+	    arm*) machine=158,5742
+	    sh3el) machine=159,5776
+	    sh3eb) machine=160,5811
+	    sh5el) machine=161,5845
+	    *) machine=162,5882
+	    *) machine=${UNAME_MACHINE_ARCH}-unknown unknown162,5882
+		os=180,6406
+		release=190,6714
+		release=193,6744
+	exit 200,7006
+	UNAME_MACHINE_ARCH=202,7033
+	exit 204,7139
+	UNAME_MACHINE_ARCH=206,7167
+	exit 208,7275
+	exit 211,7358
+	exit 214,7443
+	exit 217,7520
+	exit 220,7601
+		UNAME_RELEASE=224,7661
+		UNAME_RELEASE=227,7729
+	ALPHA_CPU_TYPE=234,8049
+		UNAME_MACHINE=239,8250
+		UNAME_MACHINE=241,8304
+		UNAME_MACHINE=243,8351
+		UNAME_MACHINE=245,8404
+		UNAME_MACHINE=247,8459
+		UNAME_MACHINE=249,8515
+		UNAME_MACHINE=251,8567
+		UNAME_MACHINE=253,8620
+		UNAME_MACHINE=255,8676
+		UNAME_MACHINE=257,8732
+		UNAME_MACHINE=259,8788
+		UNAME_MACHINE=261,8848
+		UNAME_MACHINE=263,8899
+		UNAME_MACHINE=265,8952
+	exitcode=274,9425
+	exit 282,9694
+	exit 285,9755
+	exit 288,9821
+	exit 291,9897
+	exit 294,9973
+	exit 297,10027
+	exit 300,10073
+	exit 303,10123
+	exit 306,10219
+	exit 309,10290
+	exit 312,10378
+	exit 320,10639
+	exit 323,10696
+	exit 326,10751
+	    sparc) echo sparc-icl-nx7;nx7329,10843
+	    sparc) echo sparc-icl-nx7; exit 329,10843
+	esac 330,10883
+	exit 333,10991
+	exit 336,11090
+	exit 339,11212
+	exit 342,11310
+	SUN_ARCH=345,11387
+	    if (echo '#ifdef __amd64'; echo IS_64BIT_ARCH;350,11636
+		(CCOPTS=351,11707
+	exit 358,11900
+	exit 364,12181
+		UNAME_RELEASE=368,12259
+	exit 373,12427
+	exit 376,12494
+	UNAME_RELEASE=378,12524
+		echo sparc-sun-sunos${sunos$385,12742
+	exit 388,12792
+	exit 391,12863
+	exit 402,13462
+	exit 405,13572
+	exit 408,13684
+	exit 411,13791
+	exit 414,13898
+	exit 417,13991
+	exit 420,14063
+	exit 423,14141
+	exit 426,14197
+	exit 429,14266
+	exit 432,14334
+	exit 435,14424
+	int main 441,14594
+		#define _HPUX_SOURCE617,19425
+	#undef CPU944,28696
+	#undef ${$945,28708
+	#undef ${$946,28733
+#define __ARCHITECTURE__ 1376,40924
+$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && SYSTEM_NAME=1456,42587
+test -d /usr/apollo && { echo ${ISP}-apollo-${$1461,42743
+test -d /usr/apollo && { echo ${ISP}-apollo-${SYSTYPE}; exit;1461,42743
+	exit 1479,43114
+	exit 1482,43154
+	exit 1485,43192
+This script,1492,43261
+This script, last modified $timestamp,1492,43261
+If the version you run 1500,43625
+UNAME_RELEASE 1523,44572
+UNAME_SYSTEM 1524,44605
+UNAME_VERSION 1525,44637
+
+contrib/libuuid-1.0.3/randutils.h,74
+#define UTIL_LINUX_RANDUTILS2,29
+#define srand(5,79
+#define rand(6,107
+
+contrib/libuuid-1.0.3/unpack.c,26
+void uuid_unpack(38,1635
+
+contrib/libuuid-1.0.3/unparse.c,283
+static const char *fmt_lower fmt_lower39,1637
+static const char *fmt_upper fmt_upper42,1722
+#define FMT_DEFAULT 46,1841
+#define FMT_DEFAULT 48,1877
+static void uuid_unparse_x(51,1915
+void uuid_unparse_lower(63,2249
+void uuid_unparse_upper(68,2343
+void uuid_unparse(73,2437
+
+contrib/libuuid-1.0.3/Makefile.in,2694
+VPATH 19,571
+         exit 26,877
+  esac;27,897
+  has_opt=28,907
+  sane_makeflags=29,923
+    sane_makeflags=31,987
+        bs=35,1073
+        sane_makeflags=36,1090
+    esac;38,1194
+  fi;39,1206
+  skip_next=40,1214
+  strip_trailopt 41,1232
+    test $$skip_next 46,1358
+    case $$flg in 47,1419
+        -*I) strip_trailopt 'I'; skip_next=49,1467
+        -*O) strip_trailopt 'O'; skip_next=51,1554
+        -*l) strip_trailopt 'l'; skip_next=53,1641
+      -[dEDm]) skip_next=55,1728
+      -[JT]) skip_next=56,1761
+    esac;57,1792
+      *$$target_option*) has_opt=59,1824
+      *$$target_option*) has_opt=yes; break;59,1824
+    esac;60,1872
+  done;61,1884
+  test $$has_opt 62,1894
+am__make_dryrun = (target_option=n; $(63,1917
+am__nobase_list 111,3764
+am__base_list 118,4169
+am__installdirs 127,4519
+am__v_GEN_1 159,5882
+am__v_CC_1 177,6524
+am__v_CCLD_1 185,6818
+DATA 193,7088
+  { items[items202,7450
+  { items[$$0] = 1; nonempty 202,7450
+am__define_uniq_tagged_files 208,7724
+  unique=210,7789
+    if test -f "$$i"; then echo $$i;211,7821
+    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i;$$i211,7821
+    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi;211,7821
+  done | $(212,7889
+  else 225,8325
+am__post_remove_distdir 226,8338
+	      $(400,12480
+	    list2=450,14173
+	  else 451,14201
+	  else :; fi;451,14201
+	done;452,14218
+	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 455,14300
+	  $(457,14487
+	  $(464,14753
+	locs=`for p in $$list; do echo $$p;472,15104
+	      sort -u`u474,15216
+	  echo rm -f $${$$476,15260
+	  rm -f $${$$477,15286
+libuuid.la: $(480,15311
+	echo " rm -f" $$list;489,15746
+test_uuid$(492,15786
+@am__fastdepCC_TRUE@	$(622,30884
+install-pkgconfigDATA: $(635,31611
+	  $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)" || exit 640,31820
+	fi;641,31875
+	  if test -f "$$p"; then d=643,31905
+	  if test -f "$$p"; then d=; else d=643,31905
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi;643,31905
+	  $(648,32101
+	files=`for p in $$list; do echo $$p;654,32291
+	dir=655,32358
+	dir='$(DESTDIR)$(pkgconfigdir)'; $(655,32358
+	  $(MKDIR_P) "$(DESTDIR)$(uuidincdir)" || exit 661,32632
+	fi;662,32685
+	  if test -f "$$p"; then d=664,32715
+	  if test -f "$$p"; then d=; else d=664,32715
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi;664,32715
+	  $(669,32911
+	files=`for p in $$list; do echo $$p;675,33101
+	dir=676,33168
+	dir='$(DESTDIR)$(uuidincdir)'; $(676,33168
+	if test -z "$(ETAGS_ARGS)$$*$$unique"; then 688,33457
+	  test -n "$$unique" || unique=689,33512
+	    $(691,33588
+	  fi;730,34654
+distdir: $(737,34825
+	  dist_files=`for file in $$list; do echo $$file;743,35076
+
+contrib/libuuid-1.0.3/uuid.pc.in,12
+prefix=1,0
+
+contrib/libuuid-1.0.3/depcomp,1312
+scriptversion=4,82
+    exit 31,1219
+Run PROGRAMS ARGS to compile a file,37,1318
+set_dir_from 62,2114
+make_dummy_depfile 80,2581
+aix_post_process_depfile 87,2770
+tab=108,3403
+depfile=125,3862
+tmpdepfile=127,3973
+gccflag=132,4111
+  gccflag=140,4477
+  dashmflag=146,4609
+  cygpath_u=155,4880
+  cygpath_u=163,5131
+  gccflag=169,5287
+  stat=192,5990
+    gccflag=215,6942
+  exit 251,8426
+  stat=260,8561
+  if test -f "$tmpdepfile"; then  # yes,267,8663
+  exit 293,9722
+    tmpdepfile1=305,10144
+  stat=344,11213
+  tmpdepfile=378,12614
+      stat=397,13212
+        i=406,13484
+    tmpdepfile1=445,14816
+    tmpdepfile1=495,16400
+    showIncludes=522,17047
+  exit 563,18206
+  IFS=584,18695
+      shift592,18779
+      shift # $arg597,18855
+  test -z "$dashmflag" && dashmflag=602,18900
+  exit 621,19731
+  cleared=635,19944
+      cleared=641,20028
+      eat=644,20087
+      set fnord "$@" "$arg"; shift 649,20154
+      eat=653,20345
+    -*|$object)$object654,20362
+      set fnord "$@" "$arg"; shift 657,20394
+  obj_suffix=660,20448
+  rm -f "$tmpdepfile" "$tmpdepfile".bakbak673,21091
+  IFS=690,21453
+      shift698,21537
+      shift # $arg703,21613
+  IFS=732,22324
+      shift740,22410
+        shift745,22509
+        shift750,22585
+  exit 768,23204
+  exit 777,23285
+
+contrib/libuuid-1.0.3/uuidP.h,276
+#define LIBUUID_CLOCK_FILE	40,1664
+#define TIME_OFFSET_HIGH 45,1771
+#define TIME_OFFSET_LOW 46,1807
+struct uuid 48,1844
+	uint32_t	time_low;49,1858
+	uint16_t	time_mid;50,1878
+	uint16_t	time_hi_and_version;51,1898
+	uint16_t	clock_seq;52,1929
+	uint8_t	node[node53,1950
+
+contrib/libuuid-1.0.3/pack.c,24
+void uuid_pack(38,1634
 
 contrib/libuuid-1.0.3/ltmain.sh,4177
 PROGRAM=81,3871
@@ -773,337 +1348,26 @@ prepare_spawn 4971,145581
 EOF5057,147265
 void lt_dump_script 5062,147309
 
-contrib/libuuid-1.0.3/pack.c,24
-void uuid_pack(38,1634
-
-contrib/libuuid-1.0.3/install-sh,363
-scriptversion=4,62
-nl=44,1910
-  doit_exec=53,2081
-chmodprog=62,2248
-chownprog=63,2277
-cmpprog=64,2306
-cpprog=65,2329
-mkdirprog=66,2349
-mvprog=67,2378
-rmprog=68,2398
-stripprog=69,2418
-posix_glob=71,2448
-posix_mkdir=82,2614
-    -c)c133,3893
-    -C) copy_on_change=135,3905
-    -d) dir_arg=137,3936
-    -g) chgrpcmd=139,3960
-    -m) mode=144,4041
-
-contrib/libuuid-1.0.3/config.h.in,1296
-#undef HAVE_DECL__SC_HOST_NAME_MAX5,161
-#undef HAVE_DLFCN_H8,254
-#undef HAVE_FCNTL_H11,332
-#undef HAVE_FTRUNCATE14,409
-#undef HAVE_GETTIMEOFDAY17,491
-#undef HAVE_INTTYPES_H20,577
-#undef HAVE_LIMITS_H23,659
-#undef HAVE_MEMORY_H26,739
-#undef HAVE_MEMSET29,814
-#undef HAVE_NETINET_IN_H32,896
-#undef HAVE_SOCKET35,975
-#undef HAVE_SRANDOM38,1049
-#undef HAVE_STDINT_H41,1128
-#undef HAVE_STDLIB_H44,1208
-#undef HAVE_STRINGS_H47,1289
-#undef HAVE_STRING_H50,1370
-#undef HAVE_STRTOUL53,1446
-#undef HAVE_SYS_FILE_H56,1527
-#undef HAVE_SYS_IOCTL_H59,1612
-#undef HAVE_SYS_SOCKET_H62,1699
-#undef HAVE_SYS_STAT_H65,1785
-#undef HAVE_SYS_TIME_H68,1869
-#undef HAVE_SYS_TYPES_H71,1954
-#undef HAVE_UNISTD_H74,2037
-#undef HAVE_USLEEP77,2112
-#undef LT_OBJDIR81,2216
-#undef PACKAGE84,2256
-#undef PACKAGE_BUGREPORT87,2351
-#undef PACKAGE_NAME90,2424
-#undef PACKAGE_STRING93,2504
-#undef PACKAGE_TARNAME96,2586
-#undef PACKAGE_URL99,2658
-#undef PACKAGE_VERSION102,2723
-#undef STDC_HEADERS105,2802
-#undef VERSION108,2855
-#undef _UINT32_T113,3070
-#undef _UINT64_T118,3287
-#undef _UINT8_T123,3503
-#undef int32_t127,3664
-#undef mode_t130,3736
-#undef size_t133,3816
-#undef ssize_t136,3887
-#undef uint16_t140,4050
-#undef uint32_t144,4214
-#undef uint64_t148,4378
-#undef uint8_t152,4541
-
-contrib/libuuid-1.0.3/Makefile.am,20
-check_PROGRAMS 1,0
-
-contrib/libuuid-1.0.3/depcomp,1312
-scriptversion=4,82
-    exit 31,1219
-Run PROGRAMS ARGS to compile a file,37,1318
-set_dir_from 62,2114
-make_dummy_depfile 80,2581
-aix_post_process_depfile 87,2770
-tab=108,3403
-depfile=125,3862
-tmpdepfile=127,3973
-gccflag=132,4111
-  gccflag=140,4477
-  dashmflag=146,4609
-  cygpath_u=155,4880
-  cygpath_u=163,5131
-  gccflag=169,5287
-  stat=192,5990
-    gccflag=215,6942
-  exit 251,8426
-  stat=260,8561
-  if test -f "$tmpdepfile"; then  # yes,267,8663
-  exit 293,9722
-    tmpdepfile1=305,10144
-  stat=344,11213
-  tmpdepfile=378,12614
-      stat=397,13212
-        i=406,13484
-    tmpdepfile1=445,14816
-    tmpdepfile1=495,16400
-    showIncludes=522,17047
-  exit 563,18206
-  IFS=584,18695
-      shift592,18779
-      shift # $arg597,18855
-  test -z "$dashmflag" && dashmflag=602,18900
-  exit 621,19731
-  cleared=635,19944
-      cleared=641,20028
-      eat=644,20087
-      set fnord "$@" "$arg"; shift 649,20154
-      eat=653,20345
-    -*|$object)$object654,20362
-      set fnord "$@" "$arg"; shift 657,20394
-  obj_suffix=660,20448
-  rm -f "$tmpdepfile" "$tmpdepfile".bakbak673,21091
-  IFS=690,21453
-      shift698,21537
-      shift # $arg703,21613
-  IFS=732,22324
-      shift740,22410
-        shift745,22509
-        shift750,22585
-  exit 768,23204
-  exit 777,23285
-
-contrib/libuuid-1.0.3/Makefile.in,2694
-VPATH 19,571
-         exit 26,877
-  esac;27,897
-  has_opt=28,907
-  sane_makeflags=29,923
-    sane_makeflags=31,987
-        bs=35,1073
-        sane_makeflags=36,1090
-    esac;38,1194
-  fi;39,1206
-  skip_next=40,1214
-  strip_trailopt 41,1232
-    test $$skip_next 46,1358
-    case $$flg in 47,1419
-        -*I) strip_trailopt 'I'; skip_next=49,1467
-        -*O) strip_trailopt 'O'; skip_next=51,1554
-        -*l) strip_trailopt 'l'; skip_next=53,1641
-      -[dEDm]) skip_next=55,1728
-      -[JT]) skip_next=56,1761
-    esac;57,1792
-      *$$target_option*) has_opt=59,1824
-      *$$target_option*) has_opt=yes; break;59,1824
-    esac;60,1872
-  done;61,1884
-  test $$has_opt 62,1894
-am__make_dryrun = (target_option=n; $(63,1917
-am__nobase_list 111,3764
-am__base_list 118,4169
-am__installdirs 127,4519
-am__v_GEN_1 159,5882
-am__v_CC_1 177,6524
-am__v_CCLD_1 185,6818
-DATA 193,7088
-  { items[items202,7450
-  { items[$$0] = 1; nonempty 202,7450
-am__define_uniq_tagged_files 208,7724
-  unique=210,7789
-    if test -f "$$i"; then echo $$i;211,7821
-    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i;$$i211,7821
-    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi;211,7821
-  done | $(212,7889
-  else 225,8325
-am__post_remove_distdir 226,8338
-	      $(400,12480
-	    list2=450,14173
-	  else 451,14201
-	  else :; fi;451,14201
-	done;452,14218
-	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 455,14300
-	  $(457,14487
-	  $(464,14753
-	locs=`for p in $$list; do echo $$p;472,15104
-	      sort -u`u474,15216
-	  echo rm -f $${$$476,15260
-	  rm -f $${$$477,15286
-libuuid.la: $(480,15311
-	echo " rm -f" $$list;489,15746
-test_uuid$(492,15786
-@am__fastdepCC_TRUE@	$(622,30884
-install-pkgconfigDATA: $(635,31611
-	  $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)" || exit 640,31820
-	fi;641,31875
-	  if test -f "$$p"; then d=643,31905
-	  if test -f "$$p"; then d=; else d=643,31905
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi;643,31905
-	  $(648,32101
-	files=`for p in $$list; do echo $$p;654,32291
-	dir=655,32358
-	dir='$(DESTDIR)$(pkgconfigdir)'; $(655,32358
-	  $(MKDIR_P) "$(DESTDIR)$(uuidincdir)" || exit 661,32632
-	fi;662,32685
-	  if test -f "$$p"; then d=664,32715
-	  if test -f "$$p"; then d=; else d=664,32715
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi;664,32715
-	  $(669,32911
-	files=`for p in $$list; do echo $$p;675,33101
-	dir=676,33168
-	dir='$(DESTDIR)$(uuidincdir)'; $(676,33168
-	if test -z "$(ETAGS_ARGS)$$*$$unique"; then 688,33457
-	  test -n "$$unique" || unique=689,33512
-	    $(691,33588
-	  fi;730,34654
-distdir: $(737,34825
-	  dist_files=`for file in $$list; do echo $$file;743,35076
-
-contrib/libuuid-1.0.3/configure.ac,16
-AC_PREREQ(3,66
-
-contrib/libuuid-1.0.3/clear.c,25
-void uuid_clear(39,1624
+contrib/libuuid-1.0.3/uuidd.h,413
+#define _UUID_UUIDD_H36,1612
+#define UUIDD_DIR	38,1635
+#define UUIDD_SOCKET_PATH	39,1683
+#define UUIDD_PIDFILE_PATH	40,1730
+#define UUIDD_PATH	41,1780
+#define UUIDD_OP_GETPID	43,1819
+#define UUIDD_OP_GET_MAXOP	44,1847
+#define UUIDD_OP_TIME_UUID	45,1877
+#define UUIDD_OP_RANDOM_UUID	46,1907
+#define UUIDD_OP_BULK_TIME_UUID	47,1939
+#define UUIDD_OP_BULK_RANDOM_UUID	48,1974
+#define UUIDD_MAX_OP	49,2010
 
 contrib/libuuid-1.0.3/parse.c,24
 int uuid_parse(42,1683
 
-contrib/libuuid-1.0.3/test_uuid.c,140
-#define _WIN32_WINNT 36,1629
-#define UUID 38,1678
-static int test_uuid(46,1765
-#define ATTR(64,2154
-#define ATTR(66,2193
-main(70,2221
-
-contrib/libuuid-1.0.3/c.h,1709
-#define UTIL_LINUX_C_H6,61
-#  define __GNUC_PREREQ(43,599
-#  define __GNUC_PREREQ(46,704
-# define __must_be_array(53,839
-# define ignore_result(56,956
-# define __must_be_array(61,1089
-# define ignore_result(63,1149
-#  define __ul_alloc_size(71,1292
-#  define __ul_alloc_size(73,1359
-#  define __ul_calloc_size(79,1455
-#  define __ul_calloc_size(81,1529
-#define UL_BUILD_BUG_ON_ZERO(90,1817
-#define BUILD_BUG_ON_NULL(91,1882
-# define ARRAY_SIZE(94,1972
-# define PATH_MAX 98,2078
-# define TRUE 102,2122
-# define FALSE 106,2160
-# define min(110,2197
-# define max(118,2372
-#define offsetof(126,2552
-#define container_of(130,2644
-#  define program_invocation_short_name 138,2926
-#   define program_invocation_short_name 141,3010
-#   define program_invocation_short_name 144,3106
-static char prog_inv_sh_nm_buf[prog_inv_sh_nm_buf147,3198
-prog_inv_sh_nm_from_file(149,3256
-errmsg(172,3667
-# define err(191,4053
-# define errx(195,4124
-# define warn(199,4196
-# define warnx(203,4266
-static inline __attribute__((const)) int is_power_of_2(208,4344
-typedef int64_t loff_t;214,4491
-static inline int dirfd(220,4673
-#define UL_CLOEXECSTR	232,4825
-#define UL_CLOEXECSTR	234,4857
-#define O_CLOEXEC 238,4908
-#define AI_ADDRCONFIG 243,4959
-#define IUTF8 247,5010
-static inline size_t get_hostname_max(253,5077
-static inline int usleep(275,5487
-#define USAGE_HEADER 289,5817
-#define USAGE_OPTIONS 290,5858
-#define USAGE_SEPARATOR 291,5901
-#define USAGE_HELP 292,5934
-#define USAGE_VERSION 293,6009
-#define USAGE_MAN_TAIL(294,6093
-#define UTIL_LINUX_VERSION 296,6165
-#define UL_SCNsA	302,6339
-#define UL_SCNsA	304,6400
-# define SEEK_DATA	311,6470
-# define SEEK_HOLE	314,6516
-
-contrib/libuuid-1.0.3/randutils.h,74
-#define UTIL_LINUX_RANDUTILS2,29
-#define srand(5,79
-#define rand(6,107
-
-contrib/libuuid-1.0.3/all-io.h,148
-#define UTIL_LINUX_ALL_IO_H10,218
-static inline int write_all(18,323
-static inline int fwrite_all(37,702
-static inline ssize_t read_all(57,1128
-
-contrib/libuuid-1.0.3/uuid_time.c,201
-#define _WIN32_WINNT 38,1743
-#define UUID 40,1792
-time_t uuid_time(56,2021
-int uuid_type(78,2502
-int uuid_variant(86,2634
-static const char *variant_string(variant_string104,2961
-main(120,3201
-
-contrib/libuuid-1.0.3/unparse.c,283
-static const char *fmt_lower fmt_lower39,1637
-static const char *fmt_upper fmt_upper42,1722
-#define FMT_DEFAULT 46,1841
-#define FMT_DEFAULT 48,1877
-static void uuid_unparse_x(51,1915
-void uuid_unparse_lower(63,2249
-void uuid_unparse_upper(68,2343
-void uuid_unparse(73,2437
-
-contrib/libuuid-1.0.3/isnull.c,26
-int uuid_is_null(38,1675
-
-contrib/libuuid-1.0.3/unpack.c,26
-void uuid_unpack(38,1635
-
-contrib/libuuid-1.0.3/missing,144
-scriptversion=4,73
-    exit 37,1354
-    shift42,1452
-    exit 75,2315
-"$@"; st=81,2391
-  msg=95,2867
-  msg=98,2945
-give_advice 129,3811
+contrib/libuuid-1.0.3/compare.c,49
+#define UUCMP(40,1735
+int uuid_compare(42,1799
 
 contrib/libuuid-1.0.3/config.sub,10490
 timestamp=7,246
@@ -1538,8 +1802,53 @@ vendor=1710,34505
 				vendor=1775,35345
 		basic_machine=1778,35378
 
-contrib/libuuid-1.0.3/uuid.pc.in,12
-prefix=1,0
+contrib/libuuid-1.0.3/config.h.in,1296
+#undef HAVE_DECL__SC_HOST_NAME_MAX5,161
+#undef HAVE_DLFCN_H8,254
+#undef HAVE_FCNTL_H11,332
+#undef HAVE_FTRUNCATE14,409
+#undef HAVE_GETTIMEOFDAY17,491
+#undef HAVE_INTTYPES_H20,577
+#undef HAVE_LIMITS_H23,659
+#undef HAVE_MEMORY_H26,739
+#undef HAVE_MEMSET29,814
+#undef HAVE_NETINET_IN_H32,896
+#undef HAVE_SOCKET35,975
+#undef HAVE_SRANDOM38,1049
+#undef HAVE_STDINT_H41,1128
+#undef HAVE_STDLIB_H44,1208
+#undef HAVE_STRINGS_H47,1289
+#undef HAVE_STRING_H50,1370
+#undef HAVE_STRTOUL53,1446
+#undef HAVE_SYS_FILE_H56,1527
+#undef HAVE_SYS_IOCTL_H59,1612
+#undef HAVE_SYS_SOCKET_H62,1699
+#undef HAVE_SYS_STAT_H65,1785
+#undef HAVE_SYS_TIME_H68,1869
+#undef HAVE_SYS_TYPES_H71,1954
+#undef HAVE_UNISTD_H74,2037
+#undef HAVE_USLEEP77,2112
+#undef LT_OBJDIR81,2216
+#undef PACKAGE84,2256
+#undef PACKAGE_BUGREPORT87,2351
+#undef PACKAGE_NAME90,2424
+#undef PACKAGE_STRING93,2504
+#undef PACKAGE_TARNAME96,2586
+#undef PACKAGE_URL99,2658
+#undef PACKAGE_VERSION102,2723
+#undef STDC_HEADERS105,2802
+#undef VERSION108,2855
+#undef _UINT32_T113,3070
+#undef _UINT64_T118,3287
+#undef _UINT8_T123,3503
+#undef int32_t127,3664
+#undef mode_t130,3736
+#undef size_t133,3816
+#undef ssize_t136,3887
+#undef uint16_t140,4050
+#undef uint32_t144,4214
+#undef uint64_t148,4378
+#undef uint8_t152,4541
 
 contrib/libuuid-1.0.3/COPYING,35
 This library is free software;1,0
@@ -1573,171 +1882,11 @@ void uuid_generate_random(563,12957
 static int have_random_source(575,13206
 void uuid_generate(589,13547
 
-contrib/libuuid-1.0.3/compare.c,49
-#define UUCMP(40,1735
-int uuid_compare(42,1799
-
-contrib/libuuid-1.0.3/uuidP.h,276
-#define LIBUUID_CLOCK_FILE	40,1664
-#define TIME_OFFSET_HIGH 45,1771
-#define TIME_OFFSET_LOW 46,1807
-struct uuid 48,1844
-	uint32_t	time_low;49,1858
-	uint16_t	time_mid;50,1878
-	uint16_t	time_hi_and_version;51,1898
-	uint16_t	clock_seq;52,1929
-	uint8_t	node[node53,1950
+contrib/libuuid-1.0.3/isnull.c,26
+int uuid_is_null(38,1675
 
 contrib/libuuid-1.0.3/copy.c,24
 void uuid_copy(37,1601
-
-contrib/libuuid-1.0.3/uuidd.h,413
-#define _UUID_UUIDD_H36,1612
-#define UUIDD_DIR	38,1635
-#define UUIDD_SOCKET_PATH	39,1683
-#define UUIDD_PIDFILE_PATH	40,1730
-#define UUIDD_PATH	41,1780
-#define UUIDD_OP_GETPID	43,1819
-#define UUIDD_OP_GET_MAXOP	44,1847
-#define UUIDD_OP_TIME_UUID	45,1877
-#define UUIDD_OP_RANDOM_UUID	46,1907
-#define UUIDD_OP_BULK_TIME_UUID	47,1939
-#define UUIDD_OP_BULK_RANDOM_UUID	48,1974
-#define UUIDD_MAX_OP	49,2010
-
-contrib/libuuid-1.0.3/config.guess,3349
-timestamp=7,244
-       echo "$timestamp" ; exit 69,2464
-       echo "$version" ; exit 71,2520
-       echo "$usage"; exit 73,2578
-       shift;75,2646
-       shift; break 75,2646
-       break 77,2699
-       exit 80,2770
-       break 82,2795
-set_cc_for_build=103,3362
-: ${$106,3562
- { tmp=107,3581
- { test -n "$RANDOM" && tmp=108,3689
- { tmp=109,3774
- { echo "$me: cannot create a temporary directory in $TMPDIR" >&2 ; exit 110,3887
-dummy=111,3968
-tmpfiles=112,3987
-case $CC_FOR_BUILD,113,4036
-case $CC_FOR_BUILD,$HOST_CC,113,4036
-case $CC_FOR_BUILD,$HOST_CC,$CC in113,4036
- ,,)    echo "int x;" > $dummy.c c114,4071
-	     CC_FOR_BUILD=117,4194
-	     CC_FOR_BUILD="$c"; break 117,4194
-	  fi 118,4227
-	done 119,4235
-	  CC_FOR_BUILD=121,4280
-	fi122,4316
- ,,*)   CC_FOR_BUILD=124,4324
- ,*,*)  CC_FOR_BUILD=125,4352
-esac 126,4385
-esac ; set_cc_for_build=126,4385
-	PATH=131,4580
-UNAME_MACHINE=134,4619
-	    arm*) machine=158,5742
-	    sh3el) machine=159,5776
-	    sh3eb) machine=160,5811
-	    sh5el) machine=161,5845
-	    *) machine=162,5882
-	    *) machine=${UNAME_MACHINE_ARCH}-unknown unknown162,5882
-		os=180,6406
-		release=190,6714
-		release=193,6744
-	exit 200,7006
-	UNAME_MACHINE_ARCH=202,7033
-	exit 204,7139
-	UNAME_MACHINE_ARCH=206,7167
-	exit 208,7275
-	exit 211,7358
-	exit 214,7443
-	exit 217,7520
-	exit 220,7601
-		UNAME_RELEASE=224,7661
-		UNAME_RELEASE=227,7729
-	ALPHA_CPU_TYPE=234,8049
-		UNAME_MACHINE=239,8250
-		UNAME_MACHINE=241,8304
-		UNAME_MACHINE=243,8351
-		UNAME_MACHINE=245,8404
-		UNAME_MACHINE=247,8459
-		UNAME_MACHINE=249,8515
-		UNAME_MACHINE=251,8567
-		UNAME_MACHINE=253,8620
-		UNAME_MACHINE=255,8676
-		UNAME_MACHINE=257,8732
-		UNAME_MACHINE=259,8788
-		UNAME_MACHINE=261,8848
-		UNAME_MACHINE=263,8899
-		UNAME_MACHINE=265,8952
-	exitcode=274,9425
-	exit 282,9694
-	exit 285,9755
-	exit 288,9821
-	exit 291,9897
-	exit 294,9973
-	exit 297,10027
-	exit 300,10073
-	exit 303,10123
-	exit 306,10219
-	exit 309,10290
-	exit 312,10378
-	exit 320,10639
-	exit 323,10696
-	exit 326,10751
-	    sparc) echo sparc-icl-nx7;nx7329,10843
-	    sparc) echo sparc-icl-nx7; exit 329,10843
-	esac 330,10883
-	exit 333,10991
-	exit 336,11090
-	exit 339,11212
-	exit 342,11310
-	SUN_ARCH=345,11387
-	    if (echo '#ifdef __amd64'; echo IS_64BIT_ARCH;350,11636
-		(CCOPTS=351,11707
-	exit 358,11900
-	exit 364,12181
-		UNAME_RELEASE=368,12259
-	exit 373,12427
-	exit 376,12494
-	UNAME_RELEASE=378,12524
-		echo sparc-sun-sunos${sunos$385,12742
-	exit 388,12792
-	exit 391,12863
-	exit 402,13462
-	exit 405,13572
-	exit 408,13684
-	exit 411,13791
-	exit 414,13898
-	exit 417,13991
-	exit 420,14063
-	exit 423,14141
-	exit 426,14197
-	exit 429,14266
-	exit 432,14334
-	exit 435,14424
-	int main 441,14594
-		#define _HPUX_SOURCE617,19425
-	#undef CPU944,28696
-	#undef ${$945,28708
-	#undef ${$946,28733
-#define __ARCHITECTURE__ 1376,40924
-$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && SYSTEM_NAME=1456,42587
-test -d /usr/apollo && { echo ${ISP}-apollo-${$1461,42743
-test -d /usr/apollo && { echo ${ISP}-apollo-${SYSTYPE}; exit;1461,42743
-	exit 1479,43114
-	exit 1482,43154
-	exit 1485,43192
-This script,1492,43261
-This script, last modified $timestamp,1492,43261
-If the version you run 1500,43625
-UNAME_RELEASE 1523,44572
-UNAME_SYSTEM 1524,44605
-UNAME_VERSION 1525,44637
 
 contrib/libuuid-1.0.3/aclocal.m4,194
       subroutine foo5355,183921
@@ -1747,6 +1896,52 @@ contrib/libuuid-1.0.3/aclocal.m4,194
       subroutine t7231,264297
       subroutine t7363,268297
 
+contrib/libuuid-1.0.3/all-io.h,148
+#define UTIL_LINUX_ALL_IO_H10,218
+static inline int write_all(18,323
+static inline int fwrite_all(37,702
+static inline ssize_t read_all(57,1128
+
+contrib/libuuid-1.0.3/randutils.c,226
+#define THREAD_LOCAL 21,357
+#define THREAD_LOCAL 23,400
+#define DO_JRAND_MIX27,508
+THREAD_LOCAL unsigned short ul_jrand_seed[ul_jrand_seed28,529
+int random_get_fd(31,583
+void random_get_bytes(65,1412
+int main(112,2375
+
+contrib/libuuid-1.0.3/missing,144
+scriptversion=4,73
+    exit 37,1354
+    shift42,1452
+    exit 75,2315
+"$@"; st=81,2391
+  msg=95,2867
+  msg=98,2945
+give_advice 129,3811
+
+contrib/libuuid-1.0.3/uuid.h,350
+#define _UUID_UUID_H36,1627
+typedef unsigned char uuid_t[uuid_t44,1735
+#define UUID_VARIANT_NCS	47,1801
+#define UUID_VARIANT_DCE	48,1828
+#define UUID_VARIANT_MICROSOFT	49,1855
+#define UUID_VARIANT_OTHER	50,1888
+#define UUID_TYPE_DCE_TIME 53,1946
+#define UUID_TYPE_DCE_RANDOM 54,1977
+#define UUID_DEFINE(58,2066
+#define UUID_DEFINE(61,2263
+
+contrib/libuuid-1.0.3/uuid_time.c,201
+#define _WIN32_WINNT 38,1743
+#define UUID 40,1792
+time_t uuid_time(56,2021
+int uuid_type(78,2502
+int uuid_variant(86,2634
+static const char *variant_string(variant_string104,2961
+main(120,3201
+
 contrib/fix_module_name.py,144
 class CmdLineOptions(16,268
   def __init__(19,336
@@ -1755,60 +1950,6 @@ def dbConfigFn(33,957
 def fix_module_name(41,1087
 def main(71,2032
 
-contrib/getent/constants.py,25
-    def c_char_p(17,460
-
-contrib/getent/__init__.py,814
-    def convert23(11,197
-    def convert23(15,251
-class StructMap(19,362
-    def __init__(21,388
-    def __dict__(33,693
-    def __iter__(36,750
-    def _map(45,949
-def _resolve(54,1114
-class Host(68,1670
-    def __init__(69,1693
-class Proto(76,1928
-    def __init__(77,1952
-class RPC(82,2070
-    def __init__(83,2092
-class Service(88,2208
-    def __init__(89,2234
-class Network(94,2354
-    def __init__(95,2380
-class Alias(100,2500
-    def __init__(101,2524
-class Group(106,2642
-    def __init__(107,2666
-class Passwd(112,2784
-class Shadow(116,2820
-    def __init__(117,2845
-def alias(123,3042
-def host(150,3538
-        def lookup(179,4099
-def proto(207,5038
-def rpc(244,5774
-def service(284,6572
-def network(338,7779
-def group(369,8348
-def passwd(414,9204
-def shadow(459,10073
-
-contrib/getent/headers.py,324
-class AliasStruct(4,40
-class InAddrStruct(13,236
-class InAddr6Union(20,354
-class InAddr6Struct(28,534
-class HostStruct(36,685
-class NetworkStruct(46,926
-class ProtoStruct(56,1259
-class RPCStruct(65,1533
-class ServiceStruct(74,1820
-class GroupStruct(84,2161
-class PasswdStruct(94,2386
-class ShadowStruct(106,2670
-
 contrib/update_module_name.py,148
 class CmdLineOptions(14,265
   def __init__(17,333
@@ -1816,138 +1957,6 @@ class CmdLineOptions(14,265
 def dbConfigFn(33,1315
 def update_module_name(41,1445
 def main(77,2659
-
-contrib/TACC/correct_num_cores.in,404
-from __future__ import print_function,4,40
-import os,6,126
-import os, sys,6,126
-import os, sys, re,6,126
-import os, sys, re, time,6,126
-import os, sys, re, time, datetime,6,126
-import os, sys, re, time, datetime, argparse,6,126
-import os, sys, re, time, datetime, argparse, base64,6,126
-  import os,18,442
-  def ioctl_GWINSZ(19,462
-  endtimeT 288,9109
-  fn 290,9126
-  f.close(close308,9739
-
-contrib/TACC/fix_records.in,325
-import os,5,78
-import os, sys,5,78
-import os, sys, re,5,78
-import os, sys, re, time,5,78
-import os, sys, re, time, datetime,5,78
-import os, sys, re, time, datetime, argparse,5,78
-import os, sys, re, time, datetime, argparse, base64,5,78
-    parser 20,429
-  endtimeT 105,3572
-  fn 107,3589
-  f.close(close123,4117
-
-contrib/TACC/pytas.py,833
-class client:client13,218
-    def __init__(20,422
-    def authenticate(36,961
-    def get_user(49,1453
-    def save_user(64,1979
-    def verify_user(83,2697
-    def request_password_reset(92,3046
-    def confirm_password_reset(104,3607
-    def institutions(128,4604
-    def _get_departments(146,5248
-    def get_institution(162,5735
-    def get_departments(183,6606
-    def get_department(194,7030
-    def _departments(204,7279
-    def countries(215,7509
-    def fields(232,7987
-    def projects(240,8188
-    def project(249,8566
-    def projects_for_user(255,8814
-    def create_project(281,9808
-    def edit_project(291,10242
-    def edit_allocation(301,10692
-    def get_project_users(314,11194
-    def add_project_user(322,11539
-    def del_project_user(330,11900
-    def allocation_approval(340,12298
-
-contrib/TACC/README.vm,124
-   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
-   mysql> quit;16,575
-    $ ./build_hello_executables.sh sh33,887
-
-contrib/TACC/monthly_report.in,471
-import os,4,77
-import os, sys,4,77
-import os, sys, re,4,77
-import os, sys, re, MySQLdb,4,77
-import os, sys, re, MySQLdb, json,4,77
-import os, sys, re, MySQLdb, json, time,4,77
-import os, sys, re, MySQLdb, json, time, argparse,4,77
-dirNm,7,151
-dirNm, execName 7,151
-compiled_userDirPatternT 242,15193
-    self.__host __host275,16058
-      query 400,19836
-      acctT 416,20195
-      query 417,20213
-          linkA 479,22873
-          runT[runT500,23754
-
-contrib/TACC/envReport.in,449
-from __future__ import print_function,4,40
-import os,5,88
-import os, sys,5,88
-import os, sys, re,5,88
-import os, sys, re, time,5,88
-import os, sys, re, time, datetime,5,88
-import os, sys, re, time, datetime, argparse,5,88
-import os, sys, re, time, datetime, argparse, base64,5,88
-import os, sys, re, time, datetime, argparse, base64, MySQLdb,5,88
-dirNm,11,234
-dirNm, execName 11,234
-  idx2count 61,1908
-  ja 62,1925
-  resultA 124,3384
-
-contrib/TACC/kill_dups.in,342
-from __future__ import print_function,4,40
-import os,6,126
-import os, sys,6,126
-import os, sys, re,6,126
-import os, sys, re, time,6,126
-import os, sys, re, time, datetime,6,126
-import os, sys, re, time, datetime, argparse,6,126
-import os, sys, re, time, datetime, argparse, base64,6,126
-  import os,18,442
-  def ioctl_GWINSZ(19,462
-
-contrib/TACC/syslogTest.c,15
-int main(8,84
-
-contrib/TACC/load_xalt_db,24
-export MODULEPATH=2,12
-
-contrib/TACC/quarter2months.in,52
-import os,4,77
-import os, sys,4,77
-def main(6,97
-
-contrib/TACC/check_pytas.in,182
-import os,4,77
-import os, sys,4,77
-import os, sys, re,4,77
-from urllib2       import Request,7,126
-from urllib2       import Request, urlopen,7,126
-def field_of_science(11,206
-
-contrib/TACC/reportQ.in,60
-PATH=4,36
-  startD=16,200
-  endD=17,218
-  fileNm=19,235
 
 contrib/supporting_clang/README.txt,105
     $ cd /usr/bin; rm ld;24,842
@@ -2110,6 +2119,229 @@ class ArgumentParser(1537,54313
     def exit(2347,87320
     def error(2352,87465
 
+contrib/build_reverseMapT_cray/merge_json_files.py,16
+def main(6,103
+
+contrib/build_reverseMapT_cray/cray_build_rmapT.sh,96
+  BASE_MODULE_PATH=32,1346
+  RmapDir=33,1379
+SCRIPT_DIR=55,1991
+    sn=61,2178
+OLD=75,2430
+
+contrib/TACC/fix_records.in,325
+import os,5,78
+import os, sys,5,78
+import os, sys, re,5,78
+import os, sys, re, time,5,78
+import os, sys, re, time, datetime,5,78
+import os, sys, re, time, datetime, argparse,5,78
+import os, sys, re, time, datetime, argparse, base64,5,78
+    parser 20,429
+  endtimeT 105,3572
+  fn 107,3589
+  f.close(close123,4117
+
+contrib/TACC/README.vm,124
+   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
+   mysql> quit;16,575
+    $ ./build_hello_executables.sh sh33,887
+
+contrib/TACC/pytas.py,833
+class client:client13,218
+    def __init__(20,422
+    def authenticate(36,961
+    def get_user(49,1453
+    def save_user(64,1979
+    def verify_user(83,2697
+    def request_password_reset(92,3046
+    def confirm_password_reset(104,3607
+    def institutions(128,4604
+    def _get_departments(146,5248
+    def get_institution(162,5735
+    def get_departments(183,6606
+    def get_department(194,7030
+    def _departments(204,7279
+    def countries(215,7509
+    def fields(232,7987
+    def projects(240,8188
+    def project(249,8566
+    def projects_for_user(255,8814
+    def create_project(281,9808
+    def edit_project(291,10242
+    def edit_allocation(301,10692
+    def get_project_users(314,11194
+    def add_project_user(322,11539
+    def del_project_user(330,11900
+    def allocation_approval(340,12298
+
+contrib/TACC/quarter2months.in,52
+import os,4,77
+import os, sys,4,77
+def main(6,97
+
+contrib/TACC/kill_dups.in,342
+from __future__ import print_function,4,40
+import os,6,126
+import os, sys,6,126
+import os, sys, re,6,126
+import os, sys, re, time,6,126
+import os, sys, re, time, datetime,6,126
+import os, sys, re, time, datetime, argparse,6,126
+import os, sys, re, time, datetime, argparse, base64,6,126
+  import os,18,442
+  def ioctl_GWINSZ(19,462
+
+contrib/TACC/monthly_report.in,471
+import os,4,77
+import os, sys,4,77
+import os, sys, re,4,77
+import os, sys, re, MySQLdb,4,77
+import os, sys, re, MySQLdb, json,4,77
+import os, sys, re, MySQLdb, json, time,4,77
+import os, sys, re, MySQLdb, json, time, argparse,4,77
+dirNm,7,151
+dirNm, execName 7,151
+compiled_userDirPatternT 242,15193
+    self.__host __host275,16058
+      query 400,19836
+      acctT 416,20195
+      query 417,20213
+          linkA 479,22873
+          runT[runT500,23754
+
+contrib/TACC/correct_num_cores.in,404
+from __future__ import print_function,4,40
+import os,6,126
+import os, sys,6,126
+import os, sys, re,6,126
+import os, sys, re, time,6,126
+import os, sys, re, time, datetime,6,126
+import os, sys, re, time, datetime, argparse,6,126
+import os, sys, re, time, datetime, argparse, base64,6,126
+  import os,18,442
+  def ioctl_GWINSZ(19,462
+  endtimeT 288,9109
+  fn 290,9126
+  f.close(close308,9739
+
+contrib/TACC/envReport.in,449
+from __future__ import print_function,4,40
+import os,5,88
+import os, sys,5,88
+import os, sys, re,5,88
+import os, sys, re, time,5,88
+import os, sys, re, time, datetime,5,88
+import os, sys, re, time, datetime, argparse,5,88
+import os, sys, re, time, datetime, argparse, base64,5,88
+import os, sys, re, time, datetime, argparse, base64, MySQLdb,5,88
+dirNm,11,234
+dirNm, execName 11,234
+  idx2count 61,1908
+  ja 62,1925
+  resultA 124,3384
+
+contrib/TACC/load_xalt_db,24
+export MODULEPATH=2,12
+
+contrib/TACC/check_pytas.in,182
+import os,4,77
+import os, sys,4,77
+import os, sys, re,4,77
+from urllib2       import Request,7,126
+from urllib2       import Request, urlopen,7,126
+def field_of_science(11,206
+
+contrib/TACC/syslogTest.c,15
+int main(8,84
+
+contrib/TACC/reportQ.in,60
+PATH=4,36
+  startD=16,200
+  endD=17,218
+  fileNm=19,235
+
+contrib/getent/constants.py,25
+    def c_char_p(17,460
+
+contrib/getent/__init__.py,814
+    def convert23(11,197
+    def convert23(15,251
+class StructMap(19,362
+    def __init__(21,388
+    def __dict__(33,693
+    def __iter__(36,750
+    def _map(45,949
+def _resolve(54,1114
+class Host(68,1670
+    def __init__(69,1693
+class Proto(76,1928
+    def __init__(77,1952
+class RPC(82,2070
+    def __init__(83,2092
+class Service(88,2208
+    def __init__(89,2234
+class Network(94,2354
+    def __init__(95,2380
+class Alias(100,2500
+    def __init__(101,2524
+class Group(106,2642
+    def __init__(107,2666
+class Passwd(112,2784
+class Shadow(116,2820
+    def __init__(117,2845
+def alias(123,3042
+def host(150,3538
+        def lookup(179,4099
+def proto(207,5038
+def rpc(244,5774
+def service(284,6572
+def network(338,7779
+def group(369,8348
+def passwd(414,9204
+def shadow(459,10073
+
+contrib/getent/headers.py,324
+class AliasStruct(4,40
+class InAddrStruct(13,236
+class InAddr6Union(20,354
+class InAddr6Struct(28,534
+class HostStruct(36,685
+class NetworkStruct(46,926
+class ProtoStruct(56,1259
+class RPCStruct(65,1533
+class ServiceStruct(74,1820
+class GroupStruct(84,2161
+class PasswdStruct(94,2386
+class ShadowStruct(106,2670
+
+rt/end2end/end2end.desc,16
+test_name 3,18
+
+rt/syslog/syslog.desc,16
+test_name 3,18
+
+rt/syslog/bin/logger,10
+TAG=5,42
+
+rt/common_funcs.sh,110
+initialize(4,36
+displayThis(20,326
+buildRmapT(30,618
+installXALT(39,946
+installDB(51,1413
+runMe 71,1888
+
+rt/mpi_hello_world.c,15
+int main(3,36
+
+test/check_entries_db.py,119
+class CmdLineOptions(50,1826
+  def __init__(53,1894
+  def execute(57,1951
+def count_rows(69,2782
+def main(80,3028
+
 build.rtm,299
 PKG_VERSION=23,1085
 ld_repair(35,1238
@@ -2120,278 +2352,40 @@ runMe(40,1317
 SETUP_CMD=78,1946
     base=88,2232
       base=90,2295
-    base=96,2498
-    base=101,2724
-    base=107,2793
-    base=113,2994
-BASE_DIR=116,3029
-MAKE=123,3124
-  MAKE=126,3191
-
-src/XALTdb.py,303
-def __LINE__(43,1652
-def __FILE__(49,1772
-def convertToTinyInt(55,1951
-class XALTdb(71,2279
-  def __init__(76,2413
-  def __readFromUser(85,2658
-  def __readConfig(93,2943
-  def connect(108,3548
-  def db(146,4753
-  def link_to_db(150,4820
-  def load_objects(235,7993
-  def run_to_db(281,9826
-
-src/xalt_db.conf,10
-host 2,8
-
-src/xalt_site_pkg.py,50
-def translate(52,2350
-def keep_env_var(174,6287
-
-src/nics_system_name,37
-use strict;26,1106
-sub main54,1693
-
-src/progressBar.py,171
-def getTerminalSize(27,1158
-  def ioctl_GWINSZ(34,1358
-class ProgressBar(68,2094
-  def __init__(71,2161
-  def update(109,3297
-  def fini(134,3944
-def main(140,4078
-
-src/build_xalt_regex.py,156
-class CmdLineOptions(28,1158
-  def __init__(31,1226
-  def execute(35,1283
-def convert_to_string(47,1762
-def convert_template(55,1865
-def main(86,2514
-
-src/createDB.in.py,95
-class CmdLineOptions(36,1394
-  def __init__(39,1462
-  def execute(43,1519
-def main(50,1804
-
-src/xalt_epoch.py,18
-def main(28,1142
-
-src/new_job_id.in.py,18
-def main(35,1369
-
-src/BeautifulTbl.py,117
-class BeautifulTbl(6,88
-  def __init__(7,116
-  def __build_tbl(14,461
-  def build_tbl(57,1584
-def main(140,3732
-
-src/xalt.model.mwb,3321
-^r»“`◊–¿-∞ªÑäÓ ˜ÓúãyóﬁôóubÛÿíæ%·3	/hKŒ£¡≈ÖwN O¬CÖÏ —àŒF…rF…15,5015
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1bhå32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%ZòZ32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎP±É32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒjŒ32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@dsm32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@e,ˇ” ‘Å°)@ñMì@ñM32,7610
-model-schemas: mydb,35,8943
-
-src/xalt_transmission_factory.py,407
-class XALT_transmission_factory(35,1336
-  def __init__(39,1464
-  def _syshost(50,1733
-  def _kind(57,1862
-  def build(65,2013
-class SyslogV1(89,2720
-  def __init__(94,2821
-  def save(102,3063
-class Syslog(118,3505
-  def __init__(123,3604
-  def save(132,3845
-class File(168,4866
-  def __init__(173,4953
-  def save(183,5269
-class DirectDB(205,5836
-  def __init__(210,5946
-  def save(217,6193
-
-src/xalt_util.py,390
-def config_logger(28,1265
-def extract_compiler(45,1712
-    def p_parent(56,2001
-    def p_parent_name(63,2230
-    def p_parent_exe(70,2492
-    def p_parent_cmdline(77,2746
-def files_in_tree(108,3669
-def which(130,4158
-  def is_exe(136,4266
-def capture(158,4822
-def carp(175,5228
-def remove_files(194,5604
-def obj_type(207,5861
-def obj2module(230,6347
-def dbConfigFn(257,7033
-
-src/xalt_stack.py,149
-class Stack(27,1148
-  def __init__(29,1197
-  def push(36,1317
-  def pop(40,1421
-  def isEmpty(45,1534
-  def contents(49,1653
-def main(55,1798
-
-src/ld.in,445
-LD_LIB_PATH=39,1498
-   XALT_TRANSMISSION_STYLE=49,1754
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=57,1953
-EXEC=74,2600
-    prev=83,2720
-    -*) optarg=89,2843
-    *) optarg=90,2861
-    *) optarg=; done=90,2861
-      USER_TRACE=99,3008
-      BIT32FLAG=103,3056
-      prev=107,3095
-  status=123,3470
-LINKLINE_OUT=150,4162
-  XALT_INIT_ROUTINE_OBJ=159,4413
-COMP_T=170,4856
-  OBJ=181,5130
-SHA1SUM_EXEC=209,5802
-
-src/build_syshost_routine.py,254
-def xalt_syshost_main(30,1191
-def hardcode(40,1427
-def add_hostname_routine(55,1702
-def read_file(89,2909
-def nth_name(119,3795
-def mapping(162,4905
-class CmdLineOptions(223,6725
-  def __init__(226,6793
-  def execute(230,6850
-def main(242,7391
-
-src/xalt_helper_functions.sh,69
-LD_LIB_PATH=33,1393
-tracing_msg(62,2131
-find_real_command(82,2783
-
-src/Rmap_XALT.py,93
-class Rmap(30,1343
-  def __init__(32,1440
-  def reverseMapT(74,2803
-  def libMap(82,2948
-
-src/xalt_job_id_db.conf,10
-host 2,8
-
-src/conf_create.in.py,226
-class CmdLineOptions(40,1463
-  def __init__(41,1493
-  def execute(44,1527
-class CreateConf(54,1988
-  def __init__(55,2014
-  def __readFromUser(61,2179
-  def __writeConfig(67,2510
-  def create(81,2888
-def main(88,2967
-
-src/removeDataBase.py,95
-class CmdLineOptions(36,1394
-  def __init__(39,1462
-  def execute(43,1519
-def main(50,1804
-
-rt/syslog/syslog.desc,16
-test_name 3,18
-
-rt/syslog/bin/logger,10
-TAG=5,42
-
-rt/mpi_hello_world.c,15
-int main(3,36
-
-rt/common_funcs.sh,110
-initialize(4,36
-displayThis(20,326
-buildRmapT(30,618
-installXALT(39,946
-installDB(51,1413
-runMe 71,1882
-
-rt/end2end/end2end.desc,16
-test_name 3,18
-
-doc/isc15/xalt-tutorial-slides.pptx,19
-¬0DÔÇˇDÔÇ2,2516
-
-doc/isc15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,143
-
-doc/web/xalt.txt,54
-XALT is a collaboration between PI Mark Fahey 12,355
-
-doc/SC13_BoF.pptx,607
-°\”÷ÍÂ2>fg-Û8VÀ ü7ÁôkÑˇ2©G+]„¿õô—˜k1˘k1˘2,960
-≈≥∑ÙäK∫‘ÜK∫‘35,15653
-ùë>l]l36,15894
-q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S@7S149,47581
-q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S]8KxŒu|*‰Å ;‘´∆”3—\˙à4⁄º‰ˆ;Ä+¢1"TÌœÆì_ÉbN…´˘L¥ˇÌ\˝»`ÈÑDHçmÚ2“‚¶›Jem{=PPKªMÚÔZöüÄ|6ëe6#ûÌ⁄≠èœdî3zØ8S¸<˘°z◊ü≠Ü.ßBäØPE{§,RÃô?ﬁÄ;sdΩÕË˛¬át°ïÇå‘|ÚfÃÌL)âπÁn.‚ Wg»8>Wß’kh-|5lqqœ=‘6-aã‰#µv!ÿ∑ﬂlF˛z^jãlL&Ír3Ó˜E[$ΩnÌY{çΩf˝õo∑…¡6ƒ+Ñ„DßÜıü"/TdàÔ}k∫_Oœk∫_O149,47581
-BYêTÉÔ®ﬂ?Mœ{òΩè"µ<ãc#ﬁSr5c#ﬁSr156,49061
-SWºÖ)»,<X´ä¡¿–kàπìä	ÏÌ•nà≈_˝2nà≈_˝158,49268
-
-doc/Lmod_installation,77
-     $ CC=10,297
-      CURRENT_MODULES=38,1181
-          LMOD_PKG=47,1417
-
-doc/fosdem16/abs.txt,156
-Let's talk real, no-kiddin' supercomputer analytics,4,64
-individual tasks,7,268
-individual tasks, users,7,268
-We have been running XALT at TACC,25,1175
-
-doc/fosdem16/talk.tex,313
-\newcommand{\bfnabla}\bfnabla28,979
-\newcommand{\laplacian}\laplacian29,1027
-\newcommand{\grad}\grad30,1069
-\newcommand{\tgrad}\tgrad31,1104
-\newcommand{\dvg}\dvg32,1142
-\newcommand{\curl}\curl33,1182
-\newcommand{\lap}\lap34,1224
-\section{XALT}XALT42,1319
-\section{Conclusion}Conclusion329,9922
-
-doc/fosdem16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
-doc/fosdem16/abstract.txt,224
-Let‚Äôs talk real,1,0
-Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
-individual batch submissions,4,210
-individual batch submissions, users,4,210
-organizations concerned about meeting users‚Äô needs;14,803
-
-doc/xsede15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
+    base=96,2493
+    base=101,2719
+    base=107,2788
+    base=113,2989
+BASE_DIR=116,3024
+MAKE=123,3119
+  MAKE=126,3186
 
 doc/README.vm.txt,124
    mysql> grant all on xalt.* to 'xaltuser'@'@15,517
    mysql> quit;16,575
     $ ./build_hello_executables.sh sh33,887
 
-doc/sea16/abs.txt,156
-Let's talk real, no-kiddin' supercomputer analytics,4,64
-individual tasks,7,268
-individual tasks, users,7,268
-We have been running XALT at TACC,25,1175
+doc/isc15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,143
+
+doc/isc15/xalt-tutorial-slides.pptx,19
+¬0DÔÇˇDÔÇ2,2516
+
+doc/xsede15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
+
+doc/sea16/abstract.txt,224
+Let‚Äôs talk real,1,0
+Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
+individual batch submissions,4,210
+individual batch submissions, users,4,210
+organizations concerned about meeting users‚Äô needs;14,803
+
+doc/sea16/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
 
 doc/sea16/talk.tex,314
 \newcommand{\bfnabla}\bfnabla28,1001
@@ -2404,16 +2398,51 @@ doc/sea16/talk.tex,314
 \section{XALT}XALT42,1341
 \section{Conclusion}Conclusion304,9171
 
-doc/sea16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
+doc/sea16/abs.txt,156
+Let's talk real, no-kiddin' supercomputer analytics,4,64
+individual tasks,7,268
+individual tasks, users,7,268
+We have been running XALT at TACC,25,1175
 
-doc/sea16/abstract.txt,224
+doc/Lmod_installation,77
+     $ CC=10,297
+      CURRENT_MODULES=38,1181
+          LMOD_PKG=47,1417
+
+doc/fosdem16/abstract.txt,224
 Let‚Äôs talk real,1,0
 Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
 individual batch submissions,4,210
 individual batch submissions, users,4,210
 organizations concerned about meeting users‚Äô needs;14,803
+
+doc/fosdem16/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
+
+doc/fosdem16/talk.tex,313
+\newcommand{\bfnabla}\bfnabla28,979
+\newcommand{\laplacian}\laplacian29,1027
+\newcommand{\grad}\grad30,1069
+\newcommand{\tgrad}\tgrad31,1104
+\newcommand{\dvg}\dvg32,1142
+\newcommand{\curl}\curl33,1182
+\newcommand{\lap}\lap34,1224
+\section{XALT}XALT42,1319
+\section{Conclusion}Conclusion329,9922
+
+doc/fosdem16/abs.txt,156
+Let's talk real, no-kiddin' supercomputer analytics,4,64
+individual tasks,7,268
+individual tasks, users,7,268
+We have been running XALT at TACC,25,1175
+
+doc/web/xalt.txt,54
+XALT is a collaboration between PI Mark Fahey 12,355
+
+doc/sc15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
 
 doc/sc15/talk.tex,313
 \newcommand{\bfnabla}\bfnabla28,981
@@ -2425,10 +2454,6 @@ doc/sc15/talk.tex,313
 \newcommand{\lap}\lap34,1226
 \section{XALT}XALT42,1321
 \section{Conclusion}Conclusion289,8618
-
-doc/sc15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
 
 doc/sc15/XALT_SC15-BOF.pptx,787
 5	⁄AåA1620,388852
@@ -2563,153 +2588,113 @@ cvﬁcv68733,13119301
 Ç0Xñ@*I®µe§f§>ìXö:\M]jd∂ùNBı\™X©k)±x\Ñ4…gmE∏Îô]2E;E84656,16092614
 ´;.ØN]G¿‰êÃAQ”b5i5«--	0®%V¥¶†hOƒ?=;C>#≤Òªäáôe.oo84671,16095021
 
+doc/SC13_BoF.pptx,607
+°\”÷ÍÂ2>fg-Û8VÀ ü7ÁôkÑˇ2©G+]„¿õô—˜k1˘k1˘2,960
+≈≥∑ÙäK∫‘ÜK∫‘35,15653
+ùë>l]l36,15894
+q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S@7S149,47581
+q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S]8KxŒu|*‰Å ;‘´∆”3—\˙à4⁄º‰ˆ;Ä+¢1"TÌœÆì_ÉbN…´˘L¥ˇÌ\˝»`ÈÑDHçmÚ2“‚¶›Jem{=PPKªMÚÔZöüÄ|6ëe6#ûÌ⁄≠èœdî3zØ8S¸<˘°z◊ü≠Ü.ßBäØPE{§,RÃô?ﬁÄ;sdΩÕË˛¬át°ïÇå‘|ÚfÃÌL)âπÁn.‚ Wg»8>Wß’kh-|5lqqœ=‘6-aã‰#µv!ÿ∑ﬂlF˛z^jãlL&Ír3Ó˜E[$ΩnÌY{çΩf˝õo∑…¡6ƒ+Ñ„DßÜıü"/TdàÔ}k∫_Oœk∫_O149,47581
+BYêTÉÔ®ﬂ?Mœ{òΩè"µ<ãc#ﬁSr5c#ﬁSr156,49061
+SWºÖ)»,<X´ä¡¿–kàπìä	ÏÌ•nà≈_˝2nà≈_˝158,49268
+
+my_docs/source/010_installation.rst,17
+Installation1,0
+
+my_docs/source/040_testing.rst,12
+Testing1,0
+
+my_docs/source/020_QuickStart.rst,22
+Quick Start Guide1,0
+
+my_docs/source/050_production.rst,15
+Production1,0
+
+my_docs/source/index.rst,36
+XALT: Library Tracking Software2,1
+
+my_docs/source/060_datamining.rst,16
+Data Mining1,0
+
+my_docs/source/030_FAQ.rst,8
+FAQ1,0
+
+my_docs/Makefile,17
+SPHINXOPTS 5,92
+
 aclocal.m4,26
 dnl AC_PYTHON_MODULE(1,0
 
-doc/sc15/sc15.org,0
-
-doc/sea16/xalt.org,0
-
-doc/sea16/new_things.org,0
-
-doc/ideas/xalt.org,0
-
-doc/xsede15/xalt_xsede15.tex,0
-
-doc/fosdem16/xalt.org,0
-
-doc/database.txt,0
-
-doc/isc15/xalt_isc.tex,0
-
-ACKNOWLEDGMENTS.txt,0
-
-.version,0
-
-mapping.example.json,0
-
-src/xalt_global.py,0
-
-src/xalt_rmap_lmap.in.py,0
-
-src/public_domain.txt,0
-
-contrib/supporting_clang/ld.sh,0
-
-contrib/TACC/config/hostname.ls5.txt,0
-
-contrib/TACC/config/hostname.tacc.txt,0
-
-contrib/TACC/config/ignore.tacc.txt,0
-
-contrib/TACC/config/ignore.ls5.txt,0
-
-contrib/queries/software_lastusage.py,0
-
-contrib/queries/compiler_usage.py,0
-
-contrib/queries/library_usage.py,0
-
-contrib/queries/executable_usage.py,0
-
-contrib/getent/libc.py,0
-
-contrib/update_object_module_name.py,0
-
-contrib/libuuid-1.0.3/compile,0
-
-contrib/xalt_modulefile,0
-
-QUICK_INSTALL_GUIDE.TXT,0
+README.md,97
+published by the Free Software Foundation;96,4120
+the License,97,4185
+the License, or 97,4185
 
 my_docs/source/conf.py,0
 
 my_docs/source/010_user.rst,0
 
-Config/rtm_config.py,0
+doc/ideas/xalt.org,0
 
-install,0
+doc/sc15/sc15.org,0
+
+doc/fosdem16/xalt.org,0
+
+doc/sea16/new_things.org,0
+
+doc/sea16/xalt.org,0
+
+doc/xsede15/xalt_xsede15.tex,0
+
+doc/database.txt,0
+
+doc/isc15/xalt_isc.tex,0
 
 Themis.py,0
 
+mapping.example.json,0
+
+QUICK_INSTALL_GUIDE.TXT,0
+
+ACKNOWLEDGMENTS.txt,0
+
 install.sh,0
 
-compiled/Process.d,0
+contrib/getent/libc.py,0
 
-compiled/xalt_epoch.d,0
+contrib/TACC/config/ignore.tacc.txt,0
 
-compiled/f2db.d,0
+contrib/TACC/config/hostname.tacc.txt,0
 
-compiled/xalt_mysql_utils.d,0
+contrib/TACC/config/hostname.ls5.txt,0
 
-compiled/buildRmapT.d,0
+contrib/TACC/config/ignore.ls5.txt,0
 
-compiled/epoch.d,0
+contrib/supporting_clang/ld.sh,0
 
-compiled/xalt_quotestring.d,0
+contrib/xalt_modulefile,0
 
-compiled/extractXALTRecord.d,0
+contrib/update_object_module_name.py,0
 
-compiled/Json.d,0
+contrib/queries/library_usage.py,0
 
-compiled/jsmn.d,0
+contrib/queries/compiler_usage.py,0
 
-compiled/parseLDTrace.d,0
+contrib/queries/software_lastusage.py,0
 
-compiled/ProgressBar.d,0
+contrib/queries/executable_usage.py,0
 
-compiled/parseSyslog.d,0
+contrib/libuuid-1.0.3/compile,0
 
 compiled/run.vmijo.zzz.json,0
 
-compiled/s2db_Options.d,0
+.version,0
 
-compiled/run_direct2db.d,0
+src/xalt_rmap_lmap.in.py,0
 
-compiled/translate.d,0
+src/public_domain.txt,0
 
-compiled/f2db_Options.d,0
+src/xalt_global.py,0
 
-compiled/xalt_fgets_alloc.d,0
+Config/TACC_config.py,0
 
-compiled/link_direct2db.d,0
-
-compiled/ConfigParser.d,0
-
-compiled/zstring.d,0
-
-compiled/base64.d,0
-
-compiled/transmit.d,0
-
-compiled/xalt_utils.d,0
-
-compiled/capture.d,0
-
-compiled/xalt_run_submission.d,0
-
-compiled/xalt_strip_linklib.d,0
-
-compiled/Options.d,0
-
-compiled/xalt_generate_assembly.d,0
-
-compiled/xalt_syslog_to_db.d,0
-
-compiled/parseJsonStr.d,0
-
-compiled/xalt_extract_linker.d,0
-
-compiled/parseLDD.d,0
-
-compiled/buildUserT.d,0
-
-compiled/xalt_generate_linkdata.d,0
-
-compiled/buildEnvT.d,0
-
-compiled/SyslogRecord.d,0
-
-compiled/xalt_initialize.d,0
-
-compiled/xalt_realpath.d,0
+Config/rtm_config.py,0
