@@ -15,7 +15,7 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
   FILE *fp = xalt_json_file_open(rmapD, "reverseMapD/xalt_rmapT");
   if (fp == NULL)
     {
-      FILE *fp = xalt_json_file_open(rmapD, "xalt_rmapT");
+      fp = xalt_json_file_open(rmapD, "xalt_rmapT");
       if (fp == NULL)
         return;
     }
@@ -78,5 +78,4 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
         processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
     }
   free(tokens);
-  fprintf(stderr,"rmapT.size(): %ld\n", rmapT.size());
 }
