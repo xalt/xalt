@@ -18,7 +18,7 @@ void finish_with_error(MYSQL *conn)
   exit(1);        
 }
 
-void print_stmt_error(MYSQL_STMT *stmt, const char *message, const char file, int line)
+void print_stmt_error(MYSQL_STMT *stmt, const char *message, const char* file, int line)
 {
   fprintf(stderr,"%s\n", message);
   if (stmt != NULL)
