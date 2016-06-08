@@ -78,4 +78,5 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
         processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
     }
   free(tokens);
+  fprintf(stderr,"rmapT.size(): %ld\n", rmapT.size());
 }
