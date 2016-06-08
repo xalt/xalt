@@ -3,6 +3,6 @@
 
 
 #include "xalt_types.h"
-void buildRmapT(Table& rmapT, Vstring& xlibmap);
+void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmap);
 
 #endif //BUILDRMAPT_H

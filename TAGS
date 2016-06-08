@@ -460,39 +460,6 @@ int main(24,486
 compiled/parseJsonStr.h,28
 #define PARSEJSONSTR_H2,23
 
-compiled/build_h/xalt_config.h,474
-#define XALT_CONFIG_H2,22
-#define OBJDUMP 4,45
-#define PATH_TO_PRGM_FILE 5,90
-#define LDD 6,132
-#define SHA1SUM 7,173
-#define SYS_LD_LIB_PATH 8,218
-#define PREFIX 9,668
-#define LOGGER 10,719
-#define TRANSMISSION 12,764
-#define XALT_ETC_DIR 13,797
-#define XALT_CONFIG_PY 14,841
-#define XALT_SYSTEM_PATH 15,890
-#define SYSLOG_MSG_SZ 16,932
-#define SYSHOST_CONFIG 17,963
-#define HAVE_32BIT 18,1002
-#define XALT_VERSION 19,1033
-#define XALT_GIT_VERSION 20,1067
-
-compiled/build_h/xalt_regex.h,424
-#define XALT_REGEX_H2,21
-#define N_ELEMENTS(4,43
-const char* acceptPathA[acceptPathA6,93
-const char* ignorePathA[ignorePathA7,142
-const char* hostnameA[hostnameA8,509
-const char* acceptEnvA[acceptEnvA9,550
-const char* ignoreEnvA[ignoreEnvA10,766
-const int   acceptPathSz 12,1015
-const int   ignorePathSz 13,1067
-const int   hostnameSz 14,1119
-const int   acceptEnvSz 15,1169
-const int   ignoreEnvSz 16,1220
-
 compiled/xalt_initialize.c,1286
 #define  _GNU_SOURCE27,1223
 #define STR(56,1816
@@ -578,7 +545,7 @@ compiled/xalt_utils.C,112
 int isDirectory(9,136
 bool path2module(17,280
 FILE* xalt_file_open(44,955
-FILE* xalt_json_file_open(80,1640
+FILE* xalt_json_file_open(84,1676
 
 compiled/parseLDTrace.C,56
 void parseLDTrace(8,145
@@ -614,11 +581,6 @@ class ProgressBar4,45
   double m_unit;ProgressBar::m_unit18,281
   double m_fence;ProgressBar::m_fence19,298
   char   m_symbolA[ProgressBar::m_symbolA20,316
-
-compiled/xalt_syshost.c,75
-char * hostname(11,204
-const char* xalt_syshost(33,738
-int main(61,1234
 
 compiled/xalt_fgets_alloc.c,46
 const int SZ 5,71
@@ -773,7 +735,7 @@ void object_type(33,657
 void insert_objects(62,1274
 MYSQL* xalt_open_mysql_connection(351,10842
 
-Makefile.in,1465
+Makefile.in,1270
 srcdir 22,1051
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=70,2622
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)always70,2622
@@ -802,12 +764,7 @@ VDATE	71,2788
             git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version;version254,11804
 	    git push --tags tags256,11974
           fi;257,12052
-	git archive --prefix=prefix317,15421
-	mkdir DIST;319,15560
-        cd DIST;320,15631
-        tar xf ../xalt-$(VERSION).tar;tar321,15709
-        $(RM) ../xalt-$(VERSION).tar;tar323,15872
-	$(331,16119
+	$(319,15729
 
 contrib/libuuid-1.0.3/c.h,1709
 #define UTIL_LINUX_C_H6,61

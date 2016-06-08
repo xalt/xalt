@@ -43,14 +43,18 @@ bool path2module(const char* path, Table& rmapT, char* module_name, int module_n
 
 FILE* xalt_file_open(const char* name)
 {
-  const char*        xalt_etc_dir = getenv("XALT_ETC_DIR");
-  std::string        dirNm;
-  std::string        fn;
+  FILE*       fp           = NULL;
+  const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
+  std::string dirNm;
+  std::string fn;
+
+  fp = fopen(name,"r");
+  if (fp)
+    return fp;
 
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
-  FILE*       fp    = NULL;
   const char* start = xalt_etc_dir;
   bool        done  = false;
   while(!done)

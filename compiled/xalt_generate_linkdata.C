@@ -70,9 +70,10 @@ int main(int argc, char* argv[])
 
   if (strcasecmp(transmission,"direct2db") == 0)
     {
-      Vstring xlibmapA;
-      Table   rmapT;
-      buildRmapT(rmapT, xlibmapA);
+      std::string rmapD = ""; // Must use XALT_ETC_DIR to specify rmapD location!
+      Table       rmapT;
+      Vstring     xlibmapA;
+      buildRmapT(rmapD, rmapT, xlibmapA);
 
       link_direct2db("xalt_db.conf", linklineA, resultT, libA, funcSet, rmapT);
       return 0;
