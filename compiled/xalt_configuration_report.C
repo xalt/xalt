@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <time.h>
 #include "epoch.h"
+#include "stdlib.h"
 
 const int dateSZ=100;
 
@@ -27,6 +28,14 @@ int main(int argc, char* argv[])
   time_t  now = (time_t) epoch();
   strftime(dateStr,dateSZ, "%c", localtime(&now));
   
+  const char* transmission = getenv("XALT_TRANSMISSION_STYLE");
+  if (transmission == NULL)
+    transmission = TRANSMISSION;
+
+  const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
+  if (xalt_etc_dir == NULL)
+    xalt_etc_dir = XALT_ETC_DIR;
+
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "                      XALT Configuration Report\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
@@ -35,8 +44,8 @@ int main(int argc, char* argv[])
   std::cout << "XALT_GIT_VERSION:          " << XALT_GIT_VERSION   << "\n";
   std::cout << "XALT_VERSION_STR:          " << XALT_VERSION_STR   << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
-  std::cout << "XALT_TRANSMISSION_STYLE:   " << TRANSMISSION       << "\n";
-  std::cout << "XALT_ETC_DIR:              " << XALT_ETC_DIR       << "\n";
+  std::cout << "XALT_TRANSMISSION_STYLE:   " << transmission       << "\n";
+  std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir       << "\n";
   std::cout << "XALT_CONFIG_PY:            " << XALT_CONFIG_PY     << "\n";
   std::cout << "XALT_SYSTEM_PATH:          " << XALT_SYSTEM_PATH   << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ      << "\n";
