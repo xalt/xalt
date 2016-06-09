@@ -87,7 +87,7 @@ ignore_env_patterns = [
   '^MODULEPATH_ROOT$',
   '^MPICH_HOME$',
   '^MV2_COMM_WORLD.*',
-  '^MV2_NUM_NODES_IN_JOB$'
+  '^MV2_NUM_NODES_IN_JOB$',
   '^MV2_USE_OLD_BCAST$',
   '^OMP_NUM_THREADS$',
   '^PKG_CONFIG_PATH$',
