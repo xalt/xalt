@@ -229,7 +229,7 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 # start a subshell in the background for reporting the link results
 generate_linkdata()
 {
-  LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+  LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
   $RM -rf $WRKDIR  
 }
 

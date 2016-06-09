@@ -72,7 +72,11 @@ if [ -z "$SYSHOST" ]; then
   myhost=$(hostname -f)
   myhost=${myhost%.tacc.utexas.edu}
   first=${myhost%%.*}
-  export SYSHOST=${myhost#*.}
+  if [ "$first" = xalt ]; then
+    export SYSHOST=xalt
+  else
+    export SYSHOST=${myhost#*.}
+  fi
 fi
 
 SETUP_CMD=
@@ -84,7 +88,12 @@ case $SYSHOST in
     CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py"
     ;;
 
-  ls4 | stampede | maverick)
+  xalt)
+    base="$HOME/l/pkg"
+    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
+    ;;
+
+  stampede | maverick)
     base="$HOME/l/pkg"
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"

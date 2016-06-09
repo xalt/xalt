@@ -1,5 +1,6 @@
 #include "run_submission.h"
 #include <sstream>
+#include <stdio.h>
 const char * safe_get(Table& t, const char* key, const char* defaultValue)
 {
   Table::const_iterator got = t.find(key);
@@ -26,7 +27,7 @@ void translate(Table& envT, Table& userT)
     queueType = PBS;
   else if (envT.count("LSF_VERSION"))
     queueType = LSF;
-  
+
 
   // Now fill in num_cores, num_nodes, account, job_id, queue, submit_host in userT from the environment
   if (queueType == SGE)
@@ -41,17 +42,16 @@ void translate(Table& envT, Table& userT)
   else if (queueType == SLURM_TACC || queueType == SLURM )
     {
       userT["num_cores"]   = safe_get(userT, "num_tasks",           "1");
-      userT["num_nodes"]   = safe_get(envT,  "SLURM_NNODES",        "1"); 
+      userT["num_nodes"]   = safe_get(envT,  "SLURM_NNODES",        "1");
       userT["job_id"]      = safe_get(envT,  "SLURM_JOB_ID",        "unknown");
       userT["queue"]       = safe_get(envT,  "SLURM_QUEUE",         "unknown");
       userT["submit_host"] = safe_get(envT,  "SLURM_SUBMIT_HOST",   "unknown");
-      if (queueType == SLURM_TACC)
-        userT["account"]   = safe_get(envT,  "SLURM_TACC_ACCOUNT",  "unknown");
+      userT["account"]     = safe_get(envT,  "SLURM_TACC_ACCOUNT",  "unknown");
     }
   else if (queueType == PBS)
     {
       userT["num_cores"]   = safe_get(userT, "num_tasks",     "1");
-      userT["num_nodes"]   = safe_get(envT,  "PBS_NUM_NODES", "1"); 
+      userT["num_nodes"]   = safe_get(envT,  "PBS_NUM_NODES", "1");
       userT["job_id"]      = safe_get(envT,  "PBS_JOBID",     "unknown");
       userT["queue"]       = safe_get(envT,  "PBS_QUEUE",     "unknown");
       userT["submit_host"] = safe_get(envT,  "PBS_O_HOST",    "unknown");
@@ -76,8 +76,8 @@ void translate(Table& envT, Table& userT)
         }
       count /= 2;
       std::ostringstream sstream;
-      sstream << count; 
-      
+      sstream << count;
+
       userT["num_cores"]   = safe_get(userT, "num_tasks",        "1");
       userT["num_nodes"]   = sstream.str();
       userT["job_id"]      = safe_get(envT,  "LSB_JOBID",        "unknown");

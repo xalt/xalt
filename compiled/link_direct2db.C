@@ -19,13 +19,13 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting link_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -42,7 +42,7 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -54,13 +54,13 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   if (mysql_stmt_bind_result(stmt, result))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting link_id");
+      print_stmt_error(stmt, "Could not execute stmt for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -69,7 +69,7 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for selecting link_id");
+      print_stmt_error(stmt, "Could not close stmt for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -81,21 +81,21 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linklineA, uint* link_id)
 {
 
-  const char* stmt_sql = "INSERT into xalt_link VALUES (NULL,?,?,?, ?,?,?, COMPRESS(?),?,?, ?,?,?)";
+  const char* stmt_sql = "INSERT into xalt_link VALUES (NULL,?,?,?, ?,?,?, COMPRESS(?),?,?, ?,?)";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
-  MYSQL_BIND param[12];
+  MYSQL_BIND param[11];
   memset((void *) param,  0, sizeof(param));
   
   // STRING PARAM[0] link_uuid
@@ -195,28 +195,23 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
   param[9].buffer_type   = MYSQL_TYPE_DOUBLE;
   param[9].buffer        = (void *) &build_epoch;
 
-  // TINYINT PARAM[10] exit_code
-  char exit_code        = (char ) strtol(resultT["exit_code"].c_str(),(char**) NULL, 10);
-  param[10].buffer_type = MYSQL_TYPE_TINY;
-  param[10].buffer      = (void *) &exit_code;
-
-  // STRING PARAM[11] exec_path
+  // STRING PARAM[10] exec_path
   std::string& exec_path   = resultT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[11].buffer_type   = MYSQL_TYPE_STRING;
-  param[11].buffer        = (void *) exec_path.c_str();
-  param[11].buffer_length = exec_path.capacity();
-  param[11].length        = &len_exec_path;
+  param[10].buffer_type   = MYSQL_TYPE_STRING;
+  param[10].buffer        = (void *) exec_path.c_str();
+  param[10].buffer_length = exec_path.capacity();
+  param[10].length        = &len_exec_path;
   
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_link");
+      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_link",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for insert xalt_link");
+      print_stmt_error(stmt, "Could not execute stmt for insert xalt_link",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -224,7 +219,7 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for insert xalt_link");
+      print_stmt_error(stmt, "Could not close stmt for insert xalt_link",__FILE__,__LINE__);
       exit(1);
     }
 }
@@ -240,13 +235,13 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
     {
-      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_s, stmt_sql_s, strlen(stmt_sql_s)))
     {
-      print_stmt_error(stmt_s, "Could not prepare stmt_s for select func_id");
+      print_stmt_error(stmt_s, "Could not prepare stmt_s for select func_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -266,7 +261,7 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -278,7 +273,7 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -290,13 +285,13 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
-      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)");
+      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_function");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_function",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -311,7 +306,7 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
   
@@ -325,13 +320,13 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
   if (!stmt_ii)
     {
-      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)");
+      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_ii, stmt_sql_ii, strlen(stmt_sql_ii)))
     {
-      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into join_link_function");
+      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into join_link_function",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -373,7 +368,7 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
 
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
-      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -385,12 +380,12 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
       // "SELECT func_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not execute stmt for selecting func_id");
+          print_stmt_error(stmt_s, "Could not execute stmt for selecting func_id",__FILE__,__LINE__);
           exit(1);
         }
       if (mysql_stmt_store_result(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting func_id");
+          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting func_id",__FILE__,__LINE__);
           exit(1);
         }
       
@@ -400,7 +395,7 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
           // "INSERT INTO xalt_function ..."
           if (mysql_stmt_execute(stmt_i))
             {
-              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object");
+              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object",__FILE__,__LINE__);
               exit(1);
             }
           func_id = (uint) mysql_stmt_insert_id(stmt_i);
@@ -409,7 +404,7 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
       // "INSERT INTO join_link_function ..."
       if (mysql_stmt_execute(stmt_ii))
         {
-          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into join_link_function");
+          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into join_link_function",__FILE__,__LINE__);
           exit(1);
         }
     }
@@ -417,17 +412,17 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
   mysql_stmt_free_result(stmt_s);
   if (mysql_stmt_close(stmt_s))
     {
-      print_stmt_error(stmt_s, "Could not close stmt for selecting func_id");
+      print_stmt_error(stmt_s, "Could not close stmt for selecting func_id",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_function");
+      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_function",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_ii))
     {
-      print_stmt_error(stmt_ii, "Could not close stmt for inserting into join_link_function");
+      print_stmt_error(stmt_ii, "Could not close stmt for inserting into join_link_function",__FILE__,__LINE__);
       exit(1);
     }
 }

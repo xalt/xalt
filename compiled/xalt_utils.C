@@ -99,7 +99,6 @@ FILE* xalt_json_file_open(std::string rmapD, const char* name)
           fn += name;
           fn += extA[i];
           fp  = fopen(fn.c_str(), "r");
-          fprintf(stderr,"rmapD fn: %s\n",fn.c_str());
           if (fp)
             return fp;
         }
@@ -131,7 +130,6 @@ FILE* xalt_json_file_open(std::string rmapD, const char* name)
           fn += name;
           fn += extA[i];
           fp  = fopen(fn.c_str(), "r");
-          fprintf(stderr,"XALT_ETC_DIR fn: %s\n",fn.c_str());
           if (fp)
             break;
         }

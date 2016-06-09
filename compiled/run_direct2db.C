@@ -25,13 +25,13 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -48,7 +48,7 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting run_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -60,13 +60,13 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
 
   if (mysql_stmt_bind_result(stmt, result))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting run_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not execute stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -75,7 +75,7 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not close stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -88,21 +88,21 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
                             std::string& hash_id, unsigned int* run_id)
 {
 
-  const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, COMPRESS(?))";
+  const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,COMPRESS(?))";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not prepare stmt for INSERT INTO xalt_run",__FILE__,__LINE__);
       exit(1);
     }
 
-  MYSQL_BIND param[22];
+  MYSQL_BIND param[20];
   memset((void *) param,  0, sizeof(param));
 
   // STRING PARAM[0] job_id
@@ -205,62 +205,52 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   param[11].buffer      = (void *) &num_cores;
   param[11].is_unsigned = 1;
 
-  // INT PARAM[12] job_num_cores  // think about removing this!
+  // INT PARAM[12] num_nodes
+  int num_nodes         = (int) strtol(userT["num_nodes"].c_str(), NULL, 10);
   param[12].buffer_type = MYSQL_TYPE_LONG;
-  param[12].buffer      = (void *) &num_cores;
+  param[12].buffer      = (void *) &num_nodes;
   param[12].is_unsigned = 1;
 
-  // INT PARAM[13] num_nodes
-  int num_nodes         = (int) strtol(userT["num_nodes"].c_str(), NULL, 10);
-  param[13].buffer_type = MYSQL_TYPE_LONG;
-  param[13].buffer      = (void *) &num_nodes;
+  // SHORT PARAM[13] num_threads
+  short int num_threads = (short int) strtol(userT["num_threads"].c_str(), NULL, 10);
+  param[13].buffer_type = MYSQL_TYPE_SHORT;
+  param[13].buffer      = (void *) &num_threads;
   param[13].is_unsigned = 1;
 
-  // SHORT PARAM[14] num_threads
-  short int num_threads = (short int) strtol(userT["num_threads"].c_str(), NULL, 10);
-  param[14].buffer_type = MYSQL_TYPE_SHORT;
-  param[14].buffer      = (void *) &num_threads;
-  param[14].is_unsigned = 1;
-
-  // STRING PARAM[15] queue
+  // STRING PARAM[14] queue
   std::string& queue      = userT["queue"];
   std::string::size_type len_queue = queue.size();
-  param[15].buffer_type   = MYSQL_TYPE_STRING;
-  param[15].buffer        = (void *) queue.c_str();
-  param[15].buffer_length = queue.capacity();
-  param[15].length        = &len_account;
+  param[14].buffer_type   = MYSQL_TYPE_STRING;
+  param[14].buffer        = (void *) queue.c_str();
+  param[14].buffer_length = queue.capacity();
+  param[14].length        = &len_queue;
 
-  // SHORT PARAM[16] exit_code // Think about removing this!
-  short int exit_code   = 0;
-  param[16].buffer_type = MYSQL_TYPE_SHORT;
-  param[16].buffer      = (void *) &exit_code;
-
-  // STRING PARAM[17] user
+  // STRING PARAM[15] user
   std::string& user       = userT["user"];
   std::string::size_type len_user = user.size();
-  param[17].buffer_type   = MYSQL_TYPE_STRING;
-  param[17].buffer        = (void *) user.c_str();
-  param[17].buffer_length = user.capacity();
-  param[17].length        = &len_user;
+  param[15].buffer_type   = MYSQL_TYPE_STRING;
+  param[15].buffer        = (void *) user.c_str();
+  param[15].buffer_length = user.capacity();
+  param[15].length        = &len_user;
 
-  // STRING PARAM[18] exec_path
+  // STRING PARAM[16] exec_path
   std::string& exec_path  = userT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[18].buffer_type   = MYSQL_TYPE_STRING;
-  param[18].buffer        = (void *) exec_path.c_str();
-  param[18].buffer_length = exec_path.capacity();
-  param[18].length        = &len_exec_path;
+  param[16].buffer_type   = MYSQL_TYPE_STRING;
+  param[16].buffer        = (void *) exec_path.c_str();
+  param[16].buffer_length = exec_path.capacity();
+  param[16].length        = &len_exec_path;
 
-  // STRING PARAM[19] module_name
+  // STRING PARAM[17] module_name
   const int              module_name_sz = 64;
   char                   module_name[module_name_sz];
   std::string::size_type len_module_name = 0;
   my_bool                module_name_null_flag = 0;
-  param[19].buffer_type   = MYSQL_TYPE_STRING;
-  param[19].buffer        = (void *) &module_name[0];
-  param[19].buffer_length = module_name_sz;
-  param[19].is_null       = &module_name_null_flag;
-  param[19].length        = &len_module_name;
+  param[17].buffer_type   = MYSQL_TYPE_STRING;
+  param[17].buffer        = (void *) &module_name[0];
+  param[17].buffer_length = module_name_sz;
+  param[17].is_null       = &module_name_null_flag;
+  param[17].length        = &len_module_name;
   if (path2module(exec_path.c_str(), rmapT, module_name,module_name_sz))
     {
       module_name_null_flag = 0;
@@ -269,30 +259,30 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   else
     module_name_null_flag = 1;
 
-  // STRING PARAM[20] cwd
+  // STRING PARAM[18] cwd
   std::string& cwd        = userT["cwd"];
   std::string::size_type len_cwd = cwd.size();
-  param[20].buffer_type   = MYSQL_TYPE_STRING;
-  param[20].buffer        = (void *) cwd.c_str();
-  param[20].buffer_length = cwd.capacity();
-  param[20].length        = &len_cwd;
+  param[18].buffer_type   = MYSQL_TYPE_STRING;
+  param[18].buffer        = (void *) cwd.c_str();
+  param[18].buffer_length = cwd.capacity();
+  param[18].length        = &len_cwd;
 
-  // BLOB PARAM[21] cmdline
+  // BLOB PARAM[19] cmdline
   std::string::size_type len_cmdline = usr_cmdline.size();
-  param[21].buffer_type   = MYSQL_TYPE_BLOB;
-  param[21].buffer        = (void *) usr_cmdline.c_str();
-  param[21].buffer_length = usr_cmdline.capacity();
-  param[21].length        = &len_cmdline;
+  param[19].buffer_type   = MYSQL_TYPE_BLOB;
+  param[19].buffer        = (void *) usr_cmdline.c_str();
+  param[19].buffer_length = usr_cmdline.capacity();
+  param[19].length        = &len_cmdline;
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_run");
+      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_run",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for insert xalt_run");
+      print_stmt_error(stmt, "Could not execute stmt for insert xalt_run",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -300,7 +290,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for insert xalt_run");
+      print_stmt_error(stmt, "Could not close stmt for insert xalt_run",__FILE__,__LINE__);
       exit(1);
     }
 }
@@ -312,13 +302,13 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting env_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting env_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -347,13 +337,13 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
 
   if (mysql_stmt_bind_result(stmt, result))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting env_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting env_id",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting env_id");
+      print_stmt_error(stmt, "Could not execute stmt for selecting env_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -363,7 +353,7 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not close stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -437,13 +427,13 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
-      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)");
+      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_env_name");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_env_name",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -459,7 +449,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_env_name");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_env_name",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -469,7 +459,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   // Clean up stmt_i
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_env_name");
+      print_stmt_error(stmt_i, "Could not close stmt for insert xalt_env_name",__FILE__,__LINE__);
       exit(1);
     }
   
@@ -486,13 +476,13 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
     {
-      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_s, stmt_sql_s, strlen(stmt_sql_s)))
     {
-      print_stmt_error(stmt_s, "Could not prepare stmt_s for select obj_id");
+      print_stmt_error(stmt_s, "Could not prepare stmt_s for select obj_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -508,7 +498,7 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting env_id(1)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting env_id(1)",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -520,13 +510,13 @@ uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting env_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting env_id(2)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt_s))
     {
-      print_stmt_error(stmt_s, "Could not execute stmt for selecting env_id");
+      print_stmt_error(stmt_s, "Could not execute stmt for selecting env_id",__FILE__,__LINE__);
       exit(1);
     }
   mysql_stmt_free_result(stmt_s);
@@ -546,13 +536,13 @@ void insert_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt_s for INSERT INTO xalt_total_env");
+      print_stmt_error(stmt, "Could not prepare stmt_s for INSERT INTO xalt_total_env",__FILE__,__LINE__);
       exit(1);
     }
   
@@ -586,18 +576,18 @@ void insert_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_total_env");
+      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_total_env",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for insert xalt_total_env");
+      print_stmt_error(stmt, "Could not execute stmt for insert xalt_total_env",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for insert xalt_total_env");
+      print_stmt_error(stmt, "Could not close stmt for insert xalt_total_env",__FILE__,__LINE__);
       exit(1);
     }
 }
@@ -613,13 +603,13 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt_s for INSERT INTO join_run_env");
+      print_stmt_error(stmt, "Could not prepare stmt_s for INSERT INTO join_run_env",__FILE__,__LINE__);
       exit(1);
     }
   
@@ -661,7 +651,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for insert join_run_env");
+      print_stmt_error(stmt, "Could not bind paramaters for insert join_run_env",__FILE__,__LINE__);
       exit(1);
     }
   
@@ -677,7 +667,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
       // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))
         {
-          print_stmt_error(stmt, "Could not execute stmt for insert join_run_env");
+          print_stmt_error(stmt, "Could not execute stmt for insert join_run_env",__FILE__,__LINE__);
           exit(1);
         }
     }
@@ -685,7 +675,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
   // clean up.
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for insert join_run_env");
+      print_stmt_error(stmt, "Could not close stmt for insert join_run_env",__FILE__,__LINE__);
       exit(1);
     }
 }
@@ -700,13 +690,13 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
   MYSQL_STMT* stmt     = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -736,19 +726,19 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for update run_time");
+      print_stmt_error(stmt, "Could not bind paramaters for update run_time",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for update run_time");
+      print_stmt_error(stmt, "Could not execute stmt for update run_time",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for update run_time");
+      print_stmt_error(stmt, "Could not close stmt for update run_time",__FILE__,__LINE__);
       exit(1);
     }
 }

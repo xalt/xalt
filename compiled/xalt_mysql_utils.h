@@ -13,7 +13,7 @@
 #  include "xalt_types.h"
 
    void finish_with_error(MYSQL *conn);
-   void print_stmt_error(MYSQL_STMT *stmt, const char *message);
+   void print_stmt_error(MYSQL_STMT *stmt, const char *message, const char* file, int line);
    void insert_objects(MYSQL* conn, const char* table_name, time_t epoch,  uint index, 
                        std::vector<Libpair>& lddA, std::string& syshost, Table& rmapT);
 

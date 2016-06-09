@@ -21,7 +21,6 @@ int main(int argc, char* argv[])
 {
   int         i           = 1;
   const char* uuid        = argv[i++];
-  const char* status      = argv[i++];
   const char* wd          = argv[i++];
   const char* syshost     = argv[i++];
   const char* execname    = argv[i++];
@@ -58,7 +57,6 @@ int main(int argc, char* argv[])
   resultT["link_path"]     = compilerPath;
   resultT["build_user"]    = user;
   resultT["build_epoch"]   = build_epoch;
-  resultT["exit_code"]     = status;
   resultT["exec_path"]     = execname;
   resultT["hash_id"]       = sha1sum;
   resultT["wd"]            = wd;
