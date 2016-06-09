@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir       << "\n";
   std::cout << "XALT_CONFIG_PY:            " << XALT_CONFIG_PY     << "\n";
   std::cout << "XALT_SYSTEM_PATH:          " << XALT_SYSTEM_PATH   << "\n";
+  std::cout << "XALT_SYSHOST_CONFIG:       " << SYSHOST_CONFIG     << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ      << "\n";
   std::cout << "HAVE_32BIT:                " << HAVE_32BIT         << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
