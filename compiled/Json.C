@@ -2,12 +2,27 @@
 #include "xalt_quotestring.h"
 
 
+Json::Json(Json::Kind kind)
+{
+  if (kind == TABLE)
+    {
+      m_s     = "{";
+      m_final = '}';
+    }
+  else
+    {
+      m_s     = "[";
+      m_final = ']';
+    }
+}
+
+
 void Json::fini()
 {
   if (m_s.back() == ',')
-    m_s.replace(m_s.size()-1,1,"}");
+    m_s.replace(m_s.size()-1,1,m_final);
   else
-    m_s += "}";
+    m_s += m_final;
 }
 
 void Json::add(const char* name, std::string& value)
