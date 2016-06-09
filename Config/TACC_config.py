@@ -4,7 +4,7 @@
 # compute nodes run XALT while login nodes do not.
 
 hostname_patterns = [
-  'c[0-9][0-9][0-9]-[0-9][0-9][0-9]'
+  '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]'
   ]
 
 # Acceptance is done before the ignore list so put in here the
