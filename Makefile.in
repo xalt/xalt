@@ -32,6 +32,7 @@ ifeq ($(OS_NAME),Darwin)
   LIB_OPTIONS     := -bundle -undefined dynamic_lookup
 endif
 
+OPTLVL            := -g -O2
 package           := xalt
 VERSION           := $(shell cat $(srcdir)/.version)
 TRANSMISSION      := @TRANSMISSION@
@@ -143,7 +144,7 @@ Build_libuuid_32_no:
 
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) U32=$(U32) U64=$(U64) LIB=$(LIB) LIB64=$(LIB64) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) U32=$(U32) U64=$(U64) LIB=$(LIB) OPTLVL=$(OPTLVL) LIB64=$(LIB64) all
 
 echo:
 	@echo srcdir: $(srcdir)

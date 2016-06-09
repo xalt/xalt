@@ -41,7 +41,7 @@ installXALT()
   rm -rf XALT build
   mkdir build
   (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 --with-config=$projectDir/Config/rtm_config.py >& /dev/null ; \
-  echo "<make>"; make install ;  )
+  echo "<make>"; make OPTLVL="-g -O0" install ;  )
   cp $projectDir/src/removeDataBase.py    XALT/sbin
   cp $projectDir/test/check_entries_db.py XALT/sbin
   PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
