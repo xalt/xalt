@@ -49,11 +49,11 @@ ignore_path_patterns = [
 # which pass through the filter are save in an SQL table that is
 # controllable via sql commands.
 # 
-# Each environment variable must go through the Accept list
-# followed by the reject list.  To be saved a variables name must be 
-# found in the accept list and not found in the ignore list.
-# For example, the accept list might allow for any variables that contain
-# 'PATH' but the ignore list causes a variable named DDTPATH to be ignored.
+# To be saved a variables name must be found in the accept list
+# and not found in the ignore list. For example, the accept list
+# might allow for any variables that contain 'PATH' but the
+# ignore list causes a variable named DDTPATH or INFOPATH to
+# be ignored.
 
 accept_env_patterns = [
   '^TACC_AFFINITY_ENABLED$',
@@ -63,7 +63,6 @@ accept_env_patterns = [
   '^LC_.*',
   '^LD.*',
   '^LOADEDMODULES$',
-  '^MIC_.*',
   '^MKL.*',
   '^MPICH_.*',
   '^MV2_.*',
@@ -71,7 +70,6 @@ accept_env_patterns = [
   '^OMP.*',
   '^PYTHON.*',
   '^R_.*',
-  '^SHELL$',
   '^TARG$',
   '^_LMFILES_$'
   ] 
@@ -84,15 +82,18 @@ ignore_env_patterns = [
   '^LC_COLLATE$',
   '^MAKE_INC_PATH$',
   '^MANPATH$',
-  '^MIC_ENV_PREFIX$',
-  '^MIC_TACC.*_DIR$',
-  '^MIC_TACC.*_INC',
-  '^MIC_TACC.*_LIB$',
   '^MKLROOT$',
   '^MKPATH$',
   '^MODULEPATH_ROOT$',
   '^MPICH_HOME$',
+  '^MV2_COMM_WORLD.*',
+  '^MV2_NUM_NODES_IN_JOB$'
+  '^MV2_USE_OLD_BCAST$',
+  '^OMP_NUM_THREADS$',
   '^PKG_CONFIG_PATH$',
   '^SINK_LD_LIBRARY_PATH$',
   '^__.*'
   ]  
+
+
+  
