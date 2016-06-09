@@ -93,5 +93,6 @@ ignore_env_patterns = [
   '^MODULEPATH_ROOT$',
   '^MPICH_HOME$',
   '^PKG_CONFIG_PATH$',
+  '^SINK_LD_LIBRARY_PATH$',
   '^__.*'
   ]  
