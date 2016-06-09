@@ -4,15 +4,15 @@
 
 Json::Json(Json::Kind kind)
 {
-  if (kind == TABLE)
+  if (kind == Json_TABLE)
     {
       m_s     = "{";
-      m_final = '}';
+      m_final = "}";
     }
   else
     {
       m_s     = "[";
-      m_final = ']';
+      m_final = "]";
     }
 }
 

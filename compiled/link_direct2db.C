@@ -164,7 +164,7 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linkli
     module_name_null_flag = 1;
 
   // STRING PARAM[6] link line (json string) (db compresses object)
-  Json json(Json::Kind::Array);
+  Json json(Json::Kind::Json_ARRAY);
   json.add(NULL,linklineA);
   json.fini();
   std::string linkline   = json.result();

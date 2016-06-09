@@ -7,11 +7,11 @@ class Json
 {
 public:
   enum Kind {
-    Table,
-    Array
+    Json_TABLE,
+    Json_ARRAY
   };
 
-  Json(Json::Kind kind = Json::Kind::Table);
+  Json(Json::Kind kind = Json::Kind::Json_TABLE);
   ~Json() {};
   void fini();
   void add(const char* name, Table& t);
@@ -24,7 +24,7 @@ public:
 
 private:
   std::string m_s;
-  char        m_final;
+  std::string m_final;
 };
 
 
