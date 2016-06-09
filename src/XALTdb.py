@@ -38,6 +38,11 @@ except:
 
 warnings.filterwarnings("ignore", "Unknown table.*")
 
+# In 'directdb' transmission, print goes to syslog (for exception, etc)
+if (XALT_TRANSMISSION_STYLE == 'directdb' and not XALT_TRACING):
+  logger = config_logger()
+  print = logger.exception
+
 import inspect
 
 def __LINE__():
@@ -116,32 +121,26 @@ class XALTdb(object):
     else:
       self.__readFromUser()
 
-    n = 100
-    for i in range(0,n+1):
-      try:
-        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8")
-        if (databaseName):
-          cursor = self.__conn.cursor()
-          
-          # If MySQL version < 4.1, comment out the line below
-          cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
-          cursor.execute("USE "+xalt.db())
+    try:
+      self.__conn = MySQLdb.connect \
+                      (self.__host,self.__user,self.__passwd, use_unicode=True, \
+                       charset="utf8", connect_timeout=120)
+      if (databaseName):
+        cursor = self.__conn.cursor()
+        
+        # If MySQL version < 4.1, comment out the line below
+        cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+        cursor.execute("USE "+xalt.db())
 
-          self.__conn.set_character_set('utf8')
-          cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
-          cursor.execute("SET CHARACTER SET utf8;") #same as above
-          cursor.execute("SET character_set_connection=utf8;") #same as above
-        break
+        self.__conn.set_character_set('utf8')
+        cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
+        cursor.execute("SET CHARACTER SET utf8;") #same as above
+        cursor.execute("SET character_set_connection=utf8;") #same as above
 
-      except MySQLdb.Error as e:
-        if (i < n):
-          sleep(i*0.1)
-          pass
-        else:
-          print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
-          raise
+    except MySQLdb.Error as e:
+      print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
+      raise
     return self.__conn
-
 
   def db(self):
     """ Return name of db"""
@@ -219,9 +218,9 @@ class XALTdb(object):
       conn.close()
 
     except Exception as e:
-      print(XALT_Stack.contents(), file=sys.stderr)
-      print(query, file=sys.stderr)
-      print ("link_to_db(): Error ",e, file=sys.stderr)
+      print(XALT_Stack.contents())
+      print(query)
+      print ("link_to_db(): Error %s" % e)
       sys.exit (1)
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
@@ -372,5 +371,6 @@ class XALTdb(object):
     except Exception as e:
       print(XALT_Stack.contents())
       print(query.encode("ascii","ignore"))
-      print ("run_to_db(): ",e)
+      print ("run_to_db(): %s" % e)
       sys.exit (1)
+

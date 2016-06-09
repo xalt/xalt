@@ -139,7 +139,7 @@ def main():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_run` (
           `run_id`        int(11)     unsigned NOT NULL auto_increment,
-          `job_id`        char(11)             NOT NULL,
+          `job_id`        char(64)             NOT NULL,
           `run_uuid`      char(36)             NOT NULL,
           `date`          datetime             NOT NULL,
 

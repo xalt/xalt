@@ -42,6 +42,7 @@ READLINK=@path_to_readlink@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
 EXTRACT_COMPILER=$XALT_DIR/libexec/xalt_extract_linker.py
+SHA1SUM=@sha1sum@
 
 export MY_CMD=unknown
 
