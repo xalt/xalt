@@ -63,7 +63,6 @@ accept_env_patterns = [
   '^LD.*',
   '^LOADEDMODULES$',
   '^MKL.*',
-  '^MPICH_.*',
   '^MV2_.*',
   '^OFFLOAD.*',
   '^OMP.*',
