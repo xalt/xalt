@@ -13,7 +13,7 @@ LIB_OPTIONS       := -fPIC -shared
 WARN_FLAGS  := -Wno-unused-result
 CF_INIT     := -I$(THIS_DIR) -I. -fPIC 
 CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild_h $(MYSQL_CFLAGS) 
-CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h -I$(DESTDIR)$(U64)/include 
+CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h 
 
 C_SRC       := jsmn.c             	   \
 	       xalt_fgets_alloc.c 	   \
@@ -202,7 +202,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o
-	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -Wl,-rpath,$(U32)/lib -L$(U32)/lib -luuid
+	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -luuid
 
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
@@ -211,7 +211,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -Wl,-rpath,$(U64)/lib -L$(U64)/lib -luuid 
+	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -luuid 
 
 $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CFLAGS) $(CF_INIT) -DFULL_TRACING -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
@@ -220,7 +220,7 @@ $(DESTDIR)$(LIB64)/libxalt_init_dbg.so: $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o
                                         $(DESTDIR)$(LIB64)/xalt_syshost.o        \
                                         $(DESTDIR)$(LIB64)/xalt_quotestring.o    \
                                         $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	gcc $(CFLAGS) $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -Wl,-rpath,$(U64)/lib -L$(U64)/lib -luuid 
+	gcc $(CFLAGS) $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -luuid 
 
 
 makefile: Makefile.in config.status
