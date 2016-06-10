@@ -65,9 +65,12 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
       // Save everything else (and get rid of the trailing newline!)
       path.assign(buf, strlen(buf)-1);
       char* my_realpath = canonicalize_file_name(path.c_str());
-      path.assign(my_realpath);
-      set.insert(path);
-      free(my_realpath);
+      if (my_realpath)
+        {
+          path.assign(my_realpath);
+          set.insert(path);
+          free(my_realpath);
+        }
     }
 
   free(buf);
