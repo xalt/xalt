@@ -35,6 +35,7 @@ ignore_path_patterns = [
   '^/opt/apps/shell_startup_debug/',
   '/l/pkg/xalt/',
   '^/opt/apps/xalt/',
+  '^/opt/apps/git/',
   '^/opt/apps/intel[0-9][0-9_]*/mvapich2/',
   '^/opt/apps/intel[0-9][0-9_]*/impi/',
   '^/opt/apps/gcc[0-9][0-9_]*/mvapich2/',
@@ -56,11 +57,9 @@ ignore_path_patterns = [
 # be ignored.
 
 accept_env_patterns = [
-  '^TACC_AFFINITY_ENABLED$',
   '^.*PATH.*',
   '^I_MPI.*',
   '^KMP.*',
-  '^LC_.*',
   '^LD.*',
   '^LOADEDMODULES$',
   '^MKL.*',
@@ -70,16 +69,18 @@ accept_env_patterns = [
   '^OMP.*',
   '^PYTHON.*',
   '^R_.*',
+  '^TACC_AFFINITY_ENABLED$',
   '^TARG$',
   '^_LMFILES_$'
   ] 
 
 ignore_env_patterns = [
+  '^CPATH$',
   '^DDTPATH$',
   '^INFOPATH$',
+  '^LIBRARY_PATH$',
   '^LMOD*',
   '^LUA*',
-  '^LC_COLLATE$',
   '^MAKE_INC_PATH$',
   '^MANPATH$',
   '^MKLROOT$',
