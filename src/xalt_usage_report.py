@@ -222,6 +222,46 @@ class Libraries:
 
     return resultA
 
+class SystemExec:
+  def __init__(self, cursor):
+    self.__execA  = []
+    self.__cursor = cursor
+
+  def build(self, args, startdate, enddate):
+    query = """
+    ROUND(SUM(run_time*num_cores/3600)) as corehours,
+    count(date)                         as n_jobs,
+    COUNT(DISTINCT(user))               as n_users,
+    module_name                         as module,
+    from xalt_run where syshost like %s
+    and date >= %s and date < %s and
+    (module_name is null or module_name = 'NULL'
+    """
+    cursor  = self.__cursor
+    cursor.execute(query, (args.syshost, startdate, enddate))
+    resultA = cursor.fetchall()
+    execA   = self.__execA
+    for corehours, n_jobs, n_users, modules in resultA:
+      entryT = { 'corehours' : corehours,
+                 'n_jobs'    : n_jobs,
+                 'n_users'   : n_users,
+                 'modules'   : modules }
+      execA.append(entryT)
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(["CoreHrs", "# Jobs","# Users", "Modules"])
+    resultA.append(["-------", "------","-------", "-------"])
+
+    execA = self.__execA
+    sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['modules']])
+    
+    return resultA
+        
 def kinds_of_jobs(cursor, args, startdate, enddate):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
@@ -438,6 +478,17 @@ def main():
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
+  modA = SystemExec(cursor)
+  modA.build(args, startdate, enddate)
+
+  ############################################################
+  #  Report of Top Modules by Core Hours
+  resultA = modA.report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+  print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
+  print(bt.build_tbl())
+
+
   ############################################################
   #  Report of Library by short module name usage by Core Hours.
   libA = Libraries(cursor)
