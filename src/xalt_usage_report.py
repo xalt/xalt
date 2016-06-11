@@ -169,7 +169,7 @@ class CompilerUsageByCoreHours:
   def build(self, args, startdate, enddate):
     query = """
     SELECT
-    ROUND(SUM(t1.run_time*t1.num_cores/3600)) as corehours,
+    ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as corehours,
     COUNT(t1.date)                            as n_runs,
     COUNT(DISTINCT(t1.user))                  as n_users,
     t2.link_program                           as link_program
@@ -266,7 +266,6 @@ class Libraries:
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
     return resultA
-
   def group_report_by(self, args, sort_key):
     resultA = []
     resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
