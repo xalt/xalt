@@ -11,6 +11,8 @@ try:
 except:
   import ConfigParser as configparser
 
+sys.path.insert(1,os.getcwd())
+
 from BeautifulTbl      import BeautifulTbl
 
 class StaffBuilds:
