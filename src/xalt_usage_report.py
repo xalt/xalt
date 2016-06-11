@@ -127,6 +127,42 @@ class ExecRun:
     return resultA, sumCH
 
 
+class CompilerUsageByCount:
+  def __init__(self, cursor):
+    self.__linkA  = []
+    self.__cursor = cursor
+  def build(self, args, startdate, enddate):
+    query = """
+    SELECT link_program, count(*) as count FROM xalt_link
+    WHERE build_syshost = %s
+    AND   date >= %s AND date < %s
+    AND   link_program is NOT NULL
+    GROUP by link_program
+    """
+    cursor  = self.__cursor
+    cursor.execute(query, (args.syshost, startdate, enddate))
+    resultA = cursor.fetchall()
+    linkA   = self.__linkA
+    for link_program, count in resultA:
+      entryT = { 'count'        : count,
+                 'link_program' : link_program }
+      linkA.append(entryT)
+    
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(["Count", "Link Program"])
+    resultA.append(["-----", "------------"])
+
+    modA = self.__modA
+    sortA = sorted(modA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append(["%d" % (entryT['count']), entryT['link_program']])
+    
+    return resultA
+
 class Libraries:
 
   def __init__(self, cursor):
@@ -222,9 +258,9 @@ class Libraries:
 
     return resultA
 
-class SystemExec:
+class ModuleExec:
   def __init__(self, cursor):
-    self.__execA  = []
+    self.__modA  = []
     self.__cursor = cursor
 
   def build(self, args, startdate, enddate):
@@ -241,21 +277,21 @@ class SystemExec:
     cursor  = self.__cursor
     cursor.execute(query, (args.syshost, startdate, enddate))
     resultA = cursor.fetchall()
-    execA   = self.__execA
+    modA   = self.__modA
     for corehours, n_jobs, n_users, modules in resultA:
       entryT = { 'corehours' : corehours,
                  'n_jobs'    : n_jobs,
                  'n_users'   : n_users,
                  'modules'   : modules }
-      execA.append(entryT)
+      modA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
     resultA.append(["CoreHrs", "# Jobs","# Users", "Modules"])
     resultA.append(["-------", "------","-------", "-------"])
 
-    execA = self.__execA
-    sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
+    modA = self.__modA
+    sortA = sorted(modA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
@@ -477,14 +513,23 @@ def main():
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
-  modA = SystemExec(cursor)
-  modA.build(args, startdate, enddate)
 
   ############################################################
   #  Report of Top Modules by Core Hours
+  modA = ModuleExec(cursor)
+  modA.build(args, startdate, enddate)
   resultA = modA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
+  print(bt.build_tbl())
+
+  ############################################################
+  # Report on Compiler (linker) usage by Count
+  linkA = CompilerUsageByCount(cursor)
+  linkA.build(args, startdate, enddate)
+  resultA = linkA.report_by(args, "count")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
+  print("\nCompiler usage by count\n")
   print(bt.build_tbl())
 
 
@@ -503,8 +548,6 @@ def main():
 
   ############################################################
   #  Report of Library usage by Core Hours.
-  libA = Libraries(cursor)
-  libA.build(args, startdate, enddate)
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
