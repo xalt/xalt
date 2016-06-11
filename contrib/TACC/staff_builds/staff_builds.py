@@ -15,6 +15,24 @@ sys.path.insert(1,os.getcwd())
 
 from BeautifulTbl      import BeautifulTbl
 
+class CmdLineOptions(object):
+  """ Command line Options class """
+
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
+    parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
+    parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
+    parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
+    parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
+    args = parser.parse_args()
+    return args
+
 class StaffBuilds:
   def __init__(self, cursor):
     self.__execA  = []
