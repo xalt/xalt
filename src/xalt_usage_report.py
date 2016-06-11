@@ -184,7 +184,7 @@ class CompilerUsageByCoreHours:
     cursor.execute(query, (args.syshost, startdate, enddate))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
-    for link_program, count in resultA:
+    for corehours, n_runs, n_users, link_program in resultA:
       entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
                  'n_runs'      : n_runs,
