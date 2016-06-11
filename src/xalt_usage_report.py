@@ -133,10 +133,9 @@ class CompilerUsageByCount:
     self.__cursor = cursor
   def build(self, args, startdate, enddate):
     query = """
-    SELECT link_program, count(*) as count FROM xalt_link
-    WHERE build_syshost = %s
+    SELECT link_program, count(date) as count FROM xalt_link
+    WHERE build_syshost like %s
     AND   date >= %s AND date < %s
-    AND   link_program is NOT NULL
     GROUP by link_program
     """
     cursor  = self.__cursor
@@ -148,14 +147,13 @@ class CompilerUsageByCount:
                  'link_program' : link_program }
       linkA.append(entryT)
     
-
   def report_by(self, args, sort_key):
     resultA = []
     resultA.append(["Count", "Link Program"])
     resultA.append(["-----", "------------"])
 
-    modA = self.__modA
-    sortA = sorted(modA, key=itemgetter(sort_key), reverse=True)
+    linkA = self.__linkA
+    sortA = sorted(linkA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
@@ -531,7 +529,6 @@ def main():
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
   print("\nCompiler usage by count\n")
   print(bt.build_tbl())
-
 
   ############################################################
   #  Report of Library by short module name usage by Core Hours.
