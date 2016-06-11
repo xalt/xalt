@@ -229,13 +229,14 @@ class SystemExec:
 
   def build(self, args, startdate, enddate):
     query = """
+    SELECT 
     ROUND(SUM(run_time*num_cores/3600)) as corehours,
     count(date)                         as n_jobs,
     COUNT(DISTINCT(user))               as n_users,
-    module_name                         as module,
+    module_name                         as modules
     from xalt_run where syshost like %s
-    and date >= %s and date < %s and
-    (module_name is null or module_name = 'NULL'
+    and date >= %s and date < %s and  module_name is not null
+    group by modules
     """
     cursor  = self.__cursor
     cursor.execute(query, (args.syshost, startdate, enddate))
@@ -418,8 +419,6 @@ def main():
   print("")
   print("")
   
-
-
   ############################################################
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, startdate, enddate)
