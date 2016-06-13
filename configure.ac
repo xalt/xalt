@@ -3,8 +3,6 @@ AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SUBDIRS(compiled)
 
-
-
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb) [[file]]]),
@@ -134,6 +132,22 @@ AC_PATH_PROG(MYSQL_CONFIG,[mysql_config], UNKNOWN)
 AC_SUBST(HAVE_PYMOD_PSUTIL)
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
+AC_CHECK_HEADER(uuid/uuid.h)
+
+if test $ac_cv_header_uuid_uuid_h != yes; then
+   echo
+   echo "======================================================="
+   echo "Unable to install xalt without the uuid headers"
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
+
+AC_SEARCH_LIBS([uuid_generate],[uuid], [], [
+  AC_MSG_ERROR([Unable to install xalt without the uuid library])
+  ])
+
+
 
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)

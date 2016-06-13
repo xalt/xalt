@@ -122,9 +122,8 @@ INIT_SRC          := $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 all:
 	@echo done
 
-install:  $(DIRLIST) Build_libuuid_64 Build_libuuid_32_$(HAVE_32BIT) Inst_site Inst_sbin  \
-          Inst_bin Inst_libexec Use_getent_yes Use_argparse_$(USE_ARGPARSE)               \
-          build_compiled 
+install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
+          Use_argparse_$(USE_ARGPARSE) build_compiled 
 
 Build_libuuid_64:
 	rm -rf $(CURDIR)/uuid_64
@@ -144,7 +143,7 @@ Build_libuuid_32_no:
 
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) U32=$(U32) U64=$(U64) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) all
 
 echo:
 	@echo srcdir: $(srcdir)
