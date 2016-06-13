@@ -54,10 +54,12 @@ bool parseSyslog(const char* buf, std::string& clusterName, SyslogRecord& syslog
 
       start = end;
     }
-      
+  HERE;      
+  fprintf(stderr,"clusterName: %s, syshost: %s\n",clusterName, syshost);
   if (clusterName != ".*" && clusterName != syshost)
     return false;
 
+  HERE;      
   bool                    record_stored = false;
   RecordT::const_iterator got           = recordT.find(key);
   if (got == recordT.end())
