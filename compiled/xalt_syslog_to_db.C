@@ -71,7 +71,6 @@ int main(int argc, char* argv[])
   buildRmapT(options.rmapD(), rmapT, xlibmapA);
   fnA.push_back(options.leftoverFn());
   fnA.push_back(options.syslogFn());
-  HERE;      
 
   for (auto it = fnA.begin(); it != fnA.end(); ++it)
     {
@@ -87,11 +86,9 @@ int main(int argc, char* argv[])
           //remove trailing newline from buf.
           buf[strlen(buf)-1] = '\0';
             
-	  HERE;      
           bool done = parseSyslog(buf, options.syshost(), syslogT, recordT);
           if (! done)
             continue;
-	  HERE;      
 
           std::string jsonStr;
           syslogT.value(jsonStr);
