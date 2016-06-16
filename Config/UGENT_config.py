@@ -52,6 +52,9 @@ ignore_path_patterns = [
   '/opal_wrapper$'
   '/orterun$',
   '/vtwrapper$'
+  '/conftest$'
+  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'
+  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'
   ]
 
 #------------------------------------------------------------
@@ -75,9 +78,6 @@ accept_env_patterns = [
   '^LD_LIBRARY_PATH',
   '^LOADEDMODULES$',
   '^MODULEPATH$',
-  '^MKL.*',
-  '^MV2_.*',
-  '^OFFLOAD.*',
   '^OMP.*',
   '^PATH$',
   '^PYTHON.*',
@@ -91,19 +91,6 @@ ignore_env_patterns = [
   '^I_MPI_EXTRA_FILESYSTEM',
   '^I_MPI_FABRICS',
   '^I_MPI_OFA_ADAPTER_NAME',
-  '^MKL_DIR$',
-  '^MKL_INCLUDE$',
-  '^MKL_LIB$',
-  '^MKLROOT$',
-  '^MV2_COMM_WORLD.*',
-  '^MV2_DEFAULT_TIME_OUT$',
-  '^MV2_HOMOGENEOUS_CLUSTER$',
-  '^MV2_IBA_HCA$',
-  '^MV2_NODE_ID$',
-  '^MV2_NUM_NODES_IN_JOB$',
-  '^MV2_USE_HUGEPAGES$',
-  '^MV2_USE_OLD_BCAST$',
-  '^MV2_USE_RING_STARTUP$',
   '^OMP_NUM_THREADS$',
   '^__.*'
   ]  
