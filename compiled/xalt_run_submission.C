@@ -69,7 +69,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // If here then we need the json string.  So build it!
 
-  Json    json;
+  Json json;
   json.add_json_string("cmdlineA",options.userCmdLine());
   json.add("envT",envT);
   json.add("userT",userT);
