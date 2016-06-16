@@ -118,7 +118,23 @@ do
 
 done
 
-if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$EXEC" = "conftest" ]; then
+############################################################
+# Test to see if the executable is an autoconf or cmake build
+# => skip those.
+
+SKIP=
+case "$EXEC" in
+  conftest)
+    SKIP=true;;
+  cmTryCompileExec[0-9]*)
+    SKIP=true;;
+  cmTC_[a-f0-9]*)
+    SKIP=true;;
+esac
+
+
+
+if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true ]; then
   $MY_CMD "${argA[@]}"
   status=$?
   exit $status
@@ -157,11 +173,9 @@ RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
 
 if [ -z "$BIT32FLAG" ]; then
   XALT_LIB_DIR=$XALT_DIR/lib64
-  XALT_UUID_LIBDIR=$XALT_DIR/libuuid64/lib
   XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o"
 else
   XALT_LIB_DIR=$XALT_DIR/lib
-  XALT_UUID_LIBDIR=$XALT_DIR/libuuid32/lib
   XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o"
 fi
   
@@ -204,7 +218,7 @@ fi
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -L$XALT_UUID_LIBDIR -Bstatic -luuid -Bdynamic -t > $LINKLINE_OUT 
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
 status=$?
 
 if [ ! -f "$EXEC" ]; then

@@ -54,7 +54,7 @@ bool parseSyslog(const char* buf, std::string& clusterName, SyslogRecord& syslog
 
       start = end;
     }
-      
+
   if (clusterName != ".*" && clusterName != syshost)
     return false;
 

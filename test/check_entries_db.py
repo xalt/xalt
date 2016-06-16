@@ -109,7 +109,7 @@ def main():
       tableT['xalt_total_env']  == num    and
       tableT['xalt_function']   >= nfuncs and
       tableT['xalt_object']     >   10    and
-      tableT['xalt_env_name']   >   15 ):
+      tableT['xalt_env_name']   >   4 ):
 
     result = "passed"
   f = open(args.resultFn,"w")

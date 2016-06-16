@@ -1,10 +1,10 @@
 # This is the config file for specifying tables necessary to configure XALT:
 
-# The patterns listed here are the hosts that can track executables.  Typical usage is that
-# compute nodes track programs while login nodes do not.
+# The patterns listed here are the hosts that can run XALT.  Typical usage is that
+# compute nodes run XALT while login nodes do not.
 
 hostname_patterns = [
-  '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]'
+  '.*'
   ]
 
 # Acceptance is done before the ignore list so put in here the
@@ -28,22 +28,30 @@ ignore_path_patterns = [
   '^/etc',
   '^/usr',
   '^/root',
-  '^/opt/apps/intel/',
-  '^/opt/apps/gcc/',
-  '^/opt/apps/lua',
-  '^/opt/apps/lmod/',
-  '^/opt/apps/shell_startup_debug/',
-  '/l/pkg/xalt/',
-  '^/opt/apps/xalt/',
-  '^/opt/apps/git/',
-  '^/opt/apps/cmake/',
-  '^/opt/apps/autotools/',
-  '^/opt/apps/intel[0-9][0-9_]*/mvapich2/',
-  '^/opt/apps/intel[0-9][0-9_]*/impi/',
-  '^/opt/apps/gcc[0-9][0-9_]*/mvapich2/',
-  '/conftest$'
-  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'
-  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'
+  '/gcc$',
+  '/g++$',
+  '/gfortran$',
+  '/git$',
+  '/icc$',
+  '/icpc$',
+  '/ifort$',
+  '/mpiCC$',
+  '/mpicc$',
+  '/mpicxx$',
+  '/mpif77$',
+  '/mpif90$',
+  '/mpifort$',
+  '/mpifc$',
+  '/mpigcc$',
+  '/mpigxx$',
+  '/mpiicc$',
+  '/mpiicpc$',
+  '/mpiifort$',
+  '/mpiexec.hydra$',
+  '/ompi_info$'
+  '/opal_wrapper$'
+  '/orterun$',
+  '/vtwrapper$'
   ]
 
 #------------------------------------------------------------
@@ -64,8 +72,7 @@ ignore_path_patterns = [
 accept_env_patterns = [
   '^I_MPI.*',
   '^KMP.*',
-  '^LD.*',
-  '^LD_LIBRARY_PATH$',
+  '^LD_LIBRARY_PATH',
   '^LOADEDMODULES$',
   '^MODULEPATH$',
   '^MKL.*',
@@ -75,7 +82,6 @@ accept_env_patterns = [
   '^PATH$',
   '^PYTHON.*',
   '^R_.*',
-  '^TACC_AFFINITY_ENABLED$',
   '^TARG$',
   '^_LMFILES_$'
   ] 
@@ -89,7 +95,6 @@ ignore_env_patterns = [
   '^MKL_INCLUDE$',
   '^MKL_LIB$',
   '^MKLROOT$',
-  '^MPICH_HOME$',
   '^MV2_COMM_WORLD.*',
   '^MV2_DEFAULT_TIME_OUT$',
   '^MV2_HOMOGENEOUS_CLUSTER$',
