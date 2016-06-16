@@ -118,7 +118,23 @@ do
 
 done
 
-if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$EXEC" = "conftest" ]; then
+############################################################
+# Test to see if the executable is an autoconf or cmake build
+# => skip those.
+
+SKIP=
+case "$EXEC" in
+  conftest)
+    SKIP=true;;
+  cmTryCompileExec[0-9]*)
+    SKIP=true;;
+  cmTC_[a-f0-9]*)
+    SKIP=true;;
+esac
+
+
+
+if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true ]; then
   $MY_CMD "${argA[@]}"
   status=$?
   exit $status
