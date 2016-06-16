@@ -1,7 +1,7 @@
 # This is the config file for specifying tables necessary to configure XALT:
 
-# The patterns listed here are the hosts that can run XALT.  Typical usage is that
-# compute nodes run XALT while login nodes do not.
+# The patterns listed here are the hosts that can track executables.  Typical usage is that
+# compute nodes track programs while login nodes do not.
 
 hostname_patterns = [
   '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]'
@@ -36,9 +36,14 @@ ignore_path_patterns = [
   '/l/pkg/xalt/',
   '^/opt/apps/xalt/',
   '^/opt/apps/git/',
+  '^/opt/apps/cmake/',
+  '^/opt/apps/autotools/',
   '^/opt/apps/intel[0-9][0-9_]*/mvapich2/',
   '^/opt/apps/intel[0-9][0-9_]*/impi/',
   '^/opt/apps/gcc[0-9][0-9_]*/mvapich2/',
+  '/conftest$'
+  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'
+  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'
   ]
 
 #------------------------------------------------------------
@@ -57,15 +62,17 @@ ignore_path_patterns = [
 # be ignored.
 
 accept_env_patterns = [
-  '^.*PATH.*',
   '^I_MPI.*',
   '^KMP.*',
   '^LD.*',
+  '^LD_LIBRARY_PATH$',
   '^LOADEDMODULES$',
+  '^MODULEPATH$',
   '^MKL.*',
   '^MV2_.*',
   '^OFFLOAD.*',
   '^OMP.*',
+  '^PATH$',
   '^PYTHON.*',
   '^R_.*',
   '^TACC_AFFINITY_ENABLED$',
@@ -74,26 +81,14 @@ accept_env_patterns = [
   ] 
 
 ignore_env_patterns = [
-  '^CPATH$',
-  '^DDTPATH$',
   '^I_MPI_DAPL_PROVIDER',
   '^I_MPI_EXTRA_FILESYSTEM',
   '^I_MPI_FABRICS',
   '^I_MPI_OFA_ADAPTER_NAME',
-  '^INFOPATH$',
-  '^LIBRARY_PATH$',
-  '^LMOD.*',
-  '^LUA.*',
-  '^MAKE_INC_PATH$',
-  '^MANPATH$',
-  '^MIC_LD_LIBRARY_PATH$',
-  '^MIC_LIBRARY_PATH$',
   '^MKL_DIR$',
   '^MKL_INCLUDE$',
   '^MKL_LIB$',
   '^MKLROOT$',
-  '^MKPATH$',
-  '^MODULEPATH_ROOT$',
   '^MPICH_HOME$',
   '^MV2_COMM_WORLD.*',
   '^MV2_DEFAULT_TIME_OUT$',
@@ -104,10 +99,7 @@ ignore_env_patterns = [
   '^MV2_USE_HUGEPAGES$',
   '^MV2_USE_OLD_BCAST$',
   '^MV2_USE_RING_STARTUP$',
-  '^NLSPATH$',
   '^OMP_NUM_THREADS$',
-  '^PKG_CONFIG_PATH$',
-  '^SINK_LD_LIBRARY_PATH$',
   '^__.*'
   ]  
 
