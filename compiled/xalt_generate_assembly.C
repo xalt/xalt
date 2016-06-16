@@ -45,6 +45,14 @@ int main(int argc, char* argv[])
   if (user == NULL)
     user = "unknown";
 
+  const char * loadedmodules = getenv("LOADEDMODULES");
+  if (loadedmodules == NULL)
+    loadedmodules = "";
+
+  const char * lmfiles = getenv("_LMFILES_");
+  if (lmfiles == NULL)
+    lmfiles = "";
+
   std::string osName = u.sysname;
   osName.append("_%_%_");
   osName.append(u.release);
@@ -95,6 +103,9 @@ int main(int argc, char* argv[])
   fprintf(fp,"\t.asciz \"<Build.UUID>%%%%%s%%%%\"\n",uuid);
   fprintf(fp,"\t.asciz \"<Build.Year>%%%%%s%%%%\"\n",year);
   fprintf(fp,"\t.asciz \"<Build.date>%%%%%s%%%%\"\n",date);
+  fprintf(fp,"\t.asciz \"<Build.Epoch>%%%%%s%%%%\"\n",epochStr);
+  fprintf(fp,"\t.asciz \"<Build.LOADEDMODULES>%%%%%s%%%%\"\n",loadedmodules);
+  fprintf(fp,"\t.asciz \"<Build.LMFILES>%%%%%s%%%%\"\n",lmfiles);
   fprintf(fp,"\t.asciz \"<Build.Epoch>%%%%%s%%%%\"\n",epochStr);
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
