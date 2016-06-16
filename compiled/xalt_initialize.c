@@ -86,7 +86,7 @@ static const char * syshost;
 #  define FULL_DEBUG3(fp,s,x1,x2,x3) 
 #endif
 
-#ifdef HAVE_WORKING_LIBUUID
+#if (HAVE_WORKING_LIBUUID
 #  include <uuid/uuid.h>
    void build_uuid_str()
    {
@@ -237,9 +237,7 @@ void myinit(int argc, char **argv)
   if (v && strcmp(v,"yes") == 0)
     background = 0;
 
-
-  uuid_generate(uuid);
-  uuid_unparse_lower(uuid,uuid_str);
+  build_uuid_str();
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 

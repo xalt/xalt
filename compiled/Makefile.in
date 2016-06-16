@@ -7,6 +7,10 @@ ifneq ($(MYSQL_CONFIG),UNKNOWN)
   MYSQL_CFLAGS  := $(shell $(MYSQL_CONFIG) --cflags) -DHAVE_MYSQL
   MYSQL_LDFLAGS := $(shell $(MYSQL_CONFIG) --libs)  
 endif
+ifeq ($(HAVE_LIBUUID),yes)
+  LIBUUID=-luuid
+endif
+
 
 LIB_OPTIONS       := -fPIC -shared
 
@@ -202,7 +206,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o
-	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -luuid
+	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
@@ -211,7 +215,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ -luuid 
+	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
 $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
 	gcc $(CFLAGS) $(CF_INIT) -DFULL_TRACING -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
@@ -220,7 +224,7 @@ $(DESTDIR)$(LIB64)/libxalt_init_dbg.so: $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o
                                         $(DESTDIR)$(LIB64)/xalt_syshost.o        \
                                         $(DESTDIR)$(LIB64)/xalt_quotestring.o    \
                                         $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	gcc $(CFLAGS) $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ -luuid 
+	gcc $(CFLAGS) $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ $(LIBUUID)
 
 
 makefile: Makefile.in config.status

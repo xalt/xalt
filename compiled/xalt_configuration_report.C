@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSHOST_CONFIG:       " << SYSHOST_CONFIG       << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ        << "\n";
   std::cout << "HAVE_32BIT:                " << HAVE_32BIT           << "\n";
-  std::cout << "HAVE_WORKING_LIBUUID:      " << HAVE_WORKING_LIBUUID << "\n";
+  std::cout << "Using libuuid:             " << HAVE_WORKING_LIBUUID << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
   displayArray("acceptPathA", acceptPathSz, acceptPathA);
