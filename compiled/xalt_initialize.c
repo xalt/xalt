@@ -29,7 +29,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uuid/uuid.h>
 #include <time.h>
 #include <limits.h>
 #include <regex.h>
@@ -42,7 +41,7 @@
 #include "xalt_function_names.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
-
+#include "xalt_fgets_alloc.h"
 
 const char* xalt_syshost();
 int reject(const char *path, const char * hostname);
@@ -87,6 +86,36 @@ static const char * syshost;
 #  define FULL_DEBUG3(fp,s,x1,x2,x3) 
 #endif
 
+#ifdef HAVE_WORKING_LIBUUID
+#  include <uuid/uuid.h>
+   void build_uuid_str()
+   {
+     uuid_t uuid;
+     uuid_generate(uuid);
+     uuid_unparse_lower(uuid,uuid_str);
+   } 
+#else
+   void build_uuid_str()
+   {
+     const char* uuid_proc_fn = "/proc/sys/kernel/random/uuid";
+     char*       buf          = NULL;
+     size_t      sz           = 0;
+     FILE*       fp           = fopen(uuid_proc_fn,"r");
+  
+     if (!fp)
+       {
+         fprintf(stderr,"Unable to open: %s\n",uuid_proc_fn);
+         exit(1);
+       }
+  
+     xalt_fgets_alloc(fp, &buf, &sz);
+     memcpy(uuid_str,buf, 36);
+     uuid_str[36] = '\0'
+     fclose(fp);
+   } 
+#endif
+
+
 void myinit(int argc, char **argv)
 {
   int    status, i;
@@ -99,8 +128,6 @@ void myinit(int argc, char **argv)
   
   struct timeval tv;
   struct utsname u;
-
-  uuid_t uuid;
 
   unsetenv("LD_PRELOAD");
 

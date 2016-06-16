@@ -134,19 +134,22 @@ AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
 AC_CHECK_HEADER(uuid/uuid.h)
 
-if test $ac_cv_header_uuid_uuid_h != yes; then
+AC_SUBST(HAVE_WORKING_LIBUUID)
+HAVE_WORKING_LIBUUID=no
+
+if test $ac_cv_header_uuid_uuid_h = yes; then
+  AC_SEARCH_LIBS([uuid_generate],[uuid], [HAVE_WORKING_LIBUUID=yes], [])
+fi
+
+if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
    echo
    echo "======================================================="
-   echo "Unable to install xalt without the uuid headers"
+   echo "Unable to install XALT without uuid and"
+   echo "without /proc/sys/kernel/random/uuid"
    echo "See the manual for details"
    echo "======================================================="
    exit 1
-fi
-
-AC_SEARCH_LIBS([uuid_generate],[uuid], [], [
-  AC_MSG_ERROR([Unable to install xalt without the uuid library])
-  ])
-
+fi  
 
 
 AC_SUBST(VERSION)

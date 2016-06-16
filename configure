@@ -625,6 +625,7 @@ ac_subst_vars='LTLIBOBJS
 LIBOBJS
 XALT_GIT_VERSION
 VERSION
+HAVE_WORKING_LIBUUID
 EGREP
 GREP
 CPP
@@ -2903,8 +2904,6 @@ subdirs="$subdirs compiled"
 
 
 
-
-
 # Check whether --with-transmission was given.
 if test "${with_transmission+set}" = set; then :
   withval=$with_transmission; TRANSMISSION="$withval"
@@ -4429,16 +4428,11 @@ fi
 
 
 
-if test $ac_cv_header_uuid_uuid_h != yes; then
-   echo
-   echo "======================================================="
-   echo "Unable to install xalt without the uuid headers"
-   echo "See the manual for details"
-   echo "======================================================="
-   exit 1
-fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing uuid_generate" >&5
+HAVE_WORKING_LIBUUID=no
+
+if test $ac_cv_header_uuid_uuid_h = yes; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing uuid_generate" >&5
 $as_echo_n "checking for library containing uuid_generate... " >&6; }
 if ${ac_cv_search_uuid_generate+:} false; then :
   $as_echo_n "(cached) " >&6
@@ -4491,14 +4485,20 @@ $as_echo "$ac_cv_search_uuid_generate" >&6; }
 ac_res=$ac_cv_search_uuid_generate
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
-else
-
-  as_fn_error $? "Unable to install xalt without the uuid library" "$LINENO" 5
+  HAVE_WORKING_LIBUUID=yes
+fi
 
 fi
 
-
+if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without uuid and"
+   echo "without /proc/sys/kernel/random/uuid"
+   echo "See the manual for details"
+   echo "======================================================="
+   exit 1
+fi
 
 
 
