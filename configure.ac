@@ -138,7 +138,7 @@ AC_SUBST(HAVE_WORKING_LIBUUID)
 HAVE_WORKING_LIBUUID=no
 
 if test $ac_cv_header_uuid_uuid_h = yes; then
-  AC_SEARCH_LIBS([uuid_generate],[uuid], [HAVE_WORKING_LIBUUID=yes], [])
+  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID) HAVE_WORKING_LIBUUID=yes], [])
 fi
 
 if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then

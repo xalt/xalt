@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/time.h>
 #include <limits.h>
 #include <regex.h>
 #include "xalt_regex.h"
@@ -49,8 +50,6 @@ long compute_value(const char **envA);
 void abspath(char * path, int sz);
 void myinit(int argc, char **argv);
 void myfini();
-
-
 
 #define STR(x)  STR2(x)
 #define STR2(x) #x
@@ -86,7 +85,7 @@ static const char * syshost;
 #  define FULL_DEBUG3(fp,s,x1,x2,x3) 
 #endif
 
-#if (HAVE_WORKING_LIBUUID
+#ifdef HAVE_LIBUUID
 #  include <uuid/uuid.h>
    void build_uuid_str()
    {
@@ -110,7 +109,7 @@ static const char * syshost;
   
      xalt_fgets_alloc(fp, &buf, &sz);
      memcpy(uuid_str,buf, 36);
-     uuid_str[36] = '\0'
+     uuid_str[36] = '\0';
      fclose(fp);
    } 
 #endif

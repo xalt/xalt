@@ -4485,7 +4485,8 @@ $as_echo "$ac_cv_search_uuid_generate" >&6; }
 ac_res=$ac_cv_search_uuid_generate
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  HAVE_WORKING_LIBUUID=yes
+  $as_echo "#define HAVE_LIBUUID 1" >>confdefs.h
+ HAVE_WORKING_LIBUUID=yes
 fi
 
 fi

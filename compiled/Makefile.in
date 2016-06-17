@@ -9,6 +9,7 @@ ifneq ($(MYSQL_CONFIG),UNKNOWN)
 endif
 ifeq ($(HAVE_LIBUUID),yes)
   LIBUUID=-luuid
+  HAVE_UUID=-DHAVE_LIBUUID
 endif
 
 
@@ -17,7 +18,7 @@ LIB_OPTIONS       := -fPIC -shared
 WARN_FLAGS  := -Wno-unused-result
 CF_INIT     := -I$(THIS_DIR) -I. -fPIC 
 CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild_h $(MYSQL_CFLAGS) 
-CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h 
+CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h $(HAVE_UUID)
 
 C_SRC       := jsmn.c             	   \
 	       xalt_fgets_alloc.c 	   \
