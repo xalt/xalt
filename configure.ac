@@ -63,6 +63,18 @@ AC_ARG_WITH(syslogMsgSz,
     SYSLOG_MSG_SZ="$withval"
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
 
+AC_SUBST(MYSQL_STATIC)
+AC_ARG_WITH(mysqlStatic,
+    AC_HELP_STRING([--with-mysqlStatic=ans],[Require that libmysqlclient be linked in statically [[no]]]),
+    MYSQL_STATIC="$withval"
+    AC_MSG_RESULT([MYSQL_STATIC=$with_mysqlStatic])
+    AC_DEFINE_UNQUOTED(MYSQL_STATIC, "$with_mysqlStatic")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([MYSQL_STATIC=$withval])
+    MYSQL_STATIC="$withval"
+    AC_DEFINE_UNQUOTED(MYSQL_STATIC, "$withval"))dnl
+
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
     AC_HELP_STRING([--with-syshostConfig=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),

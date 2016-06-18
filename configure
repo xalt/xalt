@@ -657,6 +657,7 @@ PATH_TO_AS
 HAVE_32BIT
 SYS_LD_LIB_PATH
 SYSHOST_CONFIG
+MYSQL_STATIC
 SYSLOG_MSG_SZ
 SYSTEM_PATH
 XALT_CONFIG_PY
@@ -717,6 +718,7 @@ with_etcDir
 with_config
 with_systemPath
 with_syslogMsgSz
+with_mysqlStatic
 with_syshostConfig
 '
       ac_precious_vars='build_alias
@@ -1352,6 +1354,8 @@ Optional Packages:
                           pattern lists [[NO DEFAULT]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
+  --with-mysqlStatic=ans  Require that libmysqlclient be linked in statically
+                          [[no]]
   --with-syshostConfig=ans
                           Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -3008,6 +3012,28 @@ $as_echo "SYSLOG_MSG_SZ=$withval" >&6; }
     SYSLOG_MSG_SZ="$withval"
     cat >>confdefs.h <<_ACEOF
 #define SYSLOG_MSG_SZ "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-mysqlStatic was given.
+if test "${with_mysqlStatic+set}" = set; then :
+  withval=$with_mysqlStatic; MYSQL_STATIC="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQL_STATIC=$with_mysqlStatic" >&5
+$as_echo "MYSQL_STATIC=$with_mysqlStatic" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define MYSQL_STATIC "$with_mysqlStatic"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQL_STATIC=$withval" >&5
+$as_echo "MYSQL_STATIC=$withval" >&6; }
+    MYSQL_STATIC="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define MYSQL_STATIC "$withval"
 _ACEOF
 
 fi
@@ -5917,6 +5943,7 @@ echo "XALT SYSLOG Message Size...................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style..................." : $SYSHOST_CONFIG
 echo "XALT 32bit support.........................." : $HAVE_32BIT
 echo "XALT Using libuuid.........................." : $HAVE_WORKING_LIBUUID
+echo "XALT Statically linking in libmysqlclient..." : $MYSQL_STATIC
 echo
 echo '------------------------------------------------------------------------------'
 echo
