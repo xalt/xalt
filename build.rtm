@@ -115,7 +115,7 @@ case $SYSHOST in
   gligar.os)
     base="$HOME/l/pkg"
     SETUP_CMD="module load mysqlclient/1.3.7-intel-2016a-Python-2.7.11"
-    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/UGENT_config.py --with-transmission=file"
+    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/UGENT_config.py --with-transmission=file --with-mysqlStatic=yes"
     ;;
 
   *)
