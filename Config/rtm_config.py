@@ -27,18 +27,34 @@ ignore_path_patterns = [
   '^/bin/',
   '^/etc',
   '^/usr',
-  '^/opt/apps/intel/',
-  '^/opt/apps/gcc/',
-  '^/opt/apps/lua',
-  '^/opt/apps/lmod/',
-  '^/opt/apps/icon/',
-  '^/opt/apps/noweb/',
-  '^/opt/apps/shell_startup_debug/',
-  '^/opt/apps/xalt/',
-  '^/opt/apps/intel-[0-9][0-9_]*/mpich/',
-  '^/opt/apps/intel-[0-9][0-9_]*/openmpi/',
-  '^/opt/VBoxGuestAdditions',
-  '^/opt/.*/mpiexec.hydra$'
+  '^/root',
+  '/gcc$',
+  '/g++$',
+  '/gfortran$',
+  '/git$',
+  '/icc$',
+  '/icpc$',
+  '/ifort$',
+  '/mpiCC$',
+  '/mpicc$',
+  '/mpicxx$',
+  '/mpif77$',
+  '/mpif90$',
+  '/mpifort$',
+  '/mpifc$',
+  '/mpigcc$',
+  '/mpigxx$',
+  '/mpiicc$',
+  '/mpiicpc$',
+  '/mpiifort$',
+  '/mpiexec.hydra$',
+  '/ompi_info$'
+  '/opal_wrapper$'
+  '/orterun$',
+  '/vtwrapper$'
+  '/conftest$'
+  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'
+  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'
   ]
 
 #------------------------------------------------------------
@@ -57,39 +73,43 @@ ignore_path_patterns = [
 # 'PATH' but the ignore list causes a variable named DDTPATH to be ignored.
 
 accept_env_patterns = [
-  '^.*PATH.*',
   '^I_MPI.*',
   '^KMP.*',
   '^LD.*',
+  '^LD_LIBRARY_PATH$',
   '^LOADEDMODULES$',
+  '^MODULEPATH$',
   '^MKL.*',
+  '^MV2_.*',
   '^OFFLOAD.*',
   '^OMP.*',
+  '^PATH$',
   '^PYTHON.*',
   '^R_.*',
+  '^TACC_AFFINITY_ENABLED$',
   '^TARG$',
   '^_LMFILES_$'
   ] 
 
 ignore_env_patterns = [
-  '^DDTPATH$',
-  '^DEFAULTS_PATH',
-  '^INFOPATH$',
-  '^LC_COLLATE$',
-  '^LMOD.*',
-  '^LUA.*',
-  '^GLADE_.*_PATH*',
-  '^MAKE_INC_PATH$',
-  '^MANDATORY_PATH$',
-  '^MANPATH$',
+  '^I_MPI_DAPL_PROVIDER',
+  '^I_MPI_EXTRA_FILESYSTEM',
+  '^I_MPI_FABRICS',
+  '^I_MPI_OFA_ADAPTER_NAME',
   '^MKL_DIR$',
   '^MKL_INCLUDE$',
   '^MKL_LIB$',
   '^MKLROOT$',
-  '^MKPATH$',
-  '^MODULEPATH_ROOT$',
   '^MPICH_HOME$',
-  '^PKG_CONFIG_PATH$',
-  '^XDG_.*_PATH$',
+  '^MV2_COMM_WORLD.*',
+  '^MV2_DEFAULT_TIME_OUT$',
+  '^MV2_HOMOGENEOUS_CLUSTER$',
+  '^MV2_IBA_HCA$',
+  '^MV2_NODE_ID$',
+  '^MV2_NUM_NODES_IN_JOB$',
+  '^MV2_USE_HUGEPAGES$',
+  '^MV2_USE_OLD_BCAST$',
+  '^MV2_USE_RING_STARTUP$',
+  '^OMP_NUM_THREADS$',
   '^__.*'
   ]  
