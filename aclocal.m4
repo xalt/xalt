@@ -73,6 +73,7 @@ echo "XALT SYSLOG Message Size...................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style..................." : $SYSHOST_CONFIG
 echo "XALT 32bit support.........................." : $HAVE_32BIT
 echo "XALT Using libuuid.........................." : $HAVE_WORKING_LIBUUID
+echo "XALT Statically linking in libmysqlclient..." : $MYSQL_STATIC
 echo
 echo '------------------------------------------------------------------------------'
 echo
