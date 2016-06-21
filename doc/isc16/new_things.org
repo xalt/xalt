@@ -1,0 +1,37 @@
+This is a record of all the things I had to learn while working on the
+transition from python to C++ for the user side of XALT.
+
+* ConfigParser.C
+  Simple config parser.  It is NOT general but specific to the XALT
+  config files.
+* Json.C:
+  A simple minded json string generator.  The only problem really was
+  the support for quoting
+* xalt_quotestring.c:
+  looks for ctrl characters and utf 8 characters to quote
+* Options.C:
+  uses gnu's getopt_long.  It is a good thing that I can safely
+  restrict the compiler to gcc/g++
+* Process.C:
+  It walks the process tree file system.  I'm not sure about the
+  cmdline part.  I think it limits it.
+* base64.C:
+  Found a working version of a C++ tool for base64
+* jsmn.c:
+  Found this parser of json strings.
+* buildRmapT.C:
+  had to figure out how to use the array of tokens that jsmn.c
+  creates.
+* link_direct2db.C, run_direct2db.C, xalt_mysql_utils.C:
+  had to learn how to use mysql's prepared statements
+* translate.C:
+  Check on safe_get.  Switch to switch statement?
+* xalt_syshost.c:
+  From configuration options use one of four ways to build a routine
+  and program that will return the name of the cluster.
+* xalt_regex.h:
+  From a single configuration file generate xalt_regex.h to have the
+  array of regular expression used to determine where to run and what
+  programs are tracked by XALT.
+* zstring.C:
+  A routine to call the zlib compress and uncompress functions.
