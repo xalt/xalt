@@ -55,6 +55,8 @@ ignore_path_patterns = [
   '/conftest$',
   '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
   '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$',
+  '/xalt_file_to_db$',
+  '/xalt_syslog_to_db$',
   '/xalt_configuration_report$/'
   ]
 
