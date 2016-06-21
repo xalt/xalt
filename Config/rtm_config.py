@@ -48,13 +48,14 @@ ignore_path_patterns = [
   '/mpiicpc$',
   '/mpiifort$',
   '/mpiexec.hydra$',
-  '/ompi_info$'
-  '/opal_wrapper$'
+  '/ompi_info$',
+  '/opal_wrapper$',
   '/orterun$',
-  '/vtwrapper$'
-  '/conftest$'
-  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'
-  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'
+  '/vtwrapper$',
+  '/conftest$',
+  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
+  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$',
+  '/xalt_configuration_report$/'
   ]
 
 #------------------------------------------------------------

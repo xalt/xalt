@@ -41,8 +41,8 @@ ignore_path_patterns = [
   '^/opt/apps/intel[0-9][0-9_]*/mvapich2/',
   '^/opt/apps/intel[0-9][0-9_]*/impi/',
   '^/opt/apps/gcc[0-9][0-9_]*/mvapich2/',
-  '/conftest$'
-  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'
+  '/conftest$',
+  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
   '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'
   ]
 
