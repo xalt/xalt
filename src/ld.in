@@ -42,6 +42,7 @@ DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
 SHA1SUM=@sha1sum@
+HAVE_WORKING_LIBUUID=@have_working_libuuid@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
 
@@ -218,11 +219,15 @@ fi
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ -luuid -t > $LINKLINE_OUT 
+if [ "$HAVE_WORKING_LIBUUID" = "yes" ]; then
+    LIBUUID="-luuid"
+fi
+
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID -t > $LINKLINE_OUT 
 status=$?
 
 if [ ! -f "$EXEC" ]; then
-   return $status
+   exit $status
 fi
 
 EXEC=$($REALPATH $EXEC)
