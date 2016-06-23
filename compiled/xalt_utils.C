@@ -81,7 +81,7 @@ FILE* xalt_file_open(const char* name)
 }
 
 
-FILE* xalt_json_file_open(std::string rmapD, const char* name)
+FILE* xalt_json_file_open(std::string& rmapD, const char* name)
 {
   FILE*              fp     = NULL;
   static const char *extA[] = {".json", ".old.json"};
@@ -136,4 +136,18 @@ FILE* xalt_json_file_open(std::string rmapD, const char* name)
       start = ++p;
     } 
   return fp;
+}
+
+void build_xaltDir(std::string& xaltDir, std::string& userName, std::string& baseDir)
+{
+  
+  #ifdef XALT_FILE_PREFIX
+    xaltDir.assign(XALT_FILE_PREFIX);
+    xaltDir.append("/");
+    xaltDir.append(userName);
+    xaltDir.append("/");
+  #else
+    xaltDir.assign(baseDir);
+    xaltDir.append("/.xalt.d/");
+  #endif
 }

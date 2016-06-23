@@ -44,6 +44,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_GIT_VERSION:          " << XALT_GIT_VERSION     << "\n";
   std::cout << "XALT_VERSION_STR:          " << XALT_VERSION_STR     << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n";
+  std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX     << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:   " << transmission         << "\n";
   std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir         << "\n";
   std::cout << "XALT_CONFIG_PY:            " << XALT_CONFIG_PY       << "\n";

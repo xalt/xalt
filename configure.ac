@@ -15,6 +15,19 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
+AC_SUBST(XALT_FILE_PREFIX)
+AC_ARG_WITH(xaltFilePrefix,
+    AC_HELP_STRING([--with-xaltFilePrefix=ans],[Prefix where the json files are written [[$HOME]]]),
+    XALT_FILE_PREFIX="$withval"
+    AC_MSG_RESULT([XALT_FILE_PREFIX=$with_xaltFilePrefix])
+    AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$with_xaltFilePrefix")dnl
+    ,
+    withval="<HOME>"
+    AC_MSG_RESULT([XALT_FILE_PREFIX=$withval])
+    XALT_FILE_PREFIX="$withval"
+    AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
+
+
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
     AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),

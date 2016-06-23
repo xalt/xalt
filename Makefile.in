@@ -45,7 +45,6 @@ SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
 HAVE_LIBUUID      := @HAVE_WORKING_LIBUUID@
 HAVE_32BIT        := @HAVE_32BIT@
-HAVE_PYMOD_PSUTIL := @HAVE_PYMOD_PSUTIL@
 MYSQL_STATIC      := @MYSQL_STATIC@
 PATH_TO_AS        := @PATH_TO_AS@
 PATH_TO_BASENAME  := @PATH_TO_BASENAME@
@@ -68,6 +67,7 @@ PATH_TO_RM        := @PATH_TO_RM@
 PATH_TO_SHA1SUM   := @PATH_TO_SHA1SUM@
 PATH_TO_UUIDGEN   := @PATH_TO_UUIDGEN@
 USE_ARGPARSE      := @USE_CONTRIB_ARGPARSE@
+XALT_FILE_PREFIX  := @XALT_FILE_PREFIX@
 
 GIT_PROG          := @PATH_TO_GIT@
 GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "@git@"; fi)
@@ -145,7 +145,7 @@ Build_libuuid_32_no:
 
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) MYSQL_STATIC=$(MYSQL_STATIC) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) MYSQL_STATIC=$(MYSQL_STATIC) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) all
 
 echo:
 	@echo srcdir: $(srcdir)
@@ -229,7 +229,7 @@ __installMe:
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           \
-                -e 's|@have_pymod_psutil@|$(HAVE_PYMOD_PSUTIL)|g'          \
+	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] && \
                chmod +x $(DIRLOC)/$$fn$$oext;                              \

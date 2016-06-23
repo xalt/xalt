@@ -197,21 +197,23 @@ int main(int argc, char* argv[])
   setpwent();
   while ( (pw = getpwent()) != NULL )
     {
+      std::string baseDir;
       std::string userName = pw->pw_name;
       if (haveUserTable)
         {
           Table::const_iterator got = users.find(userName);
           if (got == users.end())
             continue;
-          xaltDir.assign((*got).second);
+          baseDir.assign((*got).second);
         }
       else
-        xaltDir.assign(pw->pw_dir);
+        baseDir.assign(pw->pw_dir);
       pbar.update(icnt++);
 
-      // form directory xaltDir = "$HOME/.xalt.d"
-      xaltDir.append("/.xalt.d");
-      
+      // form directory xaltDir = "$HOME/.xalt.d/"
+      //    or XALT_FILE_PREFIX/user/
+      build_xaltDir(xaltDir, userName, baseDir);
+
       if (isDirectory(xaltDir.c_str()))
         {
           Vstring linkFnA;

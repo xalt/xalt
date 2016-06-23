@@ -12,6 +12,7 @@
 #include "buildRmapT.h"
 #include "run_submission.h"
 #include "run_direct2db.h"
+#include "xalt_utils.h"
 
 #define DATESZ 100
 
@@ -91,17 +92,24 @@ int main(int argc, char* argv[], char* env[])
       //*********************************************************************
       // Build file name for xalt json record.  It is only used when the
       // file transmission style is used;
-      p = getenv("HOME");
-      if (p != NULL)
+      char* c_home = getenv("HOME");
+      char* c_user = getenv("USER");
+      if (home != NULL && user != NULL )
         {
-          std::string home   = p;
+          std::string home   = c_home;
+          std::string user   = c_user;
+          std::string xaltDir;
+
+          build_xaltDir(xaltDir, user, home);
+
+
           std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
   
           time = options.startTime();
           strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
 
           std::ostringstream sstream;
-          sstream << home << "/.xalt.d/run." << options.syshost() << ".";
+          sstream << xaltDir << "run." << options.syshost() << ".";
           sstream << dateStr << "." << suffix << "." << options.uuid() << ".json";
 
           fn = sstream.str();

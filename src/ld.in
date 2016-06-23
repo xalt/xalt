@@ -132,7 +132,9 @@ case "$EXEC" in
   cmTC_[a-f0-9]*)
     SKIP=true;;
 esac
-
+if [ -z "$HOME" -o -z "$USER" ]; then
+   SKIP=true
+fi
 
 
 if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true ]; then
@@ -170,7 +172,11 @@ ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
-RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
+if [ "$XALT_FILE_PREFIX" != '<HOME>' ]; then
+    RESULT=$XALT_FILE_PREFIX/$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
+else
+    RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
+fi
 
 if [ -z "$BIT32FLAG" ]; then
   XALT_LIB_DIR=$XALT_DIR/lib64
