@@ -22,7 +22,7 @@ AC_ARG_WITH(xaltFilePrefix,
     AC_MSG_RESULT([XALT_FILE_PREFIX=$with_xaltFilePrefix])
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$with_xaltFilePrefix")dnl
     ,
-    withval="<HOME>"
+    withval="USE_HOME"
     AC_MSG_RESULT([XALT_FILE_PREFIX=$withval])
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
@@ -154,7 +154,6 @@ AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
 AC_PATH_PROG(MYSQL_CONFIG,[mysql_config], UNKNOWN)
 
-AC_SUBST(HAVE_PYMOD_PSUTIL)
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
 AC_CHECK_HEADER(uuid/uuid.h)

@@ -94,7 +94,7 @@ int main(int argc, char* argv[], char* env[])
       // file transmission style is used;
       char* c_home = getenv("HOME");
       char* c_user = getenv("USER");
-      if (home != NULL && user != NULL )
+      if (c_home != NULL && c_user != NULL )
         {
           std::string home   = c_home;
           std::string user   = c_user;

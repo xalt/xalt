@@ -42,6 +42,7 @@ DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
 SHA1SUM=@sha1sum@
+XALT_FILE_PREFIX=@xalt_file_prefix@
 HAVE_WORKING_LIBUUID=@have_working_libuuid@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
@@ -172,7 +173,7 @@ ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
-if [ "$XALT_FILE_PREFIX" != '<HOME>' ]; then
+if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
     RESULT=$XALT_FILE_PREFIX/$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
 else
     RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json

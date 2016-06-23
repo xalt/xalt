@@ -145,7 +145,7 @@ Build_libuuid_32_no:
 
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) MYSQL_STATIC=$(MYSQL_STATIC) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) MYSQL_STATIC=$(MYSQL_STATIC) XALT_FILE_PREFIX='$(XALT_FILE_PREFIX)' all
 
 echo:
 	@echo srcdir: $(srcdir)
@@ -205,7 +205,7 @@ __installMe:
 	        -e 's|@file@|$(PATH_TO_FILE)|g'                            \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              \
 	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \
-	        -e 's|@have_working_libuuuid@|$(HAVE_LIBUUID)|g'           \
+	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            \
 	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
 	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              \
 	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        \

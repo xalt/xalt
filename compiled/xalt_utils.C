@@ -141,7 +141,7 @@ FILE* xalt_json_file_open(std::string& rmapD, const char* name)
 void build_xaltDir(std::string& xaltDir, std::string& userName, std::string& baseDir)
 {
   
-  #ifdef XALT_FILE_PREFIX
+  #ifdef HAVE_FILE_PREFIX
     xaltDir.assign(XALT_FILE_PREFIX);
     xaltDir.append("/");
     xaltDir.append(userName);

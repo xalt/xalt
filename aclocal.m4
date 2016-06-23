@@ -65,6 +65,7 @@ echo "Package version (git) ......................" : $xaltV
 echo
 echo "Prefix......................................" : $prefix
 echo
+echo "XALT_FILE_PREFIX............................" : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE....................." : $TRANSMISSION
 echo "XALT_ETC_DIR................................" : $ETC_DIR
 echo "XALT Config.py file........................." : $XALT_CONFIG_PY
