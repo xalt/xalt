@@ -659,6 +659,7 @@ SYSHOST_CONFIG
 MYSQL_STATIC
 SYSLOG_MSG_SZ
 SYSTEM_PATH
+PYMOD_MYSQLDB
 XALT_CONFIG_PY
 ETC_DIR
 XALT_FILE_PREFIX
@@ -717,6 +718,7 @@ with_transmission
 with_xaltFilePrefix
 with_etcDir
 with_config
+with_pymodMySQL
 with_systemPath
 with_syslogMsgSz
 with_mysqlStatic
@@ -1355,6 +1357,8 @@ Optional Packages:
                           found [[.]]
   --with-config=ans       A python file defining the accept, ignore, hostname
                           pattern lists [[NO DEFAULT]]
+  --with-pymodMySQL=ans   Require the python MySQLdb module to build XALT
+                          [[yes]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
   --with-mysqlStatic=ans  Require that libmysqlclient be linked in statically
@@ -3000,6 +3004,28 @@ fi
 
 
 
+# Check whether --with-pymodMySQL was given.
+if test "${with_pymodMySQL+set}" = set; then :
+  withval=$with_pymodMySQL; PYMOD_MYSQLDB="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: PYMOD_MYSQLDB=$with_pymodMySQL" >&5
+$as_echo "PYMOD_MYSQLDB=$with_pymodMySQL" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define PYMOD_MYSQLDB "$with_pymodMySQL"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: PYMOD_MYSQLDB=$withval" >&5
+$as_echo "PYMOD_MYSQLDB=$withval" >&6; }
+    PYMOD_MYSQLDB="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define PYMOD_MYSQLDB "$withval"
+_ACEOF
+
+fi
+
+
+
 # Check whether --with-systemPath was given.
 if test "${with_systemPath+set}" = set; then :
   withval=$with_systemPath; SYSTEM_PATH="$withval"
@@ -4602,13 +4628,22 @@ if test "$MYSQL_CONFIG" = UNKNOWN; then
    exit 1
 fi
 
-if test "$HAVE_PYMOD_MYSQLDB" = no; then
+if test "$PYMOD_MYSQLDB" != no -a "$HAVE_PYMOD_MYSQLDB" = no; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without the python module: MySQLdb"
    echo "To install it do: pip install MySQL-python"
    echo "======================================================="
    exit 1
+fi
+
+if test "$HAVE_PYMOD_MYSQLDB" = no; then
+   echo
+   echo "======================================================="
+   echo "XALT only requires the MySQL-python module when analyzing"
+   echo "data.  Make sure that you install MySQL-python module"
+   echo "where every you are analyzing the XALT data"
+   echo "======================================================="
 fi
 
 

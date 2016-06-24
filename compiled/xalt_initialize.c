@@ -240,6 +240,17 @@ void myinit(int argc, char **argv)
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
+  const char * envA[] = {       "PATH",         "LD_LIBRARY_PATH"  };
+  const char * envB[] = {"__XALT_PATH_", "__XALT_LD_LIBRARY_PATH_" };
+  size_t       envSz  = sizeof(envA)/sizeof(envA[0]);
+
+  for (size_t i = 0; i < envSz; ++i)
+    {
+      char* v = getenv(envA[i]);
+      if (v)
+        setenv(envB[i], v, 1);
+    }
+          
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline,
            (background ? "&":" "));

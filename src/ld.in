@@ -230,7 +230,7 @@ if [ "$HAVE_WORKING_LIBUUID" = "yes" ]; then
     LIBUUID="-luuid"
 fi
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID -t > $LINKLINE_OUT 
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" ]; then
