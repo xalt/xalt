@@ -4,7 +4,7 @@
 # compute nodes run XALT while login nodes do not.
 
 hostname_patterns = [
-  '.*'
+  '^node[0-9]'
   ]
 
 # Acceptance is done before the ignore list so put in here the
@@ -23,18 +23,29 @@ accept_path_patterns = [
 # tracking the executable is turned off.
 
 ignore_path_patterns = [
+  #Ignore system directories
   '^/sbin/',
   '^/bin/',
   '^/etc',
   '^/usr',
   '^/root',
+
+  '/cmake$',
+
+  # Gnu Compilers
   '/gcc$',
   '/g++$',
   '/gfortran$',
   '/git$',
+
+  #Intel compilers
   '/icc$',
   '/icpc$',
   '/ifort$',
+
+  '/make$',
+
+  # Standard MPI Compiler Wrappers
   '/mpiCC$',
   '/mpicc$',
   '/mpicxx$',
@@ -48,13 +59,35 @@ ignore_path_patterns = [
   '/mpiicpc$',
   '/mpiifort$',
   '/mpiexec.hydra$',
+
+  # OpenMPI Compiler Wrapper
   '/ompi_info$',
   '/opal_wrapper$',
   '/orterun$',
+
+  # Portland Group Compilers
+  '/ftn$',
+  '/pgcc$',
+  '/pgCC$',
+  '/pgc\+\+$',
+  '/pgf77$',
+  '/pgfortran$',
+  '/pgf90$',
+
+  # IBM XL compilers
+  '/xlc$',
+  '/xlC$',
+  '/xlf$',
+  '/xlf90$',
+
   '/vtwrapper$',
+
+  # Configure and Cmake generated executables.
   '/conftest$',
   '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
   '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$',
+
+  # XALT Commands
   '/xalt_file_to_db$',
   '/xalt_syslog_to_db$',
   '/xalt_configuration_report$/'
