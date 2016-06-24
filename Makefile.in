@@ -45,6 +45,7 @@ SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
 HAVE_LIBUUID      := @HAVE_WORKING_LIBUUID@
 HAVE_32BIT        := @HAVE_32BIT@
+MYSQL_CONFIG      := @MYSQL_CONFIG@
 MYSQL_STATIC      := @MYSQL_STATIC@
 PATH_TO_AS        := @PATH_TO_AS@
 PATH_TO_BASENAME  := @PATH_TO_BASENAME@
@@ -79,11 +80,9 @@ LIBEXEC           := $(prefix)/libexec
 SITE              := $(prefix)/site
 BIN               := $(prefix)/bin
 SBIN              := $(prefix)/sbin
-U32               := $(prefix)/libuuid32
-U64               := $(prefix)/libuuid64
 DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                      $(DESTDIR)$(SITE)    $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN)             \
-                     $(DESTDIR)$(ETC_DIR) $(DESTDIR)$(U32) $(DESTDIR)$(U64) 
+                     $(DESTDIR)$(ETC_DIR)
 
 #BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
 #                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
@@ -102,7 +101,6 @@ LIBEXEC_PKG       := src/XALTdb.py                     src/progressBar.py       
                      src/xalt_global.py                src/xalt_transmission_factory.py \
                      src/xalt_stack.py                 src/Rmap_XALT.py                 \
                      src/xalt_util.py
-
 
 LIBEXEC_PKG       := $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
@@ -127,25 +125,9 @@ all:
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
           Use_argparse_$(USE_ARGPARSE) build_compiled 
 
-Build_libuuid_64:
-	rm -rf $(CURDIR)/uuid_64
-	mkdir  $(CURDIR)/uuid_64
-	cd     $(CURDIR)/uuid_64;                                                         \
-        $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(U64);                   \
-        make; make install;                                                               
-
-Build_libuuid_32_yes:
-	rm -rf $(CURDIR)/uuid_32
-	mkdir  $(CURDIR)/uuid_32
-	cd     $(CURDIR)/uuid_32;                                                         \
-        CC="gcc -m32" $(srcdir)/contrib/libuuid/configure --prefix $(DESTDIR)/$(U32);     \
-        make; make install;
-
-Build_libuuid_32_no:	
-
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) MYSQL_STATIC=$(MYSQL_STATIC) XALT_FILE_PREFIX='$(XALT_FILE_PREFIX)' all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) all
 
 echo:
 	@echo srcdir: $(srcdir)
@@ -209,6 +191,7 @@ __installMe:
 	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
 	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              \
 	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        \
+	        -e 's|@mysql_config@|$(MYSQL_CONFIG)|g'                    \
 	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      \
 	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \

@@ -2,16 +2,12 @@ THIS_DIR := $(PARENT_DIR)/compiled
 VPATH = .:$(THIS_DIR)
 CXX := g++
 CC  := gcc
-MYSQL_CONFIG := @MYSQL_CONFIG@
+MYSQL_CONFIG     := @MYSQL_CONFIG@
+XALT_FILE_PREFIX := @XALT_FILE_PREFIX@
 ifneq ($(MYSQL_CONFIG),UNKNOWN)
   MYSQL_CFLAGS  := $(shell $(MYSQL_CONFIG) --cflags) -DHAVE_MYSQL
   MYSQL_LDFLAGS := $(shell $(MYSQL_CONFIG) --libs)  
-  ifeq ($(MYSQL_STATIC),yes)
-     MYSQL_LDFLAGS := $(subst -lmysqlclient, -Wl%-Bstatic -lmysqlclient -Wl%-Bdynamic, $(MYSQL_LDFLAGS))
-     MYSQL_LDFLAGS := $(shell echo $(MYSQL_LDFLAGS) | tr % ,)
-  else
-     MYSQL_LDFLAGS := $(shell $(THIS_DIR)/addRpath.sh $(MYSQL_LDFLAGS))
-  endif
+  MYSQL_LDFLAGS := $(shell $(THIS_DIR)/addRpath.sh $(MYSQL_LDFLAGS))
 endif
 ifeq ($(HAVE_LIBUUID),yes)
   LIBUUID=-luuid

@@ -9,6 +9,7 @@
 #define PREFIX               "@prefix@"
 #define LOGGER               "@PATH_TO_LOGGER@"
 
+#define HAVE_MySQL           "@have_MySQL@"
 #define XALT_FILE_PREFIX     "@XALT_FILE_PREFIX@"
 #define HAVE_WORKING_LIBUUID "@HAVE_WORKING_LIBUUID@"
 #define TRANSMISSION         "@TRANSMISSION@"

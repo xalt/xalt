@@ -52,17 +52,17 @@ AC_ARG_WITH(config,
     XALT_CONFIG_PY="$withval"
     AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$withval"))dnl
 
-AC_SUBST(PYMOD_MYSQLDB)
-AC_ARG_WITH(pymodMySQL,
-    AC_HELP_STRING([--with-pymodMySQL=ans],[Require the python MySQLdb module to build XALT [[yes]]]),
-    PYMOD_MYSQLDB="$withval"
-    AC_MSG_RESULT([PYMOD_MYSQLDB=$with_pymodMySQL])
-    AC_DEFINE_UNQUOTED(PYMOD_MYSQLDB, "$with_pymodMySQL")dnl
+AC_SUBST(MYSQLDB)
+AC_ARG_WITH(MySQL,
+    AC_HELP_STRING([--with-MySQL=ans],[Require MySQL and the MySQL-python module [[yes]]]),
+    MYSQLDB="$withval"
+    AC_MSG_RESULT([MYSQLDB=$with_pymodMySQL])
+    AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL")dnl
     ,
     withval="yes"
-    AC_MSG_RESULT([PYMOD_MYSQLDB=$withval])
-    PYMOD_MYSQLDB="$withval"
-    AC_DEFINE_UNQUOTED(PYMOD_MYSQLDB, "$withval"))dnl
+    AC_MSG_RESULT([MYSQLDB=$withval])
+    MYSQLDB="$withval"
+    AC_DEFINE_UNQUOTED(MYSQLDB, "$withval"))dnl
 
 AC_SUBST(SYSTEM_PATH)
 AC_ARG_WITH(systemPath,
@@ -227,31 +227,34 @@ if ! test -f $XALT_CONFIG_PY; then
    exit 1
 fi
 
-if test "$MYSQL_CONFIG" = UNKNOWN; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without the program mysql_config"
-   echo "This program is used to find the MySQL installation"
-   echo "See the manual for details"
-   echo "======================================================="
-   exit 1
-fi
 
-if test "$PYMOD_MYSQLDB" != no -a "$HAVE_PYMOD_MYSQLDB" = no; then
+if test "$MYSQLDB" = yes; then
+   if "$HAVE_PYMOD_MYSQLDB" = no; then
+      echo
+      echo "======================================================="
+      echo "Unable to install XALT without the python module: MySQLdb"
+      echo "To install it do: pip install MySQL-python"
+      echo "======================================================="
+      exit 1
+   fi
+   if test "$MYSQL_CONFIG" = UNKNOWN; then
+      echo
+      echo "======================================================="
+      echo "Unable to install XALT without the program mysql_config"
+      echo "This program is used to find the MySQL installation"
+      echo "See the manual for details"
+      echo "======================================================="
+      exit 1
+   fi 
+else
+   MYSQL_CONFIG=UNKNOWN
    echo
    echo "======================================================="
-   echo "Unable to install XALT without the python module: MySQLdb"
-   echo "To install it do: pip install MySQL-python"
-   echo "======================================================="
-   exit 1
-fi
-
-if test "$HAVE_PYMOD_MYSQLDB" = no; then
-   echo
-   echo "======================================================="
-   echo "XALT only requires the MySQL-python module when analyzing"
-   echo "data.  Make sure that you install MySQL-python module"
-   echo "where every you are analyzing the XALT data"
+   echo "XALT only requires MySQL libraries and MySQL-python module
+   echo "when loading and analyzing the XALT Data. Make sure"
+   echo "that you install the MySQL libraries, Devel packages
+   echo "and MySQL-python module where every you are analyzing
+   echo "the XALT data."
    echo "======================================================="
 fi
 
@@ -268,9 +271,6 @@ if test "$SYSHOST_CONFIG" = no; then
    exit 1
 fi
    
-
-
-
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
 versionStr=$(python --version 2>&1 | head -1)
