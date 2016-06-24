@@ -244,11 +244,12 @@ void myinit(int argc, char **argv)
   const char * envB[] = {"__XALT_PATH_", "__XALT_LD_LIBRARY_PATH_" };
   size_t       envSz  = sizeof(envA)/sizeof(envA[0]);
 
-  for (size_t i = 0; i < envSz; ++i)
+  size_t ja;
+  for (ja = 0; ja < envSz; ++ja)
     {
-      char* v = getenv(envA[i]);
+      char* v = getenv(envA[ja]);
       if (v)
-        setenv(envB[i], v, 1);
+        setenv(envB[ja], v, 1);
     }
           
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
