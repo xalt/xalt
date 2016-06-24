@@ -45,8 +45,6 @@ SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
 SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
 HAVE_LIBUUID      := @HAVE_WORKING_LIBUUID@
 HAVE_32BIT        := @HAVE_32BIT@
-MYSQL_CONFIG      := @MYSQL_CONFIG@
-MYSQL_STATIC      := @MYSQL_STATIC@
 PATH_TO_AS        := @PATH_TO_AS@
 PATH_TO_BASENAME  := @PATH_TO_BASENAME@
 PATH_TO_CAT       := @PATH_TO_CAT@
@@ -191,7 +189,6 @@ __installMe:
 	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
 	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              \
 	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        \
-	        -e 's|@mysql_config@|$(MYSQL_CONFIG)|g'                    \
 	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      \
 	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          \
 	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \

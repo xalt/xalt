@@ -57,6 +57,11 @@ AS_VAR_POPDEF([CACHEVAR])dnl
 AC_DEFUN([AX_SUMMARIZE_CONFIG],
 [
 
+Using_MYSQL=yes
+if test "$MYSQL_CONFIG" = UNKNOWN; then
+  Using_MYSQL=no
+fi
+
 echo
 echo '----------------------------------- SUMMARY ----------------------------------'
 echo
@@ -74,7 +79,7 @@ echo "XALT SYSLOG Message Size...................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style..................." : $SYSHOST_CONFIG
 echo "XALT 32bit support.........................." : $HAVE_32BIT
 echo "XALT Using libuuid.........................." : $HAVE_WORKING_LIBUUID
-echo "XALT Statically linking in libmysqlclient..." : $MYSQL_STATIC
+echo "XALT build with MySQL support..............." : $Using_MYSQL
 echo
 echo '------------------------------------------------------------------------------'
 echo

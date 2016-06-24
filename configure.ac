@@ -164,7 +164,7 @@ AC_PATH_PROG(PATH_TO_RM, rm, [])
 AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
-AC_PATH_PROG(MYSQL_CONFIG,[mysql_config], UNKNOWN)
+AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN)
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
@@ -227,9 +227,8 @@ if ! test -f $XALT_CONFIG_PY; then
    exit 1
 fi
 
-
 if test "$MYSQLDB" = yes; then
-   if "$HAVE_PYMOD_MYSQLDB" = no; then
+   if test "$HAVE_PYMOD_MYSQLDB" = no; then
       echo
       echo "======================================================="
       echo "Unable to install XALT without the python module: MySQLdb"
@@ -250,14 +249,14 @@ else
    MYSQL_CONFIG=UNKNOWN
    echo
    echo "======================================================="
-   echo "XALT only requires MySQL libraries and MySQL-python module
+   echo "XALT only requires MySQL libraries and MySQL-python module"
    echo "when loading and analyzing the XALT Data. Make sure"
-   echo "that you install the MySQL libraries, Devel packages
-   echo "and MySQL-python module where every you are analyzing
+   echo "that you install the MySQL libraries, Devel packages"
+   echo "and MySQL-python module where every you are analyzing"
    echo "the XALT data."
    echo "======================================================="
+   echo
 fi
-
 
 BUILD_PSTREE=no
 
@@ -271,6 +270,7 @@ if test "$SYSHOST_CONFIG" = no; then
    exit 1
 fi
    
+
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
 versionStr=$(python --version 2>&1 | head -1)
@@ -286,6 +286,7 @@ echo "... $USE_CONTRIB_ARGPARSE"
 if ! test -d compiled/build_h; then
   mkdir -p compiled/build_h
 fi
+
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build_h/xalt_regex.h
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
