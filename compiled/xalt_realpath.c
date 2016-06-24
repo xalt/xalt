@@ -10,8 +10,13 @@ int main(int argc, char* argv[])
       if (access(path, F_OK) == 0)
         {
           path =  canonicalize_file_name(path);
-          fprintf(stdout,"%s\n",path);
-          free(path);
+          if (path)
+            {
+              fprintf(stdout,"%s\n",path);
+              free(path);
+            }
+          else
+            fprintf(stdout, "unknown\n");
         }
       else
         fprintf(stdout,"%s\n",path);

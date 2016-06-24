@@ -5,6 +5,17 @@
 #include "xalt_config.h"
 #include "capture.h"
 
+void addPath2Set(std::string& path, Set& set)
+{
+  char* my_realpath = canonicalize_file_name(path.c_str());
+  if (my_realpath)
+    {
+      path.assign(my_realpath);
+      set.insert(path);
+      free(my_realpath);
+    }
+}
+
 void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpair>& libA)
 {
   std::string path;
@@ -50,27 +61,22 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
           //    -lgcc_s (/usr/lib/gcc/x86_64-linux-gnu/4.8/libgcc_s.so)
           // or 
           //    (/usr/lib/x86_64-linux-gnu/libc_nonshared.a)elf-init.oS
+          //
+          // Note that we are going to ignore
+          //    /usr/lib/x86_64-linux-gnu/libc_nonshared.a(elf-init.oS)
+
           char * p     = strchr(start+1,')');
           if ( start == NULL || p == NULL)
             continue;
 
           path.assign(start+1, p);
-          char* my_realpath = canonicalize_file_name(path.c_str());
-          path.assign(my_realpath);
-          set.insert(path);
-          free(my_realpath);
+          addPath2Set(path, set);
           continue;
         }
 
       // Save everything else (and get rid of the trailing newline!)
       path.assign(buf, strlen(buf)-1);
-      char* my_realpath = canonicalize_file_name(path.c_str());
-      if (my_realpath)
-        {
-          path.assign(my_realpath);
-          set.insert(path);
-          free(my_realpath);
-        }
+      addPath2Set(path, set);
     }
 
   free(buf);
