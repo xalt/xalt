@@ -279,13 +279,22 @@ minor_version=`expr "$versionStr" : 'Python \+[[0-9]]\+\.\([[0-9]]\+\)'`
 version=`expr $major_version \* 100000 + $minor_version`
 contrib_version=200007
 if test $version -lt $contrib_version ; then
-  USE_CONTRIB_ARGPARSE=yes
+   USE_CONTRIB_ARGPARSE=yes
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
 if ! test -d compiled/build_h; then
-  mkdir -p compiled/build_h
+   mkdir -p compiled/build_h
 fi
+
+if test "$USE_CONTRIB_ARGPARSE" = yes; then
+   if test -z "$PYTHONPATH"; then
+      export PYTHONPATH=$ac_confdir/contrib/argparse
+   else
+      export PYTHONPATH=$ac_confdir/contrib/argparse:$PYTHONPATH
+   fi
+fi
+
 
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build_h/xalt_regex.h
