@@ -32,7 +32,7 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
 
       std::ofstream myfile;
       myfile.open(resultFn);
-      myfile << jsonStr;
+      myfile << jsonStr << "\n";
       myfile.close();
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
@@ -41,7 +41,7 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
       std::string zs      = compress_string(jsonStr);
       std::string b64     = base64_encode(reinterpret_cast<const unsigned char*>(zs.c_str()), zs.size());
       cmd << LOGGER " -t XALT_LOGGING \"" << kind << ":" << syshost;
-      cmd << ":" << b64 << "\"";
+      cmd << ":" << b64 << "\"\n";
       system(cmd.str().c_str());
     }
 
