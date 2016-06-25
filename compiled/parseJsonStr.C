@@ -168,7 +168,7 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
       
       p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
       lib.assign(p);
-      sha1.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start));           ++i;
+      sha1.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start);            ++i;
       Libpair libpair(lib,sha1);
       libA.push_back(libpair);
     }
