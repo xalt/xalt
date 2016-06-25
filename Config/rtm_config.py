@@ -35,6 +35,7 @@ ignore_path_patterns = [
   '/icc$',
   '/icpc$',
   '/ifort$',
+  '/lua$',
   '/mpiCC$',
   '/mpicc$',
   '/mpicxx$',
