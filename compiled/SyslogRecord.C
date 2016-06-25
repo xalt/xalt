@@ -43,6 +43,7 @@ void SyslogRecord::prt(const char* name, Vstring& resultA)
   const int sz = 15;
   char buf[sz];
   std::string prefix;
+  std::string result;
   prefix.assign(name);
   prefix.append(" kind:");
   prefix.append(m_kind);
@@ -59,7 +60,7 @@ void SyslogRecord::prt(const char* name, Vstring& resultA)
     {
       if (it->size() > 0)
         {
-          std::string result(prefix);
+          result.assign(prefix);
           result.append(" idx:");
           snprintf(buf, sz, "%ld",idx);
           result.append(buf);
