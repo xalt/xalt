@@ -82,19 +82,17 @@ const char* xalt_quotestring(const char* input)
   return buff;
 }
 
-const char * xalt_unquotestring(const char * input)
+const char * xalt_unquotestring(const char * input, int len)
 {
-  const char *p = input;
-  const char *start;
+  const char *p   = input;
+  const char *end = input + len;
   char       c;
   char       *s;
-  int        len, slen;
+  int        slen;
   int        currSz;
   char       numBuf[5];
   long       value, value2;
-    
-    
-  len    = strlen(input);
+
   currSz = 2*len+1;
 
   if (sz < currSz)
@@ -108,11 +106,13 @@ const char * xalt_unquotestring(const char * input)
 
   while (1)
     {
-      start = p;
-      p = strchr(p,'\\');
+      const char * start = p;
+      int          wlen  = end - start;
+      p = memchr(p,'\\', wlen);
       if (p == NULL)
 	{
-	  strcpy(s,start);
+	  memcpy(s,start, wlen);
+	  s[wlen] = '\0';
 	  break;
 	}
       else
@@ -175,7 +175,7 @@ const char * xalt_unquotestring(const char * input)
             }
         }
       ++p;
-      if (*p == '\0')
+      if (p == end)
         {
           *s = '\0';
           break;

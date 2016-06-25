@@ -16,6 +16,9 @@ void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok
 
   int iend = tokens[i].end;
 
+  std::string  value;
+  const char * p; 
+
   ++i;
   while (i < ntokens)
     {
@@ -27,8 +30,8 @@ void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok
           fprintf(stderr,"processArray for: %s, token type is not a string\n",name);
           exit(1);
         }
-      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      value = xalt_unquotestring(value.c_str());
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      value.assign(p);
       vA.push_back(value);
     }
 }
@@ -44,6 +47,8 @@ void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t
     }
 
   int iend = tokens[i].end;
+  std::string value;
+  const char  *p;
 
   ++i;
   while (i < ntokens)
@@ -56,8 +61,8 @@ void processSet(const char* name, const char* js, int& i, int ntokens, jsmntok_t
           fprintf(stderr,"processSet for: %s, token type is not a string\n",name);
           exit(1);
         }
-      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      value = xalt_unquotestring(value.c_str());
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      value.assign(p);
       set.insert(value);
     }
 }
@@ -72,6 +77,9 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
     }
 
   int iend = tokens[i].end;
+  std::string key;
+  std::string value;
+  const char  *p;
 
   ++i;
   while (i < ntokens)
@@ -84,10 +92,10 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
           fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
           exit(1);
         }
-      std::string key(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      key    = xalt_unquotestring(key.c_str());
-      value  = xalt_unquotestring(value.c_str());
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      key.assign(p);
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      value.assign(p);
       t[key] = value;
     }
 }
@@ -136,6 +144,9 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
     }
 
   int iend = tokens[i].end;
+  std::string lib;
+  std::string sha1;
+  const char  *p;
 
   ++i;
   while (i < ntokens)
@@ -151,13 +162,13 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
       i++;
       if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
         {
-          fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
+          fprintf(stderr,"processLibA for: %s, token types are not strings\n",name);
           exit(1);
         }
       
-      std::string lib(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      std::string sha1( js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      lib  = xalt_unquotestring(lib.c_str());
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      lib.assign(p);
+      sha1.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start));           ++i;
       Libpair libpair(lib,sha1);
       libA.push_back(libpair);
     }
@@ -168,7 +179,7 @@ void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok
 {
   if (tokens[i].type != JSMN_STRING)
     {
-      fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
+      fprintf(stderr,"processValue for: %s, token type is not an object\n",name);
       fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
       exit(1);
     }
