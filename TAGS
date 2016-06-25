@@ -1,23 +1,30 @@
 
-src/ld.in,453
+src/ld.in,587
 LD_LIB_PATH=39,1498
-   XALT_TRANSMISSION_STYLE=49,1754
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=57,1953
-EXEC=74,2600
-    prev=83,2720
-    -*) optarg=89,2843
-    *) optarg=90,2861
-    *) optarg=; done=90,2861
-      USER_TRACE=99,3008
-      BIT32FLAG=103,3056
-      prev=107,3095
-  status=123,3470
-LINKLINE_OUT=150,4162
-  XALT_LIB_DIR=159,4413
-COMP_T=174,4970
-  OBJ=185,5244
-status=208,5858
-SHA1SUM_EXEC=222,6091
+   XALT_TRANSMISSION_STYLE=51,1834
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=59,2033
+EXEC=76,2680
+    prev=85,2800
+    -*) optarg=91,2923
+    *) optarg=92,2941
+    *) optarg=; done=92,2941
+      USER_TRACE=101,3088
+      BIT32FLAG=105,3136
+      prev=109,3175
+SKIP=127,3596
+    SKIP=132,3672
+    SKIP=134,3706
+   SKIP=137,3765
+  status=143,3872
+LINKLINE_OUT=170,4564
+    RESULT=177,4773
+    RESULT=179,4851
+  XALT_LIB_DIR=183,4947
+COMP_T=196,5418
+  OBJ=207,5692
+    LIBUUID=230,6236
+EXEC=240,6402
+SHA1SUM_EXEC=248,6576
 
 src/xalt_job_id_db.conf,10
 host 2,8
@@ -198,13 +205,16 @@ class DirectDB(205,5836
 src/new_job_id.in.py,18
 def main(35,1369
 
-configure.ac,136
+configure.ac,220
 AC_INIT(1,0
-  xaltV=144,4432
-  xaltV=146,4483
-BUILD_PSTREE=197,6049
-USE_CONTRIB_ARGPARSE=213,6475
-  USE_CONTRIB_ARGPARSE=220,6807
+  AC_SEARCH_LIBS(177,5682
+AC_SUBST(191,6150
+  xaltV=197,6308
+  xaltV=199,6359
+   MYSQL_CONFIG=249,8010
+USE_CONTRIB_ARGPARSE=275,8893
+   USE_CONTRIB_ARGPARSE=282,9225
+      export PYTHONPATH=292,9437
 
 compiled/jsmn.h,508
 #define __JSMN_H_2,18
@@ -275,7 +285,7 @@ void parseCompTJsonStr(298,9114
 
 compiled/parseSyslog.C,52
 bool parseSyslog(9,173
-bool parseSyslogV1(86,2028
+bool parseSyslogV1(86,2022
 
 compiled/parseLDD.C,20
 void parseLDD(6,95
@@ -335,15 +345,15 @@ compiled/run_direct2db.C,466
 typedef std::unordered_map<std::string,std::string19,341
 typedef std::unordered_map<std::string, uint> TableIdx;19,341
 int select_run_id(21,398
-void insert_xalt_run_record(87,2249
-void buildEnvNameT(309,10374
-bool reject_env_name(373,12110
-uint findEnvNameIdx(425,13429
-void insert_envT(538,16672
-void insert_filtered_envT(605,18636
-void update_xalt_run_record(693,21184
-void run_direct2db(756,22861
-void run_direct2db(804,24448
+void insert_xalt_run_record(87,2357
+void buildEnvNameT(299,10203
+bool reject_env_name(363,12029
+uint findEnvNameIdx(415,13348
+void insert_envT(528,16753
+void insert_filtered_envT(595,18807
+void update_xalt_run_record(683,21445
+void run_direct2db(746,23212
+void run_direct2db(794,24799
 
 compiled/run_submission.h,30
 #define RUN_SUBMISSION_H2,25
@@ -356,32 +366,36 @@ Options::Options(37,633
 compiled/epoch.h,21
 #define EPOCH_H2,16
 
-compiled/xalt_config.h.in,471
+compiled/xalt_config.h.in,605
 #define XALT_CONFIG_H2,22
 #define OBJDUMP 4,45
-#define PATH_TO_PRGM_FILE 5,91
-#define LDD 6,134
-#define SHA1SUM 7,176
-#define SYS_LD_LIB_PATH 8,222
-#define PREFIX 9,268
-#define LOGGER 10,305
-#define TRANSMISSION 12,351
-#define XALT_ETC_DIR 13,394
-#define XALT_CONFIG_PY 14,432
-#define XALT_SYSTEM_PATH 15,477
-#define SYSLOG_MSG_SZ 16,519
-#define SYSHOST_CONFIG 17,562
-#define HAVE_32BIT 18,607
-#define XALT_VERSION 19,648
-#define XALT_GIT_VERSION 20,686
+#define PATH_TO_PRGM_FILE 5,94
+#define LDD 6,140
+#define SHA1SUM 7,185
+#define SYS_LD_LIB_PATH 8,234
+#define PREFIX 9,283
+#define LOGGER 10,323
+#  define BUILD_W_MYSQL 13,391
+#  define BUILD_W_MYSQL 15,432
+#define XALT_FILE_PREFIX 18,474
+#define HAVE_WORKING_LIBUUID 19,524
+#define TRANSMISSION 20,578
+#define XALT_ETC_DIR 21,624
+#define XALT_CONFIG_PY 22,665
+#define XALT_SYSTEM_PATH 23,713
+#define SYSLOG_MSG_SZ 24,758
+#define SYSHOST_CONFIG 25,804
+#define HAVE_32BIT 26,852
+#define XALT_VERSION 27,896
+#define XALT_GIT_VERSION 28,937
 
 compiled/extractXALTRecord.C,29
 void extractXALTRecord(5,75
 
 compiled/Makefile.in,74
 THIS_DIR 1,0
-	@set -e; rm -f $@$112,5173
-        $(CC) -MM $(113,5228
+	@set -e; rm -f $@$122,5457
+        $(CC) -MM $(123,5512
 
 compiled/ConfigParser.h,492
 #define CONFIGPARSER_H2,23
@@ -416,8 +430,8 @@ compiled/run_direct2db.h,29
 #define RUN_DIRECT2DB_H2,24
 
 compiled/xalt_run_submission.C,40
-#define DATESZ 16,285
-int main(18,305
+#define DATESZ 17,309
+int main(19,329
 
 compiled/f2db.C,170
 int buildUserTable(22,434
@@ -452,52 +466,54 @@ compiled/xalt_extract_linker.C,45
 void extract_linker(9,127
 int main(52,1206
 
-compiled/xalt_configuration_report.C,67
-const int dateSZ=9,152
-void displayArray(11,175
-int main(24,486
+compiled/xalt_configuration_report.C,68
+const int dateSZ=10,172
+void displayArray(12,195
+int main(25,506
 
 compiled/parseJsonStr.h,28
 #define PARSEJSONSTR_H2,23
 
-compiled/xalt_initialize.c,1286
+compiled/xalt_initialize.c,1351
 #define  _GNU_SOURCE27,1223
-#define STR(56,1816
-#define STR2(57,1840
-static char   uuid_str[uuid_str58,1859
-static int    errfd	59,1887
-static double start_time 60,1916
-static double end_time	61,1950
-static long   my_rank	62,1983
-static long   my_size	63,2014
-static int    xalt_tracing 64,2045
-static int    reject_flag 65,2077
-static int    background 66,2109
-static char   path[path67,2141
-static char * usr_cmdline;68,2171
-static const char * syshost;69,2198
-#define HERE 70,2227
-#define DEBUG0(73,2287
-#define DEBUG1(74,2349
-#define DEBUG2(75,2416
-#define DEBUG3(76,2488
-#  define FULL_DEBUG0(79,2586
-#  define FULL_DEBUG1(80,2636
-#  define FULL_DEBUG2(81,2691
-#  define FULL_DEBUG3(82,2751
-#  define FULL_DEBUG0(84,2822
-#  define FULL_DEBUG1(85,2850
-#  define FULL_DEBUG2(86,2885
-#  define FULL_DEBUG3(87,2920
-void myinit(90,2966
-void myfini(227,6849
-int reject(281,8634
-long compute_value(378,10877
-void abspath(394,11193
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(410,11527
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(411,11643
-  __attribute__((section(".init_array"))) typeof(413,11765
-  __attribute__((section(".fini_array"))) typeof(414,11840
+#define STR(54,1842
+#define STR2(55,1866
+static char   uuid_str[uuid_str56,1885
+static int    errfd	57,1913
+static double start_time 58,1942
+static double end_time	59,1976
+static long   my_rank	60,2009
+static long   my_size	61,2040
+static int    xalt_tracing 62,2071
+static int    reject_flag 63,2103
+static int    background 64,2135
+static char   path[path65,2167
+static char * usr_cmdline;66,2197
+static const char * syshost;67,2224
+#define HERE 68,2253
+#define DEBUG0(71,2313
+#define DEBUG1(72,2375
+#define DEBUG2(73,2442
+#define DEBUG3(74,2514
+#  define FULL_DEBUG0(77,2612
+#  define FULL_DEBUG1(78,2662
+#  define FULL_DEBUG2(79,2717
+#  define FULL_DEBUG3(80,2777
+#  define FULL_DEBUG0(82,2848
+#  define FULL_DEBUG1(83,2876
+#  define FULL_DEBUG2(84,2911
+#  define FULL_DEBUG3(85,2946
+   void build_uuid_str(90,3037
+   void build_uuid_str(97,3163
+void myinit(118,3632
+void myfini(263,7801
+int reject(317,9586
+long compute_value(414,11829
+void abspath(430,12145
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(446,12479
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(447,12595
+  __attribute__((section(".init_array"))) typeof(449,12717
+  __attribute__((section(".fini_array"))) typeof(450,12792
 
 compiled/f2db_Options.C,53
 #define HERE 6,86
@@ -541,15 +557,17 @@ Process::Process(10,176
 void Process::cmdline(42,910
 std::string& Process::exe(67,1383
 
-compiled/xalt_utils.C,112
+compiled/xalt_utils.C,141
 int isDirectory(9,136
 bool path2module(17,280
 FILE* xalt_file_open(44,955
 FILE* xalt_json_file_open(84,1676
+void build_xaltDir(141,2969
 
-compiled/parseLDTrace.C,56
-void parseLDTrace(8,145
-void readFunctionList(88,2228
+compiled/parseLDTrace.C,81
+void addPath2Set(8,145
+void parseLDTrace(19,368
+void readFunctionList(97,2341
 
 compiled/f2db_Options.h,634
 #define F2DB_OPTIONS_H2,23
@@ -582,9 +600,14 @@ class ProgressBar4,45
   double m_fence;ProgressBar::m_fence19,298
   char   m_symbolA[ProgressBar::m_symbolA20,316
 
-compiled/xalt_fgets_alloc.c,46
-const int SZ 5,71
-int xalt_fgets_alloc(7,93
+compiled/addRpath.sh,30
+ansA=4,36
+        path=9,85
+
+compiled/xalt_fgets_alloc.c,67
+#define HERE 5,71
+const int SZ 7,129
+int xalt_fgets_alloc(9,151
 
 compiled/xalt_version.h,30
 #define XALT_VERSION_STR 1,0
@@ -620,38 +643,43 @@ compiled/buildUserT.C,48
 #define  DATESZ 11,193
 void buildUserT(13,214
 
-compiled/Json.h,124
+compiled/Json.h,263
 #define JSON_H2,15
 class Json6,56
-  Json(Json::Json9,77
-  ~Json(Json::~Json10,101
-  std::string m_s;Json::m_s21,471
+  enum Kind Json::Kind9,77
+    Json_TABLE,Json::Kind::Json_TABLE10,91
+    Json_ARRAYJson::Kind::Json_ARRAY11,107
+  ~Json(Json::~Json15,178
+  std::string m_s;Json::m_s26,548
+  std::string m_final;Json::m_final27,567
 
-compiled/xalt_function_names.h,342
+compiled/xalt_function_names.h,403
 #define XALT_FUNCTION_NAMES2,28
 #define PASTE(4,57
 #define PaStE2(5,89
 #define HIDE 8,128
-#define hostname 12,160
-#define xalt_fgets_alloc 13,213
-#define xalt_syshost 14,269
-#define reject 15,321
-#define abspath 16,372
-#define myinit 17,424
-#define myfini 18,475
-#define xalt_quotestring 19,526
-#define xalt_unquotestring 20,582
+#define abspath 12,160
+#define build_uuid_str 13,212
+#define compute_value 14,271
+#define hostname 15,329
+#define myfini 16,382
+#define myinit 17,433
+#define reject 18,484
+#define xalt_fgets_alloc 19,535
+#define xalt_quotestring 20,591
+#define xalt_syshost 21,647
+#define xalt_unquotestring 22,699
 
 compiled/translate.C,536
-const char * safe_get(3,47
-void translate(11,247
-  enum QueueType 14,292
-  enum QueueType { UNKNOWN QueueType::UNKNOWN14,292
-  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF14,292
+const char * safe_get(4,66
+void translate(12,266
+  enum QueueType 15,311
+  enum QueueType { UNKNOWN QueueType::UNKNOWN15,311
+  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM15,311
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE15,311
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC15,311
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS15,311
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF15,311
 
 compiled/Process.h,347
 #define PROCESS_H2,18
@@ -699,17 +727,18 @@ class Options6,56
   std::string m_confFn;Options::m_confFn30,837
 
 compiled/buildEnvT.C,21
-void buildEnvT(4,49
+void buildEnvT(5,69
 
-compiled/Json.C,211
-void Json::fini(5,50
-void Json::add(13,158
-void Json::add_json_string(22,296
-void Json::add(31,442
-void Json::add(56,857
-void Json::add(77,1200
-void Json::add(113,1945
-std::string& Json::result(138,2509
+compiled/Json.C,231
+Json::Json(5,50
+void Json::fini(20,225
+void Json::add(28,341
+void Json::add_json_string(37,479
+void Json::add(46,625
+void Json::add(71,1040
+void Json::add(92,1383
+void Json::add(128,2128
+std::string& Json::result(153,2692
 
 compiled/capture.h,23
 #define CAPTURE_H2,18
@@ -719,10 +748,10 @@ int main(15,1034
 
 compiled/link_direct2db.C,153
 uint select_link_id(15,252
-void insert_xalt_link(81,2142
-void insert_functions(232,7751
-void link_direct2db(435,14252
-void link_direct2db(468,15305
+void insert_xalt_link(81,2250
+void insert_functions(227,7757
+void link_direct2db(430,14564
+void link_direct2db(463,15617
 
 compiled/transmit.h,24
 #define TRANSMIT_H2,19
@@ -731,40 +760,33 @@ compiled/xalt_mysql_utils.C,197
 static const int issueWarning 9,155
 void finish_with_error(11,191
 void print_stmt_error(21,362
-void object_type(33,657
-void insert_objects(62,1274
-MYSQL* xalt_open_mysql_connection(351,10842
+void object_type(34,718
+void insert_objects(63,1335
+MYSQL* xalt_open_mysql_connection(352,11209
 
-Makefile.in,1270
+Makefile.in,1059
 srcdir 22,1051
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=70,2622
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)always70,2622
-VDATE	71,2788
-        make;133,5668
-        make; make install;133,5668
-	cd     $(CURDIR)/uuid_32;uuid_32138,5834
-        CC=139,5919
-        make;140,6011
-        make; make install;140,6011
-	cd compiled;146,6080
-	cd compiled; $(146,6080
-	   ext=194,7892
-           oext=195,7962
-           [ "$$ext" = "in.py" ] && oext=197,8109
-           [ "$$ext" = "in.c" ]  && oext=198,8186
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext230,10440
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext232,10574
-	    true;233,10651
-	@git status -s > /tmp/git_st_$$$$;git_st_$$$$237,10749
-            git push github;241,11050
-            git push --tags github;242,11127
-        fi;243,11204
-        ifneq 247,11321
-	    echo "$(TAG)"                                            >  .version;version253,11726
-            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version;version254,11804
-	    git push --tags tags256,11974
-          fi;257,12052
-	$(319,15729
+GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=72,2693
+GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)always72,2693
+VDATE	73,2859
+	cd compiled; $(128,5328
+	   ext=176,7166
+           oext=177,7236
+           [ "$$ext" = "in.py" ] && oext=179,7383
+           [ "$$ext" = "in.c" ]  && oext=180,7460
+                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext213,9777
+               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext215,9911
+	    true;216,9988
+	@git status -s > /tmp/git_st_$$$$;git_st_$$$$220,10086
+            git push github;224,10387
+            git push --tags github;225,10464
+        fi;226,10541
+        ifneq 230,10658
+	    echo "$(TAG)"                                            >  .version;version236,11063
+            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version;version237,11141
+	    git push --tags tags239,11311
+          fi;240,11389
+	$(302,15066
 
 contrib/libuuid-1.0.3/c.h,1709
 #define UTIL_LINUX_C_H6,61
@@ -2286,8 +2308,8 @@ initialize(4,36
 displayThis(20,326
 buildRmapT(30,618
 installXALT(39,946
-installDB(51,1413
-runMe 71,1888
+installDB(51,1416
+runMe 71,1889
 
 rt/mpi_hello_world.c,15
 int main(3,36
@@ -2299,23 +2321,24 @@ class CmdLineOptions(50,1826
 def count_rows(69,2782
 def main(80,3028
 
-build.rtm,299
+build.rtm,320
 PKG_VERSION=23,1085
 ld_repair(35,1238
 runMe(40,1317
   myhost=72,1830
   first=74,1890
-  export SYSHOST=75,1912
-SETUP_CMD=78,1946
-    base=88,2232
-      base=90,2295
-    base=96,2493
-    base=101,2719
-    base=107,2788
-    base=113,2989
-BASE_DIR=116,3024
-MAKE=123,3119
-  MAKE=126,3186
+    export SYSHOST=76,1943
+SETUP_CMD=82,2015
+    base=92,2266
+    base=97,2437
+      base=99,2500
+    base=105,2698
+    base=110,2924
+    base=116,2993
+    base=122,3243
+BASE_DIR=125,3278
+MAKE=132,3373
+  MAKE=135,3440
 
 doc/README.vm.txt,124
    mysql> grant all on xalt.* to 'xaltuser'@'@15,517
@@ -2328,6 +2351,34 @@ TALKS 1,0
 
 doc/isc15/xalt-tutorial-slides.pptx,19
 Â0Dï‚ÿDï‚2,2516
+
+doc/isc16/abstract.txt,224
+Letâ€™s talk real,1,0
+Letâ€™s talk real, no-kiddinâ€™ supercomputer analytics,1,0
+individual batch submissions,4,210
+individual batch submissions, users,4,210
+organizations concerned about meeting usersâ€™ needs;14,803
+
+doc/isc16/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
+
+doc/isc16/talk.tex,314
+\newcommand{\bfnabla}\bfnabla28,1002
+\newcommand{\laplacian}\laplacian29,1050
+\newcommand{\grad}\grad30,1092
+\newcommand{\tgrad}\tgrad31,1127
+\newcommand{\dvg}\dvg32,1165
+\newcommand{\curl}\curl33,1205
+\newcommand{\lap}\lap34,1247
+\section{XALT}XALT42,1342
+\section{Conclusion}Conclusion319,9381
+
+doc/isc16/abs.txt,156
+Let's talk real, no-kiddin' supercomputer analytics,4,64
+individual tasks,7,268
+individual tasks, users,7,268
+We have been running XALT at TACC,25,1175
 
 doc/xsede15/Makefile,56
 TALKS 1,0
@@ -2602,6 +2653,10 @@ doc/sea16/xalt.org,0
 
 doc/xsede15/xalt_xsede15.tex,0
 
+doc/isc16/new_things.org,0
+
+doc/isc16/xalt.org,0
+
 doc/database.txt,0
 
 doc/isc15/xalt_isc.tex,0
@@ -2651,6 +2706,8 @@ src/xalt_rmap_lmap.in.py,0
 src/public_domain.txt,0
 
 src/xalt_global.py,0
+
+Config/UGENT_config.py,0
 
 Config/TACC_config.py,0
 
