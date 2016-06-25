@@ -73,7 +73,7 @@ XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C              \
                 buildEnvT.C buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C   \
                 parseJsonStr.C parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C      \
-                zstring.C 
+                zstring.C epoch.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
@@ -85,7 +85,7 @@ XGA_OBJS     := $(patsubst %.C, %.o, $(XGA_CXX_SRC)) $(patsubst %.c, %.o, $(XGA_
 XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
 XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
                 xalt_mysql_utils.C Json.C base64.C parseLDTrace.C capture.C link_direct2db.C         \
-                zstring.C  ConfigParser.C transmit.C
+                zstring.C  ConfigParser.C transmit.C epoch.C
 XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c
 XGL_OBJS     := $(patsubst %.C, %.o, $(XGL_CXX_SRC)) $(patsubst %.c, %.o, $(XGL_C_SRC))
 
@@ -95,14 +95,14 @@ XEL_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c
 XEL_OBJS     := $(patsubst %.C, %.o, $(XEL_CXX_SRC)) $(patsubst %.c, %.o, $(XEL_C_SRC))
 
 XSL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib
-XSL_CXX_SRC  := xalt_strip_linklib.C parseJsonStr.C buildRmapT.C xalt_utils.C
+XSL_CXX_SRC  := xalt_strip_linklib.C parseJsonStr.C buildRmapT.C xalt_utils.C epoch.C
 XSL_C_SRC    := jsmn.c  xalt_fgets_alloc.c xalt_quotestring.c 
 XSL_OBJS     := $(patsubst %.C, %.o, $(XSL_CXX_SRC)) $(patsubst %.c, %.o, $(XSL_C_SRC))
 
 F2DB_EXEC    := $(DESTDIR)$(SBIN)/xalt_file_to_db
 F2DB_CXX_SRC := f2db.C f2db_Options.C buildRmapT.C parseJsonStr.C Json.C epoch.C xalt_utils.C \
                 link_direct2db.C run_direct2db.C ProgressBar.C translate.C xalt_mysql_utils.C \
-                ConfigParser.C base64.C
+                ConfigParser.C base64.C epoch.C
 F2DB_C_SRC   := xalt_quotestring.c jsmn.c xalt_fgets_alloc.c
 F2DB_OBJS    := $(patsubst %.C, %.o, $(F2DB_CXX_SRC)) $(patsubst %.c, %.o, $(F2DB_C_SRC))
 
@@ -110,7 +110,7 @@ S2DB_EXEC    := $(DESTDIR)$(SBIN)/xalt_syslog_to_db
 S2DB_CXX_SRC := xalt_syslog_to_db.C s2db_Options.C epoch.C ProgressBar.C SyslogRecord.C       \
                 parseJsonStr.C translate.C xalt_mysql_utils.C ConfigParser.C base64.C         \
                 zstring.C buildRmapT.C parseSyslog.C xalt_utils.C link_direct2db.C            \
-                run_direct2db.C Json.C
+                run_direct2db.C Json.C epoch.C
 S2DB_C_SRC   := xalt_fgets_alloc.c jsmn.c xalt_quotestring.c
 S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2DB_C_SRC))
 
