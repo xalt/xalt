@@ -4,6 +4,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <string.h>
+#include <stdlib.h>
 #include "transmit.h"
 #include "base64.h"
 #include "xalt_types.h"
@@ -15,6 +17,9 @@ const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
 void transmit(const char* transmission, std::string& jsonStr, const char* kind, std::string& key, const char* syshost, const char* resultFn)
 {
+  char * p_dbg        = getenv("XALT_TRACING");
+  int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
+
   if (strcasecmp(transmission, "file") == 0)
     {
       //*********************************************************************
@@ -32,8 +37,14 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
 
       std::ofstream myfile;
       myfile.open(resultFn);
-      myfile << jsonStr << "\n";
-      myfile.close();
+      if (myfile.fail() && xalt_tracing)
+        fprintf(stderr,"Unable to open: %s\n", resultFn);
+      else
+        {
+          myfile << jsonStr << "\n";
+          myfile.close();
+          DEBUG2(stderr,"Wrote json %s file : %s\n",kind, resultFn);
+        }
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
     {
