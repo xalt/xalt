@@ -34,14 +34,15 @@ ignore_path_patterns = [
   r'^/usr',
   r'^/root',
 
-  r'/cmake$',
-
   # Gnu Compilers
   r'/gcc$',
   r'/g\\+\\+$',
   r'/gfortran$',
 
+  # Random commands
+  r'/cmake$',
   r'/git$',
+  r'/ld$',
 
   #Intel compilers
   r'/icc$',
