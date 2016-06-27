@@ -111,13 +111,12 @@ void myinit(int argc, char **argv)
   char * p_dbg;
   char * cmdline;
   char * v;
+  char * ld_preload_strp = NULL;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL}; 
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL}; 
   
   struct timeval tv;
   struct utsname u;
-
-  unsetenv("LD_PRELOAD");
 
   /* Stop tracking if XALT is turned off */
   p_dbg = getenv("XALT_TRACING");
@@ -222,7 +221,6 @@ void myinit(int argc, char **argv)
       return;
     }
 
-
   v = getenv("XALT_DISABLE_BACKGROUNDING");
   if (v && strcmp(v,"yes") == 0)
     background = 0;
@@ -243,6 +241,12 @@ void myinit(int argc, char **argv)
         setenv(envB[ja], v, 1);
     }
           
+  p = getenv("LD_PRELOAD");
+  if (p)
+    ld_preload_strp = strdup(p);
+
+  unsetenv("LD_PRELOAD");
+
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, path, my_size, uuid_str, usr_cmdline,
            (background ? "&":" "));
@@ -250,6 +254,12 @@ void myinit(int argc, char **argv)
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
   system(cmdline);
   free(cmdline);
+
+  if (ld_preload_strp)
+    {
+      setenv("LD_PRELOAD", ld_preload_strp, 1);
+      free(ld_preload_strp);
+    }
 }
 void myfini()
 {
@@ -294,6 +304,8 @@ void myfini()
 
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
+
+  unsetenv("LD_PRELOAD");
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
 	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline,
