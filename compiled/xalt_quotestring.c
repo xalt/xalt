@@ -118,10 +118,11 @@ const char * xalt_unquotestring(const char * input, int len)
       else
 	{
 	  slen = p - start;
-	  memcpy(s, p, slen);
+	  memcpy(s, start, slen);
+	  s += slen;
           ++p;
           c = tolower(*p);
-          if (c = '"')
+          if (c == '"')
             *s++ = '"';
           else if (c == '\\')
             *s++ = '\\';
@@ -175,7 +176,7 @@ const char * xalt_unquotestring(const char * input, int len)
             }
         }
       ++p;
-      if (p == end)
+      if (p >= end)
         {
           *s = '\0';
           break;
