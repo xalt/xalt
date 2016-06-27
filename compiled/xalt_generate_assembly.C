@@ -95,18 +95,18 @@ int main(int argc, char* argv[])
   // Print cushion
   fprintf(fp,"\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"<XALT_Version>%%%%%s%%%%\"\n",version);
-  fprintf(fp,"\t.asciz \"<Build.Syshost>%%%%%s%%%%\"\n",syshost);
-  fprintf(fp,"\t.asciz \"<Build.compiler>%%%%%s%%%%\"\n",compiler.c_str());
-  fprintf(fp,"\t.asciz \"<Build.compilerPath>%%%%%s%%%%\"\n",compilerPath.c_str());
-  fprintf(fp,"\t.asciz \"<Build.OS>%%%%%s%%%%\"\n",osName.c_str());
-  fprintf(fp,"\t.asciz \"<Build.User>%%%%%s%%%%\"\n",user);
-  fprintf(fp,"\t.asciz \"<Build.UUID>%%%%%s%%%%\"\n",uuid);
-  fprintf(fp,"\t.asciz \"<Build.Year>%%%%%s%%%%\"\n",year);
-  fprintf(fp,"\t.asciz \"<Build.date>%%%%%s%%%%\"\n",date);
-  fprintf(fp,"\t.asciz \"<Build.Epoch>%%%%%s%%%%\"\n",epochStr);
-  fprintf(fp,"\t.asciz \"<Build.LOADEDMODULES>%%%%%s%%%%\"\n",loadedmodules);
-  fprintf(fp,"\t.asciz \"<Build.LMFILES>%%%%%s%%%%\"\n",lmfiles);
-  fprintf(fp,"\t.asciz \"<Build.Epoch>%%%%%s%%%%\"\n",epochStr);
+  fprintf(fp,"\t.asciz \"<Build_Syshost>%%%%%s%%%%\"\n",syshost);
+  fprintf(fp,"\t.asciz \"<Build_compiler>%%%%%s%%%%\"\n",compiler.c_str());
+  fprintf(fp,"\t.asciz \"<Build_compilerPath>%%%%%s%%%%\"\n",compilerPath.c_str());
+  fprintf(fp,"\t.asciz \"<Build_OS>%%%%%s%%%%\"\n",osName.c_str());
+  fprintf(fp,"\t.asciz \"<Build_User>%%%%%s%%%%\"\n",user);
+  fprintf(fp,"\t.asciz \"<Build_UUID>%%%%%s%%%%\"\n",uuid);
+  fprintf(fp,"\t.asciz \"<Build_Year>%%%%%s%%%%\"\n",year);
+  fprintf(fp,"\t.asciz \"<Build_date>%%%%%s%%%%\"\n",date);
+  fprintf(fp,"\t.asciz \"<Build_Epoch>%%%%%s%%%%\"\n",epochStr);
+  fprintf(fp,"\t.asciz \"<Build_LOADEDMODULES>%%%%%s%%%%\"\n",loadedmodules);
+  fprintf(fp,"\t.asciz \"<Build_LMFILES>%%%%%s%%%%\"\n",lmfiles);
+  fprintf(fp,"\t.asciz \"<Build_Epoch>%%%%%s%%%%\"\n",epochStr);
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
 

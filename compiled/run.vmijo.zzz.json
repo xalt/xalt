@@ -205,15 +205,15 @@
     "user": "mclay"
   },
   "xaltLinkT": {
-    "Build.Epoch": "1455756952.12",
-    "Build.OS": "Linux 3.13.0-77-generic",
-    "Build.Syshost": "vmijo",
-    "Build.UUID": "16381d18-33a2-42ad-ae6d-a92b16d46357",
-    "Build.User": "mclay",
-    "Build.Year": "2016",
-    "Build.compiler": "gcc",
-    "Build.compilerPath": "/usr/bin/gcc-4.8",
-    "Build.date": "Wed Feb 17 18:55:52 2016",
+    "Build_Epoch": "1455756952.12",
+    "Build_OS": "Linux 3.13.0-77-generic",
+    "Build_Syshost": "vmijo",
+    "Build_UUID": "16381d18-33a2-42ad-ae6d-a92b16d46357",
+    "Build_User": "mclay",
+    "Build_Year": "2016",
+    "Build_compiler": "gcc",
+    "Build_compilerPath": "/usr/bin/gcc-4.8",
+    "Build_date": "Wed Feb 17 18:55:52 2016",
     "XALT_Version": "0.6"
   }
 }

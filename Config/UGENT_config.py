@@ -1,7 +1,11 @@
 # This is the config file for specifying tables necessary to configure XALT:
 
-# The patterns listed here are the hosts that can run XALT.  Typical usage is that
-# compute nodes run XALT while login nodes do not.
+# The patterns listed here are the hosts that can track executable with XALT.
+# Typical usage is that compute nodes track executable with XALT while login
+# nodes do not.
+#
+# Note that linking an executable is everywhere and is independent of
+# hostname_patterns
 
 hostname_patterns = [
   '^node[0-9]'
@@ -36,6 +40,7 @@ ignore_path_patterns = [
   '/gcc$',
   '/g++$',
   '/gfortran$',
+
   '/git$',
 
   #Intel compilers

@@ -1,7 +1,11 @@
 # This is the config file for specifying tables necessary to configure XALT:
 
-# The patterns listed here are the hosts that can track executables.  Typical usage is that
-# compute nodes track programs while login nodes do not.
+# The patterns listed here are the hosts that can track executable with XALT.
+# Typical usage is that compute nodes track executable with XALT while login
+# nodes do not.
+#
+# Note that linking an executable is everywhere and is independent of
+# hostname_patterns
 
 hostname_patterns = [
   '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]'

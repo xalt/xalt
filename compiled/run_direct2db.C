@@ -149,14 +149,21 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   std::string::size_type len_build_uuid = 0;
   std::string            build_uuid;
   param[4].buffer_type    = MYSQL_TYPE_STRING;
-  if (recordT.count("Build.UUID") == 0)
-    build_uuid_null_flag   = 1;
-  else
+  if (recordT.count("Build.UUID") > 0 )
     {
       build_uuid_null_flag = 0;
       build_uuid           = recordT["Build.UUID"];
       len_build_uuid       = build_uuid.size();
     }
+  else if (recordT.count("Build_UUID") > 0 )
+    {
+      build_uuid_null_flag = 0;
+      build_uuid           = recordT["Build_UUID"];
+      len_build_uuid       = build_uuid.size();
+    }
+  else
+    build_uuid_null_flag   = 1;
+
   param[4].buffer        = (void *) build_uuid.c_str();
   param[4].buffer_length = build_uuid.capacity();
   param[4].is_null       = &build_uuid_null_flag;
