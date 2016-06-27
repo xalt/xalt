@@ -53,6 +53,7 @@ ignore_path_patterns = [
   r'/mpiicpc$',
   r'/mpiifort$',
   r'/mpiexec.hydra$',
+  r'/hydra_pmi_proxy$',
   r'/ompi_info$',
   r'/opal_wrapper$',
   r'/orterun$',
