@@ -33,7 +33,7 @@ ignore_path_patterns = [
   '^/usr',
   '^/root',
   '/gcc$',
-  '/g++$',
+  '/g\\+\\+$',
   '/gfortran$',
   '/git$',
   '/icc$',

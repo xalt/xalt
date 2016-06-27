@@ -180,8 +180,7 @@ xalt_syshost_main.o: $(CURDIR)/xalt_syshost.c xalt_fgets_alloc.h
 
 build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
             $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o     $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
-            $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o     \
-            $(DESTDIR)$(LIB64)/xalt_initialize.o      $(DESTDIR)$(LIB64)/libxalt_init_dbg.so
+            $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         
 
 build_init_32bit_no:
 

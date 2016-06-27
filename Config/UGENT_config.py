@@ -28,74 +28,74 @@ accept_path_patterns = [
 
 ignore_path_patterns = [
   #Ignore system directories
-  '^/sbin/',
-  '^/bin/',
-  '^/etc',
-  '^/usr',
-  '^/root',
+  r'^/sbin/',
+  r'^/bin/',
+  r'^/etc',
+  r'^/usr',
+  r'^/root',
 
-  '/cmake$',
+  r'/cmake$',
 
   # Gnu Compilers
-  '/gcc$',
-  '/g++$',
-  '/gfortran$',
+  r'/gcc$',
+  r'/g\\+\\+$',
+  r'/gfortran$',
 
-  '/git$',
+  r'/git$',
 
   #Intel compilers
-  '/icc$',
-  '/icpc$',
-  '/ifort$',
+  r'/icc$',
+  r'/icpc$',
+  r'/ifort$',
 
-  '/make$',
+  r'/make$',
 
   # Standard MPI Compiler Wrappers
-  '/mpiCC$',
-  '/mpicc$',
-  '/mpicxx$',
-  '/mpif77$',
-  '/mpif90$',
-  '/mpifort$',
-  '/mpifc$',
-  '/mpigcc$',
-  '/mpigxx$',
-  '/mpiicc$',
-  '/mpiicpc$',
-  '/mpiifort$',
-  '/mpiexec.hydra$',
+  r'/mpiCC$',
+  r'/mpicc$',
+  r'/mpicxx$',
+  r'/mpif77$',
+  r'/mpif90$',
+  r'/mpifort$',
+  r'/mpifc$',
+  r'/mpigcc$',
+  r'/mpigxx$',
+  r'/mpiicc$',
+  r'/mpiicpc$',
+  r'/mpiifort$',
+  r'/mpiexec.hydra$',
 
   # OpenMPI Compiler Wrapper
-  '/ompi_info$',
-  '/opal_wrapper$',
-  '/orterun$',
+  r'/ompi_info$',
+  r'/opal_wrapper$',
+  r'/orterun$',
 
   # Portland Group Compilers
-  '/ftn$',
-  '/pgcc$',
-  '/pgCC$',
-  '/pgc\+\+$',
-  '/pgf77$',
-  '/pgfortran$',
-  '/pgf90$',
+  r'/ftn$',
+  r'/pgcc$',
+  r'/pgCC$',
+  r'/pgc\\+\\+$',
+  r'/pgf77$',
+  r'/pgfortran$',
+  r'/pgf90$',
 
   # IBM XL compilers
-  '/xlc$',
-  '/xlC$',
-  '/xlf$',
-  '/xlf90$',
+  r'/xlc$',
+  r'/xlC$',
+  r'/xlf$',
+  r'/xlf90$',
 
-  '/vtwrapper$',
+  r'/vtwrapper$',
 
   # Configure and Cmake generated executables.
-  '/conftest$',
-  '/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
-  '/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$',
+  r'/conftest$',
+  r'/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
+  r'/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$',
 
   # XALT Commands
-  '/xalt_file_to_db$',
-  '/xalt_syslog_to_db$',
-  '/xalt_configuration_report$/'
+  r'/xalt_file_to_db$',
+  r'/xalt_syslog_to_db$',
+  r'/xalt_configuration_report$/'
   ]
 
 #------------------------------------------------------------
@@ -114,26 +114,26 @@ ignore_path_patterns = [
 # be ignored.
 
 accept_env_patterns = [
-  '^I_MPI.*',
-  '^KMP.*',
-  '^LD_LIBRARY_PATH',
-  '^LOADEDMODULES$',
-  '^MODULEPATH$',
-  '^OMP.*',
-  '^PATH$',
-  '^PYTHON.*',
-  '^R_.*',
-  '^TARG$',
-  '^_LMFILES_$'
+  r'^I_MPI.*',
+  r'^KMP.*',
+  r'^LD_LIBRARY_PATH',
+  r'^LOADEDMODULES$',
+  r'^MODULEPATH$',
+  r'^OMP.*',
+  r'^PATH$',
+  r'^PYTHON.*',
+  r'^R_.*',
+  r'^TARG$',
+  r'^_LMFILES_$'
   ] 
 
 ignore_env_patterns = [
-  '^I_MPI_DAPL_PROVIDER',
-  '^I_MPI_EXTRA_FILESYSTEM',
-  '^I_MPI_FABRICS',
-  '^I_MPI_OFA_ADAPTER_NAME',
-  '^OMP_NUM_THREADS$',
-  '^__.*'
+  r'^I_MPI_DAPL_PROVIDER',
+  r'^I_MPI_EXTRA_FILESYSTEM',
+  r'^I_MPI_FABRICS',
+  r'^I_MPI_OFA_ADAPTER_NAME',
+  r'^OMP_NUM_THREADS$',
+  r'^__.*'
   ]  
 
 
