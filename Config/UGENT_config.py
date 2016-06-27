@@ -39,17 +39,32 @@ ignore_path_patterns = [
   r'/g\\+\\+$',
   r'/gfortran$',
 
-  # Random commands
+  # Other commands
+  r'/ar$',
   r'/cmake$',
   r'/git$',
   r'/ld$',
+  r'/make$',
+  r'/nm$',
+  r'/objdump$',
+  r'/strip$',
+
+  # Shells not in /bin
+  r'/ash$',
+  r'/bash$',
+  r'/csh$',
+  r'/dash$',
+  r'/fish$',
+  r'/ksh$',
+  r'/pdksh$',
+  r'/sh$',
+  r'/tcsh$',
+  r'/zsh$',
 
   #Intel compilers
   r'/icc$',
   r'/icpc$',
   r'/ifort$',
-
-  r'/make$',
 
   # Standard MPI Compiler Wrappers
   r'/mpiCC$',
