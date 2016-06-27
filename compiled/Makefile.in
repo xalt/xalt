@@ -141,6 +141,7 @@ ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 $(XRS_EXEC) : $(XRS_OBJS)
+	echo XRS_OBJS : $(XRS_OBJS)
 	$(LINK.C) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(MYSQL_LDFLAGS)
 
 $(XGA_EXEC): $(XGA_OBJS)
@@ -222,16 +223,6 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
-
-$(DESTDIR)$(LIB64)/xalt_initialize_dbg.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc $(CFLAGS) $(CF_INIT) -DFULL_TRACING -Ibuild_h -g -O0 -DSTATE=LD_PRELOAD -o $@ -c $<
-
-$(DESTDIR)$(LIB64)/libxalt_init_dbg.so: $(DESTDIR)$(LIB64)/xalt_initialize_dbg.o \
-                                        $(DESTDIR)$(LIB64)/xalt_syshost.o        \
-                                        $(DESTDIR)$(LIB64)/xalt_quotestring.o    \
-                                        $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	gcc $(CFLAGS) $(CF_INIT) -g -O0 $(LIB_OPTIONS) -o $@ $^ $(LIBUUID)
-
 
 makefile: Makefile.in config.status
 	./config.status $@

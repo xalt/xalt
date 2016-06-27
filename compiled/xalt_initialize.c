@@ -73,17 +73,6 @@ static const char * syshost;
 #define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf(fp,s,(x1),(x2))
 #define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf(fp,s,(x1),(x2),(x3))
 
-#ifdef FULL_TRACING
-#  define FULL_DEBUG0(fp,s)          DEBUG0(fp,s)
-#  define FULL_DEBUG1(fp,s,x1)       DEBUG1(fp,s,(x1))
-#  define FULL_DEBUG2(fp,s,x1,x2)    DEBUG2(fp,s,(x1),(x2))
-#  define FULL_DEBUG3(fp,s,x1,x2,x3) DEBUG3(fp,s,(x1),(x2),(x3))
-#else
-#  define FULL_DEBUG0(fp,s)
-#  define FULL_DEBUG1(fp,s,x1)    
-#  define FULL_DEBUG2(fp,s,x1,x2) 
-#  define FULL_DEBUG3(fp,s,x1,x2,x3) 
-#endif
 
 #ifdef HAVE_LIBUUID
 #  include <uuid/uuid.h>
@@ -134,6 +123,7 @@ void myinit(int argc, char **argv)
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     {
+      background   = 0;
       xalt_tracing = 1;
       errfd = dup(STDERR_FILENO);
     }
@@ -142,30 +132,30 @@ void myinit(int argc, char **argv)
   if (xalt_tracing)
     {
       abspath(path,sizeof(path));
-      FULL_DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
+      DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
     }
 
   if (!v || strcmp(v,"yes") != 0)
     {
-      FULL_DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
+      DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
       return;
     }
 
   v = getenv("__XALT_INITIAL_STATE__");
-  FULL_DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
+  DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
-      FULL_DEBUG2(stderr," __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
+      DEBUG2(stderr," __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
       return;
     }
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
-  FULL_DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
+  DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     {
-      FULL_DEBUG0(stderr," MPI Rank is not zero -> exiting\n\n");
+      DEBUG0(stderr," MPI Rank is not zero -> exiting\n\n");
       return;
     }
 
@@ -183,10 +173,10 @@ void myinit(int argc, char **argv)
   /* Get full absolute path to executable */
   abspath(path,sizeof(path));
   reject_flag = reject(path, u.nodename);
-  FULL_DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
+  DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
     {
-      FULL_DEBUG0(stderr,"  reject_flag is true -> exiting\n\n");
+      DEBUG0(stderr,"  reject_flag is true -> exiting\n\n");
       return;
     }
 
@@ -232,6 +222,7 @@ void myinit(int argc, char **argv)
       return;
     }
 
+
   v = getenv("XALT_DISABLE_BACKGROUNDING");
   if (v && strcmp(v,"yes") == 0)
     background = 0;
@@ -272,32 +263,32 @@ void myfini()
   if (xalt_tracing)
     my_stderr = fdopen(errfd,"w");
 
-  FULL_DEBUG3(my_stderr,"\nmyfini():\n  reject_flag: %d, my_rank: %ld, start_time: %f\n",reject_flag, my_rank, start_time);
+  DEBUG3(my_stderr,"\nmyfini():\n  reject_flag: %d, my_rank: %ld, start_time: %f\n",reject_flag, my_rank, start_time);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag || my_rank > 0L || start_time < 0.01)
     {
-      FULL_DEBUG0(my_stderr,"    -> exiting\n\n");
+      DEBUG0(my_stderr,"    -> exiting\n\n");
       return;
     }
 
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  FULL_DEBUG1(my_stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  DEBUG1(my_stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   if (! v)
     {
-      FULL_DEBUG0(my_stderr,"   XALT_EXECUTABLE_TRACKING is turned off -> exiting \n\n");
+      DEBUG0(my_stderr,"   XALT_EXECUTABLE_TRACKING is turned off -> exiting \n\n");
       return;
     }
 
   /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
   v = getenv("__XALT_INITIAL_STATE__");
-  FULL_DEBUG1(my_stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
-  FULL_DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
+  DEBUG1(my_stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
+  DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
   if (!v || strcmp(v,STR(STATE)) != 0)
     {
-      FULL_DEBUG0(my_stderr,    "STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
+      DEBUG0(my_stderr,    "STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
       return;
     }
 
@@ -355,11 +346,11 @@ int reject(const char *path, const char * hostname)
 
   if (rejected_host)
     {
-      FULL_DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
+      DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
       return 1;
     }
 
-  FULL_DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
+  DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
   for (i = 0; i < acceptPathSz; i++)
     {
       iret = regcomp(&regex, acceptPathA[i], 0);
@@ -372,7 +363,7 @@ int reject(const char *path, const char * hostname)
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
 	{
-	  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
+	  DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
 	  return 0;
 	}
       else if (iret != REG_NOMATCH)
@@ -396,7 +387,7 @@ int reject(const char *path, const char * hostname)
       iret = regexec(&regex, path, 0, NULL, 0);
       if (iret == 0)
 	{
-	  FULL_DEBUG2(stderr,"    path: \"%s\" is rejected because of the ignore list: %s\n", path, ignorePathA[i]);
+	  DEBUG2(stderr,"    path: \"%s\" is rejected because of the ignore list: %s\n", path, ignorePathA[i]);
 	  return 1;
 	}
       else if (iret != REG_NOMATCH)
@@ -407,7 +398,7 @@ int reject(const char *path, const char * hostname)
 	}
       regfree(&regex);
     }
-  FULL_DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
+  DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
   return 0;
 }
 
