@@ -229,6 +229,12 @@ void myinit(int argc, char **argv)
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
+  /************************************************************* 
+   * Save away original PATH and LD_LIBRARY_PATH so that XALT
+   * will report what the user had and not what we
+   * ran xalt_run_submission with!
+   ************************************************************/
+
   const char * envA[] = {       "PATH",         "LD_LIBRARY_PATH"  };
   const char * envB[] = {"__XALT_PATH_", "__XALT_LD_LIBRARY_PATH_" };
   size_t       envSz  = sizeof(envA)/sizeof(envA[0]);
@@ -240,7 +246,12 @@ void myinit(int argc, char **argv)
       if (v)
         setenv(envB[ja], v, 1);
     }
-          
+
+  /**********************************************************
+   * Save LD_PRELOAD and clear it before running
+   * xalt_run_submission.
+   *********************************************************/
+
   p = getenv("LD_PRELOAD");
   if (p)
     ld_preload_strp = strdup(p);
@@ -254,6 +265,12 @@ void myinit(int argc, char **argv)
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
   system(cmdline);
   free(cmdline);
+
+  /**********************************************************
+   * Restore LD_PRELOAD after running xalt_run_submission.
+   * This way the application and child apps will have
+   * LD_PRELOAD set. (I'm looking at you mpiexec.hydra!)
+   *********************************************************/
 
   if (ld_preload_strp)
     {
@@ -307,9 +324,10 @@ void myfini()
 
   unsetenv("LD_PRELOAD");
 
+  /* Do not background this because it might get killed by the epilog cleanup tool! */
+
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\" --ntasks %ld --uuid \"%s\" '%s' %s",
-	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline,
-           (background ? "&":" "));
+	   SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", syshost, start_time, end_time, path, my_size, uuid_str, usr_cmdline);
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
