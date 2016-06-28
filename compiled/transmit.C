@@ -38,12 +38,12 @@ void transmit(const char* transmission, std::string& jsonStr, const char* kind, 
       std::ofstream myfile;
       myfile.open(resultFn);
       if (myfile.fail() && xalt_tracing)
-        fprintf(stderr,"Unable to open: %s\n", resultFn);
+        fprintf(stderr,"  Unable to open: %s\n", resultFn);
       else
         {
           myfile << jsonStr << "\n";
           myfile.close();
-          DEBUG2(stderr,"Wrote json %s file : %s\n",kind, resultFn);
+          DEBUG2(stderr,"  Wrote json %s file : %s\n",kind, resultFn);
         }
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
