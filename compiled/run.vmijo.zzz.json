@@ -186,6 +186,11 @@
       "078a9adc50ccf86bd30aa0e5562e0b29775df46b"
     ]
   ],
+  "processTree": [
+      { "name": "foo", "cmdline": [ "./foo", "-a" ], "path": "/path/to/foo",  },
+      { "name": "bar", "cmdline": [ "./bar", "-b" ], "path": "/path/to/bar" },
+  ],
+
   "userT": {
     "currentEpoch": 1455768478.60559,
     "cwd": "/home/mclay/t/parse",
