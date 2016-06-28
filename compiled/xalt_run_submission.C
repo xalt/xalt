@@ -23,7 +23,7 @@ int main(int argc, char* argv[], char* env[])
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
 
-  DEBUG0(stderr,"Starting xalt_run_submission\n");
+  DEBUG0(stderr,"xalt_run_submission() {\n");
 
   Options options(argc, argv);
   char    dateStr[DATESZ];
@@ -36,19 +36,19 @@ int main(int argc, char* argv[], char* env[])
   Table envT;
   buildEnvT(env, envT);
 
-  DEBUG0(stderr,"Built envT\n");
+  DEBUG0(stderr,"  Built envT\n");
 
   //*********************************************************************
   // Build userT
   Table userT;
   buildUserT(options, userT);
-  DEBUG0(stderr,"Built userT\n");
+  DEBUG0(stderr,"  Built userT\n");
 
   //*********************************************************************
   // Extract the xalt record stored in the executable (possibly)
   Table recordT;
   extractXALTRecord(options.exec(), recordT);
-  DEBUG0(stderr,"Extracted recordT from executable\n");
+  DEBUG0(stderr,"  Extracted recordT from executable\n");
 
   //*********************************************************************
   // Take sha1sum of the executable
@@ -62,13 +62,13 @@ int main(int argc, char* argv[], char* env[])
   // Parse the output of ldd for this executable.
   std::vector<Libpair> libA;
   parseLDD(options.exec(), libA);
-  DEBUG0(stderr,"Parsed LDD\n");
+  DEBUG0(stderr,"  Parsed LDD\n");
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
   
-  DEBUG1(stderr,"Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
+  DEBUG1(stderr,"  Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
 
   if (strcasecmp(transmission, "direct2db") == 0)
@@ -79,7 +79,8 @@ int main(int argc, char* argv[], char* env[])
 
       buildRmapT(rmapD, rmapT, xlibmapA);
       run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
-      DEBUG0(stderr,"Completed run direct to DB\n");
+      DEBUG0(stderr,"  Completed run direct to DB\n");
+      DEBUG0(stderr,"}\n\n");
       
       return 0;
     }
@@ -96,7 +97,7 @@ int main(int argc, char* argv[], char* env[])
   json.add("libA",libA);
   json.fini();
 
-  DEBUG0(stderr,"Built json string\n");
+  DEBUG0(stderr,"  Built json string\n");
 
   std::string jsonStr = json.result();
   std::string fn;
@@ -132,11 +133,10 @@ int main(int argc, char* argv[], char* env[])
 
           fn = sstream.str();
           resultFn = fn.c_str();
-          DEBUG1(stderr, "Writing Json to file: %s\n",resultFn);
-
         }
     }
 
   transmit(transmission, jsonStr, "run", key, options.syshost().c_str(), resultFn);
+  DEBUG0(stderr,"}\n\n");
   return 0;
 }

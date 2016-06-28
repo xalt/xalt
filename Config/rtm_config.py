@@ -93,6 +93,7 @@ accept_env_patterns = [
   r'^OFFLOAD.*',
   r'^OMP.*',
   r'^PATH$',
+  r'^PATH_PATSQ',
   r'^PYTHON.*',
   r'^R_.*',
   r'^TACC_AFFINITY_ENABLED$',
