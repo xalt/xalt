@@ -66,7 +66,7 @@ ignore_path_patterns = [
   r'/icpc$',
   r'/ifort$',
 
-  # Standard MPI Compiler Wrappers
+  # Standard MPI Compiler Wrappers and job launchers
   r'/mpiCC$',
   r'/mpicc$',
   r'/mpicxx$',
@@ -80,8 +80,9 @@ ignore_path_patterns = [
   r'/mpiicpc$',
   r'/mpiifort$',
   r'/mpiexec.hydra$',
+  r'/hydra_pmi_proxy$',
 
-  # OpenMPI Compiler Wrapper
+  # OpenMPI Compiler Wrappers and job launchers
   r'/ompi_info$',
   r'/opal_wrapper$',
   r'/orterun$',
