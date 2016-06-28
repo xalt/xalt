@@ -34,20 +34,22 @@ ignore_path_patterns = [
   r'^/usr',
   r'^/root',
 
-  # Gnu Compilers
-  r'/gcc$',
-  r'/g\\+\\+$',
-  r'/gfortran$',
-
+  #Compilers directories
+  r'/software/icc/',
+  r'/software/ifort/',
+  r'/software/GCC/',
+  r'/software/GCCcore/',
+  r'/software/binutils/',
+  r'/software/impi/',
+  r'/software/OpenMPI/',
+  r'/software/MPICH/',
+  r'/software/MPICH2/',
+  r'/software/MVAPICH2/',
+  r'/software/PGI/',
+  
   # Other commands
-  r'/ar$',
   r'/cmake$',
-  r'/git$',
-  r'/ld$',
   r'/make$',
-  r'/nm$',
-  r'/objdump$',
-  r'/strip$',
 
   # Shells not in /bin
   r'/ash$',
@@ -60,49 +62,6 @@ ignore_path_patterns = [
   r'/sh$',
   r'/tcsh$',
   r'/zsh$',
-
-  #Intel compilers
-  r'/icc$',
-  r'/icpc$',
-  r'/ifort$',
-
-  # Standard MPI Compiler Wrappers and job launchers
-  r'/mpiCC$',
-  r'/mpicc$',
-  r'/mpicxx$',
-  r'/mpif77$',
-  r'/mpif90$',
-  r'/mpifort$',
-  r'/mpifc$',
-  r'/mpigcc$',
-  r'/mpigxx$',
-  r'/mpiicc$',
-  r'/mpiicpc$',
-  r'/mpiifort$',
-  r'/mpiexec.hydra$',
-  r'/hydra_pmi_proxy$',
-
-  # OpenMPI Compiler Wrappers and job launchers
-  r'/ompi_info$',
-  r'/opal_wrapper$',
-  r'/orterun$',
-
-  # Portland Group Compilers
-  r'/ftn$',
-  r'/pgcc$',
-  r'/pgCC$',
-  r'/pgc\\+\\+$',
-  r'/pgf77$',
-  r'/pgfortran$',
-  r'/pgf90$',
-
-  # IBM XL compilers
-  r'/xlc$',
-  r'/xlC$',
-  r'/xlf$',
-  r'/xlf90$',
-
-  r'/vtwrapper$',
 
   # Configure and Cmake generated executables.
   r'/conftest$',
