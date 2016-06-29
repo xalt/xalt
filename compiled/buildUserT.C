@@ -1,16 +1,17 @@
-#include "run_submission.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <limits.h>
 #include <time.h>
 #include <stdio.h>
-
+#include <string.h>
 #include <iostream>
 #include <sys/time.h>
+
+#include "run_submission.h"
 #define  DATESZ 100
 
-void buildUserT(Options& options, Table& userT)
+void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
 {
   
   time_t mtime;
@@ -26,8 +27,9 @@ void buildUserT(Options& options, Table& userT)
   gettimeofday(&tm, NULL);
   double utc = tm.tv_sec + tm.tv_usec*1.e-6;
   char * buff;
-  asprintf(&buff,"%f",utc);
-  userT["currentEpoch"] = buff;
+  char * strbuf;
+  asprintf(&strbuff,"%f",utc);
+  userT["currentEpoch"] = strbuff;
 
   // syshost
   userT["syshost"]      = options.syshost();
@@ -35,31 +37,31 @@ void buildUserT(Options& options, Table& userT)
   // run_uuid
   userT["run_uuid"]     = options.uuid();
 
-  // exit status
-  userT["exit_status"]  = "0";
-  
-  // start_time, end_time, run_time, start_date
-  asprintf(&buff,"%f",options.startTime());
-  userT["start_time"]   = buff;
-  asprintf(&buff,"%f",options.endTime());
-  userT["end_time"]     = buff;
   double runTime        = options.endTime() - options.startTime();
   if (runTime < 0.0)
     runTime = 0.0;
-  asprintf(&buff,"%f", runTime);
-  userT["run_time"]     = buff;
+
+  //num_threads
+  buff = getenv("OMP_NUM_THREADS");
+  const char* nt          = (buff) ? buff : "1";
+  double      num_threads = strtod(nt, (char **) NULL);
+  userT["num_threads"]    = nt;
+
+  // start_time, end_time, run_time, start_date
+  asprintf(&strbuff,"%f",options.startTime());
+  userT["start_time"]   = strbuff;
+  asprintf(&strbuff,"%f",options.endTime());
+  userT["end_time"]     = strbuff;
+  asprintf(&strbuff,"%f", runTime);
+  userT["run_time"]     = strbuff;
   mtime = (time_t) options.startTime();
   strftime(dateStr, DATESZ, "%c", localtime(&mtime));
   userT["start_date"] = dateStr;
 
   //num_tasks
-  asprintf(&buff, "%ld", options.ntasks());
-  userT["num_tasks"] = buff;
+  asprintf(&strbuff, "%ld", options.ntasks());
+  userT["num_tasks"] = strbuff;
 
-  //num_threads
-  buff = getenv("OMP_NUM_THREADS");
-  userT["num_threads"] = (buff) ? buff : "1";
-    
   //user
   buff = getenv("USER");
   userT["user"] = (buff) ? buff : "unknown";
@@ -72,8 +74,8 @@ void buildUserT(Options& options, Table& userT)
   mtime = 0L;
   if (stat(options.exec().c_str(), &st) != -1)
     mtime = st.st_mtime;
-  asprintf(&buff, "%ld", mtime);
-  userT["exec_epoch"] = buff;
+  asprintf(&strbuff, "%ld", mtime);
+  userT["exec_epoch"] = strbuff;
   
   //execModify
   strftime(dateStr, DATESZ, "%c", localtime(&mtime));
@@ -82,5 +84,18 @@ void buildUserT(Options& options, Table& userT)
   //exec_type
   userT["exec_type"] = options.exec_type();
 
-  free(buff);
+  free(strbuf);
+
+  // Store floating point number in userDT
+  userDT["start_time"]   = options.startTime();
+  userDT["end_time"]     = options.endTime();
+  userDT["run_time"]     = runTime;
+  userDT["num_tasks"]    = options.ntasks();
+  userDT["currentEpoch"] = utc;
+  userDT["num_threads"]  = num_threads;
+  userDT["exec_epoch"]   = mtime;
+
+  // Use this translate routine to extract values from the environment to provide standard values.
+  // These are stored in userT and userDT.  Later these values are written to the xalt_run table in DB;
+  translate(envT, userT, userDT);
 }

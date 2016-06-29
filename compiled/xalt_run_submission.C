@@ -5,6 +5,7 @@
 #include <strings.h>
 #include <string.h>
 
+#include "walkProcessTree.h"
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
@@ -23,32 +24,35 @@ int main(int argc, char* argv[], char* env[])
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
 
-  DEBUG0(stderr,"xalt_run_submission() {\n");
+  DEBUG0(stderr,"\nxalt_run_submission() {\n");
 
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
   char*   p;
 
+  walkProcessTree(options.ppid());
 
   //*********************************************************************
   // Build the env table:
   Table envT;
   buildEnvT(env, envT);
-
   DEBUG0(stderr,"  Built envT\n");
-
-  //*********************************************************************
-  // Build userT
-  Table userT;
-  buildUserT(options, userT);
-  DEBUG0(stderr,"  Built userT\n");
 
   //*********************************************************************
   // Extract the xalt record stored in the executable (possibly)
   Table recordT;
   extractXALTRecord(options.exec(), recordT);
   DEBUG0(stderr,"  Extracted recordT from executable\n");
+
+  //*********************************************************************
+  // Build userT
+  Table  userT;
+  DTable userDT;
+
+  buildUserT(options, envT, userT, userDT);
+  userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"],(char **) NULL);
+  DEBUG0(stderr,"  Built userT, userDT\n");
 
   //*********************************************************************
   // Take sha1sum of the executable
@@ -78,7 +82,7 @@ int main(int argc, char* argv[], char* env[])
       Vstring     xlibmapA;
 
       buildRmapT(rmapD, rmapT, xlibmapA);
-      run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, recordT, libA);
+      run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, userDT, recordT, libA);
       DEBUG0(stderr,"  Completed run direct to DB\n");
       DEBUG0(stderr,"}\n\n");
       
@@ -92,6 +96,7 @@ int main(int argc, char* argv[], char* env[])
   json.add_json_string("cmdlineA",options.userCmdLine());
   json.add("envT",envT);
   json.add("userT",userT);
+  json.add("userDT",userDT);
   json.add("xaltLinkT",recordT);
   json.add("hash_id",sha1_exec);
   json.add("libA",libA);

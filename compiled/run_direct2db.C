@@ -84,8 +84,8 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
   return iret;
 }
 
-void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& recordT, std::string& usr_cmdline,
-                            std::string& hash_id, unsigned int* run_id)
+void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& userDT, Table& recordT,
+                            std::string& usr_cmdline, std::string& hash_id, unsigned int* run_id)
 {
 
   const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,COMPRESS(?))";
@@ -123,7 +123,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   
   // DATETIME PARAM[2] date 
   MYSQL_TIME my_datetime;
-  double     sTimeD       = strtod(userT["start_time"].c_str(), NULL);
+  double     sTimeD       = userDT["start_time"];
   time_t     sTimeI       = (time_t) sTimeD;
   struct tm* sTime        = localtime(&sTimeI);
   my_datetime.year        = sTime->tm_year + 1900;
@@ -197,29 +197,29 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, Table& reco
   param[8].buffer        = (void *) &sTimeD;
 
   // DOUBLE PARAM[9] end_time
-  double eTimeD          = strtod(userT["end_time"].c_str(), NULL);
+  double eTimeD          = userDT["end_time"];
   param[9].buffer_type   = MYSQL_TYPE_DOUBLE;
   param[9].buffer        = (void *) &eTimeD;
 
   // DOUBLE PARAM[10] run_time
-  double rTimeD         = strtod(userT["run_time"].c_str(), NULL);
+  double rTimeD         = userDT["run_time"];
   param[10].buffer_type = MYSQL_TYPE_DOUBLE;
   param[10].buffer      = (void *) &rTimeD;
 
   // INT PARAM[11] num_cores
-  uint num_cores         = (uint) strtol(userT["num_cores"].c_str(), NULL, 10);
+  uint num_cores         = (uint) userDT["num_cores"];
   param[11].buffer_type = MYSQL_TYPE_LONG;
   param[11].buffer      = (void *) &num_cores;
   param[11].is_unsigned = 1;
 
   // INT PARAM[12] num_nodes
-  int num_nodes         = (int) strtol(userT["num_nodes"].c_str(), NULL, 10);
+  uint num_nodes        = (uint) userDT["num_nodes"];
   param[12].buffer_type = MYSQL_TYPE_LONG;
   param[12].buffer      = (void *) &num_nodes;
   param[12].is_unsigned = 1;
 
   // SHORT PARAM[13] num_threads
-  short int num_threads = (short int) strtol(userT["num_threads"].c_str(), NULL, 10);
+  unsigned short int num_threads = (unsigned short int) userDT["num_threads"];
   param[13].buffer_type = MYSQL_TYPE_SHORT;
   param[13].buffer      = (void *) &num_threads;
   param[13].is_unsigned = 1;
@@ -687,9 +687,9 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
     }
 }
 
-void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
+void update_xalt_run_record(MYSQL* conn, uint run_id, DTable& userDT)
 {
-  double end_time = strtod(userT["end_time"].c_str(),NULL);
+  double end_time = userDT["end_time"]
   if (end_time <= 0.0)
     return;
   
@@ -708,7 +708,7 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
     }
 
   
-  double run_time = strtod(userT["run_time"].c_str(),NULL);
+  double run_time = userDT["run_time"];
 
   MYSQL_BIND param[3];
   memset((void *) param,  0, sizeof(param));
@@ -751,7 +751,7 @@ void update_xalt_run_record(MYSQL* conn, uint run_id, Table& userT)
 }
 
 void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT,
-                   Table& envT, Table& userT, Table& recordT, std::vector<Libpair>& lddA)
+                   Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& lddA)
 {
   ConfigParser cp(confFn);
 
@@ -769,16 +769,13 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
   if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
   
-  // Use this translate routine to extract values from the environment to provide standard value in the xalt_run table in DB;
-  translate(envT, userT);
-  
   unsigned int run_id;
   if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id return 0 if it found [[run_id]].
     {
-      time_t startTime = (time_t) strtod(userT["start_time"].c_str(), NULL);
+      time_t startTime = userDT["start_time"];
 
       // if here there was no previous record found (and run_id is unset!).
-      insert_xalt_run_record(conn, rmapT, userT, recordT, usr_cmdline, hash_id, &run_id);
+      insert_xalt_run_record(conn, rmapT, userT, userDT, recordT, usr_cmdline, hash_id, &run_id);
       
       // Store objects
       insert_objects(conn, "join_run_object", startTime, run_id, lddA, userT["syshost"], rmapT);
@@ -790,7 +787,7 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
   else
     {
       // There was a previous record with this run_uuid, update end time (if positive)
-      update_xalt_run_record(conn, run_id, userT);
+      update_xalt_run_record(conn, run_id, userDT) ;
     }
 
   mysql_close(conn);

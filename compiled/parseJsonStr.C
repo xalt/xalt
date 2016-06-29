@@ -99,6 +99,36 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
       t[key] = value;
     }
 }
+void processDTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, DTable& t)
+{
+  if (tokens[i].type != JSMN_OBJECT)
+    {
+      fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+  std::string key;
+  const char  *p;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        return;
+
+      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
+          exit(1);
+        }
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      key.assign(p);
+      t[key] = strtod(&js[tokens[i].start], (char **) NULL);
+    }
+}
 void processA2JsonStr(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value)
 {
   value = "[";
@@ -190,7 +220,7 @@ void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok
 
 
 void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cmdline, std::string& hash_id,
-                     Table& envT, Table& userT, Table& recordT, std::vector<Libpair>& libA)
+                     Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& libA)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -244,6 +274,8 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
         processLibA(name, js, i, ntokens, tokens, libA);
       else if (mapName == "userT")
         processTable(name,js, i, ntokens, tokens, userT);
+      else if (mapName == "userDT")
+        processDTable(name,js, i, ntokens, tokens, userDT);
       else if (mapName == "xaltLinkT")
         processTable(name,js, i, ntokens, tokens, recordT);
     }

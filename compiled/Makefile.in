@@ -54,6 +54,7 @@ CXX_SRC     := ConfigParser.C         	   \
                s2db_Options.C         	   \
                translate.C            	   \
                transmit.C             	   \
+	       walkProcessTree.C           \
 	       xalt_configuration_report.C \
                xalt_epoch.C           	   \
                xalt_extract_linker.C  	   \
@@ -72,7 +73,7 @@ XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C base64.C              \
                 buildEnvT.C buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C   \
                 parseJsonStr.C parseLDD.C translate.C transmit.C xalt_mysql_utils.C xalt_utils.C      \
-                zstring.C epoch.C
+                zstring.C epoch.C walkProcessTree.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
