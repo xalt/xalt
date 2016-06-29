@@ -39,20 +39,18 @@ BASENAME=@path_to_basename@
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  if [ -n "${XALT_TRACING:-}" ]; then
-    XALT_TRACING="yes"
+  if [ "${XALT_TRACING:-}" != "yes" ]; then
+    unset $XALT_TRACING
   fi
+
   argA=()
   for i in "$@"; do
     if [ "$i" = "--xalt_tracing" ]; then
-      XALT_TRACING=yes
+      export XALT_TRACING=yes
     else
       argA+=("$i")
     fi
   done
-  if [ -n "${XALT_TRACING:-}" ]; then
-    export XALT_TRACING
-  fi
   tracing_msg "XALT Tracing Activated for version: @git@"
 }
 

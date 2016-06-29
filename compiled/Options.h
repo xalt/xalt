@@ -1,6 +1,7 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <unistd.h>
 #include <string>
 
 class Options
@@ -9,6 +10,7 @@ public:
   Options(int argc, char **argv);
   ~Options() {}
   long          ntasks()      { return m_ntasks;      }
+  pid_t         ppid()        { return m_ppid;        }
   double        startTime()   { return m_start;       }
   double        endTime()     { return m_end;         }
   std::string&  exec()        { return m_exec;        }
@@ -22,6 +24,7 @@ private:
   double      m_start;
   double      m_end;
   long        m_ntasks;
+  pid_t       m_ppid;
   std::string m_syshost;
   std::string m_uuid;
   std::string m_exec;

@@ -35,7 +35,7 @@ long convert_long(const char* name, const char* s)
 }
 
 Options::Options(int argc, char** argv)
-  : m_start(0.0), m_end(0.0), m_ntasks(1L),
+  : m_start(0.0), m_end(0.0), m_ntasks(1L), m_ppid(0L),
     m_syshost("unknown"),     m_uuid("unknown"),
     m_exec("unknown"),        m_userCmdLine("[]"),
     m_exec_type("unknown"),   m_confFn("xalt_db.conf")
@@ -54,10 +54,11 @@ Options::Options(int argc, char** argv)
         {"ntasks",  required_argument, NULL, 'n'},
         {"uuid",    required_argument, NULL, 'u'},
         {"confFn",  required_argument, NULL, 'c'},
+        {"ppid",    required_argument, NULL, 'p'},
         {0,         0,                 0,     0 }
       };
       
-      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:",
+      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:p:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -65,6 +66,10 @@ Options::Options(int argc, char** argv)
 
       switch(c)
 	{
+        case 'p':
+          if (optarg)
+            m_ppid = (pid_t) convert_long("ppid", optarg);
+          break;
 	case 's':
           if (optarg)
             m_start = convert_double("start", optarg);

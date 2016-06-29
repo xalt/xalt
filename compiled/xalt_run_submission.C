@@ -5,6 +5,7 @@
 #include <strings.h>
 #include <string.h>
 
+#include "walkProcessTree.h"
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
@@ -23,12 +24,15 @@ int main(int argc, char* argv[], char* env[])
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
 
-  DEBUG0(stderr,"xalt_run_submission() {\n");
+  DEBUG0(stderr,"\nxalt_run_submission() {\n");
 
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
   char*   p;
+
+
+  walkProcessTree(options.ppid());
 
 
   //*********************************************************************
