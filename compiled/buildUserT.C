@@ -28,8 +28,8 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   double utc = tm.tv_sec + tm.tv_usec*1.e-6;
   char * buff;
   char * strbuf;
-  asprintf(&strbuff,"%f",utc);
-  userT["currentEpoch"] = strbuff;
+  asprintf(&strbuf,"%f",utc);
+  userT["currentEpoch"] = strbuf;
 
   // syshost
   userT["syshost"]      = options.syshost();
@@ -48,19 +48,19 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   userT["num_threads"]    = nt;
 
   // start_time, end_time, run_time, start_date
-  asprintf(&strbuff,"%f",options.startTime());
-  userT["start_time"]   = strbuff;
-  asprintf(&strbuff,"%f",options.endTime());
-  userT["end_time"]     = strbuff;
-  asprintf(&strbuff,"%f", runTime);
-  userT["run_time"]     = strbuff;
+  asprintf(&strbuf,"%f",options.startTime());
+  userT["start_time"]   = strbuf;
+  asprintf(&strbuf,"%f",options.endTime());
+  userT["end_time"]     = strbuf;
+  asprintf(&strbuf,"%f", runTime);
+  userT["run_time"]     = strbuf;
   mtime = (time_t) options.startTime();
   strftime(dateStr, DATESZ, "%c", localtime(&mtime));
   userT["start_date"] = dateStr;
 
   //num_tasks
-  asprintf(&strbuff, "%ld", options.ntasks());
-  userT["num_tasks"] = strbuff;
+  asprintf(&strbuf, "%ld", options.ntasks());
+  userT["num_tasks"] = strbuf;
 
   //user
   buff = getenv("USER");
@@ -74,8 +74,8 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   mtime = 0L;
   if (stat(options.exec().c_str(), &st) != -1)
     mtime = st.st_mtime;
-  asprintf(&strbuff, "%ld", mtime);
-  userT["exec_epoch"] = strbuff;
+  asprintf(&strbuf, "%ld", mtime);
+  userT["exec_epoch"] = strbuf;
   
   //execModify
   strftime(dateStr, DATESZ, "%c", localtime(&mtime));

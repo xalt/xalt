@@ -689,7 +689,7 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
 
 void update_xalt_run_record(MYSQL* conn, uint run_id, DTable& userDT)
 {
-  double end_time = userDT["end_time"]
+  double end_time = userDT["end_time"];
   if (end_time <= 0.0)
     return;
   

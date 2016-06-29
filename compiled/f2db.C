@@ -136,6 +136,7 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
       std::string          hash_id;
       Table                envT;
       Table                userT;
+      DTable               userDT;
       Table                recordT;
       std::vector<Libpair> libA;
 
@@ -154,9 +155,9 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
       free(buf);
 
       parseRunJsonStr(it->c_str(), jsonStr, usr_cmdline, hash_id, envT,
-                      userT, recordT, libA);
+                      userT, userDT, recordT, libA);
 
-      run_direct2db(options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, recordT, libA);
+      run_direct2db(options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, userDT, recordT, libA);
       num++;
     }
   return num;

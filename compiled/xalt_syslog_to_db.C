@@ -31,11 +31,12 @@ void run_json_to_db(std::string& key, std::string confFn, Table& rmapT, std::str
   std::string          hash_id;
   Table                envT;
   Table                userT;
+  DTable               userDT;
   Table                recordT;
   std::vector<Libpair> libA;
 
-  parseRunJsonStr(key.c_str(), jsonStr, usr_cmdline, hash_id, envT, userT, recordT, libA);
-  run_direct2db(confFn.c_str(), usr_cmdline, hash_id, rmapT,  envT, userT, recordT, libA);
+  parseRunJsonStr(key.c_str(), jsonStr, usr_cmdline, hash_id, envT, userT, userDT, recordT, libA);
+  run_direct2db(confFn.c_str(), usr_cmdline, hash_id, rmapT,  envT, userT, userDT, recordT, libA);
 }
 
 int main(int argc, char* argv[])
