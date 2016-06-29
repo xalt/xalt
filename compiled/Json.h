@@ -14,7 +14,8 @@ public:
   Json(Json::Kind kind = Json::Kind::Json_TABLE);
   ~Json() {};
   void fini();
-  void add(const char* name, Table& t);
+  void add(const char* name, Table&       t);
+  void add(const char* name, DTable&      t);
   void add(const char* name, std::string& value);
   void add(const char* name, Vstring&     v);
   void add(const char* name, Set&         s);
