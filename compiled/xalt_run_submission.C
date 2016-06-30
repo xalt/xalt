@@ -54,7 +54,8 @@ int main(int argc, char* argv[], char* env[])
   DTable userDT;
 
   buildUserT(options, envT, userT, userDT);
-  userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"].c_str(),(char **) NULL);
+  if ( ! recordT.empty())
+    userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"].c_str(),(char **) NULL);
   DEBUG0(stderr,"  Built userT, userDT\n");
 
   //*********************************************************************
