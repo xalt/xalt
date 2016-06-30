@@ -13,19 +13,32 @@
 #include <unordered_map>
 #include <unordered_set>
 
-struct Libpair
-{
-  Libpair(std::string libIn, std::string sha1In)
-    : lib(libIn), sha1(sha1In) {}
-
-  std::string lib;
-  std::string sha1;
-};
 
 typedef std::vector<std::string>                    Vstring;
 typedef std::unordered_set<std::string>             Set;
 typedef std::unordered_map<std::string,std::string> Table;
 typedef std::unordered_map<std::string,double>      DTable;
 typedef unsigned int                                uint;
+
+
+struct Libpair
+{
+  Libpair(const std::string& libIn, const std::string& sha1In)
+    : lib(libIn), sha1(sha1In) {}
+
+  std::string lib;
+  std::string sha1;
+};
+
+struct ProcessTree
+{
+  ProcessTree(const std::string& nameIn, const std::string& pathIn, Vstring& cmdlineIn)
+    : name(nameIn), path(pathIn), cmdlineA(cmdlineIn) {}
+
+  std::string name;
+  std::string path;
+  Vstring     cmdlineA;
+};
+
 
 #endif //XALT_TYPES_H

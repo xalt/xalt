@@ -33,9 +33,6 @@ int main(int argc, char* argv[], char* env[])
 
   walkProcessTree(options.ppid());
 
-  walkProcessTree(options.ppid());
-
-
   //*********************************************************************
   // Build the env table:
   Table envT;
