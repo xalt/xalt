@@ -769,6 +769,11 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
   if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
   
+  // Calling translate here is only required if userDT is empty.  This only happens when using an older version of
+  // XALT 2.  This can probably get removed at some point.
+  if (userDT.empty())
+    translate(envT, userT, userDT);
+
   unsigned int run_id;
   if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id return 0 if it found [[run_id]].
     {

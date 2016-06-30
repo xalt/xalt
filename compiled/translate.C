@@ -11,6 +11,19 @@ const char * safe_get(Table& t, const char* key, const char* defaultValue)
 
 void translate(Table& envT, Table& userT, DTable& userDT)
 {
+  if (userDT.empty())
+    {
+      // Store floating point number in userDT
+      userDT["start_time"]   = strtod(userT["start_time"].c_str(),   (char **) NULL);
+      userDT["end_time"]     = strtod(userT["end_time"].c_str(),     (char **) NULL);
+      userDT["run_time"]     = strtod(userT["run_time"].c_str(),     (char **) NULL);
+      userDT["num_tasks"]    = strtod(userT["num_tasks"].c_str(),    (char **) NULL);
+      userDT["currentEpoch"] = strtod(userT["currentEpoch"].c_str(), (char **) NULL);
+      userDT["num_threads"]  = strtod(userT["num_threads"].c_str(),  (char **) NULL);
+      userDT["exec_epoch"]   = strtod(userT["exec_epoch"].c_str(),   (char **) NULL);
+    }
+
+
   enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF };
   QueueType queueType = UNKNOWN;
 
