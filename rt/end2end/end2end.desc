@@ -82,7 +82,7 @@ test_descript = {
 
      check_entries_db.py --dbname $DBNAME --results result.csv --runs 5 --functions 4 --links 3
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
-     STATUS=$(cat result.csv); echo STATUS=$STATUS
+     STATUS=$(cat result.csv); echo; echo STATUS=$STATUS; echo
    """,
 
    'tests' : [
