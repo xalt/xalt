@@ -145,11 +145,11 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       const std::string& path     = (*it).path;
       Vstring&           cmdlineA = (*it).cmdlineA;
 
-      m_s += "\"{cmd_name\":\"";
+      m_s += "\{\"cmd_name\":\"";
       m_s += xalt_quotestring(name.c_str());
-      m_s += "\",cmd_path\":\"";
+      m_s += "\",\"cmd_path\":\"";
       m_s += xalt_quotestring(path.c_str());
-      m_s += "\",cmdlineA\":\"[";
+      m_s += "\",\"cmdlineA\":[";
       for ( auto jt = cmdlineA.begin(); jt != cmdlineA.end(); ++jt )
         {
           m_s += "\"";

@@ -9,7 +9,6 @@ void walkProcessTree(pid_t ppid, std::vector<ProcessTree>& ptV)
   pid_t   my_pid       = ppid;
   char *  p_dbg        = getenv("XALT_TRACING");
   int     xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
-  Vstring cmdlineA;
   std::string name;
   std::string path;
   while(1)
@@ -20,6 +19,8 @@ void walkProcessTree(pid_t ppid, std::vector<ProcessTree>& ptV)
 
       name.assign(proc.name());
       path.assign(proc.exe());
+
+      Vstring cmdlineA;
       proc.cmdline(cmdlineA);
 
       ProcessTree pt(name, path, cmdlineA);
@@ -27,4 +28,3 @@ void walkProcessTree(pid_t ppid, std::vector<ProcessTree>& ptV)
       my_pid = parent;
     }
 }
-
