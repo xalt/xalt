@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void walkProcessTree(pid_t ppid)
+void walkProcessTree(pid_t ppid, std::vector<ProcessTree>& ptV)
 {
   pid_t   my_pid       = ppid;
   char *  p_dbg        = getenv("XALT_TRACING");
@@ -12,11 +12,6 @@ void walkProcessTree(pid_t ppid)
   Vstring cmdlineA;
   std::string name;
   std::string path;
-    
-  std::vector<ProcessTree> ptV;
-
-  fprintf(stderr, "\nStart of walkProcessTree\n");
-
   while(1)
     {
       Process proc(my_pid);
@@ -31,18 +26,5 @@ void walkProcessTree(pid_t ppid)
       ptV.push_back(pt);
       my_pid = parent;
     }
-
-  
-  for (auto it = ptV.begin(); it != ptV.end(); ++it)
-    {
-      const std::string& name = (*it).name;
-      const std::string& path = (*it).path;
-
-      //if (xalt_tracing)
-        fprintf(stderr, "  my_name: %s, path: %s\n", name.c_str(), path.c_str());
-    }
-
-  fprintf(stderr, "\nEnd of walkProcessTree\n");
-
 }
 

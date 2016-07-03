@@ -125,6 +125,52 @@ void Json::add(const char* name, Table& t)
     }
 }
 
+// "processTree":
+//     [
+//        { "cmd_name":"foo", "cmd_path":"/path/to/foo", "cmdlineA":[ "./foo","-a"]},
+//        { "cmd_name":"bar", "cmd_path":"/path/to/bar", "cmdlineA":[ "./bar","-b"]}
+//     ],
+
+void Json::add(const char* name, std::vector<ProcessTree>& ptA)
+{
+  if (name)
+    {
+      m_s += "\"";
+      m_s += name;
+      m_s += "\":[";
+    }
+  for ( auto it = ptA.begin(); it != ptA.end(); ++it )
+    {
+      const std::string& name     = (*it).name;
+      const std::string& path     = (*it).path;
+      Vstring&           cmdlineA = (*it).cmdlineA;
+
+      m_s += "\"{cmd_name\":\"";
+      m_s += xalt_quotestring(name.c_str());
+      m_s += "\",cmd_path\":\"";
+      m_s += xalt_quotestring(path.c_str());
+      m_s += "\",cmdlineA\":\"[";
+      for ( auto jt = cmdlineA.begin(); jt != cmdlineA.end(); ++jt )
+        {
+          m_s += "\"";
+          m_s += xalt_quotestring((*jt).c_str());
+          m_s += "\",";
+        }
+      if (m_s.back() == ',')
+        m_s.replace(m_s.size()-1,2,"]},");
+      else
+        m_s += "]},";
+    }
+  if (name)
+    {
+      if (m_s.back() == ',')
+        m_s.replace(m_s.size()-1,2,"],");
+      else
+        m_s += "],";
+    }
+}
+
+
 void Json::add(const char* name, DTable& t)
 {
   char * strbuff;
@@ -154,7 +200,8 @@ void Json::add(const char* name, DTable& t)
         m_s += "},";
     }
 }
-void Json::add(const char* name, std::vector<Libpair>&     libA)
+
+void Json::add(const char* name, std::vector<Libpair>&  libA)
 {
   m_s += "\"";
   m_s += name;

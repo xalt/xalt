@@ -31,7 +31,8 @@ int main(int argc, char* argv[], char* env[])
   time_t  time;
   char*   p;
 
-  walkProcessTree(options.ppid());
+  std::vector<ProcessTree> ptA;
+  walkProcessTree(options.ppid(), ptA);
 
   //*********************************************************************
   // Build the env table:
@@ -75,7 +76,6 @@ int main(int argc, char* argv[], char* env[])
   
   DEBUG1(stderr,"  Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
-
   if (strcasecmp(transmission, "direct2db") == 0)
     {
       std::string rmapD = ""; // must use XALT_ETC_DIR to specify where rmapD is!
@@ -95,6 +95,7 @@ int main(int argc, char* argv[], char* env[])
 
   Json json;
   json.add_json_string("cmdlineA",options.userCmdLine());
+  json.add("ptA", ptA);
   json.add("envT",envT);
   json.add("userT",userT);
   json.add("userDT",userDT);
