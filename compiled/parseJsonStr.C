@@ -167,7 +167,7 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
 {
   if (tokens[i].type != JSMN_ARRAY)
     {
-      fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
+      fprintf(stderr,"processLibA for: %s, token type is not an object\n",name);
       fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
               i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
       exit(1);
@@ -204,6 +204,90 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
     }
 }
 
+// "processTree":
+//     [
+//        { "cmd_name":"foo", "cmd_path":"/path/to/foo", "cmdlineA":[ "./foo","-a"]},
+//        { "cmd_name":"bar", "cmd_path":"/path/to/bar", "cmdlineA":[ "./bar","-b"]}
+//     ],
+
+void processProcessTreeA(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::vector<ProcessTree>& ptA)
+{
+  if (tokens[i].type != JSMN_ARRAY)
+    {
+      fprintf(stderr,"processProcessTreeA for: %s, token type is not an object\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+  std::string key;
+  std::string name;
+  std::string path;
+  const char  *p;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        return;
+      
+      //--------------------------------------------------
+      // Step 1: "cmd_name":"foo"
+
+
+      if (tokens[i].type != JSMN_OBJECT)
+        {
+          fprintf(stderr,"processProcessTreeA for %s: token type is not an array\n",name);
+          exit(1);
+        }
+      i++;
+
+      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processProcessTreeA for: %s, token types are not strings\n",name);
+          exit(1);
+        }
+      
+      key.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      if (key != "cmd_name")
+        {
+          fprintf(stderr,"processProcessTreeA did not find cmd_name\n");
+          exit(1);
+        }
+      
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      name.assign(p);
+
+      //--------------------------------------------------
+      // Step 2: "cmd_path":"/path/to/foo"
+
+      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processProcessTreeA for: %s, token types are not strings\n",name);
+          exit(1);
+        }
+      
+      key.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      if (key != "cmd_path")
+        {
+          fprintf(stderr,"processProcessTreeA did not find cmd_path\n");
+          exit(1);
+        }
+      
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      path.assign(p);
+
+      //--------------------------------------------------
+      // Step 3: "cmdlineA": [ "./foo", "-a" ]
+      Vstring cmdlineA;
+      processArray("cmdlineA", js, i, ntokens, tokens, cmdlineA);
+
+      ProcessTree pt(name, path, cmdlineA);
+      ptA.push_back(pt);
+    }
+}
+
 
 void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value)
 {
@@ -220,7 +304,8 @@ void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok
 
 
 void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cmdline, std::string& hash_id,
-                     Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& libA)
+                     Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& libA,
+                     std::vector<ProcessTree>& ptA)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -276,6 +361,8 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
         processTable(name,js, i, ntokens, tokens, userT);
       else if (mapName == "userDT")
         processDTable(name,js, i, ntokens, tokens, userDT);
+      else if (mapName == "ptA")
+        processProcessTreeA(name,js, i, ntokens, tokens, ptA);
       else if (mapName == "xaltLinkT")
         processTable(name,js, i, ntokens, tokens, recordT);
     }
