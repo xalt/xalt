@@ -9,8 +9,9 @@ void processTable(  const char* name, const char* js, int& i, int ntokens, jsmnt
 void processDTable( const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, DTable& t);
 void processLibA(   const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::vector<Libpair>& libA);
 
-void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cmdline, std::string& hash_id, Table& envT, 
-                     Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& libA);
+void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cmdline, std::string& hash_id,
+                     Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& libA,
+                     std::vector<ProcessTree>& ptA);
 void parseLinkJsonStr(const char* name, std::string& jsonStr, Vstring& linklineA, Table& resultT,
                       std::vector<Libpair>& libA, Set& funcSet);
 

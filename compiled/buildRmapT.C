@@ -13,9 +13,6 @@
 void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
 {
   
-  //HERE;
-  double t0 = epoch();
-
   FILE *fp = xalt_json_file_open(rmapD, "reverseMapD/xalt_rmapT");
   if (fp == NULL)
     {
@@ -33,9 +30,6 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
     jsonStr += buf;
   free(buf);
 
-  //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
-  
-
   jsmn_parser parser;
   jsmntok_t*  tokens;
   int maxTokens = 1000;
@@ -43,8 +37,6 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
   tokens = (jsmntok_t *) malloc(sizeof(jsmntok_t)*maxTokens);
 
   jsmn_init(&parser);
-
-  //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
 
   // js - pointer to JSON string
   // tokens - an array of tokens available
@@ -64,8 +56,6 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
         }
     }      
 
-  //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
-
   if (tokens[0].type != JSMN_OBJECT)
     {
       fprintf(stderr,"(5) Bad xalt_rmapT.json file\n");
@@ -83,18 +73,9 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "reverseMapT")
-        {
-          //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
-          processTable("xalt_rmapT.json",js, i, ntokens, tokens, rmapT);
-          //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
-        }
-          
+        processTable("xalt_rmapT.json",js, i, ntokens, tokens, rmapT);
       else if (mapName == "xlibmap")
-        {
-          //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
-          processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
-          //fprintf(stderr,"%04d: time: %.3f\n",__LINE__, epoch() - t0);
-        }
+        processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
     }
   free(tokens);
 }

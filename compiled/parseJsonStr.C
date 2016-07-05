@@ -204,7 +204,7 @@ void processLibA(const char* name, const char* js, int& i, int ntokens, jsmntok_
     }
 }
 
-// "processTree":
+// "ptA":
 //     [
 //        { "cmd_name":"foo", "cmd_path":"/path/to/foo", "cmdlineA":[ "./foo","-a"]},
 //        { "cmd_name":"bar", "cmd_path":"/path/to/bar", "cmdlineA":[ "./bar","-b"]}
@@ -222,68 +222,67 @@ void processProcessTreeA(const char* name, const char* js, int& i, int ntokens, 
 
   int iend = tokens[i].end;
   std::string key;
-  std::string name;
-  std::string path;
+  std::string cmd_name;
+  std::string cmd_path;
   const char  *p;
 
   ++i;
+
   while (i < ntokens)
     {
       if (tokens[i].start > iend)
         return;
-      
-      //--------------------------------------------------
-      // Step 1: "cmd_name":"foo"
 
+      int     jend     = tokens[i].end;
+      Vstring cmdlineA;
 
       if (tokens[i].type != JSMN_OBJECT)
         {
-          fprintf(stderr,"processProcessTreeA for %s: token type is not an array\n",name);
+          fprintf(stderr,"processProcessTreeA for %s: token type is not an array, type: %d\n",name, tokens[i].type );
           exit(1);
         }
       i++;
 
-      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
+      while (tokens[i].start <= jend)
         {
-          fprintf(stderr,"processProcessTreeA for: %s, token types are not strings\n",name);
-          exit(1);
+          if (tokens[i].type != JSMN_STRING)
+            {
+              fprintf(stderr,"processProcessTreeA for: %d, token type is not a string\n",tokens[i].type);
+              exit(1);
+            }
+          key.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+          if (key == "cmd_name")
+            {
+              if (tokens[i].type != JSMN_STRING)
+                {
+                  fprintf(stderr,"processProcessTreeA(cmd_name) for: %d, token type is not a string\n",tokens[i].type);
+                  exit(1);
+                }
+              p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+              cmd_name.assign(p);
+            }
+          else if (key == "cmd_path")
+            {
+              if (tokens[i].type != JSMN_STRING)
+                {
+                  fprintf(stderr,"processProcessTreeA(cmd_path) for: %d, token types is not a string\n",tokens[i].type);
+                  exit(1);
+                }
+              p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+              cmd_path.assign(p);
+            }
+          else if (key == "cmdlineA")
+            {
+              if (tokens[i].type != JSMN_ARRAY)
+                {
+                  fprintf(stderr,"processProcessTreeA(cmdlineA) for: %d, token types is not an array\n",tokens[i].type);
+                  exit(1);
+                }
+              processArray("cmdlineA", js, i, ntokens, tokens, cmdlineA);
+            }
         }
-      
-      key.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
-      if (key != "cmd_name")
-        {
-          fprintf(stderr,"processProcessTreeA did not find cmd_name\n");
-          exit(1);
-        }
-      
-      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
-      name.assign(p);
 
-      //--------------------------------------------------
-      // Step 2: "cmd_path":"/path/to/foo"
-
-      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
-        {
-          fprintf(stderr,"processProcessTreeA for: %s, token types are not strings\n",name);
-          exit(1);
-        }
-      
-      key.assign(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
-      if (key != "cmd_path")
-        {
-          fprintf(stderr,"processProcessTreeA did not find cmd_path\n");
-          exit(1);
-        }
-      
-      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
-      path.assign(p);
-
-      //--------------------------------------------------
-      // Step 3: "cmdlineA": [ "./foo", "-a" ]
-      Vstring cmdlineA;
-      processArray("cmdlineA", js, i, ntokens, tokens, cmdlineA);
-
-      ProcessTree pt(name, path, cmdlineA);
+      ProcessTree pt(cmd_name, cmd_path, cmdlineA);
       ptA.push_back(pt);
     }
 }
@@ -340,6 +339,7 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
     }
 
   int i = 1;
+  std::string mapName;
   while (i < ntokens)
     {
       if (tokens[i].type != JSMN_STRING )
@@ -348,7 +348,7 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
           fprintf(stderr,"%.*s\n",tokens[i].end - tokens[i].start, &js[tokens[i].start]);
           exit(1);
         }
-      std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
+      mapName.assign(&js[tokens[i].start], tokens[i].end - tokens[i].start); ++i;
       if (mapName == "cmdlineA")
         processA2JsonStr(name, js, i, ntokens, tokens, usr_cmdline);
       else if (mapName == "envT")

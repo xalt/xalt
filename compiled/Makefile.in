@@ -19,7 +19,7 @@ endif
 
 LIB_OPTIONS       := -fPIC -shared
 
-WARN_FLAGS  := -Wno-unused-result
+WARN_FLAGS  := -Wall -Wno-unused-result 
 CF_INIT     := -I$(THIS_DIR) -I. -fPIC 
 CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild_h $(MYSQL_CFLAGS) $(USE_PREFIX)
 CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h $(HAVE_UUID)
@@ -141,7 +141,6 @@ ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 $(XRS_EXEC) : $(XRS_OBJS)
-	echo XRS_OBJS : $(XRS_OBJS)
 	$(LINK.C) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(MYSQL_LDFLAGS)
 
 $(XGA_EXEC): $(XGA_OBJS)

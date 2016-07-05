@@ -3,13 +3,11 @@
 #include <getopt.h>
 #include "f2db_Options.h"
 
-#define HERE fprintf(stderr,"%s:%d\n",__FILE__, __LINE__)
 f2db_Options::f2db_Options(int argc, char** argv)
   : m_delete(false),          m_report(false),          m_timer(false), 
     m_rmapD("unknown"),       m_confFn("xalt_db.conf")
 {
   int   c;
-  char *p;
 
   while(1)
     {

@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
   // if user has wiped out $HOME then set resultFn to NULL so that file transmission will do nothing!
   const char* home = getenv("HOME");
   if (home == NULL)
-    resultFn == NULL;
+    resultFn = NULL;
 
   // transmit results to anything that is not "direct2db"
   transmit(transmission, jsonStr, "link", key, syshost, resultFn);

@@ -41,7 +41,6 @@ Options::Options(int argc, char** argv)
     m_exec_type("unknown"),   m_confFn("xalt_db.conf")
 {
   int   c;
-  char *p;
 
   while(1)
     {

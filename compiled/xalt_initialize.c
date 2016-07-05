@@ -108,7 +108,7 @@ static const char * syshost;
 
 void myinit(int argc, char **argv)
 {
-  int    status, i;
+  int    i;
   char * p;
   char * p_dbg;
   char * cmdline;
@@ -283,10 +283,8 @@ void myinit(int argc, char **argv)
 }
 void myfini()
 {
-  FILE * fp;
   FILE * my_stderr;
   char * v;
-  char * p_dbg;
   char * cmdline;
   struct timeval tv;
 
@@ -347,7 +345,6 @@ int reject(const char *path, const char * hostname)
   int     iret;
   int     rejected_host = (hostnameSz != 0);
   char    msgbuf[100];
-  char *  p;
 
   if (path[0] == '\0')
     return 1;
@@ -460,7 +457,7 @@ void abspath(char * path, int sz)
     int iret = proc_pidpath(getpid(), path, sz-1);
     if (iret <= 0)
       {
-	fprintf(stderr,"PID %d: proc_pid();\n",getpid());
+	fprintf(stderr,"PID %ud: proc_pid();\n",getpid());
 	fprintf(stderr,"    %s:\n", strerror(errno));
       }
   #else

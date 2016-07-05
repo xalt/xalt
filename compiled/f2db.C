@@ -90,10 +90,7 @@ void removeFiles(Vstring& fileA)
 
 int link_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 {
-  jsmn_parser parser;
-  jsmntok_t*  tokens;
-  int         maxTokens = 1000;
-  int         num       = 0;
+  int num = 0;
 
   for (auto it = fileA.begin(); it < fileA.end(); ++it)
     {
@@ -125,20 +122,18 @@ int link_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 
 int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 {
-  jsmn_parser parser;
-  jsmntok_t*  tokens;
-  int         maxTokens = 1000;
-  int         num       = 0;
+  int num = 0;
 
   for (auto it = fileA.begin(); it < fileA.end(); ++it)
     {
-      std::string          usr_cmdline;
-      std::string          hash_id;
-      Table                envT;
-      Table                userT;
-      DTable               userDT;
-      Table                recordT;
-      std::vector<Libpair> libA;
+      std::string              usr_cmdline;
+      std::string              hash_id;
+      Table                    envT;
+      Table                    userT;
+      DTable                   userDT;
+      Table                    recordT;
+      std::vector<Libpair>     libA;
+      std::vector<ProcessTree> ptA;
 
       std::string          jsonStr;
       char*                buf = NULL;
@@ -155,7 +150,7 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
       free(buf);
 
       parseRunJsonStr(it->c_str(), jsonStr, usr_cmdline, hash_id, envT,
-                      userT, userDT, recordT, libA);
+                      userT, userDT, recordT, libA, ptA);
 
       run_direct2db(options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, userDT, recordT, libA);
       num++;

@@ -9,7 +9,6 @@ s2db_Options::s2db_Options(int argc, char** argv)
     m_rmapD("reverseMapD"),   m_confFn("xalt_db.conf"),    m_syshost(".*")
 {
   int   c;
-  char *p;
 
   while(1)
     {

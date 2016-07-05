@@ -6,9 +6,7 @@
 
 void walkProcessTree(pid_t ppid, std::vector<ProcessTree>& ptV)
 {
-  pid_t   my_pid       = ppid;
-  char *  p_dbg        = getenv("XALT_TRACING");
-  int     xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
+  pid_t       my_pid = ppid;
   std::string name;
   std::string path;
   while(1)

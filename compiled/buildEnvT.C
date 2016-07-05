@@ -26,7 +26,7 @@ void buildEnvT(char* env[], Table& envT)
   const char * envB[] = {"__XALT_PATH_", "__XALT_LD_LIBRARY_PATH_" };
   size_t       envSz  = sizeof(envA)/sizeof(envA[0]);
 
-  for (int i = 0; i < envSz; ++i)
+  for (size_t i = 0; i < envSz; ++i)
     {
       char *v = getenv(envB[i]);
       if (v)

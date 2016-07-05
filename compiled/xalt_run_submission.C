@@ -29,7 +29,6 @@ int main(int argc, char* argv[], char* env[])
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
-  char*   p;
 
   std::vector<ProcessTree> ptA;
   walkProcessTree(options.ppid(), ptA);
