@@ -221,6 +221,7 @@ void processProcessTreeA(const char* name, const char* js, int& i, int ntokens, 
     }
 
   int iend = tokens[i].end;
+  pid_t       pid;
   std::string key;
   std::string cmd_name;
   std::string cmd_path;
@@ -271,6 +272,15 @@ void processProcessTreeA(const char* name, const char* js, int& i, int ntokens, 
               p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
               cmd_path.assign(p);
             }
+          else if (key == "pid")
+            {
+              if (tokens[i].type != JSMN_PRIMITIVE)
+                {
+                  fprintf(stderr,"processProcessTreeA(pid) for: %d, token types is not a number\n",tokens[i].type);
+                  exit(1);
+                }
+              pid = (pid_t) strtol(&js[tokens[i].start], (char **) NULL, 10); ++i;
+            }
           else if (key == "cmdlineA")
             {
               if (tokens[i].type != JSMN_ARRAY)
@@ -282,7 +292,7 @@ void processProcessTreeA(const char* name, const char* js, int& i, int ntokens, 
             }
         }
 
-      ProcessTree pt(cmd_name, cmd_path, cmdlineA);
+      ProcessTree pt(pid, cmd_name, cmd_path, cmdlineA);
       ptA.push_back(pt);
     }
 }

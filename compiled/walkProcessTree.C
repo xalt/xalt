@@ -21,7 +21,7 @@ void walkProcessTree(pid_t ppid, std::vector<ProcessTree>& ptV)
       Vstring cmdlineA;
       proc.cmdline(cmdlineA);
 
-      ProcessTree pt(name, path, cmdlineA);
+      ProcessTree pt(my_pid, name, path, cmdlineA);
       ptV.push_back(pt);
       my_pid = parent;
     }

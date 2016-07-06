@@ -133,6 +133,7 @@ void Json::add(const char* name, Table& t)
 
 void Json::add(const char* name, std::vector<ProcessTree>& ptA)
 {
+  char * strbuff = NULL;
   if (name)
     {
       m_s += "\"";
@@ -141,6 +142,7 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
     }
   for ( auto it = ptA.begin(); it != ptA.end(); ++it )
     {
+      pid_t              pid      = (*it).pid;
       const std::string& name     = (*it).name;
       const std::string& path     = (*it).path;
       Vstring&           cmdlineA = (*it).cmdlineA;
@@ -149,7 +151,10 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       m_s += xalt_quotestring(name.c_str());
       m_s += "\",\"cmd_path\":\"";
       m_s += xalt_quotestring(path.c_str());
-      m_s += "\",\"cmdlineA\":[";
+      asprintf(&strbuff, "%d", pid);
+      m_s += "\",\"pid\":";
+      m_s += strbuff;
+      m_s += ",\"cmdlineA\":[";
       for ( auto jt = cmdlineA.begin(); jt != cmdlineA.end(); ++jt )
         {
           m_s += "\"";
@@ -161,6 +166,8 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       else
         m_s += "]},";
     }
+  if (strbuff)
+    free(strbuff);
   if (name)
     {
       if (m_s.back() == ',')
@@ -173,7 +180,7 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
 
 void Json::add(const char* name, DTable& t)
 {
-  char * strbuff;
+  char * strbuff = NULL;
   if (name)
     {
       m_s += "\"";
@@ -191,7 +198,8 @@ void Json::add(const char* name, DTable& t)
       m_s += strbuff;
       m_s += ",";
     }
-  free(strbuff);
+  if (strbuff)
+    free(strbuff);
   if (name)
     {
       if (m_s.back() == ',')

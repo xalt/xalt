@@ -46,7 +46,6 @@ subroutine suba(irank,N,M,a,b,c)
    call system_clock(it2)
    time = dble(it2 - it1*2 + it0)/dble(irate)
    rate = 100*dble(2*(M*N))/(dble(1024*1024)*time)
-   if(irank==0) print*," MFLOPS=",rate,"    time=",time
-   write(7) t   ! make sure t is used some place
+   if(irank==0) print*," MFLOPS=",rate,"    time=",time, " t=",t
 
 end subroutine

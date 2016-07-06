@@ -12,7 +12,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-
+#include <sys/types.h>
 
 typedef std::vector<std::string>                    Vstring;
 typedef std::unordered_set<std::string>             Set;
@@ -32,12 +32,13 @@ struct Libpair
 
 struct ProcessTree
 {
-  ProcessTree(const std::string& nameIn, const std::string& pathIn, Vstring& cmdlineIn)
-    : name(nameIn), path(pathIn), cmdlineA(cmdlineIn) {}
+  ProcessTree(pid_t pidIn, const std::string& nameIn, const std::string& pathIn, Vstring& cmdlineIn)
+    : name(nameIn), path(pathIn), cmdlineA(cmdlineIn), pid(pidIn){}
 
   std::string name;
   std::string path;
   Vstring     cmdlineA;
+  pid_t       pid;
 };
 
 

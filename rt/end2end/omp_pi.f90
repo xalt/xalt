@@ -34,24 +34,16 @@ program main
     real(8)             :: starttime, stoptime
       ! start and stop time in seconds
 
-    real(8),    parameter     :: ACTUAL_PI     =  3.141592653589793_8
+    real(8)                   :: ACTUAL_PI
 
-    integer(4), parameter     :: OUTFILE_UNIT  =  2
-    integer(4), parameter     :: STDIN_UNIT    =  5
     integer(4), parameter     :: STDOUT_UNIT   =  6
-    integer(4), parameter     :: STRING_LENGTH = 80
-
-    character( len = STRING_LENGTH ), parameter :: OUTFILE_NAME  = 'omp_pi.out'
 
     ! -----------------------------------------------------
-
-    ! Preliminary housekeeping...
-
-    open( OUTFILE_UNIT, file = OUTFILE_NAME )
-
-    ! Grab input...
+    ! Specify number of integration 
 
     totalsubints = 2000000
+
+    ACTUAL_PI = 4.0_8*atan(1.0_8)
 
 
     ! Do computation...
@@ -86,13 +78,7 @@ program main
     ! Report results...
 
     call reportresults(                                                       &
-      &  OUTFILE_UNIT, computedpi, totalsubints, totalthreads, totaltime )
-    call reportresults(                                                       &
       &  STDOUT_UNIT,  computedpi, totalsubints, totalthreads, totaltime )
-
-    ! Housekeeping...
-
-    close( OUTFILE_UNIT )
 
 ! ---------------------------------------------------------
 !Internal sub-programs...
