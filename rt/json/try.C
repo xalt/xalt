@@ -10,8 +10,23 @@ const char* ans2 = "./helloñ";
 
 int main(int argc, char* argv[])
 {
-  const char* s = "./helloñ";
-  const char* p = xalt_quotestring(s);
+
+  const char* p;
+  const char* s;
+  
+  s = "./hello\\uD8FF\\uDFFDabc";
+  int len = strlen(s);
+  
+  p = xalt_unquotestring(s, len);
+  strcpy(buf,p);
+  printf("buf: %s\n",buf);
+
+  p = xalt_quotestring(buf);
+  
+  printf("p: %s\n",p);
+
+  s = "./helloñ";
+  p = xalt_quotestring(s);
   strcpy(buf, p);
 
   if (strcmp(buf, ans1) != 0)
@@ -20,7 +35,7 @@ int main(int argc, char* argv[])
       return 1;
     }
 
-  int len = strlen(buf);
+  len = strlen(buf);
   
   p = xalt_unquotestring(buf, len);
 

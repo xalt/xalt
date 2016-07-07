@@ -55,11 +55,11 @@ const char* xalt_quotestring(const char* input)
         {
           int value;
 	  b = *++p;
-          if (0xc0 <= a && a < 0xdf && b >= 0x80)
+          if (0xc0 <= a &&  a <= 0xdf &&  b >= 0x80)
             value = (a - 0xc0) * 0x40 + b - 0x80;
-          else if ( 0xe0 <= a && a <= 0xef && b >= 0x80 && (c = *++p) >= 0x80)
+          else if ( 0xe0 <= a &&  a <= 0xef &&  b >= 0x80 &&  (c = *++p) >= 0x80)
             value = ((a - 0xe0) * 0x40 + b - 0x80) * 0x40 + c - 0x80;
-          else if (  0xf0 <= a && a <= 0xf7 && b >= 0x80 && c >= 0x80 && (d = *++p) >= 0x80 )
+          else if (  0xf0 <= a &&  a <= 0xf7 &&  b >= 0x80 && (c = *++p) >= 0x80 && (d = *++p) >= 0x80 )
             value = (((a - 0xf0) * 0x40 + b - 0x80) * 0x40 + c - 0x80) * 0x40 + d - 0x80;
           else
             value = 0;
@@ -70,7 +70,7 @@ const char* xalt_quotestring(const char* input)
             }
           else if (value <= 0x10ffff)
             {
-              value -= 0x10ffff;
+              value -= 0x10000;
               high   = 0xD800 + (value/0x400);
               low    = 0xDC00 + (value % 0x400);
               sprintf(s,"\\u%.4x\\u%.4x",high,low);
@@ -143,11 +143,14 @@ const char * xalt_unquotestring(const char * input, int len)
               numBuf[4] = '\0';
               p += 4;
               value = strtol(numBuf, (char **) NULL, 16);
+
               if (0xD800 <= value &&  value <= 0xDBFF)
                 {
                   // We have the high surrogate of a UTF-16 character. Find low surrogate.
-                  memcpy(&numBuf[0],p+7,4);
-                  p += 11;
+                  p += 2;
+                  memcpy(&numBuf[0],p,4);
+                  p += 4;
+
                   numBuf[4] = '\0';
                   value2 = strtol(numBuf, (char **) NULL, 16);
                   if (value2 > 0 && 0xDC00 <= value2 && value2 <= 0xDFFF)
@@ -175,7 +178,6 @@ const char * xalt_unquotestring(const char * input, int len)
                 }
             }
         }
-      ++p;
       if (p >= end)
         {
           *s = '\0';
