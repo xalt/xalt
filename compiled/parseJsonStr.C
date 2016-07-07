@@ -221,7 +221,7 @@ void processProcessTreeA(const char* name, const char* js, int& i, int ntokens, 
     }
 
   int iend = tokens[i].end;
-  pid_t       pid;
+  pid_t       pid = 0;
   std::string key;
   std::string cmd_name;
   std::string cmd_path;

@@ -17,8 +17,8 @@ bool parseSyslog(const char* buf, std::string& clusterName, SyslogRecord& syslog
   std::string key;
   std::string syshost;
   std::string value;
-  long        nb;
-  long        idx;
+  long        nb   = 1;
+  long        idx  = 0;
   bool        done = false;
 
   while(!done)
