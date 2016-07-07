@@ -1,7 +1,7 @@
 #ifndef QUOTESTRING_H
 #define QUOTESTRING_H
 
-#include "xalt_function_names.h"
+#include "xalt_obfuscate.h"
 
 #ifdef __cplusplus
 extern "C" {

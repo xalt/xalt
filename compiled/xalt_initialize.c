@@ -40,7 +40,7 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
-#include "xalt_function_names.h"
+#include "xalt_obfuscate.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "xalt_fgets_alloc.h"
