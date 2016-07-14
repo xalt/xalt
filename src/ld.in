@@ -225,7 +225,9 @@ fi
 
 tracing_msg $MY_CMD "${argA[@]}"
 
-if [ "$HAVE_WORKING_LIBUUID" = "yes" ]; then
+#############################################################
+#  Only use the uuid library for 64bit apps not for 32bit apps
+if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
     LIBUUID="-luuid"
 fi
 

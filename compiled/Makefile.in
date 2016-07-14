@@ -22,7 +22,7 @@ LIB_OPTIONS       := -fPIC -shared
 WARN_FLAGS  := -Wall -Wno-unused-result 
 CF_INIT     := -I. -fPIC 
 CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild_h -I$(THIS_DIR) $(MYSQL_CFLAGS) $(USE_PREFIX)
-CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h -I$(THIS_DIR) $(HAVE_UUID)
+CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild_h -I$(THIS_DIR)
 
 C_SRC       := jsmn.c             	   \
 	       xalt_fgets_alloc.c 	   \
@@ -188,13 +188,13 @@ build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xa
                       $(DESTDIR)$(LIB)/libxalt_init.so
 
 $(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
-	gcc $(CFLAGS) $(CF_INIT) -o $@ -c $<
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/xalt_syshost.c
-	gcc $(CFLAGS) $(CF_INIT) -o $@ -c $< 
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
-	gcc $(CFLAGS) $(CF_INIT) -o $@ -c $<
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc $(CFLAGS) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 
 
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
@@ -211,16 +211,16 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o
-	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
+	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^
 
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 
 $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
                                     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	gcc $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
 makefile: Makefile.in config.status
 	./config.status $@
