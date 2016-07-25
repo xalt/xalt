@@ -46,18 +46,20 @@ Options::Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
-        {"start",   required_argument, NULL, 's'},
-        {"end",     required_argument, NULL, 'e'},
-        {"syshost", required_argument, NULL, 'h'},
-        {"exec",    required_argument, NULL, 'x'},
-        {"ntasks",  required_argument, NULL, 'n'},
-        {"uuid",    required_argument, NULL, 'u'},
-        {"confFn",  required_argument, NULL, 'c'},
-        {"ppid",    required_argument, NULL, 'p'},
+        {"start",      required_argument, NULL, 's'},
+        {"end",        required_argument, NULL, 'e'},
+        {"syshost",    required_argument, NULL, 'h'},
+        {"exec",       required_argument, NULL, 'x'},
+        {"ntasks",     required_argument, NULL, 'n'},
+        {"uuid",       required_argument, NULL, 'u'},
+        {"confFn",     required_argument, NULL, 'c'},
+        {"ppid",       required_argument, NULL, 'p'},
+        {"path",       required_argument, NULL, 'P'},
+        {"ld_libpath", required_argument, NULL, 'L'},
         {0,         0,                 0,     0 }
       };
       
-      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:p:",
+      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:p:P:L:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -96,6 +98,14 @@ Options::Options(int argc, char** argv)
         case 'u':
           if (optarg)
             m_uuid = optarg;
+	  break;
+        case 'P':
+          if (optarg)
+            m_path = optarg;
+	  break;
+        case 'L':
+          if (optarg)
+            m_ldLibPath = optarg;
 	  break;
 	case '?':
 	  printf("Huh?\n");

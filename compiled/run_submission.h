@@ -4,7 +4,7 @@
 #include "Options.h"
 #include "xalt_types.h"
 
-void buildEnvT(char* env[], Table& envT);
+void buildEnvT(Options& options, char* env[], Table& envT);
 void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT);
 void extractXALTRecord(std::string& exec, Table& recordT);
 void parseLDD(std::string& exec, std::vector<Libpair>& lddA);

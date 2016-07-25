@@ -19,6 +19,8 @@ public:
   std::string&  userCmdLine() { return m_userCmdLine; }
   std::string&  exec_type()   { return m_exec_type;   }
   std::string&  confFn()      { return m_confFn;      }
+  std::string&  path()        { return m_path;        }
+  std::string&  ldLibPath()   { return m_ldLibPath;   }
 
 private:
   double      m_start;
@@ -31,6 +33,8 @@ private:
   std::string m_userCmdLine;
   std::string m_exec_type;
   std::string m_confFn;
+  std::string m_path;
+  std::string m_ldLibPath;
 };
 
 

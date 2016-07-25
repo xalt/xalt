@@ -64,9 +64,12 @@ static long   my_size	   = 1L;
 static int    xalt_tracing = 0;
 static int    reject_flag  = 0;
 static int    background   = 1;
+static char * pathArg      = NULL;
+static char * ldLibPathArg = NULL;
 static char   path[PATH_MAX];
 static char * usr_cmdline;
 static const char * syshost;
+
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
@@ -231,24 +234,6 @@ void myinit(int argc, char **argv)
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
-  /*************************************************************
-   * Save away original PATH and LD_LIBRARY_PATH so that XALT
-   * will report what the user had and not what we
-   * ran xalt_run_submission with!
-   ************************************************************/
-
-  const char * envA[] = {       "PATH",         "LD_LIBRARY_PATH"  };
-  const char * envB[] = {"__XALT_PATH_", "__XALT_LD_LIBRARY_PATH_" };
-  size_t       envSz  = sizeof(envA)/sizeof(envA[0]);
-
-  size_t ja;
-  for (ja = 0; ja < envSz; ++ja)
-    {
-      char* v = getenv(envA[ja]);
-      if (v)
-        setenv(envB[ja], v, 1);
-    }
-
   /**********************************************************
    * Save LD_PRELOAD and clear it before running
    * xalt_run_submission.
@@ -260,10 +245,44 @@ void myinit(int argc, char **argv)
 
   unsetenv("LD_PRELOAD");
 
+  const char * blank = " ";
+
+  char * env_path = getenv("PATH");
+  if (!env_path)
+    {
+      pathArg = malloc(2);
+      memcpy(pathArg,blank,2);
+    }
+  else
+    {
+      int ilen = 0;
+      int plen = strlen(env_path)
+      pathArg  = malloc(8 + plen + 2);
+      memcpy(&pathArg[ilen], "--path \"", 8); ilen +=8;
+      memcpy(&pathArg[ilen], env_path, plen); ilen += plen
+      memcpy(&pathArg[ilen], "\"", 2);
+    }
+
+  char * env_ldlibpath = getenv("LD_LIBRARY_PATH");
+  if (!env_ldlibpath)
+    {
+      ldLibPathArg = malloc(2);
+      memcpy(ldLibPathArg,blank,2);
+    }
+  else
+    {
+      int ilen = 0;
+      int plen = strlen(env_ldlibpath)
+      pathArg  = malloc(15 + plen + 2);
+      memcpy(&ldLibPathArg[ilen], "--ld_libpath \"", 15); ilen +=15;
+      memcpy(&ldLibPathArg[ilen], env_ldlibpath, plen); ilen += plen
+      memcpy(&ldLibPathArg[ilen], "\"", 2);
+    }
+
   ppid = getppid();
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
-	   " --uuid \"%s\" '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, syshost,
-	   start_time, path, my_size, uuid_str, usr_cmdline, (background ? "&":" "));
+	   " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, syshost,
+	   start_time, path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
   system(cmdline);
@@ -328,14 +347,16 @@ void myfini()
   /* Do not background this because it might get killed by the epilog cleanup tool! */
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\""
-           " --ntasks %ld --uuid \"%s\" '%s'", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, syshost,
-	   start_time, end_time, path, my_size, uuid_str, usr_cmdline);
+           " --ntasks %ld --uuid \"%s\" %s %s '%s'", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, syshost,
+	   start_time, end_time, path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
   system(cmdline);
   free(cmdline);
   free(usr_cmdline);
+  free(pathArg);
+  free(ldLibPathArg);
 }
 
 int reject(const char *path, const char * hostname)
