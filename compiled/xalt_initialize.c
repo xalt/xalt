@@ -256,10 +256,10 @@ void myinit(int argc, char **argv)
   else
     {
       int ilen = 0;
-      int plen = strlen(env_path)
+      int plen = strlen(env_path);
       pathArg  = malloc(8 + plen + 2);
-      memcpy(&pathArg[ilen], "--path \"", 8); ilen +=8;
-      memcpy(&pathArg[ilen], env_path, plen); ilen += plen
+      memcpy(&pathArg[ilen], "--path \"", 8); ilen += 8;
+      memcpy(&pathArg[ilen], env_path, plen); ilen += plen;
       memcpy(&pathArg[ilen], "\"", 2);
     }
 
@@ -271,11 +271,11 @@ void myinit(int argc, char **argv)
     }
   else
     {
-      int ilen = 0;
-      int plen = strlen(env_ldlibpath)
-      pathArg  = malloc(15 + plen + 2);
-      memcpy(&ldLibPathArg[ilen], "--ld_libpath \"", 15); ilen +=15;
-      memcpy(&ldLibPathArg[ilen], env_ldlibpath, plen); ilen += plen
+      int ilen     = 0;
+      int plen     = strlen(env_ldlibpath);
+      ldLibPathArg = malloc(14 + plen + 2);
+      memcpy(&ldLibPathArg[ilen], "--ld_libpath \"", 14); ilen += 14;
+      memcpy(&ldLibPathArg[ilen], env_ldlibpath, plen);   ilen += plen;
       memcpy(&ldLibPathArg[ilen], "\"", 2);
     }
 

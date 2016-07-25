@@ -36,7 +36,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Build the env table:
   Table envT;
-  buildEnvT(env, envT);
+  buildEnvT(options, env, envT);
   DEBUG0(stderr,"  Built envT\n");
 
   //*********************************************************************

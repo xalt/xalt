@@ -21,9 +21,9 @@ void buildEnvT(Options& options, char* env[], Table& envT)
 
   std::string path = options.path();
   if (path.size() > 0)
-    envT["PATH"] = path
+    envT["PATH"] = path;
 
   std::string ldLibPath = options.ldLibPath();
   if (ldLibPath.size() > 0)
-    envT["LD_LIBRARY_PATH"] = ldLibPath
+    envT["LD_LIBRARY_PATH"] = ldLibPath;
 }
