@@ -615,9 +615,9 @@ def main():
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
-  print("------------------------------------------------------")
+  print("-------------------------------------------------------------------")
   print("Libraries used by MPI Executables sorted by Core Hours for largemem")
-  print("------------------------------------------------------")
+  print("-------------------------------------------------------------------")
   print("")
   print(bt.build_tbl())
 
