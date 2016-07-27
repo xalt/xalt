@@ -213,21 +213,21 @@ class Libraries:
     self.__libA  = []
     self.__cursor = cursor
 
-  def build(self, args, startdate, enddate):
+  def build(self, args, startdate, enddate, queue="%"):
     
-    query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,       \
-                    COUNT(DISTINCT(t3.user)) as n_users,                            \
-                    COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, \
-                    t1.object_path, t1.module_name as module                        \
-                    from xalt_object as t1, join_run_object as t2, xalt_run as t3   \
-                    where ( t1.module_name is not NULL and t1.module_name != 'NULL')\
-                    and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id             \
-                    and t3.syshost like %s                                          \
-                    and t3.date >= %s and t3.date < %s                              \
+    query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,        \
+                    COUNT(DISTINCT(t3.user)) as n_users,                             \
+                    COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs,  \
+                    t1.object_path, t1.module_name as module                         \
+                    from xalt_object as t1, join_run_object as t2, xalt_run as t3    \
+                    where ( t1.module_name is not NULL and t1.module_name != 'NULL') \
+                    and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id              \
+                    and t3.syshost like %s and t3.queue like %s                      \
+                    and t3.date >= %s and t3.date < %s                               \
                     group by t1.object_path order by corehours desc"
 
     cursor  = self.__cursor
-    cursor.execute(query,(args.syshost, startdate, enddate))
+    cursor.execute(query,(args.syshost, queue, startdate, enddate))
     resultA = cursor.fetchall()
 
     libA = self.__libA
@@ -599,6 +599,19 @@ def main():
 
   ############################################################
   #  Report of Library usage by Core Hours.
+  resultA = libA.report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
+  print("")
+  print("------------------------------------------------------")
+  print("Libraries used by MPI Executables sorted by Core Hours")
+  print("------------------------------------------------------")
+  print("")
+  print(bt.build_tbl())
+
+  ############################################################
+  #  Report of Library usage by Core Hours for largemem.
+  libA = Libraries(cursor)
+  libA.build(args, startdate, enddate, "largemem")
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
