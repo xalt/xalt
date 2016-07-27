@@ -616,7 +616,7 @@ def main():
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
   print("------------------------------------------------------")
-  print("Libraries used by MPI Executables sorted by Core Hours")
+  print("Libraries used by MPI Executables sorted by Core Hours for largemem")
   print("------------------------------------------------------")
   print("")
   print(bt.build_tbl())
