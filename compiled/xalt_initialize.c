@@ -302,7 +302,7 @@ void myinit(int argc, char **argv)
 }
 void myfini()
 {
-  FILE * my_stderr;
+  FILE * my_stderr = NULL;
   char * v;
   char * cmdline;
   struct timeval tv;
