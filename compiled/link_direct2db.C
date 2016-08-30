@@ -372,10 +372,10 @@ void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
       exit(1);
     }
 
-  for (auto it = funcSet.begin(); it != funcSet.end(); ++it)
+  for (auto const & it : funcSet)
     {
-      len_funcName = (*it).size();
-      strcpy(&funcName[0], (*it).c_str());
+      len_funcName = it.size();
+      strcpy(&funcName[0], it.c_str());
 
       // "SELECT func_id ..."
       if (mysql_stmt_execute(stmt_s))

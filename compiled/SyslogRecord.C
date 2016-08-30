@@ -56,17 +56,18 @@ void SyslogRecord::prt(const char* name, Vstring& resultA)
   prefix.append(buf);
 
   long idx = 0;
-  for (auto it = m_blkA.begin(); it != m_blkA.end(); ++it, ++idx)
+  for (auto const & it : m_blkA)
     {
-      if (it->size() > 0)
+      if (it.size() > 0)
         {
           result.assign(prefix);
           result.append(" idx:");
           snprintf(buf, sz, "%ld",idx);
           result.append(buf);
           result.append(" value:");
-          result.append(*it);
+          result.append(it);
           resultA.push_back(result);
         }
+      ++idx;
     }
 }

@@ -662,14 +662,14 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
       exit(1);
     }
   
-  for (auto it = envT.begin(); it != envT.end(); ++it)
+  for (auto const & it : envT)
     {
-      const std::string& env_name  = it->first;
+      const std::string& env_name  = it.first;
       if (reject_env_name(env_name)) continue;
       
       env_id        = findEnvNameIdx(conn, env_name, envNameT);
-      len_env_value =   (*it).second.size();
-      strcpy(env_value, (*it).second.c_str());
+      len_env_value =   it.second.size();
+      strcpy(env_value, it.second.c_str());
 
       // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))

@@ -24,18 +24,18 @@ int main(int argc, char* argv[])
   std::string libname;
   std::string::size_type idx;
 
-  for (auto it = xlibmapA.begin(); it != xlibmapA.end(); ++it)
+  for (auto const & it : xlibmapA)
     {
-      idx = (*it).rfind(".a");
+      idx = it.rfind(".a");
       if (idx != std::string::npos)
-        libname = (*it).substr(0,idx);  // from trailing "." to end of string
+        libname = it.substr(0,idx);  // from trailing "." to end of string
       else
         {
-          idx = (*it).rfind(".so");
+          idx = it.rfind(".so");
           if (idx != std::string::npos)
-            libname = (*it).substr(0,idx);  // from trailing "." to end of string
+            libname = it.substr(0,idx);  // from trailing "." to end of string
           else
-            libname = *it;
+            libname = it;
         }
       reflibSet.insert(libname);
     }
@@ -79,8 +79,8 @@ int main(int argc, char* argv[])
         resultA.push_back(argv[i]);
     }          
 
-  for (auto it = resultA.begin(); it != resultA.end(); ++it)
-    fprintf(stdout," %s",(*it).c_str());
+  for (auto const & it : resultA)
+    fprintf(stdout," %s",it.c_str());
   fprintf(stdout,"\n");
 
   return 0;

@@ -140,12 +140,12 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       m_s += name;
       m_s += "\":[";
     }
-  for ( auto it = ptA.begin(); it != ptA.end(); ++it )
+  for ( auto const & it : ptA)
     {
-      pid_t              pid      = (*it).pid;
-      const std::string& name     = (*it).name;
-      const std::string& path     = (*it).path;
-      Vstring&           cmdlineA = (*it).cmdlineA;
+      pid_t              pid      = it.pid;
+      const std::string& name     = it.name;
+      const std::string& path     = it.path;
+      const Vstring&     cmdlineA = it.cmdlineA;
 
       m_s += "\{\"cmd_name\":\"";
       m_s += xalt_quotestring(name.c_str());
@@ -155,10 +155,10 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       m_s += "\",\"pid\":";
       m_s += strbuff;
       m_s += ",\"cmdlineA\":[";
-      for ( auto jt = cmdlineA.begin(); jt != cmdlineA.end(); ++jt )
+      for ( auto const & jt : cmdlineA)
         {
           m_s += "\"";
-          m_s += xalt_quotestring((*jt).c_str());
+          m_s += xalt_quotestring(jt.c_str());
           m_s += "\",";
         }
       if (m_s.back() == ',')
@@ -187,10 +187,10 @@ void Json::add(const char* name, DTable& t)
       m_s += name;
       m_s += "\":{";
     }
-  for ( auto it = t.begin(); it != t.end(); ++it )
+  for ( auto const & it : t)
     {
-      const std::string& k = it->first;
-      double             v = it->second;
+      const std::string& k = it.first;
+      double             v = it.second;
       asprintf(&strbuff, "%f", v);
       m_s += "\"";
       m_s += k;
@@ -214,9 +214,9 @@ void Json::add(const char* name, std::vector<Libpair>&  libA)
   m_s += "\"";
   m_s += name;
   m_s += "\":[";
-  for ( auto it = libA.begin(); it != libA.end(); ++it)
+  for ( auto const & it : libA)
     {
-      std::string& lib = (*it).lib;
+      std::string            lib = it.lib;
       std::string::size_type idx = lib.find("\"");
       if (idx != std::string::npos)
         lib.replace(idx,2,"\\\"");
@@ -224,7 +224,7 @@ void Json::add(const char* name, std::vector<Libpair>&  libA)
       m_s += "[\"";
       m_s += xalt_quotestring(lib.c_str());
       m_s += "\",\"";
-      m_s += (*it).sha1;
+      m_s += it.sha1;
       m_s += "\"],";
     }
   if (m_s.back() == ',')

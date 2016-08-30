@@ -271,13 +271,13 @@ void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint inde
       exit(1);
     }
       
-  for ( auto it = lddA.begin(); it != lddA.end(); ++it)
+  for ( auto const & it : lddA)
     {
-      len_object_path = (*it).lib.size();
-      strcpy(object_path,(*it).lib.c_str());
+      len_object_path =   it.lib.size();
+      strcpy(object_path, it.lib.c_str());
 
-      len_hash_id     = (*it).sha1.size();
-      strcpy(hash_id,(*it).sha1.c_str());
+      len_hash_id     = it.sha1.size();
+      strcpy(hash_id,   it.sha1.c_str());
 
       // "SELECT obj_id ..."
       if (mysql_stmt_execute(stmt_s))

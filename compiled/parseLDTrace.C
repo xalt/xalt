@@ -82,14 +82,14 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
   free(buf);
   buf = NULL;
 
-  for(auto it = set.begin(); it != set.end(); ++it)
+  for(auto const & it : set)
     {
       std::vector<std::string> result;
-      std::string cmd = SHA1SUM " " + *it;
+      std::string cmd = SHA1SUM " " + it;
       capture(cmd,result);
       std::string sha1 = result[0].substr(0, result[0].find(" "));
 
-      Libpair libpair(*it, sha1);
+      Libpair libpair(it, sha1);
       libA.push_back(libpair);
     }
 }

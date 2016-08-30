@@ -84,15 +84,15 @@ int findFilesInDir(std::string& dir, const char* filePattern, Vstring& fileA)
 
 void removeFiles(Vstring& fileA)
 {
-  for (auto it = fileA.begin(); it < fileA.end(); ++it)
-    unlink(it->c_str());
+  for (auto const & it : fileA)
+    unlink(it.c_str());
 }
 
 int link_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 {
   int num = 0;
 
-  for (auto it = fileA.begin(); it < fileA.end(); ++it)
+  for (auto const & it : fileA)
     {
       Set                  funcSet;
       std::vector<Libpair> libA;
@@ -102,17 +102,17 @@ int link_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
       char*                buf = NULL;
       size_t               sz  = 0;
 
-      FILE*  fp = fopen(it->c_str(),"r");
+      FILE*  fp = fopen(it.c_str(),"r");
       if (fp == NULL)
         continue;
       if (options.reportFn())
-        fprintf(stdout, "Processing link file: %s\n", it->c_str());
+        fprintf(stdout, "Processing link file: %s\n", it.c_str());
 
       while(xalt_fgets_alloc(fp, &buf, &sz))
         jsonStr.append(buf);
       free(buf);
 
-      parseLinkJsonStr(it->c_str(), jsonStr, linkLineA, resultT, libA, funcSet);
+      parseLinkJsonStr(it.c_str(), jsonStr, linkLineA, resultT, libA, funcSet);
 
       link_direct2db(options.confFn().c_str(), linkLineA, resultT, libA, funcSet, rmapT);
       num++;
@@ -124,7 +124,7 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 {
   int num = 0;
 
-  for (auto it = fileA.begin(); it < fileA.end(); ++it)
+  for (auto const & it : fileA)
     {
       std::string              usr_cmdline;
       std::string              hash_id;
@@ -139,17 +139,17 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
       char*                buf = NULL;
       size_t               sz  = 0;
 
-      FILE*  fp = fopen(it->c_str(),"r");
+      FILE*  fp = fopen(it.c_str(),"r");
       if (fp == NULL)
         continue;
       if (options.reportFn())
-        fprintf(stdout, "Processing run file: %s\n", it->c_str());
+        fprintf(stdout, "Processing run file: %s\n", it.c_str());
         
       while(xalt_fgets_alloc(fp, &buf, &sz))
         jsonStr.append(buf);
       free(buf);
 
-      parseRunJsonStr(it->c_str(), jsonStr, usr_cmdline, hash_id, envT,
+      parseRunJsonStr(it.c_str(), jsonStr, usr_cmdline, hash_id, envT,
                       userT, userDT, recordT, libA, ptA);
 
       run_direct2db(options.confFn().c_str(), usr_cmdline, hash_id, rmapT, envT, userT, userDT, recordT, libA);

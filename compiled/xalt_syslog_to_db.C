@@ -74,9 +74,9 @@ int main(int argc, char* argv[])
   fnA.push_back(options.leftoverFn());
   fnA.push_back(options.syslogFn());
 
-  for (auto it = fnA.begin(); it != fnA.end(); ++it)
+  for (auto const & it : fnA)
     {
-      fp = fopen(it->c_str(), "r");
+      fp = fopen(it.c_str(), "r");
       if (!fp)
         continue;
 
@@ -134,14 +134,14 @@ int main(int argc, char* argv[])
   if (recordT.size() > 0)
     {
       fp = fopen(options.leftoverFn().c_str(), "w");
-      for (auto it = recordT.begin(); it != recordT.end(); ++it)
+      for (auto & it : recordT)
         {
-          SyslogRecord& syslogT = it->second;
+          SyslogRecord& syslogT = it.second;
           Vstring resultA;
           syslogT.prt("XALT_LOGGING V=2",resultA);
 
-          for (auto jt = resultA.begin(); jt != resultA.end(); ++jt)
-            fprintf(fp, "%s\n", jt->c_str());
+          for (auto const jt : resultA)
+            fprintf(fp, "%s\n", jt.c_str());
         }
       fclose(fp);
     }
