@@ -29,7 +29,9 @@ test_descript = {
 
      export PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
-     mpirun -n 1 ./hello 
+     export PATH=.:$PATH
+     mpirun -n 1 hello 
+     
      
      [ -d Ðì® ] || mkdir Ðì®
      mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c

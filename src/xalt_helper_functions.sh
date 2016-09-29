@@ -188,7 +188,7 @@ run_real_command()
   # Find the user executable by walking the original command line.
   EXEC_T="[{\"exec_prog\": \"unknown\", \"ntasks\": 1, \"uuid\": \"$($UUIDGEN)\"} ]"
   if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
-    EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
+    EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
   fi
 
   tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
