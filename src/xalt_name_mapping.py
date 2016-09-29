@@ -1,8 +1,6 @@
 equiv_patternA = [
-    [ r'^1690'                          , '1690*.x*'                       ],
     [ r'^2d_needle'                     , '2D_needle*'                     ],
     [ r'^3d_needle'                     , '3D_needle*'                     ],
-    [ r'^a01'                           , 'A0*'                            ],
     [ r'^abinit'                        , 'Abinit*'                        ],
     [ r'^adcirc'                        , 'ADCIRC*'                        ],
     [ r'^padcswan'                      , 'ADCIRC*'                        ],

@@ -42,6 +42,16 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 from BeautifulTbl      import BeautifulTbl
 from xalt_name_mapping import name_mapping
 
+def shortName(full):
+  idx = full.find('(')
+  if (idx != -1):
+    full = full[:idx]
+
+  idx = full.rfind('/')
+  if (idx == -1):
+    return full
+  return full[:idx]
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -117,6 +127,86 @@ class ExecRun:
     return resultA, sumCH
 
 
+class CompilerUsageByCount:
+  def __init__(self, cursor):
+    self.__linkA  = []
+    self.__cursor = cursor
+  def build(self, args, startdate, enddate):
+    query = """
+    SELECT link_program, count(date) as count FROM xalt_link
+    WHERE build_syshost like %s
+    AND   date >= %s AND date < %s
+    GROUP by link_program
+    """
+    cursor  = self.__cursor
+    cursor.execute(query, (args.syshost, startdate, enddate))
+    resultA = cursor.fetchall()
+    linkA   = self.__linkA
+    for link_program, count in resultA:
+      entryT = { 'count'        : count,
+                 'link_program' : link_program }
+      linkA.append(entryT)
+    
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(["Count", "Link Program"])
+    resultA.append(["-----", "------------"])
+
+    linkA = self.__linkA
+    sortA = sorted(linkA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append(["%d" % (entryT['count']), entryT['link_program']])
+    
+    return resultA
+
+class CompilerUsageByCoreHours:
+  def __init__(self, cursor):
+    self.__linkA  = []
+    self.__cursor = cursor
+
+  def build(self, args, startdate, enddate):
+    query = """
+    SELECT
+    ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as corehours,
+    COUNT(t1.date)                            as n_runs,
+    COUNT(DISTINCT(t1.user))                  as n_users,
+    t2.link_program                           as link_program
+    FROM xalt_run as t1, xalt_link as t2
+    WHERE t1.uuid is not NULL
+    AND   t1.uuid = t2.uuid
+    and   t1.syshost like %s
+    AND   t1.date >= %s and t1.date < %s
+    GROUP by link_program
+    """
+    cursor  = self.__cursor
+    cursor.execute(query, (args.syshost, startdate, enddate))
+    resultA = cursor.fetchall()
+    linkA   = self.__linkA
+    for corehours, n_runs, n_users, link_program in resultA:
+      entryT = { 'corehours'   : corehours,
+                 'n_users'     : n_users,
+                 'n_runs'      : n_runs,
+                 'link_program': link_program
+               }
+      linkA.append(entryT)
+    
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(['CoreHrs', '# Users','# Runs','Link Program'])
+    resultA.append(['-------', '-------','------','------------'])
+
+    linkA = self.__linkA
+    sortA = sorted(linkA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+                      entryT['link_program']])
+    return resultA
+
 class Libraries:
 
   def __init__(self, cursor):
@@ -161,6 +251,7 @@ class Libraries:
 
     libA = self.__libA
     libT = {}
+
     for entryT in libA:
       module = entryT['module']
       if (module in libT):
@@ -175,7 +266,82 @@ class Libraries:
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
     return resultA
+  def group_report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
+    resultA.append(['-------', '-------','------','------','--------------'])
 
+    libA = self.__libA
+    libT = {}
+
+    for entryT in libA:
+      module = entryT['module']
+      if (module in libT):
+        if (entryT['corehours'] > libT[module]['corehours']):
+          libT[module] = entryT
+      else:
+        libT[module] = entryT
+    
+    groupT = {}
+    for module in libT:
+      sn = shortName(module)
+      if (not sn in groupT):
+        groupT[sn]           = libT[module]
+        groupT[sn]['module'] = sn
+      else:
+        g_entry = groupT[sn]
+        entry   = libT[module]
+        for key in g_entry:
+          if (key != "module"):
+            g_entry[key] += entry[key]
+        
+    for k, entryT in sorted(groupT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+                      "%d" % (entryT['n_jobs']), entryT['module']])
+
+    return resultA
+
+class ModuleExec:
+  def __init__(self, cursor):
+    self.__modA  = []
+    self.__cursor = cursor
+
+  def build(self, args, startdate, enddate):
+    query = """
+    SELECT 
+    ROUND(SUM(run_time*num_cores/3600)) as corehours,
+    count(date)                         as n_jobs,
+    COUNT(DISTINCT(user))               as n_users,
+    module_name                         as modules
+    from xalt_run where syshost like %s
+    and date >= %s and date < %s and  module_name is not null
+    group by modules
+    """
+    cursor  = self.__cursor
+    cursor.execute(query, (args.syshost, startdate, enddate))
+    resultA = cursor.fetchall()
+    modA   = self.__modA
+    for corehours, n_jobs, n_users, modules in resultA:
+      entryT = { 'corehours' : corehours,
+                 'n_jobs'    : n_jobs,
+                 'n_users'   : n_users,
+                 'modules'   : modules }
+      modA.append(entryT)
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(["CoreHrs", "# Jobs","# Users", "Modules"])
+    resultA.append(["-------", "------","-------", "-------"])
+
+    modA = self.__modA
+    sortA = sorted(modA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['modules']])
+    
+    return resultA
+        
 def kinds_of_jobs(cursor, args, startdate, enddate):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
@@ -326,6 +492,12 @@ def main():
   if (args.startD is not None):
     startdate = args.startD
 
+  print("--------------------------------------------")
+  print("XALT REPORT from",startdate,"to",enddate)
+  print("--------------------------------------------")
+  print("")
+  print("")
+  
   ############################################################
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, startdate, enddate)
@@ -384,10 +556,49 @@ def main():
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
+
   ############################################################
-  #  Report of Library usage by Core Hours.
+  #  Report of Top Modules by Core Hours
+  modA = ModuleExec(cursor)
+  modA.build(args, startdate, enddate)
+  resultA = modA.report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+  print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
+  print(bt.build_tbl())
+
+  ############################################################
+  # Report on Compiler (linker) usage by Count
+  linkA = CompilerUsageByCount(cursor)
+  linkA.build(args, startdate, enddate)
+  resultA = linkA.report_by(args, "count")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
+  print("\nCompiler usage by Count\n")
+  print(bt.build_tbl())
+
+  ############################################################
+  # Report on Compiler (linker) usage by Core Hours
+  linkA = CompilerUsageByCoreHours(cursor)
+  linkA.build(args, startdate, enddate)
+  resultA = linkA.report_by(args, "corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+  print("\nCompiler usage by Corehours\n")
+  print(bt.build_tbl())
+
+  ############################################################
+  #  Report of Library by short module name usage by Core Hours.
   libA = Libraries(cursor)
   libA.build(args, startdate, enddate)
+  resultA = libA.group_report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
+  print("")
+  print("---------------------------------------------------------------------------------")
+  print("Libraries used by MPI Executables sorted by Core Hours grouped by module families")
+  print("---------------------------------------------------------------------------------")
+  print("")
+  print(bt.build_tbl())
+
+  ############################################################
+  #  Report of Library usage by Core Hours.
   resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
