@@ -65,7 +65,7 @@ def extract_compiler():
       Determine the name of a parent of Process instance.
       Check whether parent is a function (psutil > v2) or a property (psutil < v2)
       """
-      return (callable(p.parent) and p.parent().name()) or p.parent.name()
+      return (callable(p.parent) and p.parent().name()) or p.parent.name
 
     def p_parent_exe():
       """
