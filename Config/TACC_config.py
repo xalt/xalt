@@ -68,6 +68,7 @@ ignore_path_patterns = [
 accept_env_patterns = [
   '^I_MPI.*',
   '^KMP.*',
+  '^LAUNCHER_JID$',
   '^LD.*',
   '^LD_LIBRARY_PATH$',
   '^LOADEDMODULES$',

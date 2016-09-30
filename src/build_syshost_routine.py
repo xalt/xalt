@@ -262,7 +262,10 @@ def main():
   for entry in kindA:
     if (kind == entry[0]):
       if (not opt):
+        print("=================================================================")
+        print("Unable to install XALT")
         print("Syshost config option \"%s\" does not have the required options" % kind)
+        print("=================================================================")
         sys.exit(1)
       found = True
       func = entry[1]
@@ -272,7 +275,10 @@ def main():
     choices = ""
     for entry in kindA:
       choices += "\"" + entry[0] + "\", "
+    print("=================================================================")
+    print("Unable to install XALT")
     print("Syshost config \"%s\" is not valid, it must be one of %s" % (kind, choices))
+    print("=================================================================")
     sys.exit(1)
 
 

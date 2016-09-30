@@ -298,7 +298,18 @@ fi
 
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build_h/xalt_regex.h
+if test "$?" != 0; then
+   exit 1
+fi	
+
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
+
+if test "$?" != 0; then
+   exit 1
+fi	
+
+
+
 
 AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in)
 
