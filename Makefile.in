@@ -39,6 +39,7 @@ TRANSMISSION      := @TRANSMISSION@
 SITE_NAME         := @SITE@
 ETC_DIR           := @ETC_DIR@
 prefix            := @prefix@
+GIT_BRANCH        := devel
 XALT_V            := compiled/xalt_version.h
 XALT_DIR          := $(prefix)
 SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
@@ -301,7 +302,7 @@ tags:
 	$(RM) file_list.*
 
 dist:
-	git archive --prefix=xalt-$(VERSION)/ master > xalt-$(VERSION).tar
+	git archive --prefix=xalt-$(VERSION)/ $(GIT_BRANCH) > xalt-$(VERSION).tar
 	$(RM) -rf DIST;                                                 	   \
 	mkdir DIST;                                                     	   \
         cd DIST;                                                        	   \

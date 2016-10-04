@@ -23,20 +23,6 @@
 PKG_VERSION=`cat .version`
 echo Making Version: $PKG_VERSION
 
-removeList()
-{
-  local pkg=$1
-  shift;
-  for i in "$@"; do
-    rm -f $pkg/bin/$i
-  done
-}
-
-ld_repair()
-{
-  $SUDO perl -pi -e "s|/$SYSHOST/|/\\\$SYSHOST/|" $PKG/bin/ld
-}
-
 runMe()
 {
   local cmdA=("$@")
@@ -145,7 +131,6 @@ cmdA=("-$MAKE distclean"
       "$SUDO $MAKE Inst_TACC"
       "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
-      "ld_repair"
       )
 
 
