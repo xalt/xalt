@@ -240,6 +240,14 @@ fi
 tracing_msg $MY_CMD "${argA[@]}"
 
 #############################################################
+# If the user requested print options such as --print-map
+# then run link again with those options
+
+if [ -n "$PrintOptions" ]; then
+    $MY_CMD "${printOptA[@]}" "${argA[@]}"
+fi
+
+#############################################################
 #  Only use the uuid library for 64bit apps not for 32bit apps
 if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
     LIBUUID="-luuid"
@@ -259,11 +267,6 @@ EXEC=$($REALPATH $EXEC)
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
-
-if [ -n "$PrintOptions" ]; then
-    $MY_CMD "${printOptA[@]}" "${argA[@]}"
-fi
-
 
 # Get the sha1sum for the executable because it might move or disappear!
 SHA1SUM_EXEC=$($SHA1SUM $EXEC)

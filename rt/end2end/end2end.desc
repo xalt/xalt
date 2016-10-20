@@ -43,7 +43,7 @@ test_descript = {
      displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
      rm -rf Ðì®
      mkdir  Ðì®
-     mpicc -o helloñ $(projectDir)/rt/mpi_hello_world.c
+     mpicc -o helloñ -Wl,--print-map $(projectDir)/rt/mpi_hello_world.c > map.log 2>&1
      mv helloñ Ðì®
 
      displayThis "mpirun -n 1 Ðì®/helloñ"
