@@ -76,6 +76,8 @@ export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EXTRACT
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+printOptA=()
+PrintOptions=
 EXEC="a.out"
 append=false
 prev=
@@ -104,6 +106,11 @@ do
       USER_TRACE="true"
       ;;
 
+    -M|--print-map|--print-output-format|--print-memory-usage)
+      PrintOptions="true"
+      printOptA+=("$option")
+      ;;
+
     elf_i386)
       BIT32FLAG=--32
       ;;
@@ -122,6 +129,13 @@ do
   #fi
 
 done
+
+############################################################
+# See if the print options need to be merged
+if [ -n "$USER_TRACE" -a -n "$PrintOptions" ]; then
+    printOptA+=("--trace")
+    unset USER_TRACE
+fi
 
 PyPATH="/usr/bin:/bin"
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
@@ -169,6 +183,14 @@ fi
   STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py  "${argA[@]}") 
   $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 ) &
+
+#############################################################
+# If the user requested print options such as --print-map
+# then run link again with those options
+
+if [ -n "$PrintOptions" ]; then
+    $MY_CMD "${printOptA[@]}" "${argA[@]}"
+fi
 
 tracing_msg $MY_CMD "${argA[@]}"
 

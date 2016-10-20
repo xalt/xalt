@@ -52,6 +52,8 @@ request_tracing()
   for i in "$@"; do
     if [ "$i" = "--xalt_tracing" ]; then
       XALT_TRACING=yes
+    elif [ "$i" = "-M" -o "$i" = "--print-map" -o "$i" = "--print-output-format" -o "$i" = "--print-memory-usage" ]; then
+      :
     else
       argA+=("$i")
     fi
