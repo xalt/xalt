@@ -73,6 +73,8 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+printOptA=()
+PrintOptions=
 EXEC="a.out"
 append=false
 prev=
@@ -105,6 +107,11 @@ do
       BIT32FLAG=--32
       ;;
 
+    -M|--print-map|--print-output-format|--print-memory-usage)
+      PrintOptions="true"
+      printOptA+=("$option")
+      ;;
+
     -o)
       prev='EXEC'
       ;;
@@ -120,6 +127,13 @@ do
 
 done
 
+############################################################
+# See if the print options need to be merged
+if [ -n "$USER_TRACE" -a -n "$PrintOptions" ]; then
+    printOptA+=("--trace")
+    unset USER_TRACE
+fi
+    
 ############################################################
 # Test to see if the executable is an autoconf or cmake build
 # => skip those.
@@ -245,6 +259,11 @@ EXEC=$($REALPATH $EXEC)
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
+
+if [ -n "$PrintOptions" ]; then
+    $MY_CMD "${printOptA[@]}" "${argA[@]}"
+fi
+
 
 # Get the sha1sum for the executable because it might move or disappear!
 SHA1SUM_EXEC=$($SHA1SUM $EXEC)
