@@ -233,7 +233,25 @@ void Json::add(const char* name, std::vector<Libpair>&  libA)
     m_s += "],";
 }
 
-
+void Json::add(const char* name, int n, const char **A)
+{
+  m_s += "\"";
+  m_s += name;
+  m_s += "\":[";
+  for (int i = 0; i < n; ++i)
+    {
+      m_s += "\"";
+      m_s += xalt_quotestring(A[i]);
+      m_s += "\","
+    }
+  if (name)
+    {
+      if (m_s.back() == ',')
+        m_s.replace(m_s.size()-1,2,"],");
+      else
+        m_s += "],";
+    }
+}
 std::string& Json::result()
 {
   return m_s;
