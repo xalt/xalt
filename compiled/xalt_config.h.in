@@ -10,9 +10,9 @@
 #define LOGGER               "@PATH_TO_LOGGER@"
 
 #ifdef HAVE_MYSQL 
-#  define BUILD_W_MYSQL      "yes"
+#  define BUILT_W_MySQL      "yes"
 #else
-#  define BUILD_W_MYSQL      "no"
+#  define BUILT_W_MySQL      "no"
 #endif
 
 #define XALT_FILE_PREFIX     "@XALT_FILE_PREFIX@"

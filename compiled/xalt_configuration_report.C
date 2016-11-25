@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     {
 
       Json json;
-      json.add("date",                    dateStr);
+      json.add("DATE",                    dateStr);
       json.add("XALT_VERSION",            XALT_VERSION);
       json.add("XALT_GIT_VERSION",        XALT_GIT_VERSION);
       json.add("XALT_VERSION_STR",        XALT_VERSION_STR);
@@ -50,8 +50,8 @@ int main(int argc, char* argv[])
       json.add("XALT_ETC_DIR",            xalt_etc_dir);
       json.add("XALT_CONFIG_PY",          XALT_CONFIG_PY);
       json.add("XALT_SYSTEM_PATH",        XALT_SYSTEM_PATH);
-      json.add("XALT_SYSHOST_CONFIG",     XALT_SYSHOST_CONFIG);
-      json.add("XALT_SYSLOG_MSG_SZ",      XALT_SYSLOG_MSG_SZ);
+      json.add("XALT_SYSHOST_CONFIG",     SYSHOST_CONFIG);
+      json.add("XALT_SYSLOG_MSG_SZ",      SYSLOG_MSG_SZ);
       json.add("HAVE_32BIT",              HAVE_32BIT);
       json.add("USING_LIBUUID",           HAVE_WORKING_LIBUUID);
       json.add("BUILT_W_MySQL",           BUILT_W_MySQL);

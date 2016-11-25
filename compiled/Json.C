@@ -1,6 +1,7 @@
 #include "Json.h"
 #include "xalt_quotestring.h"
 #include "string.h"
+#include "stdio.h"
 
 Json::Json(Json::Kind kind)
 {
@@ -31,6 +32,26 @@ void Json::add(const char* name, std::string& value)
   m_s += "\":\"";
   m_s += value;
   m_s += "\",";
+}
+
+void Json::add(const char* name, const char * value)
+{
+  m_s += "\"";
+  m_s += name;
+  m_s += "\":\"";
+  m_s += value;
+  m_s += "\",";
+}
+
+void Json::add(const char* name, int          value)
+{
+  char buf[30];
+  sprintf(&buf[0],"%d",value);
+  m_s += "\"";
+  m_s += name;
+  m_s += "\":";
+  m_s += buf;
+  m_s += ",";
 }
 
 void Json::add_json_string(const char* name, std::string& value)
@@ -242,7 +263,7 @@ void Json::add(const char* name, int n, const char **A)
     {
       m_s += "\"";
       m_s += xalt_quotestring(A[i]);
-      m_s += "\","
+      m_s += "\",";
     }
   if (name)
     {
