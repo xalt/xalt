@@ -5,6 +5,7 @@
 #include <strings.h>
 #include <string.h>
 
+#include "epoch.h"
 #include "walkProcessTree.h"
 #include "Options.h"
 #include "Json.h"
@@ -29,24 +30,37 @@ int main(int argc, char* argv[], char* env[])
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
-
+  double  t1, t2;
+  DTable  measureT;
+  
+  t1 = epoch();
   std::vector<ProcessTree> ptA;
   walkProcessTree(options.ppid(), ptA);
+  t2 = epoch();
+  measureT["walkProcessTree"] = t2 - t1;
+    
 
   //*********************************************************************
   // Build the env table:
+  t1 = epoch();
   Table envT;
   buildEnvT(options, env, envT);
   DEBUG0(stderr,"  Built envT\n");
+  t2 = epoch();
+  measureT["buildEnvT"] = t2 - t1;
 
   //*********************************************************************
   // Extract the xalt record stored in the executable (possibly)
+  t1 = epoch();
   Table recordT;
   extractXALTRecord(options.exec(), recordT);
   DEBUG0(stderr,"  Extracted recordT from executable\n");
+  t2 = epoch();
+  measureT["extractXALTRecord"] = t2 - t1;
 
   //*********************************************************************
   // Build userT
+  t1 = epoch();
   Table  userT;
   DTable userDT;
 
@@ -54,20 +68,28 @@ int main(int argc, char* argv[], char* env[])
   if ( ! recordT.empty())
     userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"].c_str(),(char **) NULL);
   DEBUG0(stderr,"  Built userT, userDT\n");
+  t2 = epoch();
+  measureT["buildUserT"] = t2 - t1;
 
   //*********************************************************************
   // Take sha1sum of the executable
+  t1 = epoch();
   std::vector<std::string> result;
   std::string              cmd;
   cmd  = SHA1SUM " " + options.exec();
   capture(cmd, result);
   std::string sha1_exec = result[0].substr(0, result[0].find(" "));
+  t2 = epoch();
+  measureT["sha1_exec"] = t2 - t1;
   
   //*********************************************************************
   // Parse the output of ldd for this executable.
+  t1 = epoch();
   std::vector<Libpair> libA;
   parseLDD(options.exec(), libA);
   DEBUG0(stderr,"  Parsed LDD\n");
+  t2 = epoch();
+  measureT["parseLDD"] = t2 - t1;
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
@@ -101,6 +123,7 @@ int main(int argc, char* argv[], char* env[])
   json.add("xaltLinkT",recordT);
   json.add("hash_id",sha1_exec);
   json.add("libA",libA);
+  json.add("XALT_measureT",measureT);
   json.fini();
 
   DEBUG0(stderr,"  Built json string\n");

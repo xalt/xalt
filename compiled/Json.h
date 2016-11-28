@@ -15,6 +15,7 @@ public:
   ~Json() {};
   void fini();
   void add(const char* name, Table&                    t);
+  void add(const char* name, CTable&                   t);
   void add(const char* name, DTable&                   t);
   void add(const char* name, std::string&              value);
   void add(const char* name, const char*               value);

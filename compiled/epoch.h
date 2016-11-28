@@ -2,7 +2,7 @@
 #define EPOCH_H
 
 
-double epoch();
+volatile double epoch();
 
 
 #endif //EPOCH_H

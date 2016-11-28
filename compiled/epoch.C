@@ -1,7 +1,7 @@
 #include "epoch.h"
 #include <sys/time.h>
 
-double epoch()
+volatile double epoch()
 {
   struct timeval tm;
   gettimeofday(&tm, 0);

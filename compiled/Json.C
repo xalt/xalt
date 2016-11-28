@@ -1,7 +1,7 @@
 #include "Json.h"
 #include "xalt_quotestring.h"
-#include "string.h"
-#include "stdio.h"
+#include <string.h>
+#include <stdio.h>
 
 Json::Json(Json::Kind kind)
 {
@@ -127,14 +127,43 @@ void Json::add(const char* name, Table& t)
       if (v.find("() {") == 0)
         continue;
       
-      std::string::size_type idx = v.find("\"");
-      if (idx != std::string::npos)
-        v.replace(idx,2,"\\\"");
-
       m_s += "\"";
       m_s += k;
       m_s += "\":\"";
       m_s += xalt_quotestring(v.c_str());
+      m_s += "\",";
+    }
+  if (name)
+    {
+      if (m_s.back() == ',')
+        m_s.replace(m_s.size()-1,2,"},");
+      else
+        m_s += "},";
+    }
+}
+
+void Json::add(const char* name, CTable& t)
+{
+  if (name)
+    {
+      m_s += "\"";
+      m_s += name;
+      m_s += "\":{";
+    }
+  for ( auto it = t.begin(); it != t.end(); ++it )
+    {
+      const char* k = it->first;
+      if (strcmp("BASH_FUNC_",k) == 0)
+        continue;
+
+      const char* v = it->second;
+      if (strcmp("() {",v) == 0)
+        continue;
+      
+      m_s += "\"";
+      m_s += k;
+      m_s += "\":\"";
+      m_s += xalt_quotestring(v);
       m_s += "\",";
     }
   if (name)
