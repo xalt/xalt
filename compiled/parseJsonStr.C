@@ -316,6 +316,7 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
                      Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& libA,
                      std::vector<ProcessTree>& ptA)
 {
+  Table       measureT;
   jsmn_parser parser;
   jsmntok_t*  tokens;
   int         maxTokens = 1000;
@@ -375,6 +376,8 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
         processProcessTreeA(name,js, i, ntokens, tokens, ptA);
       else if (mapName == "xaltLinkT")
         processTable(name,js, i, ntokens, tokens, recordT);
+      else if (mapName == "XALT_measureT")
+        processTable(name,js, i, ntokens, tokens, measureT);
     }
   free(tokens);
 }
