@@ -194,7 +194,7 @@ $(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/xalt_syshost.c
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
 
 
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
@@ -204,9 +204,9 @@ $(DESTDIR)$(LIB)/xalt_syshost_32.o: $(CURDIR)/xalt_syshost.c
 $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	gcc -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc -m32 $(CFLAGS) $(CF_INIT) -DSTATE=REGULAR -Ibuild_h  -o $@ -c $<
+	gcc -m32 $(CFLAGS) $(CF_INIT) -DSTATE=REGULAR -DIDX=1 -Ibuild_h  -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc -m32 $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -Ibuild_h  -o $@ -c $<
+	gcc -m32 $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -DIDX=0 -Ibuild_h  -o $@ -c $<
 $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o \
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
@@ -214,7 +214,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
 	gcc -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^
 
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build_h/xalt_config.h 
-	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+	gcc $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
 
 $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
                                     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
