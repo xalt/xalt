@@ -89,13 +89,19 @@ test_descript = {
      OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy
 
 
+     g++ -o try.rd $(testDir)/try.C -rdynamic
+
+     displayThis "./try.rd"
+     ./try.rd
+
+
      displayThis "xalt_file_to_db"
      unset LD_PRELOAD
      export XALT_USERS="$USER;$outputDir"
 
      xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results result.csv --runs 7 --functions 4 --links 5
+     check_entries_db.py --dbname $DBNAME --results result.csv --runs 8 --functions 4 --links 6
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
      STATUS=`cat result.csv`; echo; echo STATUS=$STATUS; echo
    """,

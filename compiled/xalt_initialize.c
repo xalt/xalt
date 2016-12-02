@@ -149,14 +149,18 @@ void myinit(int argc, char **argv)
 
   v = getenv("__XALT_INITIAL_STATE__");
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
-  DEBUG2(stderr,"  count_initA[%d]: %d\n",IDX,count_initA[IDX])
   /* Stop tracking if any myinit routine has been called */
-  if (v && (strcmp(v,STR(STATE)) != 0) && count_initA[IDX] == 0)
+  if (v && (strcmp(v,STR(STATE)) != 0))
     {
       DEBUG2(stderr," __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
       return;
     }
 
+  if (count_initA[IDX] > 0)
+    {
+      DEBUG2(stderr,"  count_initA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_initA[IDX]);
+      return;
+    }
   count_initA[IDX]++;
 
   /* Stop tracking if my mpi rank is not zero */
@@ -338,12 +342,19 @@ void myfini()
   v = getenv("__XALT_INITIAL_STATE__");
   DEBUG1(my_stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
-  DEBUG2(my_stderr,"  count_finiA[%d]: %d\n",IDX,count_finiA[IDX]);
-  if ((!v || strcmp(v,STR(STATE)) != 0) && (count_finiA[IDX] == 0))
+  if (!v || strcmp(v,STR(STATE)) != 0)
     {
       DEBUG0(my_stderr,    "STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
       return;
     }
+
+  if (count_finiA[IDX] > 0)
+    {
+      DEBUG2(my_stderr,"  count_finiA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_finiA[IDX]);
+      return;
+    }
+
+
   count_finiA[IDX]++;
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
