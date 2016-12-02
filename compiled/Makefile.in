@@ -115,8 +115,9 @@ S2DB_C_SRC   := xalt_fgets_alloc.c jsmn.c xalt_quotestring.c
 S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2DB_C_SRC))
 
 XCR_EXEC     := $(DESTDIR)$(BIN)/xalt_configuration_report
-XCR_CXX_SRC  := xalt_configuration_report.C epoch.C
-XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC))
+XCR_CXX_SRC  := xalt_configuration_report.C epoch.C Json.C
+XCR_C_SRC    := xalt_quotestring.c
+XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC)) $(patsubst %.c, %.o, $(XCR_C_SRC))
 
 %.d: %.c
 	@set -e; rm -f $@;                                  \

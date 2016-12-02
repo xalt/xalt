@@ -17,6 +17,7 @@
 typedef std::vector<std::string>                    Vstring;
 typedef std::unordered_set<std::string>             Set;
 typedef std::unordered_map<std::string,std::string> Table;
+typedef std::unordered_map<const char*,const char*> CTable;
 typedef std::unordered_map<std::string,double>      DTable;
 typedef unsigned int                                uint;
 

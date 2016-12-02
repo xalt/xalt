@@ -139,7 +139,6 @@ AC_SUBST(PATH_TO_RM)
 AC_SUBST(PATH_TO_SHA1SUM)
 AC_SUBST(PATH_TO_UUIDGEN)
 
-AC_SUBST(BUILD_PSTREE)
 AC_SUBST(USE_CONTRIB_ARGPARSE)
 AC_SUBST(MYSQL_CONFIG)
 
@@ -257,8 +256,6 @@ else
    echo "======================================================="
    echo
 fi
-
-BUILD_PSTREE=no
 
 if test "$SYSHOST_CONFIG" = no; then
    echo

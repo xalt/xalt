@@ -4,8 +4,10 @@
 #include <iostream>
 #include <iomanip>
 #include <time.h>
+#include <stdlib.h>
+#include <string.h>
 #include "epoch.h"
-#include "stdlib.h"
+#include "Json.h"
 
 const int dateSZ=100;
 
@@ -18,7 +20,6 @@ void displayArray(const char *name, int n, const char **A)
   for (int i = 0; i < n; ++i)
     std::cout << std::setw(4) << i << ": " << A[i] << "\n";
   std::cout << "\n";
-
 }
 
 
@@ -35,6 +36,37 @@ int main(int argc, char* argv[])
   const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
+
+  if (argc == 2 && strcmp(argv[1],"--json") == 0) 
+    {
+
+      Json json;
+      json.add("DATE",                    dateStr);
+      json.add("XALT_VERSION",            XALT_VERSION);
+      json.add("XALT_GIT_VERSION",        XALT_GIT_VERSION);
+      json.add("XALT_VERSION_STR",        XALT_VERSION_STR);
+      json.add("XALT_FILE_PREFIX",        XALT_FILE_PREFIX);
+      json.add("XALT_TRANSMISSION_STYLE", transmission);
+      json.add("XALT_ETC_DIR",            xalt_etc_dir);
+      json.add("XALT_CONFIG_PY",          XALT_CONFIG_PY);
+      json.add("XALT_SYSTEM_PATH",        XALT_SYSTEM_PATH);
+      json.add("XALT_SYSHOST_CONFIG",     SYSHOST_CONFIG);
+      json.add("XALT_SYSLOG_MSG_SZ",      SYSLOG_MSG_SZ);
+      json.add("HAVE_32BIT",              HAVE_32BIT);
+      json.add("USING_LIBUUID",           HAVE_WORKING_LIBUUID);
+      json.add("BUILT_W_MySQL",           BUILT_W_MySQL);
+
+      json.add("acceptPathA", acceptPathSz, acceptPathA);
+      json.add("ignorePathA", ignorePathSz, ignorePathA);
+      json.add("hostnameA",   hostnameSz,   hostnameA);
+      json.add("acceptEnvA",  acceptEnvSz,  acceptEnvA);
+      json.add("ignoreEnvA",  ignoreEnvSz,  ignoreEnvA);
+      json.fini();
+
+      std::string jsonStr = json.result();
+      std::cout << jsonStr << std::endl;
+      return 0;
+    }
 
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "                      XALT Configuration Report\n";
@@ -53,7 +85,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ        << "\n";
   std::cout << "HAVE_32BIT:                " << HAVE_32BIT           << "\n";
   std::cout << "Using libuuid:             " << HAVE_WORKING_LIBUUID << "\n";
-  std::cout << "Build with MySQL:          " << BUILD_W_MYSQL        << "\n";
+  std::cout << "Built with MySQL:          " << BUILT_W_MySQL        << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
   displayArray("acceptPathA", acceptPathSz, acceptPathA);

@@ -15,12 +15,16 @@ public:
   ~Json() {};
   void fini();
   void add(const char* name, Table&                    t);
+  void add(const char* name, CTable&                   t);
   void add(const char* name, DTable&                   t);
   void add(const char* name, std::string&              value);
+  void add(const char* name, const char*               value);
+  void add(const char* name, int                       value);
   void add(const char* name, Vstring&                  v);
   void add(const char* name, Set&                      s);
   void add(const char* name, std::vector<Libpair>&     lddA);
   void add(const char* name, std::vector<ProcessTree>& ptA);
+  void add(const char* name, int n,     const char   **A);
   void add_json_string(const char* name, std::string&  value);
   std::string& result();
 
