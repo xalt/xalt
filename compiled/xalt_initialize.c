@@ -75,28 +75,30 @@ static const char * syshost;
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
-#define DEBUG0(fp,s)          if (xalt_tracing) fprintf(fp,s)
-#define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf(fp,s,(x1))
-#define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf(fp,s,(x1),(x2))
-#define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf(fp,s,(x1),(x2),(x3))
+#define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
+#define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
+#define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) fprintf((fp),s,(x1),(x2))
+#define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
+#define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
 
 
-#ifdef HAVE_LIBUUID
+#ifdef HAVE_WORKING_LIBUUID
 #  include <uuid/uuid.h>
-   void build_uuid_str()
+   void build_uuid_str(char * my_uuid_str)
    {
      uuid_t uuid;
      uuid_generate(uuid);
-     uuid_unparse_lower(uuid,uuid_str);
+     uuid_unparse_lower(uuid, my_uuid_str);
    }
 #else
-   void build_uuid_str()
+   void build_uuid_str(char * my_uuid_str)
    {
      const char* uuid_proc_fn = "/proc/sys/kernel/random/uuid";
      char*       buf          = NULL;
      size_t      sz           = 0;
      FILE*       fp           = fopen(uuid_proc_fn,"r");
 
+     HERE; 
      if (!fp)
        {
          fprintf(stderr,"Unable to open: %s\n",uuid_proc_fn);
@@ -104,9 +106,9 @@ static const char * syshost;
        }
 
      xalt_fgets_alloc(fp, &buf, &sz);
-     memcpy(uuid_str,buf, 36);
-     uuid_str[36] = '\0';
-     fclose(fp);
+     memcpy(my_uuid_str,buf, 36);
+     my_uuid_str[36] = '\0';
+     HERE; fclose(fp);
    }
 #endif
 
@@ -143,7 +145,7 @@ void myinit(int argc, char **argv)
 
   if (!v || strcmp(v,"yes") != 0)
     {
-      DEBUG0(stderr,"  XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
+      DEBUG0(stderr,"    XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
       return;
     }
 
@@ -152,13 +154,13 @@ void myinit(int argc, char **argv)
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
-      DEBUG2(stderr," __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
+      DEBUG2(stderr,"    __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
       return;
     }
 
   if (count_initA[IDX] > 0)
     {
-      DEBUG2(stderr,"  count_initA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_initA[IDX]);
+      DEBUG2(stderr,"    count_initA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_initA[IDX]);
       return;
     }
   count_initA[IDX]++;
@@ -168,7 +170,7 @@ void myinit(int argc, char **argv)
   DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     {
-      DEBUG0(stderr," MPI Rank is not zero -> exiting\n\n");
+      DEBUG0(stderr,"    MPI Rank is not zero -> exiting\n\n");
       return;
     }
 
@@ -189,7 +191,7 @@ void myinit(int argc, char **argv)
   DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
   if (reject_flag)
     {
-      DEBUG0(stderr,"  reject_flag is true -> exiting\n\n");
+      DEBUG0(stderr,"    reject_flag is true -> exiting\n\n");
       return;
     }
 
@@ -239,7 +241,8 @@ void myinit(int argc, char **argv)
   if (v && strcmp(v,"yes") == 0)
     background = 0;
 
-  build_uuid_str();
+  
+  build_uuid_str(uuid_str);
   gettimeofday(&tv,NULL);
   start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
@@ -319,12 +322,13 @@ void myfini()
   if (xalt_tracing)
     my_stderr = fdopen(errfd,"w");
 
-  DEBUG3(my_stderr,"\nmyfini():\n  reject_flag: %d, my_rank: %ld, start_time: %f\n", reject_flag, my_rank, start_time);
+  DEBUG4(my_stderr,"\nmyfini(%s):\n  reject_flag: %d, my_rank: %ld, start_time: %f\n", STR(STATE), reject_flag, my_rank, start_time);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag || my_rank > 0L || start_time < 0.01)
     {
-      DEBUG0(my_stderr,"    -> exiting\n\n");
+      DEBUG0(my_stderr,"    -> exiting because either of a reject or rank > 0 or start_time == 0.0\n"
+                       "       start_time is zero when myinit() also exits w/o recording\n\n");
       return;
     }
 
@@ -334,7 +338,7 @@ void myfini()
   DEBUG1(my_stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
   if (! v)
     {
-      DEBUG0(my_stderr,"   XALT_EXECUTABLE_TRACKING is turned off -> exiting \n\n");
+      DEBUG0(my_stderr,"    XALT_EXECUTABLE_TRACKING is turned off -> exiting \n\n");
       return;
     }
 
@@ -344,13 +348,13 @@ void myfini()
   DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
   if (!v || strcmp(v,STR(STATE)) != 0)
     {
-      DEBUG0(my_stderr,    "STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
+      DEBUG0(my_stderr,"    STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
       return;
     }
 
   if (count_finiA[IDX] > 0)
     {
-      DEBUG2(my_stderr,"  count_finiA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_finiA[IDX]);
+      DEBUG2(my_stderr,"    count_finiA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_finiA[IDX]);
       return;
     }
 

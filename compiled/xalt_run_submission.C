@@ -25,13 +25,15 @@ int main(int argc, char* argv[], char* env[])
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
 
-  DEBUG0(stderr,"\nxalt_run_submission() {\n");
 
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
   double  t1, t2;
   DTable  measureT;
+  
+  std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
+  DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix.c_str());
   
   t1 = epoch();
   std::vector<ProcessTree> ptA;
@@ -151,8 +153,6 @@ int main(int argc, char* argv[], char* env[])
 
           build_xaltDir(xaltDir, user, home);
 
-          std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
-  
           time = options.startTime();
           strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
 
