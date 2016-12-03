@@ -10,7 +10,8 @@
 #define HIDE _xalt_1_5
 #endif
 
-#define MY_NAME            PASTE3("_",STATE,HIDE)
+#define UNDERSCORE         _
+#define MY_NAME            PASTE3(UNDERSCORE,STATE,HIDE)
 
 // Functions
 #define abspath            PASTE2(__XALT_abspath,HIDE)
