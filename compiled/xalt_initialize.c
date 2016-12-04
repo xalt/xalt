@@ -45,31 +45,46 @@
 #include "xalt_config.h"
 #include "xalt_fgets_alloc.h"
 
+typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR} xalt_status;
+
+const char * xalt_reasonA[] = {
+  "Successful XALT tracking",
+  "XALT_EXECUTABLE_TRACKING is off",
+  "__XALT_INITIAL_STATE__ is different from STATE",
+  "XALT is trying to be twice in the same STATE",
+  "XALT only tracks rank 0, in mpi programs",
+  "XALT has found the host does not match hostname pattern",
+  "XALT has found the executable does not match path pattern",
+  "XALT has problem with a JSON string",
+};
+
 const char* xalt_syshost();
-int reject(const char *path, const char * hostname);
+xalt_status reject(const char *path, const char * hostname);
 long compute_value(const char **envA);
 void abspath(char * path, int sz);
 void myinit(int argc, char **argv);
 void myfini();
 
-#define STR(x)  STR2(x)
-#define STR2(x) #x
-static pid_t  ppid         = 0;
-static int    count_initA[2];
-static int    count_finiA[2];
-static char   uuid_str[37];
-static int    errfd	   = -1;
-static double start_time   = 0.0;
-static double end_time	   = 0.0;
-static long   my_rank	   = 0L;
-static long   my_size	   = 1L;
-static int    xalt_tracing = 0;
-static int    reject_flag  = 0;
-static int    background   = 1;
-static char * pathArg      = NULL;
-static char * ldLibPathArg = NULL;
-static char   path[PATH_MAX];
-static char * usr_cmdline;
+
+#define STR(x)   StR1_(x)
+#define StR1_(x) #x
+
+static xalt_status  reject_flag  = XALT_SUCCESS;
+static pid_t        ppid         = 0;
+static int          count_initA[2];
+static char         uuid_str[37];
+static int          errfd	   = -1;
+static double       start_time   = 0.0;
+static double       end_time	   = 0.0;
+static long         my_rank	   = 0L;
+static long         my_size	   = 1L;
+static int          xalt_tracing = 0;
+static int          background   = 1;
+static char *       pathArg      = NULL;
+static char *       ldLibPathArg = NULL;
+static char         path[PATH_MAX];
+static char *       usr_cmdline;
 static const char * syshost;
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
@@ -146,6 +161,7 @@ void myinit(int argc, char **argv)
   if (!v || strcmp(v,"yes") != 0)
     {
       DEBUG0(stderr,"    XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
+      reject_flag = XALT_TRACKING_OFF;
       return;
     }
 
@@ -155,12 +171,14 @@ void myinit(int argc, char **argv)
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
       DEBUG2(stderr,"    __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
+      reject_flag = XALT_WRONG_STATE;
       return;
     }
 
   if (count_initA[IDX] > 0)
     {
       DEBUG2(stderr,"    count_initA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_initA[IDX]);
+      reject_flag = XALT_RUN_TWICE;
       return;
     }
   count_initA[IDX]++;
@@ -171,6 +189,7 @@ void myinit(int argc, char **argv)
   if (my_rank > 0L)
     {
       DEBUG0(stderr,"    MPI Rank is not zero -> exiting\n\n");
+      reject_flag = XALT_MPI_RANK;
       return;
     }
 
@@ -189,7 +208,7 @@ void myinit(int argc, char **argv)
   abspath(path,sizeof(path));
   reject_flag = reject(path, u.nodename);
   DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
-  if (reject_flag)
+  if (reject_flag != XALT_SUCCESS)
     {
       DEBUG0(stderr,"    reject_flag is true -> exiting\n\n");
       return;
@@ -233,7 +252,7 @@ void myinit(int argc, char **argv)
   if (p > &usr_cmdline[sz])
     {
       fprintf(stderr,"XALT: Failure in building user command line json string!\n");
-      reject_flag = 1;
+      reject_flag = XALT_BAD_JSON_STR;
       return;
     }
 
@@ -322,44 +341,15 @@ void myfini()
   if (xalt_tracing)
     my_stderr = fdopen(errfd,"w");
 
-  DEBUG4(my_stderr,"\nmyfini(%s):\n  reject_flag: %d, my_rank: %ld, start_time: %f\n", STR(STATE), reject_flag, my_rank, start_time);
+  DEBUG1(my_stderr,"\nmyfini(%s):\n", STR(STATE));
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
-  if (reject_flag || my_rank > 0L || start_time < 0.01)
+  if (reject_flag != XALT_SUCCESS)
     {
-      DEBUG0(my_stderr,"    -> exiting because either of a reject or rank > 0 or start_time == 0.0\n"
-                       "       start_time is zero when myinit() also exits w/o recording\n\n");
+      DEBUG1(my_stderr,"    -> exiting because reject is set to: %s\n", xalt_reasonA[reject_flag]);
       return;
     }
 
-
-  /* Stop tracking if XALT is turned off */
-  v = getenv("XALT_EXECUTABLE_TRACKING");
-  DEBUG1(my_stderr,"  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", (v != NULL) ? v : "(NULL)");
-  if (! v)
-    {
-      DEBUG0(my_stderr,"    XALT_EXECUTABLE_TRACKING is turned off -> exiting \n\n");
-      return;
-    }
-
-  /* Stop tracking this initial state does not match STATE that was defined when this routine  was built. */
-  v = getenv("__XALT_INITIAL_STATE__");
-  DEBUG1(my_stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\"\n", (v != NULL) ? v : "(NULL)");
-  DEBUG1(my_stderr,"  STATE: \"%s\"\n", STR(STATE));
-  if (!v || strcmp(v,STR(STATE)) != 0)
-    {
-      DEBUG0(my_stderr,"    STATE and __XALT_INITIAL_STATE__ do not match -> exiting\n\n");
-      return;
-    }
-
-  if (count_finiA[IDX] > 0)
-    {
-      DEBUG2(my_stderr,"    count_finiA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_finiA[IDX]);
-      return;
-    }
-
-
-  count_finiA[IDX]++;
   gettimeofday(&tv,NULL);
   end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
 
@@ -380,7 +370,7 @@ void myfini()
   free(ldLibPathArg);
 }
 
-int reject(const char *path, const char * hostname)
+xalt_status reject(const char *path, const char * hostname)
 {
   int     i;
   regex_t regex;
@@ -389,7 +379,7 @@ int reject(const char *path, const char * hostname)
   char    msgbuf[100];
 
   if (path[0] == '\0')
-    return 1;
+    return XALT_PATH;
 
   // explain why reject happenned!!!
 
@@ -421,7 +411,7 @@ int reject(const char *path, const char * hostname)
   if (rejected_host)
     {
       DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
-      return 1;
+      return XALT_HOSTNAME;
     }
 
   DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
@@ -438,7 +428,7 @@ int reject(const char *path, const char * hostname)
       if (iret == 0)
 	{
 	  DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
-	  return 0;
+	  return XALT_SUCCESS;
 	}
       else if (iret != REG_NOMATCH)
 	{
@@ -462,7 +452,7 @@ int reject(const char *path, const char * hostname)
       if (iret == 0)
 	{
 	  DEBUG2(stderr,"    path: \"%s\" is rejected because of the ignore list: %s\n", path, ignorePathA[i]);
-	  return 1;
+	  return XALT_PATH;
 	}
       else if (iret != REG_NOMATCH)
 	{
@@ -473,7 +463,7 @@ int reject(const char *path, const char * hostname)
       regfree(&regex);
     }
   DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
-  return 0;
+  return XALT_SUCCESS;
 }
 
 long compute_value(const char **envA)
