@@ -40,15 +40,15 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
-#include "xalt_obfuscate.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "xalt_fgets_alloc.h"
+#include "xalt_obfuscate.h"
 
 typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR} xalt_status;
 
-const char * xalt_reasonA[] = {
+static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
   "XALT_EXECUTABLE_TRACKING is off",
   "__XALT_INITIAL_STATE__ is different from STATE",
@@ -72,9 +72,9 @@ void myfini();
 
 static int          countA[2];
 static char         uuid_str[37];
-static char         path[PATH_MAX];
+static char         exec_path[PATH_MAX];
 static char *       usr_cmdline;
-static const char * syshost;
+static const char * my_syshost;
 
 static xalt_status  reject_flag  = XALT_SUCCESS;
 static pid_t        ppid         = 0;
@@ -95,7 +95,6 @@ static char *       ldLibPathArg = NULL;
 #define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf((fp),s,(x1))
 #define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf((fp),s,(x1),(x2))
 #define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
-
 
 #ifdef HAVE_WORKING_LIBUUID
 #  include <uuid/uuid.h>
@@ -127,7 +126,6 @@ static char *       ldLibPathArg = NULL;
    }
 #endif
 
-
 void myinit(int argc, char **argv)
 {
   int    i;
@@ -154,8 +152,8 @@ void myinit(int argc, char **argv)
   v = getenv("XALT_EXECUTABLE_TRACKING");
   if (xalt_tracing)
     {
-      abspath(path,sizeof(path));
-      DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),path,(v != NULL) ? v : "(NULL)");
+      abspath(exec_path,sizeof(exec_path));
+      DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
     }
 
   if (!v || strcmp(v,"yes") != 0)
@@ -205,9 +203,9 @@ void myinit(int argc, char **argv)
     }
 
   /* Get full absolute path to executable */
-  abspath(path,sizeof(path));
-  reject_flag = reject(path, u.nodename);
-  DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, path, reject_flag);
+  abspath(exec_path,sizeof(exec_path));
+  reject_flag = reject(exec_path, u.nodename);
+  DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, exec_path, reject_flag);
   if (reject_flag != XALT_SUCCESS)
     {
       DEBUG0(stderr,"    reject_flag is true -> exiting\n\n");
@@ -217,7 +215,7 @@ void myinit(int argc, char **argv)
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
   errfd = dup(STDERR_FILENO);
 
-  syshost = xalt_syshost();
+  my_syshost = xalt_syshost();
 
   /* Build a json version of the user's command line. */
 
@@ -312,8 +310,8 @@ void myinit(int argc, char **argv)
 
   ppid = getppid();
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
-	   " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, syshost,
-	   start_time, path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
+	   " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+	   start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
   DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
   system(cmdline);
@@ -334,7 +332,6 @@ void myinit(int argc, char **argv)
 void myfini()
 {
   FILE * my_stderr = NULL;
-  char * v;
   char * cmdline;
   struct timeval tv;
 
@@ -358,8 +355,8 @@ void myfini()
   /* Do not background this because it might get killed by the epilog cleanup tool! */
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\""
-           " --ntasks %ld --uuid \"%s\" %s %s '%s'", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, syshost,
-	   start_time, end_time, path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
+           " --ntasks %ld --uuid \"%s\" %s %s '%s'", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+	   start_time, end_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
 
   DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
 
