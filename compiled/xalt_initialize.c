@@ -70,31 +70,31 @@ void myfini();
 #define STR(x)   StR1_(x)
 #define StR1_(x) #x
 
-static xalt_status  reject_flag  = XALT_SUCCESS;
-static pid_t        ppid         = 0;
-static int          count_initA[2];
+static int          countA[2];
 static char         uuid_str[37];
-static int          errfd	   = -1;
-static double       start_time   = 0.0;
-static double       end_time	   = 0.0;
-static long         my_rank	   = 0L;
-static long         my_size	   = 1L;
-static int          xalt_tracing = 0;
-static int          background   = 1;
-static char *       pathArg      = NULL;
-static char *       ldLibPathArg = NULL;
 static char         path[PATH_MAX];
 static char *       usr_cmdline;
 static const char * syshost;
 
+static xalt_status  reject_flag  = XALT_SUCCESS;
+static pid_t        ppid         = 0;
+static int          errfd	 = -1;
+static double       start_time   = 0.0;
+static double       end_time	 = 0.0;
+static long         my_rank	 = 0L;
+static long         my_size	 = 1L;
+static int          xalt_tracing = 0;
+static int          background   = 1;
+static char *       pathArg      = NULL;
+static char *       ldLibPathArg = NULL;
+
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 
-#define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
-#define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
-#define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) fprintf((fp),s,(x1),(x2))
-#define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
-#define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
+#define DEBUG0(fp,s)          if (xalt_tracing) fprintf((fp),s)
+#define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf((fp),s,(x1))
+#define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf((fp),s,(x1),(x2))
+#define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
 
 
 #ifdef HAVE_WORKING_LIBUUID
@@ -175,13 +175,13 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  if (count_initA[IDX] > 0)
+  if (countA[IDX] > 0)
     {
-      DEBUG2(stderr,"    count_initA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,count_initA[IDX]);
+      DEBUG2(stderr,"    countA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,countA[IDX]);
       reject_flag = XALT_RUN_TWICE;
       return;
     }
-  count_initA[IDX]++;
+  countA[IDX]++;
 
   /* Stop tracking if my mpi rank is not zero */
   my_rank = compute_value(rankA);
