@@ -153,12 +153,12 @@ void myinit(int argc, char **argv)
   if (xalt_tracing)
     {
       abspath(exec_path,sizeof(exec_path));
-      DEBUG3(stderr,"myinit(%s,%s):\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
+      DEBUG3(stderr,"myinit(%s,%s){\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
     }
 
   if (!v || strcmp(v,"yes") != 0)
     {
-      DEBUG0(stderr,"    XALT_EXECUTABLE_TRACKING is off -> exiting\n\n");
+      DEBUG0(stderr,"    XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
       reject_flag = XALT_TRACKING_OFF;
       return;
     }
@@ -168,14 +168,14 @@ void myinit(int argc, char **argv)
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
-      DEBUG2(stderr,"    __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n\n",v,STR(STATE));
+      DEBUG2(stderr,"    __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n}\n\n",v,STR(STATE));
       reject_flag = XALT_WRONG_STATE;
       return;
     }
 
   if (countA[IDX] > 0)
     {
-      DEBUG2(stderr,"    countA[%d]: %d which is greater than 0 -> exiting\n\n",IDX,countA[IDX]);
+      DEBUG2(stderr,"    countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
       reject_flag = XALT_RUN_TWICE;
       return;
     }
@@ -186,7 +186,7 @@ void myinit(int argc, char **argv)
   DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     {
-      DEBUG0(stderr,"    MPI Rank is not zero -> exiting\n\n");
+      DEBUG0(stderr,"    MPI Rank is not zero -> exiting\n}\n\n");
       reject_flag = XALT_MPI_RANK;
       return;
     }
@@ -208,7 +208,7 @@ void myinit(int argc, char **argv)
   DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, exec_path, reject_flag);
   if (reject_flag != XALT_SUCCESS)
     {
-      DEBUG0(stderr,"    reject_flag is true -> exiting\n\n");
+      DEBUG0(stderr,"    reject_flag is true -> exiting\n}\n\n");
       return;
     }
 
@@ -313,7 +313,7 @@ void myinit(int argc, char **argv)
 	   " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
 	   start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
-  DEBUG1(stderr, "  Start Tracking: %s\nEnd myinit()\n\n",cmdline);
+  DEBUG1(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
   system(cmdline);
   free(cmdline);
 
@@ -338,13 +338,13 @@ void myfini()
   if (xalt_tracing)
     {
       my_stderr = fdopen(errfd,"w");
-      DEBUG1(my_stderr,"\nmyfini(%s):\n", STR(STATE));
+      DEBUG1(my_stderr,"\nmyfini(%s){\n", STR(STATE));
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
     {
-      DEBUG1(my_stderr,"    -> exiting because reject is set to: %s\n", xalt_reasonA[reject_flag]);
+      DEBUG1(my_stderr,"    -> exiting because reject is set to: %s\n}\n\n", xalt_reasonA[reject_flag]);
       return;
     }
 
@@ -359,7 +359,7 @@ void myfini()
            " --ntasks %ld --uuid \"%s\" %s %s '%s'", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
 	   start_time, end_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
 
-  DEBUG1(my_stderr,"\nEnd Tracking: %s\n",cmdline);
+  DEBUG1(my_stderr,"\n  Recording State at end of user program:\n    %s\n\n}\n\n",cmdline);
 
   system(cmdline);
   free(cmdline);
