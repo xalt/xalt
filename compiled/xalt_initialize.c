@@ -336,9 +336,10 @@ void myfini()
   struct timeval tv;
 
   if (xalt_tracing)
-    my_stderr = fdopen(errfd,"w");
-
-  DEBUG1(my_stderr,"\nmyfini(%s):\n", STR(STATE));
+    {
+      my_stderr = fdopen(errfd,"w");
+      DEBUG1(my_stderr,"\nmyfini(%s):\n", STR(STATE));
+    }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
