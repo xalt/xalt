@@ -59,10 +59,11 @@ static const char * xalt_reasonA[] = {
   "XALT has problem with a JSON string",
 };
 
-const char* xalt_syshost();
-xalt_status reject(const char *path, const char * hostname);
-long compute_value(const char **envA);
-void abspath(char * path, int sz);
+const  char*           xalt_syshost();
+static xalt_status     reject(const char *path, const char * hostname);
+static long            compute_value(const char **envA);
+static void            abspath(char * path, int sz);
+static volatile double epoch();
 void myinit(int argc, char **argv);
 void myfini();
 
@@ -137,10 +138,8 @@ void myinit(int argc, char **argv)
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL};
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL};
 
-  struct timeval tv;
   struct utsname u;
 
-  /* Stop tracking if XALT is turned off */
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && strcmp(p_dbg,"yes") == 0)
     {
@@ -149,28 +148,52 @@ void myinit(int argc, char **argv)
       errfd = dup(STDERR_FILENO);
     }
 
-  v = getenv("XALT_EXECUTABLE_TRACKING");
+  v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
     {
-      abspath(exec_path,sizeof(exec_path));
-      DEBUG4(stderr,"%s:\n\nmyinit(%s,%s){\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n",
-             XALT_GIT_VERSION, STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
+      if (!v) 
+        {
+          time_t    now    = (time_t) epoch();
+          const int dateSZ = 100;
+          char      dateStr[dateSz];
+          strftime(dateStr, dateSZ, "%c", localtime(&now));
+          abspath(exec_path,sizeof(exec_path));
+          errno = 0;
+          if (uname(&u) != 0)
+            {
+              perror("uname");
+              exit(EXIT_FAILURE);
+            }
+          fprintf(stderr, "---------------------------------------------\n"
+                          " Date:          %s\n"
+                          " XALT Version:  %s\n"
+                          " Nodename:      %s\n"
+                          " System:        %s\n"
+                          " Release:       %s\n"
+                          " O.S. Version:  %s\n"
+                          " Machine:       %s\n"
+                          "---------------------------------------------\n",
+                  dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
+                  u.version, u.machine)
+        }
+      fprintf(stderr,"myinit(%s,%s){\n", STR(STATE),exec_path);
     }
 
-  if (!v || strcmp(v,"yes") != 0)
-    {
-      DEBUG0(stderr,"    -> XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
-      reject_flag = XALT_TRACKING_OFF;
-      return;
-    }
-
-  v = getenv("__XALT_INITIAL_STATE__");
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
       DEBUG2(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n}\n\n",v,STR(STATE));
       reject_flag = XALT_WRONG_STATE;
+      return;
+    }
+
+  /* Stop tracking if XALT is turned off */
+  v = getenv("XALT_EXECUTABLE_TRACKING");
+  if (!v || strcmp(v,"yes") != 0)
+    {
+      DEBUG0(stderr,"    -> XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
+      reject_flag = XALT_TRACKING_OFF;
       return;
     }
 
@@ -261,8 +284,7 @@ void myinit(int argc, char **argv)
 
   
   build_uuid_str(uuid_str);
-  gettimeofday(&tv,NULL);
-  start_time = tv.tv_sec + 1.e-6*tv.tv_usec;
+  start_time = epoch()
 
   /**********************************************************
    * Save LD_PRELOAD and clear it before running
@@ -334,7 +356,6 @@ void myfini()
 {
   FILE * my_stderr = NULL;
   char * cmdline;
-  struct timeval tv;
 
   if (xalt_tracing)
     {
@@ -349,9 +370,7 @@ void myfini()
       return;
     }
 
-  gettimeofday(&tv,NULL);
-  end_time = tv.tv_sec + 1.e-6*tv.tv_usec;
-
+  end_time = epoch()
   unsetenv("LD_PRELOAD");
 
   /* Do not background this because it might get killed by the epilog cleanup tool! */
@@ -495,6 +514,14 @@ void abspath(char * path, int sz)
     readlink("/proc/self/exe",path,sz-1);
   #endif
 }
+
+volatile double epoch()
+{
+  struct timeval tm;
+  gettimeofday(&tm, 0);
+  return tm.tv_sec + 1.0e-6*tm.tv_usec;
+}
+
 
 #ifdef __MACH__
   __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(myinit) *__init = myinit;
