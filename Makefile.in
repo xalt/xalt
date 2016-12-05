@@ -217,13 +217,14 @@ __installMe:
         done
 
 world_update:
-	@git status -s > /tmp/git_st_$$$$;                                 \
-        if [ -s /tmp/git_st_$$$$ ]; then                                   \
-            echo "All files not checked in => try again";                  \
-        else                                                               \
-            git push github;                                               \
-            git push --tags github;                                        \
-        fi;                                                                \
+	@git status -s > /tmp/git_st_$$$$;                                     	\
+        if [ -s /tmp/git_st_$$$$ ]; then                                       	\
+            echo "All files not checked in => try again";                      	\
+        else                                                                   	\
+	    branchName=`git status | head -n -1 | sed 's/^[# ]*On branch //g'`;	\
+            git push github $$branchName;                                      	\
+            git push --tags github;                                            	\
+        fi;                                                                    	\
         rm -f /tmp/git_st_$$$$
 
 gittag:
