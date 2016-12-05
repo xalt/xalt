@@ -217,28 +217,30 @@ __installMe:
         done
 
 world_update:
-	@git status -s > /tmp/git_st_$$$$;                                     	\
+	@git status -s > /tmp/git_st_$$$$                                     ; \
         if [ -s /tmp/git_st_$$$$ ]; then                                       	\
-            echo "All files not checked in => try again";                      	\
+            echo "All files not checked in => try again"                      ; \
         else                                                                   	\
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`;	\
-            git push github $$branchName;                                      	\
-            git push --tags github;                                            	\
-        fi;                                                                    	\
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` ; \
+            git push        github $$branchName                               ; \
+            git push --tags github $$branchName                               ; \
+        fi                                                                    ; \
         rm -f /tmp/git_st_$$$$
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/git_st_$$$$;                               	   \
+	  @git status -s > /tmp/git_st_$$$$                                      ; \
           if [ -s /tmp/git_st_$$$$ ]; then                                 	   \
-	    echo "All files not checked in => try again";                  	   \
+	    echo "All files not checked in => try again"                         ; \
 	  else                                                             	   \
 	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V); \
-	    echo "$(TAG)"                                            >  .version;  \
-            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version;  \
-            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                ;  \
-	    git push --tags                                                     ;  \
-          fi;                                                                      \
+	    echo "$(TAG)"                                            >  .version ; \
+            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version ; \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                 ; \
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`    ; \
+            git push        $$branchName                                         ; \
+	    git push --tags $$branchName                                         ; \
+          fi                                                                     ; \
           rm -f /tmp/git_st_$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
