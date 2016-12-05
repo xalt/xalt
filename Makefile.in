@@ -221,7 +221,7 @@ world_update:
         if [ -s /tmp/git_st_$$$$ ]; then                                       	\
             echo "All files not checked in => try again";                      	\
         else                                                                   	\
-	    branchName=`git status | head -n -1 | sed 's/^[# ]*On branch //g'`;	\
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`;	\
 	    echo branchName: $$branchName; \
             git push github $$branchName;                                      	\
             git push --tags github;                                            	\
