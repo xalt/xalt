@@ -91,8 +91,8 @@ test_descript = {
 
      g++ -o try.rd $(testDir)/try.C -rdynamic
 
-     displayThis "./try.rd"
-     ./try.rd
+     displayThis "XALT_TRACING=yes ./try.rd > try.log 2>&1"
+     XALT_TRACING=yes ./try.rd > try.log 2>&1
 
 
      displayThis "xalt_file_to_db"
