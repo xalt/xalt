@@ -90,10 +90,11 @@ static char *       ldLibPathArg = NULL;
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
-#define DEBUG0(fp,s)          if (xalt_tracing) fprintf((fp),s)
-#define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf((fp),s,(x1))
-#define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf((fp),s,(x1),(x2))
-#define DEBUG3(fp,s,x1,x2,x3) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
+#define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
+#define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
+#define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) fprintf((fp),s,(x1),(x2))
+#define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
+#define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
 
 #ifdef HAVE_WORKING_LIBUUID
 #  include <uuid/uuid.h>
@@ -152,7 +153,7 @@ void myinit(int argc, char **argv)
   if (xalt_tracing)
     {
       abspath(exec_path,sizeof(exec_path));
-      DEBUG3(stderr,"%s/n/nmyinit(%s,%s){\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n",
+      DEBUG4(stderr,"%s/n/nmyinit(%s,%s){\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n",
              STR(XALT_GIT_VERSION), STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
     }
 
