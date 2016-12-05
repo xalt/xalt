@@ -152,7 +152,8 @@ void myinit(int argc, char **argv)
   if (xalt_tracing)
     {
       abspath(exec_path,sizeof(exec_path));
-      DEBUG3(stderr,"myinit(%s,%s){\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n", STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
+      DEBUG3(stderr,"%s/n/nmyinit(%s,%s){\n  Test for XALT_EXECUTABLE_TRACKING: \"%s\"\n",
+             STR(XALT_GIT_VERSION), STR(STATE),exec_path,(v != NULL) ? v : "(NULL)");
     }
 
   if (!v || strcmp(v,"yes") != 0)
