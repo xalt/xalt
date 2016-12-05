@@ -90,7 +90,6 @@ static char *       ldLibPathArg = NULL;
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
-
 #define DEBUG0(fp,s)          if (xalt_tracing) fprintf((fp),s)
 #define DEBUG1(fp,s,x1)       if (xalt_tracing) fprintf((fp),s,(x1))
 #define DEBUG2(fp,s,x1,x2)    if (xalt_tracing) fprintf((fp),s,(x1),(x2))
