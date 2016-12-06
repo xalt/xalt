@@ -45,6 +45,8 @@
 #include "xalt_fgets_alloc.h"
 #include "xalt_obfuscate.h"
 
+#define DATESZ    100
+
 typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR} xalt_status;
 
@@ -154,9 +156,8 @@ void myinit(int argc, char **argv)
       if (!v) 
         {
           time_t    now    = (time_t) epoch();
-          const int dateSZ = 100;
-          char      dateStr[dateSz];
-          strftime(dateStr, dateSZ, "%c", localtime(&now));
+          char      dateStr[DATESZ];
+          strftime(dateStr, DATESZ, "%c", localtime(&now));
           abspath(exec_path,sizeof(exec_path));
           errno = 0;
           if (uname(&u) != 0)
@@ -172,9 +173,10 @@ void myinit(int argc, char **argv)
                           " Release:       %s\n"
                           " O.S. Version:  %s\n"
                           " Machine:       %s\n"
-                          "---------------------------------------------\n",
+		          " Syshost:       %s\n"
+                          "---------------------------------------------\n\n",
                   dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
-                  u.version, u.machine)
+                  u.version, u.machine, xalt_syshost());
         }
       fprintf(stderr,"myinit(%s,%s){\n", STR(STATE),exec_path);
     }
@@ -190,6 +192,7 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
+  DEBUG1(stderr,"  Test for XALT_EXECUTABLE_TRACKING: %s\n",(v != NULL) ? v : "(NULL)");
   if (!v || strcmp(v,"yes") != 0)
     {
       DEBUG0(stderr,"    -> XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
@@ -284,7 +287,7 @@ void myinit(int argc, char **argv)
 
   
   build_uuid_str(uuid_str);
-  start_time = epoch()
+  start_time = epoch();
 
   /**********************************************************
    * Save LD_PRELOAD and clear it before running
@@ -370,7 +373,7 @@ void myfini()
       return;
     }
 
-  end_time = epoch()
+  end_time = epoch();
   unsetenv("LD_PRELOAD");
 
   /* Do not background this because it might get killed by the epilog cleanup tool! */
