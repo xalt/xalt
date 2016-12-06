@@ -92,8 +92,10 @@ test_descript = {
      g++ -o try.rd $(testDir)/try.C -rdynamic
 
      displayThis "XALT_TRACING=yes ./try.rd > try.log 2>&1"
-     XALT_TRACING=yes ./try.rd > try.log 2>&1
+     XALT_TRACING=yes ./try.rd > try.PRELOAD.log 2>&1
 
+     displayThis "XALT_TRACING=yes LD_PRELOAD= ./try.rd > try.log 2>&1"
+     LD_PRELOAD= XALT_TRACING=yes ./try.rd > try.REGULAR.log 2>&1
 
      displayThis "xalt_file_to_db"
      unset LD_PRELOAD
@@ -101,7 +103,7 @@ test_descript = {
 
      xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results result.csv --runs 8 --functions 4 --links 6
+     check_entries_db.py --dbname $DBNAME --results result.csv --runs 9 --functions 4 --links 6
      finishTest -o $(resultFn) -t $(runtimeFn) result.csv
      STATUS=`cat result.csv`; echo; echo STATUS=$STATUS; echo
    """,
