@@ -66,9 +66,9 @@ static xalt_status     reject(const char *path, const char * hostname);
 static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
 static volatile double epoch();
+
 void myinit(int argc, char **argv);
 void myfini();
-
 
 #define STR(x)   StR1_(x)
 #define StR1_(x) #x
@@ -158,7 +158,6 @@ void myinit(int argc, char **argv)
           time_t    now    = (time_t) epoch();
           char      dateStr[DATESZ];
           strftime(dateStr, DATESZ, "%c", localtime(&now));
-          abspath(exec_path,sizeof(exec_path));
           errno = 0;
           if (uname(&u) != 0)
             {
@@ -178,6 +177,7 @@ void myinit(int argc, char **argv)
                   dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
                   u.version, u.machine, xalt_syshost());
         }
+      abspath(exec_path,sizeof(exec_path));
       fprintf(stderr,"myinit(%s,%s){\n", STR(STATE),exec_path);
     }
 
@@ -505,16 +505,17 @@ long compute_value(const char **envA)
 /* works for Linux and Mac OS X */
 void abspath(char * path, int sz)
 {
+  int iret;
   path[0] = '\0';
   #ifdef __MACH__
-    int iret = proc_pidpath(getpid(), path, sz-1);
+    iret = proc_pidpath(getpid(), path, sz-1);
     if (iret <= 0)
       {
 	fprintf(stderr,"PID %ud: proc_pid();\n",getpid());
 	fprintf(stderr,"    %s:\n", strerror(errno));
       }
   #else
-    readlink("/proc/self/exe",path,sz-1);
+    iret = readlink("/proc/self/exe",path,sz-1);
   #endif
 }
 
