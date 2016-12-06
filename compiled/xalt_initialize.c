@@ -66,9 +66,9 @@ static xalt_status     reject(const char *path, const char * hostname);
 static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
 static volatile double epoch();
+
 void myinit(int argc, char **argv);
 void myfini();
-
 
 #define STR(x)   StR1_(x)
 #define StR1_(x) #x
