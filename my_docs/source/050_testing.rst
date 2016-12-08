@@ -74,7 +74,7 @@ File to database issues
 
     Solution:
 
-*Simple Summary Report - Bad Entires
+* Simple Summary Report - Bad Entires
 
     Issue: Couldn't decode file (or syslog)
 

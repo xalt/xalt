@@ -17,12 +17,11 @@ As mentioned in installation, if you have mulitple machines and one XALT install
 
 Simple command to create reverse map::
 
-	spider -o jsonReverseMapT
-	$LMOD_MODULEPATH > rmapD/jsonReverseMapT.json
+	$ spider -o jsonReverseMapT $MODULEPATH > rmapD/jsonReverseMapT.json
 
 Cray script, found in the contrib/build_reverseMapT_cray/ (this example, XC30 using Lmod spider utility)::
 
-	darter_build_rmapT.sh 
+	$ darter_build_rmapT.sh 
 
 Wrappers
 ^^^^^^^^

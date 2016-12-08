@@ -18,19 +18,19 @@ XALT may be downloaded from either sourceforge or github:
 Lmod Installation
 ^^^^^^^^^^^^^^^^^^
 
-Get Lmod-5.8rc2 or greater from from sourceforge::
+Get Lmod-7.1 or greater from from sourceforge::
 
 	http://sourceforge.net/projects/lmod/files/
 
 
 
-Or get Lmod-5.8rc2 or greater from::
+Or get Lmod-7.1 or greater from::
 
-  git clone /Lmod.git
+  $ git clone TACC/Lmod/Lmod.git
 
 ::
 
-	download Lmod-<ver>.tar.gz from github.zod
+	download Lmod-<ver>.tar.gz from lmod.sourceforge.net
 
 
 
@@ -46,10 +46,10 @@ In the documentation, we install everything to $XALT_DIR.
 
 First, untar the XALT file, change the directory to XALT, configure, then install::
 
-	$ > cd xalt	
-	$ > ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR
-	$ > make
-	$ > make install
+	$ cd xalt	
+	$ ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR
+	$ make
+	$ make install
 
 Remove Job Launchers
 ---------------------
@@ -58,8 +58,8 @@ Next, remove job launchers that are not supported on your system. Launchers curr
 
 For removing launchers on a Cray, which only supports 'aprun'::
 
-	$> cd $XALT_DIR/bin
-	$> rm ibrun* mpirun mpiexec srun
+	$ cd $XALT_DIR/bin
+	$ rm ibrun* mpirun mpiexec srun
 
 For job launchers not part of XALT, you will ned to develop your own launcher which involves creating site/xalt_find_exec_xxxx.py. If you complete this step, please submit your launcher to the XALT team.
 
@@ -73,10 +73,8 @@ We suggest one name for an entire machine, but you could go with a name for each
 
 Depending on your installation and batch schedulers, you may need to edit site/xalt_site_pkg.py.
 
-XALT currently provides support for LSF, SGE, SLURM, and PBS hooks.
+XALT currently provides support for LSF, SGE, SLURM, and PBS queuing systems.
  
-
-
 
 ReverseMap & Libmap
 --------------------
@@ -93,9 +91,7 @@ ReverseMap and Libmap are stored in the same file.
 
 On a cluster::
 
-
-	$ > $LMOD_DIR/lmod/lmod/libexec/spider -o jsonReverseMapT $MODULEPATH
-	$ > {XALT_ETC_DIR}/reverseMapD/jsonReverseMapT.json
+    $ $LMOD_DIR/lmod/lmod/libexec/spider -o jsonReverseMapT $MODULEPATH > ${XALT_ETC_DIR}/reverseMapD/jsonReverseMapT.json
 
 It is important to use the same filename and directory "reverseMapD" as they
 are used by conventions in XALT.
@@ -104,26 +100,27 @@ On a Cray (XC, XE, XK), the process is a bit more involved, so a script has been
 provided under contrib/ directory in the XALT source distribution to make it
 easier. Use this script and run::
 
-	$> xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
+	$ xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
 
 Once the ReverseMap file is built, add libmap to is using as::
 
-	$> $XALT_DIR/sbin/xalt_rmap_lmap.py 
+	$ $XALT_DIR/sbin/xalt_rmap_lmap.py 
 
 Database Creation
 ------------------- 
 
 Create the file to hold database credentials::
 
-	$> cd $XALT_ETC_DIR
-	$> python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
+	$ cd $XALT_ETC_DIR
+	$ python $XALT_DIR/sbin/conf_create.py #-- create xalt_db.conf
+
 In this step, make sure that the credential you created have the necessary privileges to create tables, etc. If you want the database credential to be more restrictive,recreate the file to hold database credentials with the desired privilege account. 
 
 
 Create the database and tables for XALT (need to be run from $XALT_ETC_DIR)::
 
-	$> cd $XALT_ETC_DIR
-	$> python $XALT_DIR/sbin/createDB.py
+	$ cd $XALT_ETC_DIR
+	$ python $XALT_DIR/sbin/createDB.py
 	
 
 Next Steps - Database Set Up

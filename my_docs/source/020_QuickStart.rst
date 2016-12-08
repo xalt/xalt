@@ -34,15 +34,18 @@ You will need a file/syslog to datbase scripts for each machine for both options
 **Lmod/ReverseMap**
 
 Lmod on multiple machines
+
 - Machines have different software installations (module lists) AND you want ReverseMAP support.
 - Machines with different architectures.
+
 Lmod provides the spider utility which creates the map. TLC module system does not need to be replaced.
 
 **Intercepting: linkers and launchers**
 If you have multiple code launchers and linkers, you must choose a method to intercept them. There are currently three options for wrapping.
-	#. Aliasing  
-	#. XALT modulefile
-	#. Move the launcher
+
+#. Aliasing  
+#. XALT modulefile
+#. Move the launcher
 	
 	:doc:`021_interception`
 
@@ -53,7 +56,9 @@ In the case that you want the xalt_db.conf file hidden or secured, by overrunnin
 
 	--with-etcDir=ans 
 
-Note: you will need to have an XALT_ETC_DIR directory for each machine.
+If your site contains more than one cluster AND you have a
+common location for installation it is important that each cluster has
+its own XALT_ETC_DIR.
 
 
 Next Steps - Installation

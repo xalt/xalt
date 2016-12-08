@@ -17,7 +17,7 @@ Trend reports may be produced for:
 	
 	* :ref:`programenv`
 	
-	* :doc:`081_usecase`
+	* :doc:`080_usecase`
 
 Example queries were created for use with Darter & Mars at NICS, where xalt_run.syshost='darter'
 
