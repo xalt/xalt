@@ -12,7 +12,8 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
-from BeautifulTbl import BeautifulTbl
+from BeautifulTbl              import BeautifulTbl
+from xalt_transmission_factory import XALT_transmission_factory
 
       
 class CmdLineOptions(object):
@@ -25,7 +26,7 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     now       = time.strftime("%Y-%m-%d")
-    outputDir = os.getcwd()
+    outputdir = os.getcwd()
     parser    = argparse.ArgumentParser()
     confFn    = "xalt_db.conf"
     parser.add_argument("--dryrun",    dest='dryrun',    action="store_true", default = None,          help="dryrun")
@@ -39,21 +40,22 @@ class CmdLineOptions(object):
     return args
 
 def export_links(conn, syshost, startDate, endDate, outputdir):
-  cursorLnk = conn.cursor()
-  query     = "SELECT *, UNCOMPRESS(link_line as u_link_line \
+  cursorLnk = conn.cursor(MySQLdb.cursors.DictCursor)
+  query     = "SELECT * \
                FROM   xalt_link \
                WHERE  build_syshost like %s \
                AND    date >= %s AND date < %s"
   cursorLnk.execute(query, (syshost, startDate, endDate))
-  nRows = cursorLnk.rowcount
-  cursorObj = conn.cursor()
-  for in xrange(0, nRows):
-    linkT = cursorLnk.fetchone()
-    query = "SELECT object_path, hash_id \
-             FROM   xalt_object as xo, join_link_object as lo \
-             WHERE  lo.obj_id = xo.obj_id \
-             AND    lo.link_id = %s"
-    cursorObj.execute(query,[linkT["link_id"]])
+  nRows     = cursorLnk.rowcount
+  cursorObj = conn.cursor(MySQLdb.cursors.DictCursor)
+
+  for i in xrange(0, nRows):
+    linkT   = cursorLnk.fetchone()
+    query   = "SELECT object_path, hash_id \
+               FROM   xalt_object as xo, join_link_object as lo \
+               WHERE  lo.obj_id = xo.obj_id \
+               AND    lo.link_id = %s" % linkT["link_id"]
+    cursorObj.execute(query)
     linkA = [ [ iRow["object_path"], iRow["hash_id"] ] \
               for iRow in cursorObj.fetchall() ]
     dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",
@@ -61,8 +63,6 @@ def export_links(conn, syshost, startDate, endDate, outputdir):
     resultT                  = {}
     resultT["uuid"]          = linkT["uuid"]
     resultT['link_program']  = linkT['link_program']
-    resultT['link_path']     = linkT['link_path']
-    resultT['link_line']     = linkT['u_link_line']
     resultT['build_user']    = linkT['build_user']
     resultT['exit_code']     = linkT['exit_code']
     resultT['build_epoch']   = linkT['build_epoch']
