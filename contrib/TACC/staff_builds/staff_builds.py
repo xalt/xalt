@@ -48,11 +48,11 @@ class StaffBuilds:
     sA.append("COUNT(DISTINCT(user))                        as n_users, ")
     sA.append("exec_path ")
     sA.append("FROM  xalt_run ")
-    sA.append("WHERE syshost like %s ")
-    sA.append("AND   date >= %s AND date < %s ")
+    sA.append("WHERE syshost like '%s' ")
+    sA.append("AND   date >= '%s' AND date < '%s' ")
     sA.append('AND (')
     for staff in staffA:
-      s = "exec_path like '/%%%s%%/'" % (staff)
+      s = "exec_path like '%%%%/%s/%%%%'" % (staff)
       ssA.append(s)
 
     sA.append(" OR ".join(ssA))
@@ -60,8 +60,11 @@ class StaffBuilds:
     sA.append("GROUP by exec_path order by n_users")
 
     query  = "".join(sA)
+    query  = query % (args.syshost, startdate, enddate) 
+
+
     cursor = self.__cursor
-    cursor.execute(query, (args.syshost, startdate, enddate))
+    cursor.execute(query)
     resultA = cursor.fetchall()
     execA = self.__execA
     for corehours, n_runs, n_users, execname in resultA:
