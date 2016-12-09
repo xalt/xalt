@@ -71,7 +71,7 @@ def export_links(conn, syshost, startDate, endDate, outputdir):
     resultT['wd']            = ''
     resultT['build_syshost'] = linkT['build_syshost']
     resultT['linkA']         = linkA
-    key                      = "link.%s,%s.%s.json" % \
+    key                      = "link.%s.%s.%s.json" % \
                                (linkT['build_syshost'], dateStr, linkT['uuid'])
     resultFn = os.path.join(outputdir, key)
     print("Writing: " + resultFn)
@@ -79,6 +79,60 @@ def export_links(conn, syshost, startDate, endDate, outputdir):
     xfer.save(resultT, key)
 
 
+def export_runs(conn, syshost, startDate, endDate, outputdir):
+  cursorRun = conn.cursor(MySQLdb.cursors.DictCursor)
+  query     = "SELECT * \
+               FROM   xalt_run \
+               WHERE  build_syshost like %s \
+               AND    date >= %s AND date < %s"
+  
+  cursorRun.execute(query, (syshost, startDate, endDate))
+  nRows     = cursorLnk.rowcount
+  cursorObj = conn.cursor(MySQLdb.cursors.DictCursor)
+
+  for i in xrange(0, nRows):
+    runT    = cursorRun.fetchone()
+    query   = "SELECT object_path, hash_id \
+               FROM   xalt_object as xo, join_run_object as ro \
+               WHERE  ro.obj_id = xo.obj_id \
+               AND    ro.run_id = %s" % runT["run_id"]
+    cursorObj.execute(query)
+    libA    = [ [ iRow["object_path"], iRow["hash_id"] ] \
+                for iRow in cursorObj.fetchall() ]
+    dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",
+                            time.localtime(float(linkT['build_epoch'])))
+    userT                 = {}
+    userT["currentEpoch"] = float(runT["start_time"])
+    userT["cwd"]          = runT["cwd"]
+    userT["end_time"]     = float(runT["end_time"])
+    userT["execModify"]   = 0
+    userT["exec_epoch"]   = 0
+    userT["exec_path"]    = runT["exec_path"]
+    userT["exec_type"]    = runT["exec_type"]
+    userT["exit_status"]  = 0
+    userT["num_tasks"]    = runT["num_cores"]
+    userT["num_threads"]  = runT["num_threads"]
+    userT["run_time"]     = runT["run_time"]
+    userT["run_uuid"]     = runT["run_uuid"]
+    userT["start_date"]   = ""
+    userT["start_time"]   = float(runT["start_time"])
+    userT["syshost"]      = runT["syshost"]
+    userT["user"]         = runT["user"]
+
+    resultT               = {}
+    resultT["cmdlineA"]   = []
+    resultT["envT"]       = {}
+    resultT["hash_id"]    = runT["hash_id"]
+    resultT["libA"]       = libA
+    resultT["userT"]      = userT
+    resultT["xaltLinkT"]  = {}
+    key                   = "run.%s.%s.%s.json" % \
+                            (runT["syshost"], dateStr, runT['run_uuid'])
+    resultFn = os.path.join(outputdir, key)
+    print("Writing: " + resultFn)
+    xfer = XALT_transmission_factory.build("file", linkT['build_syshost'], "link", resultFn)
+    xfer.save(resultT, key)
+    
 
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
