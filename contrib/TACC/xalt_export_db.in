@@ -83,11 +83,11 @@ def export_runs(conn, syshost, startDate, endDate, outputdir):
   cursorRun = conn.cursor(MySQLdb.cursors.DictCursor)
   query     = "SELECT * \
                FROM   xalt_run \
-               WHERE  build_syshost like %s \
+               WHERE  syshost like %s \
                AND    date >= %s AND date < %s"
   
   cursorRun.execute(query, (syshost, startDate, endDate))
-  nRows     = cursorLnk.rowcount
+  nRows     = cursorRun.rowcount
   cursorObj = conn.cursor(MySQLdb.cursors.DictCursor)
 
   for i in xrange(0, nRows):
@@ -100,7 +100,7 @@ def export_runs(conn, syshost, startDate, endDate, outputdir):
     libA    = [ [ iRow["object_path"], iRow["hash_id"] ] \
                 for iRow in cursorObj.fetchall() ]
     dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",
-                            time.localtime(float(linkT['build_epoch'])))
+                            time.localtime(float(runT['start_time'])))
     userT                 = {}
     userT["currentEpoch"] = float(runT["start_time"])
     userT["cwd"]          = runT["cwd"]
@@ -130,7 +130,7 @@ def export_runs(conn, syshost, startDate, endDate, outputdir):
                             (runT["syshost"], dateStr, runT['run_uuid'])
     resultFn = os.path.join(outputdir, key)
     print("Writing: " + resultFn)
-    xfer = XALT_transmission_factory.build("file", linkT['build_syshost'], "link", resultFn)
+    xfer = XALT_transmission_factory.build("file", runT['syshost'], "run", resultFn)
     xfer.save(resultT, key)
     
 
@@ -151,6 +151,7 @@ def main():
   endDate   = args.endDate
   syshost   = args.syshost
   outputdir = args.outputdir
+  export_runs( conn, syshost, startDate, endDate, outputdir)
   export_links(conn, syshost, startDate, endDate, outputdir)
   
 if ( __name__ == '__main__'): main()
