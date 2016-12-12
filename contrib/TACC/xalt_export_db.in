@@ -101,36 +101,39 @@ def export_runs(conn, syshost, startDate, endDate, outputdir):
                 for iRow in cursorObj.fetchall() ]
     dateStr = time.strftime("%Y_%m_%d_%H_%M_%S",
                             time.localtime(float(runT['start_time'])))
-    userT                 = {}
-    userT["currentEpoch"] = float(runT["start_time"])
-    userT["cwd"]          = runT["cwd"]
-    userT["end_time"]     = float(runT["end_time"])
-    userT["execModify"]   = 0
-    userT["exec_epoch"]   = 0
-    userT["exec_path"]    = runT["exec_path"]
-    userT["exec_type"]    = runT["exec_type"]
-    userT["exit_status"]  = 0
-    userT["num_tasks"]    = runT["num_cores"]
-    userT["num_threads"]  = runT["num_threads"]
-    userT["run_time"]     = runT["run_time"]
-    userT["run_uuid"]     = runT["run_uuid"]
-    userT["start_date"]   = ""
-    userT["start_time"]   = float(runT["start_time"])
-    userT["syshost"]      = runT["syshost"]
-    userT["user"]         = runT["user"]
+    userT                   = {}
+    userT["currentEpoch"]   = float(runT["start_time"])
+    userT["cwd"]            = runT["cwd"]
+    userT["end_time"]       = float(runT["end_time"])
+    userT["execModify"]     = 0
+    userT["exec_epoch"]     = 0
+    userT["exec_path"]      = runT["exec_path"]
+    userT["exec_type"]      = runT["exec_type"]
+    userT["exit_status"]    = 0
+    userT["num_tasks"]      = runT["num_cores"]
+    userT["num_threads"]    = runT["num_threads"]
+    userT["run_time"]       = runT["run_time"]
+    userT["run_uuid"]       = runT["run_uuid"]
+    userT["start_date"]     = ""
+    userT["start_time"]     = float(runT["start_time"])
+    userT["syshost"]        = runT["syshost"]
+    userT["user"]           = runT["user"]
 
-    resultT               = {}
-    resultT["cmdlineA"]   = []
-    resultT["envT"]       = {}
-    resultT["hash_id"]    = runT["hash_id"]
-    resultT["libA"]       = libA
-    resultT["userT"]      = userT
-    resultT["xaltLinkT"]  = {}
-    key                   = "run.%s.%s.%s.json" % \
-                            (runT["syshost"], dateStr, runT['run_uuid'])
+    resultT                 = {}
+    xaltLinkT               = {}
+    xaltLinkT["Build.UUID"] = runT["uuid"]
+    resultT["cmdlineA"]     = []
+    resultT["envT"]         = {}
+    resultT["hash_id"]      = runT["hash_id"]
+    resultT["libA"]         = libA
+    resultT["userT"]        = userT
+    resultT["xaltLinkT"]    = xaltLinkT
+    key                     = "run.%s.%s.%s.json" % \
+                              (runT["syshost"], dateStr, runT['run_uuid'])
+
     resultFn = os.path.join(outputdir, key)
+    xfer     = XALT_transmission_factory.build("file", runT['syshost'], "run", resultFn)
     print("Writing: " + resultFn)
-    xfer = XALT_transmission_factory.build("file", runT['syshost'], "run", resultFn)
     xfer.save(resultT, key)
     
 
