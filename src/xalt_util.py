@@ -245,6 +245,9 @@ def obj2module(object_path, reverseMapT):
   @param reverseMapT: reverse map table. Paths to modules
   """
 
+  if (not object_path):
+    return None
+  
   dirNm, fn  = os.path.split(object_path)
   moduleName = None
   while (True):

@@ -175,16 +175,16 @@ class XALTdb(object):
       exit_code   = convertToTinyInt(linkT['exit_code'])
       exec_path   = linkT['exec_path']
       link_prg    = linkT['link_program'][:64]
-      link_path   = linkT['link_path']
+      link_path   = linkT.get('link_path',"UNKNOWN")
       link_mname  = obj2module(link_path,reverseMapT)
-      link_line   = json.dumps(linkT['link_line'])
+      link_line   = json.dumps(linkT.get('link_line',"[]"))
       build_user  = linkT['build_user']
       build_shost = linkT['build_syshost']
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
       cursor.execute(query, (linkT['uuid'], linkT['hash_id'],     dateTimeStr, 
-                             link_prg,      linkT['link_path'],   link_mname,
+                             link_prg,      link_path,            link_mname,
                              link_line,     build_user,           build_shost,
                              build_epoch,   exit_code,            exec_path))
 
