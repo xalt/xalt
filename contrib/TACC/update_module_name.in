@@ -3,10 +3,15 @@
 
 from __future__ import print_function
 import os, sys, re, time, datetime, argparse, MySQLdb, base64
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
 from Rmap_XALT import Rmap
 from xalt_util import *
 
-try
+try:
   import configparser
 except:
   import ConfigParser as configparser
@@ -23,7 +28,7 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
     parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
-    parser.add_argument("--syshost",      dest='syshost',      action="store",       default = "%",           help="system host name")
+    parser.add_argument("--syshost",      dest='syshost',      action="store",       default = None,          help="system host name")
     parser.add_argument("--rmapD",        dest='rmapD',        action="store",       default = "reverseMapD", help="Reverse Map Directory")
     parser.add_argument("--exclude_path", dest='exclude_path', action="append",                               help="exclude objects whose paths partially match EXCLUDE_PATH. This option can be specified multiple times.")
     args = parser.parse_args()
@@ -45,7 +50,7 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
     idName, pathName, tableName)
 
   if (args.syshost is not None):
-    query = query + " AND syshost = '%s'" % args.syshost
+    query = query + " AND syshost like '%s'" % args.syshost
 
   if (args.exclude_path is not None):
     for path in args.exclude_path:
@@ -56,7 +61,7 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
   n_update = 0
   for idx, path in resultA:
     module_name = obj2module(path, reverseMapT)
-    if (module_name != 'NULL'):
+    if (module_name):
       n_update += 1
       if (args.dryrun):
         print ('path    : ' + path)
