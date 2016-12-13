@@ -49,8 +49,13 @@ def dbConfigFn(dbname):
 def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
 
   cursor.execute("START TRANSACTION")
-  query = "Select %s, %s from %s where module_name is NULL AND date >= %s AND date < %s" % (
-    idName, pathName, tableName, args.startDate, args.endDate)
+  
+  query = "Select %s, %s from %s where module_name is NULL" % (
+    idName, pathName, tableName)
+
+  if (tableName == "xalt_run"):
+    query = query + " AND date >= '%s' AND date < '%s'" % (
+      args.startDate, args.endDate)
 
   if (args.syshost is not None):
     query = query + " AND syshost like '%s'" % args.syshost
@@ -59,6 +64,7 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
     for path in args.exclude_path:
       query = query + " AND %s not like '%%%s%%'" % (pathName, path)
   
+  print(query)
   cursor.execute(query)
   resultA  = cursor.fetchall()
   n_update = 0
