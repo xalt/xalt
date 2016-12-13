@@ -114,7 +114,7 @@ def read_tacc_acct_records():
     num_cores       = fieldA[12]
     acctT[jobId]    = { 'chargeAcct' : chargeAcct,
                         'end_time'   : end_time,
-                        'num_nodes'  : num_node,
+                        'num_nodes'  : num_nodes,
                         'num_cores'  : num_cores
                       }
   f.close()
