@@ -38,14 +38,6 @@ class CmdLineOptions(object):
     return args
 
 
-def dbConfigFn(dbname):
-  """
-  Build config file name from dbname.
-  @param dbname: db name
-  """
-  return dbname + "_db.conf"
-
-
 def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
 
   cursor.execute("START TRANSACTION")
