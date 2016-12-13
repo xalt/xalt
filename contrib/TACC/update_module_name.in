@@ -26,6 +26,7 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     now    = time.strftime("%Y-%m-%d")
+    confFn = "xalt_db.conf"
     parser = argparse.ArgumentParser()
     parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
     parser.add_argument("--confFn",       dest='confFn',       action="store" ,      default = confFn,        help="db name")
@@ -84,8 +85,7 @@ def update_module_name(args, tableName, idName, pathName, reverseMapT, cursor):
 def main():
   args     = CmdLineOptions().execute()
   config   = configparser.ConfigParser()     
-  configFn = dbConfigFn(args.dbname)
-  config.read(configFn)
+  config.read(args.confFn)
 
   conn = MySQLdb.connect \
          (config.get("MYSQL","HOST"), \
