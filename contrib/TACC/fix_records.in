@@ -105,7 +105,7 @@ def read_tacc_acct_records():
   f = open(fn,"r")
   for line in f:
     fieldA          = line.split(":")
-    if (len(fieldA) < 6):
+    if (len(fieldA) < 13):
       continue
     jobId           = fieldA[0]
     chargeAcct      = fieldA[2]
