@@ -298,7 +298,7 @@ def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
   config       = configparser.ConfigParser()     
-  config.read(confFn)
+  config.read(args.confFn)
 
   conn = MySQLdb.connect \
          (config.get("MYSQL","HOST"), \
