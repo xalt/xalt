@@ -132,22 +132,16 @@ class CmdLineOptions(object):
   
   def execute(self):
     """ Specify command line arguments and parse the command line"""
-    now    = time.time()
+    now    = time.strftime("%Y-%m-%d")
+    confFn = "xalt_db.conf"
     parser = argparse.ArgumentParser()
+
     parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
-    parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
-    parser.add_argument("--start",        dest='start',        action="store",       default = 0.0,           help="start date")
-    parser.add_argument("--end",          dest='enddate',      action="store",       default = now,           help="end date")
+    parser.add_argument("--confFn",       dest='confFn',       action="store",       default = confFn,        help="db name")
+    parser.add_argument("--start",        dest='startDate',    action="store",       default = '1970-01-01',  help="start date")
+    parser.add_argument("--end",          dest='endDate',      action="store",       default = now,           help="end date")
     args = parser.parse_args()
     return args
-
-
-def dbConfigFn(dbname):
-  """
-  Build config file name from dbname.
-  @param dbname: db name
-  """
-  return dbname + "_db.conf"
 
 
 def correct_num_cores(args, cursor, acctT):
@@ -170,18 +164,8 @@ def correct_num_cores(args, cursor, acctT):
   @param acctT:    account record
   """
 
-  if (type(args.start) == type("abc")):
-    start = args.start
-  else:
-    start   = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.start)))
-
-  if (type(args.enddate) == type("abc")):
-    enddate = args.enddate
-  else:
-    enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
-
   query = "select distinct(job_id) from xalt_run where date >= %s and date < %s"
-  cursor.execute(query,(start,enddate))
+  cursor.execute(query,(args.startDate,args.endDate))
 
   print("(2) Finished finding distinct job_ids")
   
@@ -314,8 +298,7 @@ def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
   config       = configparser.ConfigParser()     
-  configFn     = dbConfigFn(os.path.join(XALT_ETC_DIR,args.dbname))
-  config.read(configFn)
+  config.read(confFn)
 
   conn = MySQLdb.connect \
          (config.get("MYSQL","HOST"), \
