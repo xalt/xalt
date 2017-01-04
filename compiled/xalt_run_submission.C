@@ -29,13 +29,14 @@ int main(int argc, char* argv[], char* env[])
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
-  double  t1, t2;
+  double  t0, t1, t2;
   DTable  measureT;
   
   std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
   DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix.c_str());
   
-  t1 = epoch();
+  t0 = epoch();
+  t1 = t0;
   std::vector<ProcessTree> ptA;
   walkProcessTree(options.ppid(), ptA);
   t2 = epoch();
@@ -88,10 +89,13 @@ int main(int argc, char* argv[], char* env[])
   // Parse the output of ldd for this executable.
   t1 = epoch();
   std::vector<Libpair> libA;
-  parseLDD(options.exec(), libA);
+  double t_ldd, t_sha1;
+  parseLDD(options.exec(), libA, t_ldd, t_sha1);
   DEBUG0(stderr,"  Parsed LDD\n");
   t2 = epoch();
-  measureT["parseLDD"] = t2 - t1;
+  measureT["parseLDD"]      = t2 - t1;
+  measureT["parseLDD_ldd"]  = t_ldd;
+  measureT["parseLDD_sha1"] = t_sha1;
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
@@ -116,6 +120,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // If here then we need the json string.  So build it!
 
+  measureT["total"] = epoch() - t0;
   Json json;
   json.add_json_string("cmdlineA",options.userCmdLine());
   json.add("ptA", ptA);
