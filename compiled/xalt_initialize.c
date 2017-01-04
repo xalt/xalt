@@ -505,17 +505,16 @@ long compute_value(const char **envA)
 /* works for Linux and Mac OS X */
 void abspath(char * path, int sz)
 {
-  int iret;
   path[0] = '\0';
   #ifdef __MACH__
-    iret = proc_pidpath(getpid(), path, sz-1);
+    int iret = proc_pidpath(getpid(), path, sz-1);
     if (iret <= 0)
       {
 	fprintf(stderr,"PID %ud: proc_pid();\n",getpid());
 	fprintf(stderr,"    %s:\n", strerror(errno));
       }
   #else
-    iret = readlink("/proc/self/exe",path,sz-1);
+    readlink("/proc/self/exe",path,sz-1);
   #endif
 }
 
