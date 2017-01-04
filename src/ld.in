@@ -68,7 +68,7 @@ find_working_python  # This function sets MY_PYTHON
 ########################################################################
 # Find compiler calling this ld
 
-export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $EXTRACT_COMPILER)
+export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EXTRACT_COMPILER)
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -143,7 +143,7 @@ XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
 SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
-SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $SYS_HOST_CMD)
+SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
@@ -167,7 +167,7 @@ if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
 fi
 
-EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
+EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
 
 #
 # If the $ARGSRC exists then build it
@@ -180,7 +180,7 @@ else
 fi
 
 (   # start intentional fail link for function tracking
-  STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py  "${argA[@]}") 
+  STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py  "${argA[@]}") 
   $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 ) &
 
@@ -217,7 +217,7 @@ wait #-- wait for subshell to finish
       exit 0
     fi
 
-    LD_LIBRARY_PATH=$LD_LIB_PATH PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" \
+    LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" \
        "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
 
     $RM -rf $WRKDIR
