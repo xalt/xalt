@@ -21,8 +21,9 @@ buildRmapT()
   echo "<build xalt_rmapT.json and jsonReverseMapT.json files>"
   rm -rf reverseMapD
   mkdir  reverseMapD
-  $LMOD_DIR/spider -o xalt_rmapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/xalt_rmapT.json
-  $LMOD_DIR/spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > $outputDir/reverseMapD/jsonReverseMapT.json
+  MPATH=${LMOD_DEFAULT_MODULEPATH-$MODULEPATH}
+  $LMOD_DIR/spider -o xalt_rmapT      $MPATH > $outputDir/reverseMapD/xalt_rmapT.json
+  $LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
   echo "<finish>"
 }
 
