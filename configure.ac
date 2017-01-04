@@ -168,6 +168,12 @@ AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN)
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
 AC_CHECK_HEADER(uuid/uuid.h)
+AC_CHECK_HEADER(openssl/sha.h,
+                [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
+                   [Define to 1 if you have <openssl/sha.h>.])],
+                [AC_MSG_ERROR([Unable to build XALT without openssl/sha.h])])
+
+AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
 
 AC_SUBST(HAVE_WORKING_LIBUUID)
 HAVE_WORKING_LIBUUID=no
