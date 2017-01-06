@@ -13,7 +13,7 @@
 #include "xalt_config.h"
 #include "epoch.h"
 
-void compute_sha1(std::string& fn, char* sha1)
+void compute_sha1(const char* fn, char* sha1)
 {
   struct stat st;
   int fd, i;
@@ -21,7 +21,7 @@ void compute_sha1(std::string& fn, char* sha1)
   unsigned char* buffer;
   unsigned char  hash[SHA_DIGEST_LENGTH];
   
-  fd     = open(fn.c_str(), O_RDONLY);
+  fd     = open(fn, O_RDONLY);
   fstat(fd, &st);
   fileSz = st.st_size;
 
@@ -85,7 +85,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
       s2  = s.find(" (",s1);
       lib = s.substr(s1+3, s2-(s1+3)); 
       
-      compute_sha1(lib, &c_sha1[0]);
+      compute_sha1(lib.c_str(), &c_sha1[0]);
       sha1.assign(c_sha1);
 
       Libpair libpair(lib, sha1);
