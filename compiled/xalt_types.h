@@ -15,13 +15,12 @@
 #include <sys/types.h>
 
 
-struct Arg
-{
-  char        sha1[41];
-  std::string fn;
-};
-
-typedef std::vector<Arg>
+typedef std::vector<std::string>                    Vstring;
+typedef std::unordered_set<std::string>             Set;
+typedef std::unordered_map<std::string,std::string> Table;
+typedef std::unordered_map<const char*,const char*> CTable;
+typedef std::unordered_map<std::string,double>      DTable;
+typedef unsigned int                                uint;
 
 struct Libpair
 {
@@ -42,14 +41,5 @@ struct ProcessTree
   Vstring     cmdlineA;
   pid_t       pid;
 };
-
-
-typedef std::vector<Arg>                            ArgV;
-typedef std::vector<std::string>                    Vstring;
-typedef std::unordered_set<std::string>             Set;
-typedef std::unordered_map<std::string,std::string> Table;
-typedef std::unordered_map<const char*,const char*> CTable;
-typedef std::unordered_map<std::string,double>      DTable;
-typedef unsigned int                                uint;
 
 #endif //XALT_TYPES_H
