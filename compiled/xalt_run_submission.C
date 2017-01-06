@@ -29,18 +29,19 @@ int main(int argc, char* argv[], char* env[])
   Options options(argc, argv);
   char    dateStr[DATESZ];
   time_t  time;
-  double  t0, t1, t2;
+  double  t0, t1;
+  double  t_ldd, t_sha1;
   DTable  measureT;
+  bool    end_record = (options.endTime() > 0.0);
   
-  std::string suffix = (options.endTime() > 0.0) ? "zzz" : "aaa";
+  std::string suffix = end_record ? "zzz" : "aaa";
   DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix.c_str());
   
   t0 = epoch();
   t1 = t0;
   std::vector<ProcessTree> ptA;
   walkProcessTree(options.ppid(), ptA);
-  t2 = epoch();
-  measureT["walkProcessTree"] = t2 - t1;
+  measureT["04_WalkProcTree_"] = epoch() - t1;
     
 
   //*********************************************************************
@@ -49,8 +50,7 @@ int main(int argc, char* argv[], char* env[])
   Table envT;
   buildEnvT(options, env, envT);
   DEBUG0(stderr,"  Built envT\n");
-  t2 = epoch();
-  measureT["buildEnvT"] = t2 - t1;
+  measureT["03_BuildEnvT____"] = epoch() - t1;
 
   //*********************************************************************
   // Extract the xalt record stored in the executable (possibly)
@@ -58,8 +58,7 @@ int main(int argc, char* argv[], char* env[])
   Table recordT;
   extractXALTRecord(options.exec(), recordT);
   DEBUG0(stderr,"  Extracted recordT from executable\n");
-  t2 = epoch();
-  measureT["extractXALTRecord"] = t2 - t1;
+  measureT["05_ExtractXALTR_"] = epoch() - t1;
 
   //*********************************************************************
   // Build userT
@@ -71,32 +70,32 @@ int main(int argc, char* argv[], char* env[])
   if ( ! recordT.empty())
     userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"].c_str(),(char **) NULL);
   DEBUG0(stderr,"  Built userT, userDT\n");
-  t2 = epoch();
-  measureT["buildUserT"] = t2 - t1;
+  measureT["01_BuildUserT___"] = epoch() - t1;
 
   //*********************************************************************
   // Take sha1sum of the executable
   t1 = epoch();
-  std::vector<std::string> result;
-  std::string              cmd;
-  cmd  = SHA1SUM " " + options.exec();
-  capture(cmd, result);
-  std::string sha1_exec = result[0].substr(0, result[0].find(" "));
-  t2 = epoch();
-  measureT["sha1_exec"] = t2 - t1;
+  char sha1[41];
+  compute_sha1(options.exec(), &sha1[0]);
+  std::string sha1_exec = sha1;
+  measureT["02_Sha1_exec____"] = epoch() - t1;
   
   //*********************************************************************
-  // Parse the output of ldd for this executable.
-  t1 = epoch();
+  // Parse the output of ldd for this executable (start record only)
   std::vector<Libpair> libA;
-  double t_ldd, t_sha1;
-  parseLDD(options.exec(), libA, t_ldd, t_sha1);
-  DEBUG0(stderr,"  Parsed LDD\n");
-  t2 = epoch();
-  measureT["parseLDD"]      = t2 - t1;
-  measureT["parseLDD_ldd"]  = t_ldd;
-  measureT["parseLDD_sha1"] = t_sha1;
-
+  if (end_record)
+    {
+      t_ldd  = 0.0;
+      t_sha1 = 0.0;
+    }
+  else
+    {
+      parseLDD(options.exec(), libA, t_ldd, t_sha1);
+      DEBUG0(stderr,"  Parsed LDD\n");
+    }
+  measureT["06_ParseLDD_ldd_"] = t_ldd;
+  measureT["06_ParseLDD_sha1"] = t_sha1;
+  
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
@@ -119,8 +118,7 @@ int main(int argc, char* argv[], char* env[])
   
   //*********************************************************************
   // If here then we need the json string.  So build it!
-
-  measureT["total"] = epoch() - t0;
+  measureT["07____total_____"] = epoch() - t0;
   Json json;
   json.add_json_string("cmdlineA",options.userCmdLine());
   json.add("ptA", ptA);
@@ -140,7 +138,7 @@ int main(int argc, char* argv[], char* env[])
   const char* resultFn = NULL;
 
 
-  std::string key   = ((options.endTime() > 0.0) ? "run_fini_" : "run_strt_");
+  std::string key   = (end_record) ? "run_fini_" : "run_strt_";
   key.append(options.uuid());
 
   if (strcasecmp(transmission, "file") == 0)

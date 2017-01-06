@@ -13,7 +13,6 @@
 #include "xalt_config.h"
 #include "epoch.h"
 
-
 void compute_sha1(std::string& fn, char* sha1)
 {
   struct stat st;
@@ -43,10 +42,6 @@ void compute_sha1(std::string& fn, char* sha1)
   for (i = 0; i < 20; i++)
     sprintf(&sha1[i*2], "%02x", hash[i]);
 }
-
-
-
-
 
 void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, double& t_sha1)
 {

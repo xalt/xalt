@@ -770,7 +770,7 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
     finish_with_error(conn);
   
   unsigned int run_id;
-  if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id return 0 if it found [[run_id]].
+  if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id returns a non-zero if [[run_id]] is not found.
     {
       time_t startTime = userDT["start_time"];
 
@@ -786,6 +786,14 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
     }
   else
     {
+      // If the end record is loaded first then the start record is used to store shared libraries
+      if (userDT["end_time"] < 1.0)
+        {
+          time_t startTime = userDT["start_time"];
+          insert_objects(conn, "join_run_object", startTime, run_id, lddA, userT["syshost"], rmapT);
+        }
+      
+
       // There was a previous record with this run_uuid, update end time (if positive)
       update_xalt_run_record(conn, run_id, userDT) ;
     }
