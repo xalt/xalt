@@ -17,25 +17,26 @@
 struct Arg
 {
   Arg(std::string& fnIn)
-    : fn(fnIn), sha1('\0') {}
+    : fn(fnIn), sha1('') {}
   std::string fn;
-  char        sha1[41];
+  std::string sha1;
 };
 
 pthread_mutex_t mutex;
 ArgV            argV;
-int             Gwork = 0;  
-int             fnSz  = 0;
+int             iworkG = -1;  
+int             fnSzG  =  0;
 
-void compute_sha1(std::string& fn, char* sha1)
+void compute_sha1(std::string& fn, std::string& sha1)
 {
-  struct stat st;
-  int fd, i;
+  struct stat    st;
+  int            fd, i;
+  char           sha1buf[41];
   unsigned long  fileSz;
   unsigned char* buffer;
   unsigned char  hash[SHA_DIGEST_LENGTH];
   
-  fd     = open(fn, O_RDONLY);
+  fd     = open(fn.c_str(), O_RDONLY);
   fstat(fd, &st);
   fileSz = st.st_size;
 
@@ -54,20 +55,20 @@ void compute_sha1(std::string& fn, char* sha1)
   close(fd);
 
   for (i = 0; i < 20; i++)
-    sprintf(&sha1[i*2], "%02x", hash[i]);
+    sprintf(&sha1buf[i*2], "%02x", hash[i]);
+  sha1.assign(sha1buf);
 }
-
 
 void* do_work(void *t)
 {
   while(1)
     {
       pthread_mutex_lock(&mutex);
-      Gwork++;
+      iworkG++;
       pthread_mutex_unlock(&mutex);
-      if (Gwork >= fnSz)
+      if (iworkG >= fnSzG)
         break;
-      compute_sha1(argV[Gwork].fn, &argV[Gwork].results[0]);
+      compute_sha1(argV[iworkG].fn, argV[iworkG].sha1);
     }
   pthread_exit(NULL);
 }
@@ -100,13 +101,10 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
   t1 = epoch();
   std::string::size_type s1,s2;
   std::string            lib, sha1;
-  char                   c_sha1[41];
     
   int sz = result.size();
   for (int i = 0; i < sz; ++i)
     {
-      Vstring      sha1_result;
-      
       std::string& s = result[i];
       s1 = s.find("=> /");
       if (s1 == std::string::npos)
@@ -115,14 +113,43 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
       lib = s.substr(s1+3, s2-(s1+3));
       argV.push_back(Arg(lib))
     }
-  fnSz = argV.size();
-  
-      
-      compute_sha1(lib.c_str(), &c_sha1[0]);
-      sha1.assign(c_sha1);
+  fnSzG = argV.size();
 
-      Libpair libpair(lib, sha1);
+  int            nthreads = std::min(std::min(sysconf(_SC_NPROCESSORS_ONLN), fnSzG),16);
+  pthread_t*     threads  = new pthread_t[nthreads];
+  pthread_attr_t attr;
+
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+  pthread_mutex_init(&mutex, NULL);
+      
+  for (ithread = 0; ithread < nthreads; ++ithread)
+    {
+      int rc = pthread_create(&threads[ithread], &attr, do_work,
+				  (void *) &ithread);
+      if (rc)
+        {
+          printf("Error: pthread_create return code: %d\n",rc);
+          exit(-1);
+        }
+    }
+
+  for (ithread = 0; ithread < nthreads; ++ithread)
+    {
+      int rc = pthread_join(threads[ithread], NULL);
+      if (rc)
+        {
+          printf("Error: fileNo: %d pthread_join return code: %d\n",i, rc);
+          exit(-1);
+        }
+    }
+  pthread_attr_destroy(&attr);
+  pthread_mutex_destroy(&mutex);
+  for (int i = 0; i < fnSzG; ++i)
+    {
+      Libpair libpair(argV[i].fn, argV[i].sha1);
       libA.push_back(libpair);
     }
+  delete [] threads;
   t_sha1 = epoch() - t1;
 }

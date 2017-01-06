@@ -75,9 +75,9 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Take sha1sum of the executable
   t1 = epoch();
-  char sha1[41];
-  compute_sha1(options.exec().c_str(), &sha1[0]);
-  std::string sha1_exec = sha1;
+  std::string sha1_exec;
+  compute_sha1(options.exec(), sha1_exec);
+
   measureT["02_Sha1_exec____"] = epoch() - t1;
   
   //*********************************************************************
