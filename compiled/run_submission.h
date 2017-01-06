@@ -6,6 +6,7 @@
 
 void buildEnvT(Options& options, char* env[], Table& envT);
 void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT);
+void compute_sha1(std::string& fn, char* sha1);
 void extractXALTRecord(std::string& exec, Table& recordT);
 void parseLDD(std::string& exec, std::vector<Libpair>& lddA, double& t_ldd, double& t_sha1);
 void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, 
