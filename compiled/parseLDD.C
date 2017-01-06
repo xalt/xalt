@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <openssl/sha.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,7 +14,20 @@
 #include "xalt_config.h"
 #include "epoch.h"
 
-void compute_sha1(const char* fn, char* sha1)
+struct Arg
+{
+  Arg(std::string& fnIn)
+    : fn(fnIn), sha1('\0') {}
+  std::string fn;
+  char        sha1[41];
+};
+
+pthread_mutex_t mutex;
+ArgV            argV;
+int             Gwork = 0;  
+int             fnSz  = 0;
+
+void compute_sha1(std::string& fn, char* sha1)
 {
   struct stat st;
   int fd, i;
@@ -41,6 +55,21 @@ void compute_sha1(const char* fn, char* sha1)
 
   for (i = 0; i < 20; i++)
     sprintf(&sha1[i*2], "%02x", hash[i]);
+}
+
+
+void* do_work(void *t)
+{
+  while(1)
+    {
+      pthread_mutex_lock(&mutex);
+      Gwork++;
+      pthread_mutex_unlock(&mutex);
+      if (Gwork >= fnSz)
+        break;
+      compute_sha1(argV[Gwork].fn, &argV[Gwork].results[0]);
+    }
+  pthread_exit(NULL);
 }
 
 void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, double& t_sha1)
@@ -83,7 +112,11 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
       if (s1 == std::string::npos)
         continue;
       s2  = s.find(" (",s1);
-      lib = s.substr(s1+3, s2-(s1+3)); 
+      lib = s.substr(s1+3, s2-(s1+3));
+      argV.push_back(Arg(lib))
+    }
+  fnSz = argV.size();
+  
       
       compute_sha1(lib.c_str(), &c_sha1[0]);
       sha1.assign(c_sha1);
