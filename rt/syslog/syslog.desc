@@ -37,8 +37,8 @@ test_descript = {
      export XALT_USERS="$USER;$outputDir"
      xalt_syslog_to_db.py  --dbname $DBNAME --syslog_file syslog.log --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results result.csv
-     finishTest -o $(resultFn) -t $(runtimeFn) result.csv
+     check_entries_db.py --dbname $DBNAME --results results.csv
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
    """,
 
    'tests' : [
