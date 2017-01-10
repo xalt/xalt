@@ -67,6 +67,7 @@ class CmdLineOptions(object):
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
     parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
     parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
+    parser.add_argument("--full",    dest='full',      action="store_true",                            help="top number of entries to report")
     args = parser.parse_args()
     return args
 
@@ -138,7 +139,7 @@ class ExecRunLink:
     for entry in equiv_patternA:
       left  = entry[0].lower()
       right = entry[1]
-      s     = "WHEN LOWER(SUBSTRING_INDEX(xalt_run.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
+      s     = "WHEN LOWER(SUBSTRING_INDEX(t1.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (left, right)
       sA.append(s)
 
     sA.append(" ELSE SUBSTRING_INDEX(t1.exec_path,'/',-1) END ")
@@ -567,7 +568,7 @@ def main():
   print("             sys: executables managed by system-level modulefiles")
   print("      usr-script: shell scripts in a user's account")
   print("      sys-script: shell scripts managed by system-level modulefiles")
-
+  
   ############################################################
   #  Self-build vs. BuildU != RunU
   resultA = running_other_exec(cursor, args, startdate, enddate)
@@ -578,13 +579,13 @@ def main():
   print("---------------------------------------------------")
   print("")
   print(bt.build_tbl())
-
+  
   print("")
   print("-------------------")
   print("Top MPI Executables")
   print("-------------------")
   print("")
-
+  
   ############################################################
   #  Build top executable list
   execA = ExecRun(cursor)
@@ -596,14 +597,14 @@ def main():
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
-
+  
   ############################################################
   #  Report of Top EXEC by Num Jobs
   resultA, sumCH  = execA.report_by(args,"n_jobs")
   bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Executables sorted by # Jobs\n")
   print(bt.build_tbl())
-
+  
   ############################################################
   #  Report of Top EXEC by Users
   resultA, sumCH = execA.report_by(args,"n_users")
@@ -611,26 +612,60 @@ def main():
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
-  ############################################################
-  #  Report of Top EXEC by Corehours for gcc
-  resultA, sumCH = execA.report_by(args,"corehours","gcc")
-  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by Core-hours for gcc\n")
-  print(bt.build_tbl())
+  if (args.full):
+    ############################################################
+    #  Report of Top EXEC by Corehours for gcc
+    execA          = ExecRunLink(cursor)
+    execA.build(args, startdate, enddate,"gcc")
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for gcc\n")
+    print(bt.build_tbl())
 
-  ############################################################
-  #  Report of Top EXEC by Corehours for g++
-  resultA, sumCH = execA.report_by(args,"corehours","g++")
-  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by Core-hours for g++\n")
-  print(bt.build_tbl())
+    ############################################################
+    #  Report of Top EXEC by Corehours for g++
+    execA          = ExecRunLink(cursor)
+    execA.build(args, startdate, enddate,"g++")
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for g++\n")
+    print(bt.build_tbl())
   
-  ############################################################
-  #  Report of Top EXEC by Corehours for gfortran
-  resultA, sumCH = execA.report_by(args,"corehours","gfortran")
-  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by Core-hours for gfortran\n")
-  print(bt.build_tbl())
+    ############################################################
+    #  Report of Top EXEC by Corehours for gfortran
+    execA          = ExecRunLink(cursor)
+    execA.build(args, startdate, enddate,"gfortran")
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for gfortran\n")
+    print(bt.build_tbl())
+
+    ############################################################
+    #  Report of Top EXEC by Corehours for ifort
+    execA          = ExecRunLink(cursor)
+    execA.build(args, startdate, enddate,"ifort")
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for ifort\n")
+    print(bt.build_tbl())
+
+    ############################################################
+    #  Report of Top EXEC by Corehours for icc
+    execA          = ExecRunLink(cursor)
+    execA.build(args, startdate, enddate,"icc")
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for icc\n")
+    print(bt.build_tbl())
+  
+    ############################################################
+    #  Report of Top EXEC by Corehours for icpc
+    execA          = ExecRunLink(cursor)
+    execA.build(args, startdate, enddate,"icpc")
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for icpc\n")
+    print(bt.build_tbl())
 
   ############################################################
   #  Report of Top Modules by Core Hours
@@ -640,7 +675,7 @@ def main():
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
   print(bt.build_tbl())
-
+  
   ############################################################
   # Report on Compiler (linker) usage by Count
   linkA = CompilerUsageByCount(cursor)
@@ -649,7 +684,7 @@ def main():
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
   print("\nCompiler usage by Count\n")
   print(bt.build_tbl())
-
+  
   ############################################################
   # Report on Compiler (linker) usage by Core Hours
   linkA = CompilerUsageByCoreHours(cursor)
@@ -658,7 +693,7 @@ def main():
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nCompiler usage by Corehours\n")
   print(bt.build_tbl())
-
+  
   ############################################################
   #  Report of Library by short module name usage by Core Hours.
   libA = Libraries(cursor)
@@ -671,7 +706,7 @@ def main():
   print("---------------------------------------------------------------------------------")
   print("")
   print(bt.build_tbl())
-
+  
   ############################################################
   #  Report of Library usage by Core Hours.
   resultA = libA.report_by(args,"corehours")
@@ -682,7 +717,7 @@ def main():
   print("------------------------------------------------------")
   print("")
   print(bt.build_tbl())
-
+  
   ############################################################
   #  Report of Library usage by Core Hours for largemem.
   libA = Libraries(cursor)
