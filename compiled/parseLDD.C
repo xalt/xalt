@@ -17,15 +17,17 @@
 struct Arg
 {
   Arg(std::string& fnIn)
-    : fn(fnIn), sha1('') {}
+    : fn(fnIn), sha1("") {}
   std::string fn;
   std::string sha1;
 };
 
+typedef std::vector<Arg> ArgV;
+
 pthread_mutex_t mutex;
 ArgV            argV;
 int             iworkG = -1;  
-int             fnSzG  =  0;
+long            fnSzG  =  0;
 
 void compute_sha1(std::string& fn, std::string& sha1)
 {
@@ -111,11 +113,11 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
         continue;
       s2  = s.find(" (",s1);
       lib = s.substr(s1+3, s2-(s1+3));
-      argV.push_back(Arg(lib))
+      argV.push_back(Arg(lib));
     }
   fnSzG = argV.size();
 
-  int            nthreads = std::min(std::min(sysconf(_SC_NPROCESSORS_ONLN), fnSzG),16);
+  long           nthreads = std::min(std::min(sysconf(_SC_NPROCESSORS_ONLN), fnSzG),16L);
   pthread_t*     threads  = new pthread_t[nthreads];
   pthread_attr_t attr;
 
@@ -123,7 +125,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
   pthread_mutex_init(&mutex, NULL);
       
-  for (ithread = 0; ithread < nthreads; ++ithread)
+  for (long ithread = 0; ithread < nthreads; ++ithread)
     {
       int rc = pthread_create(&threads[ithread], &attr, do_work,
 				  (void *) &ithread);
@@ -134,18 +136,18 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
         }
     }
 
-  for (ithread = 0; ithread < nthreads; ++ithread)
+  for (long ithread = 0; ithread < nthreads; ++ithread)
     {
       int rc = pthread_join(threads[ithread], NULL);
       if (rc)
         {
-          printf("Error: fileNo: %d pthread_join return code: %d\n",i, rc);
+          printf("Error: pthread_join return code: %d\n", rc);
           exit(-1);
         }
     }
   pthread_attr_destroy(&attr);
   pthread_mutex_destroy(&mutex);
-  for (int i = 0; i < fnSzG; ++i)
+  for (long i = 0; i < fnSzG; ++i)
     {
       Libpair libpair(argV[i].fn, argV[i].sha1);
       libA.push_back(libpair);

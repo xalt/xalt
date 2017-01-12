@@ -142,7 +142,7 @@ ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 $(XRS_EXEC) : $(XRS_OBJS)
-	$(LINK.C) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto $(MYSQL_LDFLAGS)
+	$(LINK.C) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread $(MYSQL_LDFLAGS) 
 
 $(XGA_EXEC): $(XGA_OBJS)
 	g++ $(OPTLVL) $(WARN_FLAGS) -o $@ $^
