@@ -139,7 +139,10 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
         sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)
       num   += 1
-      f      = open(fn,"r")
+      try:
+        f      = open(fn,"r")
+      except FileNotFoundError:
+        continue
       
       try:
         runT   = json.loads(f.read())
