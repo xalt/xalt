@@ -1,4 +1,749 @@
 
+aclocal.m4,26
+dnl AC_PYTHON_MODULE(1,0
+
+configure.ac,220
+AC_INIT(1,0
+  BUILD_PSTREE=87,2554
+     versionStr=97,2739
+       major_version=100,2885
+         BUILD_PSTREE=105,3189
+      PATH_TO_PSTREE=112,3306
+USE_CONTRIB_ARGPARSE=123,3566
+  USE_CONTRIB_ARGPARSE=130,3898
+
+docs/Makefile,17
+SPHINXOPTS 5,92
+
+docs/source/index.rst,36
+XALT: Library Tracking Software2,1
+
+docs/source/020_QuickStart.rst,51
+Quick Start Guide - Prerequistes and Decisions1,0
+
+docs/source/050_testing.rst,12
+Testing1,0
+
+docs/source/060_production.rst,15
+Production1,0
+
+docs/source/080_usecase.rst,135
+Workflow Case Studies1,0
+	mysql> SELECT object_path,36,736
+	FROM xalt_object,37,775
+	WHERE join_link_object.link_id=link_id38,811
+
+docs/source/030_installation.rst,443
+Installation1,0
+On a Cray (XC, XE, XK), the process is a bit more involved,99,2933
+Once the ReverseMap file is built,105,3200
+In this step,117,3475
+In this step, make sure that the credential you created have the necessary privileges to create tables,117,3475
+In this step, make sure that the credential you created have the necessary privileges to create tables, etc. If you want the database credential to be more restrictive,117,3475
+
+docs/source/090_FAQ.rst,8
+FAQ1,0
+
+docs/source/070_datamining.rst,16
+Data Mining1,0
+
+docs/source/101_pagelisting.rst,11
+Topics1,0
+
+docs/source/021_interception.rst,25
+Interception Options1,0
+
+src/xalt_stack.py,149
+class Stack(27,1148
+  def __init__(29,1197
+  def push(36,1317
+  def pop(40,1421
+  def isEmpty(45,1534
+  def contents(49,1653
+def main(55,1798
+
+src/build_xalt_regex.py,156
+class CmdLineOptions(28,1158
+  def __init__(31,1226
+  def execute(35,1283
+def convert_to_string(47,1762
+def convert_template(55,1865
+def main(86,2514
+
+src/conf_create.in.py,226
+class CmdLineOptions(40,1463
+  def __init__(41,1493
+  def execute(44,1527
+class CreateConf(54,1988
+  def __init__(55,2014
+  def __readFromUser(61,2179
+  def __writeConfig(67,2510
+  def create(81,2888
+def main(88,2967
+
+src/xalt_file_to_db_dir.in.py,229
+def __LINE__(55,1973
+def __FILE__(61,2093
+class CmdLineOptions(64,2163
+  def __init__(67,2231
+  def execute(71,2288
+def link_json_to_db(84,3155
+def run_json_to_db(125,4151
+def passwd_generator(165,5157
+def main(193,5887
+
+src/xalt_name_mapping.py,28
+def name_mapping(239,18376
+
+src/xalt_file_to_db.in.py,229
+def __LINE__(55,1973
+def __FILE__(61,2093
+class CmdLineOptions(64,2163
+  def __init__(67,2231
+  def execute(71,2288
+def link_json_to_db(83,3031
+def run_json_to_db(124,4027
+def passwd_generator(167,5095
+def main(195,5825
+
+src/xalt_extract_linker.py,18
+def main(34,1393
+
+src/xalt_job_id_db.conf,10
+host 2,8
+
+src/progressBar.py,171
+def getTerminalSize(27,1158
+  def ioctl_GWINSZ(34,1358
+class ProgressBar(68,2094
+  def __init__(71,2161
+  def update(109,3297
+  def fini(134,3944
+def main(140,4078
+
+src/xalt_usage_report.py,929
+def shortName(45,2433
+class CmdLineOptions(55,2597
+  def __init__(58,2665
+  def execute(62,2722
+class ExecRun:ExecRun74,3665
+  def __init__(76,3735
+  def build(80,3816
+  def report_by(112,4997
+class ExecRunLink:ExecRunLink129,5570
+  def __init__(131,5644
+  def build(135,5725
+  def report_by(169,7049
+class CompilerUsageByCount:CompilerUsageByCount186,7622
+  def __init__(187,7650
+  def build(190,7730
+  def report_by(206,8264
+class CompilerUsageByCoreHours:CompilerUsageByCoreHours220,8692
+  def __init__(221,8724
+  def build(225,8805
+  def report_by(252,9752
+class Libraries:Libraries266,10302
+  def __init__(268,10320
+  def build(272,10400
+  def report_by(303,12288
+  def group_report_by(325,13062
+class ModuleExec:ModuleExec360,14192
+  def __init__(361,14210
+  def build(365,14290
+  def report_by(387,15094
+def kinds_of_jobs(401,15618
+def running_other_exec(473,18289
+def main(529,20711
+
+src/Rmap_XALT.py,93
+class Rmap(30,1343
+  def __init__(32,1440
+  def reverseMapT(75,2825
+  def libMap(83,2970
+
+src/xalt_run_submission.py,739
+def __LINE__(41,1598
+def __FILE__(47,1718
+def syshost(55,1923
+class CmdLineOptions(65,2171
+  def __init__(68,2239
+  def execute(72,2296
+class ExtractXALT(89,3125
+  def __init__(93,3243
+  def __extract_xalt_linux(133,4147
+  def __extract_xalt_darwin(157,4808
+  def xaltRecordT(178,5374
+class UserEnvT(183,5475
+  def __init__(185,5564
+  def userT(215,6791
+class UserExec(219,6882
+  def __init__(223,6958
+  def execName(251,7870
+  def execType(255,7966
+  def execEpoch(259,8074
+  def execModify(263,8184
+  def libA(267,8318
+  def hash(271,8430
+  def __computeHash(275,8522
+  def __parseLDD(280,8676
+class EnvT(318,9482
+  def __init__(320,9567
+  def envT(323,9670
+  def __reportUserEnv(326,9752
+def main(372,10914
+
+src/nics_system_name,37
+use strict;26,1106
+sub main54,1693
+
+src/xalt_helper_functions.sh,126
+LD_LIB_PATH=33,1422
+tracing_msg(70,2501
+find_real_command(90,3172
+find_working_python(155,5262
+run_real_command(176,5875
+
+src/removeDataBase.py,95
+class CmdLineOptions(36,1394
+  def __init__(39,1462
+  def execute(43,1519
+def main(50,1804
+
+src/xalt_util.py,390
+def config_logger(28,1270
+def extract_compiler(45,1717
+    def p_parent(56,2006
+    def p_parent_name(63,2235
+    def p_parent_exe(70,2495
+    def p_parent_cmdline(77,2749
+def files_in_tree(119,4041
+def which(141,4530
+  def is_exe(147,4638
+def capture(169,5194
+def carp(186,5600
+def remove_files(205,5976
+def obj_type(218,6233
+def obj2module(241,6719
+def dbConfigFn(271,7449
+
+src/build_syshost_routine.py,254
+def xalt_syshost_main(30,1191
+def hardcode(40,1427
+def add_hostname_routine(55,1702
+def read_file(89,2909
+def nth_name(119,3795
+def mapping(162,4905
+class CmdLineOptions(223,6725
+  def __init__(226,6793
+  def execute(230,6850
+def main(242,7391
+
+src/ld.in,441
+LD_LIB_PATH=37,1480
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=53,1924
+export COMP_T=71,2533
+    prev=90,3099
+    -*) optarg=96,3222
+    *) optarg=97,3240
+    *) optarg=; done=97,3240
+      USER_TRACE=106,3387
+      PrintOptions=110,3484
+      BIT32FLAG=115,3563
+      prev=119,3602
+LINKLINE_OUT=158,4635
+EPOCH=170,4907
+  OBJ=179,5183
+status=198,5790
+SHA1SUM_EXEC=207,6011
+    LD_LIBRARY_PATH=220,6304
+
+src/xalt_working_python.py,18
+def main(28,1127
+
+src/xalt_generate_linkdata.py,114
+def __LINE__(39,1531
+def __FILE__(45,1651
+def readFunctionList(55,1948
+def cleanup(73,2360
+def main(129,3564
+
+src/XALTdb.py,303
+def __LINE__(48,1844
+def __FILE__(54,1964
+def convertToTinyInt(60,2143
+class XALTdb(76,2471
+  def __init__(81,2605
+  def __readFromUser(90,2850
+  def __readConfig(98,3135
+  def connect(113,3740
+  def db(145,4831
+  def link_to_db(149,4898
+  def load_objects(226,7879
+  def run_to_db(272,9712
+
+src/new_job_id.in.py,18
+def main(35,1369
+
+src/xalt_generate_assembly.py,46
+def print_assembly(37,1447
+def main(83,3320
+
+src/createDB.in.py,95
+class CmdLineOptions(36,1394
+  def __init__(39,1462
+  def execute(43,1519
+def main(50,1804
+
+src/xalt_syslog_to_db.in.py,359
+def __LINE__(52,1876
+def __FILE__(58,1996
+class CmdLineOptions(67,2238
+  def __init__(70,2306
+  def execute(74,2363
+class Record(87,3241
+  def __init__(92,3353
+  def addBlk(106,3641
+  def completed(111,3767
+  def value(114,3834
+  def prt(117,3886
+def parseSyslogV1(145,4498
+def parseSyslogV2(160,4865
+def parseSyslog(210,6004
+def main(216,6143
+
+src/BeautifulTbl.py,117
+class BeautifulTbl(6,88
+  def __init__(7,116
+  def __build_tbl(14,461
+  def build_tbl(57,1584
+def main(140,3732
+
+src/xalt_epoch.py,18
+def main(28,1142
+
+src/xalt.model.mwb,3321
+^r»“`◊–¿-∞ªÑäÓ ˜ÓúãyóﬁôóubÛÿíæ%·3	/hKŒ£¡≈ÖwN O¬CÖÏ —àŒF…rF…15,5015
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1bhå32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%ZòZ32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎP±É32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒjŒ32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@dsm32,7610
+òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@e,ˇ” ‘Å°)@ñMì@ñM32,7610
+model-schemas: mydb,35,8943
+
+src/xalt_transmission_factory.py,407
+class XALT_transmission_factory(35,1336
+  def __init__(39,1464
+  def _syshost(50,1733
+  def _kind(57,1862
+  def build(65,2013
+class SyslogV1(89,2720
+  def __init__(94,2821
+  def save(102,3063
+class Syslog(118,3505
+  def __init__(123,3604
+  def save(132,3845
+class File(168,4866
+  def __init__(173,4953
+  def save(183,5269
+class DirectDB(205,5836
+  def __init__(210,5946
+  def save(217,6193
+
+job_launcher/xalt_find_exec_mympirun.py,18
+def main(60,1995
+
+job_launcher/xalt_syshost_ncar.py,43
+def map_syshost(35,1287
+def main(54,1625
+
+job_launcher/mpirun.lsf.in,234
+XALT_DIR=36,1422
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
+    prev=72,2580
+    -*) optarg=78,2703
+    *) optarg=79,2721
+    *) optarg=; done=79,2721
+      testMe=88,2868
+FIND_EXEC_PRGM=101,3147
+
+job_launcher/xalt_find_exec_aprun.py,18
+def main(86,2927
+
+job_launcher/ibrun.in,234
+XALT_DIR=36,1419
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
+    prev=71,2561
+    -*) optarg=77,2684
+    *) optarg=78,2702
+    *) optarg=; done=78,2702
+      testMe=87,2836
+FIND_EXEC_PRGM=100,3115
+
+job_launcher/xalt_find_exec_ibrun.py,90
+def mpi_size(55,1810
+def mpi_rank(65,2094
+def compute_ntasks(76,2368
+def main(91,2786
+
+job_launcher/xalt_site_pkg.py,50
+def translate(52,2350
+def keep_env_var(174,6287
+
+job_launcher/xalt_find_exec_ncar.py,19
+def main(102,3374
+
+job_launcher/srun.in,235
+XALT_DIR=36,1416
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1681
+    prev=78,2921
+    -*) optarg=84,3044
+    *) optarg=85,3062
+    *) optarg=; done=85,3062
+      testMe=110,3676
+FIND_EXEC_PRGM=143,4506
+
+job_launcher/aprun.in,264
+XALT_DIR=36,1419
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
+  export PBS_ACCOUNT=64,2362
+    prev=80,2869
+    -*) optarg=86,2992
+    *) optarg=87,3010
+    *) optarg=; done=87,3010
+      testMe=96,3147
+FIND_EXEC_PRGM=114,3679
+
+job_launcher/xalt_find_exec_srun.py,46
+def compute_ntasks(65,2222
+def main(80,2558
+
+job_launcher/xalt_parse_mpirun_args.py,108
+def find_cmd(30,1289
+def default_compute_ntasks(50,1788
+def find_exec(55,1913
+def parse_ntasks(118,3625
+
+job_launcher/xalt_find_exec_hydra.py,19
+def main(102,3413
+
+job_launcher/xalt_find_exec_openmpi.py,19
+def main(135,4727
+
+job_launcher/xalt_syshost_default.py,100
+def map_syshost(37,1440
+def level1_syshost(74,2372
+def level2_syshost(90,2763
+def main(116,3251
+
+job_launcher/mpirun.in,322
+XALT_DIR=36,1422
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
+  export PBS_ACCOUNT=65,2363
+    prev=80,2869
+    -*) optarg=86,2992
+    *) optarg=87,3010
+    *) optarg=; done=87,3010
+      testMe=96,3157
+FIND_EXEC_PRGM=109,3436
+    FIND_EXEC_PRGM=120,3706
+    FIND_EXEC_PRGM=123,3783
+
+job_launcher/xalt_find_exec_sgimpt.py,18
+def main(56,1878
+
+job_launcher/mympirun.in,234
+XALT_DIR=36,1428
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1693
+    prev=71,2573
+    -*) optarg=77,2696
+    *) optarg=78,2714
+    *) optarg=; done=78,2714
+      testMe=87,2863
+FIND_EXEC_PRGM=100,3142
+
+job_launcher/xalt_which_mpi.in,69
+tracing_msg(26,1091
+findName(34,1210
+mpiN=133,3412
+elif 147,3634
+
+job_launcher/xalt_syshost_TACC.py,71
+def map_syshost(39,1501
+def level2_syshost(51,1683
+def main(77,2177
+
+old/uuid/try.c,15
+int main(3,42
+
+old/c_src/cencode.c,171
+const int CHARS_PER_LINE 10,236
+void base64_init_encodestate(12,268
+char base64_encode_value(19,407
+int base64_encode_block(26,616
+int base64_encode_blockend(87,2124
+
+old/c_src/Makefile,8
+CC 1,0
+
+old/c_src/dictionary.c,414
+#define MAXVALSZ 24,830
+#define DICTMINSZ 27,915
+#define DICT_INVALID_KEY 30,965
+static void * mem_double(38,1311
+char * xstrdup(61,1947
+unsigned dictionary_hash(91,2939
+dictionary * dictionary_new(120,3800
+void dictionary_del(147,4551
+char * dictionary_get(179,5595
+int dictionary_set(225,7241
+void dictionary_unset(292,9425
+void dictionary_dump(341,10674
+#define NVALS 363,11115
+int main(364,11135
+
+old/c_src/iniparser.c,925
+#define ASCIILINESZ 14,449
+#define INI_INVALID_KEY 15,484
+typedef enum _line_status_ 23,810
+    LINE_UNPROCESSED,24,839
+    LINE_ERROR,25,861
+    LINE_EMPTY,26,877
+    LINE_COMMENT,27,893
+    LINE_SECTION,28,911
+    LINE_VALUE29,929
+} line_status 30,944
+static void strlwc(42,1323
+void strstrip(64,1958
+int iniparser_getnsec(100,3029
+char * iniparser_getsecname(131,3912
+void iniparser_dump(166,4906
+void iniparser_dump_ini(194,5733
+void iniparser_dumpsection_ini(232,6881
+int iniparser_getsecnkeys(268,7942
+char ** iniparser_getseckeys(308,9109
+char * iniparser_getstring(360,10509
+int iniparser_getint(402,11826
+double iniparser_getdouble(424,12616
+int iniparser_getboolean(465,13942
+int iniparser_find_entry(494,14983
+int iniparser_set(519,15773
+void iniparser_unset(539,16408
+static line_status iniparser_line(557,17060
+dictionary * iniparser_load(689,20564
+void iniparser_freedict(899,25885
+
+old/c_src/b64/cdecode.h,255
+#define BASE64_CDECODE_H9,220
+	step_a,13,261
+	step_a, step_b,13,261
+	step_a, step_b, step_c,13,261
+	step_a, step_b, step_c, step_d13,261
+} base64_decodestep;14,293
+	base64_decodestep step;18,332
+	char plainchar;19,357
+} base64_decodestate;20,374
+
+old/c_src/b64/cencode.h,235
+#define BASE64_CENCODE_H9,220
+	step_A,13,261
+	step_A, step_B,13,261
+	step_A, step_B, step_C13,261
+} base64_encodestep;14,285
+	base64_encodestep step;18,324
+	char result;19,349
+	int stepcount;20,363
+} base64_encodestate;21,379
+
+old/c_src/b64/encode.h,222
+#define BASE64_ENCODE_H9,234
+	struct encoder20,342
+		base64_encodestate _state;22,361
+		int _buffersize;23,390
+		encoder(25,410
+		int encode(29,489
+		int encode(34,567
+		int encode_end(39,727
+		void encode(44,832
+
+old/c_src/b64/decode.h,197
+#define BASE64_DECODE_H9,234
+	struct decoder20,341
+		base64_decodestate _state;22,360
+		int _buffersize;23,389
+		decoder(25,409
+		int decode(29,488
+		int decode(34,566
+		void decode(39,726
+
+old/c_src/iniparser.h,29
+#define _INIPARSER_H_11,271
+
+old/c_src/dictionary.h,254
+#define _DICTIONARY_H_15,499
+typedef struct _dictionary_ 45,1468
+    int             n 46,1498
+    int             size 47,1565
+    char        **  val 48,1613
+    char        **  key 49,1670
+    unsigned     *  hash 50,1725
+} dictionary 51,1789
+
+old/c_src/read_conf.c,57
+#define SIZE 6,80
+char* decode(11,147
+int main(28,457
+
+old/c_src/cdecode.c,101
+int base64_decode_value(10,236
+void base64_init_decodestate(19,707
+int base64_decode_block(25,823
+
+old/altd/etc/altd_db.conf,12
+passwd 2,8
+
+old/altd/etc/altd_log.conf,12
+keys=5,170
+
+old/altd/etc/altd.conf,27
+export ALTD_SELECT_ON=1,0
+
+old/altd/bin/aprun,688
+my (%signo,@signame)(%signo,@signame18,437
+my $i i19,459
+my $tooldir tooldir28,590
+my $real_aprun real_aprun32,670
+my $prologue_retcode prologue_retcode35,717
+    my @prologue_arglist prologue_arglist41,861
+    my $prologue_exit prologue_exit51,1148
+    my $prologue_signal prologue_signal52,1181
+my @aprun_arglist aprun_arglist64,1491
+my $aprun_exit aprun_exit67,1599
+my $aprun_signal aprun_signal68,1620
+my $pid;pid69,1642
+    my $aprun_retcode aprun_retcode74,1697
+my $epilogue_retcode epilogue_retcode93,2036
+    my @epilogue_arglist epilogue_arglist96,2132
+    my $epilogue_exit epilogue_exit107,2460
+    my $epilogue_signal epilogue_signal108,2493
+
+old/altd/bin/ld,164
+ARGV=36,1278
+  export ALTD_PATH=48,1510
+elif 65,2091
+elif 77,2485
+SCRIPT=89,2785
+WRKDIR=108,3260
+TRACEMAP=121,3583
+STATUS=155,4427
+    EXECUTABLE=180,5038
+
+old/altd/bin/pyLD.py,244
+class ALTD_LD(83,3014
+    def __init__(84,3037
+    def mysql_db_connect(108,3829
+    def table_lookup(128,4496
+    def print_assembly(156,5586
+    def update_tag_table(185,6727
+    def mysql_db_disconnect(226,8695
+    def main(242,9152
+
+old/altd/sbin/altd_db.020817352010,12
+passwd 2,8
+
+old/altd/sbin/setDb.py,72
+def readFromUser(10,113
+def readConfig(17,319
+def writeConfig(31,830
+
+old/altd/sbin/write_altd_db_conf.py,72
+def readFromUser(13,174
+def readConfig(21,381
+def writeConfig(36,893
+
+old/altd/aprun-prologue/aprun-prologue,16
+Copyright 4,27
+
+old/altd/LICENSE,15
+Copyright 1,0
+
+old/altd/dev/bin/aprun_dev,688
+my (%signo,@signame)(%signo,@signame18,437
+my $i i19,459
+my $tooldir tooldir28,590
+my $real_aprun real_aprun32,684
+my $prologue_retcode prologue_retcode35,731
+    my @prologue_arglist prologue_arglist41,874
+    my $prologue_exit prologue_exit51,1161
+    my $prologue_signal prologue_signal52,1194
+my @aprun_arglist aprun_arglist64,1504
+my $aprun_exit aprun_exit67,1612
+my $aprun_signal aprun_signal68,1633
+my $pid;pid69,1655
+    my $aprun_retcode aprun_retcode74,1710
+my $epilogue_retcode epilogue_retcode93,2049
+    my @epilogue_arglist epilogue_arglist96,2145
+    my $epilogue_exit epilogue_exit107,2473
+    my $epilogue_signal epilogue_signal108,2506
+
+old/altd/dev/bin/check_link_altd,251
+host=14,308
+echo -n "Enter $db_user password: " ; stty -echo echo19,404
+echo -n "Enter $db_user password: " ; stty -echo ; read db_passwd 19,404
+echo -n "Enter $db_user password: " ; stty -echo ; read db_passwd ; stty echo 19,404
+db_name=21,493
+
+old/altd/dev/aprun-prologue/aprun-prologue,16
+Copyright 4,27
+
+old/altd/dev/modulefiles/altd_dev,38
+setenv ALTD_SELECT_USERS jones,8,112
+
+old/altd/modulefiles/altd,39
+setenv ALTD_SELECT_USERS jones,10,369
+
+Makefile.in,907
+srcdir 22,1051
+GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=64,2409
+LIBEXEC 66,2544
+	cd $(srcdir)/compiled; $(130,6013
+	   ext=188,8150
+           oext=189,8220
+           [ "$$ext" = "in.py" ] && oext=191,8367
+           [ "$$ext" = "in.c" ]  && oext=192,8444
+                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext223,10628
+               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext225,10782
+	    true;226,10859
+	@git status -s > /tmp/git_st_$$$$;git_st_$$$$230,10957
+            git push github;234,11258
+            git push --tags github;235,11335
+        fi;236,11412
+        ifneq 240,11529
+	    echo "$(TAG)" >                                      .version;version245,11840
+            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version246,11910
+	    git push --tags tags248,12064
+          fi;249,12134
+	$(296,14812
+
+build.rtm,259
+PKG_VERSION=23,1085
+ld_repair(35,1238
+runMe(40,1317
+  myhost=72,1830
+  first=74,1890
+  export SYSHOST=75,1912
+    SUDO=80,2033
+    base=85,2107
+      base=87,2170
+    base=93,2267
+    base=99,2349
+BASE_DIR=102,2384
+MAKE=109,2479
+  MAKE=112,2546
+
+contrib/build_exec_in_tmp.patch,16
+ status=13,428
+
 contrib/argparse/argparse.py,5073
     def sorted(108,3670
 def _callable(116,3838
@@ -155,10 +900,24 @@ class ArgumentParser(1537,54313
     def exit(2347,87320
     def error(2352,87465
 
+contrib/upgradeDB_From0.7.1.py,95
+class CmdLineOptions(36,1394
+  def __init__(39,1462
+  def execute(43,1519
+def main(50,1804
+
 contrib/supporting_clang/README.txt,105
     $ cd /usr/bin; rm ld;24,842
     $ cd /usr/bin; rm ld; ln -s ld.bfd ld.x;x24,842
    setenv(28,913
+
+contrib/fix_module_name.py,144
+class CmdLineOptions(16,268
+  def __init__(19,336
+  def execute(23,393
+def dbConfigFn(33,957
+def fix_module_name(41,1087
+def main(71,2032
 
 contrib/getent/headers.py,324
 class AliasStruct(4,40
@@ -173,6 +932,9 @@ class ServiceStruct(74,1820
 class GroupStruct(84,2161
 class PasswdStruct(94,2386
 class ShadowStruct(106,2670
+
+contrib/getent/constants.py,25
+    def c_char_p(17,460
 
 contrib/getent/__init__.py,814
     def convert23(11,197
@@ -211,53 +973,6 @@ def group(369,8348
 def passwd(414,9204
 def shadow(459,10073
 
-contrib/getent/constants.py,25
-    def c_char_p(17,460
-
-contrib/fix_module_name.py,144
-class CmdLineOptions(16,268
-  def __init__(19,336
-  def execute(23,393
-def dbConfigFn(33,957
-def fix_module_name(41,1087
-def main(71,2032
-
-contrib/build_exec_in_tmp.patch,16
- status=13,428
-
-contrib/TACC/check_pytas.in,182
-import os,4,77
-import os, sys,4,77
-import os, sys, re,4,77
-from urllib2       import Request,7,126
-from urllib2       import Request, urlopen,7,126
-def field_of_science(11,206
-
-contrib/TACC/syslogTest.c,15
-int main(8,84
-
-contrib/TACC/reportQ.in,60
-PATH=4,36
-  startD=16,200
-  endD=17,218
-  fileNm=19,235
-
-contrib/TACC/update_module_name.in,281
-import os,5,78
-import os, sys,5,78
-import os, sys, re,5,78
-import os, sys, re, time,5,78
-import os, sys, re, time, datetime,5,78
-import os, sys, re, time, datetime, argparse,5,78
-import os, sys, re, time, datetime, argparse, MySQLdb,5,78
-dirNm,7,141
-dirNm, execName 7,141
-
-contrib/TACC/quarter2months.in,52
-import os,4,77
-import os, sys,4,77
-def main(6,97
-
 contrib/TACC/pytas.py,833
 class client:client13,218
     def __init__(20,422
@@ -286,8 +1001,31 @@ class client:client13,218
     def del_project_user(330,11900
     def allocation_approval(340,12298
 
-contrib/TACC/load_xalt_db,24
-export MODULEPATH=2,12
+contrib/TACC/xalt_export_db.in,537
+from __future__ import print_function,4,40
+import os,5,88
+import os, sys,5,88
+import os, sys, re,5,88
+import os, sys, re, time,5,88
+import os, sys, re, time, datetime,5,88
+import os, sys, re, time, datetime, argparse,5,88
+import os, sys, re, time, datetime, argparse, base64,5,88
+import os, sys, re, time, datetime, argparse, base64, MySQLdb,5,88
+dirNm,11,234
+dirNm, execName 11,234
+    resultT[resultT64,2674
+    userT[userT105,4465
+    xaltLinkT 123,5213
+    xaltLinkT[xaltLinkT124,5246
+    resultT[resultT127,5355
+
+contrib/TACC/check_pytas.in,182
+import os,4,77
+import os, sys,4,77
+import os, sys, re,4,77
+from urllib2       import Request,7,126
+from urllib2       import Request, urlopen,7,126
+def field_of_science(11,206
 
 contrib/TACC/kill_dups.in,342
 from __future__ import print_function,4,40
@@ -301,10 +1039,68 @@ import os, sys, re, time, datetime, argparse, base64,6,126
   import os,18,442
   def ioctl_GWINSZ(19,462
 
-contrib/TACC/README.vm,124
-   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
-   mysql> quit;16,575
-    $ ./build_hello_executables.sh sh33,887
+contrib/TACC/envReport.in,449
+from __future__ import print_function,4,40
+import os,5,88
+import os, sys,5,88
+import os, sys, re,5,88
+import os, sys, re, time,5,88
+import os, sys, re, time, datetime,5,88
+import os, sys, re, time, datetime, argparse,5,88
+import os, sys, re, time, datetime, argparse, base64,5,88
+import os, sys, re, time, datetime, argparse, base64, MySQLdb,5,88
+dirNm,11,234
+dirNm, execName 11,234
+  idx2count 61,1908
+  ja 62,1925
+  resultA 124,3384
+
+contrib/TACC/quarter2months.in,52
+import os,4,77
+import os, sys,4,77
+def main(6,97
+
+contrib/TACC/syslogTest.c,15
+int main(8,84
+
+contrib/TACC/fix_records.in,325
+import os,5,78
+import os, sys,5,78
+import os, sys, re,5,78
+import os, sys, re, time,5,78
+import os, sys, re, time, datetime,5,78
+import os, sys, re, time, datetime, argparse,5,78
+import os, sys, re, time, datetime, argparse, base64,5,78
+    parser 20,429
+  endtimeT 102,3968
+  fn 104,3985
+  f.close(close120,4515
+
+contrib/TACC/correct_num_cores.in,404
+from __future__ import print_function,4,40
+import os,6,126
+import os, sys,6,126
+import os, sys, re,6,126
+import os, sys, re, time,6,126
+import os, sys, re, time, datetime,6,126
+import os, sys, re, time, datetime, argparse,6,126
+import os, sys, re, time, datetime, argparse, base64,6,126
+  import os,18,442
+  def ioctl_GWINSZ(19,462
+  endtimeT 272,8716
+  fn 274,8733
+  f.close(close292,9346
+
+contrib/TACC/update_module_name.in,281
+import os,5,78
+import os, sys,5,78
+import os, sys, re,5,78
+import os, sys, re, time,5,78
+import os, sys, re, time, datetime,5,78
+import os, sys, re, time, datetime, argparse,5,78
+import os, sys, re, time, datetime, argparse, MySQLdb,5,78
+dirNm,7,141
+dirNm, execName 7,141
 
 contrib/TACC/monthly_report.in,471
 import os,4,77
@@ -324,49 +1120,13 @@ compiled_userDirPatternT 242,15193
           linkA 479,22873
           runT[runT500,23754
 
-contrib/TACC/correct_num_cores.in,404
-from __future__ import print_function,4,40
-import os,6,126
-import os, sys,6,126
-import os, sys, re,6,126
-import os, sys, re, time,6,126
-import os, sys, re, time, datetime,6,126
-import os, sys, re, time, datetime, argparse,6,126
-import os, sys, re, time, datetime, argparse, base64,6,126
-  import os,18,442
-  def ioctl_GWINSZ(19,462
-  endtimeT 272,8716
-  fn 274,8733
-  f.close(close292,9346
+contrib/TACC/README.vm,124
+   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
+   mysql> quit;16,575
+    $ ./build_hello_executables.sh sh33,887
 
-contrib/TACC/envReport.in,449
-from __future__ import print_function,4,40
-import os,5,88
-import os, sys,5,88
-import os, sys, re,5,88
-import os, sys, re, time,5,88
-import os, sys, re, time, datetime,5,88
-import os, sys, re, time, datetime, argparse,5,88
-import os, sys, re, time, datetime, argparse, base64,5,88
-import os, sys, re, time, datetime, argparse, base64, MySQLdb,5,88
-dirNm,11,234
-dirNm, execName 11,234
-  idx2count 61,1908
-  ja 62,1925
-  resultA 124,3384
-
-contrib/TACC/fix_records.in,325
-import os,5,78
-import os, sys,5,78
-import os, sys, re,5,78
-import os, sys, re, time,5,78
-import os, sys, re, time, datetime,5,78
-import os, sys, re, time, datetime, argparse,5,78
-import os, sys, re, time, datetime, argparse, base64,5,78
-    parser 20,429
-  endtimeT 102,3968
-  fn 104,3985
-  f.close(close120,4515
+contrib/TACC/load_xalt_db,24
+export MODULEPATH=2,12
 
 contrib/TACC/staff_builds/staff.py,28
 def xalt_tacc_staff(27,281
@@ -381,29 +1141,11 @@ class StaffBuilds:StaffBuilds37,1323
   def report_by(77,2572
 def main(91,3094
 
-contrib/TACC/xalt_export_db.in,537
-from __future__ import print_function,4,40
-import os,5,88
-import os, sys,5,88
-import os, sys, re,5,88
-import os, sys, re, time,5,88
-import os, sys, re, time, datetime,5,88
-import os, sys, re, time, datetime, argparse,5,88
-import os, sys, re, time, datetime, argparse, base64,5,88
-import os, sys, re, time, datetime, argparse, base64, MySQLdb,5,88
-dirNm,11,234
-dirNm, execName 11,234
-    resultT[resultT64,2674
-    userT[userT105,4465
-    xaltLinkT 123,5213
-    xaltLinkT[xaltLinkT124,5246
-    resultT[resultT127,5355
-
-contrib/upgradeDB_From0.7.1.py,95
-class CmdLineOptions(36,1394
-  def __init__(39,1462
-  def execute(43,1519
-def main(50,1804
+contrib/TACC/reportQ.in,60
+PATH=4,36
+  startD=16,200
+  endD=17,218
+  fileNm=19,235
 
 contrib/build_reverseMapT_cray/cray_build_rmapT.sh,154
   BASE_MODULE_PATH=32,1346
@@ -424,442 +1166,17 @@ class CmdLineOptions(50,1826
 def count_rows(67,2529
 def main(78,2775
 
-build.rtm,259
-PKG_VERSION=23,1085
-ld_repair(35,1238
-runMe(40,1317
-  myhost=72,1830
-  first=74,1890
-  export SYSHOST=75,1912
-    SUDO=80,2033
-    base=85,2107
-      base=87,2170
-    base=93,2267
-    base=99,2349
-BASE_DIR=102,2384
-MAKE=109,2479
-  MAKE=112,2546
-
-docs/source/index.rst,36
-XALT: Library Tracking Software2,1
-
-docs/source/050_testing.rst,12
-Testing1,0
-
-docs/source/080_usecase.rst,135
-Workflow Case Studies1,0
-	mysql> SELECT object_path,36,736
-	FROM xalt_object,37,775
-	WHERE join_link_object.link_id=link_id38,811
-
-docs/source/021_interception.rst,25
-Interception Options1,0
-
-docs/source/090_FAQ.rst,8
-FAQ1,0
-
-docs/source/020_QuickStart.rst,51
-Quick Start Guide - Prerequistes and Decisions1,0
-
-docs/source/070_datamining.rst,16
-Data Mining1,0
-
-docs/source/101_pagelisting.rst,11
-Topics1,0
-
-docs/source/030_installation.rst,443
-Installation1,0
-On a Cray (XC, XE, XK), the process is a bit more involved,99,2933
-Once the ReverseMap file is built,105,3200
-In this step,117,3475
-In this step, make sure that the credential you created have the necessary privileges to create tables,117,3475
-In this step, make sure that the credential you created have the necessary privileges to create tables, etc. If you want the database credential to be more restrictive,117,3475
-
-docs/source/060_production.rst,15
-Production1,0
-
-docs/build/doctrees/environment.pickle,974
-anchornameU#syslogUrefurihanchornameU#syslogUrefuri100,22357
-anchornameU#syslogUrefurihth]hh100,22357
-anchornameU#syslogUrefurihth]h]hh100,22357
-anchornameU#syslogUrefurihth]h]h]hh100,22357
-anchornameU#syslogUrefurihth]h]h]h]hh100,22357
-anchornameU#testing-parse-syslog-fileUrefurihthfileUrefuriht101,22672
-anchornameU#testing-parse-syslog-fileUrefurihth]hh101,22672
-anchornameU#testing-parse-syslog-fileUrefurihth]h]hh101,22672
-anchornameU#testing-parse-syslog-fileUrefurihth]h]h]hh101,22672
-anchornameU#testing-parse-syslog-fileUrefurihth]h]h]h]hh101,22672
-anchornameU#next-steps-data-miningUrefurihthminingUrefuriht102,23044
-anchornameU#next-steps-data-miningUrefurihth]hh102,23044
-anchornameU#next-steps-data-miningUrefurihth]h]hh102,23044
-anchornameU#next-steps-data-miningUrefurihth]h]h]hh102,23044
-anchornameU#next-steps-data-miningUrefurihth]h]h]h]hh102,23044
-
-docs/build/html/genindex.html,133
-Index &mdash; XALT 1.0 documentation10,259
-Navigation31,1105
-Indexindex46,1562
-Quick searchsearchbox62,1863
-Navigation79,2498
-
-docs/build/html/040_Database.html,362
-Database Set Up &mdash; XALT 1.0 documentation9,258
-Navigation30,1114
-Database Set Updatabase-set-up45,1627
-New for Version 2.0+new-for-version-2-047,1786
-Setting Up the Databasesetting-up-the-database56,2327
-Next Steps - Testingnext-steps-testing77,3682
-Table Of Contents89,4099
-This Page100,4573
-Quick searchsearchbox107,4799
-Navigation124,5434
-
-docs/build/html/_static/comment.png,41
-dÄr`)¨ÇB(ÜÕ∞*`/‘@4¿QhÜìp.¬U∏U7,682
-
-docs/build/html/_static/doctools.js,30
-  function highlight(69,1777
-
-docs/build/html/_static/nature.css,195
-div.sphinxsidebar h3,83,1253
-div.body h1,144,2195
-div.body h2,145,2208
-div.body h3,146,2221
-div.body h4,147,2234
-div.body h5,148,2247
-div.body p,178,3051
-div.body p, div.body dd,178,3051
-
-docs/build/html/_static/comment-bright.png,41
-dÄr`)¨ÇB(ÜÕ∞*`/‘@4¿QhÜìp.¬U∏U7,682
-
-docs/build/html/_static/comment-close.png,41
-dÄr`)¨ÇB(ÜÕ∞*`/‘@4¿QhÜìp.¬U∏U7,682
-
-docs/build/html/_static/jquery.js,2440
-function isArraylike(570,13620
-function Sizzle(787,20129
-function createCache(901,23484
-	function cache(904,23526
-function markFunction(919,23936
-function assert(928,24124
-function addHandle(950,24601
-function siblingCheck(965,24933
-function createInputPseudo(992,25442
-function createButtonPseudo(1003,25688
-function createPositionalPseudo(1014,25962
-function testContext(1037,26576
-function setFilters(2046,56477
-function toSelector(2117,58077
-function addCombinator(2127,58242
-function elementMatcher(2180,59824
-function multipleContexts(2194,60092
-function condense(2203,60281
-function setMatcher(2224,60659
-function matcherFromTokens(2317,63325
-function matcherFromGroupMatchers(2375,65330
-function winnow(2671,73750
-function sibling(3001,82124
-function createOptions(3084,84162
-function detach(3484,95135
-function completed(3498,95501
-function dataAttr(3661,99961
-function isEmptyDataObject(3693,100775
-function internalData(3709,101066
-function internalRemoveData(3798,103646
-function returnTrue(4283,116014
-function returnFalse(4287,116055
-function safeActiveElement(4291,116098
-function createSafeFragment(5300,145610
-function getAll(5352,147598
-function fixDefaultChecked(5375,148317
-function manipulationTarget(5383,148498
-function disableScript(5393,148878
-function restoreScript(5397,149003
-function setGlobalEval(5408,149237
-function cloneCopyEvent(5416,149454
-function fixCloneNodeIssues(5444,150051
-function actualDisplay(6035,166065
-function defaultDisplay(6057,166844
-function addGetHookIf(6256,172481
-	function computeStyleTests(6350,174934
-function vendorPropName(6470,179159
-function showHide(6492,179563
-function setPositiveNumber(6543,180974
-function augmentWidthOrHeight(6551,181249
-function getWidthOrHeight(6590,182491
-function Tween(6929,192544
-function createFxNow(7098,197421
-function genFx(7106,197588
-function createTween(7126,198080
-function defaultPrefilter(7140,198426
-function propFilter(7282,202430
-function Animation(7319,203359
-function addToPrefiltersOrTransports(8633,237932
-function inspectPrefiltersOrTransports(8665,238814
-	function inspect(8670,238975
-function ajaxExtend(8692,239747
-function ajaxHandleResponses(8712,240249
-function ajaxConvert(8767,241690
-		function done(9227,254072
-function buildParams(9472,259767
-function createStandardXHR(9745,268172
-function createActiveXHR(9751,268268
-function getWindow(10056,275488
-
-docs/build/html/_static/searchtools.js,69
-    function pulse(281,6367
-    function displayNextItem(409,10505
-
-docs/build/html/_static/basic.css,1112
-div.sphinxsidebar ul ul,61,964
-table.indextable dl,154,2477
-h1:hover > a.headerlink,headerlink194,3176
-h2:hover > a.headerlink,headerlink195,3201
-h3:hover > a.headerlink,headerlink196,3226
-h4:hover > a.headerlink,headerlink197,3251
-h5:hover > a.headerlink,headerlink198,3276
-h6:hover > a.headerlink,headerlink199,3301
-dt:hover > a.headerlink,headerlink200,3326
-caption:hover > a.headerlink,headerlink201,3351
-p.caption:hover > a.headerlink,headerlink202,3381
-img.align-left,left228,3719
-img.align-left, .figure.align-left,left228,3719
-img.align-right,right234,3835
-img.align-right, .figure.align-right,right234,3835
-img.align-center,center240,3955
-img.align-center, .figure.align-center,center240,3955
-table.docutils td,327,5412
-table.field-list td,335,5579
-table.footnote td,339,5651
-dd ul,406,6572
-dt:target,target416,6695
-.guilabel,guilabel468,7355
-abbr,480,7507
-code.xref,xref546,8607
-h1 code,551,8688
-h1 code, h2 code,551,8688
-h1 code, h2 code, h3 code,551,8688
-h1 code, h2 code, h3 code, h4 code,551,8688
-h1 code, h2 code, h3 code, h4 code, h5 code,551,8688
-
-docs/build/html/_static/websupport.js,921
-  function init(47,1058
-  function initEvents(52,1123
-  function setComparator(107,3097
-  function initComparator(127,3783
-  function show(147,4331
-  function hide(168,4892
-  function getComments(181,5186
-  function addComment(216,6231
-  function appendComments(275,8048
-  function insertComment(290,8561
-  function acceptComment(320,9421
-  function deleteComment(335,9833
-  function showProposal(369,10955
-  function hideProposal(375,11079
-  function showProposeChange(381,11201
-  function hideProposeChange(390,11441
-  function toggleCommentMarkupBox(398,11642
-  function handleReSort(403,11771
-  function handleVote(426,12505
-  function openReply(488,14314
-  function closeReply(516,15053
-  function sortComments(530,15389
-  function getChildren(542,15691
-  function createCommentDiv(555,16087
-  function renderTemplate(593,17608
-    function handle(596,17704
-  function showError(610,18092
-
-docs/build/html/060_production.html,382
-Production &mdash; XALT 1.0 documentation9,258
-Navigation30,1109
-Productionproduction45,1617
-reverseMapreversemap47,1757
-Wrapperswrappers66,3365
-syslog71,3800
-Testing Parse syslog filetesting-parse-syslog-file79,4344
-Next Steps - Data Miningnext-steps-data-mining92,5252
-Table Of Contents104,5684
-This Page117,6280
-Quick searchsearchbox124,6508
-Navigation141,7143
-
-docs/build/html/070_datamining.html,465
-Data Mining &mdash; XALT 1.0 documentation9,258
-Navigation30,1110
-Data Miningdata-mining45,1619
-Module File Usagemodulefilelabel61,2776
-Library Usagelibrary107,5167
-Application Usageapplication120,5891
-Provenance and Reproducibilityprovenance123,6102
-Usage Statsticsstats133,6653
-Restoring the Program Environmentprogramenv136,6857
-Nextnext139,7073
-Table Of Contents151,7474
-This Page166,8291
-Quick searchsearchbox173,8519
-Navigation190,9154
-
-docs/build/html/index.html,522
-XALT: Library Tracking Software &mdash; XALT 1.0 documentation9,258
-Navigation31,1227
-XALT: Library Tracking Softwarexalt-library-tracking-software49,1912
-PURPOSEpurpose51,2090
-OVERVIEWoverview55,2330
-New in Version 2.0+new-in-version-2-059,2861
-Installing XALT - Getting Startedinstalling-xalt-getting-started64,3352
-User Guide for  XALTuser-guide-for-xalt81,4432
-Indices and tablesindices-and-tables86,4796
-Table Of Contents99,5288
-This Page116,6184
-Quick searchsearchbox123,6403
-Navigation140,7038
-
-docs/build/html/080_usecase.html,260
-Workflow Case Studies &mdash; XALT 1.0 documentation9,258
-Navigation30,1120
-Workflow Case Studiesworkflow-case-studies45,1639
-Program Usageprogramusage50,2176
-Table Of Contents81,3287
-This Page90,3564
-Quick searchsearchbox97,3789
-Navigation114,4424
-
-docs/build/html/030_installation.html,557
-Installation &mdash; XALT 1.0 documentation9,258
-Navigation30,1111
-Installationinstallation45,1621
-Install XALTinstall-xalt49,2033
-Lmod Installationlmod57,2538
-Installation Stepsinstallation-steps76,3480
-Remove Job Launchersremove-job-launchers86,3972
-Manual Stepsmanual-steps96,4710
-ReverseMap &amp; Libmapreversemap-libmap103,5301
-Database Creationdatabase-creation127,6893
-Next Steps - Database Set Upnext-steps-database-set-up142,7765
-Table Of Contents154,8207
-This Page172,9117
-Quick searchsearchbox179,9347
-Navigation196,9982
-
-docs/build/html/010_user.html,195
-User Manual for XALT &mdash; XALT 1.0 documentation9,258
-Navigation30,1119
-User Manual for XALTuser-manual-for-xalt45,1637
-This Page55,1982
-Quick searchsearchbox62,2204
-Navigation79,2839
-
-docs/build/html/objects.inv,11
-x⁄x5,115
-
-docs/build/html/050_testing.html,388
-Testing &mdash; XALT 1.0 documentation9,258
-Navigation30,1106
-Testingtesting45,1611
-Setupsetup47,1740
-Testingid152,2027
-Common Issues and Troubleshootingtroubleshooting75,3520
-File to database issuestroubleshooting298,4343
-Next Steps - Productionnext-steps-production117,5037
-Table Of Contents129,5466
-This Page141,5992
-Quick searchsearchbox148,6217
-Navigation165,6852
-
-docs/build/html/_sources/030_installation.txt,443
-Installation1,0
-On a Cray (XC, XE, XK), the process is a bit more involved,99,2933
-Once the ReverseMap file is built,105,3200
-In this step,117,3475
-In this step, make sure that the credential you created have the necessary privileges to create tables,117,3475
-In this step, make sure that the credential you created have the necessary privileges to create tables, etc. If you want the database credential to be more restrictive,117,3475
-
-docs/build/html/_sources/021_interception.txt,25
-Interception Options1,0
-
-docs/build/html/_sources/060_production.txt,15
-Production1,0
-
-docs/build/html/_sources/020_QuickStart.txt,51
-Quick Start Guide - Prerequistes and Decisions1,0
-
-docs/build/html/_sources/070_datamining.txt,16
-Data Mining1,0
-
-docs/build/html/_sources/101_pagelisting.txt,11
-Topics1,0
-
-docs/build/html/_sources/090_FAQ.txt,8
-FAQ1,0
-
-docs/build/html/_sources/080_usecase.txt,135
-Workflow Case Studies1,0
-	mysql> SELECT object_path,36,736
-	FROM xalt_object,37,775
-	WHERE join_link_object.link_id=link_id38,811
-
-docs/build/html/_sources/index.txt,36
-XALT: Library Tracking Software2,1
-
-docs/build/html/_sources/050_testing.txt,12
-Testing1,0
-
-docs/build/html/020_QuickStart.html,554
-Quick Start Guide - Prerequistes and Decisions &mdash; XALT 1.0 documentation9,258
-Navigation32,1283
-Quick Start Guide - Prerequistes and Decisionsquick-start-guide-prerequistes-and-decisions53,2087
-Prerequisitesprerequisites55,2300
-Install XALTinstall-xalt63,2614
-Decisions: Installation Location, Database(s), Interceptingdecisions-installation-location-database-s-intercepting71,3157
-Next Steps - Installationnext-steps-installation109,5284
-Table Of Contents121,5721
-This Page139,6648
-Quick searchsearchbox146,6876
-Navigation163,7511
-
-docs/build/html/021_interception.html,195
-Interception Options &mdash; XALT 1.0 documentation9,258
-Navigation30,1119
-Interception Optionsinterception-options45,1637
-This Page73,3669
-Quick searchsearchbox80,3899
-Navigation97,4534
-
-docs/build/html/101_pagelisting.html,153
-Topics &mdash; XALT 1.0 documentation9,258
-Navigation30,1105
-Topicstopics45,1609
-This Page68,2957
-Quick searchsearchbox75,3186
-Navigation92,3821
-
-docs/build/html/search.html,191
-Search &mdash; XALT 1.0 documentation9,258
-Navigationsearchindexloader38,1362
-Searchsearch-documentation52,1830
-$('#fallback').hide();fallback54,1923
-Navigationsearch-results86,2912
-
-docs/build/html/090_FAQ.html,144
-FAQ &mdash; XALT 1.0 documentation9,258
-Navigation31,1208
-FAQfaq49,1879
-This Page62,2371
-Quick searchsearchbox69,2592
-Navigation86,3227
-
-docs/Makefile,17
-SPHINXOPTS 5,92
-
-detectfunctions/StripLibs.py,20
-def convert(18,358
+README.md,100
+published by the Free Software Foundation;105,4416
+the License,106,4481
+the License, or 106,4481
 
 detectfunctions/CreateLibMap.py,53
 class NestedDict(19,354
     def __getitem__(20,378
+
+detectfunctions/StripLibs.py,20
+def convert(18,358
 
 detectfunctions/ld,148
 ARGV=34,1254
@@ -872,290 +1189,343 @@ TRACEMAP=128,3857
 STATUS=162,4701
     EXECUTABLE=187,5312
 
-Makefile.in,907
-srcdir 22,1051
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d .git ]; then GV=64,2409
-LIBEXEC 66,2544
-	cd $(srcdir)/compiled; $(130,6013
-	   ext=188,8150
-           oext=189,8220
-           [ "$$ext" = "in.py" ] && oext=191,8367
-           [ "$$ext" = "in.c" ]  && oext=192,8444
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext223,10628
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext225,10782
-	    true;226,10859
-	@git status -s > /tmp/git_st_$$$$;git_st_$$$$230,10957
-            git push github;234,11258
-            git push --tags github;235,11335
-        fi;236,11412
-        ifneq 240,11529
-	    echo "$(TAG)" >                                      .version;version245,11840
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version;version246,11910
-	    git push --tags tags248,12064
-          fi;249,12134
-	$(296,14812
+compiled/capture.h,23
+#define CAPTURE_H2,18
 
-old/uuid/try.c,15
-int main(3,42
+compiled/xalt_run_submission.C,72
+#define DATESZ 16,297
+const int syslog_msg_sz 17,316
+int main(19,348
 
-old/c_src/dictionary.h,254
-#define _DICTIONARY_H_15,499
-typedef struct _dictionary_ 45,1468
-    int             n 46,1498
-    int             size 47,1565
-    char        **  val 48,1613
-    char        **  key 49,1670
-    unsigned     *  hash 50,1725
-} dictionary 51,1789
+compiled/zstring.h,23
+#define ZSTRING_H2,18
 
-old/c_src/cencode.c,171
-const int CHARS_PER_LINE 10,236
-void base64_init_encodestate(12,268
-char base64_encode_value(19,407
-int base64_encode_block(26,616
-int base64_encode_blockend(87,2124
+compiled/jsmn.h,475
+#define __JSMN_H_2,18
+	JSMN_UNDEFINED 18,261
+	JSMN_OBJECT 19,282
+	JSMN_ARRAY 20,300
+	JSMN_STRING 21,317
+	JSMN_PRIMITIVE 22,335
+} jsmntype_t;23,355
+enum jsmnerr 25,370
+	JSMN_ERROR_NOMEM 27,424
+	JSMN_ERROR_INVAL 29,492
+	JSMN_ERROR_PART 31,581
+	jsmntype_t type;41,810
+	int start;42,828
+	int end;43,840
+	int size;44,850
+	int parent;46,886
+} jsmntok_t;48,906
+	unsigned int pos;55,1085
+	unsigned int toknext;56,1136
+	int toksuper;57,1188
+} jsmn_parser;58,1257
 
-old/c_src/read_conf.c,57
-#define SIZE 6,80
-char* decode(11,147
-int main(28,457
+compiled/translate.C,536
+const char * safe_get(3,47
+void translate(11,247
+  enum QueueType 14,292
+  enum QueueType { UNKNOWN QueueType::UNKNOWN14,292
+  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS14,292
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF14,292
 
-old/c_src/iniparser.h,29
-#define _INIPARSER_H_11,271
+compiled/zstring.C,74
+std::string compress_string(8,182
+std::string decompress_string(53,1401
 
-old/c_src/dictionary.c,414
-#define MAXVALSZ 24,830
-#define DICTMINSZ 27,915
-#define DICT_INVALID_KEY 30,965
-static void * mem_double(38,1311
-char * xstrdup(61,1947
-unsigned dictionary_hash(91,2939
-dictionary * dictionary_new(120,3800
-void dictionary_del(147,4551
-char * dictionary_get(179,5595
-int dictionary_set(225,7241
-void dictionary_unset(292,9425
-void dictionary_dump(341,10674
-#define NVALS 363,11115
-int main(364,11135
+compiled/Process.h,347
+#define PROCESS_H2,18
+class Process9,95
+  ~Process(Process::~Process13,141
+  pid_t        parent(Process::parent15,158
+  std::string& name(Process::name16,205
+  std::string m_exe;Process::m_exe21,345
+  std::string m_name;Process::m_name22,366
+  pid_t       m_pid;Process::m_pid23,388
+  pid_t       m_parent;Process::m_parent24,409
 
-old/c_src/b64/decode.h,197
-#define BASE64_DECODE_H9,234
-	struct decoder20,341
-		base64_decodestate _state;22,360
-		int _buffersize;23,389
-		decoder(25,409
-		int decode(29,488
-		int decode(34,566
-		void decode(39,726
+compiled/Makefile,25
+CXX 1,0
+	gcc $(51,2305
 
-old/c_src/b64/encode.h,222
-#define BASE64_ENCODE_H9,234
-	struct encoder20,342
-		base64_encodestate _state;22,361
-		int _buffersize;23,390
-		encoder(25,410
-		int encode(29,489
-		int encode(34,567
-		int encode_end(39,727
-		void encode(44,832
+compiled/Json.C,211
+void Json::fini(5,50
+void Json::add(13,158
+void Json::add_json_string(22,296
+void Json::add(31,442
+void Json::add(56,857
+void Json::add(77,1200
+void Json::add(113,1945
+std::string& Json::result(138,2509
 
-old/c_src/b64/cencode.h,235
-#define BASE64_CENCODE_H9,220
-	step_A,13,261
-	step_A, step_B,13,261
-	step_A, step_B, step_C13,261
-} base64_encodestep;14,285
-	base64_encodestep step;18,324
-	char result;19,349
-	int stepcount;20,363
-} base64_encodestate;21,379
+compiled/xalt_strip_linklib.C,15
+int main(5,46
 
-old/c_src/b64/cdecode.h,255
-#define BASE64_CDECODE_H9,220
-	step_a,13,261
-	step_a, step_b,13,261
-	step_a, step_b, step_c,13,261
-	step_a, step_b, step_c, step_d13,261
-} base64_decodestep;14,293
-	base64_decodestep step;18,332
-	char plainchar;19,357
-} base64_decodestate;20,374
+compiled/xalt_mysql_utils.C,157
+static const int issueWarning 5,75
+void finish_with_error(7,111
+void print_stmt_error(17,282
+std::string object_type(29,577
+void insert_objects(57,1169
 
-old/c_src/cdecode.c,101
-int base64_decode_value(10,236
-void base64_init_decodestate(19,707
-int base64_decode_block(25,823
+compiled/buildEnvT.C,21
+void buildEnvT(4,49
 
-old/c_src/Makefile,8
-CC 1,0
+compiled/xalt_generate_assembly.C,37
+double epoch(9,139
+int main(16,247
 
-old/c_src/iniparser.c,925
-#define ASCIILINESZ 14,449
-#define INI_INVALID_KEY 15,484
-typedef enum _line_status_ 23,810
-    LINE_UNPROCESSED,24,839
-    LINE_ERROR,25,861
-    LINE_EMPTY,26,877
-    LINE_COMMENT,27,893
-    LINE_SECTION,28,911
-    LINE_VALUE29,929
-} line_status 30,944
-static void strlwc(42,1323
-void strstrip(64,1958
-int iniparser_getnsec(100,3029
-char * iniparser_getsecname(131,3912
-void iniparser_dump(166,4906
-void iniparser_dump_ini(194,5733
-void iniparser_dumpsection_ini(232,6881
-int iniparser_getsecnkeys(268,7942
-char ** iniparser_getseckeys(308,9109
-char * iniparser_getstring(360,10509
-int iniparser_getint(402,11826
-double iniparser_getdouble(424,12616
-int iniparser_getboolean(465,13942
-int iniparser_find_entry(494,14983
-int iniparser_set(519,15773
-void iniparser_unset(539,16408
-static line_status iniparser_line(557,17060
-dictionary * iniparser_load(689,20564
-void iniparser_freedict(899,25885
+compiled/run_submission.h,30
+#define RUN_SUBMISSION_H2,25
 
-old/altd/sbin/setDb.py,72
-def readFromUser(10,113
-def readConfig(17,319
-def writeConfig(31,830
+compiled/xalt_initialize.c,1252
+#define  _GNU_SOURCE27,1223
+#define STR(54,1782
+#define STR2(55,1806
+static char   uuid_str[uuid_str56,1825
+static int    errfd	57,1853
+static double start_time 58,1882
+static double end_time	59,1916
+static long   my_rank	60,1949
+static long   my_size	61,1980
+static int    xalt_tracing 62,2011
+static int    reject_flag 63,2043
+static char   path[path64,2075
+static char * usr_cmdline;65,2105
+static const char * syshost;66,2132
+#define HERE 67,2161
+#define DEBUG0(70,2221
+#define DEBUG1(71,2283
+#define DEBUG2(72,2350
+#define DEBUG3(73,2422
+#  define FULL_DEBUG0(76,2520
+#  define FULL_DEBUG1(77,2570
+#  define FULL_DEBUG2(78,2625
+#  define FULL_DEBUG3(79,2685
+#  define FULL_DEBUG0(81,2756
+#  define FULL_DEBUG1(82,2784
+#  define FULL_DEBUG2(83,2819
+#  define FULL_DEBUG3(84,2854
+void myinit(87,2900
+void myfini(219,6647
+int reject(272,8394
+long compute_value(369,10616
+void abspath(385,10932
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(401,11266
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(402,11382
+  __attribute__((section(".init_array"))) typeof(404,11504
+  __attribute__((section(".fini_array"))) typeof(405,11579
 
-old/altd/sbin/altd_db.020817352010,12
-passwd 2,8
+compiled/base64.h,22
+#define BASE64_H2,17
 
-old/altd/sbin/write_altd_db_conf.py,72
-def readFromUser(13,174
-def readConfig(21,381
-def writeConfig(36,893
+compiled/xalt_utils.C,52
+bool path2module(5,70
+FILE* xalt_file_open(21,360
 
-old/altd/LICENSE,15
-Copyright 1,0
+compiled/ConfigParser.C,53
+void trim(11,204
+ConfigParser::ConfigParser(24,380
 
-old/altd/dev/modulefiles/altd_dev,38
-setenv ALTD_SELECT_USERS jones,8,112
+compiled/xalt_fgets_alloc.h,32
+#define XALT_FGETS_ALLOC_H2,27
 
-old/altd/dev/bin/aprun_dev,688
-my (%signo,@signame)(%signo,@signame18,437
-my $i i19,459
-my $tooldir tooldir28,590
-my $real_aprun real_aprun32,684
-my $prologue_retcode prologue_retcode35,731
-    my @prologue_arglist prologue_arglist41,874
-    my $prologue_exit prologue_exit51,1161
-    my $prologue_signal prologue_signal52,1194
-my @aprun_arglist aprun_arglist64,1504
-my $aprun_exit aprun_exit67,1612
-my $aprun_signal aprun_signal68,1633
-my $pid;pid69,1655
-    my $aprun_retcode aprun_retcode74,1710
-my $epilogue_retcode epilogue_retcode93,2049
-    my @epilogue_arglist epilogue_arglist96,2145
-    my $epilogue_exit epilogue_exit107,2473
-    my $epilogue_signal epilogue_signal108,2506
+compiled/link_direct2db.C,122
+uint select_link_id(13,223
+void insert_xalt_link(79,2099
+void insert_functions(226,7530
+void link_direct2db(410,13344
 
-old/altd/dev/bin/check_link_altd,251
-host=14,308
-echo -n "Enter $db_user password: " ; stty -echo echo19,404
-echo -n "Enter $db_user password: " ; stty -echo ; read db_passwd 19,404
-echo -n "Enter $db_user password: " ; stty -echo ; read db_passwd ; stty echo 19,404
-db_name=21,493
+compiled/xalt_fgets_alloc.c,46
+const int SZ 5,71
+int xalt_fgets_alloc(7,92
 
-old/altd/dev/aprun-prologue/aprun-prologue,16
-Copyright 4,27
+compiled/buildRmapT.C,79
+void processRmapT(9,172
+void processXlibmap(41,1010
+void buildRmapT(72,1862
 
-old/altd/etc/altd.conf,27
-export ALTD_SELECT_ON=1,0
+compiled/buildRmapT.h,26
+#define BUILDRMAPT_H2,21
 
-old/altd/etc/altd_db.conf,12
-passwd 2,8
+compiled/xalt_generate_linkdata.C,17
+int main(13,246
 
-old/altd/etc/altd_log.conf,12
-keys=5,170
+compiled/parseLDTrace.C,80
+#define _GNU_SOURCE1,0
+void parseLDTrace(8,144
+void readFunctionList(73,1860
 
-old/altd/modulefiles/altd,39
-setenv ALTD_SELECT_USERS jones,10,369
+compiled/extractXALTRecord.C,29
+void extractXALTRecord(5,75
 
-old/altd/bin/pyLD.py,244
-class ALTD_LD(83,3014
-    def __init__(84,3037
-    def mysql_db_connect(108,3829
-    def table_lookup(128,4496
-    def print_assembly(156,5586
-    def update_tag_table(185,6727
-    def mysql_db_disconnect(226,8695
-    def main(242,9152
+compiled/link_submission.h,31
+#define LINK_SUBMISSION_H2,26
 
-old/altd/bin/aprun,688
-my (%signo,@signame)(%signo,@signame18,437
-my $i i19,459
-my $tooldir tooldir28,590
-my $real_aprun real_aprun32,670
-my $prologue_retcode prologue_retcode35,717
-    my @prologue_arglist prologue_arglist41,861
-    my $prologue_exit prologue_exit51,1148
-    my $prologue_signal prologue_signal52,1181
-my @aprun_arglist aprun_arglist64,1491
-my $aprun_exit aprun_exit67,1599
-my $aprun_signal aprun_signal68,1620
-my $pid;pid69,1642
-    my $aprun_retcode aprun_retcode74,1697
-my $epilogue_retcode epilogue_retcode93,2036
-    my @epilogue_arglist epilogue_arglist96,2132
-    my $epilogue_exit epilogue_exit107,2460
-    my $epilogue_signal epilogue_signal108,2493
+compiled/xalt_mysql_utils.h,32
+#define XALT_MYSQL_UTILS_H2,27
 
-old/altd/bin/ld,164
-ARGV=36,1278
-  export ALTD_PATH=48,1510
-elif 65,2091
-elif 77,2485
-SCRIPT=89,2785
-WRKDIR=108,3260
-TRACEMAP=121,3583
-STATUS=155,4427
-    EXECUTABLE=180,5038
+compiled/xalt_regex.template,419
+#define XALT_REGEX_H2,21
+#define N_ELEMENTS(4,43
+const char* acceptPathA[acceptPathA6,93
+const char* ignorePathA[ignorePathA7,145
+const char* hostnameA[hostnameA8,197
+const char* acceptEnvA[acceptEnvA9,249
+const char* ignoreEnvA[ignoreEnvA10,301
+const int   acceptPathSz 12,354
+const int   ignorePathSz 13,406
+const int   hostnameSz 14,458
+const int   acceptEnvSz 15,508
+const int   ignoreEnvSz 16,559
 
-old/altd/aprun-prologue/aprun-prologue,16
-Copyright 4,27
+compiled/capture.C,43
+#define DATA_SIZE 4,60
+void capture(6,84
 
-my_docs/SC13_BoF.pptx,627
-°\”÷ÍÂ2>fg-Û8VÀ ü7ÁôkÑˇ2©G+]„¿õô—˜k1˘k1˘2,960
-≈≥∑ÙäK∫‘ÜK∫‘35,15653
-ùë>l]l36,15894
-q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S@7S149,47581
-q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S]8KxŒu|*‰Å ;‘´∆”3—\˙à4⁄º‰ˆ;Ä+¢1"TÌœÆì_ÉbN…´˘L¥ˇÌ\˝»`ÈÑDHçmÚ2“‚¶›Jem{=PPKªMÚÔZöüÄ|6ëe6#ûÌ⁄≠èœdî3zØ8S¸<˘°z◊ü≠Ü.ßBäØPE{§,RÃô?ﬁÄ;sdΩÕË˛¬át°ïÇå‘|ÚfÃÌL)âπÁn.‚ Wg»8>Wß’kh-|5lqqœ=‘6-aã‰#µv!ÿ∑ﬂlF˛z^jãlL&Ír3Ó˜E[$ΩnÌY{çΩf˝õo∑…¡6ƒ+Ñ„DßÜıü"/TdàÔ}k∫_OœEA`û∏ »‡€ﬁÁ¶{˘ñ˜™∂¸˜Ín=n149,47581
-BYêTÉÔ®ﬂ?Mœ{òΩè"µ<ãc#ﬁSr5c#ﬁSr156,49061
-SWºÖ)»,<X´ä¡¿–kàπìä	ÏÌ•nà≈_˝2nà≈_˝158,49268
+compiled/Options.h,963
+#define OPTIONS_H2,18
+class Options6,56
+  ~Options(Options::~Options10,114
+  long          ntasks(Options::ntasks11,130
+  double        startTime(Options::startTime12,186
+  double        endTime(Options::endTime13,242
+  std::string&  exec(Options::exec14,298
+  std::string&  syshost(Options::syshost15,354
+  std::string&  uuid(Options::uuid16,410
+  std::string&  userCmdLine(Options::userCmdLine17,466
+  std::string&  exec_type(Options::exec_type18,522
+  std::string&  confFn(Options::confFn19,578
+  double      m_start;Options::m_start22,644
+  double      m_end;Options::m_end23,667
+  long        m_ntasks;Options::m_ntasks24,688
+  std::string m_syshost;Options::m_syshost25,712
+  std::string m_uuid;Options::m_uuid26,737
+  std::string m_exec;Options::m_exec27,759
+  std::string m_userCmdLine;Options::m_userCmdLine28,781
+  std::string m_exec_type;Options::m_exec_type29,810
+  std::string m_confFn;Options::m_confFn30,837
 
-my_docs/README.vm.txt,124
-   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
-   mysql> quit;16,575
-    $ ./build_hello_executables.sh sh33,887
+compiled/Process.C,90
+Process::Process(10,176
+void Process::cmdline(42,910
+std::string& Process::exe(67,1383
 
-my_docs/xsede15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
+compiled/xalt_utils.h,26
+#define XALT_UTILS_H2,21
+
+compiled/base64.C,155
+static const std::string base64_chars 31,1048
+static inline bool is_base64(37,1204
+std::string base64_encode(41,1306
+std::string base64_decode(83,2467
+
+compiled/direct2db.C,430
+#define  DATESZ 15,288
+typedef std::unordered_map<std::string,std::string17,309
+typedef std::unordered_map<std::string, uint> TableI;17,309
+int select_run_id(20,365
+void insert_xalt_run_record(85,2186
+void buildEnvNameT(305,10205
+bool reject_env_name(364,11737
+uint findEnvNameIdx(416,13056
+void insert_envT(526,16231
+void insert_filtered_envT(580,17713
+void update_xalt_run_record(656,19748
+void direct2db(719,21425
+
+compiled/buildUserT.C,48
+#define  DATESZ 11,193
+void buildUserT(13,214
+
+compiled/Options.C,80
+double convert_double(9,145
+long convert_long(23,390
+Options::Options(37,633
+
+compiled/jsmn.c,222
+static jsmntok_t *jsmn_alloc_token(jsmn_alloc_token6,82
+static void jsmn_fill_token(24,444
+static int jsmn_parse_primitive(35,700
+static int jsmn_parse_string(84,1856
+int jsmn_parse(151,3594
+void jsmn_init(306,7648
+
+compiled/parseLDD.C,20
+void parseLDD(6,95
+
+compiled/ConfigParser.h,492
+#define CONFIGPARSER_H2,23
+class ConfigParser6,66
+  ~ConfigParser(ConfigParser::~ConfigParser10,128
+  std::string& host(ConfigParser::host12,151
+  std::string& user(ConfigParser::user13,196
+  std::string& db(ConfigParser::db14,241
+  std::string& passwd(ConfigParser::passwd15,286
+  std::string m_host;ConfigParser::m_host18,345
+  std::string m_user;ConfigParser::m_user19,367
+  std::string m_db;ConfigParser::m_db20,389
+  std::string m_passwd;ConfigParser::m_passwd21,409
+
+compiled/xalt_config.h.in,286
+#define XALT_CONFIG_H2,22
+#define OBJDUMP 4,45
+#define PATH_TO_PRGM_FILE 5,91
+#define LDD 6,134
+#define SHA1SUM 7,176
+#define SYS_LD_LIB_PATH 8,222
+#define PREFIX 9,268
+#define TRANSMISSION 10,305
+#define LOGGER 11,348
+#define XALT_ETC_DIR 12,393
+#define XALT_VERSION 13,431
+
+compiled/xalt_types.h,467
+#define XALT_TYPES_H2,21
+struct Libpair9,130
+  Libpair(11,147
+  std::string lib;Libpair::lib14,231
+  std::string sha1;Libpair::sha115,250
+typedef std::vector<std::string>                    Vstring;18,274
+typedef std::unordered_set<std::string>             Set;19,335
+typedef std::unordered_map<std::string,std::string20,392
+typedef std::unordered_map<std::string,std::string> Table;20,392
+typedef unsigned int                                uint;21,451
+
+compiled/extract_linker.h,30
+#define EXTRACT_LINKER_H2,25
+
+compiled/Json.h,124
+#define JSON_H2,15
+class Json6,56
+  Json(Json::Json9,77
+  ~Json(Json::~Json10,101
+  std::string m_s;Json::m_s21,471
+
+compiled/extract_linker.C,26
+void extract_linker(4,50
+
+compiled/xalt_quotestring.h,27
+#define QUOTESTRING_H2,22
+
+compiled/xalt_quotestring.c,226
+#define HERE 6,108
+const char *qcharA[qcharA7,180
+const char escCharA[escCharA13,617
+static char * buff 16,758
+static unsigned int sz 17,785
+const char* xalt_quotestring(20,815
+const char * xalt_unquotestring(85,2355
 
 my_docs/Lmod_installation,77
      $ CC=10,297
       CURRENT_MODULES=38,1181
           LMOD_PKG=47,1417
-
-my_docs/web/xalt.txt,54
-XALT is a collaboration between PI Mark Fahey 12,355
-
-my_docs/isc15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,143
-
-my_docs/isc15/xalt-tutorial-slides.pptx,19
-¬0DÔÇˇDÔÇ2,2516
 
 my_docs/sc15/XALT_SC15-BOF.pptx,787
 5	⁄AåA1620,388852
@@ -1168,7 +1538,22 @@ my_docs/sc15/XALT_SC15-BOF.pptx,787
 ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
 ≤≤∞*Ò∫ñéX§VIôYÇYºl˚g0mìl˚ƒ+qmp•qmp5265,1885423
 
-my_docs/sc15/XALTdata.pptx,9239
+my_docs/sc15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
+
+my_docs/sc15/talk.tex,313
+\newcommand{\bfnabla}\bfnabla28,981
+\newcommand{\laplacian}\laplacian29,1029
+\newcommand{\grad}\grad30,1071
+\newcommand{\tgrad}\tgrad31,1106
+\newcommand{\dvg}\dvg32,1144
+\newcommand{\curl}\curl33,1184
+\newcommand{\lap}\lap34,1226
+\section{XALT}XALT42,1321
+\section{Conclusion}Conclusion289,8618
+
+my_docs/sc15/XALTdata.pptx,9407
 ¬0DÔÇˇDÔÇ10,2569
 ˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒjY19,6261
 ˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒ]-k«ÇÅC2M…qB*´äoBsoB19,6261
@@ -1179,7 +1564,7 @@ Q≤ö∑Àºi{iÕ!“%[à1≥wT:ÅeÈMë—Ô∂πUR“Sı≥jnö+e>_>\)ñgó√*Q¬-Œ∏˚–3VÜáÒìÈ˜Ω$1]/Ty
 î*\êƒ&†P–i‘∆P–i‘1567,409369
 eëÀ’à»à»†ŒB¯ƒ·√*±, àZH@)&≠:èiU“A¶™∞RtVãËA#®¥˚™æ•·•¶€Ã›\’–◊W‘M-x£õ0ë‰+(∞€ñΩpz	*¢i£yñ@!äúñ[áºI.l¨ü]¡MjËœ·ï≠WÄV‘7q,#” ZG≠îÀ¶ZG≠îÀ1616,419117
 }à4˛ƒú—ÀZÌësS⁄K*À±ç•txYµH≤€§^ÕEkôÜíHT+@Ç0Ya∫9ªm¨J@Ç0Ya∫9ªm¨4706,999114
-§Í•	dÆ(@*†Ñ˛©¿“eª/É°≈“gSno‡ÿÃ]f„ç1;ßK$î±S*dÍÈ™M,ÑÆ7JiY€∆ÍB	\£aı{ı¨6PøP4746,1005613
+§Í•	dÆ(@*†Ñ˛©¿“eª/É°≈“gSno‡ÿÃ]f„ç1;ßK$î±S*dÍÈ™M,ÑÆ7JiY€∆ÍB	\£aıa4746,1005613
 g§p¥•¸å≈ΩÜ’o+I∏ƒ±≈‘i84!fJ∆Ç¬PDå+",k⁄IjıfíwQ‡>¶e¿∆ñ•»Üöi∑≈√®QQmäú˝C7Uì¶ŸâYä®›0bR8jÒ˚_Ìå9L~3´M0ÜfçM0Üf4983,1050624
 –äQ«¨8Z dö®‘ßúLŸ\]&¨UU4995,1052765
 –äQ«¨8Z dö®‘ßúLŸ\]&¨U]c´h∞≥œÑlTQ=4995,1052765
@@ -1220,7 +1605,7 @@ hSE•=˘:˙C5D≠A_]Ö£¢∆c6ç>Zû⁄E°»gÒMWë™…7‹}µ,ï?Ó>4ç¶£yÕ3ô~Â@T{Ö¥Àmm#ó–ëÕj⁄@—P
 1%N°QN°Q55410,10629486
 1%N°Q4Û≈,3ü!V,V55410,10629486
 1%N°Q4Û≈,3ü!V,∂ﬁKWπKW55410,10629486
-®ÓAÇÖ$‘∫K8.UCPΩOFÃUV†±©:Ö	*Øò≈k“c/Ò£∞6˝yÍ<]m{ìA¸	pªéπj*)‚® PgZ153G]PgZ153G55488,10644531
+®ÓAÇÖ$‘∫K8.UCPΩOFÃUV†±©:Ö	*Øò≈k“c/Ò£∞6˝yÍ<]m{m55488,10644531
 ÛH∑3æçbéàc,êQ∫IÓ–Æ4*∂∫áÆñîé¥bå\í’MMB›‹8©SSJp¡/Y≥ﬂg/Y≥ﬂ55491,10645148
 -\ì1:K¢©&f÷öƒÌå≈*˝±πqò‹˛‚órÂ≤e∞’—RnƒÊÂ˚He˚%UFôÍ+)^é¢(5∫ƒ…l.â∑YoÃqH—F—ƒÒ≥: ≈¢fQ5≤F⁄–<~#∆"®j¢‚Y©i‚0%Å`»äáp§°dëû™„VïrÍƒ´§ækGôWœ}≠} ‹µyëµÎyëµ55609,10667423
 ıîâkn•£kn•55617,10668459
@@ -1233,7 +1618,7 @@ IÉ0©Ml\‘Wâ9(£JÜ Fñ6IcDä5™Ä@†ÄœÌ94©$úß—ø≥§ßjXö:LdU∆Vñ}fV2÷d)–^Iı†ñIı
 }qûü&ﬂYz]©ò¡ÊÛ´]GvJGv57936,11104615
 }qûü&ﬂYz]©ò¡ÊÛ´]GvJé]üö‹òjçØãÃ„*$©¬n#å¬ƒ—W}√y‡…◊’Ã’&®HcHô¢Òö¡p±mex¬\Y&å™H5/Ä≤)“C3ùJC3ù57936,11104615
 5jUT~ IZ †Ö:◊˜2õK/É›ïu˚¢<,‚ÒõªoQf°JØJ®ê‚‡zóë©©QŸ£äÜ¶ $âe-Vï≠µ∆VtïVo“h÷Ë©%›-Tó1D«6Â‰%tÀC⁄ éÖëãUJUh˙å$“ä“ê∑·ÆÉ¥˜-hHˆ_¸73hHˆ_¸757939,11104955
-êii57940,11105450
+5jUT~ IZ †Ö:◊˜2õK/É›ïu˚¢<,‚ÒõªoQf°JØJ®ê‚‡zóë©©QŸ£äÜ¶ $âe-Vï≠µ∆VtïVo“h÷Ë©%›-Tó1D«6Â‰%tÀC⁄ éÖëãUJUh˙å$“ä“ê∑·ÆÉ¥˜-hHˆ_¸73êá7Q]èà”n::h$€>gß…IB)™¥s¬)¸¯˙⁄∆√LÈxü’!≈‡ñ®ˆ/¨Ñâ∂æe‘u¨÷ƒìÙe‘u¨÷ƒì57939,11104955
 Õ”òß»e3Uÿ(02U÷„ˆ˛Ogm}±åäèÜ›äT'èùj£•…Èß»=<rT¬"˛!&á˘zÎ~Â}ÊÀp∏IÏdhp∏IÏd58002,11114171
 Õ”òß»e3Uÿ(02U÷„ˆ˛Ogm}±åäèÜ›äT'èùj£•…Èß»=<rT¬"˛!&á˘zÎ~Â}ÊÀp∏IÏdhR8òœ*°,∞€9∏*‡È`%Ò…z—TD®z—TD58002,11114171
 ÉæB™îHƒHK-Rôc*ÖqDîU$ìSvjj—c^ˆ. JöºrÌzjHË0¯mπ∏©∂ç^Z}ÖPπöºUjz%ÃbÛÍbÛ58004,11114759
@@ -1290,18 +1675,35 @@ cvﬁcv68733,13119301
 Ç0Xñ@*I®µe§f§>ìXö:\M]jd∂ùNBı\™X©k)±x\Ñ4…gmE∏Îô]2E;E84656,16092614
 ´;.ØN]G¿‰êÃAQ”b5i5«--	0®%V¥¶†hOƒ?=;C>#≤Òªäáôe.oo84671,16095021
 
-my_docs/sc15/talk.tex,313
-\newcommand{\bfnabla}\bfnabla28,981
-\newcommand{\laplacian}\laplacian29,1029
-\newcommand{\grad}\grad30,1071
-\newcommand{\tgrad}\tgrad31,1106
-\newcommand{\dvg}\dvg32,1144
-\newcommand{\curl}\curl33,1184
-\newcommand{\lap}\lap34,1226
-\section{XALT}XALT42,1321
-\section{Conclusion}Conclusion289,8618
+my_docs/SC13_BoF.pptx,607
+°\”÷ÍÂ2>fg-Û8VÀ ü7ÁôkÑˇ2©G+]„¿õô—˜k1˘k1˘2,960
+≈≥∑ÙäK∫‘ÜK∫‘35,15653
+ùë>l]l36,15894
+q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S@7S149,47581
+q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S]8KxŒu|*‰Å ;‘´∆”3—\˙à4⁄º‰ˆ;Ä+¢1"TÌœÆì_ÉbN…´˘L¥ˇÌ\˝»`ÈÑDHçmÚ2“‚¶›Jem{=PPKªMÚÔZöüÄ|6ëe6#ûÌ⁄≠èœdî3zØ8S¸<˘°z◊ü≠Ü.ßBäØPE{§,RÃô?ﬁÄ;sdΩÕË˛¬át°ïÇå‘|ÚfÃÌL)âπÁn.‚ Wg»8>Wß’kh-|5lqqœ=‘6-aã‰#µv!ÿ∑ﬂlF˛z^jãlL&Ír3Ó˜E[$ΩnÌY{çΩf˝õo∑…¡6ƒ+Ñ„DßÜıü"/TdàÔ}k∫_Oœk∫_O149,47581
+BYêTÉÔ®ﬂ?Mœ{òΩè"µ<ãc#ﬁSr5c#ﬁSr156,49061
+SWºÖ)»,<X´ä¡¿–kàπìä	ÏÌ•nà≈_˝2nà≈_˝158,49268
 
-my_docs/sc15/Makefile,56
+my_docs/isc15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,143
+
+my_docs/isc15/xalt-tutorial-slides.pptx,19
+¬0DÔÇˇDÔÇ2,2516
+
+my_docs/web/xalt.txt,54
+XALT is a collaboration between PI Mark Fahey 12,355
+
+my_docs/README.vm.txt,124
+   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
+   mysql> quit;16,575
+    $ ./build_hello_executables.sh sh33,887
+
+my_docs/xsede15/Makefile,56
+TALKS 1,0
+	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
+
+my_docs/fosdem16/Makefile,56
 TALKS 1,0
 	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
 
@@ -1329,19 +1731,12 @@ individual batch submissions,4,210
 individual batch submissions, users,4,210
 organizations concerned about meeting users‚Äô needs;14,803
 
-my_docs/fosdem16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
-configure.ac,220
-AC_INIT(1,0
-  BUILD_PSTREE=87,2554
-     versionStr=97,2739
-       major_version=100,2885
-         BUILD_PSTREE=105,3189
-      PATH_TO_PSTREE=112,3306
-USE_CONTRIB_ARGPARSE=123,3566
-  USE_CONTRIB_ARGPARSE=130,3898
+rt/common_funcs.sh,90
+initialize(4,36
+buildRmapT(19,312
+installXALT(30,678
+installDB(42,1028
+runMe 57,1402
 
 rt/syslog/bin/logger,10
 TAG=5,42
@@ -1349,811 +1744,35 @@ TAG=5,42
 rt/syslog/syslog.desc,16
 test_name 3,18
 
-rt/common_funcs.sh,90
-initialize(4,36
-buildRmapT(19,312
-installXALT(29,662
-installDB(41,1012
-runMe 56,1386
+rt/end2end/end2end.desc,16
+test_name 3,18
 
 rt/mpi_hello_world.c,15
 int main(3,36
 
-rt/end2end/end2end.desc,16
-test_name 3,18
+ACKNOWLEDGMENTS.txt,0
 
-aclocal.m4,26
-dnl AC_PYTHON_MODULE(1,0
+QUICK_INSTALL_GUIDE.TXT,0
 
-src/xalt_transmission_factory.py,407
-class XALT_transmission_factory(35,1336
-  def __init__(39,1464
-  def _syshost(50,1733
-  def _kind(57,1862
-  def build(65,2013
-class SyslogV1(89,2720
-  def __init__(94,2821
-  def save(102,3063
-class Syslog(118,3505
-  def __init__(123,3604
-  def save(132,3845
-class File(168,4866
-  def __init__(173,4953
-  def save(183,5269
-class DirectDB(205,5836
-  def __init__(210,5946
-  def save(217,6193
-
-src/XALTdb.py,303
-def __LINE__(48,1844
-def __FILE__(54,1964
-def convertToTinyInt(60,2143
-class XALTdb(76,2471
-  def __init__(81,2605
-  def __readFromUser(90,2850
-  def __readConfig(98,3135
-  def connect(113,3740
-  def db(145,4831
-  def link_to_db(149,4898
-  def load_objects(226,7879
-  def run_to_db(272,9712
-
-src/xalt_file_to_db_dir.in.py,229
-def __LINE__(55,1973
-def __FILE__(61,2093
-class CmdLineOptions(64,2163
-  def __init__(67,2231
-  def execute(71,2288
-def link_json_to_db(84,3155
-def run_json_to_db(125,4151
-def passwd_generator(165,5157
-def main(193,5887
-
-src/ld.in,441
-LD_LIB_PATH=37,1480
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=53,1924
-export COMP_T=71,2533
-    prev=90,3099
-    -*) optarg=96,3222
-    *) optarg=97,3240
-    *) optarg=; done=97,3240
-      USER_TRACE=106,3387
-      PrintOptions=110,3484
-      BIT32FLAG=115,3563
-      prev=119,3602
-LINKLINE_OUT=158,4635
-EPOCH=170,4907
-  OBJ=179,5184
-status=198,5791
-SHA1SUM_EXEC=207,6012
-    LD_LIBRARY_PATH=220,6305
-
-src/xalt_job_id_db.conf,10
-host 2,8
-
-src/conf_create.in.py,226
-class CmdLineOptions(40,1463
-  def __init__(41,1493
-  def execute(44,1527
-class CreateConf(54,1988
-  def __init__(55,2014
-  def __readFromUser(61,2179
-  def __writeConfig(67,2510
-  def create(81,2888
-def main(88,2967
-
-src/xalt_name_mapping.py,28
-def name_mapping(239,18376
-
-src/progressBar.py,171
-def getTerminalSize(27,1158
-  def ioctl_GWINSZ(34,1358
-class ProgressBar(68,2094
-  def __init__(71,2161
-  def update(109,3297
-  def fini(134,3944
-def main(140,4078
-
-src/nics_system_name,40
-use strict;26,1106
-  my $host 56,1704
-
-src/xalt_generate_linkdata.py,114
-def __LINE__(39,1531
-def __FILE__(45,1651
-def readFunctionList(55,1948
-def cleanup(73,2360
-def main(129,3564
-
-src/xalt_stack.py,149
-class Stack(27,1148
-  def __init__(29,1197
-  def push(36,1317
-  def pop(40,1421
-  def isEmpty(45,1534
-  def contents(49,1653
-def main(55,1798
-
-src/xalt_helper_functions.sh,126
-LD_LIB_PATH=33,1422
-tracing_msg(70,2501
-find_real_command(90,3172
-find_working_python(155,5262
-run_real_command(176,5875
-
-src/xalt_syslog_to_db.in.py,359
-def __LINE__(52,1876
-def __FILE__(58,1996
-class CmdLineOptions(67,2238
-  def __init__(70,2306
-  def execute(74,2363
-class Record(87,3241
-  def __init__(92,3353
-  def addBlk(106,3641
-  def completed(111,3767
-  def value(114,3834
-  def prt(117,3886
-def parseSyslogV1(145,4498
-def parseSyslogV2(160,4865
-def parseSyslog(210,6004
-def main(216,6143
-
-src/createDB.in.py,95
-class CmdLineOptions(36,1394
-  def __init__(39,1462
-  def execute(43,1519
-def main(50,1804
-
-src/xalt_file_to_db.in.py,229
-def __LINE__(55,1973
-def __FILE__(61,2093
-class CmdLineOptions(64,2163
-  def __init__(67,2231
-  def execute(71,2288
-def link_json_to_db(83,3031
-def run_json_to_db(124,4027
-def passwd_generator(164,5033
-def main(192,5763
-
-src/new_job_id.in.py,18
-def main(35,1369
-
-src/xalt_usage_report.py,813
-def shortName(45,2433
-class CmdLineOptions(55,2597
-  def __init__(58,2665
-  def execute(62,2722
-class ExecRun:ExecRun75,3524
-  def __init__(77,3594
-  def build(81,3675
-  def report_by(113,4856
-class CompilerUsageByCount:CompilerUsageByCount130,5429
-  def __init__(131,5457
-  def build(134,5537
-  def report_by(150,6071
-class CompilerUsageByCoreHours:CompilerUsageByCoreHours164,6499
-  def __init__(165,6531
-  def build(169,6612
-  def report_by(196,7559
-class Libraries:Libraries210,8109
-  def __init__(212,8127
-  def build(216,8207
-  def report_by(247,10095
-  def group_report_by(269,10869
-class ModuleExec:ModuleExec304,11999
-  def __init__(305,12017
-  def build(309,12097
-  def report_by(331,12901
-def kinds_of_jobs(345,13425
-def running_other_exec(417,16096
-def main(473,18518
-
-src/xalt_run_submission.py,739
-def __LINE__(41,1598
-def __FILE__(47,1718
-def syshost(55,1923
-class CmdLineOptions(65,2171
-  def __init__(68,2239
-  def execute(72,2296
-class ExtractXALT(89,3125
-  def __init__(93,3243
-  def __extract_xalt_linux(133,4147
-  def __extract_xalt_darwin(157,4808
-  def xaltRecordT(178,5374
-class UserEnvT(183,5475
-  def __init__(185,5564
-  def userT(215,6791
-class UserExec(219,6882
-  def __init__(223,6958
-  def execName(251,7870
-  def execType(255,7966
-  def execEpoch(259,8074
-  def execModify(263,8184
-  def libA(267,8318
-  def hash(271,8430
-  def __computeHash(275,8522
-  def __parseLDD(280,8676
-class EnvT(318,9482
-  def __init__(320,9567
-  def envT(323,9670
-  def __reportUserEnv(326,9752
-def main(372,10914
-
-src/xalt_util.py,390
-def config_logger(28,1270
-def extract_compiler(45,1717
-    def p_parent(56,2006
-    def p_parent_name(63,2235
-    def p_parent_exe(70,2495
-    def p_parent_cmdline(77,2749
-def files_in_tree(119,4041
-def which(141,4530
-  def is_exe(147,4638
-def capture(169,5194
-def carp(186,5600
-def remove_files(205,5976
-def obj_type(218,6233
-def obj2module(241,6719
-def dbConfigFn(271,7449
-
-src/BeautifulTbl.py,117
-class BeautifulTbl(6,88
-  def __init__(7,116
-  def __build_tbl(14,461
-  def build_tbl(57,1584
-def main(140,3732
-
-src/xalt_epoch.py,18
-def main(28,1142
-
-src/removeDataBase.py,95
-class CmdLineOptions(36,1394
-  def __init__(39,1462
-  def execute(43,1519
-def main(50,1804
-
-src/xalt_working_python.py,18
-def main(28,1127
-
-src/Rmap_XALT.py,93
-class Rmap(30,1343
-  def __init__(32,1440
-  def reverseMapT(75,2825
-  def libMap(83,2970
-
-src/build_xalt_regex.py,156
-class CmdLineOptions(28,1158
-  def __init__(31,1226
-  def execute(35,1283
-def convert_to_string(47,1762
-def convert_template(55,1865
-def main(86,2514
-
-src/xalt_extract_linker.py,18
-def main(34,1393
-
-src/xalt.model.mwb,3321
-^r»“`◊–¿-∞ªÑäÓ ˜ÓúãyóﬁôóubÛÿíæ%·3	/hKŒ£¡≈ÖwN O¬CÖÏ —àŒF…rF…15,5015
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1bhå32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%ZòZ32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎP±É32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒjŒ32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@dsm32,7610
-òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@e,ˇ” ‘Å°)@ñMì@ñM32,7610
-model-schemas: mydb,35,8943
-
-src/xalt_generate_assembly.py,46
-def print_assembly(37,1447
-def main(83,3320
-
-src/build_syshost_routine.py,254
-def xalt_syshost_main(30,1191
-def hardcode(40,1427
-def add_hostname_routine(55,1702
-def read_file(89,2909
-def nth_name(119,3795
-def mapping(162,4905
-class CmdLineOptions(223,6725
-  def __init__(226,6793
-  def execute(230,6850
-def main(242,7391
-
-compiled/base64.C,155
-static const std::string base64_chars 31,1048
-static inline bool is_base64(37,1204
-std::string base64_encode(41,1306
-std::string base64_decode(83,2467
-
-compiled/buildRmapT.C,79
-void processRmapT(9,172
-void processXlibmap(41,1010
-void buildRmapT(72,1862
-
-compiled/xalt_strip_linklib.C,15
-int main(5,46
-
-compiled/jsmn.c,222
-static jsmntok_t *jsmn_alloc_token(jsmn_alloc_token6,82
-static void jsmn_fill_token(24,444
-static int jsmn_parse_primitive(35,700
-static int jsmn_parse_string(84,1856
-int jsmn_parse(151,3594
-void jsmn_init(306,7648
-
-compiled/extractXALTRecord.C,29
-void extractXALTRecord(5,75
-
-compiled/xalt_types.h,467
-#define XALT_TYPES_H2,21
-struct Libpair9,130
-  Libpair(11,147
-  std::string lib;Libpair::lib14,231
-  std::string sha1;Libpair::sha115,250
-typedef std::vector<std::string>                    Vstring;18,274
-typedef std::unordered_set<std::string>             Set;19,335
-typedef std::unordered_map<std::string,std::string20,392
-typedef std::unordered_map<std::string,std::string> Table;20,392
-typedef unsigned int                                uint;21,451
-
-compiled/xalt_initialize.c,1252
-#define  _GNU_SOURCE27,1223
-#define STR(54,1782
-#define STR2(55,1806
-static char   uuid_str[uuid_str56,1825
-static int    errfd	57,1853
-static double start_time 58,1882
-static double end_time	59,1916
-static long   my_rank	60,1949
-static long   my_size	61,1980
-static int    xalt_tracing 62,2011
-static int    reject_flag 63,2043
-static char   path[path64,2075
-static char * usr_cmdline;65,2105
-static const char * syshost;66,2132
-#define HERE 67,2161
-#define DEBUG0(70,2221
-#define DEBUG1(71,2283
-#define DEBUG2(72,2350
-#define DEBUG3(73,2422
-#  define FULL_DEBUG0(76,2520
-#  define FULL_DEBUG1(77,2570
-#  define FULL_DEBUG2(78,2625
-#  define FULL_DEBUG3(79,2685
-#  define FULL_DEBUG0(81,2756
-#  define FULL_DEBUG1(82,2784
-#  define FULL_DEBUG2(83,2819
-#  define FULL_DEBUG3(84,2854
-void myinit(87,2900
-void myfini(219,6647
-int reject(272,8394
-long compute_value(369,10616
-void abspath(385,10932
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(401,11266
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(402,11382
-  __attribute__((section(".init_array"))) typeof(404,11504
-  __attribute__((section(".fini_array"))) typeof(405,11579
-
-compiled/ConfigParser.h,492
-#define CONFIGPARSER_H2,23
-class ConfigParser6,66
-  ~ConfigParser(ConfigParser::~ConfigParser10,128
-  std::string& host(ConfigParser::host12,151
-  std::string& user(ConfigParser::user13,196
-  std::string& db(ConfigParser::db14,241
-  std::string& passwd(ConfigParser::passwd15,286
-  std::string m_host;ConfigParser::m_host18,345
-  std::string m_user;ConfigParser::m_user19,367
-  std::string m_db;ConfigParser::m_db20,389
-  std::string m_passwd;ConfigParser::m_passwd21,409
-
-compiled/translate.C,536
-const char * safe_get(3,47
-void translate(11,247
-  enum QueueType 14,292
-  enum QueueType { UNKNOWN QueueType::UNKNOWN14,292
-  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS14,292
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF14,292
-
-compiled/run_submission.h,30
-#define RUN_SUBMISSION_H2,25
-
-compiled/extract_linker.C,26
-void extract_linker(4,50
-
-compiled/xalt_fgets_alloc.h,32
-#define XALT_FGETS_ALLOC_H2,27
-
-compiled/xalt_utils.C,52
-bool path2module(5,70
-FILE* xalt_file_open(21,360
-
-compiled/xalt_mysql_utils.C,157
-static const int issueWarning 5,75
-void finish_with_error(7,111
-void print_stmt_error(17,282
-std::string object_type(29,577
-void insert_objects(57,1169
-
-compiled/link_submission.h,31
-#define LINK_SUBMISSION_H2,26
-
-compiled/Options.C,80
-double convert_double(9,145
-long convert_long(23,390
-Options::Options(37,633
-
-compiled/xalt_config.h.in,286
-#define XALT_CONFIG_H2,22
-#define OBJDUMP 4,45
-#define PATH_TO_PRGM_FILE 5,91
-#define LDD 6,134
-#define SHA1SUM 7,176
-#define SYS_LD_LIB_PATH 8,222
-#define PREFIX 9,268
-#define TRANSMISSION 10,305
-#define LOGGER 11,348
-#define XALT_ETC_DIR 12,393
-#define XALT_VERSION 13,431
-
-compiled/buildEnvT.C,21
-void buildEnvT(4,49
-
-compiled/Process.C,90
-Process::Process(10,176
-void Process::cmdline(42,910
-std::string& Process::exe(67,1383
-
-compiled/ConfigParser.C,53
-void trim(11,204
-ConfigParser::ConfigParser(24,380
-
-compiled/Options.h,963
-#define OPTIONS_H2,18
-class Options6,56
-  ~Options(Options::~Options10,114
-  long          ntasks(Options::ntasks11,130
-  double        startTime(Options::startTime12,186
-  double        endTime(Options::endTime13,242
-  std::string&  exec(Options::exec14,298
-  std::string&  syshost(Options::syshost15,354
-  std::string&  uuid(Options::uuid16,410
-  std::string&  userCmdLine(Options::userCmdLine17,466
-  std::string&  exec_type(Options::exec_type18,522
-  std::string&  confFn(Options::confFn19,578
-  double      m_start;Options::m_start22,644
-  double      m_end;Options::m_end23,667
-  long        m_ntasks;Options::m_ntasks24,688
-  std::string m_syshost;Options::m_syshost25,712
-  std::string m_uuid;Options::m_uuid26,737
-  std::string m_exec;Options::m_exec27,759
-  std::string m_userCmdLine;Options::m_userCmdLine28,781
-  std::string m_exec_type;Options::m_exec_type29,810
-  std::string m_confFn;Options::m_confFn30,837
-
-compiled/xalt_utils.h,26
-#define XALT_UTILS_H2,21
-
-compiled/xalt_generate_assembly.C,37
-double epoch(9,139
-int main(16,247
-
-compiled/link_direct2db.C,122
-uint select_link_id(13,223
-void insert_xalt_link(79,2099
-void insert_functions(226,7530
-void link_direct2db(410,13344
-
-compiled/direct2db.C,430
-#define  DATESZ 15,288
-typedef std::unordered_map<std::string,std::string17,309
-typedef std::unordered_map<std::string, uint> TableI;17,309
-int select_run_id(20,365
-void insert_xalt_run_record(85,2186
-void buildEnvNameT(305,10205
-bool reject_env_name(364,11737
-uint findEnvNameIdx(416,13056
-void insert_envT(526,16231
-void insert_filtered_envT(580,17713
-void update_xalt_run_record(656,19748
-void direct2db(719,21425
-
-compiled/parseLDTrace.C,80
-#define _GNU_SOURCE1,0
-void parseLDTrace(8,144
-void readFunctionList(73,1860
-
-compiled/Process.h,347
-#define PROCESS_H2,18
-class Process9,95
-  ~Process(Process::~Process13,141
-  pid_t        parent(Process::parent15,158
-  std::string& name(Process::name16,205
-  std::string m_exe;Process::m_exe21,345
-  std::string m_name;Process::m_name22,366
-  pid_t       m_pid;Process::m_pid23,388
-  pid_t       m_parent;Process::m_parent24,409
-
-compiled/capture.C,43
-#define DATA_SIZE 4,60
-void capture(6,84
-
-compiled/xalt_mysql_utils.h,32
-#define XALT_MYSQL_UTILS_H2,27
-
-compiled/Json.C,211
-void Json::fini(5,50
-void Json::add(13,158
-void Json::add_json_string(22,296
-void Json::add(31,442
-void Json::add(56,857
-void Json::add(77,1200
-void Json::add(113,1945
-std::string& Json::result(138,2509
-
-compiled/buildUserT.C,48
-#define  DATESZ 11,193
-void buildUserT(13,214
-
-compiled/xalt_generate_linkdata.C,17
-int main(13,246
-
-compiled/zstring.C,74
-std::string compress_string(8,182
-std::string decompress_string(53,1401
-
-compiled/parseLDD.C,20
-void parseLDD(6,95
-
-compiled/Makefile,25
-CXX 1,0
-	gcc $(51,2305
-
-compiled/base64.h,22
-#define BASE64_H2,17
-
-compiled/xalt_regex.template,419
-#define XALT_REGEX_H2,21
-#define N_ELEMENTS(4,43
-const char* acceptPathA[acceptPathA6,93
-const char* ignorePathA[ignorePathA7,145
-const char* hostnameA[hostnameA8,197
-const char* acceptEnvA[acceptEnvA9,249
-const char* ignoreEnvA[ignoreEnvA10,301
-const int   acceptPathSz 12,354
-const int   ignorePathSz 13,406
-const int   hostnameSz 14,458
-const int   acceptEnvSz 15,508
-const int   ignoreEnvSz 16,559
-
-compiled/extract_linker.h,30
-#define EXTRACT_LINKER_H2,25
-
-compiled/jsmn.h,475
-#define __JSMN_H_2,18
-	JSMN_UNDEFINED 18,261
-	JSMN_OBJECT 19,282
-	JSMN_ARRAY 20,300
-	JSMN_STRING 21,317
-	JSMN_PRIMITIVE 22,335
-} jsmntype_t;23,355
-enum jsmnerr 25,370
-	JSMN_ERROR_NOMEM 27,424
-	JSMN_ERROR_INVAL 29,492
-	JSMN_ERROR_PART 31,581
-	jsmntype_t type;41,810
-	int start;42,828
-	int end;43,840
-	int size;44,850
-	int parent;46,886
-} jsmntok_t;48,906
-	unsigned int pos;55,1085
-	unsigned int toknext;56,1136
-	int toksuper;57,1188
-} jsmn_parser;58,1257
-
-compiled/xalt_run_submission.C,72
-#define DATESZ 16,297
-const int syslog_msg_sz 17,316
-int main(19,348
-
-compiled/xalt_quotestring.c,226
-#define HERE 6,108
-const char *qcharA[qcharA7,180
-const char escCharA[escCharA13,617
-static char * buff 16,758
-static unsigned int sz 17,785
-const char* xalt_quotestring(20,815
-const char * xalt_unquotestring(85,2355
-
-compiled/zstring.h,23
-#define ZSTRING_H2,18
-
-compiled/buildRmapT.h,26
-#define BUILDRMAPT_H2,21
-
-compiled/capture.h,23
-#define CAPTURE_H2,18
-
-compiled/Json.h,124
-#define JSON_H2,15
-class Json6,56
-  Json(Json::Json9,77
-  ~Json(Json::~Json10,101
-  std::string m_s;Json::m_s21,471
-
-compiled/xalt_quotestring.h,27
-#define QUOTESTRING_H2,22
-
-compiled/xalt_fgets_alloc.c,46
-const int SZ 5,71
-int xalt_fgets_alloc(7,92
-
-README.md,97
-published by the Free Software Foundation;96,4120
-the License,97,4185
-the License, or 97,4185
-
-job_launcher/xalt_find_exec_openmpi.py,19
-def main(135,4727
-
-job_launcher/xalt_find_exec_srun.py,46
-def compute_ntasks(65,2222
-def main(80,2558
-
-job_launcher/xalt_which_mpi.in,69
-tracing_msg(26,1091
-findName(34,1210
-mpiN=133,3412
-elif 147,3634
-
-job_launcher/xalt_find_exec_mympirun.py,18
-def main(60,1995
-
-job_launcher/xalt_find_exec_hydra.py,19
-def main(102,3413
-
-job_launcher/xalt_find_exec_ncar.py,19
-def main(102,3374
-
-job_launcher/xalt_parse_mpirun_args.py,108
-def find_cmd(30,1289
-def default_compute_ntasks(50,1788
-def find_exec(55,1913
-def parse_ntasks(118,3625
-
-job_launcher/xalt_syshost_default.py,100
-def map_syshost(37,1440
-def level1_syshost(74,2372
-def level2_syshost(90,2763
-def main(116,3251
-
-job_launcher/aprun.in,264
-XALT_DIR=36,1419
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
-  export PBS_ACCOUNT=64,2362
-    prev=80,2869
-    -*) optarg=86,2992
-    *) optarg=87,3010
-    *) optarg=; done=87,3010
-      testMe=96,3147
-FIND_EXEC_PRGM=114,3679
-
-job_launcher/xalt_find_exec_ibrun.py,90
-def mpi_size(55,1810
-def mpi_rank(65,2094
-def compute_ntasks(76,2368
-def main(91,2786
-
-job_launcher/mpirun.lsf.in,234
-XALT_DIR=36,1422
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
-    prev=72,2580
-    -*) optarg=78,2703
-    *) optarg=79,2721
-    *) optarg=; done=79,2721
-      testMe=88,2868
-FIND_EXEC_PRGM=101,3147
-
-job_launcher/xalt_syshost_TACC.py,71
-def map_syshost(39,1501
-def level2_syshost(51,1683
-def main(77,2177
-
-job_launcher/ibrun.in,234
-XALT_DIR=36,1419
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
-    prev=71,2561
-    -*) optarg=77,2684
-    *) optarg=78,2702
-    *) optarg=; done=78,2702
-      testMe=87,2836
-FIND_EXEC_PRGM=100,3115
-
-job_launcher/xalt_find_exec_aprun.py,18
-def main(86,2927
-
-job_launcher/mympirun.in,234
-XALT_DIR=36,1428
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1693
-    prev=71,2573
-    -*) optarg=77,2696
-    *) optarg=78,2714
-    *) optarg=; done=78,2714
-      testMe=87,2863
-FIND_EXEC_PRGM=100,3142
-
-job_launcher/xalt_syshost_ncar.py,43
-def map_syshost(35,1287
-def main(54,1625
-
-job_launcher/mpirun.in,322
-XALT_DIR=36,1422
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
-  export PBS_ACCOUNT=65,2363
-    prev=80,2869
-    -*) optarg=86,2992
-    *) optarg=87,3010
-    *) optarg=; done=87,3010
-      testMe=96,3157
-FIND_EXEC_PRGM=109,3436
-    FIND_EXEC_PRGM=120,3706
-    FIND_EXEC_PRGM=123,3783
-
-job_launcher/xalt_find_exec_sgimpt.py,18
-def main(56,1878
-
-job_launcher/srun.in,235
-XALT_DIR=36,1416
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1681
-    prev=78,2921
-    -*) optarg=84,3044
-    *) optarg=85,3062
-    *) optarg=; done=85,3062
-      testMe=110,3676
-FIND_EXEC_PRGM=143,4506
-
-job_launcher/xalt_site_pkg.py,50
-def translate(52,2350
-def keep_env_var(174,6287
-
-hostname.default.txt,0
+.version,0
 
 ignore.default.txt,0
 
-compiled/run.vmijo.zzz.json,0
-
-src/xalt_rmap_lmap.in.py,0
-
-src/xalt_global.py,0
-
-src/public_domain.txt,0
-
-src/xalt_strip_linklib.py,0
-
-Themis.py,0
-
 my_docs/fosdem16/xalt.org,0
-
-my_docs/database.txt,0
-
-my_docs/sc15/sc15.org,0
-
-my_docs/isc15/xalt_isc.tex,0
-
-my_docs/ideas/xalt.org,0
 
 my_docs/xsede15/xalt_xsede15.tex,0
 
-mapping.example.json,0
+my_docs/ideas/xalt.org,0
 
-old/altd/aprun-prologue/system-hostname,0
+my_docs/database.txt,0
 
-old/altd/dev/bin/check_executable.py,0
+my_docs/isc15/xalt_isc.tex,0
 
-ACKNOWLEDGMENTS.txt,0
+my_docs/sc15/sc15.org,0
+
+compiled/run.vmijo.zzz.json,0
+
+Themis.py,0
 
 detectfunctions/ParseFuncList.py,0
 
@@ -2161,73 +1780,13 @@ detectfunctions/dirs.xml,0
 
 detectfunctions/libmap.json,0
 
-docs/build/html/_sources/010_user.txt,0
+contrib/TACC/config/hostname.tacc.txt,0
 
-docs/build/html/_sources/040_Database.txt,0
+contrib/TACC/config/ignore.ls5.txt,0
 
-docs/build/html/searchindex.js,0
+contrib/TACC/config/ignore.tacc.txt,0
 
-docs/build/html/_static/plus.png,0
-
-docs/build/html/_static/up-pressed.png,0
-
-docs/build/html/_static/underscore.js,0
-
-docs/build/html/_static/file.png,0
-
-docs/build/html/_static/minus.png,0
-
-docs/build/html/_static/ajax-loader.gif,0
-
-docs/build/html/_static/down-pressed.png,0
-
-docs/build/html/_static/up.png,0
-
-docs/build/html/_static/pygments.css,0
-
-docs/build/html/_static/down.png,0
-
-docs/build/html/.buildinfo,0
-
-docs/build/doctrees/010_user.doctree,0
-
-docs/build/doctrees/021_interception.doctree,0
-
-docs/build/doctrees/050_testing.doctree,0
-
-docs/build/doctrees/101_pagelisting.doctree,0
-
-docs/build/doctrees/030_installation.doctree,0
-
-docs/build/doctrees/060_production.doctree,0
-
-docs/build/doctrees/020_QuickStart.doctree,0
-
-docs/build/doctrees/index.doctree,0
-
-docs/build/doctrees/070_datamining.doctree,0
-
-docs/build/doctrees/090_FAQ.doctree,0
-
-docs/build/doctrees/040_Database.doctree,0
-
-docs/build/doctrees/080_usecase.doctree,0
-
-docs/source/040_Database.rst,0
-
-docs/source/010_user.rst,0
-
-docs/source/conf.py,0
-
-accept.default.txt,0
-
-Config/rtm_config.py,0
-
-.version,0
-
-QUICK_INSTALL_GUIDE.TXT,0
-
-contrib/queries/compiler_usage.py,0
+contrib/TACC/config/hostname.ls5.txt,0
 
 contrib/queries/library_usage.py,0
 
@@ -2235,20 +1794,40 @@ contrib/queries/software_lastusage.py,0
 
 contrib/queries/export_db_to_file.py,0
 
+contrib/queries/compiler_usage.py,0
+
 contrib/queries/executable_usage.py,0
 
 contrib/xalt_modulefile,0
 
-contrib/TACC/config/hostname.tacc.txt,0
-
-contrib/TACC/config/ignore.ls5.txt,0
-
-contrib/TACC/config/hostname.ls5.txt,0
-
-contrib/TACC/config/ignore.tacc.txt,0
-
-contrib/update_object_module_name.py,0
-
 contrib/getent/libc.py,0
 
 contrib/supporting_clang/ld.sh,0
+
+contrib/update_object_module_name.py,0
+
+Config/rtm_config.py,0
+
+old/altd/dev/bin/check_executable.py,0
+
+old/altd/aprun-prologue/system-hostname,0
+
+mapping.example.json,0
+
+accept.default.txt,0
+
+hostname.default.txt,0
+
+src/xalt_rmap_lmap.in.py,0
+
+src/public_domain.txt,0
+
+src/xalt_strip_linklib.py,0
+
+src/xalt_global.py,0
+
+docs/source/conf.py,0
+
+docs/source/040_Database.rst,0
+
+docs/source/010_user.rst,0
