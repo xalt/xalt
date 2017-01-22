@@ -99,7 +99,10 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
       if (listFn):
         sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)   # push fn
-      f     = open(fn,"r")
+      try:
+        f     = open(fn,"r")
+      except:
+        continue
       try:
         linkT = json.loads(f.read())
       except:  
@@ -140,7 +143,10 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
         sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)
       num   += 1
-      f      = open(fn,"r")
+      try:
+        f      = open(fn,"r")
+      except:
+        continue
       
       try:
         runT   = json.loads(f.read())
