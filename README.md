@@ -32,6 +32,16 @@ researchers do and do not need.  Drilling down to data driven usage
 statistics helps stakeholders conduct business in a more efficient,
 effective, and systematic way.
 
+## Commercial Support
+Ellexus is providing commercial support.
+See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercomputers if interested.
+
+
+## Documentation
+Documentation is provided at http://xalt.readthedocs.org as well as
+doc/XALTDesignandInstallationManual-0.5.pdf.
+
+
 ## Installation and Use of XALT
 
 For quick installation instructions, see [QUICK_INSTALL_GUIDE.TXT](QUICK_INSTALL_GUIDE.TXT).
