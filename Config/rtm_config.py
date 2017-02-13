@@ -98,7 +98,9 @@ accept_env_patterns = [
   r'^R_.*',
   r'^TACC_AFFINITY_ENABLED$',
   r'^TARG$',
-  r'^_LMFILES_$'
+  r'^_LMFILES_$',
+  r'^HTTP_PROXY$',
+  r'^http_proxy$'
   ] 
 
 ignore_env_patterns = [

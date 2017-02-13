@@ -674,7 +674,17 @@ void insert_filtered_envT(MYSQL* conn, uint run_id, time_t epoch, Table& envT)
       // INSERT INTO join_run_env
       if (mysql_stmt_execute(stmt))
         {
-          print_stmt_error(stmt, "Could not execute stmt for insert join_run_env",__FILE__,__LINE__);
+          char istr[12];
+          sprintf(&istr[0], "%d", env_id);
+
+          std::string str = "Could not execute stmt for insert join_run_env: name: \"";
+          str.append(env_name);
+          str.append("\", value: \"");
+          str.append(env_value);
+          str.append("\" env_id: ");
+          str.append(istr);
+          
+          print_stmt_error(stmt, str.c_str() ,__FILE__,__LINE__);
           exit(1);
         }
     }
