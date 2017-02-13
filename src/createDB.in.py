@@ -76,7 +76,7 @@ def main():
     # If MySQL version < 4.1, comment out the line below
     cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
     # If the database does not exist, create it, otherwise, switch to the database.
-    cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci" % xalt.db())
+    cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_bin" % xalt.db())
     cursor.execute("USE "+xalt.db())
 
     idx = 1
@@ -102,7 +102,7 @@ def main():
           PRIMARY KEY  (`link_id`),
           INDEX  `index_date` (`date`),
           UNIQUE  KEY  `uuid` (`uuid`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_link table" % idx); idx += 1
 
@@ -119,7 +119,7 @@ def main():
           PRIMARY KEY  (`obj_id`),
           INDEX  `index_hash_id` (`hash_id`),
           INDEX  `thekey` (`object_path`(128), `hash_id`, `syshost`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_object table" % idx ); idx += 1;
 
@@ -134,7 +134,7 @@ def main():
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`link_id`) REFERENCES `xalt_link`(`link_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create join_link_object table" % idx); idx += 1
 
@@ -171,7 +171,7 @@ def main():
           INDEX  `index_date`     (`date`     ),
           INDEX  `index_run_uuid` (`run_uuid` ),
           INDEX `thekey` (`job_id`, `syshost` )
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_run table" % idx)
     idx += 1
@@ -187,7 +187,7 @@ def main():
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`),
           FOREIGN KEY (`obj_id`)  REFERENCES `xalt_object`(`obj_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create join_run_object table" % idx); idx += 1
 
@@ -200,7 +200,7 @@ def main():
           PRIMARY KEY  (`env_id`),
           UNIQUE  KEY  `env_name` (`env_name`),
           INDEX        `a_env_name` (`env_name`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_env_name table" % idx); idx += 1
 
@@ -215,7 +215,7 @@ def main():
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`env_id`)  REFERENCES `xalt_env_name`(`env_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`) 
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1 
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1 
         """)
     print("(%d) create join_run_env table" % idx); idx += 1
 
@@ -228,7 +228,7 @@ def main():
           PRIMARY KEY (`usr_id`),
           INDEX `the_user` (`user`),
           INDEX `a_user`   (`anon_user`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_user table" % idx); idx += 1
 
@@ -242,7 +242,7 @@ def main():
           PRIMARY KEY (`acct_id`),
           INDEX `the_account` (`account`),
           INDEX `a_acct`   (`anon_user`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_account table" % idx ); idx += 1;
     
@@ -253,7 +253,7 @@ def main():
           `function_name` varchar(255)            NOT NULL,
           PRIMARY KEY  (`func_id`),
           UNIQUE  KEY  `function_name` (`function_name`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_function table" % idx ); idx += 1;
     
@@ -267,7 +267,7 @@ def main():
           PRIMARY KEY (`join_id`),
           FOREIGN KEY (`func_id`)  REFERENCES `xalt_function`(`func_id`),
           FOREIGN KEY (`link_id`)  REFERENCES `xalt_link`(`link_id`) 
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1 
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1 
         """)
     print("(%d) create join_link_function table" % idx); idx += 1
     
@@ -280,7 +280,7 @@ def main():
           `env_blob`      blob                NOT NULL,
           PRIMARY KEY (`envT_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_ci AUTO_INCREMENT=1
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_general_bin AUTO_INCREMENT=1
         """)
     print("(%d) create xalt_env table" % idx); idx += 1
 
