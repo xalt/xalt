@@ -10,6 +10,14 @@ OVERVIEW
 ^^^^^^^^
 XALT is a lightweight software tool for any Linux cluster, workstation, or high-end supercomputer to track executable information and linkage of static shared and dynamically linked libraries. When the code is executed, wrappers intercept both the GNU linker (ld) and code launcher (like mpirun, aprun, or ibrun) to capture linkage information and environmental variables.
 
+DOWNLOAD
+^^^^^^^^
+
+The most current release of XALT can be found at
+https://github.com/Fahey-McLay/xalt.git.
+
+Stable releases of XALT can be found at https://xalt.sf.net
+
 New in Version 2.0+
 ^^^^^^^^^^^^^^^^^^^^
 
