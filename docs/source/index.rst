@@ -16,7 +16,7 @@ DOWNLOAD
 The most current release of XALT can be found at
 https://github.com/Fahey-McLay/xalt.git.
 
-Stable releases of XALT can be found at https://xalt.sf.net
+Stable releases of XALT can be found at http://xalt.sf.net
 
 New in Version 2.0+
 ^^^^^^^^^^^^^^^^^^^^
