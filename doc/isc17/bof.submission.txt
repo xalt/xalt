@@ -1,0 +1,44 @@
+Title: XALT and Related Technologies: Job-Level Usage Data on Today's Supercomputers
+ 
+Abstract (250 words):
+ 
+V0.3 Currently 236 words:
+ 
+Let's continue talking about real, high value supercomputer analytics
+at the level of each individual job. We’re interested in what users
+are actually doing: everything from which applications, libraries, and
+individual functions are in demand, to preventing the problems that
+get in the way of successful computational research. Moreover, we want
+to do this for every single job running on our systems. And this year
+we’re especially interested in some of the next great challenges,
+including (1) understanding the needs of formerly non-traditional
+research communities that comprise half the user community and whose
+non-MPI workflows consume more than a third of the computing cycles;
+(2) putting usage data in the hands of end users interested in records
+of their own job-level activity to facilitate, for example,
+reproducible research. Among the emerging needs: tracking individual
+Python packages and similar usage within other frameworks like R and
+MATLAB. 
+ 
+XALT (xalt.readthedocs.org) is a battle-tested tool focused on
+job-level usage data; it enjoys a well-documented history of helping
+administrators, support staff, and decision makers manage and improve
+their operations. The small but growing list of centers that run XALT
+includes NCSA, UK NCC, KAUST, NICS, the University of Utah, and
+TACC. Version 2.0 is now ready to begin tracking non-MPI
+workflows. Join us a far-ranging discussion that will begin with an
+overview of new XALT capabilities before it ventures into broader
+strategic and technical issues related to job-level activity
+tracking. 
+ 
+Target Audience (100 words):
+ 
+V0.1 46 words
+ 
+The target audience includes system administrators, support staff, and
+decision-makers interested in the data needed to understand their
+users’ needs, priorities, and workflows. We are especially interested
+in return visits from among the 40+ passionate stakeholders who joined
+us for last year’s highly successful ISC BoF.
+
+ 
