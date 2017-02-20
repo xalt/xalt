@@ -66,6 +66,7 @@ class CmdLineOptions(object):
     parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
     parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
+    parser.add_argument("--cpn",     dest='cpn',       action="store",       default = "16",           help="Cores per node (default = 16)")
     parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
     parser.add_argument("--full",    dest='full',      action="store_true",                            help="top number of entries to report")
     args = parser.parse_args()
@@ -78,6 +79,7 @@ class ExecRun:
     self.__cursor = cursor
 
   def build(self, args, startdate, enddate):
+    cpn            = args.cpn
     equiv_patternA = name_mapping()
     sA = []
     sA.append("SELECT CASE ")
@@ -88,7 +90,7 @@ class ExecRun:
       sA.append(s)
 
     sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
-    sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
+    sA.append(" AS execname, ROUND(SUM(run_time*num_nodes*cpn/3600)) as totalcput, ")
     sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
