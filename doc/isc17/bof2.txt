@@ -1,0 +1,57 @@
+Title: XALT, OGRT and Related Technologies: Job-Level Usage Data on Today's Supercomputers
+
+Abstract (248 words):
+
+Let's continue talking about real, high value cluster analytics at the
+level of each job. We're interested in what users are actually doing:
+from applications and libraries, to prevent things in the way of
+successful research. Moreover, we want to do this for every single job
+running on our systems. This year we're especially interested in some
+of the next challenges, including (1) understanding the needs of
+non-MPI workflows that comprise half the user community; (2) putting
+usage data in the hands of end users interested in records of their
+own job-level activity. Among the emerging needs: tracking individual
+usage within other frameworks such as Python; (3) combining job level
+activity with job level metrics to enable users and operations
+personnel to understand the resource requirements of applications and
+use resources more efficiently.
+ 
+XALT (xalt.readthedocs.org) is a battle-tested tool focused on
+job-level usage data; it enjoys a history of helping
+decision makers manage and improve their operations. A current list of
+centers that run XALT includes CSCS, NCSA, UK NCC, KAUST, NICS and
+TACC. Version 2.0 is now ready to begin tracking non-MPI workflows.
+
+OGRT (https://github.com/georg-rath/ogrt) started out as a way to apply the
+capabilities of XALT to non-traditional workloads, using non-traditional technologies.
+Its focus is on real-time tracking of job level activity with lowest possible overhead.
+
+Join us a far-ranging discussion that will begin with an overview of
+new XALT and OGRT capabilities before it ventures into broader
+strategic and technical issues related to job-level activity tracking. 
+
+Target Audience (100 words):
+ 
+V0.2 62 words
+ 
+The target audience includes system administrators, support staff, and
+decision-makers interested in the data needed to understand their
+users' needs, priorities, and workflows. You do not need to own a
+supercomputer to attend, a small cluster is sufficient.  We are
+especially interested in return visits from among the 40+ passionate
+stakeholders who joined us for last year's highly successful ISC BoF.
+
+
+Georg Rath Bio:
+
+Georg slipped into data intensive computing while studying software
+engineering. He held a part time position at a scientific research
+institute doing image processing in Vienna and got insight into the
+unique challenges this environment brings with it. After finishing his
+bachelor he had to come up with a way to handle the large influx of
+data and subsequent processing of that data in that institute. From
+there he went on to drag the legacy infrastructure of a life sciences
+institute into the 21st century and while doing so got interested in
+ways of improving user experience when working with centralized
+computing services.
+
