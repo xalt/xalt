@@ -254,6 +254,10 @@ class XALTdb(object):
           obj_kind   = obj_type(object_path)
 
           query      = "INSERT into xalt_object VALUES (NULL,%s,%s,%s,%s,NOW(),%s)"
+          
+          if moduleName:
+            if len(moduleName) > 64:
+              moduleName = moduleName[:63]
                       
           cursor.execute(query,(object_path, syshost, hash_id, moduleName, obj_kind))
           obj_id   = conn.insert_id()
