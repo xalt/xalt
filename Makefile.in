@@ -312,7 +312,7 @@ dist:
 	mkdir DIST;                                                     	   \
         cd DIST;                                                        	   \
         tar xf ../xalt-$(VERSION).tar;                                             \
-	sed -i 's/\@git\@/$(GIT_VERSION)/g' $$(find xalt-$(VERSION) -type f); \
+	sed -i '' 's/\@git\@/$(GIT_VERSION)/g' $$(find xalt-$(VERSION) -type f); \
         $(RM) ../xalt-$(VERSION).tar;                                    	   \
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION);           	   \
 	cd ..; $(RM) -rf DIST
