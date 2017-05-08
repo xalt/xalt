@@ -48,7 +48,7 @@
 #define DATESZ    100
 
 typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR} xalt_status;
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO} xalt_status;
 
 static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
@@ -59,6 +59,7 @@ static const char * xalt_reasonA[] = {
   "XALT has found the host does not match hostname pattern",
   "XALT has found the executable does not match path pattern",
   "XALT has problem with a JSON string",
+  "XALT in tracking MPI only, non-mpi executable found",
 };
 
 const  char*           xalt_syshost();
@@ -219,6 +220,18 @@ void myinit(int argc, char **argv)
     }
 
   my_size = compute_value(sizeA);
+  v = getenv("XALT_TRACKING_MPI_ONLY");
+  if (!v)
+    v = XALT_TRACKING_MPI_ONLY;
+      
+  if (my_size == 0L && strcmp(v,"yes"))
+    {
+      DEBUG0(stderr,"    -> MPI Tracking turned on and this job is not an MPI job -> exiting\n}\n\n");
+      reject_flag = XALT_MPI_SIZE_ZERO;
+      return;
+    }
+
+
   if (my_size < 1L)
     my_size = 1L;
 

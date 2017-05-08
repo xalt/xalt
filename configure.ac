@@ -28,6 +28,19 @@ AC_ARG_WITH(xaltFilePrefix,
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
 
 
+AC_SUBST(XALT_TRACK_MPI_ONLY)
+AC_ARG_WITH(trackMPIOnly
+    AC_HELP_STRING([--with-trackMPIOnly=ans],[Track only mpi executable, [[no]]]),
+    XALT_TRACK_MPI_ONLY="$withval"
+    AC_MSG_RESULT([XALT_TRACK_MPI_ONLY=$with_trackMPIOnly])
+    AC_DEFINE_UNQUOTED(XALT_TRACK_MPI_ONLY, "$with_trackMPIOnly")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([XALT_TRACK_MPI_ONLY=$withval])
+    XALT_TRACK_MPI_ONLY="$withval"
+    AC_DEFINE_UNQUOTED(XALT_TRACK_MPI_ONLY, "$withval"))dnl
+
+
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
     AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
