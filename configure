@@ -661,6 +661,7 @@ SYSTEM_PATH
 MYSQLDB
 XALT_CONFIG_PY
 ETC_DIR
+XALT_TRACKING_MPI_ONLY
 XALT_FILE_PREFIX
 TRANSMISSION
 subdirs
@@ -715,6 +716,7 @@ ac_user_opts='
 enable_option_checking
 with_transmission
 with_xaltFilePrefix
+with_trackMPIOnly
 with_etcDir
 with_config
 with_MySQL
@@ -1352,6 +1354,7 @@ Optional Packages:
   --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
   --with-xaltFilePrefix=ans
                           Prefix where the json files are written [[$HOME]]
+  --with-trackMPIOnly=ans Track only mpi executable, [[no]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
   --with-config=ans       A python file defining the accept, ignore, hostname
@@ -2951,6 +2954,29 @@ $as_echo "XALT_FILE_PREFIX=$withval" >&6; }
     XALT_FILE_PREFIX="$withval"
     cat >>confdefs.h <<_ACEOF
 #define XALT_FILE_PREFIX "$withval"
+_ACEOF
+
+fi
+
+
+
+
+# Check whether --with-trackMPIOnly was given.
+if test "${with_trackMPIOnly+set}" = set; then :
+  withval=$with_trackMPIOnly; XALT_TRACKING_MPI_ONLY="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TRACKING_MPI_ONLY=$with_trackMPIOnly" >&5
+$as_echo "XALT_TRACKING_MPI_ONLY=$with_trackMPIOnly" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_TRACKING_MPI_ONLY "$with_trackMPIOnly"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TRACKING_MPI_ONLY=$withval" >&5
+$as_echo "XALT_TRACKING_MPI_ONLY=$withval" >&6; }
+    XALT_TRACKING_MPI_ONLY="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_TRACKING_MPI_ONLY "$withval"
 _ACEOF
 
 fi
@@ -6092,6 +6118,7 @@ echo "XALT Config.py file........................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH............................" : $SYSTEM_PATH
 echo "XALT SYSLOG Message Size...................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style..................." : $SYSHOST_CONFIG
+echo "XALT_TRACKING_MPI_ONLY......................" : "$XALT_TRACKING_MPI_ONLY"
 echo "XALT 32bit support.........................." : $HAVE_32BIT
 echo "XALT Using libuuid.........................." : $HAVE_WORKING_LIBUUID
 echo "XALT build with MySQL support..............." : $Using_MYSQL
