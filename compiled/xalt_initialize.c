@@ -224,7 +224,7 @@ void myinit(int argc, char **argv)
   if (!v)
     v = XALT_TRACKING_MPI_ONLY;
       
-  if (my_size == 0L && strcmp(v,"yes"))
+  if (my_size == 0L && (strcmp(v,"yes") == 0))
     {
       DEBUG0(stderr,"    -> MPI Tracking turned on and this job is not an MPI job -> exiting\n}\n\n");
       reject_flag = XALT_MPI_SIZE_ZERO;

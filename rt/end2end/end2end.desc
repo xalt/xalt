@@ -75,6 +75,9 @@ test_descript = {
      ./helloñññ
 
 
+     displayThis "XALT_TRACKING_MPI_ONLY=yes ./helloñññ"
+     XALT_TRACKING_MPI_ONLY=yes ./helloñññ
+
      displayThis "gfortran -fopenmp -o omp_pi"
      gfortran -fopenmp -o omp_pi $(testDir)/omp_pi.f90
 
@@ -96,6 +99,7 @@ test_descript = {
 
      displayThis "XALT_TRACING=yes LD_PRELOAD= ./try.rd > try.log 2>&1"
      LD_PRELOAD= XALT_TRACING=yes ./try.rd > try.REGULAR.log 2>&1
+
 
      displayThis "xalt_file_to_db"
      unset LD_PRELOAD

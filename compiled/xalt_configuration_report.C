@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 
   const char* xalt_tracking_mpi_only = getenv("XALT_TRACKING_MPI_ONLY");
   if (xalt_tracking_mpi_only == NULL)
-    xalt_tracking_mpi_only == XALT_TRACKING_MPI_ONLY;
+    xalt_tracking_mpi_only = XALT_TRACKING_MPI_ONLY;
 
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {

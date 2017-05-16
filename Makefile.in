@@ -35,7 +35,7 @@ endif
 OPTLVL            := -g -O2
 package           := xalt
 VERSION           := $(shell cat $(srcdir)/.version)
-TRACK_MPI_ONLY    := @XALT_TRACK_MPI_ONLY@
+TRACKING_MPI_ONLY := @XALT_TRACKING_MPI_ONLY@
 TRANSMISSION      := @TRANSMISSION@
 SITE_NAME         := @SITE@
 ETC_DIR           := @ETC_DIR@
@@ -209,7 +209,7 @@ __installMe:
 	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \
-	        -e 's|@xalt_track_mpi_only@|$(TRACK_MPI_ONLY)|g'           \
+	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           \
 	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   \
