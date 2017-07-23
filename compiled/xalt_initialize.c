@@ -144,7 +144,7 @@ void myinit(int argc, char **argv)
   struct utsname u;
 
   p_dbg = getenv("XALT_TRACING");
-  if (p_dbg && strcmp(p_dbg,"yes") == 0)
+  if (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run")))
     {
       background   = 0;
       xalt_tracing = 1;
