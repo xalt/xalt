@@ -23,7 +23,7 @@ int main(int argc, char* argv[], char* env[])
 {
 
   char * p_dbg        = getenv("XALT_TRACING");
-  int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
+  int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
 
   Options options(argc, argv);

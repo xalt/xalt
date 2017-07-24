@@ -176,7 +176,7 @@ AC_PATH_PROG(PATH_TO_RM, rm, [])
 AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
-AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN)
+AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN_mysql_config)
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
@@ -202,6 +202,7 @@ if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
    echo "without /proc/sys/kernel/random/uuid"
    echo "See the manual for details"
    echo "======================================================="
+   rm -f makefile
    exit 1
 fi  
 
@@ -224,6 +225,7 @@ if test "$HAVE_CXX11" = no; then
    echo "Unable to install XALT without g++ supporting -std=c++11"
    echo "See the manual for details"
    echo "======================================================="
+   rm -f makefile
    exit 1
 fi
 
@@ -233,6 +235,7 @@ if test "$XALT_CONFIG_PY" = no; then
    echo "Unable to install XALT without setting --with-config=..."
    echo "See the manual for details"
    echo "======================================================="
+   rm -f makefile
    exit 1
 fi
 
@@ -242,6 +245,7 @@ if ! test -f $XALT_CONFIG_PY; then
    echo "Unable to find the file: $XALT_CONFIG_PY"
    echo "quitting!"
    echo "======================================================="
+   rm -f makefile
    exit 1
 fi
 
@@ -252,19 +256,21 @@ if test "$MYSQLDB" = yes; then
       echo "Unable to install XALT without the python module: MySQLdb"
       echo "To install it do: pip install MySQL-python"
       echo "======================================================="
+      rm -f makefile
       exit 1
    fi
-   if test "$MYSQL_CONFIG" = UNKNOWN; then
+   if test "$MYSQL_CONFIG" = UNKNOWN_mysql_config; then
       echo
       echo "======================================================="
       echo "Unable to install XALT without the program mysql_config"
       echo "This program is used to find the MySQL installation"
       echo "See the manual for details"
       echo "======================================================="
+      rm -f makefile
       exit 1
    fi 
 else
-   MYSQL_CONFIG=UNKNOWN
+   MYSQL_CONFIG=UNKNOWN_mysql_config
    echo
    echo "======================================================="
    echo "XALT only requires MySQL libraries and MySQL-python module"
@@ -283,6 +289,7 @@ if test "$SYSHOST_CONFIG" = no; then
    echo "Your choices are hardcode, nth_name, read_file and mapping."
    echo "See the manual for details."
    echo "======================================================="
+   rm -f makefile
    exit 1
 fi
    
@@ -315,12 +322,14 @@ fi
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build_h/xalt_regex.h
 if test "$?" != 0; then
+   rm -f makefile
    exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
 
 if test "$?" != 0; then
+   rm -f makefile
    exit 1
 fi	
 

@@ -18,7 +18,7 @@ const int syslog_msg_sz = SYSLOG_MSG_SZ;
 void transmit(const char* transmission, std::string& jsonStr, const char* kind, std::string& key, const char* syshost, const char* resultFn)
 {
   char * p_dbg        = getenv("XALT_TRACING");
-  int    xalt_tracing = (p_dbg && strcmp(p_dbg,"yes") == 0);
+  int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0 ));
 
   if (strcasecmp(transmission, "file") == 0)
     {
