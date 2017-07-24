@@ -1,282 +1,4 @@
 
-doc/SC13_BoF.pptx,607
-°\”÷ÍÂ2>fg-Û8VÀ ü7ÁôkÑˇ2©G+]„¿õô—˜k1˘k1˘2,960
-≈≥∑ÙäK∫‘ÜK∫‘35,15653
-ùë>l]l36,15894
-q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S@7S149,47581
-q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S]8KxŒu|*‰Å ;‘´∆”3—\˙à4⁄º‰ˆ;Ä+¢1"TÌœÆì_ÉbN…´˘L¥ˇÌ\˝»`ÈÑDHçmÚ2“‚¶›Jem{=PPKªMÚÔZöüÄ|6ëe6#ûÌ⁄≠èœdî3zØ8S¸<˘°z◊ü≠Ü.ßBäØPE{§,RÃô?ﬁÄ;sdΩÕË˛¬át°ïÇå‘|ÚfÃÌL)âπÁn.‚ Wg»8>Wß’kh-|5lqqœ=‘6-aã‰#µv!ÿ∑ﬂlF˛z^jãlL&Ír3Ó˜E[$ΩnÌY{çΩf˝õo∑…¡6ƒ+Ñ„DßÜıü"/TdàÔ}k∫_Oœk∫_O149,47581
-BYêTÉÔ®ﬂ?Mœ{òΩè"µ<ãc#ﬁSr5c#ﬁSr156,49061
-SWºÖ)»,<X´ä¡¿–kàπìä	ÏÌ•nà≈_˝2nà≈_˝158,49268
-
-doc/README.vm.txt,124
-   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
-   mysql> quit;16,575
-    $ ./build_hello_executables.sh sh33,887
-
-doc/xsede15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,147
-
-doc/Lmod_installation,77
-     $ CC=10,297
-      CURRENT_MODULES=38,1181
-          LMOD_PKG=47,1417
-
-doc/web/xalt.txt,54
-XALT is a collaboration between PI Mark Fahey 12,355
-
-doc/sea16/abs.txt,156
-Let's talk real, no-kiddin' supercomputer analytics,4,64
-individual tasks,7,268
-individual tasks, users,7,268
-We have been running XALT at TACC,25,1175
-
-doc/sea16/talk.tex,314
-\newcommand{\bfnabla}\bfnabla28,1001
-\newcommand{\laplacian}\laplacian29,1049
-\newcommand{\grad}\grad30,1091
-\newcommand{\tgrad}\tgrad31,1126
-\newcommand{\dvg}\dvg32,1164
-\newcommand{\curl}\curl33,1204
-\newcommand{\lap}\lap34,1246
-\section{XALT}XALT42,1341
-\section{Conclusion}Conclusion304,9171
-
-doc/sea16/abstract.txt,224
-Let‚Äôs talk real,1,0
-Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
-individual batch submissions,4,210
-individual batch submissions, users,4,210
-organizations concerned about meeting users‚Äô needs;14,803
-
-doc/sea16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
-doc/sc16/talk.tex,244
-\newcommand{\bfnabla}\bfnabla28,988
-\newcommand{\laplacian}\laplacian29,1036
-\newcommand{\grad}\grad30,1078
-\newcommand{\tgrad}\tgrad31,1113
-\newcommand{\dvg}\dvg32,1151
-\newcommand{\curl}\curl33,1191
-\newcommand{\lap}\lap34,1233
-
-doc/sc16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
-doc/isc15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,143
-
-doc/isc15/xalt-tutorial-slides.pptx,19
-¬0DÔÇˇDÔÇ2,2516
-
-doc/sc15/XALT_SC15-BOF.pptx,787
-5	⁄AåA1620,388852
-5	⁄Aå;^X/∂°ınG;nG1620,388852
-ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–WRÃZ≠T…Y∂V«Y¬W∆Y–3041,914254
-ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠Y3041,914254
-ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠Y3041,914254
-ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
-ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
-ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
-≤≤∞*Ò∫ñéX§VIôYÇYºl˚g0mìl˚ƒ+qmp•qmp5265,1885423
-
-doc/sc15/XALTdata.pptx,9407
-¬0DÔÇˇDÔÇ10,2569
-˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒjY19,6261
-˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒ]-k«ÇÅC2M…qB*´äoBsoB19,6261
-˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒ]-k«ÇÅC2M…qB*´äoBsÕ;•úO]O19,6261
-J≤0€ ‰€|:òaj=aj28,7679
-Q≤ö∑Àºi{iÕ!“%[à1≥wT:ÅeÈMë—Ô∂πUR“Sı≥jnö+e>_>\)ñgó√*Q¬-Œ∏˚–3VÜáÒìÈ˜Ω$1]/TyÚNLa[;p˛#˝ƒ$1ïkÕR˚2ﬁ¶Àﬂ˜åMó{Fè˚†¡fQ≤ ZÙπ9^oŒπ–í]"ïÀ∫»§b|c†ù% Â}ù~lYU√dÚÑµ4Ω|ËÂí˘¥R≥d˙±Åì2çX˙7vG˛Éq‹k<DÉÕC?øÖªçı˙¨Œ…'w¯m^äi—Í˝XH„+X$¶òèÿôBP jÙ·∆aYÆ¥qkK=+§@òw÷'úèyåP‚·;8KCÅNå¨≤+°ƒı≥“»Z1≈∫Z1≈50,12923
-f°´àg1Uÿå%IMµTs¡N1˜“®<et©vSu=ïç∑”¡≠X∫≥äÑV%5£¬Ñê#"5*ÖeaS’cVôºW°•@†©•hCB	‡hMk‘ËÚ≠ózö}ø]üJÿJ1478,392913
-î*\êƒ&†P–i‘∆P–i‘1567,409369
-eëÀ’à»à»†ŒB¯ƒ·√*±, àZH@)&≠:èiU“A¶™∞RtVãËA#®¥˚™æ•·•¶€Ã›\’–◊W‘M-x£õ0ë‰+(∞€ñΩpz	*¢i£yñ@!äúñ[áºI.l¨ü]¡MjËœ·ï≠WÄV‘7q,#” ZG≠îÀ¶ZG≠îÀ1616,419117
-}à4˛ƒú—ÀZÌësS⁄K*À±ç•txYµH≤€§^ÕEkôÜíHT+@Ç0Ya∫9ªm¨J@Ç0Ya∫9ªm¨4706,999114
-§Í•	dÆ(@*†Ñ˛©¿“eª/É°≈“gSno‡ÿÃ]f„ç1;ßK$î±S*dÍÈ™M,ÑÆ7JiY€∆ÍB	\£aıa4746,1005613
-g§p¥•¸å≈ΩÜ’o+I∏ƒ±≈‘i84!fJ∆Ç¬PDå+",k⁄IjıfíwQ‡>¶e¿∆ñ•»Üöi∑≈√®QQmäú˝C7Uì¶ŸâYä®›0bR8jÒ˚_Ìå9L~3´M0ÜfçM0Üf4983,1050624
-–äQ«¨8Z dö®‘ßúLŸ\]&¨UU4995,1052765
-–äQ«¨8Z dö®‘ßúLŸ\]&¨U]c´h∞≥œÑlTQ=4995,1052765
-}∑WÜ…WÜ19679,3890128
-}∑WÜ……ñ¡W‚Â¨]√6›∆üøñ,%é¨TU@”WíXû9¢qÓó◊~>‰˜ìH÷ÈoÈÉ:$Å°ÜXjHìJôÆHQ ú3Cé‹CßQëé≠TF¿!Ÿ‹aúÇt©+í£ÖNN19679,3890128
-Õì\nﬂ8»^zY‚ëÁñäÆiíU8¯•fÄEÌ$aeæí8ñe®Xåû.¢h∆h25533,4994955
-!pﬁ®KÆV§3°jí¢£≠È∑Z+ÉB¥bMXê)RkPø>ïÙ=1c,•.‚KX€´-KµËì3ä©«—ScW/UOC.>ºedíBÌV§ì¡fd	¥˘7g;Ø’ΩÁç·Üäå¡j⁄X©XÊjj⁄X©XÊ25557,4998630
-ü©&*∆UÁEd™ê®¥–ì¸Mh`J¿¬t,F+˙}Ÿ¬úÛ$ÁØ’∏2ô}…Aπ•ŒAπ•25941,5069312
-◊Vg`+pî4Ÿ·√E]>kj5.s;πÁèrcÊ≈b¸rcÊ≈b25971,5074612
-H™&ô ¿Çßópî\EìI<qhãıû%jA;jA25974,5075101
-@:¥ÇEçI|($i©ØR•‹ïÏçN+y≈QäΩ∏Îy≈QäΩ∏25976,5075381
-®2ÉB’Bj‘…¶öÄ+‘∫∏(1∏=˜éƒWn6∆z/∞™ã%µÉek*©2g%Å«UcÎc5’‚(~˛∂jVäÖóKy£“Ø›⁄Ì/a5≠¥ìg4ë¸"≈§å∑Öj ≠A$ﬁEXÙ8–)∑f‚9ÂX¸D£Uö‹ëÅL™©-R;R25977,5076038
-…Ë2ıπ‹,QÕ4¶äJh‚zhú®gçµ,…N±º≥.Ï≈™¡,∑ìÄìÃ°jj25978,5076406
-LãÑÀπ?ç¢¨’ïL™UïΩº0›A}4øSn∫åﬂ™cSn∫åﬂ™c26171,5111993
-ÃµQÇÅQÇ36761,7095627
-Ì•-fJlNfJlN36762,7095658
-Ì•-fJlN¥ÎÒ¥;qm=36762,7095658
-™ÜV'[ëPÄ⁄FKÉSJ/K∑≈—ÊSñ€ÃoVc∞]qSÄÀnM›V±Ì>»ÀO^îƒRnàc˛6Bû,v™äu£5¢`ËMß∏ÕnvœÈ"hÂÒß/V®IV®39042,7523172
-´_Y;_Y39043,7523400
-ù?¬55)”§	Q5VBLö‰÷´/èÀÏz|Õ$XLT¯Ã˛:ò}Ó)Òt&Qïå¿"ÇWà@<“K4LÛK4L39049,7523828
-ıxîZ¬ ‡5;ãò5j5ÂGP`~`Ùæ€€6£±≥Yˆ≠5eå”Áp2“÷c1rA>Ù'SGíÕÊR«EY3Ud±Ó^yiêU<AÑû@∂Ï7˚é‡_nöI¬Ëï1ígg$Æ…‚Dö›º'}zT†zT39072,7527743
-ä1´äV¢ï? z„íz„39079,7528980
-øÚz‹•`Éèézw™∆ºiLÔ*Uº“}›,™À£⁄Ωæ‰∫kP¥kP¥39181,7548704
-ëCù4†9Œ+Ç’“°nìê#VW”L3ß<˘åÖX QdRX Qd39182,7548776
-äÜ«ﬁ∂¡SËS39187,7549210
-ÄEOù8Ä†WÂˆú-2zù&võîß…≈ª2Ÿ-…ICâ ‡7ÜR¶|TÙ«C"…ÉƒmÛGWÁI¶ù+i©‰é(cç⁄Ñå}™x˛ñpó∑O+àËö®ã·´Ï¨“Çtà∆e€àÍÅ‰t&4Uâ4°…:à#M3™Ç¥¿≠:fñ¶ñ<~Zï®∞Úb™©·˙⁄*”ã•…eqƒ° À∂™j‚é™¥‘÷‘	S∆cy•ES∆cy•39198,7550109
-ñ¡.Z\ïtnÏı&F"A68¯#WgWâ°1ØøGkπy†2EP≤Ñ,ë»A4]A439231,7556266
-´;.ØN]N39235,7557166
-6∂∂⁄LqPêŒ@$¸C∫ßQ»»¬ë¿tËø$;^ãÔ"õq∂q53978,10344515
-}QÈY	w´w54050,10359636
-ó¨-ëdWÇ@“®óQsìR\ñ´$Å	A¨ÄCSâI◊Ö%-BeæBe54051,10359677
-hSE•=˘:˙C5D≠A_]Ö£¢∆c6ç>Zû⁄E°»gÒMWë™…7‹}µ,ï?Ó>4ç¶£yÕ3ô~Â@T{Ö¥Àmm#ó–ëÕj⁄@—PôC©ä2‘FÃ≈ú≥ª™ÉÛo4fY ¸L…5óPîPIZjPcµõ¶÷∆˝˛/¥±ıxx∞Ù˘Ÿsxù©%}o,zÊz54058,10360753
-ôz<dX•‹ëeº}´i©ßß•û¶hWÌe»…Lê82.ÜG∞§Îas‚€<foÉfo54059,10361106
-ôz<dX•‹ëeº}´i©ßß•û¶hWÌe»…Lê82.ÜG∞§Îas‚€<foÉJì¶ï;ù—:óL±¢i–·Z…ıïõPM ™≤ùD†ÿe:ìÃÜöÆE^7<ôlÇRUCYKÒö&ÆÕ-,ÚÓi\—¿c§ßQc§ß54059,10361106
-äy)ö£¯{ÃÒPBÉ˜*#‘ ¸rZ]nR‹Ó7qGêTé9Té54344,10419016
-}øQmUQm55409,10629358
-}øQmU=r‰©Á…Q “JÉƒ”T IU∑P€E<ìX√X‰Q,äW√é8æ)Qt0}Uå3…ÄI⁄ÂâCVÚM _™zH¨USú!m]m55409,10629358
-1%N°QN°Q55410,10629486
-1%N°Q4Û≈,3ü!V,V55410,10629486
-1%N°Q4Û≈,3ü!V,∂ﬁKWπKW55410,10629486
-®ÓAÇÖ$‘∫K8.UCPΩOFÃUV†±©:Ö	*Øò≈k“c/Ò£∞6˝yÍ<]m{m55488,10644531
-ÛH∑3æçbéàc,êQ∫IÓ–Æ4*∂∫áÆñîé¥bå\í’MMB›‹8©SSJp¡/Y≥ﬂg/Y≥ﬂ55491,10645148
--\ì1:K¢©&f÷öƒÌå≈*˝±πqò‹˛‚órÂ≤e∞’—RnƒÊÂ˚He˚%UFôÍ+)^é¢(5∫ƒ…l.â∑YoÃqH—F—ƒÒ≥: ≈¢fQ5≤F⁄–<~#∆"®j¢‚Y©i‚0%Å`»äáp§°dëû™„VïrÍƒ´§ækGôWœ}≠} ‹µyëµÎyëµ55609,10667423
-ıîâkn•£kn•55617,10668459
-ıîâkn•£I]~~55617,10668459
-öI´È‹pfw∆N∫¯‹ï.¯Lik‡p∏⁄∫Lù5]v]Ú9ÂUé´Ué55630,10671228
-î-”∆K¯K55637,10672110
-î-”∆K¯Óﬁ;M/¨Üâ_±4_±55637,10672110
-IÉ0©Ml\‘Wâ9(£JÜ Fñ6IcDä5™Ä@†ÄœÌ94©$úß—ø≥§ßjXö:LdU∆Vñ}fV2÷d)–^Iı†ñIı†ñ55685,10681007
-}qûü&ﬂYz]Yz57936,11104615
-}qûü&ﬂYz]©ò¡ÊÛ´]GvJGv57936,11104615
-}qûü&ﬂYz]©ò¡ÊÛ´]GvJé]üö‹òjçØãÃ„*$©¬n#å¬ƒ—W}√y‡…◊’Ã’&®HcHô¢Òö¡p±mex¬\Y&å™H5/Ä≤)“C3ùJC3ù57936,11104615
-5jUT~ IZ †Ö:◊˜2õK/É›ïu˚¢<,‚ÒõªoQf°JØJ®ê‚‡zóë©©QŸ£äÜ¶ $âe-Vï≠µ∆VtïVo“h÷Ë©%›-Tó1D«6Â‰%tÀC⁄ éÖëãUJUh˙å$“ä“ê∑·ÆÉ¥˜-hHˆ_¸73hHˆ_¸757939,11104955
-5jUT~ IZ †Ö:◊˜2õK/É›ïu˚¢<,‚ÒõªoQf°JØJ®ê‚‡zóë©©QŸ£äÜ¶ $âe-Vï≠µ∆VtïVo“h÷Ë©%›-Tó1D«6Â‰%tÀC⁄ éÖëãUJUh˙å$“ä“ê∑·ÆÉ¥˜-hHˆ_¸73êá7Q]èà”n::h$€>gß…IB)™¥s¬)¸¯˙⁄∆√LÈxü’!≈‡ñ®ˆ/¨Ñâ∂æe‘u¨÷ƒìÙe‘u¨÷ƒì57939,11104955
-Õ”òß»e3Uÿ(02U÷„ˆ˛Ogm}±åäèÜ›äT'èùj£•…Èß»=<rT¬"˛!&á˘zÎ~Â}ÊÀp∏IÏdhp∏IÏd58002,11114171
-Õ”òß»e3Uÿ(02U÷„ˆ˛Ogm}±åäèÜ›äT'èùj£•…Èß»=<rT¬"˛!&á˘zÎ~Â}ÊÀp∏IÏdhR8òœ*°,∞€9∏*‡È`%Ò…z—TD®z—TD58002,11114171
-ÉæB™îHƒHK-Rôc*ÖqDîU$ìSvjj—c^ˆ. JöºrÌzjHË0¯mπ∏©∂ç^Z}ÖPπöºUjz%ÃbÛÍbÛ58004,11114759
-ÉæB™îHƒHK-Rôc*ÖqDîU$ìSvjj—c^ˆ. JöºrÌzjHË0¯mπ∏©∂ç^Z}ÖPπöºUjz%ÃbÛÍ…§®íLe,o3EJÕIo3EJÕ58004,11114759
-à“T√°4√+DH+†G&ßUEsESÓUEsES58006,11114878
-Ur«I†Ur«I58043,11120448
-yS áÌÙËÎuoÃ}˜÷;;+∞sX¸&˙Ÿ˚¢£ì›ôóìå…—è≥ü%≤∑>Ii©€D·jf≠£®Ii©€D·jf≠£58055,11122513
-yS áÌÙËÎuoÃ}˜÷;;+∞sX¸&˙Ÿ˚¢£ì›ôóìå…—è≥ü%≤∑>Ii©€D·jf≠£®yŸ‹πfB@⁄”ö7ã4]≠Uu;Uu58055,11122513
-MO6Zø Ù‘∞ŒEE=EE58059,11123195
-®≠dã-¥û≈Lì†ëó∑√Òîgå∆‡ÎÒ1¢È*ûùÓZ©}(J©°J©58093,11129923
-‹Œne}]4˘É§é∂,Ud€EDîò∫·å:í¶ö8ºT4K¶ùïdé@ Ì⁄õA&“ó1¨ìL,Q¬Cäù8Q¬Cäù58129,11135653
-‹Œne}]4˘É§é∂,Ud€EDîò∫·å:í¶ö8ºT4K¶ùïdé@ Ì⁄õA&“ó1¨ìL,Q¬Cäù8ïUV™;cn∂Ë—JV‡|•ÂôÖ#Ãúû5GNò ºWü7ò•⁄Ü€4—C>‰YÍÒπ8„‹YÍÒπ8„58129,11135653
-Uå¥ŸUå¥Ÿ59065,11308284
-*%®€…¸CMUµÛ∏ÏûCMUµÛ∏Ï59071,11309729
-VT-ZØZ59072,11309861
-VT-ZØî€ÿÍ·]O?€“”†™ITEV¢ITEV59072,11309861
-ÇE0uû÷UkeÔl±@Ωà≈cÒ’x∫*º∆P‚jjÎvãÇô®≤’t–≈Ì«bs"çÒ—œiQ4iQ462994,12031087
-}µâ≈•$y:2U”Nµå»Q-Mm÷4f˙9d	5⁄)êCyA#%Rè0Jâ+´‚õÅ ≠UïI q,q67103,12806955
-}3∞y]y67224,12831857
-™ßèj¡c¢`Zà*øéHnæ70›≈Hnæ70›67226,12832366
-®?A¯ÅÛ>î4È']î3c≤SKä»∂'9^µoåo67272,12844450
-ñã=é∆‰ç4‘ﬁjßh+#íû:HC5Ls9!’n˜≤\Ïw°7! òÍ,Iâï¶#OâÌm-®ÍFU”&¢		Ïo‚‹!’mM°£v†¸/JäåRÑöR†q,3l \&;˚Õ_ù/áÉå§é¢´	¸	™l˘<¶lE+T÷Ö®â~Ë’EHö)%rÊXê>õ\Ú€B€åçB€å67287,12848378
-ï$öÆGRaù∂∆w¯LÒSWÓyÒŸçøò ·rë®Ã·´Û5OKCì••>SSîZYöSSîZY67288,12848668
-™òû£	0ö:Èï`h™©2ŸÎ¿™HøtKÓ∆ÏHÍŸë#ìL8;ÈÔì√JH¡î»jJH¡î»67380,12869046
-™òû£	0ö:Èï`h™©2ŸÎ¿™HøtKÓ∆ÏHÍŸë#ìL8;ÈÔì√JH¡î»jTìN∑·’åo®Ω;UU67380,12869046
-.äV!@¡b)ƒ‘TíGC◊aw>ˆœl,l67547,12900077
-´è†ÕÕOzâãºpöëR∆»™cô-©oinÇ8Ä(™≤ƒ`)1(FQÙÎ.îI]—¡™∆¥R”£MWïâf9$†:çh∆µŸ*≈Bí+®Á•ñ:í≥Y>o˝c+˜ŸL≈\{ïŒÂÉqn¸‰ìäa≤®∞fI›!†î÷AÇñXÀ≠‰>8‚QGu∂ÀMÌLèÙ·“O?Ç≤»ÌTEL»A™¢Ê6åTEL»A™¢Ê6å67631,12917462
-´è†ÕÕOzâãºpöëR∆»™cô-©oinÇ8Ä(™≤ƒ`)1(FQÙÎ.îI]—¡™∆¥R”£MWïâf9$†:çh∆µŸ*≈Bí+®Á•ñ:í≥Y>o˝c+˜ŸL≈\{ïŒÂÉqn¸‰ìäa≤®∞fI›!†î÷AÇñXÀ≠‰>8‚QGu∂ÀMÌLèÙ·“O?Ç≤»ÌTEL»A™¢Ê6å ¥vu„ôG–≠#FíÄj–†Uõ]*jBÄ1¿LÌº‚IIUQ◊¥u)ÆZ‹ˆ6jM—é¿V”Ãh“¥ü-D“Q‡©%éI2Tı)NÒI/‹E"∆öΩuº˝«ó”pÚ*íI;ç+»+‡x§à◊QûV öÆñz=πÆ¢wqòUYÅ()ƒÎV$	(3Ä]@¿™vÔjc∂6/gWa£∆è<πLÕzÕUµlıtQ¨ìÅJ¥TıTµb"áSLûGö	⁄¶7ãŸ≠∂Ás∂s67631,12917462
-¬ãRBohÂbÿx∫~ŒÕg1~ä¶äZLné≥u„6t∏˙∂âısÂj*W;W67632,12917881
-¬ãRBohÂbÿx∫~ŒÕg1~ä¶äZLné≥u„6t∏˙∂âısÂj*W;bj,bj67632,12917881
-¬ãRBohÂbÿx∫~ŒÕg1~ä¶äZLné≥u„6t∏˙∂âısÂj*W;bj,ºÙuâç”ÌÍ&Ò‘«(n‹˚ŒSmÕ≥Ô∑œl#É¶Víë∞oí1ﬂ¨∏F%GS¢ÄGS¢Ä67632,12917881
-µKh≠ÆFâ;Luî*i@Ç™VLÍ˚q¿ús±fvˆÓÆ§›RGAæ2‘y‘ﬁò˙Ê°‹y‹FÂã$!°ßóM°É#∆≥¶Bû_ªVî¬∞•Vò‹˜}«k∫xo‡¶XÿÕîê—®^4Z_û,7,Ó±Ç£¡%èÅyÀn⁄£,48Ì≠pÍ«ÇpÍ«Ç68157,13020550
-Ø!.J,J68730,13119105
-cvﬁcv68733,13119301
-è0zèÑ¡Â2xÏ÷rá3ìßóB?ºxƒû∑ÄÜíâjiõ&+´'ZZ∫O0a5(Ky'ßzRœ+∆SD»&A!ô‚ëòvÈeåvÈe68737,13119510
- s3§TÛy)Üàù÷∏ºìX e$aKupS)mK•ÄÀ:ï§~"È®Èœß√âîF}B’Jík†ägNQ´L@óóñ´rÀMéÜä≠*qMqM68760,13123502
-Ñ)3›Î@:ZQg˜≠V_!Bkˆ}‡ g2É#µ%¨¡b6÷ZT≈•?ÒWÆÅ·•äö)Æôi™%äΩ°ä©bäUibäU82000,15598170
-}•]KE0®…÷Qäòk!•¢¶YaAT±3@YaAT±382023,15602146
-¯Ã<Â™Qu)’”Ixä	ÇY|$Q®î¢	îØáÆ0»⁄B≈©…£√€¿≠Ci´1e®ÛQVÜÑT≥pÆCπdSW5.;m“µ^ÊÜ∫ßsÂó	ÖöÇã%Sê§Sê82027,15602591
-⁄§_Ñ–∂¶¨sLöG/,cıT©≠FíI%AEßŸNìÜM»á!óÀKï≈‚≥ÒAë4yQGA∂ ∆–Väz|Uj jïñ2CPc∑Gî¥ã∫√Ωs®È∑ò2ÑzG;-N¢JON¢J82031,15603066
-j¡h•4ı©§”∏È†`1òÈiD≤Ós“Qd2U˘jZ∫Z›πïƒHÉ5Aä°’PµÊΩ^ö¢G™Hññ#¥åÆ§û%auıq§äßGÍ∫—ıF@ö±ΩAJ∞!d4¶?	ZT≤àô÷¢Ω†‚Ñ4`*–é‹±œŸœPf°Pf82114,15617127
-{Smk{Smk82115,15617293
-Ì•-fJlN¥ÎÒ¥;qm=82198,15633513
-™ÜV'[ëPÄ⁄FKÉSJ/K∑≈—ÊSñ€ÃoVc∞]qSÄÀnM›V±Ì>»ÀO^îƒRnàc˛6Bû,v™äu£5¢`ËMß∏ÕnvœÈ"hÂÒß/V®IV®84478,16061027
-´_Y;_Y84479,16061255
-ù?¬55)”§ù?¬55)”84485,16061683
-ıxîZ¬ ‡5;ãò5j5ÂGP`~`Ùæ€€6£±≥Yˆ≠5eå”Áp2“÷c1rA>Ù'SGíÕÊR«EY3Ud±Ó^yiêU<AÑû@∂Ï7˚é‡_nöI¬Ëï1ígg$Æ…‚Dö›º'}zT†zT84508,16065598
-ä1´äV¢ï? z„íz„84515,16066835
-øÚz‹•`Éèézw™∆ºiLÔ*Uº“}›,™À£⁄Ωæ‰∫kP¥kP¥84617,16086559
-ëCù4†9Œ+Ç’“°nìê#VWnìê#V84618,16086631
-È“kQ&¥¢©rGájC2–ë÷ÑïÈ4¢öyf™$êæmQÚ=M‹”°ZLl˚n™|éK%*ÕI]>FÉ#$ß%_4t–™IºÉ/OC ÇüC´C84619,16086704
-Ç0Xñ@*I®µe§f§>ìXöX84656,16092614
-Ç0Xñ@*I®µe§f§>ìXö:\M]jd∂ùNBı\™X©k)±x\Ñ4…gmE∏gmE84656,16092614
-Ç0Xñ@*I®µe§f§>ìXö:\M]jd∂ùNBı\™X©k)±x\Ñ4…gmE∏Îô]2E;E84656,16092614
-´;.ØN]G¿‰êÃAQ”b5i5«--	0®%V¥¶†hOƒ?=;C>#≤Òªäáôe.oo84671,16095021
-
-doc/sc15/talk.tex,313
-\newcommand{\bfnabla}\bfnabla28,981
-\newcommand{\laplacian}\laplacian29,1029
-\newcommand{\grad}\grad30,1071
-\newcommand{\tgrad}\tgrad31,1106
-\newcommand{\dvg}\dvg32,1144
-\newcommand{\curl}\curl33,1184
-\newcommand{\lap}\lap34,1226
-\section{XALT}XALT42,1321
-\section{Conclusion}Conclusion289,8618
-
-doc/sc15/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
-doc/fosdem16/abs.txt,156
-Let's talk real, no-kiddin' supercomputer analytics,4,64
-individual tasks,7,268
-individual tasks, users,7,268
-We have been running XALT at TACC,25,1175
-
-doc/fosdem16/talk.tex,313
-\newcommand{\bfnabla}\bfnabla28,979
-\newcommand{\laplacian}\laplacian29,1027
-\newcommand{\grad}\grad30,1069
-\newcommand{\tgrad}\tgrad31,1104
-\newcommand{\dvg}\dvg32,1142
-\newcommand{\curl}\curl33,1182
-\newcommand{\lap}\lap34,1224
-\section{XALT}XALT42,1319
-\section{Conclusion}Conclusion329,9922
-
-doc/fosdem16/abstract.txt,224
-Let‚Äôs talk real,1,0
-Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
-individual batch submissions,4,210
-individual batch submissions, users,4,210
-organizations concerned about meeting users‚Äô needs;14,803
-
-doc/fosdem16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
-doc/isc16/abs.txt,156
-Let's talk real, no-kiddin' supercomputer analytics,4,64
-individual tasks,7,268
-individual tasks, users,7,268
-We have been running XALT at TACC,25,1175
-
-doc/isc16/talk.tex,314
-\newcommand{\bfnabla}\bfnabla28,1002
-\newcommand{\laplacian}\laplacian29,1050
-\newcommand{\grad}\grad30,1092
-\newcommand{\tgrad}\tgrad31,1127
-\newcommand{\dvg}\dvg32,1165
-\newcommand{\curl}\curl33,1205
-\newcommand{\lap}\lap34,1247
-\section{XALT}XALT42,1342
-\section{Conclusion}Conclusion319,9381
-
-doc/isc16/abstract.txt,224
-Let‚Äôs talk real,1,0
-Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
-individual batch submissions,4,210
-individual batch submissions, users,4,210
-organizations concerned about meeting users‚Äô needs;14,803
-
-doc/isc16/Makefile,56
-TALKS 1,0
-	$(RM) $(foreach suf, ${TEX_SUFS}, $(10,139
-
 contrib/argparse/argparse.py,5073
     def sorted(108,3670
 def _callable(116,3838
@@ -674,68 +396,568 @@ BASE_DIR=111,3108
 MAKE=118,3203
   MAKE=121,3270
 
-Makefile.in,1221
-srcdir 22,1051
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=73,2720
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)always73,2720
-VDATE	74,2896
-	cd compiled; $(128,5364
-	   ext=176,7239
-           oext=177,7309
-           [ "$$ext" = "in.py" ] && oext=179,7456
-           [ "$$ext" = "in.c" ]  && oext=180,7533
-                           < $$i > $(DIRLOC)/$$fn$$oext;$$fn$$oext213,9850
-               chmod +x $(DIRLOC)/$$fn$$oext;$$fn$$oext215,9984
-	    true;216,10061
-	@git status -s > /tmp/git_st_$$$$ git_st_$$$$220,10159
-	    branchName=226,10637
-            git push        github $$branchName 227,10712
-            git push --tags github $$branchName 228,10794
-        fi 229,10876
-        ifneq 233,10998
-	    echo "$(TAG)"                                            >  .version version239,11411
-            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version version240,11489
-	    branchName=242,11659
-            git push        origin $$branchName 243,11737
-	    git push --tags origin $$branchName 244,11822
-          fi 245,11900
-	$(307,15577
-
-my_docs/source/index.rst,36
+docs/source/index.rst,36
 XALT: Library Tracking Software2,1
 
-my_docs/source/020_QuickStart.rst,22
+docs/source/020_QuickStart.rst,22
 Quick Start Guide1,0
 
-my_docs/source/030_FAQ.rst,8
+docs/source/030_FAQ.rst,8
 FAQ1,0
 
-my_docs/source/060_datamining.rst,16
+docs/source/060_datamining.rst,16
 Data Mining1,0
 
-my_docs/source/050_production.rst,15
+docs/source/050_production.rst,15
 Production1,0
 
-my_docs/source/010_installation.rst,17
+docs/source/010_installation.rst,17
 Installation1,0
 
-my_docs/source/040_testing.rst,12
+docs/source/040_testing.rst,12
 Testing1,0
 
-my_docs/Makefile,17
+docs/Makefile,1466
 SPHINXOPTS 5,92
+SPHINXBUILD 6,108
+PAPER 7,137
+BUILDDIR 8,153
+$(error The '$(SPHINXBUILD)' command was not found. Make sure you have Sphinx installed, then set the SPHINXBUILD environment variable to point to the full path of the '$(SPHINXBUILD)' executable. Alternatively you can add the directory with the executable to your PATH. If you don't have Sphinx installed, grab it from http:$(error The '$(SPHINXBUILD)' command was not found. Make sure you have Sphinx installed, then set the SPHINXBUILD environment variable to point to the full path of the '$(SPHINXBUILD)' executable. Alternatively you can add the directory with the executable to your PATH. If you don't have Sphinx installed, grab it from http12,281
+PAPEROPT_a4 16,654
+PAPEROPT_letter 17,695
+ALLSPHINXOPTS 18,740
+I18NSPHINXOPTS 20,901
+.PHONY:.PHONY22,962
+html:html24,1114
+help:help29,1251
+clean:clean56,2778
+dirhtml:dirhtml60,2809
+singlehtml:singlehtml65,2958
+pickle:pickle70,3117
+json:json75,3258
+htmlhelp:htmlhelp80,3391
+qthelp:qthelp86,3598
+applehelp:applehelp95,3971
+devhelp:devhelp103,4283
+epub:epub112,4563
+latex:latex117,4698
+latexpdf:latexpdf124,4976
+latexpdfja:latexpdfja130,5202
+text:text136,5444
+man:man141,5581
+texinfo:texinfo146,5716
+info:info153,5998
+gettext:gettext159,6225
+changes:changes164,6379
+linkcheck:linkcheck169,6514
+doctest:doctest175,6723
+coverage:coverage180,6918
+xml:xml185,7117
+pseudoxml:pseudoxml190,7249
 
-configure.ac,241
+Makefile.in,2408
+srcdir 22,1051
+VPATH 23,1081
+  srcdir 25,1130
+CURRENT_MK 27,1158
+OS_NAME 29,1209
+LIB_OPTIONS 30,1248
+  LIB_OPTIONS 32,1308
+OPTLVL 35,1370
+package 36,1398
+VERSION 37,1424
+TRACKING_MPI_ONLY 38,1477
+TRANSMISSION 39,1523
+SITE_NAME 40,1559
+ETC_DIR 41,1587
+prefix 42,1618
+GIT_BRANCH 43,1648
+XALT_V 44,1675
+XALT_DIR 45,1720
+SYSLOG_MSG_SZ 46,1751
+SYS_LD_LIB_PATH 47,1788
+HAVE_LIBUUID 48,1827
+HAVE_32BIT 49,1871
+PATH_TO_AS 50,1905
+PATH_TO_BASENAME 51,1939
+PATH_TO_CAT 52,1979
+PATH_TO_CAT 53,2014
+PATH_TO_DATE 54,2049
+PATH_TO_DIRNAME 55,2085
+PATH_TO_FILE 56,2124
+PATH_TO_GREP 57,2160
+PATH_TO_HEAD 58,2196
+PATH_TO_LDD 59,2232
+PATH_TO_LOGGER 60,2267
+PATH_TO_MKDIR 61,2305
+PATH_TO_OBJDUMP 62,2342
+PATH_TO_OTOOL 63,2381
+PATH_TO_PSTREE 64,2418
+PATH_TO_PYTHON 65,2456
+PATH_TO_READLINK 66,2494
+PATH_TO_RM 67,2534
+PATH_TO_SHA1SUM 68,2568
+PATH_TO_UUIDGEN 69,2607
+USE_ARGPARSE 70,2646
+XALT_FILE_PREFIX 71,2690
+GIT_PROG 73,2731
+GIT_VERSION 74,2766
+VDATE	75,2942
+LIB 77,2981
+LIB64 78,3016
+LIBEXEC 79,3053
+SITE 80,3092
+BIN 81,3128
+SBIN 82,3163
+DIRLIST 83,3199
+BIN_PKG 91,3676
+BIN_PKG 93,3752
+SBIN_PKG 95,3813
+SBIN_PKG 97,3983
+LIBEXEC_PKG 99,4045
+LIBEXEC_PKG 105,4437
+SITE_PKG 107,4502
+SITE_PKG 109,4579
+TACC_PKG 111,4641
+TACC_PKG 116,5053
+INIT_SRC 117,5114
+INIT_SRC 118,5157
+.PHONY:.PHONY120,5219
+all:all122,5228
+install:install125,5246
+build_compiled:build_compiled128,5394
+echo:echo131,5694
+remove_genfiles:remove_genfiles140,5896
+$(DIRLIST)$(DIRLIST143,6049
+Inst_libexec:Inst_libexec146,6076
+Inst_site:Inst_site149,6199
+Inst_sbin:Inst_sbin152,6316
+Inst_bin:Inst_bin155,6433
+Inst_TACC:Inst_TACC158,6548
+Use_getent_yes:Use_getent_yes162,6666
+Use_argparse_no:Use_argparse_no168,6882
+Use_argparse_yes:Use_argparse_yes170,6900
+__installMe:__installMe173,7051
+           bareN=175,7133
+           fn=176,7209
+           oext=178,7355
+           [ "$$ext" [ "$$ext"180,7502
+           [ "$$ext" [ "$$ext"181,7579
+            [ "$$ext" [ "$$ext"216,10043
+world_update:world_update221,10261
+            echo "All files not checked in echo "All files not checked in224,10432
+            echo "configure is out of date echo "configure is out of date226,10589
+gittag:gittag234,11106
+tags:tags253,12206
+dist:dist311,15713
+makefile:makefile322,16351
+neat:neat325,16418
+clean:clean328,16488
+clobber:clobber330,16624
+
+my_docs/SC13_BoF.pptx,607
+°\”÷ÍÂ2>fg-Û8VÀ ü7ÁôkÑˇ2©G+]„¿õô—˜k1˘k1˘2,960
+≈≥∑ÙäK∫‘ÜK∫‘35,15653
+ùë>l]l36,15894
+q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S@7S149,47581
+q?÷˜¡]Ö´ﬁá¬b±Ù?Í*ü≠Í|Ë…{‘ì˘ŒÑñ÷Mº'‡±Œáìt—Ü‡∞\åh±)E<B"@7S]8KxŒu|*‰Å ;‘´∆”3—\˙à4⁄º‰ˆ;Ä+¢1"TÌœÆì_ÉbN…´˘L¥ˇÌ\˝»`ÈÑDHçmÚ2“‚¶›Jem{=PPKªMÚÔZöüÄ|6ëe6#ûÌ⁄≠èœdî3zØ8S¸<˘°z◊ü≠Ü.ßBäØPE{§,RÃô?ﬁÄ;sdΩÕË˛¬át°ïÇå‘|ÚfÃÌL)âπÁn.‚ Wg»8>Wß’kh-|5lqqœ=‘6-aã‰#µv!ÿ∑ﬂlF˛z^jãlL&Ír3Ó˜E[$ΩnÌY{çΩf˝õo∑…¡6ƒ+Ñ„DßÜıü"/TdàÔ}k∫_Oœk∫_O149,47581
+BYêTÉÔ®ﬂ?Mœ{òΩè"µ<ãc#ﬁSr5c#ﬁSr156,49061
+SWºÖ)»,<X´ä¡¿–kàπìä	ÏÌ•nà≈_˝2nà≈_˝158,49268
+
+my_docs/eb_hack_17/talk.tex,244
+\newcommand{\bfnabla}\bfnabla28,992
+\newcommand{\laplacian}\laplacian29,1040
+\newcommand{\grad}\grad30,1082
+\newcommand{\tgrad}\tgrad31,1117
+\newcommand{\dvg}\dvg32,1155
+\newcommand{\curl}\curl33,1195
+\newcommand{\lap}\lap34,1237
+
+my_docs/eb_hack_17/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/README.vm.txt,124
+   mysql> grant all on xalt.* to 'xaltuser'@'@15,517
+   mysql> quit;16,575
+    $ ./build_hello_executables.sh sh33,887
+
+my_docs/xsede15/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,29
+%.pdf:%.pdf4,95
+all:all7,125
+clean:clean9,140
+clobber:clobber13,223
+
+my_docs/Lmod_installation,77
+     $ CC=10,297
+      CURRENT_MODULES=38,1181
+          LMOD_PKG=47,1417
+
+my_docs/web/xalt.txt,54
+XALT is a collaboration between PI Mark Fahey 12,355
+
+my_docs/sea16/abs.txt,156
+Let's talk real, no-kiddin' supercomputer analytics,4,64
+individual tasks,7,268
+individual tasks, users,7,268
+We have been running XALT at TACC,25,1175
+
+my_docs/sea16/talk.tex,314
+\newcommand{\bfnabla}\bfnabla28,1001
+\newcommand{\laplacian}\laplacian29,1049
+\newcommand{\grad}\grad30,1091
+\newcommand{\tgrad}\tgrad31,1126
+\newcommand{\dvg}\dvg32,1164
+\newcommand{\curl}\curl33,1204
+\newcommand{\lap}\lap34,1246
+\section{XALT}XALT42,1341
+\section{Conclusion}Conclusion304,9171
+
+my_docs/sea16/abstract.txt,224
+Let‚Äôs talk real,1,0
+Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
+individual batch submissions,4,210
+individual batch submissions, users,4,210
+organizations concerned about meeting users‚Äô needs;14,803
+
+my_docs/sea16/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/isc17/bof.submission.txt,361
+Abstract 3,87
+of their own job-level activity to facilitate,18,902
+administrators,25,1243
+administrators, support staff,25,1243
+includes NCSA,27,1383
+includes NCSA, UK NCC,27,1383
+includes NCSA, UK NCC, KAUST,27,1383
+includes NCSA, UK NCC, KAUST, NICS,27,1383
+includes NCSA, UK NCC, KAUST, NICS, the University of Utah,27,1383
+Target Audience 34,1712
+
+my_docs/isc17/bof2.txt,98
+Title: XALT,1,0
+Abstract 3,92
+usage within other frameworks such as Python;14,734
+XALT 19,971
+
+my_docs/sc16/talk.tex,244
+\newcommand{\bfnabla}\bfnabla28,988
+\newcommand{\laplacian}\laplacian29,1036
+\newcommand{\grad}\grad30,1078
+\newcommand{\tgrad}\tgrad31,1113
+\newcommand{\dvg}\dvg32,1151
+\newcommand{\curl}\curl33,1191
+\newcommand{\lap}\lap34,1233
+
+my_docs/sc16/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/isc15/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,25
+%.pdf:%.pdf4,91
+all:all7,121
+clean:clean9,136
+clobber:clobber13,219
+
+my_docs/isc15/xalt-tutorial-slides.pptx,19
+¬0DÔÇˇDÔÇ2,2516
+
+my_docs/sc15/XALT_SC15-BOF.pptx,787
+5	⁄AåA1620,388852
+5	⁄Aå;^X/∂°ınG;nG1620,388852
+ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–WRÃZ≠T…Y∂V«Y¬W∆Y–3041,914254
+ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠Y3041,914254
+ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠Y3041,914254
+ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
+ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
+ˇ;ˇÄD˚~LÙ{T%Óv]-Èqh4‰mr;‡i|A‹eÖFÿbéJ‘_ñM—]ùPŒ\•RÃZ≠T…Y∂V«Y¬W∆Y–W¬YÊXøYÛYªZ˚Yµ[˚Z∞]˚Z≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠]˚Y≠Y3041,914254
+≤≤∞*Ò∫ñéX§VIôYÇYºl˚g0mìl˚ƒ+qmp•qmp5265,1885423
+
+my_docs/sc15/XALTdata.pptx,9407
+¬0DÔÇˇDÔÇ10,2569
+˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒjY19,6261
+˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒ]-k«ÇÅC2M…qB*´äoBsoB19,6261
+˛¬Àê¸—[L≈6ÃÑ˘ÖÍ∑«P¯qª@¿ÁaJ„>—u†Á-(ØuÉOÿ…éπ¶0‚F∆æ]–%jYÒ]-k«ÇÅC2M…qB*´äoBsÕ;•úO]O19,6261
+J≤0€ ‰€|:òaj=aj28,7679
+Q≤ö∑Àºi{iÕ!“%[à1≥wT:ÅeÈMë—Ô∂πUR“Sı≥jnö+e>_>\)ñgó√*Q¬-Œ∏˚–3VÜáÒìÈ˜Ω$1]/TyÚNLa[;p˛#˝ƒ$1ïkÕR˚2ﬁ¶Àﬂ˜åMó{Fè˚†¡fQ≤ ZÙπ9^oŒπ–í]"ïÀ∫»§b|c†ù% Â}ù~lYU√dÚÑµ4Ω|ËÂí˘¥R≥d˙±Åì2çX˙7vG˛Éq‹k<DÉÕC?øÖªçı˙¨Œ…'w¯m^äi—Í˝XH„+X$¶òèÿôBP jÙ·∆aYÆ¥qkK=+§@òw÷'úèyåP‚·;8KCÅNå¨≤+°ƒı≥“»Z1≈∫Z1≈50,12923
+f°´àg1Uÿå%IMµTs¡N1˜“®<et©vSu=ïç∑”¡≠X∫≥äÑV%5£¬Ñê#"5*ÖeaS’cVôºW°•@†©•hCB	‡hMk‘ËÚ≠ózö}ø]üJÿJ1478,392913
+î*\êƒ&†P–i‘∆P–i‘1567,409369
+eëÀ’à»à»†ŒB¯ƒ·√*±, àZH@)&≠:èiU“A¶™∞RtVãËA#®¥˚™æ•·•¶€Ã›\’–◊W‘M-x£õ0ë‰+(∞€ñΩpz	*¢i£yñ@!äúñ[áºI.l¨ü]¡MjËœ·ï≠WÄV‘7q,#” ZG≠îÀ¶ZG≠îÀ1616,419117
+}à4˛ƒú—ÀZÌësS⁄K*À±ç•txYµH≤€§^ÕEkôÜíHT+@Ç0Ya∫9ªm¨J@Ç0Ya∫9ªm¨4706,999114
+§Í•	dÆ(@*†Ñ˛©¿“eª/É°≈“gSno‡ÿÃ]f„ç1;ßK$î±S*dÍÈ™M,ÑÆ7JiY€∆ÍB	\£aıa4746,1005613
+g§p¥•¸å≈ΩÜ’o+I∏ƒ±≈‘i84!fJ∆Ç¬PDå+",k⁄IjıfíwQ‡>¶e¿∆ñ•»Üöi∑≈√®QQmäú˝C7Uì¶ŸâYä®›0bR8jÒ˚_Ìå9L~3´M0ÜfçM0Üf4983,1050624
+–äQ«¨8Z dö®‘ßúLŸ\]&¨UU4995,1052765
+–äQ«¨8Z dö®‘ßúLŸ\]&¨U]c´h∞≥œÑlTQ=4995,1052765
+}∑WÜ…WÜ19679,3890128
+}∑WÜ……ñ¡W‚Â¨]√6›∆üøñ,%é¨TU@”WíXû9¢qÓó◊~>‰˜ìH÷ÈoÈÉ:$Å°ÜXjHìJôÆHQ ú3Cé‹CßQëé≠TF¿!Ÿ‹aúÇt©+í£ÖNN19679,3890128
+Õì\nﬂ8»^zY‚ëÁñäÆiíU8¯•fÄEÌ$aeæí8ñe®Xåû.¢h∆h25533,4994955
+!pﬁ®KÆV§3°jí¢£≠È∑Z+ÉB¥bMXê)RkPø>ïÙ=1c,•.‚KX€´-KµËì3ä©«—ScW/UOC.>ºedíBÌV§ì¡fd	¥˘7g;Ø’ΩÁç·Üäå¡j⁄X©XÊjj⁄X©XÊ25557,4998630
+ü©&*∆UÁEd™ê®¥–ì¸Mh`J¿¬t,F+˙}Ÿ¬úÛ$ÁØ’∏2ô}…Aπ•ŒAπ•25941,5069312
+◊Vg`+pî4Ÿ·√E]>kj5.s;πÁèrcÊ≈b¸rcÊ≈b25971,5074612
+H™&ô ¿Çßópî\EìI<qhãıû%jA;jA25974,5075101
+@:¥ÇEçI|($i©ØR•‹ïÏçN+y≈QäΩ∏Îy≈QäΩ∏25976,5075381
+®2ÉB’Bj‘…¶öÄ+‘∫∏(1∏=˜éƒWn6∆z/∞™ã%µÉek*©2g%Å«UcÎc5’‚(~˛∂jVäÖóKy£“Ø›⁄Ì/a5≠¥ìg4ë¸"≈§å∑Öj ≠A$ﬁEXÙ8–)∑f‚9ÂX¸D£Uö‹ëÅL™©-R;R25977,5076038
+…Ë2ıπ‹,QÕ4¶äJh‚zhú®gçµ,…N±º≥.Ï≈™¡,∑ìÄìÃ°jj25978,5076406
+LãÑÀπ?ç¢¨’ïL™UïΩº0›A}4øSn∫åﬂ™cSn∫åﬂ™c26171,5111993
+ÃµQÇÅQÇ36761,7095627
+Ì•-fJlNfJlN36762,7095658
+Ì•-fJlN¥ÎÒ¥;qm=36762,7095658
+™ÜV'[ëPÄ⁄FKÉSJ/K∑≈—ÊSñ€ÃoVc∞]qSÄÀnM›V±Ì>»ÀO^îƒRnàc˛6Bû,v™äu£5¢`ËMß∏ÕnvœÈ"hÂÒß/V®IV®39042,7523172
+´_Y;_Y39043,7523400
+ù?¬55)”§	Q5VBLö‰÷´/èÀÏz|Õ$XLT¯Ã˛:ò}Ó)Òt&Qïå¿"ÇWà@<“K4LÛK4L39049,7523828
+ıxîZ¬ ‡5;ãò5j5ÂGP`~`Ùæ€€6£±≥Yˆ≠5eå”Áp2“÷c1rA>Ù'SGíÕÊR«EY3Ud±Ó^yiêU<AÑû@∂Ï7˚é‡_nöI¬Ëï1ígg$Æ…‚Dö›º'}zT†zT39072,7527743
+ä1´äV¢ï? z„íz„39079,7528980
+øÚz‹•`Éèézw™∆ºiLÔ*Uº“}›,™À£⁄Ωæ‰∫kP¥kP¥39181,7548704
+ëCù4†9Œ+Ç’“°nìê#VW”L3ß<˘åÖX QdRX Qd39182,7548776
+äÜ«ﬁ∂¡SËS39187,7549210
+ÄEOù8Ä†WÂˆú-2zù&võîß…≈ª2Ÿ-…ICâ ‡7ÜR¶|TÙ«C"…ÉƒmÛGWÁI¶ù+i©‰é(cç⁄Ñå}™x˛ñpó∑O+àËö®ã·´Ï¨“Çtà∆e€àÍÅ‰t&4Uâ4°…:à#M3™Ç¥¿≠:fñ¶ñ<~Zï®∞Úb™©·˙⁄*”ã•…eqƒ° À∂™j‚é™¥‘÷‘	S∆cy•ES∆cy•39198,7550109
+ñ¡.Z\ïtnÏı&F"A68¯#WgWâ°1ØøGkπy†2EP≤Ñ,ë»A4]A439231,7556266
+´;.ØN]N39235,7557166
+6∂∂⁄LqPêŒ@$¸C∫ßQ»»¬ë¿tËø$;^ãÔ"õq∂q53978,10344515
+}QÈY	w´w54050,10359636
+ó¨-ëdWÇ@“®óQsìR\ñ´$Å	A¨ÄCSâI◊Ö%-BeæBe54051,10359677
+hSE•=˘:˙C5D≠A_]Ö£¢∆c6ç>Zû⁄E°»gÒMWë™…7‹}µ,ï?Ó>4ç¶£yÕ3ô~Â@T{Ö¥Àmm#ó–ëÕj⁄@—PôC©ä2‘FÃ≈ú≥ª™ÉÛo4fY ¸L…5óPîPIZjPcµõ¶÷∆˝˛/¥±ıxx∞Ù˘Ÿsxù©%}o,zÊz54058,10360753
+ôz<dX•‹ëeº}´i©ßß•û¶hWÌe»…Lê82.ÜG∞§Îas‚€<foÉfo54059,10361106
+ôz<dX•‹ëeº}´i©ßß•û¶hWÌe»…Lê82.ÜG∞§Îas‚€<foÉJì¶ï;ù—:óL±¢i–·Z…ıïõPM ™≤ùD†ÿe:ìÃÜöÆE^7<ôlÇRUCYKÒö&ÆÕ-,ÚÓi\—¿c§ßQc§ß54059,10361106
+äy)ö£¯{ÃÒPBÉ˜*#‘ ¸rZ]nR‹Ó7qGêTé9Té54344,10419016
+}øQmUQm55409,10629358
+}øQmU=r‰©Á…Q “JÉƒ”T IU∑P€E<ìX√X‰Q,äW√é8æ)Qt0}Uå3…ÄI⁄ÂâCVÚM _™zH¨USú!m]m55409,10629358
+1%N°QN°Q55410,10629486
+1%N°Q4Û≈,3ü!V,V55410,10629486
+1%N°Q4Û≈,3ü!V,∂ﬁKWπKW55410,10629486
+®ÓAÇÖ$‘∫K8.UCPΩOFÃUV†±©:Ö	*Øò≈k“c/Ò£∞6˝yÍ<]m{m55488,10644531
+ÛH∑3æçbéàc,êQ∫IÓ–Æ4*∂∫áÆñîé¥bå\í’MMB›‹8©SSJp¡/Y≥ﬂg/Y≥ﬂ55491,10645148
+-\ì1:K¢©&f÷öƒÌå≈*˝±πqò‹˛‚órÂ≤e∞’—RnƒÊÂ˚He˚%UFôÍ+)^é¢(5∫ƒ…l.â∑YoÃqH—F—ƒÒ≥: ≈¢fQ5≤F⁄–<~#∆"®j¢‚Y©i‚0%Å`»äáp§°dëû™„VïrÍƒ´§ækGôWœ}≠} ‹µyëµÎyëµ55609,10667423
+ıîâkn•£kn•55617,10668459
+ıîâkn•£I]~~55617,10668459
+öI´È‹pfw∆N∫¯‹ï.¯Lik‡p∏⁄∫Lù5]v]Ú9ÂUé´Ué55630,10671228
+î-”∆K¯K55637,10672110
+î-”∆K¯Óﬁ;M/¨Üâ_±4_±55637,10672110
+IÉ0©Ml\‘Wâ9(£JÜ Fñ6IcDä5™Ä@†ÄœÌ94©$úß—ø≥§ßjXö:LdU∆Vñ}fV2÷d)–^Iı†ñIı†ñ55685,10681007
+}qûü&ﬂYz]Yz57936,11104615
+}qûü&ﬂYz]©ò¡ÊÛ´]GvJGv57936,11104615
+}qûü&ﬂYz]©ò¡ÊÛ´]GvJé]üö‹òjçØãÃ„*$©¬n#å¬ƒ—W}√y‡…◊’Ã’&®HcHô¢Òö¡p±mex¬\Y&å™H5/Ä≤)“C3ùJC3ù57936,11104615
+5jUT~ IZ †Ö:◊˜2õK/É›ïu˚¢<,‚ÒõªoQf°JØJ®ê‚‡zóë©©QŸ£äÜ¶ $âe-Vï≠µ∆VtïVo“h÷Ë©%›-Tó1D«6Â‰%tÀC⁄ éÖëãUJUh˙å$“ä“ê∑·ÆÉ¥˜-hHˆ_¸73hHˆ_¸757939,11104955
+5jUT~ IZ †Ö:◊˜2õK/É›ïu˚¢<,‚ÒõªoQf°JØJ®ê‚‡zóë©©QŸ£äÜ¶ $âe-Vï≠µ∆VtïVo“h÷Ë©%›-Tó1D«6Â‰%tÀC⁄ éÖëãUJUh˙å$“ä“ê∑·ÆÉ¥˜-hHˆ_¸73êá7Q]èà”n::h$€>gß…IB)™¥s¬)¸¯˙⁄∆√LÈxü’!≈‡ñ®ˆ/¨Ñâ∂æe‘u¨÷ƒìÙe‘u¨÷ƒì57939,11104955
+Õ”òß»e3Uÿ(02U÷„ˆ˛Ogm}±åäèÜ›äT'èùj£•…Èß»=<rT¬"˛!&á˘zÎ~Â}ÊÀp∏IÏdhp∏IÏd58002,11114171
+Õ”òß»e3Uÿ(02U÷„ˆ˛Ogm}±åäèÜ›äT'èùj£•…Èß»=<rT¬"˛!&á˘zÎ~Â}ÊÀp∏IÏdhR8òœ*°,∞€9∏*‡È`%Ò…z—TD®z—TD58002,11114171
+ÉæB™îHƒHK-Rôc*ÖqDîU$ìSvjj—c^ˆ. JöºrÌzjHË0¯mπ∏©∂ç^Z}ÖPπöºUjz%ÃbÛÍbÛ58004,11114759
+ÉæB™îHƒHK-Rôc*ÖqDîU$ìSvjj—c^ˆ. JöºrÌzjHË0¯mπ∏©∂ç^Z}ÖPπöºUjz%ÃbÛÍ…§®íLe,o3EJÕIo3EJÕ58004,11114759
+à“T√°4√+DH+†G&ßUEsESÓUEsES58006,11114878
+Ur«I†Ur«I58043,11120448
+yS áÌÙËÎuoÃ}˜÷;;+∞sX¸&˙Ÿ˚¢£ì›ôóìå…—è≥ü%≤∑>Ii©€D·jf≠£®Ii©€D·jf≠£58055,11122513
+yS áÌÙËÎuoÃ}˜÷;;+∞sX¸&˙Ÿ˚¢£ì›ôóìå…—è≥ü%≤∑>Ii©€D·jf≠£®yŸ‹πfB@⁄”ö7ã4]≠Uu;Uu58055,11122513
+MO6Zø Ù‘∞ŒEE=EE58059,11123195
+®≠dã-¥û≈Lì†ëó∑√Òîgå∆‡ÎÒ1¢È*ûùÓZ©}(J©°J©58093,11129923
+‹Œne}]4˘É§é∂,Ud€EDîò∫·å:í¶ö8ºT4K¶ùïdé@ Ì⁄õA&“ó1¨ìL,Q¬Cäù8Q¬Cäù58129,11135653
+‹Œne}]4˘É§é∂,Ud€EDîò∫·å:í¶ö8ºT4K¶ùïdé@ Ì⁄õA&“ó1¨ìL,Q¬Cäù8ïUV™;cn∂Ë—JV‡|•ÂôÖ#Ãúû5GNò ºWü7ò•⁄Ü€4—C>‰YÍÒπ8„‹YÍÒπ8„58129,11135653
+Uå¥ŸUå¥Ÿ59065,11308284
+*%®€…¸CMUµÛ∏ÏûCMUµÛ∏Ï59071,11309729
+VT-ZØZ59072,11309861
+VT-ZØî€ÿÍ·]O?€“”†™ITEV¢ITEV59072,11309861
+ÇE0uû÷UkeÔl±@Ωà≈cÒ’x∫*º∆P‚jjÎvãÇô®≤’t–≈Ì«bs"çÒ—œiQ4iQ462994,12031087
+}µâ≈•$y:2U”Nµå»Q-Mm÷4f˙9d	5⁄)êCyA#%Rè0Jâ+´‚õÅ ≠UïI q,q67103,12806955
+}3∞y]y67224,12831857
+™ßèj¡c¢`Zà*øéHnæ70›≈Hnæ70›67226,12832366
+®?A¯ÅÛ>î4È']î3c≤SKä»∂'9^µoåo67272,12844450
+ñã=é∆‰ç4‘ﬁjßh+#íû:HC5Ls9!’n˜≤\Ïw°7! òÍ,Iâï¶#OâÌm-®ÍFU”&¢		Ïo‚‹!’mM°£v†¸/JäåRÑöR†q,3l \&;˚Õ_ù/áÉå§é¢´	¸	™l˘<¶lE+T÷Ö®â~Ë’EHö)%rÊXê>õ\Ú€B€åçB€å67287,12848378
+ï$öÆGRaù∂∆w¯LÒSWÓyÒŸçøò ·rë®Ã·´Û5OKCì••>SSîZYöSSîZY67288,12848668
+™òû£	0ö:Èï`h™©2ŸÎ¿™HøtKÓ∆ÏHÍŸë#ìL8;ÈÔì√JH¡î»jJH¡î»67380,12869046
+™òû£	0ö:Èï`h™©2ŸÎ¿™HøtKÓ∆ÏHÍŸë#ìL8;ÈÔì√JH¡î»jTìN∑·’åo®Ω;UU67380,12869046
+.äV!@¡b)ƒ‘TíGC◊aw>ˆœl,l67547,12900077
+´è†ÕÕOzâãºpöëR∆»™cô-©oinÇ8Ä(™≤ƒ`)1(FQÙÎ.îI]—¡™∆¥R”£MWïâf9$†:çh∆µŸ*≈Bí+®Á•ñ:í≥Y>o˝c+˜ŸL≈\{ïŒÂÉqn¸‰ìäa≤®∞fI›!†î÷AÇñXÀ≠‰>8‚QGu∂ÀMÌLèÙ·“O?Ç≤»ÌTEL»A™¢Ê6åTEL»A™¢Ê6å67631,12917462
+´è†ÕÕOzâãºpöëR∆»™cô-©oinÇ8Ä(™≤ƒ`)1(FQÙÎ.îI]—¡™∆¥R”£MWïâf9$†:çh∆µŸ*≈Bí+®Á•ñ:í≥Y>o˝c+˜ŸL≈\{ïŒÂÉqn¸‰ìäa≤®∞fI›!†î÷AÇñXÀ≠‰>8‚QGu∂ÀMÌLèÙ·“O?Ç≤»ÌTEL»A™¢Ê6å ¥vu„ôG–≠#FíÄj–†Uõ]*jBÄ1¿LÌº‚IIUQ◊¥u)ÆZ‹ˆ6jM—é¿V”Ãh“¥ü-D“Q‡©%éI2Tı)NÒI/‹E"∆öΩuº˝«ó”pÚ*íI;ç+»+‡x§à◊QûV öÆñz=πÆ¢wqòUYÅ()ƒÎV$	(3Ä]@¿™vÔjc∂6/gWa£∆è<πLÕzÕUµlıtQ¨ìÅJ¥TıTµb"áSLûGö	⁄¶7ãŸ≠∂Ás∂s67631,12917462
+¬ãRBohÂbÿx∫~ŒÕg1~ä¶äZLné≥u„6t∏˙∂âısÂj*W;W67632,12917881
+¬ãRBohÂbÿx∫~ŒÕg1~ä¶äZLné≥u„6t∏˙∂âısÂj*W;bj,bj67632,12917881
+¬ãRBohÂbÿx∫~ŒÕg1~ä¶äZLné≥u„6t∏˙∂âısÂj*W;bj,ºÙuâç”ÌÍ&Ò‘«(n‹˚ŒSmÕ≥Ô∑œl#É¶Víë∞oí1ﬂ¨∏F%GS¢ÄGS¢Ä67632,12917881
+µKh≠ÆFâ;Luî*i@Ç™VLÍ˚q¿ús±fvˆÓÆ§›RGAæ2‘y‘ﬁò˙Ê°‹y‹FÂã$!°ßóM°É#∆≥¶Bû_ªVî¬∞•Vò‹˜}«k∫xo‡¶XÿÕîê—®^4Z_û,7,Ó±Ç£¡%èÅyÀn⁄£,48Ì≠pÍ«ÇpÍ«Ç68157,13020550
+Ø!.J,J68730,13119105
+cvﬁcv68733,13119301
+è0zèÑ¡Â2xÏ÷rá3ìßóB?ºxƒû∑ÄÜíâjiõ&+´'ZZ∫O0a5(Ky'ßzRœ+∆SD»&A!ô‚ëòvÈeåvÈe68737,13119510
+ s3§TÛy)Üàù÷∏ºìX e$aKupS)mK•ÄÀ:ï§~"È®Èœß√âîF}B’Jík†ägNQ´L@óóñ´rÀMéÜä≠*qMqM68760,13123502
+Ñ)3›Î@:ZQg˜≠V_!Bkˆ}‡ g2É#µ%¨¡b6÷ZT≈•?ÒWÆÅ·•äö)Æôi™%äΩ°ä©bäUibäU82000,15598170
+}•]KE0®…÷Qäòk!•¢¶YaAT±3@YaAT±382023,15602146
+¯Ã<Â™Qu)’”Ixä	ÇY|$Q®î¢	îØáÆ0»⁄B≈©…£√€¿≠Ci´1e®ÛQVÜÑT≥pÆCπdSW5.;m“µ^ÊÜ∫ßsÂó	ÖöÇã%Sê§Sê82027,15602591
+⁄§_Ñ–∂¶¨sLöG/,cıT©≠FíI%AEßŸNìÜM»á!óÀKï≈‚≥ÒAë4yQGA∂ ∆–Väz|Uj jïñ2CPc∑Gî¥ã∫√Ωs®È∑ò2ÑzG;-N¢JON¢J82031,15603066
+j¡h•4ı©§”∏È†`1òÈiD≤Ós“Qd2U˘jZ∫Z›πïƒHÉ5Aä°’PµÊΩ^ö¢G™Hññ#¥åÆ§û%auıq§äßGÍ∫—ıF@ö±ΩAJ∞!d4¶?	ZT≤àô÷¢Ω†‚Ñ4`*–é‹±œŸœPf°Pf82114,15617127
+{Smk{Smk82115,15617293
+Ì•-fJlN¥ÎÒ¥;qm=82198,15633513
+™ÜV'[ëPÄ⁄FKÉSJ/K∑≈—ÊSñ€ÃoVc∞]qSÄÀnM›V±Ì>»ÀO^îƒRnàc˛6Bû,v™äu£5¢`ËMß∏ÕnvœÈ"hÂÒß/V®IV®84478,16061027
+´_Y;_Y84479,16061255
+ù?¬55)”§ù?¬55)”84485,16061683
+ıxîZ¬ ‡5;ãò5j5ÂGP`~`Ùæ€€6£±≥Yˆ≠5eå”Áp2“÷c1rA>Ù'SGíÕÊR«EY3Ud±Ó^yiêU<AÑû@∂Ï7˚é‡_nöI¬Ëï1ígg$Æ…‚Dö›º'}zT†zT84508,16065598
+ä1´äV¢ï? z„íz„84515,16066835
+øÚz‹•`Éèézw™∆ºiLÔ*Uº“}›,™À£⁄Ωæ‰∫kP¥kP¥84617,16086559
+ëCù4†9Œ+Ç’“°nìê#VWnìê#V84618,16086631
+È“kQ&¥¢©rGájC2–ë÷ÑïÈ4¢öyf™$êæmQÚ=M‹”°ZLl˚n™|éK%*ÕI]>FÉ#$ß%_4t–™IºÉ/OC ÇüC´C84619,16086704
+Ç0Xñ@*I®µe§f§>ìXöX84656,16092614
+Ç0Xñ@*I®µe§f§>ìXö:\M]jd∂ùNBı\™X©k)±x\Ñ4…gmE∏gmE84656,16092614
+Ç0Xñ@*I®µe§f§>ìXö:\M]jd∂ùNBı\™X©k)±x\Ñ4…gmE∏Îô]2E;E84656,16092614
+´;.ØN]G¿‰êÃAQ”b5i5«--	0®%V¥¶†hOƒ?=;C>#≤Òªäáôe.oo84671,16095021
+
+my_docs/sc15/talk.tex,313
+\newcommand{\bfnabla}\bfnabla28,981
+\newcommand{\laplacian}\laplacian29,1029
+\newcommand{\grad}\grad30,1071
+\newcommand{\tgrad}\tgrad31,1106
+\newcommand{\dvg}\dvg32,1144
+\newcommand{\curl}\curl33,1184
+\newcommand{\lap}\lap34,1226
+\section{XALT}XALT42,1321
+\section{Conclusion}Conclusion289,8618
+
+my_docs/sc15/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/fosdem16/abs.txt,156
+Let's talk real, no-kiddin' supercomputer analytics,4,64
+individual tasks,7,268
+individual tasks, users,7,268
+We have been running XALT at TACC,25,1175
+
+my_docs/fosdem16/talk.tex,313
+\newcommand{\bfnabla}\bfnabla28,979
+\newcommand{\laplacian}\laplacian29,1027
+\newcommand{\grad}\grad30,1069
+\newcommand{\tgrad}\tgrad31,1104
+\newcommand{\dvg}\dvg32,1142
+\newcommand{\curl}\curl33,1182
+\newcommand{\lap}\lap34,1224
+\section{XALT}XALT42,1319
+\section{Conclusion}Conclusion329,9922
+
+my_docs/fosdem16/abstract.txt,224
+Let‚Äôs talk real,1,0
+Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
+individual batch submissions,4,210
+individual batch submissions, users,4,210
+organizations concerned about meeting users‚Äô needs;14,803
+
+my_docs/fosdem16/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/isc16/abs.txt,156
+Let's talk real, no-kiddin' supercomputer analytics,4,64
+individual tasks,7,268
+individual tasks, users,7,268
+We have been running XALT at TACC,25,1175
+
+my_docs/isc16/talk.tex,314
+\newcommand{\bfnabla}\bfnabla28,1002
+\newcommand{\laplacian}\laplacian29,1050
+\newcommand{\grad}\grad30,1092
+\newcommand{\tgrad}\tgrad31,1127
+\newcommand{\dvg}\dvg32,1165
+\newcommand{\curl}\curl33,1205
+\newcommand{\lap}\lap34,1247
+\section{XALT}XALT42,1342
+\section{Conclusion}Conclusion319,9381
+
+my_docs/isc16/abstract.txt,224
+Let‚Äôs talk real,1,0
+Let‚Äôs talk real, no-kiddin‚Äô supercomputer analytics,1,0
+individual batch submissions,4,210
+individual batch submissions, users,4,210
+organizations concerned about meeting users‚Äô needs;14,803
+
+my_docs/isc16/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/TACC_sysadmin_17/themes/beamerthemeTACC16-169.sty,446
+  \def\beamer@calltheme#1#2#3{\beamer@calltheme13,234
+    \def\beamer@themelist{\beamer@themelist14,266
+  \def\usefolder#1{\usefolder18,414
+    \def\beamer@themelocation{\beamer@themelocation19,434
+  \def\beamer@themelocation{\beamer@themelocation21,472
+\newcommand{\event}\event32,631
+  \def\TACC@eventname{\TACC@eventname34,673
+\newcommand{\sectionframe}\sectionframe37,717
+\newcommand{\subsectionframe}\subsectionframe38,786
+
+my_docs/TACC_sysadmin_17/themes/beamercolorthemeTACC16.sty,120
+\definecolor{inecolor13,281
+\definecolor{inecolor14,319
+\definecolor{inecolor15,361
+\definecolor{inecolor17,442
+
+my_docs/TACC_sysadmin_17/themes/beamerthemeTACC16.sty,182
+\newcommand{\event}\event20,325
+  \def\TACC@eventname{\TACC@eventname22,367
+\newcommand{\sectionframe}\sectionframe25,411
+\newcommand{\subsectionframe}\subsectionframe26,480
+
+my_docs/TACC_sysadmin_17/figures/master169.png,18
+‹¥Qîƒ%≤v)v4,133
+
+my_docs/TACC_sysadmin_17/figures/secondary169.png,162
+‚Ö˘tF»Ê>Yó>ÁÆøÇÎ_◊“5ï_R8G˜^⁄>v!›ÎE¨+ôÀãÚi%Ã`6õÒl∑·~¥√xË∏zqÃ≠kõ\æ8‰“÷àãÎìQç∏Öß™®ÊªÍ MÆÃnÿodfÙ^Ó˜-<~ønº+í„é”˚Qè˜‰¡˝˙ÂT^Êz√0√0√0√0>T@WÆT@W16,8790
+
+my_docs/TACC_sysadmin_17/figures/isa.png,165
+÷≈ üÆ¯≤Yµ?ÖÅÎfg=fg4,1772
+îã≤Û„≤Ú˙À∫PæKEd˚î.d!  ÿ 	îÃ™=∂èıabŸÚUÛı8›è’zQWQèﬂVæyz^˙IÄHÄHÄHÄHÄHÄH ”D}®ÌçNùYùc˙NùYùc6,2234
+À”Ω™!fòêfò8,2889
+
+my_docs/TACC_sysadmin_17/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,117
+clean:clean9,132
+clobber:clobber13,215
+
+my_docs/TACC_sysadmin_17/talk_old.tex,244
+\newcommand{\bfnabla}\bfnabla28,992
+\newcommand{\laplacian}\laplacian29,1040
+\newcommand{\grad}\grad30,1082
+\newcommand{\tgrad}\tgrad31,1117
+\newcommand{\dvg}\dvg32,1155
+\newcommand{\curl}\curl33,1195
+\newcommand{\lap}\lap34,1237
+
+configure.ac,243
 AC_INIT(1,0
-  AC_SEARCH_LIBS(182,5981
-AC_SUBST(196,6449
-  xaltV=202,6607
-  xaltV=204,6658
-   MYSQL_CONFIG=254,8309
-USE_CONTRIB_ARGPARSE=278,9175
-   USE_CONTRIB_ARGPARSE=285,9507
-      export PYTHONPATH=295,9719
-AC_OUTPUT(317,10218
+  AC_SEARCH_LIBS(195,6475
+AC_SUBST(209,6943
+  xaltV=215,7101
+  xaltV=217,7152
+   MYSQL_CONFIG=267,8803
+USE_CONTRIB_ARGPARSE=291,9669
+   USE_CONTRIB_ARGPARSE=298,10001
+      export PYTHONPATH=308,10213
+AC_OUTPUT(330,10712
 
 rt/syslog/bin/logger,10
 TAG=5,42
@@ -758,8 +980,16 @@ const char* ans1 8,106
 const char* ans2 9,143
 int main(11,176
 
-rt/json/Makefile,10
+rt/json/Makefile,164
 EXEC 1,0
+C_SRC 2,17
+CXX_SRC 3,49
+OBJS 4,68
+CFLAGS 5,106
+CXXFLAGS 6,126
+$(EXEC)$(EXEC8,147
+try.o:try.o11,185
+xalt_quotestring.o:xalt_quotestring.o12,217
 
 rt/mpi_hello_world.c,15
 int main(3,36
@@ -1023,9 +1253,9 @@ bool reject_env_name(370,12116
 uint findEnvNameIdx(422,13435
 void insert_envT(535,16840
 void insert_filtered_envT(602,18894
-void update_xalt_run_record(690,21501
-void run_direct2db(753,23230
-void run_direct2db(798,24658
+void update_xalt_run_record(700,21802
+void run_direct2db(763,23531
+void run_direct2db(816,25288
 
 compiled/xalt_configuration_report.C,68
 const int dateSZ=12,210
@@ -1035,34 +1265,34 @@ int main(26,543
 compiled/extractXALTRecord.C,29
 void extractXALTRecord(5,75
 
-compiled/xalt_types.h,1101
+compiled/xalt_types.h,957
 #define XALT_TYPES_H2,21
 #define HERE 4,43
 #define DEBUG0(6,101
 #define DEBUG1(7,163
 #define DEBUG2(8,230
 #define DEBUG3(9,302
-typedef std::vector<std::string>                    Vstring;17,490
-typedef std::unordered_set<std::string>             Set;18,551
-typedef std::unordered_map<std::string,std::string19,608
-typedef std::unordered_map<std::string,std::string> Table;19,608
-typedef std::unordered_map<const char*char20,667
-typedef std::unordered_map<const char*,const char*> CTable;20,667
-typedef std::unordered_map<std::string,std::string21,727
-typedef std::unordered_map<std::string,double>      DTable;21,727
-typedef unsigned int                                uint;22,787
+typedef std::vector<std::string>                    Vstring;18,491
+typedef std::unordered_set<std::string>             Set;19,552
+typedef std::unordered_map<std::string,std::string20,609
+typedef std::unordered_map<std::string,std::string> Table;20,609
+typedef std::unordered_map<const char*char21,668
+typedef std::unordered_map<const char*,const char*> CTable;21,668
+typedef std::unordered_map<std::string,std::string22,728
+typedef std::unordered_map<std::string,double>      DTable;22,728
+typedef unsigned int                                uint;23,788
 struct Libpair25,847
-  Libpair(Libpair::Libpair27,864
-  std::string lib;Libpair::lib30,962
-  std::string sha1;Libpair::sha131,981
+  Libpair(27,864
+  std::string lib;30,962
+  std::string sha1;31,981
 struct ProcessTree34,1005
-  ProcessTree(ProcessTree::ProcessTree36,1026
-  std::string name;ProcessTree::name39,1196
-  std::string path;ProcessTree::path40,1216
-  Vstring     cmdlineA;ProcessTree::cmdlineA41,1236
-  pid_t       pid;ProcessTree::pid42,1260
+  ProcessTree(36,1026
+  std::string name;39,1196
+  std::string path;40,1216
+  Vstring     cmdlineA;41,1236
+  pid_t       pid;42,1260
 
-compiled/xalt_initialize.c,2097
+compiled/xalt_initialize.c,2222
 #define  _GNU_SOURCE27,1220
 #define DATESZ 48,1647
 typedef enum { XALT_SUCCESS,50,1670
@@ -1072,72 +1302,73 @@ typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE
                XALT_MPI_RANK,51,1752
                XALT_MPI_RANK, XALT_HOSTNAME,51,1752
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH,51,1752
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR}XALT_BAD_JSON_STR51,1752
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR} xalt_status;51,1752
-static const char * xalt_reasonA[xalt_reasonA53,1841
-#define STR(73,2570
-#define StR1_(74,2596
-static int          countA[countA76,2617
-static char         uuid_str[uuid_str77,2648
-static char         exec_path[exec_path78,2682
-static char *       usr_cmdline;79,2723
-static const char * my_syshost;80,2756
-static xalt_status  reject_flag 82,2789
-static pid_t        ppid 83,2838
-static int          errfd	84,2876
-static double       start_time 85,2909
-static double       end_time	86,2949
-static long         my_rank	87,2986
-static long         my_size	88,3021
-static int          xalt_tracing 89,3056
-static int          background 90,3094
-static char *       pathArg 91,3132
-static char *       ldLibPathArg 92,3173
-#define HERE 94,3215
-#define DEBUG0(96,3274
-#define DEBUG1(97,3341
-#define DEBUG2(98,3413
-#define DEBUG3(99,3490
-#define DEBUG4(100,3572
-   void build_uuid_str(104,3713
-   void build_uuid_str(111,3860
-void myinit(132,4365
-void myfini(358,11238
-xalt_status reject(394,12352
-long compute_value(490,14611
-void abspath(506,14927
-volatile double epoch(522,15261
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(531,15392
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(532,15508
-  __attribute__((section(".init_array"))) typeof(534,15630
-  __attribute__((section(".fini_array"))) typeof(535,15705
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR,51,1752
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO}XALT_MPI_SIZE_ZERO51,1752
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO} xalt_status;51,1752
+static const char * xalt_reasonA[xalt_reasonA53,1861
+#define STR(74,2647
+#define StR1_(75,2673
+static int          countA[countA77,2694
+static char         uuid_str[uuid_str78,2725
+static char         exec_path[exec_path79,2759
+static char *       usr_cmdline;80,2800
+static const char * my_syshost;81,2833
+static xalt_status  reject_flag 83,2866
+static pid_t        ppid 84,2915
+static int          errfd	85,2953
+static double       start_time 86,2986
+static double       end_time	87,3026
+static long         my_rank	88,3063
+static long         my_size	89,3098
+static int          xalt_tracing 90,3133
+static int          background 91,3171
+static char *       pathArg 92,3209
+static char *       ldLibPathArg 93,3250
+#define HERE 95,3292
+#define DEBUG0(97,3351
+#define DEBUG1(98,3418
+#define DEBUG2(99,3490
+#define DEBUG3(100,3567
+#define DEBUG4(101,3649
+   void build_uuid_str(105,3790
+   void build_uuid_str(112,3937
+void myinit(133,4442
+void myfini(371,11622
+xalt_status reject(407,12736
+long compute_value(503,14995
+void abspath(519,15311
+volatile double epoch(534,15630
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(543,15761
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(544,15877
+  __attribute__((section(".init_array"))) typeof(546,15999
+  __attribute__((section(".fini_array"))) typeof(547,16074
 
-compiled/ConfigParser.h,492
+compiled/ConfigParser.h,304
 #define CONFIGPARSER_H2,23
 class ConfigParser6,66
-  ~ConfigParser(ConfigParser::~ConfigParser10,128
-  std::string& host(ConfigParser::host12,151
-  std::string& user(ConfigParser::user13,196
-  std::string& db(ConfigParser::db14,241
-  std::string& passwd(ConfigParser::passwd15,286
-  std::string m_host;ConfigParser::m_host18,345
-  std::string m_user;ConfigParser::m_user19,367
-  std::string m_db;ConfigParser::m_db20,389
-  std::string m_passwd;ConfigParser::m_passwd21,409
+  ~ConfigParser(10,128
+  std::string& host(12,151
+  std::string& user(13,196
+  std::string& db(14,241
+  std::string& passwd(15,286
+  std::string m_host;18,345
+  std::string m_user;19,367
+  std::string m_db;20,389
+  std::string m_passwd;21,409
 
 compiled/xalt_version.h,30
 #define XALT_VERSION_STR 1,0
 
-compiled/translate.C,536
+compiled/translate.C,433
 const char * safe_get(4,67
 void translate(12,267
   enum QueueType 14,327
-  enum QueueType { UNKNOWN QueueType::UNKNOWN14,327
-  enum QueueType { UNKNOWN = -1, SLURM QueueType::SLURM14,327
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,QueueType::SGE14,327
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,QueueType::SLURM_TACC14,327
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,QueueType::PBS14,327
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF QueueType::LSF14,327
+  enum QueueType { UNKNOWN 14,327
+  enum QueueType { UNKNOWN = -1, SLURM 14,327
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE,14,327
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC,14,327
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS,14,327
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF 14,327
 
 compiled/run_submission.h,30
 #define RUN_SUBMISSION_H2,25
@@ -1145,12 +1376,12 @@ compiled/run_submission.h,30
 compiled/xalt_fgets_alloc.h,32
 #define XALT_FGETS_ALLOC_H2,27
 
-compiled/xalt_utils.C,141
-int isDirectory(9,136
-bool path2module(17,280
-FILE* xalt_file_open(44,955
-FILE* xalt_json_file_open(84,1676
-void build_xaltDir(141,2969
+compiled/xalt_utils.C,142
+int isDirectory(11,159
+bool path2module(19,303
+FILE* xalt_file_open(46,978
+FILE* xalt_json_file_open(86,1699
+void build_xaltDir(143,2992
 
 compiled/walkProcessTree.C,28
 void walkProcessTree(7,114
@@ -1174,20 +1405,20 @@ int main(161,3982
 compiled/f2db_Options.C,33
 f2db_Options::f2db_Options(6,86
 
-compiled/SyslogRecord.h,620
+compiled/SyslogRecord.h,378
 #define SYSLOGRECORD_H2,23
 class SyslogRecord6,72
-  ~SyslogRecord(SyslogRecord::~SyslogRecord12,204
-  bool          completed(SyslogRecord::completed14,226
-  std::string&  kind(SyslogRecord::kind15,291
-  std::string&  syshost(SyslogRecord::syshost16,356
-  std::string&  key(SyslogRecord::key17,421
-  long        m_blkcnt;SyslogRecord::m_blkcnt23,617
-  long        m_nblks;SyslogRecord::m_nblks24,641
-  std::string m_kind;SyslogRecord::m_kind25,664
-  std::string m_syshost;SyslogRecord::m_syshost26,686
-  std::string m_key;SyslogRecord::m_key27,711
-  Vstring     m_blkA;SyslogRecord::m_blkA28,732
+  ~SyslogRecord(12,204
+  bool          completed(14,226
+  std::string&  kind(15,291
+  std::string&  syshost(16,356
+  std::string&  key(17,421
+  long        m_blkcnt;23,617
+  long        m_nblks;24,641
+  std::string m_kind;25,664
+  std::string m_syshost;26,686
+  std::string m_key;27,711
+  Vstring     m_blkA;28,732
 
 compiled/parseJsonStr.C,325
 void processArray(7,97
@@ -1214,37 +1445,38 @@ double convert_double(9,145
 long convert_long(23,390
 Options::Options(37,633
 
-compiled/ProgressBar.C,117
+compiled/ProgressBar.C,141
 int setWidth(7,89
-ProgressBar::ProgressBar(15,191
-void ProgressBar::update(43,746
-void ProgressBar::fini(66,1168
+ProgressBar::ProgressBar(ProgressBar15,191
+void ProgressBar::update(update43,746
+void ProgressBar::fini(fini66,1168
 
 compiled/epoch.C,28
 volatile double epoch(4,42
 
-compiled/xalt_config.h.in,605
+compiled/xalt_config.h.in,645
 #define XALT_CONFIG_H2,22
 #define OBJDUMP 4,45
-#define PATH_TO_PRGM_FILE 5,94
-#define LDD 6,140
-#define SHA1SUM 7,185
-#define SYS_LD_LIB_PATH 8,234
-#define PREFIX 9,283
-#define LOGGER 10,323
-#  define BUILT_W_MySQL 13,391
-#  define BUILT_W_MySQL 15,432
-#define XALT_FILE_PREFIX 18,474
-#define HAVE_WORKING_LIBUUID 19,524
-#define TRANSMISSION 20,578
-#define XALT_ETC_DIR 21,624
-#define XALT_CONFIG_PY 22,665
-#define XALT_SYSTEM_PATH 23,713
-#define SYSLOG_MSG_SZ 24,758
-#define SYSHOST_CONFIG 25,804
-#define HAVE_32BIT 26,852
-#define XALT_VERSION 27,896
-#define XALT_GIT_VERSION 28,937
+#define PATH_TO_PRGM_FILE 5,96
+#define LDD 6,144
+#define SHA1SUM 7,191
+#define SYS_LD_LIB_PATH 8,242
+#define PREFIX 9,293
+#define LOGGER 10,335
+#  define BUILT_W_MySQL 13,405
+#  define BUILT_W_MySQL 15,448
+#define XALT_TRACKING_MPI_ONLY 18,492
+#define XALT_FILE_PREFIX 19,550
+#define HAVE_WORKING_LIBUUID 20,602
+#define TRANSMISSION 21,658
+#define XALT_ETC_DIR 22,706
+#define XALT_CONFIG_PY 23,749
+#define XALT_SYSTEM_PATH 24,799
+#define SYSLOG_MSG_SZ 25,846
+#define SYSHOST_CONFIG 26,894
+#define HAVE_32BIT 27,944
+#define XALT_VERSION 28,990
+#define XALT_GIT_VERSION 29,1033
 
 compiled/xalt_syslog_to_db.C,75
 void link_json_to_db(17,341
@@ -1258,19 +1490,102 @@ compiled/xalt_realpath.c,41
 #define _GNU_SOURCE 1,0
 int main(5,120
 
-compiled/Process.C,90
-Process::Process(10,176
-void Process::cmdline(42,910
-std::string& Process::exe(67,1383
+compiled/Process.C,110
+Process::Process(Process10,176
+void Process::cmdline(cmdline42,910
+std::string& Process::exe(exe67,1383
 
-compiled/Makefile.in,74
+compiled/Makefile.in,2902
 THIS_DIR 1,0
-	@set -e; rm -f $@$123,5598
-        $(CC) -MM $(124,5653
+VPATH 2,35
+CXX 3,57
+CC 4,68
+MYSQL_CONFIG 5,79
+  MYSQL_CFLAGS 7,146
+  MYSQL_LDFLAGS 8,212
+  MYSQL_LDFLAGS 9,265
+  LIBUUID=12,367
+  HAVE_UUID=13,384
+  USE_PREFIX=17,455
+LIB_OPTIONS 20,494
+WARN_FLAGS 22,530
+CF_INIT 23,571
+CXXFLAGS 24,597
+CFLAGS 25,701
+C_SRC 27,765
+CXX_SRC 33,950
+XRS_EXEC 72,2513
+XRS_CXX_SRC 73,2570
+XRS_C_SRC 77,2934
+XRS_OBJS 78,2995
+XGA_EXEC 80,3084
+XGA_CXX_SRC 81,3144
+XGA_C_SRC 82,3200
+XGA_OBJS 83,3250
+XGL_EXEC 85,3339
+XGL_CXX_SRC 86,3399
+XGL_C_SRC 89,3666
+XGL_OBJS 90,3728
+XEL_EXEC 92,3817
+XEL_CXX_SRC 93,3874
+XEL_C_SRC 94,3929
+XEL_OBJS 95,3983
+XSL_EXEC 97,4072
+XSL_CXX_SRC 98,4128
+XSL_C_SRC 99,4214
+XSL_OBJS 100,4277
+F2DB_EXEC 102,4366
+F2DB_CXX_SRC 103,4416
+F2DB_C_SRC 106,4656
+F2DB_OBJS 107,4717
+S2DB_EXEC 109,4808
+S2DB_CXX_SRC 110,4860
+S2DB_C_SRC 114,5195
+S2DB_OBJS 115,5256
+XCR_EXEC 117,5347
+XCR_CXX_SRC 118,5406
+XCR_C_SRC 119,5465
+XCR_OBJS 120,5500
+%.d:%.d122,5589
+        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[125,5715
+%.d:%.d128,5800
+        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[131,5926
+all:all134,6011
+ECHO:ECHO141,6418
+$(XRS_EXEC)$(XRS_EXEC144,6486
+$(XGA_EXEC)$(XGA_EXEC147,6598
+$(XGL_EXEC)$(XGL_EXEC150,6662
+$(XEL_EXEC)$(XEL_EXEC153,6747
+$(XSL_EXEC)$(XSL_EXEC156,6812
+$(XCR_EXEC)$(XCR_EXEC159,6877
+$(F2DB_EXEC)$(F2DB_EXEC162,6942
+$(S2DB_EXEC)$(S2DB_EXEC165,7030
+$(DESTDIR)$(LIBEXEC)/xalt_realpath:$(DESTDIR)$(LIBEXEC)/xalt_realpath168,7118
+$(DESTDIR)$(LIBEXEC)/xalt_epoch:$(DESTDIR)$(LIBEXEC)/xalt_epoch171,7209
+$(DESTDIR)$(LIBEXEC)/xalt_syshost:$(DESTDIR)$(LIBEXEC)/xalt_syshost174,7302
+xalt_syshost_main.o:xalt_syshost_main.o177,7429
+build_init:build_init181,7564
+build_init_32bit_no:build_init_32bit_no185,7867
+build_init_32bit_yes:build_init_32bit_yes187,7889
+$(DESTDIR)$(LIB64)/xalt_quotestring.o:$(DESTDIR)$(LIB64)/xalt_quotestring.o191,8151
+$(DESTDIR)$(LIB64)/xalt_syshost.o:$(DESTDIR)$(LIB64)/xalt_syshost.o193,8279
+$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o:$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o195,8391
+$(DESTDIR)$(LIB64)/xalt_initialize.o:$(DESTDIR)$(LIB64)/xalt_initialize.o197,8519
+$(DESTDIR)$(LIB)/xalt_quotestring_32.o:$(DESTDIR)$(LIB)/xalt_quotestring_32.o201,8694
+$(DESTDIR)$(LIB)/xalt_syshost_32.o:$(DESTDIR)$(LIB)/xalt_syshost_32.o203,8815
+$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o:$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o205,8920
+$(DESTDIR)$(LIB)/xalt_initialize_32.o:$(DESTDIR)$(LIB)/xalt_initialize_32.o207,9041
+$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o:$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o209,9218
+$(DESTDIR)$(LIB)/libxalt_init.so:$(DESTDIR)$(LIB)/libxalt_init.so211,9406
+$(DESTDIR)$(LIB64)/xalt_initialize_preload.o:$(DESTDIR)$(LIB64)/xalt_initialize_preload.o217,9782
+$(DESTDIR)$(LIB64)/libxalt_init.so:$(DESTDIR)$(LIB64)/libxalt_init.so220,9967
+makefile:makefile226,10366
+neat:neat230,10424
+clean:clean232,10440
 
-compiled/ConfigParser.C,53
+compiled/ConfigParser.C,66
 void trim(11,204
-ConfigParser::ConfigParser(24,380
+ConfigParser::ConfigParser(ConfigParser24,380
 
 compiled/parseSyslog.h,152
 #define PARSESYSLOG_H2,22
@@ -1328,34 +1643,34 @@ compiled/xalt_obfuscate.h,1237
 compiled/walkProcessTree.h,34
 #define _WALK_PROCESS_TREE_H2,29
 
-compiled/Options.h,1251
+compiled/Options.h,817
 #define OPTIONS_H2,18
 class Options7,76
-  ~Options(Options::~Options11,134
-  long          ntasks(Options::ntasks12,150
-  pid_t         ppid(Options::ppid13,206
-  double        startTime(Options::startTime14,262
-  double        endTime(Options::endTime15,318
-  std::string&  exec(Options::exec16,374
-  std::string&  syshost(Options::syshost17,430
-  std::string&  uuid(Options::uuid18,486
-  std::string&  userCmdLine(Options::userCmdLine19,542
-  std::string&  exec_type(Options::exec_type20,598
-  std::string&  confFn(Options::confFn21,654
-  std::string&  path(Options::path22,710
-  std::string&  ldLibPath(Options::ldLibPath23,766
-  double      m_start;Options::m_start26,832
-  double      m_end;Options::m_end27,855
-  long        m_ntasks;Options::m_ntasks28,876
-  pid_t       m_ppid;Options::m_ppid29,900
-  std::string m_syshost;Options::m_syshost30,922
-  std::string m_uuid;Options::m_uuid31,947
-  std::string m_exec;Options::m_exec32,969
-  std::string m_userCmdLine;Options::m_userCmdLine33,991
-  std::string m_exec_type;Options::m_exec_type34,1020
-  std::string m_confFn;Options::m_confFn35,1047
-  std::string m_path;Options::m_path36,1071
-  std::string m_ldLibPath;Options::m_ldLibPath37,1093
+  ~Options(11,134
+  long          ntasks(12,150
+  pid_t         ppid(13,206
+  double        startTime(14,262
+  double        endTime(15,318
+  std::string&  exec(16,374
+  std::string&  syshost(17,430
+  std::string&  uuid(18,486
+  std::string&  userCmdLine(19,542
+  std::string&  exec_type(20,598
+  std::string&  confFn(21,654
+  std::string&  path(22,710
+  std::string&  ldLibPath(23,766
+  double      m_start;26,832
+  double      m_end;27,855
+  long        m_ntasks;28,876
+  pid_t       m_ppid;29,900
+  std::string m_syshost;30,922
+  std::string m_uuid;31,947
+  std::string m_exec;32,969
+  std::string m_userCmdLine;33,991
+  std::string m_exec_type;34,1020
+  std::string m_confFn;35,1047
+  std::string m_path;36,1071
+  std::string m_ldLibPath;37,1093
 
 compiled/xalt_utils.h,26
 #define XALT_UTILS_H2,21
@@ -1381,16 +1696,16 @@ void addPath2Set(8,145
 void parseLDTrace(19,368
 void readFunctionList(97,2316
 
-compiled/Process.h,347
+compiled/Process.h,235
 #define PROCESS_H2,18
 class Process9,95
-  ~Process(Process::~Process13,141
-  pid_t        parent(Process::parent15,158
-  std::string& name(Process::name16,205
-  std::string m_exe;Process::m_exe21,345
-  std::string m_name;Process::m_name22,366
-  pid_t       m_pid;Process::m_pid23,388
-  pid_t       m_parent;Process::m_parent24,409
+  ~Process(13,141
+  pid_t        parent(15,158
+  std::string& name(16,205
+  std::string m_exe;21,345
+  std::string m_name;22,366
+  pid_t       m_pid;23,388
+  pid_t       m_parent;24,409
 
 compiled/capture.C,43
 #define DATA_SIZE 4,60
@@ -1402,22 +1717,22 @@ compiled/xalt_mysql_utils.h,90
 #  undef max8,132
 #  undef test9,145
 
-compiled/Json.C,378
-Json::Json(6,88
-void Json::fini(20,262
-void Json::add(28,378
-void Json::add(37,516
-void Json::add(46,654
-void Json::add_json_string(57,833
-void Json::add(66,979
-void Json::add(91,1394
-void Json::add(112,1737
-void Json::add(145,2364
-void Json::add(184,3189
-void Json::add(231,4292
-void Json::add(262,4860
-void Json::add(286,5400
-std::string& Json::result(305,5752
+compiled/Json.C,455
+Json::Json(Json6,88
+void Json::fini(fini20,262
+void Json::add(add28,378
+void Json::add(add37,516
+void Json::add(add46,654
+void Json::add_json_string(add_json_string57,833
+void Json::add(add66,979
+void Json::add(add91,1394
+void Json::add(add112,1737
+void Json::add(add145,2364
+void Json::add(add184,3189
+void Json::add(add231,4292
+void Json::add(add262,4860
+void Json::add(add286,5400
+std::string& Json::result(result305,5752
 
 compiled/buildUserT.C,48
 #define  DATESZ 12,213
@@ -1436,41 +1751,51 @@ compiled/zstring.C,74
 std::string compress_string(9,183
 std::string decompress_string(54,1402
 
-compiled/parseLDD.C,48
-void compute_sha1(17,305
-void parseLDD(51,962
+compiled/parseLDD.C,314
+struct Arg17,325
+  Arg(19,338
+  std::string fn;21,391
+  std::string sha1;22,409
+typedef std::vector<Arg> ArgV;25,433
+pthread_mutex_t mutex;27,465
+ArgV            argV;28,488
+int             iworkG 29,510
+long            fnSzG 30,541
+void compute_sha1(32,571
+void* do_work(64,1302
+void parseLDD(78,1559
 
-compiled/f2db_Options.h,634
+compiled/f2db_Options.h,386
 #define F2DB_OPTIONS_H2,23
 class f2db_Options6,66
-  ~f2db_Options(f2db_Options::~f2db_Options10,134
-  bool          deleteFn(f2db_Options::deleteFn11,155
-  bool          reportFn(f2db_Options::reportFn12,203
-  bool          timer(f2db_Options::timer13,251
-  std::string&  rmapD(f2db_Options::rmapD14,299
-  std::string&  confFn(f2db_Options::confFn15,347
-  bool        m_delete;f2db_Options::m_delete18,405
-  bool        m_report;f2db_Options::m_report19,429
-  bool        m_timer;f2db_Options::m_timer20,453
-  std::string m_rmapD;f2db_Options::m_rmapD21,476
-  std::string m_confFn;f2db_Options::m_confFn22,499
+  ~f2db_Options(10,134
+  bool          deleteFn(11,155
+  bool          reportFn(12,203
+  bool          timer(13,251
+  std::string&  rmapD(14,299
+  std::string&  confFn(15,347
+  bool        m_delete;18,405
+  bool        m_report;19,429
+  bool        m_timer;20,453
+  std::string m_rmapD;21,476
+  std::string m_confFn;22,499
 
-compiled/s2db_Options.h,760
+compiled/s2db_Options.h,458
 #define S2DB_OPTIONS_H2,23
 class s2db_Options6,66
-  ~s2db_Options(s2db_Options::~s2db_Options10,134
-  bool          timer(s2db_Options::timer11,155
-  std::string&  syshost(s2db_Options::syshost12,209
-  std::string&  syslogFn(s2db_Options::syslogFn13,263
-  std::string&  leftoverFn(s2db_Options::leftoverFn14,317
-  std::string&  rmapD(s2db_Options::rmapD15,371
-  std::string&  confFn(s2db_Options::confFn16,425
-  bool        m_timer;s2db_Options::m_timer19,489
-  std::string m_syslogFn;s2db_Options::m_syslogFn20,512
-  std::string m_leftoverFn;s2db_Options::m_leftoverFn21,538
-  std::string m_rmapD;s2db_Options::m_rmapD22,566
-  std::string m_confFn;s2db_Options::m_confFn23,589
-  std::string m_syshost;s2db_Options::m_syshost24,613
+  ~s2db_Options(10,134
+  bool          timer(11,155
+  std::string&  syshost(12,209
+  std::string&  syslogFn(13,263
+  std::string&  leftoverFn(14,317
+  std::string&  rmapD(15,371
+  std::string&  confFn(16,425
+  bool        m_timer;19,489
+  std::string m_syslogFn;20,512
+  std::string m_leftoverFn;21,538
+  std::string m_rmapD;22,566
+  std::string m_confFn;23,589
+  std::string m_syshost;24,613
 
 compiled/base64.h,22
 #define BASE64_H2,17
@@ -1517,25 +1842,25 @@ compiled/transmit.C,54
 const int syslog_msg_sz 16,300
 void transmit(18,342
 
-compiled/SyslogRecord.C,163
+compiled/SyslogRecord.C,185
 SyslogRecord::SyslogRecord(7,88
-void SyslogRecord::init(11,209
-void SyslogRecord::addblk(23,498
-void SyslogRecord::value(29,588
-void SyslogRecord::prt(41,832
+void SyslogRecord::init(init11,209
+void SyslogRecord::addblk(addblk23,498
+void SyslogRecord::value(value29,588
+void SyslogRecord::prt(prt41,832
 
-compiled/ProgressBar.h,476
+compiled/ProgressBar.h,287
 #define PROGRESSBAR_H2,22
 class ProgressBar4,45
-  ~ProgressBar(ProgressBar::~ProgressBar8,118
-  bool   m_active;ProgressBar::m_active13,187
-  int    m_barWidth;ProgressBar::m_barWidth14,206
-  int    m_count;ProgressBar::m_count15,227
-  int    m_mark;ProgressBar::m_mark16,245
-  double m_maxVal;ProgressBar::m_maxVal17,262
-  double m_unit;ProgressBar::m_unit18,281
-  double m_fence;ProgressBar::m_fence19,298
-  char   m_symbolA[ProgressBar::m_symbolA20,316
+  ~ProgressBar(8,118
+  bool   m_active;13,187
+  int    m_barWidth;14,206
+  int    m_count;15,227
+  int    m_mark;16,245
+  double m_maxVal;17,262
+  double m_unit;18,281
+  double m_fence;19,298
+  char   m_symbolA[m_symbolA20,316
 
 compiled/s2db_Options.C,53
 #define HERE 6,86
@@ -1570,15 +1895,15 @@ compiled/buildRmapT.h,26
 compiled/capture.h,23
 #define CAPTURE_H2,18
 
-compiled/Json.h,263
+compiled/Json.h,170
 #define JSON_H2,15
 class Json6,56
-  enum Kind Json::Kind9,77
-    Json_TABLE,Json::Kind::Json_TABLE10,91
-    Json_ARRAYJson::Kind::Json_ARRAY11,107
-  ~Json(Json::~Json15,178
-  std::string m_s;Json::m_s32,971
-  std::string m_final;Json::m_final33,990
+  enum Kind 9,77
+    Json_TABLE,10,91
+    Json_ARRAY11,107
+  ~Json(15,178
+  std::string m_s;32,971
+  std::string m_final;33,990
 
 compiled/epoch.h,21
 #define EPOCH_H2,16
@@ -1591,10 +1916,10 @@ compiled/xalt_fgets_alloc.c,67
 const int SZ 7,129
 int xalt_fgets_alloc(9,151
 
-README.md,97
-published by the Free Software Foundation;96,4120
-the License,97,4185
-the License, or 97,4185
+README.md,100
+published by the Free Software Foundation;106,4417
+the License,107,4482
+the License, or 107,4482
 
 compiled/run.vmijo.zzz.json,0
 
@@ -1610,13 +1935,51 @@ rt/json/tryThis.json,0
 
 Themis.py,0
 
-my_docs/source/010_user.rst,0
+my_docs/TACC_sysadmin_17/figures/cc.png,0
 
-my_docs/source/conf.py,0
+my_docs/TACC_sysadmin_17/themes/beamerouterthemeTACC16.sty,0
+
+my_docs/TACC_sysadmin_17/themes/beamerouterthemeTACC16-169.sty,0
+
+my_docs/TACC_sysadmin_17/themes/beamerfontthemeTACC16.sty,0
+
+my_docs/TACC_sysadmin_17/themes/beamerinnerthemeTACC16.sty,0
+
+my_docs/TACC_sysadmin_17/themes/license.tex,0
+
+my_docs/TACC_sysadmin_17/talk.tex,0
+
+my_docs/isc16/xalt.org,0
+
+my_docs/isc16/new_things.org,0
+
+my_docs/fosdem16/xalt.org,0
+
+my_docs/database.txt,0
+
+my_docs/sc15/sc15.org,0
+
+my_docs/isc15/xalt_isc.tex,0
+
+my_docs/sc16/sc16.abs.txt,0
+
+my_docs/isc17/bof.org,0
+
+my_docs/sea16/xalt.org,0
+
+my_docs/sea16/new_things.org,0
+
+my_docs/ideas/xalt.org,0
+
+my_docs/xsede15/xalt_xsede15.tex,0
 
 mapping.example.json,0
 
 ACKNOWLEDGMENTS.txt,0
+
+docs/source/010_user.rst,0
+
+docs/source/conf.py,0
 
 Config/TACC_config.py,0
 
@@ -1651,25 +2014,3 @@ contrib/update_object_module_name.py,0
 contrib/getent/libc.py,0
 
 contrib/supporting_clang/ld.sh,0
-
-doc/isc16/xalt.org,0
-
-doc/isc16/new_things.org,0
-
-doc/fosdem16/xalt.org,0
-
-doc/database.txt,0
-
-doc/sc15/sc15.org,0
-
-doc/isc15/xalt_isc.tex,0
-
-doc/sc16/sc16.abs.txt,0
-
-doc/sea16/xalt.org,0
-
-doc/sea16/new_things.org,0
-
-doc/ideas/xalt.org,0
-
-doc/xsede15/xalt_xsede15.tex,0
