@@ -138,6 +138,7 @@ void myinit(int argc, char **argv)
   char * cmdline;
   char * v;
   char * ld_preload_strp = NULL;
+  char   dateStr[DATESZ];
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL};
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL};
 
@@ -157,7 +158,6 @@ void myinit(int argc, char **argv)
       if (!v) 
         {
           time_t    now    = (time_t) epoch();
-          char      dateStr[DATESZ];
           strftime(dateStr, DATESZ, "%c", localtime(&now));
           errno = 0;
           if (uname(&u) != 0)
@@ -346,6 +346,15 @@ void myinit(int argc, char **argv)
       memcpy(&ldLibPathArg[ilen], env_ldlibpath, plen);   ilen += plen;
       memcpy(&ldLibPathArg[ilen], "\"", 2);
     }
+
+  /* Push XALT_RUN_UUID, XALT_DATE_TIME into the environment so that things like
+   * R and python can know what job and what start time of the this run is.
+   */
+
+  setenv("XALT_RUN_UUID",uuid_str,1);
+  time_t time = start_time;
+  strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
+  setenv("XALT_DATE_TIME",dateStr,1);
 
   ppid = getppid();
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"

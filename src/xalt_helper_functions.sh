@@ -39,7 +39,7 @@ BASENAME=@path_to_basename@
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  if [ "${XALT_TRACING:-}" = "yes" ||  "${XALT_TRACING:-}" = "link" ]; then
+  if [ "${XALT_TRACING:-}" = "yes" -o  "${XALT_TRACING:-}" = "link" ]; then
     export XALT_TRACING=yes
   else
     unset XALT_TRACING

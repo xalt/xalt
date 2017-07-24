@@ -56,7 +56,7 @@ source $MY_DIR/xalt_helper_functions.sh
 
 ##########################################################################
 # Check for user requested tracing.
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no/link
 
 tracing_msg "Starting ld"
 
