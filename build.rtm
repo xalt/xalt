@@ -79,12 +79,20 @@ case $SYSHOST in
     CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
     ;;
 
-  stampede2 | maverick)
+  stampede | maverick)
     base="$HOME/l/pkg"
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
     CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog"
+    ;;
+
+  stampede2)
+    base="$HOME/l/pkg"
+    if [ $SYSHOST == "stampede" ]; then
+      base="$base/$(uname -m)"
+    fi
+    CONF_OPTS="CC=/usr/bin/gcc CXX=/usr/bin/g++ --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog"
     ;;
 
   ls5 )
