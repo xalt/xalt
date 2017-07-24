@@ -93,6 +93,7 @@ case $SYSHOST in
       base="$base/$(uname -m)"
     fi
     CONF_OPTS="CC=/usr/bin/gcc CXX=/usr/bin/g++ --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog"
+    MAKE_OPTS="CC=/usr/bin/gcc CXX=/usr/bin/g++"
     ;;
 
   ls5 )
@@ -135,8 +136,8 @@ cmdA=("-$MAKE distclean"
       "-rm -rf $PKG"
       "$SETUP_CMD"
       "./configure --prefix=$PKG $CONF_OPTS"
-      "$SUDO $MAKE install"
-      "$SUDO $MAKE Inst_TACC"
+      "$SUDO $MAKE $MAKE_OPTS install"
+      "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
       "rm -f config.log"
       "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
       )
