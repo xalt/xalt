@@ -99,7 +99,8 @@ test_descript = {
      LD_PRELOAD= XALT_TRACING=yes ./try.rd > try.REGULAR.log 2>&1
 
 
-     gcc -o get_XALT_env $(testDir)/get_XALT_env.c
+     displayThis "XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c"
+     XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c
      displayThis "./get_XALT_env"
      ./get_XALT_env
 

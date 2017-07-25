@@ -145,7 +145,7 @@ void myinit(int argc, char **argv)
   struct utsname u;
 
   p_dbg = getenv("XALT_TRACING");
-  if (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run")))
+  if (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0))
     {
       background   = 0;
       xalt_tracing = 1;
@@ -166,7 +166,7 @@ void myinit(int argc, char **argv)
               exit(EXIT_FAILURE);
             }
           fprintf(stderr, "---------------------------------------------\n"
-                          " Date:          %s\n"
+                          " RTM Date:      %s\n"
                           " XALT Version:  %s\n"
                           " Nodename:      %s\n"
                           " System:        %s\n"
