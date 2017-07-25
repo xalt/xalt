@@ -72,14 +72,14 @@ def extract_compiler():
       Determine the absolute path of the executable.
       Check whether parent is a function (psutil > v2) or a property (psutil < v2)
       """
-      return (callable(p.parent) and p.parent().exe()) or p.parent.exe()
+      return (callable(p.parent) and p.parent().exe()) or p.parent.exe
 
     def p_parent_cmdline():
       """
       Determine the command line of the the parent process.
       Check whether parent is a function (psutil > v2) or a property (psutil < v2)
       """
-      return (callable(p.parent) and p.parent().cmdline()) or p.parent.cmdline()
+      return (callable(p.parent) and p.parent().cmdline()) or p.parent.cmdline
 
     while p_parent():
       if p_parent_name() not in ignore_programs:
