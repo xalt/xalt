@@ -1,7 +1,6 @@
 # -*- python -*-
 
 test_name = "end2end"
-
 test_descript = {
    'description' : "End to end test",
    'keywords'    : [ "simple", test_name,],
