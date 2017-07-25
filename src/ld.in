@@ -151,8 +151,9 @@ if [ -z "$HOME" -o -z "$USER" ]; then
    SKIP=true
 fi
 
-
 if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true ]; then
+  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP"
+
   $MY_CMD "${argA[@]}"
   status=$?
   exit $status

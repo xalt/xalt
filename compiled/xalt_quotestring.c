@@ -19,10 +19,11 @@ static unsigned int sz = 0;
 
 const char* xalt_quotestring(const char* input)
 {
-  const char   *p = input;
-  char         *s;
+  const char    *p = input;
+  char          *s;
   unsigned char a,b,c,d;
-  int high, low, len, currSz;
+  unsigned int  currSz;
+  int           high, low, len;
   len    = strlen(input);
   currSz = 3*len+1;
   if (sz < currSz)
@@ -84,14 +85,14 @@ const char* xalt_quotestring(const char* input)
 
 const char * xalt_unquotestring(const char * input, int len)
 {
-  const char *p   = input;
-  const char *end = input + len;
-  char       c;
-  char       *s;
-  int        slen;
-  int        currSz;
-  char       numBuf[5];
-  long       value, value2;
+  const char   *p   = input;
+  const char   *end = input + len;
+  char         c;
+  char         *s;
+  int          slen;
+  unsigned int currSz;
+  char         numBuf[5];
+  long         value, value2;
 
   currSz = 2*len+1;
 
@@ -108,7 +109,7 @@ const char * xalt_unquotestring(const char * input, int len)
     {
       const char * start = p;
       int          wlen  = end - start;
-      p = memchr(p,'\\', wlen);
+      p = (const char *) memchr(p, '\\', wlen);
       if (p == NULL)
 	{
 	  memcpy(s,start, wlen);

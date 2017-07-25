@@ -136,9 +136,9 @@ void myinit(int argc, char **argv)
   char * p;
   char * p_dbg;
   char * cmdline;
-  char * v;
   char * ld_preload_strp = NULL;
   char   dateStr[DATESZ];
+  const char *  v;
   const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL};
   const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL};
 
@@ -198,6 +198,7 @@ void myinit(int argc, char **argv)
     {
       DEBUG0(stderr,"    -> XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
       reject_flag = XALT_TRACKING_OFF;
+      unsetenv("XALT_RUN_UUID");
       return;
     }
 
@@ -205,6 +206,7 @@ void myinit(int argc, char **argv)
     {
       DEBUG2(stderr,"    -> countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
       reject_flag = XALT_RUN_TWICE;
+      unsetenv("XALT_RUN_UUID");
       return;
     }
   countA[IDX]++;
@@ -216,6 +218,7 @@ void myinit(int argc, char **argv)
     {
       DEBUG0(stderr,"    -> MPI Rank is not zero -> exiting\n}\n\n");
       reject_flag = XALT_MPI_RANK;
+      unsetenv("XALT_RUN_UUID");
       return;
     }
 
@@ -228,6 +231,7 @@ void myinit(int argc, char **argv)
     {
       DEBUG0(stderr,"    -> MPI Tracking turned on and this job is not an MPI job -> exiting\n}\n\n");
       reject_flag = XALT_MPI_SIZE_ZERO;
+      unsetenv("XALT_RUN_UUID");
       return;
     }
 
@@ -249,6 +253,7 @@ void myinit(int argc, char **argv)
   if (reject_flag != XALT_SUCCESS)
     {
       DEBUG0(stderr,"    -> reject_flag is true -> exiting\n}\n\n");
+      unsetenv("XALT_RUN_UUID");
       return;
     }
 
@@ -291,6 +296,7 @@ void myinit(int argc, char **argv)
     {
       fprintf(stderr,"XALT: Failure in building user command line json string!\n");
       reject_flag = XALT_BAD_JSON_STR;
+      unsetenv("XALT_RUN_UUID");
       return;
     }
 
@@ -318,14 +324,14 @@ void myinit(int argc, char **argv)
   char * env_path = getenv("PATH");
   if (!env_path)
     {
-      pathArg = malloc(2);
+      pathArg = (char *) malloc(2);
       memcpy(pathArg,blank,2);
     }
   else
     {
       int ilen = 0;
       int plen = strlen(env_path);
-      pathArg  = malloc(8 + plen + 2);
+      pathArg  = (char *) malloc(8 + plen + 2);
       memcpy(&pathArg[ilen], "--path \"", 8); ilen += 8;
       memcpy(&pathArg[ilen], env_path, plen); ilen += plen;
       memcpy(&pathArg[ilen], "\"", 2);
@@ -334,14 +340,14 @@ void myinit(int argc, char **argv)
   char * env_ldlibpath = getenv("LD_LIBRARY_PATH");
   if (!env_ldlibpath)
     {
-      ldLibPathArg = malloc(2);
+      ldLibPathArg = (char *) malloc(2);
       memcpy(ldLibPathArg,blank,2);
     }
   else
     {
       int ilen     = 0;
       int plen     = strlen(env_ldlibpath);
-      ldLibPathArg = malloc(14 + plen + 2);
+      ldLibPathArg = (char *) malloc(14 + plen + 2);
       memcpy(&ldLibPathArg[ilen], "--ld_libpath \"", 14); ilen += 14;
       memcpy(&ldLibPathArg[ilen], env_ldlibpath, plen);   ilen += plen;
       memcpy(&ldLibPathArg[ilen], "\"", 2);

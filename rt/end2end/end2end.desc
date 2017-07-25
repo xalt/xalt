@@ -23,6 +23,8 @@ test_descript = {
      displayThis "installDB"
      installDB 
 
+     rm -f get_XALT_env hello* hybrid_daxpy map.log omp_pi
+
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
