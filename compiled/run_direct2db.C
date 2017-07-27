@@ -18,7 +18,7 @@
 
 typedef std::unordered_map<std::string, uint> TableIdx;
 
-int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
+int select_run_id(MYSQL* conn, ConfigParser& cp, std::string& run_uuid, uint* run_id)
 {
   const char* stmt_sql = "SELECT `run_id` FROM `xalt_run` WHERE `run_uuid` = ? limit 1";
 
@@ -31,8 +31,17 @@ int select_run_id(MYSQL* conn, std::string& run_uuid, uint* run_id)
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id",__FILE__,__LINE__);
-      exit(1);
+      /* Try closing and opening DB to see if this works better */
+
+      mysql_close(conn);
+      if (xalt_open_mysql_connection(conn, cp) == NULL)
+        finish_with_error(conn);
+
+      if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
+        {
+          print_stmt_error(stmt, "Could not prepare stmt for selecting run_id",__FILE__,__LINE__);
+          exit(1);
+        }
     }
 
   MYSQL_BIND param[1], result[1];
@@ -780,7 +789,7 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
     finish_with_error(conn);
   
   unsigned int run_id;
-  if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id returns a non-zero if [[run_id]] is not found.
+  if (select_run_id(conn, cp, userT["run_uuid"], &run_id)) // select_run_id returns a non-zero if [[run_id]] is not found.
     {
       time_t startTime = userDT["start_time"];
 
