@@ -137,7 +137,7 @@ done
 
 if [ "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
     echo Die Die Die
-    exit;
+    exit 1;
 fi
 
 ############################################################
