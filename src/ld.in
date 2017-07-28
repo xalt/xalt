@@ -139,13 +139,15 @@ if [ "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
     RED=$'\033[1;31m'
     NONE=$'\033[0m'
     echo 
-    echo "${RED}=======================================================================${NONE}"
+    echo "${RED}==========================================================================${NONE}"
+    echo 
     echo "  TACC Error: Link failed. You are compiling an MPI code with profiling"
     echo "  flags (e.g. '-pg' or '-p'). Because of a known bug in the Omni-Path"
     echo "  network drivers, this may cause catastrophic node failure when you try"
     echo "  to run this code. The vendor is working on a patch. In the interim,"
     echo "  please recompile without this option."
-    echo "${RED}=======================================================================${NONE}"
+    echo 
+    echo "${RED}==========================================================================${NONE}"
     echo 
     unset RED NONE
     exit 1;
