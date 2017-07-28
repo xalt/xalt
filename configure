@@ -656,6 +656,7 @@ HAVE_32BIT
 SYS_LD_LIB_PATH
 SYSHOST_CONFIG
 MYSQL_STATIC
+OMNI_PATH_PROFILE_BUG
 SYSLOG_MSG_SZ
 SYSTEM_PATH
 MYSQLDB
@@ -691,6 +692,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -721,6 +723,7 @@ with_config
 with_MySQL
 with_systemPath
 with_syslogMsgSz
+with_omnipathProfileBug
 with_mysqlStatic
 with_syshostConfig
 '
@@ -771,6 +774,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1023,6 +1027,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1160,7 +1173,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1313,6 +1326,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1350,6 +1364,8 @@ Optional Packages:
   --with-MySQL=ans        Require MySQL and the MySQL-python module [[yes]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
+  --with-omnipathProfileBug,=ans
+
   --with-mysqlStatic=ans  Require that libmysqlclient be linked in statically
                           [[no]]
   --with-syshostConfig=ans
@@ -2948,7 +2964,6 @@ fi
 
 
 
-
 # Check whether --with-trackMPIOnly was given.
 if test "${with_trackMPIOnly+set}" = set; then :
   withval=$with_trackMPIOnly; XALT_TRACKING_MPI_ONLY="$withval"
@@ -3076,6 +3091,28 @@ $as_echo "SYSLOG_MSG_SZ=$withval" >&6; }
     SYSLOG_MSG_SZ="$withval"
     cat >>confdefs.h <<_ACEOF
 #define SYSLOG_MSG_SZ "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-omnipathProfileBug was given.
+if test "${with_omnipathProfileBug+set}" = set; then :
+  withval=$with_omnipathProfileBug; OMNI_PATH_PROFILE_BUG="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug" >&5
+$as_echo "OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define OMNI_PATH_PROFILE_BUG "$with_omnipathProfileBug"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: OMNI_PATH_PROFILE_BUG=$withval" >&5
+$as_echo "OMNI_PATH_PROFILE_BUG=$withval" >&6; }
+    OMNI_PATH_PROFILE_BUG="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define OMNI_PATH_PROFILE_BUG "$withval"
 _ACEOF
 
 fi

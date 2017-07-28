@@ -27,7 +27,6 @@ AC_ARG_WITH(xaltFilePrefix,
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
 
-
 AC_SUBST(XALT_TRACKING_MPI_ONLY)
 AC_ARG_WITH(trackMPIOnly,
     AC_HELP_STRING([--with-trackMPIOnly=ans],[Track only mpi executable, [[no]]]),
@@ -100,6 +99,18 @@ AC_ARG_WITH(syslogMsgSz,
     AC_MSG_RESULT([SYSLOG_MSG_SZ=$withval])
     SYSLOG_MSG_SZ="$withval"
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
+
+AC_SUBST(OMNI_PATH_PROFILE_BUG)
+AC_ARG_WITH(omnipathProfileBug,
+    AC_HELP_STRING([--with-omnipathProfileBug,=ans],[]),
+    OMNI_PATH_PROFILE_BUG="$withval"
+    AC_MSG_RESULT([OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug])
+    AC_DEFINE_UNQUOTED(OMNI_PATH_PROFILE_BUG, "$with_omnipathProfileBug")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([OMNI_PATH_PROFILE_BUG=$withval])
+    OMNI_PATH_PROFILE_BUG="$withval"
+    AC_DEFINE_UNQUOTED(OMNI_PATH_PROFILE_BUG, "$withval"))dnl
 
 AC_SUBST(MYSQL_STATIC)
 AC_ARG_WITH(mysqlStatic,

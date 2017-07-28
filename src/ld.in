@@ -135,7 +135,8 @@ do
 
 done
 
-if [ "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
+OMNI_PATH_PROFILE_BUG="@omni_path_profile_bug@"
+if [ "$OMNI_PATH_PROFILE_BUG" = yes -a "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
     RED=$'\033[1;31m'
     NONE=$'\033[0m'
     echo 

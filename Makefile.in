@@ -32,6 +32,8 @@ ifeq ($(OS_NAME),Darwin)
   LIB_OPTIONS     := -bundle -undefined dynamic_lookup
 endif
 
+OMNI_PATH_PROFILE_BUG := @OMNI_PATH_PROFILE_BUG@
+
 OPTLVL            := -g -O2
 package           := xalt
 VERSION           := $(shell cat $(srcdir)/.version)
@@ -183,6 +185,7 @@ __installMe:
 	        -e 's|@date@|$(PATH_TO_DATE)|g'                            \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
 	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  \
+	        -e 's|@omni_path_profile_bug@|$(OMNI_PATH_PROFILE_BUG)|g'  \
 	        -e 's|@file@|$(PATH_TO_FILE)|g'                            \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              \
 	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \
