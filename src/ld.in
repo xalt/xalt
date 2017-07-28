@@ -73,6 +73,7 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+PARTIAL_LINKING=
 MPI_PROGRAM=
 PROFILING=
 printOptA=()
@@ -117,6 +118,11 @@ do
     -o)
       prev='EXEC'
       ;;
+
+    -r)
+      PARTIAL_LINKING=true
+      ;;
+
     -lmpi*)
       MPI_PROGRAM=true
       ;;
@@ -134,6 +140,9 @@ do
   #fi
 
 done
+
+
+
 
 OMNI_PATH_PROFILE_BUG="@omni_path_profile_bug@"
 if [ "$OMNI_PATH_PROFILE_BUG" = yes -a "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
@@ -178,8 +187,8 @@ if [ -z "$HOME" -o -z "$USER" ]; then
    SKIP=true
 fi
 
-if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true ]; then
-  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP"
+if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true -o "$PARTIAL_LINKING" = true ]; then
+  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP, PARTIAL_LINKING: $PARTIAL_LINKING"
 
   $MY_CMD "${argA[@]}"
   status=$?
