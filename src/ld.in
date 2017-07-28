@@ -138,10 +138,10 @@ done
 if [ "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
     echo 
     echo "${RED}=======================================================================${NONE}"
-    echo TACC Error: Link failed. You are compiling an MPI code with profiling flags (e.g. "-pg" or "-p").
-    echo Because of a known bug in the Omni-Path network drivers, this may cause catastrophic node failure
-    echo when you try to run this code. The vendor is working on a patch. In the interim,
-    echo please recompile without this option.  
+    echo "TACC Error: Link failed. You are compiling an MPI code with profiling flags (e.g. '-pg' or '-p')."
+    echo "Because of a known bug in the Omni-Path network drivers, this may cause catastrophic node failure"
+    echo "when you try to run this code. The vendor is working on a patch. In the interim,"
+    echo "please recompile without this option.  "
     echo "${RED}=======================================================================${NONE}"
     echo 
     exit 1;
