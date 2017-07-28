@@ -73,6 +73,8 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+MPI_PROGRAM=
+PROFILING=
 printOptA=()
 PrintOptions=
 EXEC="a.out"
@@ -115,6 +117,12 @@ do
     -o)
       prev='EXEC'
       ;;
+    -lmpi*)
+      MPI_PROGRAM=true
+      ;;
+    */lib64/gcrt1.o)
+      PROFILING=true
+      ;;
   esac
 
   #####################################################################
@@ -126,6 +134,11 @@ do
   #fi
 
 done
+
+if [ "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
+    echo Die Die Die
+    exit;
+fi
 
 ############################################################
 # See if the print options need to be merged
