@@ -509,7 +509,7 @@ class XALTdb(object):
 
     except Exception as e:
       print("query: ",query)
-      print("something when wrong: ",e)
+      print("something went wrong: ",e)
 
 
 class CmdLineOptions(object):
