@@ -779,6 +779,8 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
   if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
   
+  mysql_query(conn,"START TRANSACTION");
+
   unsigned int run_id;
   if (select_run_id(conn, userT["run_uuid"], &run_id)) // select_run_id returns a non-zero if [[run_id]] is not found.
     {
@@ -808,6 +810,7 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
       update_xalt_run_record(conn, run_id, userDT) ;
     }
 
+  mysql_query(conn,"COMMIT");
   mysql_close(conn);
   return;
 }
