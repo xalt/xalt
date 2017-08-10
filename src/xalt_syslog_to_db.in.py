@@ -75,7 +75,8 @@ class CmdLineOptions(object):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--syslog",      dest='syslog',   action="store",      help="Location and name of syslog file")
-    parser.add_argument("--syshost",     dest='syshost',  action="store",      help="Store just records that come from syshost")
+    parser.add_argument("--syshost",     dest='syshost',  action="store",      default=".*",
+                                                                               help="Store just records that come from syshost")
     parser.add_argument("--leftover_fn", dest='leftover', action="store",      default='leftover.log',
                                                                                help="Name of the leftover file")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
