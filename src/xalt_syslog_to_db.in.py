@@ -143,7 +143,7 @@ class Record(object):
         sA.append("\n")
     return "".join(sA)
 
-def parseSyslogV1(s):
+def parseSyslogV1(s, clusterName):
   t = { 'kind' : None, 'value' : None, 'syshost' : None, 'version' : 1}
 
   idx = s.find("link:")
@@ -156,9 +156,13 @@ def parseSyslogV1(s):
   t['kind']    = array[0].strip()
   t['syshost'] = array[1].strip()
   t['value']   = base64.b64decode(array[2])
+
+  if (clusterName != ".*" && clusterName != syshost):
+    return t, False
+
   return t, True
 
-def parseSyslogV2(s, recordT):
+def parseSyslogV2(s, clusterName, recordT):
   t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
 
   idx = s.find(" V:2 ")
@@ -193,6 +197,9 @@ def parseSyslogV2(s, recordT):
     r  = Record(t)
     recordT[key] = r
 
+  if (clusterName != ".*" && clusterName != syshost):
+    return t, False
+
   # If the block is completed then grap the value, remove the entry from *recordT*
   # and return a completed table.
   if (r.completed()):
@@ -208,10 +215,10 @@ def parseSyslogV2(s, recordT):
   # Entry is not complete.
   return t, False
 
-def parseSyslog(s, recordT):
+def parseSyslog(s, clusterName, recordT):
   if ("XALT_LOGGING" in s) and ("V:2" in s):
-    return parseSyslogV2(s, recordT)
-  return parseSyslogV1(s)
+    return parseSyslogV2(s, clusterName, recordT)
+  return parseSyslogV1(s, clusterName)
 
 
 def main():
@@ -259,7 +266,7 @@ def main():
     for line in f:
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog(line, recordT)
+      t, done = parseSyslog(line, args.syshost, recordT)
       if (not done):
         continue
 
