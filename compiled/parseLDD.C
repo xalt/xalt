@@ -49,7 +49,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
       lib = s.substr(s1+3, s2-(s1+3));
       argV.push_back(Arg(lib));
     }
-  fnSzG = argV.size();
+  long fnSzG = argV.size();
 
   compute_sha1_master(fnSzG);  // compute sha1sum for all files.
 
@@ -58,6 +58,5 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
       Libpair libpair(argV[i].fn, argV[i].sha1);
       libA.push_back(libpair);
     }
-  delete [] threads;
   t_sha1 = epoch() - t1;
 }

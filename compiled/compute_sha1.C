@@ -94,4 +94,5 @@ void compute_sha1_master(long n)
     }
   pthread_attr_destroy(&attr);
   pthread_mutex_destroy(&mutex);
+  delete [] threads;
 }
