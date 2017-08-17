@@ -42,16 +42,9 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
       if (buf == p)
         continue;
       
-      if (strstr(buf,"/xalt_syshost.o"))
-        continue;
-          
-      if (strstr(buf,"/xalt_fgets_alloc.o"))
-        continue;
-
-      if (strstr(buf,"/xalt_quotestring.o"))
-        continue;
-
-      if (strstr(buf,"/xalt_initialize.o"))
+      // Ignore all *.o files
+      int len = strlen(buf);
+      if (len > 2 && strstr(&buf[len-3],".o\n"))
         continue;
 
       char * start = strchr(buf,'(');
@@ -75,7 +68,7 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
         }
 
       // Save everything else (and get rid of the trailing newline!)
-      path.assign(buf, strlen(buf)-1);
+      path.assign(buf, len - 1);
       addPath2Set(path, set);
     }
 
