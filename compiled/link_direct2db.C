@@ -446,7 +446,7 @@ void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std:
     finish_with_error(conn);
 
   // Start the transaction
-  mysql_query(conn, "START TRANSACTION")
+  mysql_query(conn, "START TRANSACTION");
 
   // Check to see if we have already stored this link record.  If so then return.
   std::string link_uuid = resultT["uuid"];
@@ -458,7 +458,7 @@ void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std:
   insert_xalt_link(conn, resultT, rmapT, linklineA, &link_id);
   insert_objects(conn, "join_link_object", build_epoch, link_id, libA, resultT["build_syshost"], rmapT);
   insert_functions(conn, build_epoch, funcSet, link_id);
-  mysql_query(conn, "COMMIT")
+  mysql_query(conn, "COMMIT");
   mysql_close(conn);
 }
 
