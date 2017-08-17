@@ -88,8 +88,6 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
       Libpair libpair(argV[i].fn, argV[i].sha1);
       libA.push_back(libpair);
     }
-
-
 }
 
 void readFunctionList(const char* fn, Set& funcSet)
