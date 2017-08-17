@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "compute_sha1.h"
 #include "link_submission.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
@@ -76,15 +77,19 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
   buf = NULL;
 
   for(auto const & it : set)
-    {
-      std::vector<std::string> result;
-      std::string cmd = SHA1SUM " " + it;
-      capture(cmd,result);
-      std::string sha1 = result[0].substr(0, result[0].find(" "));
+    argV.push_back(Arg(it));
 
-      Libpair libpair(it, sha1);
+  long fnSzG = argV.size();
+
+  compute_sha1_master(fnSzG);  // compute sha1sum for all files.
+
+  for (long i = 0; i < fnSzG; ++i)
+    {
+      Libpair libpair(argV[i].fn, argV[i].sha1);
       libA.push_back(libpair);
     }
+
+
 }
 
 void readFunctionList(const char* fn, Set& funcSet)
