@@ -313,19 +313,8 @@ wait #-- wait for subshell to finish
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
-# start a subshell in the background for reporting the link results
-generate_linkdata()
-{
-  LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
-  $RM -rf $WRKDIR  
-}
-
-if [ "$XALT_DISABLE_BACKGROUNDING" = yes ]; then
-    generate_linkdata
-else
-    (
-       generate_linkdata
-    )&
-fi
+# Generate link data.  
+LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+$RM -rf $WRKDIR  
 
 exit $status
