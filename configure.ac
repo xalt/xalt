@@ -136,6 +136,18 @@ AC_ARG_WITH(syshostConfig,
     SYSHOST_CONFIG="$withval"
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval"))dnl
 
+AC_SUBST(ENABLE_BACKGROUNDING)
+AC_ARG_WITH(enableBackgrounding,
+    AC_HELP_STRING([--with-enableBackgrounding=ans],[Enable backgrounding of start record of an executable run [[no]]]),
+    ENABLE_BACKGROUNDING="$withval"
+    AC_MSG_RESULT([ENABLE_BACKGROUNDING=$with_enableBackgrounding])
+    AC_DEFINE_UNQUOTED(ENABLE_BACKGROUNDING, "$with_enableBackgrounding")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([ENABLE_BACKGROUNDING=$withval])
+    ENABLE_BACKGROUNDING="$withval"
+    AC_DEFINE_UNQUOTED(ENABLE_BACKGROUNDING, "$withval"))dnl
+
 AC_SUBST(SYS_LD_LIB_PATH)
 SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 

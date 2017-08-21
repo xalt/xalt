@@ -86,7 +86,7 @@ XGA_OBJS     := $(patsubst %.C, %.o, $(XGA_CXX_SRC)) $(patsubst %.c, %.o, $(XGA_
 XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
 XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
                 xalt_mysql_utils.C Json.C base64.C parseLDTrace.C capture.C link_direct2db.C         \
-                zstring.C  ConfigParser.C transmit.C epoch.C
+                zstring.C  ConfigParser.C transmit.C epoch.C compute_sha1.C
 XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c
 XGL_OBJS     := $(patsubst %.C, %.o, $(XGL_CXX_SRC)) $(patsubst %.c, %.o, $(XGL_C_SRC))
 
@@ -149,7 +149,7 @@ $(XGA_EXEC): $(XGA_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
 
 $(XGL_EXEC): $(XGL_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ $(MYSQL_LDFLAGS) -lz
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ $(MYSQL_LDFLAGS) -lz -lcrypto -lpthread
 
 $(XEL_EXEC) : $(XEL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^

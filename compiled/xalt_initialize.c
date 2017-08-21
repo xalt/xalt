@@ -88,7 +88,7 @@ static double       end_time	 = 0.0;
 static long         my_rank	 = 0L;
 static long         my_size	 = 1L;
 static int          xalt_tracing = 0;
-static int          background   = 1;
+static int          background   = 0;
 static char *       pathArg      = NULL;
 static char *       ldLibPathArg = NULL;
 
@@ -144,10 +144,18 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
+  /* Check to see if backgrounding should be turned on*/
+  v = getenv("XALT_ENABLE_BACKGROUNDING");
+  if (v == NULL)
+    v = XALT_ENABLE_BACKGROUNDING;
+  
+  if (strcmp(v,"yes") == 0)
+    background = 1;
+
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0))
     {
-      background   = 0;
+      background   = 0;  /* backgrounding the start record is always off when tracing is on*/
       xalt_tracing = 1;
       errfd = dup(STDERR_FILENO);
     }
@@ -299,10 +307,6 @@ void myinit(int argc, char **argv)
       unsetenv("XALT_RUN_UUID");
       return;
     }
-
-  v = getenv("XALT_DISABLE_BACKGROUNDING");
-  if (v && strcmp(v,"yes") == 0)
-    background = 0;
 
   
   build_uuid_str(uuid_str);

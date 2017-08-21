@@ -34,90 +34,91 @@ endif
 
 OMNI_PATH_PROFILE_BUG := @OMNI_PATH_PROFILE_BUG@
 
-OPTLVL            := -g -O2
-package           := xalt
-VERSION           := $(shell cat $(srcdir)/.version)
-TRACKING_MPI_ONLY := @XALT_TRACKING_MPI_ONLY@
-TRANSMISSION      := @TRANSMISSION@
-SITE_NAME         := @SITE@
-ETC_DIR           := @ETC_DIR@
-prefix            := @prefix@
-GIT_BRANCH        := devel
-XALT_V            := compiled/xalt_version.h
-XALT_DIR          := $(prefix)
-SYSLOG_MSG_SZ     := @SYSLOG_MSG_SZ@
-SYS_LD_LIB_PATH   := @SYS_LD_LIB_PATH@
-HAVE_LIBUUID      := @HAVE_WORKING_LIBUUID@
-HAVE_32BIT        := @HAVE_32BIT@
-PATH_TO_AS        := @PATH_TO_AS@
-PATH_TO_BASENAME  := @PATH_TO_BASENAME@
-PATH_TO_CAT       := @PATH_TO_CAT@
-PATH_TO_CAT       := @PATH_TO_CAT@
-PATH_TO_DATE      := @PATH_TO_DATE@
-PATH_TO_DIRNAME   := @PATH_TO_DIRNAME@
-PATH_TO_FILE      := @PATH_TO_FILE@
-PATH_TO_GREP      := @PATH_TO_GREP@
-PATH_TO_HEAD      := @PATH_TO_HEAD@
-PATH_TO_LDD       := @PATH_TO_LDD@
-PATH_TO_LOGGER    := @PATH_TO_LOGGER@
-PATH_TO_MKDIR     := @PATH_TO_MKDIR@
-PATH_TO_OBJDUMP   := @PATH_TO_OBJDUMP@
-PATH_TO_OTOOL     := @PATH_TO_OTOOL@
-PATH_TO_PSTREE    := @PATH_TO_PSTREE@
-PATH_TO_PYTHON    := @PATH_TO_PYTHON@
-PATH_TO_READLINK  := @PATH_TO_READLINK@
-PATH_TO_RM        := @PATH_TO_RM@
-PATH_TO_SHA1SUM   := @PATH_TO_SHA1SUM@
-PATH_TO_UUIDGEN   := @PATH_TO_UUIDGEN@
-USE_ARGPARSE      := @USE_CONTRIB_ARGPARSE@
-XALT_FILE_PREFIX  := @XALT_FILE_PREFIX@
+OPTLVL               := -g -O2
+package              := xalt
+VERSION              := $(shell cat $(srcdir)/.version)
+TRACKING_MPI_ONLY    := @XALT_TRACKING_MPI_ONLY@
+TRANSMISSION         := @TRANSMISSION@
+SITE_NAME            := @SITE@
+ETC_DIR              := @ETC_DIR@
+prefix               := @prefix@
+GIT_BRANCH           := devel
+XALT_V               := compiled/xalt_version.h
+XALT_DIR             := $(prefix)
+SYSLOG_MSG_SZ        := @SYSLOG_MSG_SZ@
+SYS_LD_LIB_PATH      := @SYS_LD_LIB_PATH@
+HAVE_LIBUUID         := @HAVE_WORKING_LIBUUID@
+HAVE_32BIT           := @HAVE_32BIT@
+PATH_TO_AS           := @PATH_TO_AS@
+PATH_TO_BASENAME     := @PATH_TO_BASENAME@
+PATH_TO_CAT          := @PATH_TO_CAT@
+PATH_TO_CAT          := @PATH_TO_CAT@
+PATH_TO_DATE         := @PATH_TO_DATE@
+PATH_TO_DIRNAME      := @PATH_TO_DIRNAME@
+PATH_TO_FILE         := @PATH_TO_FILE@
+PATH_TO_GREP         := @PATH_TO_GREP@
+PATH_TO_HEAD         := @PATH_TO_HEAD@
+PATH_TO_LDD          := @PATH_TO_LDD@
+PATH_TO_LOGGER       := @PATH_TO_LOGGER@
+PATH_TO_MKDIR        := @PATH_TO_MKDIR@
+PATH_TO_OBJDUMP      := @PATH_TO_OBJDUMP@
+PATH_TO_OTOOL        := @PATH_TO_OTOOL@
+PATH_TO_PSTREE       := @PATH_TO_PSTREE@
+PATH_TO_PYTHON       := @PATH_TO_PYTHON@
+PATH_TO_READLINK     := @PATH_TO_READLINK@
+PATH_TO_RM           := @PATH_TO_RM@
+PATH_TO_SHA1SUM      := @PATH_TO_SHA1SUM@
+PATH_TO_UUIDGEN      := @PATH_TO_UUIDGEN@
+USE_ARGPARSE         := @USE_CONTRIB_ARGPARSE@
+XALT_FILE_PREFIX     := @XALT_FILE_PREFIX@
+ENABLE_BACKGROUNDING := @ENABLE_BACKGROUNDING@
 
-GIT_PROG          := @PATH_TO_GIT@
-GIT_VERSION       := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
-VDATE		  := $(shell date +'%F %H:%M')
+GIT_PROG             := @PATH_TO_GIT@
+GIT_VERSION          := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
+VDATE		     := $(shell date +'%F %H:%M')
 
-LIB               := $(prefix)/lib
-LIB64             := $(prefix)/lib64
-LIBEXEC           := $(prefix)/libexec
-SITE              := $(prefix)/site
-BIN               := $(prefix)/bin
-SBIN              := $(prefix)/sbin
-DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
-                     $(DESTDIR)$(SITE)    $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN)             \
-                     $(DESTDIR)$(ETC_DIR)
+LIB                  := $(prefix)/lib
+LIB64                := $(prefix)/lib64
+LIBEXEC              := $(prefix)/libexec
+SITE                 := $(prefix)/site
+BIN                  := $(prefix)/bin
+SBIN                 := $(prefix)/sbin
+DIRLIST              := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
+                        $(DESTDIR)$(SITE)    $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN)             \
+                        $(DESTDIR)$(ETC_DIR)
 
-#BIN_PKG           := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
-#                     src/ibrun.symm.in src/aprun.in src/srun.in                         \
-#                     src/mpirun.lsf.in src/xalt_helper_functions.sh
+#BIN_PKG              := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
+#                        src/ibrun.symm.in src/aprun.in src/srun.in                         \
+#                        src/mpirun.lsf.in src/xalt_helper_functions.sh
 
-BIN_PKG           := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
+BIN_PKG              := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
 
-BIN_PKG           := $(patsubst %, $(srcdir)/%, $(BIN_PKG))
+BIN_PKG              := $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
-SBIN_PKG          := src/conf_create.in.py  	       src/createDB.in.py               \
-                     src/xalt_db.conf                  src/xalt_syslog_to_db.in.py
-SBIN_PKG          := $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
+SBIN_PKG             := src/conf_create.in.py  	       src/createDB.in.py               \
+                        src/xalt_db.conf                  src/xalt_syslog_to_db.in.py
+SBIN_PKG             := $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
-LIBEXEC_PKG       := src/XALTdb.py                     src/progressBar.py               \
-	             src/xalt_epoch.py                 src/BeautifulTbl.py              \
-                     src/xalt_global.py                src/xalt_transmission_factory.py \
-                     src/xalt_stack.py                 src/Rmap_XALT.py                 \
-                     src/xalt_util.py
+LIBEXEC_PKG          := src/XALTdb.py                     src/progressBar.py               \
+	                src/xalt_epoch.py                 src/BeautifulTbl.py              \
+                        src/xalt_global.py                src/xalt_transmission_factory.py \
+                        src/xalt_stack.py                 src/Rmap_XALT.py                 \
+                        src/xalt_util.py
 
-LIBEXEC_PKG       := $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
+LIBEXEC_PKG          := $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
-SITE_PKG          := src/new_job_id.in.py src/xalt_site_pkg.py             
+SITE_PKG             := src/new_job_id.in.py src/xalt_site_pkg.py             
 
-SITE_PKG          := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
+SITE_PKG             := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
 
-TACC_PKG          := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
-                     contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
-                     contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
-                     contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
-                     contrib/TACC/quarter2months.in
-TACC_PKG          := $(patsubst %, $(srcdir)/%, $(TACC_PKG))
-INIT_SRC          := src/xalt_initialize.c
-INIT_SRC          := $(patsubst %, $(srcdir)/%, $(INIT_SRC))
+TACC_PKG             := contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
+                        contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
+                        contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
+                        contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
+                        contrib/TACC/quarter2months.in
+TACC_PKG             := $(patsubst %, $(srcdir)/%, $(TACC_PKG))
+INIT_SRC             := src/xalt_initialize.c
+INIT_SRC             := $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 
 .PHONY:
 
@@ -173,52 +174,53 @@ Use_argparse_yes: $(srcdir)/contrib/argparse/argparse.py
 	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
 __installMe:
-	-for i in $(FILELIST); do                                     	   \
-           bareN=$${i##*/};                                           	   \
-           fn=$${bareN%%.in*};                                        	   \
-	   ext=$${bareN#$$fn.}                                             \
-           oext=;                                                          \
-	   : echo "bareN: $$bareN, ext: $$ext";                            \
-           [ "$$ext" = "in.py" ] && oext=".py";                            \
-           [ "$$ext" = "in.c" ]  && oext=".c";                             \
-           sed  -e 's|@PREFIX@|$(prefix)|g'                            	   \
-	        -e 's|@date@|$(PATH_TO_DATE)|g'                            \
-	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              \
-	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  \
-	        -e 's|@omni_path_profile_bug@|$(OMNI_PATH_PROFILE_BUG)|g'  \
-	        -e 's|@file@|$(PATH_TO_FILE)|g'                            \
-	        -e 's|@git@|$(GIT_VERSION)|g'                              \
-	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            \
-	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            \
-	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            \
-	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              \
-	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        \
-	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      \
-	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          \
-	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        \
-	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            \
-	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      \
-	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              \
-	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  \
-	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                \
-	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            \
-	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        \
-	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        \
-	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      \
-	        -e 's|@site_name@|$(SITE_NAME)|g'                          \
-	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              \
-	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
-	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      \
-	        -e 's|@version@|$(VERSION)|g'                              \
-	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
-	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     \
-	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     \
-	        -e 's|@xalt_site_dir@|$(SITE)|g'                           \
-	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            \
-                           < $$i > $(DIRLOC)/$$fn$$oext;                   \
-            [ "$$ext" = "in" -o "$$ext" = "in.py" ] && \
-               chmod +x $(DIRLOC)/$$fn$$oext;                              \
-	    true;                                                          \
+	-for i in $(FILELIST); do                                     	   	  \
+           bareN=$${i##*/};                                           	   	  \
+           fn=$${bareN%%.in*};                                        	   	  \
+	   ext=$${bareN#$$fn.}                                             	  \
+           oext=;                                                          	  \
+	   : echo "bareN: $$bareN, ext: $$ext";                            	  \
+           [ "$$ext" = "in.py" ] && oext=".py";                            	  \
+           [ "$$ext" = "in.c" ]  && oext=".c";                             	  \
+           sed  -e 's|@PREFIX@|$(prefix)|g'                            	   	  \
+	        -e 's|@date@|$(PATH_TO_DATE)|g'                            	  \
+	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
+	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
+	        -e 's|@omni_path_profile_bug@|$(OMNI_PATH_PROFILE_BUG)|g'  	  \
+	        -e 's|@file@|$(PATH_TO_FILE)|g'                            	  \
+	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
+	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            	  \
+	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
+	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            	  \
+	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              	  \
+	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
+	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
+	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
+	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        	  \
+	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            	  \
+	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      	  \
+	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              	  \
+	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
+	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            	  \
+	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        	  \
+	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
+	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
+	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
+	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              	  \
+	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
+	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      	  \
+	        -e 's|@version@|$(VERSION)|g'                              	  \
+	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   	  \
+	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     	  \
+	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     	  \
+	        -e 's|@xalt_site_dir@|$(SITE)|g'                           	  \
+	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            	  \
+	        -e 's|@xalt_enable_backgrounding@|$(ENABLE_BACKGROUNDING)|g'      \
+                           < $$i > $(DIRLOC)/$$fn$$oext;                   	  \
+            [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                            \
+               chmod +x $(DIRLOC)/$$fn$$oext;                              	  \
+	    true;                                                          	  \
         done
 
 world_update:

@@ -6,7 +6,7 @@
 
 struct Arg
 {
-  Arg(std::string& fnIn)
+  Arg(const std::string& fnIn)
     : fn(fnIn), sha1("") {}
   std::string fn;
   std::string sha1;

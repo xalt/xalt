@@ -6,6 +6,8 @@
 #include "xalt_config.h"
 #include "capture.h"
 
+ArgV            argV;
+
 void addPath2Set(std::string& path, Set& set)
 {
   char* my_realpath = canonicalize_file_name(path.c_str());

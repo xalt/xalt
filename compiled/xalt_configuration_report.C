@@ -33,6 +33,10 @@ int main(int argc, char* argv[])
   if (transmission == NULL)
     transmission = TRANSMISSION;
 
+  const char* enable_backgrounding = getenv("XALT_ENABLE_BACKGROUNDING");
+  if (enable_backgrounding == NULL)
+    enable_backgrounding = XALT_ENABLE_BACKGROUNDING;
+
   const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
@@ -45,21 +49,22 @@ int main(int argc, char* argv[])
     {
 
       Json json;
-      json.add("DATE",                    dateStr);
-      json.add("XALT_VERSION",            XALT_VERSION);
-      json.add("XALT_GIT_VERSION",        XALT_GIT_VERSION);
-      json.add("XALT_VERSION_STR",        XALT_VERSION_STR);
-      json.add("XALT_FILE_PREFIX",        XALT_FILE_PREFIX);
-      json.add("XALT_TRANSMISSION_STYLE", transmission);
-      json.add("XALT_ETC_DIR",            xalt_etc_dir);
-      json.add("XALT_CONFIG_PY",          XALT_CONFIG_PY);
-      json.add("XALT_SYSTEM_PATH",        XALT_SYSTEM_PATH);
-      json.add("XALT_SYSHOST_CONFIG",     SYSHOST_CONFIG);
-      json.add("XALT_TRACKING_MPI_ONLY",  xalt_tracking_mpi_only);
-      json.add("XALT_SYSLOG_MSG_SZ",      SYSLOG_MSG_SZ);
-      json.add("HAVE_32BIT",              HAVE_32BIT);
-      json.add("USING_LIBUUID",           HAVE_WORKING_LIBUUID);
-      json.add("BUILT_W_MySQL",           BUILT_W_MySQL);
+      json.add("DATE",                       dateStr);
+      json.add("XALT_VERSION",               XALT_VERSION);
+      json.add("XALT_GIT_VERSION",           XALT_GIT_VERSION);
+      json.add("XALT_VERSION_STR",           XALT_VERSION_STR);
+      json.add("XALT_FILE_PREFIX",           XALT_FILE_PREFIX);
+      json.add("XALT_ENABLE_BACKGROUNDING",  enable_backgrounding);
+      json.add("XALT_TRANSMISSION_STYLE",    transmission);
+      json.add("XALT_ETC_DIR",               xalt_etc_dir);
+      json.add("XALT_CONFIG_PY",             XALT_CONFIG_PY);
+      json.add("XALT_SYSTEM_PATH",           XALT_SYSTEM_PATH);
+      json.add("XALT_SYSHOST_CONFIG",        SYSHOST_CONFIG);
+      json.add("XALT_TRACKING_MPI_ONLY",     xalt_tracking_mpi_only);
+      json.add("XALT_SYSLOG_MSG_SZ",         SYSLOG_MSG_SZ);
+      json.add("HAVE_32BIT",                 HAVE_32BIT);
+      json.add("USING_LIBUUID",              HAVE_WORKING_LIBUUID);
+      json.add("BUILT_W_MySQL",              BUILT_W_MySQL);
 
       json.add("acceptPathA", acceptPathSz, acceptPathA);
       json.add("ignorePathA", ignorePathSz, ignorePathA);
@@ -83,6 +88,7 @@ int main(int argc, char* argv[])
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX       << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:   " << transmission           << "\n";
+  std::cout << "XALT_ENABLE_BACKGROUNDING: " << enable_backgrounding   << "\n";
   std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir           << "\n";
   std::cout << "XALT_CONFIG_PY:            " << XALT_CONFIG_PY         << "\n";
   std::cout << "XALT_TRACKING_MPI_ONLY:    " << xalt_tracking_mpi_only << "\n";

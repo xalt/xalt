@@ -65,22 +65,23 @@ fi
 echo
 echo '----------------------------------- SUMMARY ----------------------------------'
 echo
-echo "Package version............................." : XALT-$VERSION
-echo "Package version (git) ......................" : $xaltV
+echo "Package version......................................" : XALT-$VERSION
+echo "Package version (git) ..............................." : $xaltV
 echo
-echo "Prefix......................................" : $prefix
+echo "Prefix..............................................." : $prefix
 echo
-echo "XALT_FILE_PREFIX............................" : "$XALT_FILE_PREFIX"
-echo "XALT_TRANSMISSION_STYLE....................." : $TRANSMISSION
-echo "XALT_ETC_DIR................................" : $ETC_DIR
-echo "XALT Config.py file........................." : $XALT_CONFIG_PY
-echo "XALT SYSTEM PATH............................" : $SYSTEM_PATH
-echo "XALT SYSLOG Message Size...................." : $SYSLOG_MSG_SZ
-echo "XALT SYSHOST CONFIG Style..................." : $SYSHOST_CONFIG
-echo "XALT_TRACKING_MPI_ONLY......................" : "$XALT_TRACKING_MPI_ONLY"
-echo "XALT 32bit support.........................." : $HAVE_32BIT
-echo "XALT Using libuuid.........................." : $HAVE_WORKING_LIBUUID
-echo "XALT build with MySQL support..............." : $Using_MYSQL
+echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
+echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
+echo "XALT_ETC_DIR........................................." : $ETC_DIR
+echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
+echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
+echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
+echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
+echo "XALT_TRACKING_MPI_ONLY..............................." : "$XALT_TRACKING_MPI_ONLY"
+echo "XALT 32bit support..................................." : $HAVE_32BIT
+echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
+echo "XALT build with MySQL support........................" : $Using_MYSQL
+echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo
 echo '------------------------------------------------------------------------------'
 echo
