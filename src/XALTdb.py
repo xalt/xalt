@@ -294,7 +294,7 @@ class XALTdb(object):
       conn.query(query)
 
       
-      translate(nameA, runT['envT'], runT['userT']);
+      translate(nameA, runT['envT'], runT['userT'], , runT['userDT']);
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
       runTime     = "%.2f" % (runT['userDT']['run_time'])

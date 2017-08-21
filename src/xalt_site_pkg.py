@@ -49,7 +49,7 @@ from __future__ import print_function
 import os, re
 
 
-def translate(nameA, envT, userT):
+def translate(nameA, envT, userT, userDT):
   """
   Site Package prototype.
   """
@@ -67,8 +67,7 @@ def translate(nameA, envT, userT):
     queueType = "LSF"
       
   if (queueType == "SGE"):
-    userT['num_cores']     = "NSLOTS"
-    userT['job_num_cores'] = "NSLOTS"
+    userDT['num_cores']    = "NSLOTS"
     sysT['num_nodes']      = "NHOSTS"
     sysT['account']        = "SGE_ACCOUNT"
     sysT['job_id']         = "JOB_ID"
@@ -76,9 +75,7 @@ def translate(nameA, envT, userT):
       
   elif (queueType == "SLURM_TACC"):
     num_nodes              = int(envT.get("SLURM_NNODES",0))
-    coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
-    userT['job_num_cores'] = num_nodes*coresPerNode
-    userT['num_cores']     = userT['num_tasks']
+    userDT['num_cores']    = userDT['num_tasks']
     sysT['num_nodes']      = "SLURM_NNODES"
     sysT['account']        = "SLURM_TACC_ACCOUNT"
     sysT['job_id']         = "SLURM_JOB_ID"
@@ -88,16 +85,14 @@ def translate(nameA, envT, userT):
   elif (queueType == "SLURM"):
     num_nodes              = int(envT.get("SLURM_NNODES",0))
     coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
-    userT['job_num_cores'] = num_nodes*coresPerNode
-    userT['num_cores']     = num_nodes*coresPerNode
+    userDT['num_cores']    = num_nodes*coresPerNode
     sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
     sysT['job_id']         = "SLURM_JOB_ID"
     sysT['queue']          = "SLURM_QUEUE"
     sysT['submit_host']    = "SLURM_SUBMIT_HOST"
 
   elif (queueType == "PBS"):
-    userT['job_num_cores'] = envT.get("PBS_NP" ,0)
-    userT['num_cores']     = userT['num_tasks']
+    userDT['num_cores']    = userDT['num_tasks']
     sysT['num_nodes']      = "PBS_NUM_NODES"
     sysT['account']        = "PBS_ACCOUNT"
     sysT['job_id']         = "PBS_JOBID"
@@ -105,10 +100,9 @@ def translate(nameA, envT, userT):
     sysT['submit_host']    = "PBS_O_HOST"
   
   elif (queueType == "LSF"):
-    userT['job_num_cores'] = "LSB_MAX_NUM_PROCESSORS"
-    userT['num_cores']     = "LSB_DJOB_NUMPROC"
+    userDT['num_cores']    = "LSB_DJOB_NUMPROC"
     mcpu_hostA             = envT.get("LSB_MCPU_HOSTS","a 1").split()
-    userT['num_nodes']     = len(mcpu_hostsA)/2
+    userDT['num_nodes']    = len(mcpu_hostsA)/2
     sysT['account']        = "%%_UNKNOWN_%%"
     sysT['job_id']         = "LSB_JOBID"
     sysT['queue']          = "LSB_QUEUE"
@@ -122,14 +116,14 @@ def translate(nameA, envT, userT):
     if (not (name in userT)):
       userT[name] = result
     
-  keyA = [ 'job_num_cores', 'num_cores', 'num_nodes' ]
+  keyA = [ 'num_cores', 'num_nodes' ]
 
   for key in keyA:
-    value = userT.get(key,"unknown")
+    value = userDT.get(key,"unknown")
     if ( value == "unknown" ):
-      userT[key] = 0
+      userDT[key] = 0
     else:
-      userT[key] = int(userT[key])    
+      userDT[key] = int(userDT[key])    
   
   if (userT['job_id'] == "unknown"):
     userT['job_id'] = envT.get('JOB_ID','unknown')
