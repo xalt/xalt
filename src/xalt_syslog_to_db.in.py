@@ -159,7 +159,7 @@ def parseSyslogV1(s, clusterName):
   t['syshost'] = array[1].strip()
   t['value']   = base64.b64decode(array[2])
 
-  if (clusterName != ".*" and clusterName != syshost):
+  if (clusterName != ".*" and clusterName != t['syshost']):
     return t, False
 
   return t, True
@@ -199,7 +199,7 @@ def parseSyslogV2(s, clusterName, recordT):
     r  = Record(t)
     recordT[key] = r
 
-  if (clusterName != ".*" and clusterName != syshost):
+  if (clusterName != ".*" and clusterName != t['syshost']):
     return t, False
 
   # If the block is completed then grap the value, remove the entry from *recordT*
