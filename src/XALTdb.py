@@ -207,7 +207,7 @@ class XALTdb(object):
       # store tracked functions
       for func_name in functionA:
         query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
-        cursor.execute(query, [func_name])
+        cursor.execute(query, [func_name[:255]])
         if (cursor.rowcount > 0):
           func_id = int(cursor.fetchone()[0])
         else:
