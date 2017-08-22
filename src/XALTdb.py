@@ -251,7 +251,7 @@ class XALTdb(object):
 
         query = "SELECT obj_id, object_path FROM xalt_object WHERE hash_id=%s AND object_path=%s AND syshost=%s"
           
-        cursor.execute(query,(hash_id, object_path, syshost))
+        cursor.execute(query,(hash_id, object_path[:1024], syshost[:64]))
 
         if (cursor.rowcount > 0):
           row    = cursor.fetchone()
@@ -354,7 +354,7 @@ class XALTdb(object):
           continue
         value = envT[key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
-        cursor.execute(query,[key])
+        cursor.execute(query,[key[:64]])
         if (cursor.rowcount > 0):
           row    = cursor.fetchone()
           env_id = int(row[0])
