@@ -266,6 +266,8 @@ def main():
 
     f=open(fn, 'r')
     for line in f:
+      count += 1
+      pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
       t, done = parseSyslog(line, args.syshost, recordT)
@@ -292,8 +294,6 @@ def main():
         print(e, file=sys.stderr)
         badCnt += 1
 
-      count += 1
-      pbar.update(count)
 
     f.close()
 
