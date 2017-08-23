@@ -43,6 +43,7 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
+    parser.add_argument("--drop",        dest='drop',   action="store_true", default = False,          help="xalt")
     parser.add_argument("--dbname",      dest='dbname', action="store",      default = "xalt",         help="xalt")
     parser.add_argument("--confFn",      dest='confFn', action="store",      default = None,           help="xalt")
     args = parser.parse_args()
@@ -75,6 +76,11 @@ def main():
 
     # If MySQL version < 4.1, comment out the line below
     cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
+
+    # drop db if requested.
+    if (args.drop):
+      cursor.execute("DROP DATABASE IF EXISTS %s " % xalt.db())
+
     # If the database does not exist, create it, otherwise, switch to the database.
     cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_bin" % xalt.db())
     cursor.execute("USE "+xalt.db())
