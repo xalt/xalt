@@ -1,0 +1,125 @@
+{
+    "function": [],
+    "linkA": [
+        [
+            "/usr/lib64/crtn.o",
+            "34838b6885c3d2d139858c82b1201e97e126489a"
+        ],
+        [
+            "/usr/lib64/ld-2.17.so",
+            "33a48cbc6a0a00a64d29e5c211443aebc94e9595"
+        ],
+        [
+            "/usr/lib64/libuuid.so.1.3.0",
+            "32d1a375c23fbaef3e1e20c2c4b4663d6059a207"
+        ],
+        [
+            "/opt/apps/gcc/5.4.0/lib/gcc/x86_64-unknown-linux-gnu/5.4.0/crtend.o",
+            "1d6207f8a93759d49568ca5d420f8c5446c927d9"
+        ],
+        [
+            "/usr/lib64/libc_nonshared.a",
+            "da2305e5f6094f2097d5ba78496c60371d5844af"
+        ],
+        [
+            "/usr/lib64/libc-2.17.so",
+            "fea1ce7a573e6052deb26df6a50f77f8a26b83f0"
+        ],
+        [
+            "/opt/apps/gcc/5.4.0/lib64/libgcc_s.so.1",
+            "1df850b5499c8912ac055e5d651b554035e743ce"
+        ],
+        [
+            "/opt/apps/gcc/5.4.0/lib64/libstdc++.so.6.0.21",
+            "4f5a44ef3bfa0f8c9c58d98411e2b9cca78e3dc2"
+        ],
+        [
+            "/opt/intel/compilers_and_libraries_2017.4.196/linux/compiler/lib/intel64_lin/libirc.a",
+            "2ffa16fabe000af44c5489a9d433ee4a887b60b9"
+        ],
+        [
+            "/usr/lib64/crt1.o",
+            "c8d72359a06c546f45442b60d072483349b55ffa"
+        ],
+        [
+            "/usr/lib64/crti.o",
+            "71c297a56de8e68d12b478aa38a8a52d11b68853"
+        ],
+        [
+            "/opt/apps/gcc/5.4.0/lib/gcc/x86_64-unknown-linux-gnu/5.4.0/crtbegin.o",
+            "8c9cdbb29a57a7bde21369585dbb3944671ec9ba"
+        ],
+        [
+            "/opt/intel/compilers_and_libraries_2017.4.196/linux/compiler/lib/intel64_lin/libcilkrts.so.5",
+            "7a9cf8ddc3891750881d74d60bf32a03625fed5a"
+        ],
+        [
+            "/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib/libmpifort.so.12.0",
+            "61605359c5f35edc222fd5f8b84adcf0ecfb5f26"
+        ],
+        [
+            "/usr/lib64/librt-2.17.so",
+            "1b8a16c1fcbe0fdb81372b3dbad007500bfa439c"
+        ],
+        [
+            "/usr/lib64/libdl-2.17.so",
+            "d611ddd0729ea9422c4b9bdbb2fa8a63fba897e6"
+        ],
+        [
+            "/usr/lib64/libpthread-2.17.so",
+            "8e4373315c6af96f8e9cda711e8cea40a758b039"
+        ],
+        [
+            "/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib/release_mt/libmpi.so.12.0",
+            "d17d961680e09bc8efeefd7dbc0abb2f07709303"
+        ],
+        [
+            "/usr/lib64/libm-2.17.so",
+            "1030f25880be0ee9dccff98d2a83c445d24b7de9"
+        ]
+    ],
+    "link_line": [
+        "icc",
+        "-o",
+        "hello",
+        "mpi_hello_world.c",
+        "-I/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/include",
+        "-L/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib/release_mt",
+        "-L/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib",
+        "-Xlinker",
+        "--enable-new-dtags",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib/release_mt",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/opt/intel/mpi-rt/2017.0.0/intel64/lib/release_mt",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/opt/intel/mpi-rt/2017.0.0/intel64/lib",
+        "-lmpifort",
+        "-lmpi",
+        "-lmpigi",
+        "-ldl",
+        "-lrt",
+        "-lpthread"
+    ],
+    "resultT": {
+        "build_epoch": "1498754507.9059",
+        "build_syshost": "stampede2",
+        "build_user": "mclay",
+        "exec_path": "/home1/00515/mclay/t/hello",
+        "hash_id": "3eae43c087b90e0672ccdbe7f0d44058491274bf",
+        "link_path": "/opt/intel/compilers_and_libraries_2017.4.196/linux/bin/intel64/icc",
+        "link_program": "icc",
+        "uuid": "b6e67891-9362-4ccd-8476-a08b9bd9898b",
+        "wd": "/home1/00515/mclay/t"
+    }
+}

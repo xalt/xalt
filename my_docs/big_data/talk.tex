@@ -1,0 +1,193 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+\begin{document}
+\title[XALT]{XALT's Big Data Problem}
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{What is XALT 2?}
+  \begin{itemize}
+    \item XALT tracks links and executable runs on S1, S2 \& Maverick
+    \item XALT has filter to avoid tracking every user executable
+    \item XALT is being used at other sites in US, KAUST, etc.
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Current Design: Linking}
+  \begin{itemize}
+    \item XALT hijacks linker
+    \item XALT's ld calls system ld
+    \item XALT records: functions, linkA, resultT
+    \item Each exe is ``watermarked'' $\Rightarrow$ gets a build uuid
+    \item Code is added to run before and after main().
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}[fragile]
+    \frametitle{Json Link example }
+    {\tiny
+\begin{semiverbatim}
+\{
+    "function": [],
+    "linkA": [
+        [ "/usr/lib64/librt-2.17.so", "1b8a16c..."  ],
+        [ "/usr/lib64/libm-2.17.so",  "1030f25..."  ]
+    ],
+    "link_line": [ ],
+    "resultT": \{
+        "build_epoch": "1498754507.9059",
+        "build_syshost": "stampede2",
+        "build_user": "mclay",
+        "exec_path": "/home1/00515/mclay/t/hello",
+        "hash_id": "3eae43c0...,
+        "link_path": "/opt/intel/.../icc",
+        "link_program": "icc",
+        "uuid": "b6e67891-9362-4ccd-8476-a08b9bd9898b",
+        "wd": "/home1/00515/mclay/t"
+    \}
+\}
+\end{semiverbatim}
+    }
+\end{frame}
+
+% page 5
+\begin{frame}{Current Design: run}
+  \begin{itemize}
+    \item Each run produces two json files: Start and End.
+    \item Start record: Some program won't complete
+    \item End record: Find run\_time
+    \item Each json file: Environment, Shared libraries,
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}[fragile]
+    \frametitle{Json Run example}
+    {\tiny
+\begin{semiverbatim}
+\{
+    "cmdlineA": []
+    "envT": \{ ... \}
+    "hash_id": "3eae43c087b90e0672ccdbe7f0d44058491274bf",
+    "libA": [
+        [ "/usr/lib64/librt-2.17.so", "1b8a16c..."  ],
+        [ "/usr/lib64/libm-2.17.so",  "1030f25..."  ]
+    ],
+    "userDT": \{
+        "end_time": 1498754913.81,
+        "num_cores": 1.0,
+        "num_nodes": 1.0,
+        "num_threads": 1.0,
+        "run_time": 0.166,
+        "start_time": 1498754913.644
+    \},
+    "userT": \{
+        "exec_path": "/home1/00515/mclay/t/hello",
+        "exec_type": "binary",
+        "job_id": "76064",
+        "run_uuid": "acc1af54-6d3c-4ada-8cac-4c8f6aad8bb5",
+        "user": "mclay"
+    \},
+    "xaltLinkT": \{
+        "Build_Epoch": "1498754507.9059",
+        "Build_UUID": "b6e67891-9362-4ccd-8476-a08b9bd9898b",
+        "Build_User": "mclay",
+    \}
+\}
+\end{semiverbatim}
+    }
+\end{frame}
+
+% page 7
+\begin{frame}{Optional Data collection}
+  \begin{itemize}
+    \item R libraries
+    \item Python libraries
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{1 to N relationships}
+  \begin{itemize}
+    \item Links
+      \begin{itemize}
+        \item functions
+        \item libraries: *.a, *.so
+      \end{itemize}
+    \item Runs:
+      \begin{itemize}
+        \item Environment
+        \item Shared libraries
+        \item Python libraries (optionally)
+        \item R libraries (optionally)
+        \item ...
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{Kinds of queries}
+  \begin{itemize}
+    \item Top executables: num times, node-hours, unique users,
+      /opt/apps executables
+    \item Top libraries: num times, node-hours, unique users.
+    \item Top users by node-hours, num times
+    \item Top compiler usage by node-hours
+    \item Top library usage from modules
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{Current Installations}
+  \begin{itemize}
+    \item Stampede 2 is tracking MPI only.
+    \item Maverick is both MPI and non-MPI.
+    \item S2 is a big cluster.
+    \item Maverick is a normal size cluster.
+    \item In less than 10 days Maverick $>$ 5M runs
+    \item Where as S2 > 40K runs (MPI only)
+    \item August 23 has 64Gb syslog. 
+    \item It has taken more than 4 days to process
+    \item Written to a MYSQL db for each cluster.
+    \item DB lives on XALT vm in the Rodeo VM farm.
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Maverick stats}
+  \begin{itemize}
+    \item 5M runs
+    \item 10K runs $>$ 10 secs
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Needs}
+  \begin{itemize}
+    \item Must keep 1 to N relationships
+    \item Need faster data ingestion
+    \item Store some, Summerize when possible
+    \item Multiple DB?: staging one to another?
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}{Questions}
+  \begin{itemize}
+    \item SQL db: MySQL, Postgresql?
+    \item NO SQL db: Mongo? others?
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
