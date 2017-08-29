@@ -38,12 +38,12 @@
     {\tiny
 \begin{semiverbatim}
 \{
-    "function": [],
+    "function": [...],
     "linkA": [
         [ "/usr/lib64/librt-2.17.so", "1b8a16c..."  ],
         [ "/usr/lib64/libm-2.17.so",  "1030f25..."  ]
     ],
-    "link_line": [ ],
+    "link_line": [...],
     "resultT": \{
         "build_epoch": "1498754507.9059",
         "build_syshost": "stampede2",
@@ -76,7 +76,7 @@
     {\tiny
 \begin{semiverbatim}
 \{
-    "cmdlineA": []
+    "cmdlineA": [...]
     "envT": \{ ... \}
     "hash_id": "3eae43c087b90e0672ccdbe7f0d44058491274bf",
     "libA": [
@@ -117,6 +117,62 @@
 \end{frame}
 
 % page 8
+\begin{frame}[fragile]
+    \frametitle{xalt\_link records}
+    {\tiny
+\begin{semiverbatim}
+  `link\_id`          int(11)   unsigned NOT NULL auto\_increment,
+  `uuid`             char(36)           NOT NULL,
+  `hash\_id`          char(40)           NOT NULL,
+  `date`             DATETIME           NOT NULL,
+  `link\_program`     varchar(64)        NOT NULL,
+  `link\_path`        varchar(1024)      NOT NULL,
+  `link\_module\_name` varchar(64)                ,
+  `link\_line`        blob                       ,
+  `build\_user`       varchar(64)        NOT NULL,
+  `build\_syshost`    varchar(64)        NOT NULL,
+  `build\_epoch`      double             NOT NULL,
+  `exec\_path`        varchar(1024)      NOT NULL,
+\end{semiverbatim}
+    }
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{xalt\_run records}
+    {\tiny
+\begin{semiverbatim}
+   `run\_id`        int(11)     unsigned NOT NULL auto\_increment,
+   `job\_id`        char(11)             NOT NULL,
+   `run\_uuid`      char(36)             NOT NULL,
+   `date`          datetime             NOT NULL,
+
+   `syshost`       varchar(64)          NOT NULL,
+   `uuid`          char(36)                     ,
+   `hash\_id`       char(40)             NOT NULL,
+
+   `account`       varchar(20)          NOT NULL,
+   `exec\_type`     char(7)              NOT NULL,
+   `start\_time`    double               NOT NULL,
+
+   `end\_time`      double               NOT NULL,
+   `run\_time`      double               NOT NULL,
+   `num\_cores`     int(11)     unsigned NOT NULL,
+
+   `num\_nodes`     int(11)     unsigned NOT NULL,
+   `num\_threads`   smallint(6) unsigned NOT NULL,
+   `queue`         varchar(32)          NOT NULL,
+
+   `user`          varchar(32)          NOT NULL,
+   `exec\_path`     varchar(1024)        NOT NULL,
+   `module\_name`   varchar(64)                  ,
+   `cwd`           varchar(1024)        NOT NULL,
+   `cmdline`       blob                 NOT NULL,
+\end{semiverbatim}
+    }
+\end{frame}
+
+% page 10
 \begin{frame}{1 to N relationships}
   \begin{itemize}
     \item Links
@@ -135,7 +191,7 @@
   \end{itemize}
 \end{frame}
 
-% page 8
+% page 11
 \begin{frame}{Kinds of queries}
   \begin{itemize}
     \item Top executables: num times, node-hours, unique users,
@@ -147,7 +203,7 @@
   \end{itemize}
 \end{frame}
 
-% page 9
+% page 12
 \begin{frame}{Current Installations}
   \begin{itemize}
     \item Stampede 2 is tracking MPI only.
@@ -157,22 +213,22 @@
     \item In less than 10 days Maverick $>$ 5M runs
     \item Where as S2 > 40K runs (MPI only)
     \item August 23 has 64Gb syslog. 
-    \item It has taken more than 4 days to process
+    \item It has 4.5 days to process this 64Gb
     \item Written to a MYSQL db for each cluster.
     \item DB lives on XALT vm in the Rodeo VM farm.
   \end{itemize}
 \end{frame}
 
-% page 10
+% page 13
 \begin{frame}{Maverick stats}
   \begin{itemize}
-    \item 5M runs
+    \item 5.3M runs
     \item 10K runs $>$ 10 secs
     \item 0.2\% of runs take more than 10 secs.
   \end{itemize}
 \end{frame}
 
-% page 11
+% page 14
 \begin{frame}{Needs}
   \begin{itemize}
     \item Must keep 1 to N relationships
@@ -182,7 +238,7 @@
   \end{itemize}
 \end{frame}
 
-% page 12
+% page 15
 \begin{frame}{Questions}
   \begin{itemize}
     \item SQL db: MySQL, Postgresql?
