@@ -7,21 +7,68 @@
 % It's possible to move the footer to the right:
 %\usetheme[rightfooter]{TACC16}
 
+%% page 
+%\begin{frame}{}
+%  \begin{itemize}
+%    \item 
+%  \end{itemize}
+%\end{frame}
+
+%% page 
+%\begin{frame}[fragile]
+%    \frametitle{}
+%    {\tiny
+%\begin{semiverbatim}
+%\end{semiverbatim}
+%    }
+%\end{frame}
+
+
 \begin{document}
 \title[XALT]{XALT's Big Data Problem}
 % page 1
 \frame{\titlepage} 
 
 % page 2
+\begin{frame}{Outline}
+  \begin{itemize}
+    \item What XALT does do?
+    \item Why I think this is a Big Data Problem.
+    \item XALT data has many 1 to N relationships
+    \item DB choices: MySQL or a No SQL db like MongoDB?
+  \end{itemize}
+\end{frame}
+
+% page 3
 \begin{frame}{What is XALT 2?}
   \begin{itemize}
-    \item XALT tracks links and executable runs on S1, S2 \& Maverick
+    \item XALT tracks links and executables run on S1, S2 \& Maverick
     \item XALT has filter to avoid tracking every user executable
     \item XALT is being used at other sites in US, KAUST, etc.
   \end{itemize}
 \end{frame}
 
-% page 3
+% page 4
+\begin{frame}{1 to N relationships}
+  \begin{itemize}
+    \item Links
+      \begin{itemize}
+        \item functions
+        \item libraries: *.a, *.so
+      \end{itemize}
+    \item Runs:
+      \begin{itemize}
+        \item Environment
+        \item Shared libraries
+        \item Python libraries (optionally)
+        \item R libraries (optionally)
+        \item Matlib libraries (optionally
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+% page 5
 \begin{frame}{Current Design: Linking}
   \begin{itemize}
     \item XALT hijacks linker
@@ -32,9 +79,9 @@
   \end{itemize}
 \end{frame}
 
-% page 4
+% page 6
 \begin{frame}[fragile]
-    \frametitle{Json Link example }
+    \frametitle{Json Link example (edited)}
     {\tiny
 \begin{semiverbatim}
 \{
@@ -60,7 +107,7 @@
     }
 \end{frame}
 
-% page 5
+% page 7
 \begin{frame}{Current Design: run}
   \begin{itemize}
     \item Each run produces two json files: Start and End.
@@ -70,9 +117,9 @@
   \end{itemize}
 \end{frame}
 
-% page 6
+% page 8
 \begin{frame}[fragile]
-    \frametitle{Json Run example}
+    \frametitle{Json Run example (edited)}
     {\tiny
 \begin{semiverbatim}
 \{
@@ -108,15 +155,7 @@
     }
 \end{frame}
 
-% page 7
-\begin{frame}{Optional Data collection}
-  \begin{itemize}
-    \item R libraries
-    \item Python libraries
-  \end{itemize}
-\end{frame}
-
-% page 8
+% page 9
 \begin{frame}[fragile]
     \frametitle{xalt\_link records}
     {\tiny
@@ -137,7 +176,7 @@
     }
 \end{frame}
 
-% page 9
+% page 10
 \begin{frame}[fragile]
     \frametitle{xalt\_run records}
     {\tiny
@@ -172,25 +211,6 @@
     }
 \end{frame}
 
-% page 10
-\begin{frame}{1 to N relationships}
-  \begin{itemize}
-    \item Links
-      \begin{itemize}
-        \item functions
-        \item libraries: *.a, *.so
-      \end{itemize}
-    \item Runs:
-      \begin{itemize}
-        \item Environment
-        \item Shared libraries
-        \item Python libraries (optionally)
-        \item R libraries (optionally)
-        \item ...
-      \end{itemize}
-  \end{itemize}
-\end{frame}
-
 % page 11
 \begin{frame}{Kinds of queries}
   \begin{itemize}
@@ -209,11 +229,11 @@
     \item Stampede 2 is tracking MPI only.
     \item Maverick is both MPI and non-MPI.
     \item S2 is a big cluster.
-    \item Maverick is a normal size cluster.
-    \item In less than 10 days Maverick $>$ 5M runs
+    \item Maverick is a normal size cluster (132 nodes, 2540 Cores)
+    \item In less than 10 days Maverick $>$ 5M runs (not slurm jobs)
     \item Where as S2 > 40K runs (MPI only)
-    \item August 23 has 64Gb syslog. 
-    \item It has 4.5 days to process this 64Gb
+    \item August 23 has 64GB syslog. 
+    \item It has 4.5 days to process this 64GB
     \item Written to a MYSQL db for each cluster.
     \item DB lives on XALT vm in the Rodeo VM farm.
   \end{itemize}
@@ -229,7 +249,7 @@
 \end{frame}
 
 % page 14
-\begin{frame}{Needs}
+\begin{frame}{Need and Ideas}
   \begin{itemize}
     \item Must keep 1 to N relationships
     \item Need faster data ingestion
