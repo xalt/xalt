@@ -229,7 +229,7 @@
     \item Stampede 2 is tracking MPI only.
     \item Maverick is both MPI and non-MPI.
     \item S2 is a big cluster.
-    \item Maverick is a normal size cluster (132 nodes, 2540 Cores)
+    \item Maverick is a normal size cluster (132 nodes, 2560 Cores)
     \item In less than 10 days Maverick $>$ 5M runs (not slurm jobs)
     \item Where as S2 > 40K runs (MPI only)
     \item August 23 has 64GB syslog. 
@@ -271,13 +271,13 @@
 % page 16
 \begin{frame}{Ideas}
   \begin{itemize}
-    \item For scalar (non-MPI) executables only save end record to
+    \item For scalar (non-MPI) executables only save end-record to
       syslog
     \item No need to join start and end record
-    \item For scalar executables w/ run_times < 10 secs sample 
-    \item Keep start record for python, R, matlab
+    \item For scalar executables sample with 1/x type curve for each user.
+    \item Keep start record for python, R, matlab and MPI executable runs
+    \item Want a maximum of say 100K runs per cluster per day.
   \end{itemize}
 \end{frame}
-
 
 \end{document}
