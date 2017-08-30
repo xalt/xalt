@@ -90,13 +90,15 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  ignorePathStr = convert_to_string(namespace.get('ignore_path_patterns',{}))
-  acceptPathStr = convert_to_string(namespace.get('accept_path_patterns',{}))
-  ignoreEnvStr  = convert_to_string(namespace.get('ignore_env_patterns', {}))
-  acceptEnvStr  = convert_to_string(namespace.get('accept_env_patterns', {}))
-  hostStr       = convert_to_string(namespace.get('hostname_patterns',   {}))
+  scalarPrgmStr = convert_to_string(namespace.get('scalar_prgm_start_record',{}))
+  ignorePathStr = convert_to_string(namespace.get('ignore_path_patterns',    {}))
+  acceptPathStr = convert_to_string(namespace.get('accept_path_patterns',    {}))
+  ignoreEnvStr  = convert_to_string(namespace.get('ignore_env_patterns',     {}))
+  acceptEnvStr  = convert_to_string(namespace.get('accept_env_patterns',     {}))
+  hostStr       = convert_to_string(namespace.get('hostname_patterns',       {}))
 
   pattA = [
+    ['@scalar_prgm_list@', scalarPrgmStr],
     ['@accept_path_list@', acceptPathStr],
     ['@ignore_path_list@', ignorePathStr],
     ['@accept_env_list@',  acceptEnvStr],

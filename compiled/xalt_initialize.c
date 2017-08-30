@@ -133,6 +133,7 @@ static char *       ldLibPathArg = NULL;
 void myinit(int argc, char **argv)
 {
   int    i;
+  int    produce_strt_rec = 0;
   char * p;
   char * p_dbg;
   char * cmdline;
@@ -367,13 +368,52 @@ void myinit(int argc, char **argv)
   setenv("XALT_DATE_TIME",dateStr,1);
 
   ppid = getppid();
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
-	   " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
-	   start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
-  DEBUG1(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
-  system(cmdline);
-  free(cmdline);
+  /* my_size == 0 when the user executable is a scalar (non-mpi) program.
+   * XALT is only recording the end record for scalar executables and
+   * not the start record.  The only exception to this is when the exec_path
+   * matches one of the patterns in scalarPrgmA.
+   */
+
+  if (my_size > 0)
+    produce_strt_rec = 1;  /*Produce a start record for all MPI jobs. */
+  else
+    {
+      for (i = 0; i < scalarPrgmSz; i++)
+	{
+	  int iret = regcomp(&regex, scalarPrgmA[i], 0);
+	  if (iret)
+	    {
+	      fprintf(stderr,"Could not compile regex: \"%s\n", scalarPrgmA[i]);
+	      exit(1);
+	    }
+	  
+	  iret = regexec(&regex, exec_path, 0, NULL, 0);
+	  if (iret == 0)
+	    {
+	      produce_strt_rec = 1;
+	      break;
+	    }
+	  else if (iret != REG_NOMATCH)
+	    {
+	      regerror(iret, &regex, msgbuf, sizeof(msgbuf));
+	      fprintf(stderr, "scalarPrgmA Regex match failed: %s\n", msgbuf);
+	      exit(1);
+	    }
+	  regfree(&regex);
+	}
+    }
+
+  if ( produce_strt_rec )
+    {
+      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
+	       " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+	       start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
+
+      DEBUG1(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
+      system(cmdline);
+      free(cmdline);
+    }
 
   /**********************************************************
    * Restore LD_PRELOAD after running xalt_run_submission.
