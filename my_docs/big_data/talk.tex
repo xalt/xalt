@@ -243,6 +243,19 @@
   \begin{itemize}
     \item SQL db: MySQL, Postgresql?
     \item NO SQL db: Mongo? others?
+    \item Want simplest solution that works.
+    \item Wrangler can't be part of the solution.
+  \end{itemize}
+\end{frame}
+
+% page 16
+\begin{frame}{Ideas}
+  \begin{itemize}
+    \item For scalar (non-MPI) executables only save end record to
+      syslog
+    \item No need to join start and end record
+    \item For scalar executables w/ run_times < 10 secs sample 
+    \item Keep start record for python, R, matlab
   \end{itemize}
 \end{frame}
 
