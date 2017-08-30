@@ -238,10 +238,7 @@ def main():
   xalt       = XALTdb(args.confFn)
   syslogFile = args.syslog
 
-  # should add a check if file exists
-  num    = int(capture("cat "+syslogFile+" | wc -l"))
   icnt   = 0
-
   t1     = time.time()
 
   rmapT  = Rmap(args.rmapD).reverseMapT()
@@ -253,20 +250,22 @@ def main():
 
   recordT = {}
 
-  if (num == 0):
-    return
-    
-  pbar   = ProgressBar(maxVal=num)
+  fnA    = [ args.leftover, syslogFile ]
 
-  fnA = [ args.leftover, syslogFile ]
+  fnSz = 0
+  for fn in fnA:
+    if (not os.path.isfile(fn)):
+      continue
+    fnSz += os.path.getsize(fn)
 
+  pbar   = ProgressBar(maxVal=fnSz)
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
 
     f=open(fn, 'r')
     for line in f:
-      count += 1
+      count += len(line)
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
