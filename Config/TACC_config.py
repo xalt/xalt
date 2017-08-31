@@ -43,6 +43,7 @@ ignore_path_patterns = [
   '^/usr',
   '^/root',
   '^/opt/apps/intel/',
+  '^/opt/apps/cuda/',
   '^/opt/apps/gcc/',
   '^/opt/apps/lua',
   '^/opt/apps/lmod/',
