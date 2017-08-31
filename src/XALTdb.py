@@ -28,9 +28,10 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
 import MySQLdb, getpass, time
 import warnings
-from   xalt_util     import *
-from   xalt_global   import *
-from   xalt_site_pkg import translate, keep_env_var
+from   xalt_util        import *
+from   xalt_global      import *
+from   xalt_site_pkg    import translate
+from   xalt_env_pattern import EnvPatterns
 try:
   import configparser
 except:
@@ -81,6 +82,11 @@ class XALTdb(object):
     self.__db     = None
     self.__conn   = None
     self.__confFn = confFn
+
+    envPatterns = EnvPatterns()
+    self.__accept_patternA = envPatterns.accept_patternA()
+    self.__ignore_patternA = envPatterns.ignore_patternA()
+
 
   def __readFromUser(self):
     """ Ask user for database access info. (private) """
@@ -343,15 +349,36 @@ class XALTdb(object):
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
                         "join_run_object", run_id)
 
-      envT    = runT['envT']
-      jsonStr = json.dumps(envT)
-      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
-      cursor.execute(query, [run_id, dateStr, jsonStr])
+
+      # Not storing the total environment.
+      #envT    = runT['envT']
+      #jsonStr = json.dumps(envT)
+      #query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
+      #cursor.execute(query, [run_id, dateStr, jsonStr])
       
+      acceptEnvA = self.__accept_patternA
+      ignoreEnvA = self.__ignore_patternA
+
       # loop over env. vars.
       for key in envT:
-        if (not keep_env_var(key)):
+
+        ignore = True
+        for patt in acceptEnvA:
+          m = patt.search(key)
+          if (m):
+            ignore = False
+            break
+
+        if (ignore):
+          for patt in ignoreEnvA:
+            m = patt.search(key)
+            if (m):
+              ignore = True
+              break
+
+        if (ignore):
           continue
+
         value = envT[key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
         cursor.execute(query,[key[:64]])

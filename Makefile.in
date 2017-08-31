@@ -72,6 +72,7 @@ PATH_TO_UUIDGEN      := @PATH_TO_UUIDGEN@
 USE_ARGPARSE         := @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     := @XALT_FILE_PREFIX@
 ENABLE_BACKGROUNDING := @ENABLE_BACKGROUNDING@
+XALT_CONFIG_PY       := @XALT_CONFIG_PY@
 
 GIT_PROG             := @PATH_TO_GIT@
 GIT_VERSION          := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
@@ -95,8 +96,9 @@ BIN_PKG              := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
 
 BIN_PKG              := $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
-SBIN_PKG             := src/conf_create.in.py  	       src/createDB.in.py               \
-                        src/xalt_db.conf                  src/xalt_syslog_to_db.in.py
+SBIN_PKG             := src/conf_create.in.py  	          src/createDB.in.py               \
+                        src/xalt_db.conf                  src/xalt_syslog_to_db.in.py      \
+                        src/xalt_split_syslog_fn.in.py
 SBIN_PKG             := $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG          := src/XALTdb.py                     src/progressBar.py               \
@@ -153,6 +155,7 @@ Inst_site: $(SITE_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
 
 Inst_sbin: $(SBIN_PKG)
+        $(srcdir)/src/build_xalt_regex.py --confFn $(XALT_CONFIG_PY) --input $(srcdir)/src/xalt_scalar.template --output $(DESTDIR)$(LIBEXEC)/xalt_scalar.py
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
 Inst_bin: $(BIN_PKG)
@@ -212,6 +215,7 @@ __installMe:
 	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      	  \
 	        -e 's|@version@|$(VERSION)|g'                              	  \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   	  \
+	        -e 's|@xalt_config_py@|$(XALT_CONFIG_PY)|g' 	   	   	  \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     	  \
 	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     	  \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           	  \
