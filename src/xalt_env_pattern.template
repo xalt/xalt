@@ -24,10 +24,10 @@ import re
 
 class EnvPatterns(object):
   def __init__(self):
-    self.__raw_accept_patternA  = [ @accept_env_list@ ]
-    self.__raw_ignore_patternA  = [ @ignore_env_list@ ]
-    self.__accept_patternA      = {}
-    self.__ignore_patternA      = {}
+    self.__raw_accept_patternA  = ( @accept_env_list@ )
+    self.__raw_ignore_patternA  = ( @ignore_env_list@ )
+    self.__accept_patternA      = []
+    self.__ignore_patternA      = []
     for patt in self.__raw_accept_patternA:
       self.__accept_patternA.append(re.compile(patt))
 

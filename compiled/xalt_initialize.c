@@ -379,6 +379,8 @@ void myinit(int argc, char **argv)
     produce_strt_rec = 1;  /*Produce a start record for all MPI jobs. */
   else
     {
+      char    msgbuf[100];
+      regex_t regex;
       for (i = 0; i < scalarPrgmSz; i++)
 	{
 	  int iret = regcomp(&regex, scalarPrgmA[i], 0);

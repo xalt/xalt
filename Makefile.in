@@ -155,7 +155,7 @@ Inst_site: $(SITE_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
 
 Inst_sbin: $(SBIN_PKG)
-        $(srcdir)/src/build_xalt_regex.py --confFn $(XALT_CONFIG_PY) --input $(srcdir)/src/xalt_scalar.template --output $(DESTDIR)$(LIBEXEC)/xalt_scalar.py
+	$(PATH_TO_PYTHON) $(srcdir)/src/build_xalt_regex.py --confFn $(XALT_CONFIG_PY) --input $(srcdir)/src/xalt_env_pattern.template --output $(DESTDIR)$(LIBEXEC)/xalt_env_pattern.py
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
 Inst_bin: $(BIN_PKG)
