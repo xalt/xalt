@@ -793,7 +793,8 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
       insert_objects(conn, "join_run_object", startTime, run_id, lddA, userT["syshost"], rmapT);
 
       // Store environment
-      insert_envT(         conn, run_id, startTime, envT);
+      // There is not enough room to save total env table.
+      // insert_envT(         conn, run_id, startTime, envT);
       insert_filtered_envT(conn, run_id, startTime, envT);
     }
   else

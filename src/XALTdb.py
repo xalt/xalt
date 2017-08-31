@@ -349,9 +349,9 @@ class XALTdb(object):
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
                         "join_run_object", run_id)
 
+      envT    = runT['envT']
 
       # Not storing the total environment.
-      #envT    = runT['envT']
       #jsonStr = json.dumps(envT)
       #query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
       #cursor.execute(query, [run_id, dateStr, jsonStr])
@@ -362,20 +362,23 @@ class XALTdb(object):
       # loop over env. vars.
       for key in envT:
 
-        ignore = True
+        accept_found = False
         for patt in acceptEnvA:
           m = patt.search(key)
           if (m):
-            ignore = False
+            accept_found = True
             break
-
-        if (ignore):
-          for patt in ignoreEnvA:
-            m = patt.search(key)
-            if (m):
-              ignore = True
-              break
-
+        
+        if (not accept_found):
+          continue
+        
+        ignore = False
+        for patt in ignoreEnvA:
+          m = patt.search(key)
+          if (m):
+            ignore = True
+            break
+        
         if (ignore):
           continue
 
