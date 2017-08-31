@@ -118,7 +118,7 @@ ignore_env_patterns = [
   r'^I_MPI_EXTRA_FILESYSTEM',
   r'^I_MPI_FABRICS',
   r'^I_MPI_OFA_ADAPTER_NAME',
-  r'^MKL_DIR$',
+  r'^PATH$',
   r'^MKL_INCLUDE$',
   r'^MKL_LIB$',
   r'^MKLROOT$',
