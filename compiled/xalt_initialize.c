@@ -569,9 +569,11 @@ long compute_value(const char **envA)
     {
       char *v = getenv(*p);
       if (v)
-        value += strtol(v, (char **) NULL, 10);
+	{
+	  value += strtol(v, (char **) NULL, 10);
+	  break;
+	}
     }
-
   return value;
 }
 
