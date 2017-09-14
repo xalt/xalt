@@ -140,6 +140,9 @@ void myinit(int argc, char **argv)
   char * ld_preload_strp = NULL;
   char   dateStr[DATESZ];
   const char * v;
+
+  /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
+  /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
   const char * rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "SLURM_PROCID", NULL };
   const char * sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "SLURM_NPROCS", NULL };
 
