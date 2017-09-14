@@ -33,6 +33,10 @@ int main(int argc, char* argv[])
   if (transmission == NULL)
     transmission = TRANSMISSION;
 
+  const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
+  if (computeSHA1 == NULL)
+    computeSHA1 = XALT_COMPUTE_SHA1;
+
   const char* enable_backgrounding = getenv("XALT_ENABLE_BACKGROUNDING");
   if (enable_backgrounding == NULL)
     enable_backgrounding = XALT_ENABLE_BACKGROUNDING;
@@ -56,6 +60,7 @@ int main(int argc, char* argv[])
       json.add("XALT_FILE_PREFIX",           XALT_FILE_PREFIX);
       json.add("XALT_ENABLE_BACKGROUNDING",  enable_backgrounding);
       json.add("XALT_TRANSMISSION_STYLE",    transmission);
+      json.add("XALT_COMPUTE_SHA1",          computeSHA1);
       json.add("XALT_ETC_DIR",               xalt_etc_dir);
       json.add("XALT_CONFIG_PY",             XALT_CONFIG_PY);
       json.add("XALT_SYSTEM_PATH",           XALT_SYSTEM_PATH);
@@ -88,6 +93,7 @@ int main(int argc, char* argv[])
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX       << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:   " << transmission           << "\n";
+  std::cout << "XALT_COMPUTE_SHA1:         " << computeSHA1            << "\n";
   std::cout << "XALT_ENABLE_BACKGROUNDING: " << enable_backgrounding   << "\n";
   std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir           << "\n";
   std::cout << "XALT_CONFIG_PY:            " << XALT_CONFIG_PY         << "\n";

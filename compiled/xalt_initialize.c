@@ -139,9 +139,9 @@ void myinit(int argc, char **argv)
   char * cmdline;
   char * ld_preload_strp = NULL;
   char   dateStr[DATESZ];
-  const char *  v;
-  const char *  rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", NULL};
-  const char *  sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", NULL};
+  const char * v;
+  const char * rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "SLURM_PROCID", NULL };
+  const char * sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "SLURM_NPROCS", NULL };
 
   struct utsname u;
 

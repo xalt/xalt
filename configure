@@ -663,6 +663,7 @@ SYSTEM_PATH
 MYSQLDB
 XALT_CONFIG_PY
 ETC_DIR
+COMPUTE_SHA1SUM
 XALT_TRACKING_MPI_ONLY
 XALT_FILE_PREFIX
 TRANSMISSION
@@ -719,6 +720,7 @@ enable_option_checking
 with_transmission
 with_xaltFilePrefix
 with_trackMPIOnly
+with_computeSHA1
 with_etcDir
 with_config
 with_MySQL
@@ -1359,6 +1361,7 @@ Optional Packages:
   --with-xaltFilePrefix=ans
                           Prefix where the json files are written [[$HOME]]
   --with-trackMPIOnly=ans Track only mpi executable, [[no]]
+  --with-computeSHA1=ans  compute SHA1 sum on libraries, [[no]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
   --with-config=ans       A python file defining the accept, ignore, hostname
@@ -2985,6 +2988,28 @@ $as_echo "XALT_TRACKING_MPI_ONLY=$withval" >&6; }
     XALT_TRACKING_MPI_ONLY="$withval"
     cat >>confdefs.h <<_ACEOF
 #define XALT_TRACKING_MPI_ONLY "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-computeSHA1 was given.
+if test "${with_computeSHA1+set}" = set; then :
+  withval=$with_computeSHA1; COMPUTE_SHA1SUM="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$with_computeSHA1" >&5
+$as_echo "COMPUTE_SHA1SUM=$with_computeSHA1" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define COMPUTE_SHA1SUM "$with_computeSHA1"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$withval" >&5
+$as_echo "COMPUTE_SHA1SUM=$withval" >&6; }
+    COMPUTE_SHA1SUM="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define COMPUTE_SHA1SUM "$withval"
 _ACEOF
 
 fi
@@ -6184,6 +6209,7 @@ echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
+echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo
 echo '------------------------------------------------------------------------------'
 echo

@@ -82,6 +82,7 @@ echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
+echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo
 echo '------------------------------------------------------------------------------'
 echo

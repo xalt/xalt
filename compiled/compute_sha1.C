@@ -63,7 +63,22 @@ void* do_work(void *t)
 
 void compute_sha1_master(long n)
 {
-  fnSzG                   = n;
+  fnSzG          = n;
+
+  // Only compute SHA1 sum if XALT_COMPUTE_SHA is yes
+  // If not computing it then set result to "0"
+  const char * v = getenv("XALT_COMPUTE_SHA1");
+  if (v == NULL)
+    v = XALT_COMPUTE_SHA1;
+  if (strcmp(v,"yes") != 0)
+    {
+      for (long i = 0; i < fnSzG; ++i)
+        argV[i].sha1 = "0";
+      return;
+    }
+                              
+  // If we are here then compute sha1 sum.
+
   long           nthreads = std::min(std::min(sysconf(_SC_NPROCESSORS_ONLN), fnSzG),16L);
   pthread_t*     threads  = new pthread_t[nthreads];
   pthread_attr_t attr;

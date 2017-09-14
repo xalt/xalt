@@ -39,6 +39,18 @@ AC_ARG_WITH(trackMPIOnly,
     XALT_TRACKING_MPI_ONLY="$withval"
     AC_DEFINE_UNQUOTED(XALT_TRACKING_MPI_ONLY, "$withval"))dnl
 
+AC_SUBST(COMPUTE_SHA1SUM)
+AC_ARG_WITH(computeSHA1,
+    AC_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sum on libraries, [[no]]]),
+    COMPUTE_SHA1SUM="$withval"
+    AC_MSG_RESULT([COMPUTE_SHA1SUM=$with_computeSHA1])
+    AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$with_computeSHA1")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([COMPUTE_SHA1SUM=$withval])
+    COMPUTE_SHA1SUM="$withval"
+    AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$withval"))dnl
+
 
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
