@@ -145,84 +145,107 @@ class Record(object):
         sA.append("\n")
     return "".join(sA)
 
-def parseSyslogV1(s, clusterName):
-  t = { 'kind' : None, 'value' : None, 'syshost' : None, 'version' : 1}
+class ParseSyslog(object):
+  """
+  """
+  def __init__(self, leftover):
+    self.__recordT    = {}
+    self.__leftoverFn = leftover
 
-  idx = s.find("link:")
-  if (idx == -1):
-    idx = s.find("run:")
-  if (idx == -1):
-    return t, False
+  def writeRecordT(self):
+    leftover = self.__leftoverFn
+    if (os.path.isfile(leftover)):
+      os.rename(leftover, leftover + ".old")
 
-  array        = s[idx:].split(":")
-  t['kind']    = array[0].strip()
-  t['syshost'] = array[1].strip()
-  t['value']   = base64.b64decode(array[2])
-
-  if (clusterName != ".*" and clusterName != t['syshost']):
-    return t, False
-
-  return t, True
-
-def parseSyslogV2(s, clusterName, recordT):
-  t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
-
-  idx = s.find(" V:2 ")
-  if (idx  == -1):
-    return t, False
-
-  # Strip off "XALT_LOGGING V:2" from string.
-  s                      = s[idx+5:]
-
-  # Setup parser
-  lexer                  = shlex.shlex(s)
-  lexer.whitespace_split = True
-  lexer.whitespace       = ' :'
-
-  # Pick off two values at a time.
-  try: 
-    while True:
-      key    = next(lexer)
-      value  = next(lexer)
-      t[key] = value
-  except StopIteration as e:
-    pass
-  
-
-  # get the key from the input, then place an entry in the *recordT* table.
-  # or just add the block to the current record.
-  key = t['key']
-  r    = recordT.get(key, None)
-  if (r):
-    r.addBlk(t)
-  else:
-    r  = Record(t)
-    recordT[key] = r
-
-  if (clusterName != ".*" and clusterName != t['syshost']):
-    return t, False
-
-  # If the block is completed then grap the value, remove the entry from *recordT*
-  # and return a completed table.
-  if (r.completed()):
+    recordT = self.__recordT
+    if (recordT):
+      f = open(self.__leftoverFn, "w")
+      for key in recordT:
+        r = recordT[key]
+        s = r.prt("XALT_LOGGING V=2", key)
+        f.write(s)
+      f.close()
     
-    rv   = r.value()
-    b64v = base64.b64decode(rv)
-    vv   = zlib.decompress(b64v)
 
-    t['value'] = vv
-    recordT.pop(key)
+  def parse(self, s, clusterName):
+    if ("XALT_LOGGING" in s) and ("V:2" in s):
+      return self.__parseSyslogV2(s, clusterName)
+    return self.__parseSyslogV1(s, clusterName)
+
+
+  def __parseSyslogV1(self, s, clusterName):
+    t = { 'kind' : None, 'value' : None, 'syshost' : None, 'version' : 1}
+
+    idx = s.find("link:")
+    if (idx == -1):
+      idx = s.find("run:")
+    if (idx == -1):
+      return t, False
+
+    array        = s[idx:].split(":")
+    t['kind']    = array[0].strip()
+    t['syshost'] = array[1].strip()
+    t['value']   = base64.b64decode(array[2])
+
+    if (clusterName != ".*" and clusterName != t['syshost']):
+      return t, False
+
     return t, True
+    
+  def __parseSyslogV2(self, s, clusterName):
+    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
 
-  # Entry is not complete.
-  return t, False
+    idx = s.find(" V:2 ")
+    if (idx  == -1):
+      return t, False
 
-def parseSyslog(s, clusterName, recordT):
-  if ("XALT_LOGGING" in s) and ("V:2" in s):
-    return parseSyslogV2(s, clusterName, recordT)
-  return parseSyslogV1(s, clusterName)
+    # Strip off "XALT_LOGGING V:2" from string.
+    s                      = s[idx+5:]
 
+    # Setup parser
+    lexer                  = shlex.shlex(s)
+    lexer.whitespace_split = True
+    lexer.whitespace       = ' :'
 
+    # Pick off two values at a time.
+    try: 
+      while True:
+        key    = next(lexer)
+        value  = next(lexer)
+        t[key] = value
+    except StopIteration as e:
+      pass
+  
+    recordT = self.__recordT
+
+    # get the key from the input, then place an entry in the *recordT* table.
+    # or just add the block to the current record.
+    key = t['key']
+    r    = recordT.get(key, None)
+    if (r):
+      r.addBlk(t)
+    else:
+      r  = Record(t)
+      recordT[key] = r
+
+    if (clusterName != ".*" and clusterName != t['syshost']):
+      return t, False
+
+    # If the block is completed then grap the value, remove the entry from *recordT*
+    # and return a completed table.
+    if (r.completed()):
+      
+      rv   = r.value()
+      b64v = base64.b64decode(rv)
+      vv   = zlib.decompress(b64v)
+
+      t['value'] = vv
+      recordT.pop(key)
+      return t, True
+
+    # Entry is not complete.
+    return t, False
+    
 def main():
   """
   read from syslog file into XALT db.
@@ -252,12 +275,21 @@ def main():
 
   fnA    = [ args.leftover, syslogFile ]
 
+  parseSyslog = ParseSyslog(args.leftover)
+
+
   fnSz = 0
+  #for fn in fnA:
+  #  if (not os.path.isfile(fn)):
+  #    continue
+  #
+  #  f
+
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
-    fnSz += os.path.getsize(fn)
-
+    fnSz  += os.path.getsize(fn)
+    
   pbar   = ProgressBar(maxVal=fnSz)
   for fn in fnA:
     if (not os.path.isfile(fn)):
@@ -269,7 +301,7 @@ def main():
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog(line, args.syshost, recordT)
+      t, done = parseSyslog.parse(line, args.syshost)
       if (not done):
         continue
 
@@ -304,19 +336,9 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt, ", badCnt: ", badCnt)
         
-  leftover = args.leftover
-  if (os.path.isfile(leftover)):
-    os.rename(leftover, leftover + ".old")
   
   # if there is anything left in recordT file write it out to the leftover file.
-
-  if (recordT):
-    f = open(leftover, "w")
-    for key in recordT:
-      r = recordT[key]
-      s = r.prt("XALT_LOGGING V=2", key)
-      f.write(s)
-    f.close()
+  parseSyslog.writeRecordT()
 
 
 if ( __name__ == '__main__'): main()
