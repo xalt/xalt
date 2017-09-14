@@ -1,3 +1,4 @@
+#include "xalt_config.h"
 #include "compute_sha1.h"
 #include <fcntl.h>
 #include <openssl/sha.h>
