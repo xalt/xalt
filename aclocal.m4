@@ -58,7 +58,7 @@ AC_DEFUN([AX_SUMMARIZE_CONFIG],
 [
 
 Using_MYSQL=yes
-if test "$MYSQL_CONFIG" = UNKNOWN; then
+if test "$MYSQL_CONFIG" = UNKNOWN_mysql_config; then
   Using_MYSQL=no
 fi
 

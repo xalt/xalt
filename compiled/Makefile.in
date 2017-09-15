@@ -3,7 +3,7 @@ VPATH = .:$(THIS_DIR)
 CXX := g++
 CC  := gcc
 MYSQL_CONFIG     := @MYSQL_CONFIG@
-ifneq ($(MYSQL_CONFIG),UNKNOWN)
+ifneq ($(MYSQL_CONFIG),UNKNOWN_mysql_config)
   MYSQL_CFLAGS  := $(shell $(MYSQL_CONFIG) --cflags) -DHAVE_MYSQL
   MYSQL_LDFLAGS := $(shell $(MYSQL_CONFIG) --libs)  
   MYSQL_LDFLAGS := $(shell $(THIS_DIR)/addRpath.sh $(MYSQL_LDFLAGS))
@@ -223,10 +223,6 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
-
-makefile: Makefile.in config.status
-	./config.status $@
-
 
 neat:
 	$(RM) *~

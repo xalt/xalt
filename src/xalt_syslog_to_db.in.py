@@ -148,20 +148,20 @@ class Record(object):
 class ParseSyslog(object):
   """
   """
-  def __init__(self, leftover):
+  def __init__(self, leftoverFn):
     self.__recordT    = {}
-    self.__leftoverFn = leftover
+    self.__leftoverFn = leftoverFn
 
   def writeRecordT(self):
-    leftover = self.__leftoverFn
-    if (os.path.isfile(leftover)):
-      os.rename(leftover, leftover + ".old")
+    leftoverFn = self.__leftoverFn
+    if (os.path.isfile(leftoverFn)):
+      os.rename(leftoverFn, leftoverFn + ".old")
 
-    recordT = self.__recordT
-    if (recordT):
-      f = open(self.__leftoverFn, "w")
-      for key in recordT:
-        r = recordT[key]
+    #recordT = self.__recordT
+    if (self.__recordT):
+      f = open(leftoverFn, "w")
+      for key in self.__recordT:
+        r = self.__recordT[key]
         s = r.prt("XALT_LOGGING V=2", key)
         f.write(s)
       f.close()
@@ -216,20 +216,20 @@ class ParseSyslog(object):
     except StopIteration as e:
       pass
   
-    recordT = self.__recordT
+    if (clusterName != ".*" and clusterName != t['syshost']):
+      return t, False
+
+    # recordT = self.__recordT
 
     # get the key from the input, then place an entry in the *recordT* table.
     # or just add the block to the current record.
-    key = t['key']
-    r    = recordT.get(key, None)
+    key  = t['key']
+    r    = self.__recordT.get(key, None)
     if (r):
       r.addBlk(t)
     else:
       r  = Record(t)
-      recordT[key] = r
-
-    if (clusterName != ".*" and clusterName != t['syshost']):
-      return t, False
+      self.__recordT[key] = r
 
     # If the block is completed then grap the value, remove the entry from *recordT*
     # and return a completed table.
@@ -240,7 +240,7 @@ class ParseSyslog(object):
       vv   = zlib.decompress(b64v)
 
       t['value'] = vv
-      recordT.pop(key)
+      self.__recordT.pop(key)
       return t, True
 
     # Entry is not complete.

@@ -211,7 +211,11 @@ AC_PATH_PROG(PATH_TO_RM, rm, [])
 AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
-AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN_mysql_config)
+if test "$MYSQLDB" == yes; then
+  AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN_mysql_config)
+else
+  MYSQL_CONFIG=UNKNOWN_mysql_config
+fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
@@ -371,6 +375,6 @@ fi
 
 
 
-AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in)
+AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in)
 
 AX_SUMMARIZE_CONFIG

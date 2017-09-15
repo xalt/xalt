@@ -331,6 +331,9 @@ dist:
 makefile: $(srcdir)/Makefile.in config.status
 	./config.status $@
 
+compiled/makefile: $(srcdir)/compiled/Makefile.in config.status
+	./config.status $@
+
 neat:
 	$(RM) *~ src/*~
 	cd compiled ; $(MAKE) PARENT_DIR=$(srcdir) $@

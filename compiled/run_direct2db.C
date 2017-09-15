@@ -817,8 +817,8 @@ void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& ha
 }
 
 #else
-void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT, Table& envT, Table& userT,
-               Table& recordT, std::vector<Libpair>& lddA)
+void run_direct2db(const char* confFn, std::string& usr_cmdline, std::string& hash_id, Table& rmapT,
+                   Table& envT, Table& userT, DTable& userDT, Table& recordT, std::vector<Libpair>& lddA)
 {
   fprintf(stderr,"This version of XALT was not built with MySQL support.\n"
           "You can not use the direct2db transmission style.  Aborting!\n");
