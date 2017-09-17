@@ -106,12 +106,22 @@ def main():
   nlinks = int(args.links)
   if (tableT['xalt_link']       == nlinks and
       tableT['xalt_run']        == num    and
-      tableT['xalt_total_env']  == num    and
       tableT['xalt_function']   >= nfuncs and
       tableT['xalt_object']     >   10    and
       tableT['xalt_env_name']   >   4 ):
 
     result = "passed"
+  else:
+    print("Expected:")
+    print(" links:       ",nlinks)
+    print(" runs:        ",num)
+    print(" functions >= ",num)
+    print(" objects   >  10")
+    print(" env names >  4")
+
+
+
+
   f = open(args.resultFn,"w")
   f.write(result+"\n")
   f.close()
