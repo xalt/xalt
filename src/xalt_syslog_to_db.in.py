@@ -267,6 +267,7 @@ class Filter(object):
     entry                = jobT.get(job_id, { 'Njobs' : 0, 'total_time' : 0.0, 'Nsaved' : 0 })
     entry['Njobs']      += 1
     entry['total_time'] += userDT['run_time']
+    jobT[job_id]         = entry
 
   def apply(self, runT):
 
@@ -276,6 +277,7 @@ class Filter(object):
     job_id       = runT['userT'].get('job_id',"0")
     jobT         = self.__jobT
     maxJobsSaved = self.__num
+    entry        = jobT[job_id]
 
     Njobs        = entry['Njobs']
     if ( Njobs <= maxJobsSaved):
@@ -341,6 +343,7 @@ def main():
     if (not os.path.isfile(fn)):
       continue
     
+    f=open(fn, 'r')
     for line in f:
       if (not ("XALT_LOGGING" in line)):
         continue
@@ -349,6 +352,7 @@ def main():
         continue
 
       filter.register(json.loads(t['value']))
+    f.close()
 
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=fnSz)
