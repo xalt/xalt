@@ -33,8 +33,9 @@
 #
 #
 
-from __future__  import print_function
-import os, sys, re, MySQLdb, json, time, argparse, base64, zlib, shlex
+from __future__ import print_function
+from __future__ import division
+import os, sys, re, MySQLdb, json, time, argparse, base64, zlib, shlex, random
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -247,6 +248,49 @@ class ParseSyslog(object):
     # Entry is not complete.
     return t, False
     
+class Filter(object):
+
+  def __init__(self, maxJobsSaved):
+    self.__jobT = {}
+    self.__num  = maxJobsSaved
+
+  def register(self, runT):
+
+    # ignore a start record or mpi executable
+    if (runT['userDT']['end_time'] <= 0.0 or runT['userDT']['num_cores'] > 1):
+      return
+
+    jobT                 = self.__jobT
+    userT                = runT['userT']
+    userDT               = runT['userDT']
+    job_id               = userT.get('job_id',"0")
+    entry                = jobT.get(job_id, { 'Njobs' : 0, 'total_time' : 0.0, 'Nsaved' : 0 })
+    entry['Njobs']      += 1
+    entry['total_time'] += userDT['run_time']
+
+  def apply(self, runT):
+
+    if (runT['userDT']['end_time'] <= 0.0 or runT['userDT']['num_cores'] > 1):
+      return True
+
+    job_id       = runT['userT'].get('job_id',"0")
+    jobT         = self.__jobT
+    maxJobsSaved = self.__num
+
+    Njobs        = entry['Njobs']
+    if ( Njobs <= maxJobsSaved):
+      return True
+
+    if (entry.Nsaved >= maxJobsSaved):
+      return False
+
+    if (random.random() < maxJobsSaved/Njobs):
+      entry['Nsaved'] += 1
+      return True
+
+    return False
+
+
 def main():
   """
   read from syslog file into XALT db.
@@ -279,19 +323,35 @@ def main():
   parseSyslog = ParseSyslog(args.leftover)
 
 
-  fnSz = 0
-  #for fn in fnA:
-  #  if (not os.path.isfile(fn)):
-  #    continue
-  #
-  #  f
+  #-----------------------------
+  # Figure out size in bytes.
 
+  fnSz = 0
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
     fnSz  += os.path.getsize(fn)
     
-  pbar   = ProgressBar(maxVal=fnSz)
+
+  #----------------------------------------------------------
+  # Count the number and sum the run_time for all scalar jobs
+
+  filter = Filter(100)
+  for fn in fnA:
+    if (not os.path.isfile(fn)):
+      continue
+    
+    for line in f:
+      if (not ("XALT_LOGGING" in line)):
+        continue
+      t, done = parseSyslog.parse(line, args.syshost)
+      if (not done or t['kind'] != "run"):
+        continue
+
+      filter.register(json.loads(t['value']))
+
+  parseSyslog = ParseSyslog(args.leftover)
+  pbar        = ProgressBar(maxVal=fnSz)
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
@@ -315,10 +375,12 @@ def main():
           XALT_Stack.pop()
           lnkCnt += 1
         elif ( t['kind'] == "run" ):
-          XALT_Stack.push("run_to_db()")
-          xalt.run_to_db(rmapT, json.loads(t['value']))
-          XALT_Stack.pop()
-          runCnt += 1
+          runT = json.loads(t['value'])
+          if (filter.apply(runT)):
+            XALT_Stack.push("run_to_db()")
+            xalt.run_to_db(rmapT, runT)
+            XALT_Stack.pop()
+            runCnt += 1
         else:
           print("Error in xalt_syslog_to_db", file=sys.stderr)
         XALT_Stack.pop()
