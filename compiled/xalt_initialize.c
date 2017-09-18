@@ -116,7 +116,6 @@ static char *       ldLibPathArg = NULL;
      size_t      sz           = 0;
      FILE*       fp           = fopen(uuid_proc_fn,"r");
 
-     HERE; 
      if (!fp)
        {
          fprintf(stderr,"Unable to open: %s\n",uuid_proc_fn);
@@ -126,7 +125,7 @@ static char *       ldLibPathArg = NULL;
      xalt_fgets_alloc(fp, &buf, &sz);
      memcpy(my_uuid_str,buf, 36);
      my_uuid_str[36] = '\0';
-     HERE; fclose(fp);
+     fclose(fp);
    }
 #endif
 
