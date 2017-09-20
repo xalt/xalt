@@ -264,10 +264,20 @@ class Filter(object):
     userT                = runT['userT']
     userDT               = runT['userDT']
     job_id               = userT.get('job_id',"0")
-    entry                = jobT.get(job_id, { 'Njobs' : 0, 'total_time' : 0.0, 'Nsaved' : 0 })
-    entry['Njobs']      += 1
+    entry                = jobT.get(job_id, { 'Nexecs' : 0, 'total_time' : 0.0, 'Nsaved' : 0 })
+    entry['Nexecs']     += 1
     entry['total_time'] += userDT['run_time']
     jobT[job_id]         = entry
+
+  def report_stats(self):
+    jobT       = self.__jobT
+    numJobs    = 0
+    maxExecCnt = -1
+    for key, entry in jobT.iteritems():
+      numJobs    += 1
+      maxExecCnt  = max(maxExecCnt,entry.Nexecs)
+
+   print("\nNumber of Jobs:", numJobs,", Max number of executions in one job:", maxExecCnt,"\n")
 
   def apply(self, runT):
 
@@ -279,19 +289,18 @@ class Filter(object):
     maxJobsSaved = self.__num
     entry        = jobT[job_id]
 
-    Njobs        = entry['Njobs']
-    if ( Njobs <= maxJobsSaved):
+    Nexecs       = entry['Nexecs']
+    if ( Nexecs <= maxJobsSaved):
       return True
 
     if (entry.Nsaved >= maxJobsSaved):
       return False
 
-    if (random.random() < maxJobsSaved/Njobs):
+    if (random.random() < maxJobsSaved/Nexecs):
       entry['Nsaved'] += 1
       return True
 
     return False
-
 
 def main():
   """
@@ -358,6 +367,8 @@ def main():
     f.close()
   pbar.fini()
 
+  filter.report_stats()
+  
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=fnSz)
   for fn in fnA:
