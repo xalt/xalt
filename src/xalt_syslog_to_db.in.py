@@ -339,12 +339,15 @@ def main():
   # Count the number and sum the run_time for all scalar jobs
 
   filter = Filter(100)
+  pbar   = ProgressBar(maxVal=fnSz)
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
     
     f=open(fn, 'r')
     for line in f:
+      count += len(line)
+      pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
       t, done = parseSyslog.parse(line, args.syshost)
@@ -353,6 +356,7 @@ def main():
 
       filter.register(json.loads(t['value']))
     f.close()
+  pbar.fini()
 
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=fnSz)
