@@ -369,6 +369,7 @@ def main():
 
   filter.report_stats()
   
+  count       = 0
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=fnSz)
   for fn in fnA:
