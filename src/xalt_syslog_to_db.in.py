@@ -275,7 +275,7 @@ class Filter(object):
     maxExecCnt = -1
     for key, entry in jobT.iteritems():
       numJobs    += 1
-      maxExecCnt  = max(maxExecCnt,entry.Nexecs)
+      maxExecCnt  = max(maxExecCnt,entry['Nexecs'])
 
     print("\nNumber of Jobs:", numJobs,", Max number of executions in one job:", maxExecCnt,"\n")
 
