@@ -277,7 +277,7 @@ class Filter(object):
       numJobs    += 1
       maxExecCnt  = max(maxExecCnt,entry.Nexecs)
 
-   print("\nNumber of Jobs:", numJobs,", Max number of executions in one job:", maxExecCnt,"\n")
+    print("\nNumber of Jobs:", numJobs,", Max number of executions in one job:", maxExecCnt,"\n")
 
   def apply(self, runT):
 
