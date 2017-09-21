@@ -119,14 +119,16 @@ class Record(object):
   def value(self):
     return "".join(self.__blkA)
 
-  def prt(self, prefix, key):
+  def prt(self, key):
     sA    = []
     nblks = self.__nblks
     blkA  = self.__blkA
 
     sPA   = []
-    sPA.append(prefix)
-    sPA.append(" kind:")
+    
+    sPA.append("XALT_LOGGING_")
+    sPA.append(syshost)
+    sPA.append(" V:2 kind:")
     sPA.append(self.__kind)
     sPA.append(" syshost:")
     sPA.append(self.__syshost)
@@ -144,7 +146,6 @@ class Record(object):
         sA.append(str(idx))
         sA.append(" value:")
         sA.append(value)
-        sA.append("\n")
     return "".join(sA)
 
 class ParseSyslog(object):
@@ -170,13 +171,21 @@ class ParseSyslog(object):
     
 
   def parse(self, s, clusterName):
-    if ("XALT_LOGGING" in s) and ("V:2" in s):
-      return self.__parseSyslogV2(s, clusterName)
-    return self.__parseSyslogV1(s, clusterName)
-
+    if ("XALT_LOGGING_" in s):
+      if (" V:2 " in s):
+        return self.__parseSyslogV2(s, clusterName)
+      else:
+        return self.__parseSyslogV1(s, clusterName)
+    return false, {}
 
   def __parseSyslogV1(self, s, clusterName):
     t = { 'kind' : None, 'value' : None, 'syshost' : None, 'version' : 1}
+
+    idx          = s.find("XALT_LOGGING_")
+    idx         += 13
+    p            = s[idx:].find(" ")
+    t['syshost'] = s[idx:idx+p]
+    
 
     idx = s.find("link:")
     if (idx == -1):
@@ -186,8 +195,7 @@ class ParseSyslog(object):
 
     array        = s[idx:].split(":")
     t['kind']    = array[0].strip()
-    t['syshost'] = array[1].strip()
-    t['value']   = base64.b64decode(array[2])
+    t['value']   = base64.b64decode(array[1])
 
     if (clusterName != ".*" and clusterName != t['syshost']):
       return t, False

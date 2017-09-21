@@ -4,7 +4,7 @@
 #include "parseSyslog.h"
 #include "SyslogRecord.h"
 
-// XALT_LOGGING V:2 kind:kind key:key syshost:syshost nb:nb idx:idx value:value
+// XALT_LOGGING_<syshost> V:2 kind:kind key:key syshost:syshost nb:nb idx:idx value:value
 
 bool parseSyslog(const char* buf, std::string& clusterName, SyslogRecord& syslogT, RecordT& recordT)
 {
@@ -81,7 +81,7 @@ bool parseSyslog(const char* buf, std::string& clusterName, SyslogRecord& syslog
   return false;
 }
 
-// XALT_LOGGING kind:syshost:value
+// XALT_LOGGING_<syshost> kind:value
 
 bool parseSyslogV1(const char* buf, SyslogRecord& syslogT)
 {
@@ -92,11 +92,16 @@ bool parseSyslogV1(const char* buf, SyslogRecord& syslogT)
   std::string syshost;
   std::string value;
 
-  const char* start = strstr((char *) buf,"XALT_LOGGING");
+  const char* start = strstr((char *) buf,"XALT_LOGGING_");
   if (start == NULL)
     return false;
+  
+  start += 13;
+  
+  const char* p = strchr(start,' ');
+  syshost.assign(start, p - start);
+  start = p + 1
 
-  start += 12;
   while(isspace(*start))
     start++ ;
 
