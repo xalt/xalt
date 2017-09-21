@@ -294,11 +294,11 @@ class Filter(object):
     if ( Nexecs <= maxJobsSaved):
       return True
 
-    if (entry.Nsaved >= maxJobsSaved):
+    if (entry['Nsaved'] >= maxJobsSaved):
       return False
 
     if (random.random() < maxJobsSaved/Nexecs):
-      entry['Nsaved'] += 1
+      jobT[job_id]['Nsaved'] += 1
       return True
 
     return False
