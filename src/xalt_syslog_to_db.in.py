@@ -109,8 +109,9 @@ class Record(object):
 
   def addBlk(self,t):
     idx               = int(t['idx'])
-    self.__blkA[idx]  = t['value']
-    self.__blkCnt    += 1
+    if (not self.__blkA[idx]):
+        self.__blkA[idx]  = t['value']
+        self.__blkCnt    += 1
     
   def completed(self):
     return (self.__blkCnt >= self.__nblks)
