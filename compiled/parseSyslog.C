@@ -98,23 +98,19 @@ bool parseSyslogV1(const char* buf, SyslogRecord& syslogT)
   
   start += 13;
   
+
   const char* p = strchr(start,' ');
   syshost.assign(start, p - start);
-  start = p + 1
-
-  while(isspace(*start))
-    start++ ;
-
-  const char* p = strchr(start,':');
-  if (p)
-    kind.assign(start, p - start);
 
   start = p + 1;
-  p = strchr(start,':');
-  
-  if (p)
-    syshost.assign(start, p - start);
 
+  while(isspace(*start))
+    start++;
+
+  p = strchr(start,':');
+  if (p)
+    kind.assign(start, p - start);
+  
   start = p + 1;
   p     = start+strlen(start);
 

@@ -58,8 +58,6 @@ test_descript = {
      
      displayThis  "xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
-     displayThis  "mpirun -n 1 ./hello"
-     mpirun -n 1 ./hello.x
 
 
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 3 --functions 4 --links 2
