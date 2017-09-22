@@ -1,6 +1,7 @@
 #include "run_submission.h"
 #include <stdlib.h>
 #include <string.h>
+#include "xalt_utils.h"
 
 void buildEnvT(Options& options, char* env[], Table& envT)
 {
@@ -13,8 +14,11 @@ void buildEnvT(Options& options, char* env[], Table& envT)
 
       if (p) {
         n.assign(w, p - w);
-        v.assign(p+1);
-        envT[n] = v;
+        if ( ! reject_env_name(n))
+          {
+            v.assign(p+1);
+            envT[n] = v;
+          }
       }
     }
 

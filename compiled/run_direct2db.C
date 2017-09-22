@@ -2,13 +2,11 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
-#include <regex.h>
 
 #include "run_submission.h"
 #include "run_direct2db.h"
 #include "link_direct2db.h"
 #include "ConfigParser.h"
-#include "xalt_regex.h"
 #include "Json.h"
 #include "xalt_utils.h"
 #include "xalt_mysql_utils.h"
@@ -366,58 +364,6 @@ void buildEnvNameT(MYSQL* conn, TableIdx& envNameT)
 
   mysql_stmt_free_result(stmt);
 }
-
-bool reject_env_name(const std::string& env_name)
-{
-  regex_t regex;
-  char    msgbuf[100];
-  bool    ret = (acceptEnvSz != 0);
-
-  for (int i = 0; i < acceptEnvSz; ++i)
-    {
-      if (regcomp(&regex, acceptEnvA[i], 0))
-        {
-          fprintf(stderr,"Could not compile regex \"%s\"\n", acceptEnvA[i]);
-          exit(1);
-        }
-      int iret = regexec(&regex, env_name.c_str(), 0, NULL, 0);
-      if (iret == 0)
-        {
-          ret = false;
-          break;
-        }
-      else if (iret != REG_NOMATCH)
-        {
-          regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-          fprintf(stderr, "acceptEnvA Regex match failed: %s\n", msgbuf);
-          exit(1);
-        }
-      regfree(&regex);
-    }
-
-  if (ret)
-    return true;
-  
-  for (int i = 0; i < ignoreEnvSz; ++i)
-    {
-      if (regcomp(&regex, ignoreEnvA[i], 0))
-        {
-          fprintf(stderr,"Could not compile regex \"%s\"\n", ignoreEnvA[i]);
-          exit(1);
-        }
-      int iret = regexec(&regex, env_name.c_str(), 0, NULL, 0);
-      if (iret == 0)
-        return true;
-      else if (iret != REG_NOMATCH)
-        {
-          regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-          fprintf(stderr, "ignoreEnvA Regex match failed: %s\n", msgbuf);
-          exit(1);
-        }
-      regfree(&regex);
-    }
-  return false;
-}  
 
 uint findEnvNameIdx(MYSQL* conn, const std::string& env_name, TableIdx& envNameT)
 {
