@@ -117,8 +117,8 @@ S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2D
 
 XCR_EXEC     := $(DESTDIR)$(BIN)/xalt_configuration_report
 XCR_CXX_SRC  := xalt_configuration_report.C epoch.C Json.C
-XCR_C_SRC    := xalt_quotestring.c
-XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC)) $(patsubst %.c, %.o, $(XCR_C_SRC))
+XCR_C_SRC    := xalt_quotestring.c 
+XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC)) $(patsubst %.c, %.o, $(XCR_C_SRC)) xalt_syshost.o
 
 %.d: %.c
 	@set -e; rm -f $@;                                  \
@@ -157,8 +157,8 @@ $(XEL_EXEC) : $(XEL_OBJS)
 $(XSL_EXEC) : $(XSL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
 
-$(XCR_EXEC) : $(XCR_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+$(XCR_EXEC) : $(XCR_OBJS) 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
 
 $(F2DB_EXEC) : $(F2DB_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(MYSQL_LDFLAGS)
