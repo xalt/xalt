@@ -90,7 +90,7 @@ AC_ARG_WITH(MySQL,
 
 AC_SUBST(SYSTEM_PATH)
 AC_ARG_WITH(systemPath,
-    AC_HELP_STRING([--with-systemPath=ans],[]),
+    AC_HELP_STRING([--with-systemPath=[ans]],[]),
     SYSTEM_PATH="$withval"
     AC_MSG_RESULT([SYSTEM_PATH=$with_systemPath])
     AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$with_systemPath")dnl
