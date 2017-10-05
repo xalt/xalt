@@ -160,8 +160,8 @@ void myinit(int argc, char **argv)
   if (p_dbg)
     {
       background       = 0;  /* backgrounding the start record is always off when tracing is on*/
-      xalt_tracing     = ((strcmp(p_dbg,"yes") == 0)
-      xalt_run_tracing = ((strcmp(p_dbg,"run") == 0)
+      xalt_tracing     = (strcmp(p_dbg,"yes") == 0);
+      xalt_run_tracing = (strcmp(p_dbg,"run") == 0);
       errfd	       = dup(STDERR_FILENO);
     }
 
