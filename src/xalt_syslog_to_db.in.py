@@ -165,7 +165,7 @@ class ParseSyslog(object):
       f = open(leftoverFn, "w")
       for key in self.__recordT:
         r = recordT[key]
-        s = r.prt("XALT_LOGGING V=2", key)
+        s = r.prt(key)
         f.write(s)
       f.close()
     
