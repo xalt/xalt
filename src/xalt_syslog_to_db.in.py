@@ -372,7 +372,12 @@ def main():
       if (not done or t['kind'] != "run"):
         continue
 
-      filter.register(json.loads(t['value']))
+      try:
+        value = json.loads(t['value'])
+        filter.register(value)
+      except Exception as e:
+        continue
+
     f.close()
   pbar.fini()
 
@@ -396,18 +401,22 @@ def main():
         continue
 
       try:
+        value = json.loads(t['value'])
+      except Exception as e:
+        continue
+
+      try:
         XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
 
         if ( t['kind'] == "link" ):
           XALT_Stack.push("link_to_db()")
-          xalt.link_to_db(rmapT, json.loads(t['value']))
+          xalt.link_to_db(rmapT, value)
           XALT_Stack.pop()
           lnkCnt += 1
         elif ( t['kind'] == "run" ):
-          runT = json.loads(t['value'])
-          if (filter.apply(runT)):
+          if (filter.apply(value)):
             XALT_Stack.push("run_to_db()")
-            xalt.run_to_db(rmapT, runT)
+            xalt.run_to_db(rmapT, value)
             XALT_Stack.pop()
             runCnt += 1
         else:
