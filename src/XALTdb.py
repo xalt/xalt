@@ -277,9 +277,9 @@ class XALTdb(object):
         cursor.execute(query,(obj_id, index, dateStr))
   
     except Exception as e:
-      print(XALT_Stack.contents())
-      print(query)
-      print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
+      print(XALT_Stack.contents(),file=sys.stderr)
+      print(query,file=sys.stderr)
+      print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]),file=sys.stderr)
       sys.exit (1)
 
   def run_to_db(self, reverseMapT, runT):
@@ -405,7 +405,7 @@ class XALTdb(object):
       conn.close()
 
     except Exception as e:
-      print(XALT_Stack.contents())
-      print(query.encode("ascii","ignore"))
-      print ("run_to_db(): ",e)
+      print(XALT_Stack.contents(),file=sys.stderr)
+      print(query.encode("ascii","ignore"),file=sys.stderr)
+      print ("run_to_db(): ",e,file=sys.stderr)
       sys.exit (1)
