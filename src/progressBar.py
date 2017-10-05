@@ -129,7 +129,7 @@ class ProgressBar(object):
         self.__count +=  1
         self.__mark  += 10
         symbol = self.__symbolT[self.__count]
-      self.__fd.write(symbol)
+      self.__fd.write(symbol); self._fd.flush()
       self.__fence += self.__unit
   def fini(self):
     """ Finish progress bar output. """
