@@ -378,6 +378,7 @@ def main():
       ##################################
       # If the json conversion then
       # ignore record and keep going
+      value = False
 
       try:
         value = json.loads(t['value'])
