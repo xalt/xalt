@@ -362,9 +362,11 @@ def main():
     if (not os.path.isfile(fn)):
       continue
     
+    lineNo = 0    
     f=open(fn, 'r')
     for line in f:
-      count += len(line)
+      lineNo += 1    
+      count  += len(line)
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
@@ -381,6 +383,7 @@ def main():
         value = json.loads(t['value'])
         filter.register(value)
       except Exception as e:
+        print("fn:",fn,"line:",lineNo,"value:",value,file=sys.stderr)
         continue
 
     f.close()
