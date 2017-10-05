@@ -372,6 +372,11 @@ def main():
       if (not done or t['kind'] != "run"):
         continue
 
+
+      ##################################
+      # If the json conversion then
+      # ignore record and keep going
+
       try:
         value = json.loads(t['value'])
         filter.register(value)
@@ -399,6 +404,10 @@ def main():
       t, done = parseSyslog.parse(line, args.syshost)
       if (not done):
         continue
+
+      ##################################
+      # If the json conversion then
+      # ignore record and keep going
 
       try:
         value = json.loads(t['value'])
