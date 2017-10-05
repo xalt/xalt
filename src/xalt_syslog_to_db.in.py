@@ -384,7 +384,7 @@ def main():
         value = json.loads(t['value'])
         filter.register(value)
       except Exception as e:
-        print("fn:",fn,"line:",lineNo,"value:",value,file=sys.stderr)
+        print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
         continue
 
     f.close()
