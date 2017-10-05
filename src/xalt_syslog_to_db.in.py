@@ -127,7 +127,7 @@ class Record(object):
     sPA   = []
     
     sPA.append("XALT_LOGGING_")
-    sPA.append(syshost)
+    sPA.append(self.__syshost)
     sPA.append(" V:2 kind:")
     sPA.append(self.__kind)
     sPA.append(" syshost:")
