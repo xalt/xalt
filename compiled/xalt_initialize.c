@@ -80,17 +80,18 @@ static char         exec_path[PATH_MAX];
 static char *       usr_cmdline;
 static const char * my_syshost;
 
-static xalt_status  reject_flag  = XALT_SUCCESS;
-static pid_t        ppid         = 0;
-static int          errfd	 = -1;
-static double       start_time   = 0.0;
-static double       end_time	 = 0.0;
-static long         my_rank	 = 0L;
-static long         my_size	 = 1L;
-static int          xalt_tracing = 0;
-static int          background   = 0;
-static char *       pathArg      = NULL;
-static char *       ldLibPathArg = NULL;
+static xalt_status  reject_flag	     = XALT_SUCCESS;
+static pid_t        ppid	     = 0;
+static int          errfd	     = -1;
+static double       start_time	     = 0.0;
+static double       end_time	     = 0.0;
+static long         my_rank	     = 0L;
+static long         my_size	     = 1L;
+static int          xalt_tracing     = 0;
+static int          xalt_run_tracing = 0;
+static int          background	     = 0;
+static char *       pathArg	     = NULL;
+static char *       ldLibPathArg     = NULL;
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
@@ -156,11 +157,12 @@ void myinit(int argc, char **argv)
     background = 1;
 
   p_dbg = getenv("XALT_TRACING");
-  if (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0))
+  if (p_dbg)
     {
-      background   = 0;  /* backgrounding the start record is always off when tracing is on*/
-      xalt_tracing = 1;
-      errfd = dup(STDERR_FILENO);
+      background       = 0;  /* backgrounding the start record is always off when tracing is on*/
+      xalt_tracing     = ((strcmp(p_dbg,"yes") == 0)
+      xalt_run_tracing = ((strcmp(p_dbg,"run") == 0)
+      errfd	       = dup(STDERR_FILENO);
     }
 
   v = getenv("__XALT_INITIAL_STATE__");
@@ -414,7 +416,8 @@ void myinit(int argc, char **argv)
 	       " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
 	       start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
-      DEBUG1(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
+      if (xalt_tracing || xalt_run_tracing) 
+	fprintf(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
       system(cmdline);
       free(cmdline);
     }
