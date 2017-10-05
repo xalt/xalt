@@ -357,7 +357,7 @@ def main():
   # Count the number and sum the run_time for all scalar jobs
 
   filter = Filter(100)
-  pbar   = ProgressBar(maxVal=fnSz)
+  pbar   = ProgressBar(maxVal=fnSz,fd=sys.stdout)
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
@@ -394,7 +394,7 @@ def main():
   
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
-  pbar        = ProgressBar(maxVal=fnSz)
+  pbar        = ProgressBar(maxVal=fnSz,fd=sys.stdout)
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
