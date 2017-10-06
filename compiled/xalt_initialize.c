@@ -292,7 +292,6 @@ void myinit(int argc, char **argv)
 
   usr_cmdline = (char *) malloc(sz);
   p	      = &usr_cmdline[0];
-  *p++        = '[';
   for (i = 0; i < argc; ++i)
     {
       *p++ = '"';
@@ -301,9 +300,8 @@ void myinit(int argc, char **argv)
       memcpy(p,qs,len);
       p += len;
       *p++= '"';
-      *p++= ',';
+      *p++= ' ';
     }
-  *--p = ']';
   *++p = '\0';
   if (p > &usr_cmdline[sz])
     {
@@ -413,7 +411,7 @@ void myinit(int argc, char **argv)
   if ( produce_strt_rec )
     {
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" %s %s  '%s' %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+	       " --uuid \"%s\" %s %s %s %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
 	       start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
       if (xalt_tracing || xalt_run_tracing) 
@@ -458,7 +456,7 @@ void myfini()
   /* Do not background this because it might get killed by the epilog cleanup tool! */
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\""
-           " --ntasks %ld --uuid \"%s\" %s %s '%s'", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+           " --ntasks %ld --uuid \"%s\" %s %s %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
 	   start_time, end_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
 
   DEBUG1(my_stderr,"  Recording State at end of user program:\n    %s\n\n}\n\n",cmdline);

@@ -116,8 +116,15 @@ Options::Options(int argc, char** argv)
     }
   
   if (optind < argc)
-    m_userCmdLine = argv[optind];
-
+    {
+      m_userCmdLine = "[";
+      for (int i = optind; i < argc; ++i)
+        {
+          m_userCmdLine += argv[i];
+          m_userCmdLine += ",";
+        }
+      m_userCmdLine.replace(m_userCmdLine.size()-1,1,"]");
+    }
 
   if (m_exec != "unknown")
     {
