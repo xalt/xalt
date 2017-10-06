@@ -302,7 +302,7 @@ void myinit(int argc, char **argv)
       *p++= '"';
       *p++= ' ';
     }
-  *++p = '\0';
+  *--p = '\0';
   if (p > &usr_cmdline[sz])
     {
       fprintf(stderr,"XALT: Failure in building user command line json string!\n");
