@@ -5,10 +5,10 @@
 #include "xalt_quotestring.h"
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__);fflush(stderr)
 const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0005","\\u0006","\\u0007",
-		       	 "\\b"    ,"\\t"    ,"\\n"    ,"\\u000b","\\f"    ,"\\r"    ,"\\u000e","\\u000f",
-		       	 "\\u0010","\\u0011",    "\\r","\\u0013","\\u0014","\\u0015","\\u0016","\\u0017",
-		       	 "\\u0018","\\u0019","\\u001a","\\u001b","\\u001c","\\u001d","\\u001e","\\u001f",		       
-		       	 " "      ,      "!",     "\\\""};
+                         "\\b"    ,"\\t"    ,"\\n"    ,"\\u000b","\\f"    ,"\\r"    ,"\\u000e","\\u000f",
+                         "\\u0010","\\u0011",    "\\r","\\u0013","\\u0014","\\u0015","\\u0016","\\u0017",
+                         "\\u0018","\\u0019","\\u001a","\\u001b","\\u001c","\\u001d","\\u001e","\\u001f",
+                         " "      ,      "!",   "\\\""};
 
 const char escCharA[] = {'a', '\b', 'c','d','e','\f','g','h','i','j','k','l','m','\n','o','p','q','\r','s',
                          '\t'};
@@ -24,13 +24,14 @@ const char* xalt_quotestring(const char* input)
   unsigned char a,b,c,d;
   unsigned int  currSz;
   int           high, low, len;
+
   len    = strlen(input);
   currSz = 3*len+1;
   if (sz < currSz)
     {
       sz = currSz;
       if (buff)
-	free(buff);
+        free(buff);
       buff = (char *) malloc(sz);
     }
   s = buff;
@@ -39,23 +40,23 @@ const char* xalt_quotestring(const char* input)
     {
       a = *p;
       if (a < 0x023)
-	{
-	  const char *r = qcharA[a];
-	  len = strlen(r);
-	  memcpy(s,r,len);
-	  s += len;
-	}
+        {
+          const char *r = qcharA[a];
+          len = strlen(r);
+          memcpy(s,r,len);
+          s += len;
+        }
       else if (a == '\\')
-	{
-	  memcpy(s,"\\\\",2);
-	  s += 2;
-	}
+        {
+          memcpy(s,"\\\\",2);
+          s += 2;
+        }
       else if (a < 0x07f)
-	*s++ = a;
+        *s++ = a;
       else
         {
           int value;
-	  b = *++p;
+          b = *++p;
           if (0xc0 <= a &&  a <= 0xdf &&  b >= 0x80)
             value = (a - 0xc0) * 0x40 + b - 0x80;
           else if ( 0xe0 <= a &&  a <= 0xef &&  b >= 0x80 &&  (c = *++p) >= 0x80)
@@ -100,7 +101,7 @@ const char * xalt_unquotestring(const char * input, int len)
     {
       sz = currSz;
       if (buff)
-	free(buff);
+        free(buff);
       buff = (char *) malloc(sz);
     }
   s = buff;
@@ -111,16 +112,16 @@ const char * xalt_unquotestring(const char * input, int len)
       int          wlen  = end - start;
       p = (const char *) memchr(p, '\\', wlen);
       if (p == NULL)
-	{
-	  memcpy(s,start, wlen);
-	  s[wlen] = '\0';
-	  break;
-	}
+        {
+          memcpy(s,start, wlen);
+          s[wlen] = '\0';
+          break;
+        }
       else
-	{
-	  slen = p - start;
-	  memcpy(s, start, slen);
-	  s += slen;
+        {
+          slen = p - start;
+          memcpy(s, start, slen);
+          s += slen;
           ++p;
           c = tolower(*p);
           if (c == '"')
