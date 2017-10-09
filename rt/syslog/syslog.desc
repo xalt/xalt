@@ -38,7 +38,7 @@ test_descript = {
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
      displayThis  "mpirun -n 1 ./hello"
-     mpirun -n 1 ./hello
+     mpirun -n 1 ./hello "a';'d"
 
      displayThis XALT_TRANSMISSION_STYLE=syslogV1
      export XALT_TRANSMISSION_STYLE=syslogV1
