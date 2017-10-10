@@ -53,7 +53,7 @@ test_descript = {
      displayThis "Setting LD_PRELOAD, ./hello"
      export LD_LIBRARY_PATH=$outputDir/XALT/lib64:$outputDir/XALT/lib:$LD_LIBRARY_PATH
      export LD_PRELOAD=libxalt_init.so
-     ./hello "a';'d"
+     ./hello --ntasks p "a';'d"
      
      
      displayThis "Setting direct2db; mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
