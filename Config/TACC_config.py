@@ -42,6 +42,7 @@ ignore_path_patterns = [
   '^/etc',
   '^/usr',
   '^/root',
+  '^/opt/intel/',
   '^/opt/apps/intel/',
   '^/opt/apps/cuda/',
   '^/opt/apps/gcc/',
@@ -99,7 +100,6 @@ accept_env_patterns = [
   '^PYTHON.*',
   '^R_.*',
   '^TACC_AFFINITY_ENABLED$',
-  '^TARG$',
   '^_LMFILES_$'
   ] 
 
