@@ -414,13 +414,15 @@ def main():
     if (not os.path.isfile(fn)):
       continue
 
+    old = (fn == args.leftover)
+
     f=open(fn, 'r')
     for line in f:
       count += len(line)
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog.parse(line, args.syshost)
+      t, done = parseSyslog.parse(line, args.syshost, old)
       if (not done):
         continue
 
