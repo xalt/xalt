@@ -86,7 +86,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
                             std::string& usr_cmdline, std::string& hash_id, unsigned int* run_id)
 {
 
-  const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,COMPRESS(?))";
+  const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, COMPRESS(?))";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
@@ -100,7 +100,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
       exit(1);
     }
 
-  MYSQL_BIND param[20];
+  MYSQL_BIND param[22];
   memset((void *) param,  0, sizeof(param));
 
   // STRING PARAM[0] job_id
@@ -230,32 +230,44 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
   param[14].buffer_length = queue.capacity();
   param[14].length        = &len_queue;
 
-  // STRING PARAM[15] user
+  // Int PARAM[15] sum_runs
+  uint sum_runs         = 0;
+  param[15].buffer_type = MYSQL_TYPE_LONG;
+  param[15].buffer      = (void *) &sum_runs;
+  param[15].is_unsigned = 1;
+  
+  // DOUBLE PARAM[16] sum_times
+  double sum_times      = 0.0;
+  param[16].buffer_type = MYSQL_TYPE_DOUBLE;
+  param[16].buffer      = (void *) &sum_times;
+
+
+  // STRING PARAM[17] user
   std::string& user       = userT["user"];
   std::string::size_type len_user = user.size();
-  param[15].buffer_type   = MYSQL_TYPE_STRING;
-  param[15].buffer        = (void *) user.c_str();
-  param[15].buffer_length = user.capacity();
-  param[15].length        = &len_user;
+  param[17].buffer_type   = MYSQL_TYPE_STRING;
+  param[17].buffer        = (void *) user.c_str();
+  param[17].buffer_length = user.capacity();
+  param[17].length        = &len_user;
 
-  // STRING PARAM[16] exec_path
+  // STRING PARAM[18] exec_path
   std::string& exec_path  = userT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[16].buffer_type   = MYSQL_TYPE_STRING;
-  param[16].buffer        = (void *) exec_path.c_str();
-  param[16].buffer_length = exec_path.capacity();
-  param[16].length        = &len_exec_path;
+  param[18].buffer_type   = MYSQL_TYPE_STRING;
+  param[18].buffer        = (void *) exec_path.c_str();
+  param[18].buffer_length = exec_path.capacity();
+  param[18].length        = &len_exec_path;
 
-  // STRING PARAM[17] module_name
+  // STRING PARAM[19] module_name
   const int              module_name_sz = 64;
   char                   module_name[module_name_sz];
   std::string::size_type len_module_name = 0;
   my_bool                module_name_null_flag = 0;
-  param[17].buffer_type   = MYSQL_TYPE_STRING;
-  param[17].buffer        = (void *) &module_name[0];
-  param[17].buffer_length = module_name_sz;
-  param[17].is_null       = &module_name_null_flag;
-  param[17].length        = &len_module_name;
+  param[19].buffer_type   = MYSQL_TYPE_STRING;
+  param[19].buffer        = (void *) &module_name[0];
+  param[19].buffer_length = module_name_sz;
+  param[19].is_null       = &module_name_null_flag;
+  param[19].length        = &len_module_name;
   if (path2module(exec_path.c_str(), rmapT, module_name,module_name_sz))
     {
       module_name_null_flag = 0;
@@ -264,20 +276,20 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
   else
     module_name_null_flag = 1;
 
-  // STRING PARAM[18] cwd
+  // STRING PARAM[20] cwd
   std::string& cwd        = userT["cwd"];
   std::string::size_type len_cwd = cwd.size();
-  param[18].buffer_type   = MYSQL_TYPE_STRING;
-  param[18].buffer        = (void *) cwd.c_str();
-  param[18].buffer_length = cwd.capacity();
-  param[18].length        = &len_cwd;
+  param[20].buffer_type   = MYSQL_TYPE_STRING;
+  param[20].buffer        = (void *) cwd.c_str();
+  param[20].buffer_length = cwd.capacity();
+  param[20].length        = &len_cwd;
 
-  // BLOB PARAM[19] cmdline
+  // BLOB PARAM[21] cmdline
   std::string::size_type len_cmdline = usr_cmdline.size();
-  param[19].buffer_type   = MYSQL_TYPE_BLOB;
-  param[19].buffer        = (void *) usr_cmdline.c_str();
-  param[19].buffer_length = usr_cmdline.capacity();
-  param[19].length        = &len_cmdline;
+  param[21].buffer_type   = MYSQL_TYPE_BLOB;
+  param[21].buffer        = (void *) usr_cmdline.c_str();
+  param[21].buffer_length = usr_cmdline.capacity();
+  param[21].length        = &len_cmdline;
 
   if (mysql_stmt_bind_param(stmt, param))
     {

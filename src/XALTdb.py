@@ -333,16 +333,19 @@ class XALTdb(object):
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
         num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
         usr_cmdline   = json.dumps(runT['cmdlineA'])
+        sum_runs      = runT['userDT'].get('sum_runs' , 0)
+        sum_times     = runT['userDT'].get('sum_times', 0.0)
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
-        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,COMPRESS(%s))"
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
                                runT['userT']['account'],     runT['userT']['exec_type'],   startTime,
                                endTime,                      runTime,                      runT['userDT']['num_cores'],
                                runT['userDT']['num_nodes'],  num_threads,                  runT['userT']['queue'],
-                               runT['userT']['user'],        runT['userT']['exec_path'],   moduleName,
-                               runT['userT']['cwd'],         usr_cmdline))
+                               sum_runs,                     sum_times,                    runT['userT']['user'],
+                               runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd'],
+                               usr_cmdline))
         run_id   = cursor.lastrowid
 
 

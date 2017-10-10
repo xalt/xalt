@@ -167,6 +167,9 @@ def main():
           `num_nodes`     int(11)     unsigned NOT NULL,
           `num_threads`   smallint(6) unsigned NOT NULL,
           `queue`         varchar(32)          NOT NULL,
+          
+          `sum_runs`      int(11)     unsigned NOT NULL,
+          `sum_time`      double               NOT NULL,
 
           `user`          varchar(32)          NOT NULL,
           `exec_path`     varchar(1024)        NOT NULL,

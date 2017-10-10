@@ -93,11 +93,12 @@ class Record(object):
   This class holds the pieces of a single record as it comes in from
   syslog
   """
-  def __init__(self, t):
+  def __init__(self, t, old=False):
     nblks          = int(t['nb'])
     self.__nblks   = nblks
     self.__kind    = t['kind']
     self.__syshost = t['syshost']
+    self.__old     = old
     self.__blkCnt  = 0
 
     blkA = []
@@ -109,7 +110,7 @@ class Record(object):
 
   def addBlk(self,t):
     idx               = int(t['idx'])
-    if (not self.__blkA[idx]):
+    if (not self.__blkA[idx] and idx < self.__nblks):
         self.__blkA[idx]  = t['value']
         self.__blkCnt    += 1
     
@@ -120,6 +121,9 @@ class Record(object):
     return "".join(self.__blkA)
 
   def prt(self, key):
+    if (self.__old):
+      return
+
     sA    = []
     nblks = self.__nblks
     blkA  = self.__blkA
@@ -170,10 +174,10 @@ class ParseSyslog(object):
       f.close()
     
 
-  def parse(self, s, clusterName):
+  def parse(self, s, clusterName, old):
     if ("XALT_LOGGING_" in s):
       if (" V:2 " in s):
-        return self.__parseSyslogV2(s, clusterName)
+        return self.__parseSyslogV2(s, clusterName, old)
       else:
         return self.__parseSyslogV1(s, clusterName)
     return false, {}
@@ -202,7 +206,7 @@ class ParseSyslog(object):
 
     return t, True
     
-  def __parseSyslogV2(self, s, clusterName):
+  def __parseSyslogV2(self, s, clusterName, old):
     t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
 
     idx = s.find(" V:2 ")
@@ -239,7 +243,7 @@ class ParseSyslog(object):
     if (r):
       r.addBlk(t)
     else:
-      r            = Record(t)
+      r            = Record(t, old)
       recordT[key] = r
 
     # If the block is completed then grap the value, remove the entry from *recordT*
@@ -279,14 +283,21 @@ class Filter(object):
     jobT[job_id]         = entry
 
   def report_stats(self):
-    jobT       = self.__jobT
-    numJobs    = 0
-    maxExecCnt = -1
-    for key, entry in jobT.iteritems():
-      numJobs    += 1
-      maxExecCnt  = max(maxExecCnt,entry['Nexecs'])
+    jobT = self.__jobT
 
-    print("\nNumber of Jobs:", numJobs,", Max number of executions in one job:", maxExecCnt,"\n")
+    icnt          = 0
+    N             = 4
+    numScalarJobs = len(jobT)
+    maxExecCnt    = 0
+
+    for job_id in sorted(jobT, key=lambda x : jobT[x]['Nexecs'], reverse=True):
+      icnt += 1
+      if (icnt <= N):
+        print ("job_id:",job_id,"Num of exec:", jobT[job_id]['Nexecs'], "Total time:",jobT[job_id]['total_time'])
+      maxExecCnt += jobT[job_id]['Nexecs']
+      
+    print("Number of job_id's:",numScalarJobs,"Total number of scalar executables: ", maxExecCnt)
+
 
   def apply(self, runT):
 
@@ -306,6 +317,8 @@ class Filter(object):
       return False
 
     if (random.random() < maxJobsSaved/Nexecs):
+      runT['userDT']['sum_runs']  = Nexecs
+      runT['userDT']['sum_times'] = entry['total_time']
       jobT[job_id]['Nsaved'] += 1
       return True
 
@@ -361,6 +374,8 @@ def main():
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
+
+    old = (fn == args.leftover)
     
     lineNo = 0    
     f=open(fn, 'r')
@@ -370,14 +385,14 @@ def main():
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog.parse(line, args.syshost)
+      t, done = parseSyslog.parse(line, args.syshost, old)
       if (not done or t['kind'] != "run"):
         continue
 
 
       ##################################
-      # If the json conversion then
-      # ignore record and keep going
+      # If the json conversion fails,
+      # then ignore record and keep going
       value = False
 
       try:
@@ -410,9 +425,8 @@ def main():
         continue
 
       ##################################
-      # If the json conversion then
-      # ignore record and keep going
-
+      # If the json conversion fails,
+      # then ignore record and keep going
       try:
         value = json.loads(t['value'])
       except Exception as e:
