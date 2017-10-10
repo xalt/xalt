@@ -49,6 +49,8 @@ ignore_path_patterns = [
   '^/opt/apps/lmod/',
   '^/opt/apps/shell_startup_debug/',
   '/l/pkg/xalt/',
+  '/l/pkg/lua/',
+  '/l/pkg/lmod/',
   '^/opt/apps/xalt/',
   '^/opt/apps/git/',
   '^/opt/apps/cmake/',
