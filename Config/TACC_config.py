@@ -77,7 +77,12 @@ ignore_path_patterns = [
 # be ignored.
 
 accept_env_patterns = [
-  '^I_MPI.*',
+  '^I_MPI_INFO_NUMA_NODE_MAP$',
+  '^I_MPI_INFO_NUMA_NODE_NUM$',
+  '^I_MPI_PIN_INFO$',
+  '^I_MPI_PIN_MAPPING$',
+  '^I_MPI_THREAD_LEVEL$',
+  '^I_MPI_TMI_PROVIDER$',
   '^KMP.*',
   '^LAUNCHER_JID$',
   '^LD.*',
@@ -97,10 +102,6 @@ accept_env_patterns = [
   ] 
 
 ignore_env_patterns = [
-  '^I_MPI_DAPL_PROVIDER',
-  '^I_MPI_EXTRA_FILESYSTEM',
-  '^I_MPI_FABRICS',
-  '^I_MPI_OFA_ADAPTER_NAME',
   '^MKL_DIR$',
   '^MKL_INCLUDE$',
   '^MKL_LIB$',
@@ -114,6 +115,7 @@ ignore_env_patterns = [
   '^MV2_NUM_NODES_IN_JOB$',
   '^MV2_USE_HUGEPAGES$',
   '^MV2_USE_OLD_BCAST$',
+  '^MV2_USE_UD_HYBRID$',
   '^MV2_USE_RING_STARTUP$',
   '^OMP_NUM_THREADS$',
   '^__.*'
