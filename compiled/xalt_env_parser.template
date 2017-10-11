@@ -1,0 +1,44 @@
+/* -*- c -*- */
+%{
+#include <string.h>
+
+static strbuf          = NULL;
+static unsigned int sz = 0;
+enum {
+  KEEP = 1,
+  SKIP = 2,
+  IGNORE = 3
+};
+%}
+
+%%
+@env_table@
+.*   { return ignore; }
+%%
+
+int yywrap()
+{
+   return 1;
+}
+
+int reject_env_name(const char * env_name)
+{
+  unsigned int len = strlen(env_name) + 2;
+  if (sz < len)
+    {
+      sz = len;
+      if (buf)
+	free(buf);
+      strbuf = (char *) malloc(sz);
+    }
+	
+  memcpy(&strbuf[0], env_name, len);
+  strbuf[len]   = '\0';
+  strbuf[len+1] = '\0';
+
+  YY_BUFFER_STATE buffer = yy_scan_buffer(strbuf, len+2);
+  int token = yylex();
+  yy_delete_buffer(buffer);
+
+  return token > KEEP;
+}

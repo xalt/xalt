@@ -366,7 +366,12 @@ if test "$?" != 0; then
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi	
 
+$PATH_TO_PYTHON $ac_confdir/src/build_env_parser_routine.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_env_parser.template --output compiled/build_h/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
