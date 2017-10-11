@@ -91,7 +91,6 @@ accept_env_patterns = [
   '^LD.*',
   '^LD_LIBRARY_PATH$',
   '^LOADEDMODULES$',
-  '^MODULEPATH$',
   '^MKL.*',
   '^MV2_.*',
   '^OFFLOAD.*',
@@ -104,24 +103,24 @@ accept_env_patterns = [
   ] 
 
 ignore_env_patterns = [
+  '^MKLROOT$',
   '^MKL_DIR$',
   '^MKL_INCLUDE$',
   '^MKL_LIB$',
-  '^MKLROOT$',
   '^MPICH_HOME$',
   '^MV2_COMM_WORLD.*',
+  '^MV2_CPU_BINDING_POLICY$',
   '^MV2_DEFAULT_TIME_OUT$',
   '^MV2_HOMOGENEOUS_CLUSTER$',
+  '^MV2_HYBRID_BINDING_POLICY$',
   '^MV2_IBA_HCA$',
   '^MV2_NODE_ID$',
   '^MV2_NUM_NODES_IN_JOB$',
+  '^MV2_THREADS_PER_PROCESS$',
   '^MV2_USE_HUGEPAGES$',
   '^MV2_USE_OLD_BCAST$',
-  '^MV2_USE_UD_HYBRID$',
   '^MV2_USE_RING_STARTUP$',
+  '^MV2_USE_UD_HYBRID$',
   '^OMP_NUM_THREADS$',
   '^__.*'
   ]  
-
-
-  

@@ -316,7 +316,7 @@ class Filter(object):
     if (entry['Nsaved'] >= maxJobsSaved):
       return False
 
-    if (random.random() < maxJobsSaved/Nexecs):
+    if (entry['Nsaved'] == 0 or random.random() < maxJobsSaved/Nexecs):
       runT['userDT']['sum_runs']  = Nexecs
       runT['userDT']['sum_times'] = entry['total_time']
       jobT[job_id]['Nsaved'] += 1
