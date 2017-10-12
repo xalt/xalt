@@ -167,6 +167,7 @@ env_patterns = [
     [ 'KEEP', r'^LD=.*'],
     [ 'KEEP', r'^LD_LIBRARY_PATH=.*'],
     [ 'KEEP', r'^LOADEDMODULES=.*'],
+    [ 'KEEP', r'^MODULEPATH=.*'],
     [ 'KEEP', r'^MKL.*'],
     [ 'KEEP', r'^MV2_.*'],
     [ 'KEEP', r'^OFFLOAD.*'],

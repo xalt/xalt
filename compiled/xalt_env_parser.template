@@ -2,7 +2,7 @@
 %{
 #include <string.h>
 
-static strbuf          = NULL;
+static char * strbuf   = NULL;
 static unsigned int sz = 0;
 enum {
   KEEP = 1,
@@ -13,7 +13,7 @@ enum {
 
 %%
 @env_patterns@
-.*   { return ignore; }
+.*   { return IGNORE; }
 %%
 
 int yywrap()
@@ -27,8 +27,8 @@ int keep_env_name(const char * env_string)
   if (sz < len)
     {
       sz = len;
-      if (buf)
-	free(buf);
+      if (strbuf)
+	free(strbuf);
       strbuf = (char *) malloc(sz);
     }
 	

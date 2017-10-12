@@ -56,7 +56,6 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
     idx = line.find(pattern)
     if (idx == -1):
       outA.append(line)
-      sys.stdout.write(line)
     else:
       for entry in replaceA:
         regexp = entry[1]
@@ -80,8 +79,8 @@ def main():
   args = CmdLineOptions().execute()
   namespace = {}
   exec(open(args.confFn).read(), namespace)
-  patternStr = "@" + args.patterns + "@"
+  patternStr = "@" + args.pattern + "@"
 
-  convert_template(patternStr, namespace.get(args.patterns, []), args.input, args.output)
+  convert_template(patternStr, namespace.get(args.pattern, []), args.input, args.output)
 
 if ( __name__ == '__main__'): main()

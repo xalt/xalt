@@ -380,6 +380,6 @@ fi
 
 
 
-AC_OUTPUT(makefile:Makefile.in compiled/build_h/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in)
+AC_OUTPUT(makefile:Makefile.in compiled/build/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in)
 
 AX_SUMMARIZE_CONFIG

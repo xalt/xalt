@@ -181,7 +181,10 @@ lex.xalt_env.c: $(CURDIR)/build/xalt_env_parser.lex
 	flex -P xalt_env -o $@ $^
 
 lex.xalt_env.o: lex.xalt_env.c
-	$(COMPILE.c) -o $@ $^
+	$(COMPILE.c) -Wno-unused-function  -o $@ $^
+
+xalt_syshost.o: build/xalt_syshost.c
+	$(COMPILE.c) -c -o $@ $^
 
 xalt_syshost_main.o: $(CURDIR)/build/xalt_syshost.c xalt_fgets_alloc.h
 	$(LINK.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) -o $@ $<
