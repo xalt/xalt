@@ -12,7 +12,7 @@ enum {
 %}
 
 %%
-@env_table@
+@env_patterns@
 .*   { return ignore; }
 %%
 
@@ -21,9 +21,9 @@ int yywrap()
    return 1;
 }
 
-int reject_env_name(const char * env_name)
+int keep_env_name(const char * env_string)
 {
-  unsigned int len = strlen(env_name) + 2;
+  unsigned int len = strlen(env_string) + 2;
   if (sz < len)
     {
       sz = len;
@@ -32,7 +32,7 @@ int reject_env_name(const char * env_name)
       strbuf = (char *) malloc(sz);
     }
 	
-  memcpy(&strbuf[0], env_name, len);
+  memcpy(&strbuf[0], env_string, len);
   strbuf[len]   = '\0';
   strbuf[len+1] = '\0';
 
@@ -40,5 +40,10 @@ int reject_env_name(const char * env_name)
   int token = yylex();
   yy_delete_buffer(buffer);
 
-  return token > KEEP;
+  return token == KEEP;
+}
+
+void env_parser_cleanup()
+{
+  free(strbuf);
 }

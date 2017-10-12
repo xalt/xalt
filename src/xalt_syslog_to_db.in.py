@@ -110,7 +110,7 @@ class Record(object):
 
   def addBlk(self,t):
     idx               = int(t['idx'])
-    if (not self.__blkA[idx] and idx < self.__nblks):
+    if (not self.__blkA[idx] and 0 <= idx and idx < self.__nblks):
         self.__blkA[idx]  = t['value']
         self.__blkCnt    += 1
     

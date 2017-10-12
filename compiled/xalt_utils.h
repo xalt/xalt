@@ -10,7 +10,6 @@ int   isDirectory(const char *path);
 bool  path2module(const char* path, Table& rmapT, char* module_name, int module_name_sz);
 FILE* xalt_file_open(const char* name);
 FILE* xalt_json_file_open(std::string& rmapD, const char* name);
-bool  reject_env_name(const std::string& env_name);
 
 
 #endif //XALT_UTILS_H

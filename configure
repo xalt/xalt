@@ -4852,8 +4852,8 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-if ! test -d compiled/build_h; then
-   mkdir -p compiled/build_h
+if ! test -d compiled/build; then
+   mkdir -p compiled/build
 fi
 
 if test "$USE_CONTRIB_ARGPARSE" = yes; then
@@ -4866,14 +4866,19 @@ fi
 
 
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build_h/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/xalt_syshost.c
+$PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/build/xalt_syshost.c
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi
 
+$PATH_TO_PYTHON $ac_confdir/src/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/compiled/xalt_env_parser.template --output compiled/build/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1

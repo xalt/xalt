@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "xalt_utils.h"
+#include "xalt_env_parser.h"
 
 void buildEnvT(Options& options, char* env[], Table& envT)
 {
@@ -13,14 +14,17 @@ void buildEnvT(Options& options, char* env[], Table& envT)
       char * p = strchr(w, '=');
 
       if (p) {
-        n.assign(w, p - w);
-        if ( ! reject_env_name(n))
+        if (keep_env_name(w))
           {
+            n.assign(w, p - w);
             v.assign(p+1);
             envT[n] = v;
           }
       }
     }
+
+  // free memory used by keep_env_name()
+  env_parser_cleanup();
 
   std::string path = options.path();
   if (path.size() > 0)

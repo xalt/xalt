@@ -36,23 +36,14 @@ class CmdLineOptions(object):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--confFn",   dest='confFn',   action="store", help="python config file")
+    parser.add_argument("--pattern",  dest='pattern',  action="store", help="name of pattern")
     parser.add_argument("--input",    dest='input',    action="store", help="input template file")
-    parser.add_argument("--output",   dest='output',   action="store", help="output header file")
+    parser.add_argument("--output",   dest='output',   action="store", help="output file")
     args = parser.parse_args()
     
     return args
 
-
-
-def convert_to_string(list):
-
-  a = []
-  for s in list:
-    a.append('"'+s+'"')
-
-  return ",".join(a)
-
-def convert_template(a, inputFn, outputFn):
+def convert_template(pattern, replaceA  ,inputFn, outputFn):
   try:
     f = open(inputFn,"r")
   except IOError as e:
@@ -62,15 +53,16 @@ def convert_template(a, inputFn, outputFn):
   
   outA = []
   for line in f:
-    for entry in a:
-      fromStr = entry[0]
-      toStr   = entry[1]
-      idx     = line.find(fromStr)
-      if (idx != -1):
-        my_len = len(fromStr)
-        line   = line[:idx] + toStr + line[idx+my_len:]
-      
-    outA.append(line)
+    idx = line.find(pattern)
+    if (idx == -1):
+      outA.append(line)
+      sys.stdout.write(line)
+    else:
+      for entry in replaceA:
+        regexp = entry[1]
+        value  = entry[0]
+        line   = regexp + "  { return " + value + "; }\n"
+        outA.append(line)
 
   f.close()
   
@@ -79,34 +71,17 @@ def convert_template(a, inputFn, outputFn):
   except IOError as e:
     print("Unable to open \"%s\", aborting!" % (outputFn))
     sys.exit(-1)
-
+        
   of.write("".join(outA))
   of.close()
 
 def main():
 
   args = CmdLineOptions().execute()
-
   namespace = {}
   exec(open(args.confFn).read(), namespace)
+  patternStr = "@" + args.patterns + "@"
 
-  scalarPrgmStr = convert_to_string(namespace.get('scalar_prgm_start_record',{}))
-  ignorePathStr = convert_to_string(namespace.get('ignore_path_patterns',    {}))
-  acceptPathStr = convert_to_string(namespace.get('accept_path_patterns',    {}))
-  ignoreEnvStr  = convert_to_string(namespace.get('ignore_env_patterns',     {}))
-  acceptEnvStr  = convert_to_string(namespace.get('accept_env_patterns',     {}))
-  hostStr       = convert_to_string(namespace.get('hostname_patterns',       {}))
-
-  pattA = [
-    ['@scalar_prgm_list@', scalarPrgmStr],
-    ['@accept_path_list@', acceptPathStr],
-    ['@ignore_path_list@', ignorePathStr],
-    ['@accept_env_list@',  acceptEnvStr],
-    ['@ignore_env_list@',  ignoreEnvStr],
-    ['@hostname_list@',    hostStr],
-  ]
-
-  convert_template(pattA, args.input, args.output)
-
+  convert_template(patternStr, namespace.get(args.patterns, []), args.input, args.output)
 
 if ( __name__ == '__main__'): main()
