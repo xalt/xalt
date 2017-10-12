@@ -52,21 +52,16 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
   
   outA = []
   for line in f:
-    
-
-
-
-
-
-    for entry in a:
-      fromStr = entry[0]
-      toStr   = entry[1]
-      idx     = line.find(fromStr)
-      if (idx != -1):
-        my_len = len(fromStr)
-        line   = line[:idx] + toStr + line[idx+my_len:]
-      
-    outA.append(line)
+    idx = line.find(pattern)
+    if (idx == -1):
+      outA.append(line)
+      sys.stdout.write(line)
+    else:
+      for entry in replaceA:
+        regexp = entry[1]
+        value  = entry[0]
+        line   = regexp + "  { return " + value + "; }\n"
+        outA.append(line)
 
   f.close()
   
@@ -85,3 +80,6 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
+  convert_template("@env_table@", namespace.get('env_patterns', []), args.input, args.output)
+
+if ( __name__ == '__main__'): main()
