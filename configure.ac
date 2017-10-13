@@ -192,6 +192,7 @@ AC_SUBST(MYSQL_CONFIG)
 
 AC_PATH_PROG(PATH_TO_GIT,git, [])
 AC_PATH_PROG(PATH_TO_AS,as, [])
+AC_PATH_PROG(PATH_TO_FLEX,flex, [])
 AC_PATH_PROG(PATH_TO_BASENAME, basename, [])
 AC_PATH_PROG(PATH_TO_CAT, cat, [])
 AC_PATH_PROG(PATH_TO_DATE, date, [])
@@ -210,6 +211,7 @@ AC_PATH_PROG(PATH_TO_READLINK, readlink, [])
 AC_PATH_PROG(PATH_TO_RM, rm, [])
 AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
+
 
 if test "$MYSQLDB" == yes; then
   AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN_mysql_config)
@@ -356,8 +358,6 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
       export PYTHONPATH=$ac_confdir/contrib/argparse:$PYTHONPATH
    fi
 fi
-
-
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build/xalt_regex.h
 if test "$?" != 0; then
