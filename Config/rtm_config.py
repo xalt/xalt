@@ -76,6 +76,50 @@ ignore_path_patterns = [
   r'/xalt_configuration_report$'
   ]
 
+path_patterns = [
+    ['KEEP',  r'^/usr/bin/ddt$'],
+    ['SKIP',  r'^/sbin/.*'],
+    ['SKIP',  r'^/bin/.*'],
+    ['SKIP',  r'^/etc/.*'],
+    ['SKIP',  r'^/usr/.*'],
+    ['SKIP',  r'^/root/.*'],
+    ['SKIP',  r'.*/gcc$'],
+    ['SKIP',  r'.*/g\\+\\+$'],
+    ['SKIP',  r'.*/gfortran$'],
+    ['SKIP',  r'.*/git$'],
+    ['SKIP',  r'.*/icc$'],
+    ['SKIP',  r'.*/icpc$'],
+    ['SKIP',  r'.*/ifort$'],
+    ['SKIP',  r'.*/lua$'],
+    ['SKIP',  r'.*/mpiCC$'],
+    ['SKIP',  r'.*/mpicc$'],
+    ['SKIP',  r'.*/mpicxx$'],
+    ['SKIP',  r'.*/mpif77$'],
+    ['SKIP',  r'.*/mpif90$'],
+    ['SKIP',  r'.*/mpifort$'],
+    ['SKIP',  r'.*/mpifc$'],
+    ['SKIP',  r'.*/mpigcc$'],
+    ['SKIP',  r'.*/mpigxx$'],
+    ['SKIP',  r'.*/mpiicc$'],
+    ['SKIP',  r'.*/mpiicpc$'],
+    ['SKIP',  r'.*/mpiifort$'],
+    ['SKIP',  r'.*/mpiexec.hydra$'],
+    ['SKIP',  r'.*/hydra_pmi_proxy$'],
+    ['SKIP',  r'.*/ompi_info$'],
+    ['SKIP',  r'.*/opal_wrapper$'],
+    ['SKIP',  r'.*/orterun$'],
+    ['SKIP',  r'.*/vtwrapper$'],
+    ['SKIP',  r'.*/conftest$'],
+    ['SKIP',  r'.*/CMakeTmp/cmTryCompileExec[0-9][0-9]*$'],
+    ['SKIP',  r'.*/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$'],
+    ['SKIP',  r'.*/xalt_file_to_db$'],
+    ['SKIP',  r'.*/xalt_syslog_to_db$'],
+    ['SKIP',  r'.*/xalt_configuration_report$']
+  ]
+    
+
+
+
 #------------------------------------------------------------
 # Note: The entire environment of key-value pairs are stored in
 # the database as a compressed blob.  The entire environment can
@@ -90,51 +134,6 @@ ignore_path_patterns = [
 # found in the accept list and not found in the ignore list.
 # For example, the accept list might allow for any variables that contain
 # 'PATH' but the ignore list causes a variable named DDTPATH to be ignored.
-
-accept_env_patterns = [
-  r'^I_MPI.*',
-  r'^KMP.*',
-  r'^LD.*',
-  r'^LD_LIBRARY_PATH$',
-  r'^LOADEDMODULES$',
-  r'^MODULEPATH$',
-  r'^MKL.*',
-  r'^MV2_.*',
-  r'^OFFLOAD.*',
-  r'^OMP.*',
-  r'^PATH$',
-  r'^PATH_PATSQ',
-  r'^PYTHON.*',
-  r'^R_.*',
-  r'^TACC_AFFINITY_ENABLED$',
-  r'^TARG$',
-  r'^_LMFILES_$',
-  r'^HTTP_PROXY$',
-  r'^http_proxy$'
-  ] 
-
-ignore_env_patterns = [
-  r'^I_MPI_DAPL_PROVIDER',
-  r'^I_MPI_EXTRA_FILESYSTEM',
-  r'^I_MPI_FABRICS',
-  r'^I_MPI_OFA_ADAPTER_NAME',
-  r'^PATH$',
-  r'^MKL_INCLUDE$',
-  r'^MKL_LIB$',
-  r'^MKLROOT$',
-  r'^MPICH_HOME$',
-  r'^MV2_COMM_WORLD.*',
-  r'^MV2_DEFAULT_TIME_OUT$',
-  r'^MV2_HOMOGENEOUS_CLUSTER$',
-  r'^MV2_IBA_HCA$',
-  r'^MV2_NODE_ID$',
-  r'^MV2_NUM_NODES_IN_JOB$',
-  r'^MV2_USE_HUGEPAGES$',
-  r'^MV2_USE_OLD_BCAST$',
-  r'^MV2_USE_RING_STARTUP$',
-  r'^OMP_NUM_THREADS$',
-  r'^__.*'
-  ]  
 
 env_patterns = [
     [ 'SKIP', r'^MKLROOT=.*' ],

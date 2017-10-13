@@ -1,0 +1,49 @@
+/* -*- c -*- */
+%{
+#include <string.h>
+#include "xalt_obfuscate.h"
+
+static char * strbuf   = NULL;
+static unsigned int sz = 0;
+enum {
+  KEEP = 1,
+  SKIP = 2,
+};
+%}
+
+%%
+@path_patterns@
+.*   { return KEEP; }
+%%
+
+int yywrap()
+{
+   return 1;
+}
+
+int keep_path(const char * path)
+{
+  unsigned int len = strlen(path) + 2;
+  if (sz < len)
+    {
+      sz = len;
+      if (strbuf)
+	free(strbuf);
+      strbuf = (char *) malloc(sz);
+    }
+
+  memcpy(&strbuf[0], path, len);
+  strbuf[len]   = '\0';
+  strbuf[len+1] = '\0';
+
+  YY_BUFFER_STATE buffer = yy_scan_buffer(strbuf, len+2);
+  int token = yylex();
+  yy_delete_buffer(buffer);
+
+  return token == KEEP;
+}
+
+void path_parser_cleanup()
+{
+  free(strbuf);
+}

@@ -183,6 +183,12 @@ lex.xalt_env.c: $(CURDIR)/build/xalt_env_parser.lex
 lex.xalt_env.o: lex.xalt_env.c
 	$(COMPILE.c) -Wno-unused-function  -o $@ $^
 
+lex.__XALT_path.c: $(CURDIR)/build/xalt_parser_parser.lex
+	flex -P __XALT_path -o $@ $^
+
+lex.__XALT_path.o: lex.__XALT_path.c
+	$(COMPILE.c) -Wno-unused-function  -o $@ $^
+
 xalt_syshost.o: build/xalt_syshost.c
 	$(COMPILE.c) -c -o $@ $^
 
@@ -192,37 +198,43 @@ xalt_syshost_main.o: $(CURDIR)/build/xalt_syshost.c xalt_fgets_alloc.h
 
 build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
             $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o     $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
-            $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         
+            $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         \
+            $(DESTDIR)$(LIB64)/lex.__XALT_path.o
 
 build_init_32bit_no:
 
 build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xalt_syshost_32.o      \
                       $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o   \
-                      $(DESTDIR)$(LIB)/libxalt_init.so
+                      $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so
 
+$(DESTDIR)$(LIB64)/lex.__XALT_path.o: lex.__XALT_path.c xalt_obfuscate.h
+	$(COMPILE.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
-	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
+	$(COMPILE.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/build/xalt_syshost.c
-	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $< 
+	$(COMPILE.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
-	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
+	$(COMPILE.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
-	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
+	$(COMPILE.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
 
 
+$(DESTDIR)$(LIB)/lex.__XALT_path_32.o: lex.__XALT_path.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(CFLAGS) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $<
+	$(COMPILE.c) -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_syshost_32.o: $(CURDIR)/build/xalt_syshost.c
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $< 
+	$(COMPILE.c) -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $<
+	$(COMPILE.c) -m32 $(CFLAGS) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) -DSTATE=REGULAR -DIDX=1 -Ibuild  -o $@ -c $<
+	$(COMPILE.c) -m32 $(CFLAGS) $(CF_INIT) -DSTATE=REGULAR -DIDX=1 -Ibuild  -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -DIDX=0 -Ibuild  -o $@ -c $<
+	$(COMPILE.c) -m32 $(CFLAGS) $(CF_INIT) -DSTATE=LD_PRELOAD -DIDX=0 -Ibuild  -o $@ -c $<
 $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o \
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
+                                  $(DESTDIR)$(LIB)/lex.__XALT_path_32.o         \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o
 	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^
 
@@ -232,6 +244,7 @@ $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring
 $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
                                     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
+                                    $(DESTDIR)$(LIB64)/lex.__XALT_path.o         \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 

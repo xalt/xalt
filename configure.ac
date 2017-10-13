@@ -377,7 +377,11 @@ if test "$?" != 0; then
    exit 1
 fi	
 
-
+$PATH_TO_PYTHON $ac_confdir/src/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/compiled/xalt_path_parser.template --output compiled/build/xalt_path_parser.lex
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi	
 
 
 AC_OUTPUT(makefile:Makefile.in compiled/build/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in)

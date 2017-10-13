@@ -44,6 +44,7 @@
 #include "xalt_config.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_obfuscate.h"
+#include "xalt_path_parser.h"
 
 #define DATESZ    100
 
@@ -479,7 +480,7 @@ xalt_status reject(const char *path, const char * hostname)
   if (path[0] == '\0')
     return XALT_PATH;
 
-  // explain why reject happenned!!!
+  // explain why reject happened!!!
 
 
   for (i = 0; i < hostnameSz; i++)
@@ -513,55 +514,16 @@ xalt_status reject(const char *path, const char * hostname)
     }
 
   DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
-  for (i = 0; i < acceptPathSz; i++)
+
+  iret = keep_path(path);
+  path_parser_cleanup();
+  if (iret)
     {
-      iret = regcomp(&regex, acceptPathA[i], 0);
-      if (iret)
-	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", acceptPathA[i]);
-	  exit(1);
-	}
-
-      iret = regexec(&regex, path, 0, NULL, 0);
-      if (iret == 0)
-	{
-	  DEBUG1(stderr,"    path: \"%s\" is accepted because of the accept list\n",path);
-	  return XALT_SUCCESS;
-	}
-      else if (iret != REG_NOMATCH)
-	{
-	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "AcceptA Regex match failed: %s\n", msgbuf);
-	  exit(1);
-	}
-      regfree(&regex);
+      DEBUG1(stderr,"    executable: \"%s\" is accepted\n",path);
+      return XALT_SUCCESS;
     }
-
-  for (i = 0; i < ignorePathSz; i++)
-    {
-      iret = regcomp(&regex, ignorePathA[i], 0);
-      if (iret)
-	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", ignorePathA[i]);
-	  exit(1);
-	}
-
-      iret = regexec(&regex, path, 0, NULL, 0);
-      if (iret == 0)
-	{
-	  DEBUG2(stderr,"    path: \"%s\" is rejected because of the ignore list: %s\n", path, ignorePathA[i]);
-	  return XALT_PATH;
-	}
-      else if (iret != REG_NOMATCH)
-	{
-	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "IgnoreA Regex match failed: %s\n", msgbuf);
-	  exit(1);
-	}
-      regfree(&regex);
-    }
-  DEBUG1(stderr,"    path: \"%s\" is accepted because it wasn't found in the ignore list\n",path);
-  return XALT_SUCCESS;
+  DEBUG1(stderr,"    executable: \"%s\" is rejected\n", path);
+  return XALT_PATH;
 }
 
 long compute_value(const char **envA)
