@@ -31,7 +31,7 @@ import warnings
 from   xalt_util        import *
 from   xalt_global      import *
 from   xalt_site_pkg    import translate
-from   xalt_env_pattern import EnvPatterns
+
 try:
   import configparser
 except:

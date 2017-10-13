@@ -80,11 +80,7 @@ int main(int argc, char* argv[])
       json.add("USING_LIBUUID",              HAVE_WORKING_LIBUUID);
       json.add("BUILT_W_MySQL",              BUILT_W_MySQL);
 
-      json.add("acceptPathA", acceptPathSz, acceptPathA);
-      json.add("ignorePathA", ignorePathSz, ignorePathA);
       json.add("hostnameA",   hostnameSz,   hostnameA);
-      json.add("acceptEnvA",  acceptEnvSz,  acceptEnvA);
-      json.add("ignoreEnvA",  ignoreEnvSz,  ignoreEnvA);
       json.fini();
 
       std::string jsonStr = json.result();
@@ -118,11 +114,9 @@ int main(int argc, char* argv[])
   std::cout << "Built with MySQL:          " << BUILT_W_MySQL          << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
-  displayArray("acceptPathA", acceptPathSz, acceptPathA);
-  displayArray("ignorePathA", ignorePathSz, ignorePathA);
-  displayArray("hostnameA",   hostnameSz,   hostnameA);
-  displayArray("acceptEnvA",  acceptEnvSz,  acceptEnvA);
-  displayArray("ignoreEnvA",  ignoreEnvSz,  ignoreEnvA);
+  displayArray("hostnameA",    hostnameSz,    hostnameA);
+  displayArray("pathPatternA", pathPatternSz, pathPatternA);
+  displayArray("envPatternA",  envPatternSz,  envPatternA);
 
   return 0;
 }

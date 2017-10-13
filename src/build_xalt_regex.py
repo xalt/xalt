@@ -43,6 +43,15 @@ class CmdLineOptions(object):
     return args
 
 
+def convert_pattern(list):
+  a = []
+  for entry in list:
+    token = entry[0]
+    value = entry[1].replace("\\","\\\\")
+    
+    a.append('"'+token+' => '+value+'"')
+
+  return ",".join(a)
 
 def convert_to_string(list):
 
@@ -90,20 +99,16 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  scalarPrgmStr = convert_to_string(namespace.get('scalar_prgm_start_record',{}))
-  ignorePathStr = convert_to_string(namespace.get('ignore_path_patterns',    {}))
-  acceptPathStr = convert_to_string(namespace.get('accept_path_patterns',    {}))
-  ignoreEnvStr  = convert_to_string(namespace.get('ignore_env_patterns',     {}))
-  acceptEnvStr  = convert_to_string(namespace.get('accept_env_patterns',     {}))
-  hostStr       = convert_to_string(namespace.get('hostname_patterns',       {}))
+  hostStr        = convert_to_string(namespace.get('hostname_patterns',       {}))
+  scalarPrgmStr  = convert_to_string(namespace.get('scalar_prgm_start_record',{}))
+  pathPatternStr = convert_pattern(  namespace.get('path_patterns',           {}))
+  envPatternStr  = convert_pattern(  namespace.get('env_patterns',            {}))
 
   pattA = [
     ['@scalar_prgm_list@', scalarPrgmStr],
-    ['@accept_path_list@', acceptPathStr],
-    ['@ignore_path_list@', ignorePathStr],
-    ['@accept_env_list@',  acceptEnvStr],
-    ['@ignore_env_list@',  ignoreEnvStr],
     ['@hostname_list@',    hostStr],
+    ['@path_patterns@',    pathPatternStr],
+    ['@env_patterns@',     envPatternStr]
   ]
 
   convert_template(pattA, args.input, args.output)

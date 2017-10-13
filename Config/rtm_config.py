@@ -21,61 +21,6 @@ hostname_patterns = [
   '.*'                    # match  all hosts
   ]
 
-# Acceptance is done before the ignore list so put in here the
-# absolute path of program you want to run that would otherwise
-# be in ignore list.  For example /usr/bin/ddt might be a program
-# your site would like to track but all other programs in /usr/bin
-# are ignored:
-
-accept_path_patterns = [
-  '^/usr/bin/ddt'
-  ]
-
-
-# If a path is not in the acceptance list then it is compared
-# against the ignore list.  If the path matches any in this list,
-# tracking the executable is turned off.
-
-ignore_path_patterns = [
-  r'^/sbin/',
-  r'^/bin/',
-  r'^/etc',
-  r'^/usr',
-  r'^/root',
-  r'/gcc$',
-  r'/g\\+\\+$',
-  r'/gfortran$',
-  r'/git$',
-  r'/icc$',
-  r'/icpc$',
-  r'/ifort$',
-  r'/lua$',
-  r'/mpiCC$',
-  r'/mpicc$',
-  r'/mpicxx$',
-  r'/mpif77$',
-  r'/mpif90$',
-  r'/mpifort$',
-  r'/mpifc$',
-  r'/mpigcc$',
-  r'/mpigxx$',
-  r'/mpiicc$',
-  r'/mpiicpc$',
-  r'/mpiifort$',
-  r'/mpiexec.hydra$',
-  r'/hydra_pmi_proxy$',
-  r'/ompi_info$',
-  r'/opal_wrapper$',
-  r'/orterun$',
-  r'/vtwrapper$',
-  r'/conftest$',
-  r'/CMakeTmp/cmTryCompileExec[0-9][0-9]*$',
-  r'/CMakeTmp/cmTC_[a-f0-9][a-f0-9]*$',
-  r'/xalt_file_to_db$',
-  r'/xalt_syslog_to_db$',
-  r'/xalt_configuration_report$'
-  ]
-
 path_patterns = [
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/sbin\/.*'],

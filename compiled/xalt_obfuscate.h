@@ -30,17 +30,8 @@
 
 // Data
 
-#define acceptPathA         PASTE2(__XALT_acceptPathA,         MY_NAME)
-#define ignorePathA         PASTE2(__XALT_ignorePathA,         MY_NAME)
 #define hostnameA           PASTE2(__XALT_hostnameA,           MY_NAME)
-#define acceptEnvA          PASTE2(__XALT_acceptEnvA,          MY_NAME)
-#define ignoreEnvA          PASTE2(__XALT_ignoreEnvA,          MY_NAME)
-
-#define acceptPathSz        PASTE2(__XALT_acceptPathSz,        MY_NAME)
-#define ignorePathSz        PASTE2(__XALT_ignorePathSz,        MY_NAME)
 #define hostnameSz          PASTE2(__XALT_hostnameSz,          MY_NAME)
-#define acceptEnvSz         PASTE2(__XALT_acceptEnvSz,         MY_NAME)
-#define ignoreEnvSz         PASTE2(__XALT_ignoreEnvSz,         MY_NAME)
 
 #define background          PASTE2(__XALT_background,          MY_NAME)
 #define countA              PASTE2(__XALT_countA,              MY_NAME)
