@@ -231,10 +231,10 @@ fi
 
 if [ -z "$BIT32FLAG" ]; then
   XALT_LIB_DIR=$XALT_DIR/lib64
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o"
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o $XALT_LIB_DIR/lex.__XALT_path.o"
 else
   XALT_LIB_DIR=$XALT_DIR/lib
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o"
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o $XALT_LIB_DIR/lex.__XALT_path_32.o"
 fi
   
 

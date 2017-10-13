@@ -23,10 +23,10 @@ int yywrap()
 
 int keep_env_name(const char * env_string)
 {
-  unsigned int len = strlen(env_string) + 2;
-  if (sz < len)
+  unsigned int len = strlen(env_string);
+  if (sz < len+2)
     {
-      sz = len;
+      sz = len+2;
       if (strbuf)
 	free(strbuf);
       strbuf = (char *) malloc(sz);

@@ -2,6 +2,7 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
+#define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
@@ -23,10 +24,10 @@ int yywrap()
 
 int keep_path(const char * path)
 {
-  unsigned int len = strlen(path) + 2;
-  if (sz < len)
+  unsigned int len = strlen(path);
+  if (sz < len+2)
     {
-      sz = len;
+      sz = len+2;
       if (strbuf)
 	free(strbuf);
       strbuf = (char *) malloc(sz);
