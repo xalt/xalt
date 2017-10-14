@@ -21,12 +21,37 @@ hostname_patterns = [
   '.*'                    # match  all hosts
   ]
 
+#------------------------------------------------------------
+# This "table" is use to filter executables by their path
+# The value on the left is either KEEP or SKIP.  If the value
+# is KEEP then if the path matches the regular expression then
+# the executable is acceptable as far as the path test goes.
+# If the value on the left is SKIP then if the path matches
+# the regular expression then executable is not acceptable so
+# no XALT tracking is done for that path.
+
+# This "table" is used to generate a flex routine that processes
+# the paths. So the regular express must follow flex rules.
+# In particular, in order to match the pattern must match the whole path
+# No partial matches allowed.  Also do not use $ to match the
+# end of the string.  Finally slash is a special character and must
+# be quoted with a backslash.
+
+# The path are conceptionally matched from the first regular 
+# expression to the last.  Once a match is found no other later
+# matches are checked. The upshot of this is that if you want to
+# track say /usr/bin/ddt, but ignore everything in /usr, then keep
+# /usr/bin/ddt first and skip /usr/.* after.
+
+# If a path does not match any patterns it is marked as KEEP.
+
+
 path_patterns = [
     ['KEEP',  r'^\/usr\/bin\/ddt'],
+    ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],
     ['SKIP',  r'^\/bin\/.*'],
     ['SKIP',  r'^\/etc\/.*'],
-    ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/root\/.*'],
     ['SKIP',  r'.*\/gcc'],
     ['SKIP',  r'.*\/g\+\+'],
@@ -62,23 +87,29 @@ path_patterns = [
     ['SKIP',  r'.*\/xalt_configuration_report']
   ]
     
-
-
-
 #------------------------------------------------------------
-# Note: The entire environment of key-value pairs are stored in
-# the database as a compressed blob.  The entire environment can
-# then be reported but it isn't searchable via SQL statements.  
-
-# XALT also filters the environment variables. Those variables
+# XALT filter environment variables.  Those variables
 # which pass through the filter are save in an SQL table that is
-# controllable via sql commands.
-# 
-# Each environment variable must go through the Accept list
-# followed by the reject list.  To be saved a variables name must be 
-# found in the accept list and not found in the ignore list.
-# For example, the accept list might allow for any variables that contain
-# 'PATH' but the ignore list causes a variable named DDTPATH to be ignored.
+# searchable via sql commands.  The environment variables are passed
+# to this filter routine as:
+#
+#      env_key=env_value
+#
+# So the regular expression patterns must match the whole string.
+
+
+# The value on the left is either KEEP or SKIP.  If the value
+# is KEEP then if the environment string matches the regular
+# expression then the variable is stored. If the value on the left
+# is SKIP then if the variable matches it is not stored.
+
+# Order of the list matters.  The first match is used even if a
+# later pattern would also match.  The upshot is that special pattern
+# matches should appear first and general ones later.
+
+# If the environment string does not match any pattern then it is
+# marked as SKIP.
+
 
 env_patterns = [
     [ 'SKIP', r'^MKLROOT=.*' ],
