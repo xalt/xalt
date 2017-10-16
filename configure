@@ -4783,6 +4783,17 @@ fi
 
 fi
 
+if test -z "$PATH_TO_FLEX" ; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without flex"
+   echo "See the manual for details"
+   echo "======================================================="
+   rm -f makefile
+   exit 1
+fi
+
+
 if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
    echo
    echo "======================================================="

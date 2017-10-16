@@ -236,6 +236,17 @@ if test $ac_cv_header_uuid_uuid_h = yes; then
   AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID) HAVE_WORKING_LIBUUID=yes], [])
 fi
 
+if test -z "$PATH_TO_FLEX" ; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without flex"
+   echo "See the manual for details"
+   echo "======================================================="
+   rm -f makefile
+   exit 1
+fi
+
+
 if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
    echo
    echo "======================================================="
