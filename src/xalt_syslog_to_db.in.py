@@ -122,7 +122,7 @@ class Record(object):
 
   def prt(self, key):
     if (self.__old):
-      return
+      return None
 
     sA    = []
     nblks = self.__nblks
@@ -170,7 +170,9 @@ class ParseSyslog(object):
       for key in self.__recordT:
         r = recordT[key]
         s = r.prt(key)
-        f.write(s)
+        if (s):
+          f.write(s)
+          
       f.close()
     
 
@@ -399,7 +401,7 @@ def main():
         value = json.loads(t['value'])
         filter.register(value)
       except Exception as e:
-        print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
+        ## print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
         continue
 
     f.close()

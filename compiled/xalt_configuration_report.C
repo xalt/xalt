@@ -59,28 +59,30 @@ int main(int argc, char* argv[])
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
       Json json;
-      json.add("DATE",                       dateStr);
-      json.add("XALT_SYSHOST",               syshost);
-      json.add("XALT_VERSION",               XALT_VERSION);
-      json.add("XALT_GIT_VERSION",           XALT_GIT_VERSION);
-      json.add("XALT_VERSION_STR",           XALT_VERSION_STR);
-      json.add("XALT_FILE_PREFIX",           XALT_FILE_PREFIX);
-      json.add("XALT_ENABLE_BACKGROUNDING",  enable_backgrounding);
-      json.add("XALT_TRANSMISSION_STYLE",    transmission);
+      json.add("DATE",                        dateStr);
+      json.add("XALT_SYSHOST",                syshost);
+      json.add("XALT_VERSION",                XALT_VERSION);
+      json.add("XALT_GIT_VERSION",            XALT_GIT_VERSION);
+      json.add("XALT_VERSION_STR",            XALT_VERSION_STR);
+      json.add("XALT_FILE_PREFIX",            XALT_FILE_PREFIX);
+      json.add("XALT_ENABLE_BACKGROUNDING",   enable_backgrounding);
+      json.add("XALT_TRANSMISSION_STYLE",     transmission);
       if (strcmp(transmission,"syslog") == 0)
-        json.add("XALT_LOGGING_TAG",         syslog_tag);
-      json.add("XALT_COMPUTE_SHA1",          computeSHA1);
-      json.add("XALT_ETC_DIR",               xalt_etc_dir);
-      json.add("XALT_CONFIG_PY",             XALT_CONFIG_PY);
-      json.add("XALT_SYSTEM_PATH",           XALT_SYSTEM_PATH);
-      json.add("XALT_SYSHOST_CONFIG",        SYSHOST_CONFIG);
-      json.add("XALT_TRACKING_MPI_ONLY",     xalt_tracking_mpi_only);
-      json.add("XALT_SYSLOG_MSG_SZ",         SYSLOG_MSG_SZ);
-      json.add("HAVE_32BIT",                 HAVE_32BIT);
-      json.add("USING_LIBUUID",              HAVE_WORKING_LIBUUID);
-      json.add("BUILT_W_MySQL",              BUILT_W_MySQL);
+        json.add("XALT_LOGGING_TAG",          syslog_tag);
+      json.add("XALT_COMPUTE_SHA1",           computeSHA1);
+      json.add("XALT_ETC_DIR",                xalt_etc_dir);
+      json.add("XALT_CONFIG_PY",              XALT_CONFIG_PY);
+      json.add("XALT_SYSTEM_PATH",            XALT_SYSTEM_PATH);
+      json.add("XALT_SYSHOST_CONFIG",         SYSHOST_CONFIG);
+      json.add("XALT_TRACKING_MPI_ONLY",      xalt_tracking_mpi_only);
+      json.add("XALT_SYSLOG_MSG_SZ",          SYSLOG_MSG_SZ);
+      json.add("HAVE_32BIT",                  HAVE_32BIT);
+      json.add("USING_LIBUUID",               HAVE_WORKING_LIBUUID);
+      json.add("BUILT_W_MySQL",               BUILT_W_MySQL);
 
-      json.add("hostnameA",   hostnameSz,   hostnameA);
+      json.add("hostnameA",    hostnameSz,    hostnameA);
+      json.add("pathPatternA", pathPatternSz, pathPatternA);
+      json.add("envPatternA",  envPatternSz,  envPatternA);
       json.fini();
 
       std::string jsonStr = json.result();
