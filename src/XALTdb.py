@@ -83,11 +83,6 @@ class XALTdb(object):
     self.__conn   = None
     self.__confFn = confFn
 
-    envPatterns = EnvPatterns()
-    self.__accept_patternA = envPatterns.accept_patternA()
-    self.__ignore_patternA = envPatterns.ignore_patternA()
-
-
   def __readFromUser(self):
     """ Ask user for database access info. (private) """
 
@@ -359,31 +354,8 @@ class XALTdb(object):
       #query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
       #cursor.execute(query, [run_id, dateStr, jsonStr])
       
-      acceptEnvA = self.__accept_patternA
-      ignoreEnvA = self.__ignore_patternA
-
       # loop over env. vars.
       for key in envT:
-
-        accept_found = False
-        for patt in acceptEnvA:
-          m = patt.search(key)
-          if (m):
-            accept_found = True
-            break
-        
-        if (not accept_found):
-          continue
-        
-        ignore = False
-        for patt in ignoreEnvA:
-          m = patt.search(key)
-          if (m):
-            ignore = True
-            break
-        
-        if (ignore):
-          continue
 
         value = envT[key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
