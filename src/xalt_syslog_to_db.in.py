@@ -395,7 +395,7 @@ def main():
         t, done = parseSyslog.parse(line, args.syshost, old)
       except Exception as e:
         print(e, file=sys.stderr)
-        print("lineNo:" lineNo,"file:",fn,"line:",line, file=sys.stderr)
+        print("lineNo:",lineNo,"file:",fn,"line:",line, file=sys.stderr)
         continue
 
       if (not done or t['kind'] != "run"):
