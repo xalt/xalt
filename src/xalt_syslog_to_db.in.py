@@ -113,8 +113,8 @@ class Record(object):
     if (0 <= idx and idx < self.__nblks and not self.__blkA[idx] ):
       self.__blkA[idx]  = t['value']
       self.__blkCnt    += 1
-    else:
-      print("idx:",idx,", nblks: ",self.__nblks)
+    else if (idx < 0 or idx >= self.__nblks):
+      print("idx:",idx,", nblks: ",self.__nblks, file=sys.stderr)
       raise ValueError("Bad block index")
         
     
