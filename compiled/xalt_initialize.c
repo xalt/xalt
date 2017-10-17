@@ -107,7 +107,7 @@ static char *       ldLibPathArg     = NULL;
    void build_uuid_str(char * my_uuid_str)
    {
      uuid_t uuid;
-     uuid_generate(uuid);
+     uuid_generate_random(uuid);
      uuid_unparse_lower(uuid, my_uuid_str);
    }
 #else

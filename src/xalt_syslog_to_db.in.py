@@ -419,6 +419,7 @@ def main():
 
   filter.report_stats()
   
+  badsyslog   = 0
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=fnSz,fd=sys.stdout)
@@ -434,7 +435,12 @@ def main():
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog.parse(line, args.syshost, old)
+      try:
+        t, done = parseSyslog.parse(line, args.syshost, old)
+      except Exception as e:
+        badsyslog += 1
+        continue
+      
       if (not done):
         continue
 
@@ -476,7 +482,8 @@ def main():
   rt = t2 - t1
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
-  print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt, ", badCnt: ", badCnt)
+  print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
+          ", badCnt: ", badCnt, ", badsyslog: ",badsyslog)
         
   
   # if there is anything left in recordT file write it out to the leftover file.
