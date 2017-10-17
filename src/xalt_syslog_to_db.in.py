@@ -110,9 +110,13 @@ class Record(object):
 
   def addBlk(self,t):
     idx               = int(t['idx'])
-    if (not self.__blkA[idx] and 0 <= idx and idx < self.__nblks):
-        self.__blkA[idx]  = t['value']
-        self.__blkCnt    += 1
+    if (0 <= idx and idx < self.__nblks and not self.__blkA[idx] ):
+      self.__blkA[idx]  = t['value']
+      self.__blkCnt    += 1
+    else:
+      print("idx:",idx,", nblks: ",self.__nblks)
+      raise ValueError("Bad block index")
+        
     
   def completed(self):
     return (self.__blkCnt >= self.__nblks)
@@ -387,7 +391,13 @@ def main():
       pbar.update(count)
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog.parse(line, args.syshost, old)
+      try:
+        t, done = parseSyslog.parse(line, args.syshost, old)
+      except Exception as e:
+        print(e, file=sys.stderr)
+        print("lineNo:" lineNo,"file:",fn,"line:",line, file=sys.stderr)
+        continue
+
       if (not done or t['kind'] != "run"):
         continue
 
