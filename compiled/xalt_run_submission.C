@@ -73,6 +73,14 @@ int main(int argc, char* argv[], char* env[])
   measureT["01_BuildUserT___"] = epoch() - t1;
 
   //*********************************************************************
+  // Filter envT 
+  t1 = epoch();
+  filterEnvT(env, envT);
+  DEBUG0(stderr,"  Filter envT\n");
+  measureT["03_BuildEnvT____"] += epoch() - t1;
+  
+
+  //*********************************************************************
   // Take sha1sum of the executable
   t1 = epoch();
   std::string sha1_exec;

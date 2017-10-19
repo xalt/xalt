@@ -30,6 +30,8 @@ test_descript = {
      module --quiet load gcc mpich
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
+     export SBATCH_ACCOUNT=rtm
+     export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_DISABLE_BACKGROUNDING=yes
 

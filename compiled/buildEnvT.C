@@ -13,18 +13,14 @@ void buildEnvT(Options& options, char* env[], Table& envT)
       char * w = env[i];
       char * p = strchr(w, '=');
 
-      if (p) {
-        if (keep_env_name(w))
-          {
-            n.assign(w, p - w);
-            v.assign(p+1);
-            envT[n] = v;
-          }
-      }
+      if (p)
+        {
+          n.assign(w, p - w);
+          v.assign(p+1);
+          envT[n] = v;
+        }
     }
 
-  // free memory used by keep_env_name()
-  env_parser_cleanup();
 
   std::string path = options.path();
   if (path.size() > 0)
@@ -34,3 +30,27 @@ void buildEnvT(Options& options, char* env[], Table& envT)
   if (ldLibPath.size() > 0)
     envT["LD_LIBRARY_PATH"] = ldLibPath;
 }
+
+void filterEnvT(char* env[], Table& envT)
+{
+  std::string n;
+
+  for (int i = 0; env[i] != NULL; ++i)
+    {
+      char * w = env[i];
+      char * p = strchr(w, '=');
+
+      if (p)
+        {
+          if (!keep_env_name(w))
+            {
+              n.assign(w, p - w);
+              envT.erase(n);
+            }
+        }
+    }
+  env_parser_cleanup();
+}
+
+
+                  // free memory used by keep_env_name()

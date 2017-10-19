@@ -5,6 +5,7 @@
 #include "xalt_types.h"
 
 void buildEnvT(Options& options, char* env[], Table& envT);
+void filterEnvT(char* env[], Table& envT);
 void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT);
 void compute_sha1(std::string& fn, std::string& sha1);
 void extractXALTRecord(std::string& exec, Table& recordT);
