@@ -12,6 +12,8 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
+     rm -f results.csv
+
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
@@ -62,7 +64,12 @@ test_descript = {
 
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 3 --functions 4 --links 2
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
-     STATUS=`cat results.csv`; echo; echo STATUS=$STATUS; echo
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
    """,
 
    'tests' : [

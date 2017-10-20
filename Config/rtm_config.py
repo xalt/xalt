@@ -1,15 +1,5 @@
 # This is the config file for specifying tables necessary to configure XALT:
 
-# Here are patterns for non-mpi programs to produce a start-record.
-# Normally non-mpi programs (a.k.a.) scalar executables only produce
-# an end-record, but programs like R and python that can have optional data
-# such as R and python must have a start-record.
-
-scalar_prgm_start_record = [
-    r'/python[0-9][^/][^/]*$',
-    r'/R$'
-    ]
-
 # The patterns listed here are the hosts that can track executable with XALT.
 # Typical usage is that compute nodes track executable with XALT while login
 # nodes do not.
@@ -18,7 +8,7 @@ scalar_prgm_start_record = [
 # hostname_patterns
 
 hostname_patterns = [
-  '.*'                    # match  all hosts
+  ['KEEP', r'.*']                    # match  all hosts
   ]
 
 #------------------------------------------------------------
@@ -49,8 +39,8 @@ hostname_patterns = [
 # These are marked as SPSR
 
 path_patterns = [
-    ['SPSR'   r'.*\/python[0-9][^/][^/]*'],
-    ['SPSR'   r'.*\/R'],
+    ['SPSR',  r'.*\/python[0-9][^/][^/]*'],
+    ['SPSR',  r'.*\/R'],
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],

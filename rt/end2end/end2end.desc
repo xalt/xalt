@@ -23,7 +23,7 @@ test_descript = {
      displayThis "installDB"
      installDB 
 
-     rm -f get_XALT_env hello* hybrid_daxpy map.log omp_pi
+     rm -f get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv
 
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
@@ -116,7 +116,12 @@ test_descript = {
 
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 10 --functions 4 --links 7
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
-     STATUS=`cat results.csv`; echo; echo STATUS=$STATUS; echo
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
    """,
 
    'tests' : [

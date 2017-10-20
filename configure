@@ -4941,6 +4941,12 @@ if test "$?" != 0; then
    exit 1
 fi
 
+$PATH_TO_PYTHON $ac_confdir/src/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/compiled/xalt_hostname_parser.template --output compiled/build/xalt_hostname_parser.lex
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi
+
 
 ac_config_files="$ac_config_files makefile:Makefile.in compiled/build/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in"
 
