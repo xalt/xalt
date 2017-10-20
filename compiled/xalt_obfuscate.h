@@ -30,8 +30,14 @@
 
 // Data
 
+#define scalarPrgmA         PASTE2(__XALT_scalarPrgmA,         MY_NAME)
+#define scalarPrgmSz        PASTE2(__XALT_scalarPrgmSz,        MY_NAME)
 #define hostnameA           PASTE2(__XALT_hostnameA,           MY_NAME)
 #define hostnameSz          PASTE2(__XALT_hostnameSz,          MY_NAME)
+#define pathPatternA        PASTE2(__XALT_pathPatternA,        MY_NAME)
+#define pathPatternSz       PASTE2(__XALT_pathPatternSz,       MY_NAME)
+#define envPatternA         PASTE2(__XALT_envPatternA,         MY_NAME)
+#define envPatternSz        PASTE2(__XALT_envPatternSz,        MY_NAME)
 
 #define background          PASTE2(__XALT_background,          MY_NAME)
 #define countA              PASTE2(__XALT_countA,              MY_NAME)
