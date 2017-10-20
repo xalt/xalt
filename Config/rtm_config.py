@@ -45,8 +45,12 @@ hostname_patterns = [
 
 # If a path does not match any patterns it is marked as KEEP.
 
+# There are special scalar programs that must generate a start record.
+# These are marked as SPSR
 
 path_patterns = [
+    ['SPSR'   r'.*\/python[0-9][^/][^/]*'],
+    ['SPSR'   r'.*\/R'],
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],

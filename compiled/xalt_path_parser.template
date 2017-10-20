@@ -7,8 +7,9 @@
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
 enum {
-  KEEP = 1,
-  SKIP = 2,
+  SPSR = 1,
+  KEEP = 2,
+  SKIP = 3
 };
 %}
 
@@ -41,7 +42,7 @@ int keep_path(const char * path)
   int token = yylex();
   yy_delete_buffer(buffer);
 
-  return token == KEEP;
+  return token;
 }
 
 void path_parser_cleanup()
