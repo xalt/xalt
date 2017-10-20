@@ -1,7 +1,6 @@
 #include "run_submission.h"
 #include <stdio.h>
 #include <string.h>
-#define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 const char * safe_get(Table& t, const char* key, const char* defaultValue)
 {
@@ -18,18 +17,17 @@ void translate(Table& envT, Table& userT, DTable& userDT)
 
   // Pick type of queuing system.
 
-  HERE;
 
   if (envT.count("SGE_ACCOUNT"))
-    {HERE;queueType = SGE;}
+    queueType = SGE;
   else if (envT.count("SLURM_TACC_ACCOUNT") || envT.count("SLURM_TACC_JOBNAME"))
-    { HERE;queueType = SLURM_TACC;}
+    queueType = SLURM_TACC;
   else if (envT.count("SBATCH_ACCOUNT"))
-    {HERE;queueType = SLURM;}
+    queueType = SLURM;
   else if (envT.count("PBS_JOBID"))
-    {HERE; queueType = PBS;}
+    queueType = PBS;
   else if (envT.count("LSF_VERSION"))
-    {HERE; queueType = LSF;}
+    queueType = LSF;
 
   // userDT["num_tasks"] has a safe default value of 1 if not overridden by the run.
   userDT["num_cores"]  = userDT["num_tasks"]; 
@@ -45,7 +43,6 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     }
   else if (queueType == SLURM_TACC || queueType == SLURM )
     {
-      HERE;
       userDT["num_nodes"]  = strtod(safe_get(envT, "SLURM_NNODES",        "1"),       (char **) NULL);
       userT["job_id"]      = safe_get(envT,        "SLURM_JOB_ID",        "unknown");
       userT["queue"]       = safe_get(envT,        "SLURM_QUEUE",         "unknown");
@@ -87,12 +84,10 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     }
   else
     {
-      HERE;
       userDT["num_nodes"]  = 1.0;
       userT["job_id"]      = "unknown";
       userT["queue"]       = "unknown";
       userT["submit_host"] = "unknown";
       userT["account"]     = "unknown";
     }
-  fprintf(stderr,"queueType: %d, job_id: %s\n", queueType, userT["job_id"].c_str());
 }
