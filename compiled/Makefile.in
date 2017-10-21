@@ -43,6 +43,7 @@ CXX_SRC     := ConfigParser.C         	   \
                capture.C              	   \
 	       compute_sha1.C              \
                epoch.C                	   \
+               extractMain.C    	   \
                extractXALTRecord.C    	   \
                f2db.C                 	   \
                f2db_Options.C         	   \
@@ -120,6 +121,12 @@ XCR_CXX_SRC  := xalt_configuration_report.C epoch.C Json.C
 XCR_C_SRC    := xalt_quotestring.c 
 XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC)) $(patsubst %.c, %.o, $(XCR_C_SRC)) xalt_syshost.o
 
+XER_EXEC     := $(DESTDIR)$(BIN)/xalt_extract_record
+XER_CXX_SRC  := extractMain.C extractXALTRecord.C capture.C
+XER_OBJS     := $(patsubst %.C, %.o, $(XER_CXX_SRC))
+
+
+
 %.d: %.c
 	@set -e; rm -f $@;                                  \
         $(CC) -MM $(CFLAGS) $< > $@.$$$$;                   \
@@ -137,6 +144,7 @@ all: ECHO $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC) $(XSL_EXEC) $(F2DB_EXE
 	        $(DESTDIR)$(LIBEXEC)/xalt_syshost               \
                 $(DESTDIR)$(LIBEXEC)/xalt_realpath          	\
 	        $(DESTDIR)$(BIN)/xalt_configuration_report    	\
+	        $(DESTDIR)$(BIN)/xalt_extract_record    	\
                 $(DESTDIR)$(LIBEXEC)/xalt_epoch             	
 
 ECHO:
@@ -160,6 +168,9 @@ $(XSL_EXEC) : $(XSL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
 
 $(XCR_EXEC) : $(XCR_OBJS) 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
+
+$(XER_EXEC) : $(XER_OBJS) 
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
 
 $(F2DB_EXEC) : $(F2DB_OBJS)
@@ -189,6 +200,12 @@ lex.__XALT_pathR.c: $(CURDIR)/build/xalt_path_parser.lex
 lex.__XALT_pathL.c: $(CURDIR)/build/xalt_path_parser.lex
 	flex -P __XALT_pathL -o $@ $^
 
+lex.__XALT_hostR.c: $(CURDIR)/build/xalt_hostname_parser.lex
+	flex -P __XALT_hostR -o $@ $^
+
+lex.__XALT_hostL.c: $(CURDIR)/build/xalt_hostname_parser.lex
+	flex -P __XALT_hostL -o $@ $^
+
 xalt_syshost.o: build/xalt_syshost.c
 	$(COMPILE.c) -c -o $@ $^
 
@@ -199,17 +216,23 @@ xalt_syshost_main.o: $(CURDIR)/build/xalt_syshost.c xalt_fgets_alloc.h
 build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
             $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o     $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
             $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         \
-            $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o 
+            $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
+            $(DESTDIR)$(LIB64)/lex.__XALT_host.o      $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o
 
 build_init_32bit_no:
 
-build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xalt_syshost_32.o      \
-                      $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o   \
-                      $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so
+build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xalt_syshost_32.o    \
+                      $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o \
+                      $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
+                      $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  
 
 $(DESTDIR)$(LIB64)/lex.__XALT_path.o: lex.__XALT_pathR.c xalt_obfuscate.h
 	$(COMPILE.c)  -Wno-unused-function $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o: lex.__XALT_pathL.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB64)/lex.__XALT_host.o: lex.__XALT_hostR.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o: lex.__XALT_hostL.c xalt_obfuscate.h
 	$(COMPILE.c)  -Wno-unused-function $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -o $@ -c $<
@@ -227,6 +250,10 @@ $(DESTDIR)$(LIB)/lex.__XALT_path_32.o: lex.__XALT_pathR.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o: lex.__XALT_pathL.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB)/lex.__XALT_host_32.o: lex.__XALT_hostR.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: lex.__XALT_hostL.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
 	$(COMPILE.c) -m32  $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_syshost_32.o: $(CURDIR)/build/xalt_syshost.c
@@ -241,6 +268,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
                                   $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o \
+                                  $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o
 	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^
 
@@ -249,6 +277,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
+                                    $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	$(LINK.c) $(CFLAGS) $(HAVE_UUID) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 

@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX       << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:   " << transmission           << "\n";
   if (strcmp(transmission,"syslog") == 0)
-    std::cout << "XALT_LOGGING_TAG:          " << syslog_tag             << "\n";
+    std::cout << "XALT_LOGGING_TAG:        " << syslog_tag             << "\n";
   std::cout << "XALT_COMPUTE_SHA1:         " << computeSHA1            << "\n";
   std::cout << "XALT_ENABLE_BACKGROUNDING: " << enable_backgrounding   << "\n";
   std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir           << "\n";
@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
   displayArray("hostnameA",    hostnameSz,    hostnameA);
+  std::cout << "\nRemember that \"SPSR\" means a scalar program that creates a start record\n";
   displayArray("pathPatternA", pathPatternSz, pathPatternA);
   displayArray("envPatternA",  envPatternSz,  envPatternA);
 

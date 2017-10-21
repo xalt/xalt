@@ -7,15 +7,14 @@
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
 enum {
-  SPSR = 1,
   KEEP = 2,
   SKIP = 3
 };
 %}
 
 %%
-@path_patterns@
-.*   { return KEEP; }
+@hostname_patterns@
+.*   { return SKIP; }
 %%
 
 int yywrap()
@@ -23,9 +22,9 @@ int yywrap()
    return 1;
 }
 
-int keep_path(const char * path)
+int hostname_parser(const char * hostname)
 {
-  unsigned int len = strlen(path);
+  unsigned int len = strlen(hostname);
   if (sz < len+2)
     {
       sz = len+2;
@@ -34,7 +33,7 @@ int keep_path(const char * path)
       strbuf = (char *) malloc(sz);
     }
 
-  memcpy(&strbuf[0], path, len);
+  memcpy(&strbuf[0], hostname, len);
   strbuf[len]   = '\0';
   strbuf[len+1] = '\0';
 
@@ -45,7 +44,7 @@ int keep_path(const char * path)
   return token;
 }
 
-void path_parser_cleanup()
+void hostname_parser_cleanup()
 {
   free(strbuf);
 }

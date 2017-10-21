@@ -99,16 +99,14 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  hostStr        = convert_to_string(namespace.get('hostname_patterns',       {}))
-  scalarPrgmStr  = convert_to_string(namespace.get('scalar_prgm_start_record',{}))
-  pathPatternStr = convert_pattern(  namespace.get('path_patterns',           {}))
-  envPatternStr  = convert_pattern(  namespace.get('env_patterns',            {}))
+  hostPatternStr = convert_pattern( namespace.get('hostname_patterns',       {}))
+  pathPatternStr = convert_pattern( namespace.get('path_patterns',           {}))
+  envPatternStr  = convert_pattern( namespace.get('env_patterns',            {}))
 
   pattA = [
-    ['@scalar_prgm_list@', scalarPrgmStr],
-    ['@hostname_list@',    hostStr],
-    ['@path_patterns@',    pathPatternStr],
-    ['@env_patterns@',     envPatternStr]
+    ['@hostname_patterns@', hostPatternStr],
+    ['@path_patterns@',     pathPatternStr],
+    ['@env_patterns@',      envPatternStr]
   ]
 
   convert_template(pattA, args.input, args.output)

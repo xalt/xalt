@@ -32,7 +32,6 @@
 #include <time.h>
 #include <sys/time.h>
 #include <limits.h>
-#include <regex.h>
 #include "xalt_regex.h"
 #include <errno.h>
 #include <sys/utsname.h>
@@ -45,8 +44,11 @@
 #include "xalt_fgets_alloc.h"
 #include "xalt_obfuscate.h"
 #include "xalt_path_parser.h"
+#include "xalt_hostname_parser.h"
 
 #define DATESZ    100
+
+typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO} xalt_status;
@@ -375,38 +377,15 @@ void myinit(int argc, char **argv)
   /* my_size == 0 when the user executable is a scalar (non-mpi) program.
    * XALT is only recording the end record for scalar executables and
    * not the start record.  The only exception to this is when the exec_path
-   * matches one of the patterns in scalarPrgmA.
+   * matches one of the patterns in path_patterns returns SPSR.
    */
 
   if (my_size > 0)
     produce_strt_rec = 1;  /*Produce a start record for all MPI jobs. */
   else
     {
-      char    msgbuf[100];
-      regex_t regex;
-      for (i = 0; i < scalarPrgmSz; i++)
-	{
-	  int iret = regcomp(&regex, scalarPrgmA[i], 0);
-	  if (iret)
-	    {
-	      fprintf(stderr,"Could not compile regex: \"%s\n", scalarPrgmA[i]);
-	      exit(1);
-	    }
-	  
-	  iret = regexec(&regex, exec_path, 0, NULL, 0);
-	  if (iret == 0)
-	    {
-	      produce_strt_rec = 1;
-	      break;
-	    }
-	  else if (iret != REG_NOMATCH)
-	    {
-	      regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	      fprintf(stderr, "scalarPrgmA Regex match failed: %s\n", msgbuf);
-	      exit(1);
-	    }
-	  regfree(&regex);
-	}
+      produce_strt_rec = (keep_path(exec_path) == SPSR);
+      path_parser_cleanup();
     }
 
   if ( produce_strt_rec )
@@ -471,53 +450,23 @@ void myfini()
 
 xalt_status reject(const char *path, const char * hostname)
 {
-  int     i;
-  regex_t regex;
-  int     iret;
-  int     rejected_host = (hostnameSz != 0);
-  char    msgbuf[100];
-
+  xalt_parser results;
   if (path[0] == '\0')
     return XALT_PATH;
 
   // explain why reject happened!!!
 
-
-  for (i = 0; i < hostnameSz; i++)
-    {
-      iret = regcomp(&regex, hostnameA[i], 0);
-      if (iret)
-	{
-	  fprintf(stderr,"Could not compile regex: \"%s\n", hostnameA[i]);
-	  exit(1);
-	}
-
-      iret = regexec(&regex, hostname, 0, NULL, 0);
-      if (iret == 0)
-	{
-	  rejected_host = 0;
-	  break;
-	}
-      else if (iret != REG_NOMATCH)
-	{
-	  regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-	  fprintf(stderr, "HostnameA Regex match failed: %s\n", msgbuf);
-	  exit(1);
-	}
-      regfree(&regex);
-    }
-
-  if (rejected_host)
+  results = hostname_parser(hostname);
+  hostname_parser_cleanup();
+  if (results == SKIP)
     {
       DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
       return XALT_HOSTNAME;
     }
 
-  DEBUG1(stderr,"    hostname: \"%s\" is accepted\n",hostname);
-
-  iret = keep_path(path);
+  results = keep_path(path);
   path_parser_cleanup();
-  if (iret)
+  if (results != SKIP)
     {
       DEBUG1(stderr,"    executable: \"%s\" is accepted\n",path);
       return XALT_SUCCESS;
