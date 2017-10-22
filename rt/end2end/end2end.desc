@@ -115,9 +115,13 @@ test_descript = {
      displayThis "Build shared library"
      gcc -o libabc.so -fPIC -shared a.o b.o c.o
 
-
-     displayThis "xalt_file_to_db"
      unset LD_PRELOAD
+     displayThis "Extract Watermark"
+     xalt_extract_record libabc.so
+   
+     displayThis "xalt_file_to_db"
+
+     export XALT_USERS="$USER;$outputDir"
 
      xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
