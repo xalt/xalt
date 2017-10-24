@@ -19,11 +19,19 @@ int main(int argc, char* argv[])
   Table recordT;
   extractXALTRecord(exec, recordT);
   
+  if (recordT.size() < 1)
+    {
+      std::cout << "\nNo XALT Watermark\n" << std::endl;
+      return 1;
+    }
 
 
+  std::cout << "****************************************\n"
+            << "XALT Watermark: " << exec << "\n"
+            << "****************************************\n";
   for ( auto it = recordT.begin(); it != recordT.end(); ++it)
     {
-      int my_len = leftColWidth - it->first->length();
+      int my_len = leftColWidth - it->first.length();
       std::cout << it->first << blanks.substr(1,my_len) << it->second << "\n";
     }
 
