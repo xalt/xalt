@@ -1,15 +1,5 @@
 # This is the config file for specifying tables necessary to configure XALT:
 
-# Here are patterns for non-mpi programs to produce a start-record.
-# Normally non-mpi programs (a.k.a.) scalar executables only produce
-# an end-record, but programs like R and python that can have optional data
-# such as R and python must have a start-record.
-
-scalar_prgm_start_record = [
-    r'/python[0-9][^/][^/]*$',
-    r'/R$'
-    ]
-
 # The patterns listed here are the hosts that can track executable with XALT.
 # Typical usage is that compute nodes track executable with XALT while login
 # nodes do not.
@@ -18,14 +8,8 @@ scalar_prgm_start_record = [
 # hostname_patterns
 
 hostname_patterns = [
-  '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]'
+  ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]']
   ]
-
-# Acceptance is done before the ignore list so put in here the
-# absolute path of program you want to run that would otherwise
-# be in ignore list.  For example /usr/bin/ddt might be a program
-# your site would like to track but all other programs in /usr/bin
-# are ignored:
 
 #------------------------------------------------------------
 # This "table" is use to filter executables by their path
@@ -51,7 +35,12 @@ hostname_patterns = [
 
 # If a path does not match any patterns it is marked as KEEP.
 
+# There are special scalar programs that must generate a start record.
+# These are marked as SPSR
+
 path_patterns = [
+    ['SPSR',  r'.*\/python[0-9][^/][^/]*'],
+    ['SPSR',  r'.*\/R'],
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],
@@ -74,7 +63,7 @@ path_patterns = [
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/mvapich2\/.*'],
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/impi\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc[0-9][0-9_]*\/mvapich2\/.*'],
-    ['SKIP',  r'.*\/g++'],
+    ['SKIP',  r'.*\/g\+\+'],
     ['SKIP',  r'.*\/gfortran'],
     ['SKIP',  r'.*\/git'],
     ['SKIP',  r'.*\/icc'],
@@ -106,8 +95,7 @@ path_patterns = [
     ['SKIP',  r'.*\/xalt_syslog_to_db'],
     ['SKIP',  r'.*\/xalt_configuration_report']
   ]
-
-
+    
 #------------------------------------------------------------
 # XALT filter environment variables.  Those variables
 # which pass through the filter are save in an SQL table that is
