@@ -64,12 +64,7 @@ path_patterns = [
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/impi\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc[0-9][0-9_]*\/mvapich2\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc\/.*'],
-    ['SKIP',  r'.*\/g\+\+'],
-    ['SKIP',  r'.*\/gfortran'],
     ['SKIP',  r'.*\/git'],
-    ['SKIP',  r'.*\/icc'],
-    ['SKIP',  r'.*\/icpc'],
-    ['SKIP',  r'.*\/ifort'],
     ['SKIP',  r'.*\/lua'],
     ['SKIP',  r'.*\/mpiCC'],
     ['SKIP',  r'.*\/mpicc'],
@@ -94,6 +89,7 @@ path_patterns = [
     ['SKIP',  r'.*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*'],
     ['SKIP',  r'.*\/xalt_file_to_db'],
     ['SKIP',  r'.*\/xalt_syslog_to_db'],
+    ['SKIP',  r'.*\/xalt_extract_record'],
     ['SKIP',  r'.*\/xalt_configuration_report']
   ]
     
