@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
   keys.reserve(recordT.size());
   for (auto it = recordT.begin(); it != recordT.end(); ++it)
     keys.push_back(it->first);
-  std::sort(keys.begin(); keys.end());
+  std::sort(keys.begin(), keys.end());
   
   for ( auto& it = keys.begin(); it != keys.end(); ++it)
     {
