@@ -3,6 +3,10 @@
 
 int main(int argc, char* argv[])
 {
+  const int   leftColWidth = 25;
+  std::string blanks       = "                                        ";
+
+
   if (argc < 2)
     {
       std::cout << "Usage: xalt_extract_record a.out\n";
@@ -14,9 +18,14 @@ int main(int argc, char* argv[])
 
   Table recordT;
   extractXALTRecord(exec, recordT);
+  
+
 
   for ( auto it = recordT.begin(); it != recordT.end(); ++it)
-    std::cout << it->first << "\t\t" << it->second << "\n";
+    {
+      int my_len = leftColWidth - it->first->length();
+      std::cout << it->first << blanks.substr(1,my_len) << it->second << "\n";
+    }
 
   std::cout << std::endl;
 
