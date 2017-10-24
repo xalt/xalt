@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
   // Print cushion
   fprintf(fp,"\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"<XALT_Version>%%%%%s%%%%\"\n",version);
-  fprintf(fp,"\t.asciz \"<Build_host>%%%%%s%%%%\"\n",host);
+  fprintf(fp,"\t.asciz \"<Build_host>%%%%%s%%%%\"\n",host.c_str());
   fprintf(fp,"\t.asciz \"<Build_Syshost>%%%%%s%%%%\"\n",syshost);
   fprintf(fp,"\t.asciz \"<Build_compiler>%%%%%s%%%%\"\n",compiler.c_str());
   fprintf(fp,"\t.asciz \"<Build_compilerPath>%%%%%s%%%%\"\n",compilerPath.c_str());
