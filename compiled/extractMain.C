@@ -1,4 +1,5 @@
 #include "run_submission.h"
+#include <algorithm>
 #include <iostream>
 
 int main(int argc, char* argv[])
