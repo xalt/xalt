@@ -48,7 +48,7 @@ path_patterns = [
     ['SKIP',  r'^\/etc\/.*'],
     ['SKIP',  r'^\/root\/.*'],
     ['SKIP',  r'^\/opt\/intel\/.*'],
-    ['SKIP',  r'^\/opt\/apps\/intel/.*'],
+    ['SKIP',  r'^\/opt\/apps\/intel\/.*'],
     ['SKIP',  r'^\/opt\/apps\/cuda\/.*'],
     ['SKIP',  r'^\/opt\/apps\/lua\/.*'],
     ['SKIP',  r'^\/opt\/apps\/lmod\/.*'],
