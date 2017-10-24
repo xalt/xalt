@@ -49,6 +49,7 @@ path_patterns = [
     ['SKIP',  r'^\/root\/.*'],
     ['SKIP',  r'.*\/gcc'],
     ['SKIP',  r'.*\/g\+\+'],
+    ['SKIP',  r'.*\/cc1plus'],
     ['SKIP',  r'.*\/gfortran'],
     ['SKIP',  r'.*\/git'],
     ['SKIP',  r'.*\/icc'],
