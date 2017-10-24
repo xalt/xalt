@@ -63,6 +63,7 @@ path_patterns = [
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/mvapich2\/.*'],
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/impi\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc[0-9][0-9_]*\/mvapich2\/.*'],
+    ['SKIP',  r'^\/opt\/apps\/gcc\/.*'],
     ['SKIP',  r'.*\/g\+\+'],
     ['SKIP',  r'.*\/gfortran'],
     ['SKIP',  r'.*\/git'],
