@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     keys.push_back(it->first);
   std::sort(keys.begin(), keys.end());
   
-  for ( auto& it = keys.begin(); it != keys.end(); ++it)
+  for ( auto& it : keys)
     {
       int my_len = leftColWidth - it.length();
       std::cout << it << blanks.substr(1,my_len) << recordT[it] << "\n";
