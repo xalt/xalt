@@ -1,4 +1,5 @@
 #include "run_submission.h"
+#include <algorithm>
 #include <iostream>
 
 int main(int argc, char* argv[])
@@ -25,14 +26,21 @@ int main(int argc, char* argv[])
       return 1;
     }
 
-
   std::cout << "****************************************\n"
             << "XALT Watermark: " << exec << "\n"
             << "****************************************\n";
-  for ( auto it = recordT.begin(); it != recordT.end(); ++it)
+  
+
+  std::vector<std::string> keys;
+  keys.reserve(recordT.size());
+  for (auto it = recordT.begin(); it != recordT.end(); ++it)
+    keys.push_back(it->first);
+  std::sort(keys.begin(), keys.end());
+  
+  for ( auto& it : keys)
     {
-      int my_len = leftColWidth - it->first.length();
-      std::cout << it->first << blanks.substr(1,my_len) << it->second << "\n";
+      int my_len = leftColWidth - it.length();
+      std::cout << it << blanks.substr(1,my_len) << recordT[it] << "\n";
     }
 
   std::cout << std::endl;
