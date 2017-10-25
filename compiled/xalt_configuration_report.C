@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
       json.add("XALT_ENABLE_BACKGROUNDING",   enable_backgrounding);
       json.add("XALT_TRANSMISSION_STYLE",     transmission);
       if (strcmp(transmission,"syslog") == 0)
-        json.add("XALT_LOGGING_TAG",          syslog_tag);
+        json.add("XALT_LOGGING_TAG",            syslog_tag);
       json.add("XALT_COMPUTE_SHA1",           computeSHA1);
       json.add("XALT_ETC_DIR",                xalt_etc_dir);
       json.add("XALT_CONFIG_PY",              XALT_CONFIG_PY);
