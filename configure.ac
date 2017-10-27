@@ -124,6 +124,18 @@ AC_ARG_WITH(mysqlStatic,
     MYSQL_STATIC="$withval"
     AC_DEFINE_UNQUOTED(MYSQL_STATIC, "$withval"))dnl
 
+AC_SUBST(CXX_LD_LIBRARY_PATH)
+AC_ARG_WITH(cxxLDLibraryPath,
+    AC_HELP_STRING([--with-cxxLDLibraryPath=ans],[LD_LIBRARY_PATH for c++ programs[[]]]),
+    CXX_LD_LIBRARY_PATH="$withval"
+    AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath])
+    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$with_cxxLDLibraryPath")dnl
+    ,
+    withval=""
+    AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$withval])
+    CXX_LD_LIBRARY_PATH="$withval"
+    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$withval"))dnl
+
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
     AC_HELP_STRING([--with-syshostConfig=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),

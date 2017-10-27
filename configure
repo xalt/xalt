@@ -659,6 +659,7 @@ CXX
 HAVE_32BIT
 ENABLE_BACKGROUNDING
 SYSHOST_CONFIG
+CXX_LD_LIBRARY_PATH
 MYSQL_STATIC
 SYSLOG_MSG_SZ
 SYSTEM_PATH
@@ -729,6 +730,7 @@ with_MySQL
 with_systemPath
 with_syslogMsgSz
 with_mysqlStatic
+with_cxxLDLibraryPath
 with_syshostConfig
 with_enableBackgrounding
 '
@@ -1375,6 +1377,8 @@ Optional Packages:
   --with-syslogMsgSz=ans
   --with-mysqlStatic=ans  Require that libmysqlclient be linked in statically
                           [[no]]
+  --with-cxxLDLibraryPath=ans
+                          LD_LIBRARY_PATH for c++ programs[[]]
   --with-syshostConfig=ans
                           Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -3227,6 +3231,28 @@ $as_echo "MYSQL_STATIC=$withval" >&6; }
     MYSQL_STATIC="$withval"
     cat >>confdefs.h <<_ACEOF
 #define MYSQL_STATIC "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-cxxLDLibraryPath was given.
+if test "${with_cxxLDLibraryPath+set}" = set; then :
+  withval=$with_cxxLDLibraryPath; CXX_LD_LIBRARY_PATH="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&5
+$as_echo "CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define CXX_LD_LIBRARY_PATH "$with_cxxLDLibraryPath"
+_ACEOF
+
+else
+  withval=""
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$withval" >&5
+$as_echo "CXX_LD_LIBRARY_PATH=$withval" >&6; }
+    CXX_LD_LIBRARY_PATH="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define CXX_LD_LIBRARY_PATH "$withval"
 _ACEOF
 
 fi
