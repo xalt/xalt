@@ -36,7 +36,7 @@
 
 
 unset LD_PRELOAD
-LD_LIB_PATH=@sys_ld_lib_path@
+CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
@@ -74,8 +74,6 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 # we want to know about.
 
 PARTIAL_LINKING=
-MPI_PROGRAM=
-PROFILING=
 printOptA=()
 PrintOptions=
 EXEC="a.out"
@@ -122,13 +120,6 @@ do
     -r)
       PARTIAL_LINKING=true
       ;;
-
-    -lmpi*)
-      MPI_PROGRAM=true
-      ;;
-    */lib64/gcrt1.o)
-      PROFILING=true
-      ;;
   esac
 
   #####################################################################
@@ -140,28 +131,6 @@ do
   #fi
 
 done
-
-
-
-
-OMNI_PATH_PROFILE_BUG="@omni_path_profile_bug@"
-if [ "$OMNI_PATH_PROFILE_BUG" = yes -a "${MPI_PROGRAM}.${PROFILING}" = true.true ]; then
-    RED=$'\033[1;31m'
-    NONE=$'\033[0m'
-    echo 
-    echo "${RED}==========================================================================${NONE}"
-    echo 
-    echo "  TACC Error: Link failed. You are compiling an MPI code with profiling"
-    echo "  flags (e.g. '-pg' or '-p'). Because of a known bug in the Omni-Path"
-    echo "  network drivers, this may cause catastrophic node failure when you try"
-    echo "  to run this code. The vendor is working on a patch. In the interim,"
-    echo "  please recompile without this option."
-    echo 
-    echo "${RED}==========================================================================${NONE}"
-    echo 
-    unset RED NONE
-    exit 1;
-fi
 
 ############################################################
 # See if the print options need to be merged
@@ -204,7 +173,7 @@ STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
 SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
-SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH $SYS_HOST_CMD)
+SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
@@ -245,7 +214,7 @@ fi
 # Get the compiler information
 COMP_T=$($EXTRACT_LINKER)
 
-EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
 
 #
 # If the $ARGSRC exists then build it
@@ -262,7 +231,7 @@ fi
 # failed link for function tracking
 function_tracking()
 {
-   STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH $STRIP_LINKLIB "${argA[@]}")
+   STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
    $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
 }
 
@@ -314,7 +283,7 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # Generate link data.  
-LD_LIBRARY_PATH=$LD_LIB_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
 $RM -rf $WRKDIR  
 
 exit $status

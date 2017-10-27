@@ -654,11 +654,9 @@ PATH_TO_CAT
 PATH_TO_BASENAME
 PATH_TO_AS
 HAVE_32BIT
-SYS_LD_LIB_PATH
 ENABLE_BACKGROUNDING
 SYSHOST_CONFIG
 MYSQL_STATIC
-OMNI_PATH_PROFILE_BUG
 SYSLOG_MSG_SZ
 SYSTEM_PATH
 MYSQLDB
@@ -727,7 +725,6 @@ with_config
 with_MySQL
 with_systemPath
 with_syslogMsgSz
-with_omnipathProfileBug
 with_mysqlStatic
 with_syshostConfig
 with_enableBackgrounding
@@ -1370,8 +1367,6 @@ Optional Packages:
   --with-MySQL=ans        Require MySQL and the MySQL-python module [[yes]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
-  --with-omnipathProfileBug,=ans
-
   --with-mysqlStatic=ans  Require that libmysqlclient be linked in statically
                           [[no]]
   --with-syshostConfig=ans
@@ -3128,28 +3123,6 @@ fi
 
 
 
-# Check whether --with-omnipathProfileBug was given.
-if test "${with_omnipathProfileBug+set}" = set; then :
-  withval=$with_omnipathProfileBug; OMNI_PATH_PROFILE_BUG="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug" >&5
-$as_echo "OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define OMNI_PATH_PROFILE_BUG "$with_omnipathProfileBug"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: OMNI_PATH_PROFILE_BUG=$withval" >&5
-$as_echo "OMNI_PATH_PROFILE_BUG=$withval" >&6; }
-    OMNI_PATH_PROFILE_BUG="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define OMNI_PATH_PROFILE_BUG "$withval"
-_ACEOF
-
-fi
-
-
-
 # Check whether --with-mysqlStatic was given.
 if test "${with_mysqlStatic+set}" = set; then :
   withval=$with_mysqlStatic; MYSQL_STATIC="$withval"
@@ -3213,9 +3186,6 @@ $as_echo "ENABLE_BACKGROUNDING=$withval" >&6; }
 _ACEOF
 
 fi
-
-
-SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 
 
 
@@ -6281,7 +6251,7 @@ echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIB
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
-echo
+echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
 echo '------------------------------------------------------------------------------'
 echo
 

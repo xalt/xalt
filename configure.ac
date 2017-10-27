@@ -112,18 +112,6 @@ AC_ARG_WITH(syslogMsgSz,
     SYSLOG_MSG_SZ="$withval"
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
 
-AC_SUBST(OMNI_PATH_PROFILE_BUG)
-AC_ARG_WITH(omnipathProfileBug,
-    AC_HELP_STRING([--with-omnipathProfileBug,=ans],[]),
-    OMNI_PATH_PROFILE_BUG="$withval"
-    AC_MSG_RESULT([OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug])
-    AC_DEFINE_UNQUOTED(OMNI_PATH_PROFILE_BUG, "$with_omnipathProfileBug")dnl
-    ,
-    withval="no"
-    AC_MSG_RESULT([OMNI_PATH_PROFILE_BUG=$withval])
-    OMNI_PATH_PROFILE_BUG="$withval"
-    AC_DEFINE_UNQUOTED(OMNI_PATH_PROFILE_BUG, "$withval"))dnl
-
 AC_SUBST(MYSQL_STATIC)
 AC_ARG_WITH(mysqlStatic,
     AC_HELP_STRING([--with-mysqlStatic=ans],[Require that libmysqlclient be linked in statically [[no]]]),
@@ -159,9 +147,6 @@ AC_ARG_WITH(enableBackgrounding,
     AC_MSG_RESULT([ENABLE_BACKGROUNDING=$withval])
     ENABLE_BACKGROUNDING="$withval"
     AC_DEFINE_UNQUOTED(ENABLE_BACKGROUNDING, "$withval"))dnl
-
-AC_SUBST(SYS_LD_LIB_PATH)
-SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 
 AC_SUBST(HAVE_32BIT)
 

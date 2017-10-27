@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
       json.add("XALT_SYSHOST_CONFIG",         SYSHOST_CONFIG);
       json.add("XALT_TRACKING_MPI_ONLY",      xalt_tracking_mpi_only);
       json.add("XALT_SYSLOG_MSG_SZ",          SYSLOG_MSG_SZ);
+      json.add("CXX_LD_LIBRARY_PATH",         CXX_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                  HAVE_32BIT);
       json.add("USING_LIBUUID",               HAVE_WORKING_LIBUUID);
       json.add("BUILT_W_MySQL",               BUILT_W_MySQL);
@@ -111,6 +112,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSTEM_PATH:          " << XALT_SYSTEM_PATH       << "\n";
   std::cout << "XALT_SYSHOST_CONFIG:       " << SYSHOST_CONFIG         << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ          << "\n";
+  std::cout << "CXX_LD_LIBRARY_PATH:       " << CXX_LD_LIBRARY_PATH    << "\n";
   std::cout << "HAVE_32BIT:                " << HAVE_32BIT             << "\n";
   std::cout << "Using libuuid:             " << HAVE_WORKING_LIBUUID   << "\n";
   std::cout << "Built with MySQL:          " << BUILT_W_MySQL          << "\n";
