@@ -85,7 +85,7 @@ case $SYSHOST in
       base="$base/$(uname -m)"
     fi
     PRE_CONF_OPTS='CXX="LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib /opt/apps/gcc/4.9.1/bin/g++"'
-    CONF_OPTS="CXX=/opt/apps/gcc/4.9.1/bin/g++ --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
+    CONF_OPTS="CXX=LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib /opt/apps/gcc/4.9.1/bin/g++ --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
     MAKE_OPTS="CXX=/opt/apps/gcc/4.9.1/bin/g++"
     ;;
 
@@ -136,7 +136,7 @@ unset LD_PRELOAD
 cmdA=("-$MAKE distclean"
       "-rm -rf $PKG"
       "$SETUP_CMD"
-      "$PRE_CONF_OPTS ./configure --prefix=$PKG $CONF_OPTS"
+      "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
       "rm -f config.log"
