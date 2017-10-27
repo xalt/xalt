@@ -1,9 +1,8 @@
-#!/bin/bash
-# -*- shell-script -*-
+#!/bin/bash -*- shell-script -*-
 #-----------------------------------------------------------------------
-# XALT: A tool that tracks users jobs and environments on a cluster.
-# Copyright (C) 2013-2014 University of Texas at Austin
-# Copyright (C) 2013-2014 University of Tennessee
+#XALT: A tool that tracks users jobs and environments on a cluster.
+#Copyright (C) 2013-2014 University of Texas at Austin Copyright (C)
+#2013-2014 University of Tennessee
 # 
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -84,9 +83,8 @@ case $SYSHOST in
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    PRE_CONF_OPTS='CXX="LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib /opt/apps/gcc/4.9.1/bin/g++"'
-    CONF_OPTS="CXX=LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib /opt/apps/gcc/4.9.1/bin/g++ --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
-    MAKE_OPTS="CXX=/opt/apps/gcc/4.9.1/bin/g++"
+    CONF_OPTS="CXX=$PWD/g++.sh --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
+    MAKE_OPTS="CXX=$PWD/g++.sh"
     ;;
 
   stampede2)
