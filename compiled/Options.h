@@ -10,6 +10,7 @@ public:
   Options(int argc, char **argv);
   ~Options() {}
   long          ntasks()      { return m_ntasks;      }
+  long          interfaceV()  { return m_interfaceV;  }
   pid_t         ppid()        { return m_ppid;        }
   double        startTime()   { return m_start;       }
   double        endTime()     { return m_end;         }
@@ -26,6 +27,7 @@ private:
   double      m_start;
   double      m_end;
   long        m_ntasks;
+  long        m_interfaceV;
   pid_t       m_ppid;
   std::string m_syshost;
   std::string m_uuid;

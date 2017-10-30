@@ -3,6 +3,10 @@ AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SUBDIRS(compiled)
 
+AC_SUBST(XALT_INTERFACE_VERSION)
+XALT_INTERFACE_VERSION=3
+
+
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb) [[file]]]),

@@ -670,6 +670,7 @@ COMPUTE_SHA1SUM
 XALT_TRACKING_MPI_ONLY
 XALT_FILE_PREFIX
 TRANSMISSION
+XALT_INTERFACE_VERSION
 subdirs
 OBJEXT
 EXEEXT
@@ -3012,6 +3013,10 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 subdirs="$subdirs compiled"
+
+
+
+XALT_INTERFACE_VERSION=3
 
 
 
@@ -6621,6 +6626,7 @@ echo "Package version......................................" : XALT-$VERSION
 echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
+echo "Installation Directory..............................." : $PKGV
 echo
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION

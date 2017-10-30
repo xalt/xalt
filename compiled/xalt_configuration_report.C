@@ -62,6 +62,7 @@ int main(int argc, char* argv[])
       json.add("DATE",                        dateStr);
       json.add("XALT_SYSHOST",                syshost);
       json.add("XALT_VERSION",                XALT_VERSION);
+      json.add("XALT_INTERFACE_VERSION",      XALT_INTERFACE_VERSION);
       json.add("XALT_GIT_VERSION",            XALT_GIT_VERSION);
       json.add("XALT_VERSION_STR",            XALT_VERSION_STR);
       json.add("XALT_FILE_PREFIX",            XALT_FILE_PREFIX);
@@ -101,6 +102,7 @@ int main(int argc, char* argv[])
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "XALT_SYSHOST:              " << syshost                << "\n";
   std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX       << "\n";
+  std::cout << "XALT_INTERFACE_VERSION:    " << XALT_INTERFACE_VERSION << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:   " << transmission           << "\n";
   if (strcmp(transmission,"syslog") == 0)
     std::cout << "XALT_LOGGING_TAG:          " << syslog_tag           << "\n";

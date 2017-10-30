@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <getopt.h>
 #include <vector>
 #include "Options.h"
@@ -35,7 +36,8 @@ long convert_long(const char* name, const char* s)
 }
 
 Options::Options(int argc, char** argv)
-  : m_start(0.0), m_end(0.0), m_ntasks(1L), m_ppid(0L),
+  : m_start(0.0), m_end(0.0), m_ntasks(1L),
+    m_interfaceV(0L),         m_ppid(0L),
     m_syshost("unknown"),     m_uuid("unknown"),
     m_exec("unknown"),        m_userCmdLine("[]"),
     m_exec_type("unknown"),   m_confFn("xalt_db.conf")
@@ -46,6 +48,7 @@ Options::Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
+        {"interfaceV", required_argument, NULL, 'V'},
         {"start",      required_argument, NULL, 's'},
         {"end",        required_argument, NULL, 'e'},
         {"syshost",    required_argument, NULL, 'h'},
@@ -67,6 +70,10 @@ Options::Options(int argc, char** argv)
 
       switch(c)
 	{
+        case 'V':
+          if (optarg)
+            m_interfaceV = (pid_t) convert_long("ppid", optarg);
+          break;
         case 'p':
           if (optarg)
             m_ppid = (pid_t) convert_long("ppid", optarg);
@@ -115,7 +122,9 @@ Options::Options(int argc, char** argv)
         }
     }
   
-  if (optind < argc)
+  if (optind + 1 == argc && argv[optind][0] == '[')
+    m_userCmdLine = argv[optind];
+  else if (optind < argc)
     {
       m_userCmdLine = "[";
       for (int i = optind; i < argc; ++i)
