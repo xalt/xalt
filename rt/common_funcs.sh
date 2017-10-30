@@ -20,7 +20,7 @@ initialize()
 
 displayThis()
 {
-  XALT_EPOCH_T1=$(LD_PRELOAD= $outputDir/XALT/libexec/xalt_epoch "$XALT_EPOCH_T0")
+  XALT_EPOCH_T1=$(LD_PRELOAD= $outputDir/XALT/xalt/xalt/libexec/xalt_epoch "$XALT_EPOCH_T0")
   echo 
   echo "#==========================================================#"
   echo "  $@"
@@ -44,9 +44,9 @@ installXALT()
   mkdir build
   (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 --with-config=$projectDir/Config/rtm_config.py ; \
   echo "<make>"; make OPTLVL="-g -O0" install ;  )
-  cp $projectDir/src/removeDataBase.py    XALT/sbin
-  cp $projectDir/test/check_entries_db.py XALT/sbin
-  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+  cp $projectDir/src/removeDataBase.py    XALT/xalt/xalt/sbin
+  cp $projectDir/test/check_entries_db.py XALT/xalt/xalt/sbin
+  PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
   echo "<end make>"
 }
 

@@ -120,9 +120,9 @@ esac
 BASE_DIR=$base
 
 pkgName=xalt
-PKG=$BASE_DIR/$pkgName/${PKG_VERSION}${EXTRA}
+PKG=$BASE_DIR
 
-$SUDO rm -rf $PKG
+$SUDO rm -rf $PKG/xalt/$PKG_VERSION
 
 MAKE=make
 command -v remake 2>&1 > /dev/null
@@ -133,13 +133,12 @@ fi
 unset LD_PRELOAD
 
 cmdA=("-$MAKE distclean"
-      "-rm -rf $PKG"
+      "-rm -rf $PKG/xalt/$PKG_VERSION"
       "$SETUP_CMD"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
       "rm -f config.log"
-      "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
       )
 
 

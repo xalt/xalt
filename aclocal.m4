@@ -69,6 +69,7 @@ echo "Package version......................................" : XALT-$VERSION
 echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
+echo "Installation Directory..............................." : $PKGV
 echo
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION

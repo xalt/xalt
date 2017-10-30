@@ -53,7 +53,7 @@ test_descript = {
      mpirun -n 1 Ðì®/helloñ
      
      displayThis "Setting LD_PRELOAD, ./hello"
-     export LD_LIBRARY_PATH=$outputDir/XALT/lib64:$outputDir/XALT/lib:$LD_LIBRARY_PATH
+     export LD_LIBRARY_PATH=$outputDir/XALT/xalt/xalt/lib64:$outputDir/XALT/xalt/xalt/lib:$LD_LIBRARY_PATH
      export LD_PRELOAD=libxalt_init.so
      ./hello --ntasks p "a';'d"
      
