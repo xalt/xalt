@@ -6,7 +6,7 @@ test_descript = {
    'description' : "Test syslog transfer (New and old)",
    'keywords'    : [ test_name ],
 
-   'active'      : True,
+   'active'      : False,
    'test_name'   : test_name,
 
    'run_script'  : """
