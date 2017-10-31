@@ -625,6 +625,7 @@ ac_subst_vars='LTLIBOBJS
 LIBOBJS
 XALT_GIT_VERSION
 VERSION
+PKGV
 HAVE_WORKING_LIBUUID
 EGREP
 GREP
@@ -5168,7 +5169,11 @@ fi
 
 
 
+
 VERSION=$(cat $ac_confdir/.version)
+PKGV=$prefix/xalt/$VERSION
+
+
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
   xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`

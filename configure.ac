@@ -262,10 +262,14 @@ if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
 fi  
 
 
+AC_SUBST(PKGV)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version)
+PKGV=$prefix/xalt/$VERSION
+
+
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
   xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`
