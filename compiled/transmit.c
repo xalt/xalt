@@ -8,6 +8,8 @@
 #include "transmit.h"
 #include "compress_string.h"
 #include "base64.h"
+#include "xalt_config.h"
+#include "xalt_c_utils.h"
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
@@ -28,7 +30,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       int   lenFn   = strlen(resultFn);
       char* dirname = malloc(lenFn+1);
-      memcpy(dirname, resultFn, lenFn+1)
+      memcpy(dirname, resultFn, lenFn+1);
 
       char* p       = strrchr(dirname,'/');
       *p = '\0';

@@ -2140,12 +2140,11 @@ int yywrap(20,271
 int hostname_parser(25,302
 void hostname_parser_cleanup(47,719
 
-compiled/xalt_utils.C,146
-int isDirectory(13,202
-bool path2module(73,1767
-FILE* xalt_file_open(100,2442
-FILE* xalt_json_file_open(140,3163
-void build_xaltDir(197,4456
+compiled/xalt_utils.C,118
+bool path2module(13,202
+FILE* xalt_file_open(40,877
+FILE* xalt_json_file_open(80,1598
+void build_xaltDir(137,2891
 
 compiled/walkProcessTree.C,28
 void walkProcessTree(7,114
@@ -2271,7 +2270,7 @@ Process::Process(Process10,176
 void Process::cmdline(cmdline42,910
 std::string& Process::exe(exe67,1383
 
-compiled/Makefile.in,4043
+compiled/Makefile.in,4044
 THIS_DIR 1,0
 VPATH 2,35
 CXX 3,57
@@ -2292,90 +2291,90 @@ C_SRC 27,774
 CXX_SRC 37,1131
 XRS_EXEC 76,2682
 XRS_CXX_SRC 77,2739
-XRS_C_SRC 81,3119
-XRS_OBJS 82,3196
-XGA_EXEC 84,3285
-XGA_CXX_SRC 85,3345
-XGA_C_SRC 86,3401
-XGA_OBJS 87,3451
-XGL_EXEC 89,3540
-XGL_CXX_SRC 90,3600
-XGL_C_SRC 93,3882
-XGL_OBJS 94,3944
-XEL_EXEC 96,4033
-XEL_CXX_SRC 97,4090
-XEL_C_SRC 98,4145
-XEL_OBJS 99,4199
-XSL_EXEC 101,4288
-XSL_CXX_SRC 102,4344
-XSL_C_SRC 103,4430
-XSL_OBJS 104,4493
-F2DB_EXEC 106,4582
-F2DB_CXX_SRC 107,4632
-F2DB_C_SRC 110,4872
-F2DB_OBJS 111,4933
-S2DB_EXEC 113,5024
-S2DB_CXX_SRC 114,5076
-S2DB_C_SRC 118,5411
-S2DB_OBJS 119,5472
-XCR_EXEC 121,5563
-XCR_CXX_SRC 122,5622
-XCR_C_SRC 123,5681
-XCR_OBJS 124,5717
-XER_EXEC 126,5821
-XER_CXX_SRC 127,5874
-XER_OBJS 128,5934
-%.d:%.d132,5990
-        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[135,6116
-%.d:%.d138,6201
-        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[141,6327
-all:all144,6412
-ECHO:ECHO152,6871
-$(XRS_EXEC)$(XRS_EXEC157,6941
-$(XGA_EXEC)$(XGA_EXEC160,7054
-$(XGL_EXEC)$(XGL_EXEC163,7125
-$(XEL_EXEC)$(XEL_EXEC166,7236
-$(XSL_EXEC)$(XSL_EXEC169,7308
-$(XCR_EXEC)$(XCR_EXEC172,7380
-$(XER_EXEC)$(XER_EXEC175,7454
-$(F2DB_EXEC)$(F2DB_EXEC178,7528
-$(S2DB_EXEC)$(S2DB_EXEC181,7623
-$(DESTDIR)$(LIBEXEC)/xalt_realpath:$(DESTDIR)$(LIBEXEC)/xalt_realpath184,7718
-$(DESTDIR)$(LIBEXEC)/xalt_epoch:$(DESTDIR)$(LIBEXEC)/xalt_epoch187,7816
-$(DESTDIR)$(LIBEXEC)/xalt_syshost:$(DESTDIR)$(LIBEXEC)/xalt_syshost190,7916
-lex.xalt_env.c:lex.xalt_env.c193,8049
-lex.xalt_env.o:lex.xalt_env.o196,8129
-lex.__XALT_pathR.c:lex.__XALT_pathR.c199,8206
-lex.__XALT_pathL.c:lex.__XALT_pathL.c202,8295
-lex.__XALT_hostR.c:lex.__XALT_hostR.c205,8384
-lex.__XALT_hostL.c:lex.__XALT_hostL.c208,8477
-xalt_syshost.o:xalt_syshost.o211,8570
-xalt_syshost_main.o:xalt_syshost_main.o214,8634
-build_init:build_init218,8781
-build_init_32bit_no:build_init_32bit_no224,9285
-build_init_32bit_yes:build_init_32bit_yes226,9307
-$(DESTDIR)$(LIB64)/lex.__XALT_path.o:$(DESTDIR)$(LIB64)/lex.__XALT_path.o231,9673
-$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o233,9835
-$(DESTDIR)$(LIB64)/lex.__XALT_host.o:$(DESTDIR)$(LIB64)/lex.__XALT_host.o235,10008
-$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o237,10170
-$(DESTDIR)$(LIB64)/xalt_quotestring.o:$(DESTDIR)$(LIB64)/xalt_quotestring.o239,10343
-$(DESTDIR)$(LIB64)/xalt_syshost.o:$(DESTDIR)$(LIB64)/xalt_syshost.o241,10470
-$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o:$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o243,10587
-$(DESTDIR)$(LIB64)/xalt_initialize.o:$(DESTDIR)$(LIB64)/xalt_initialize.o245,10714
-$(DESTDIR)$(LIB64)/xalt_initialize_preload.o:$(DESTDIR)$(LIB64)/xalt_initialize_preload.o247,10884
-$(DESTDIR)$(LIB)/lex.__XALT_path_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_32.o251,11074
-$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o253,11220
-$(DESTDIR)$(LIB)/lex.__XALT_host_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_32.o255,11377
-$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o257,11523
-$(DESTDIR)$(LIB)/xalt_quotestring_32.o:$(DESTDIR)$(LIB)/xalt_quotestring_32.o259,11680
-$(DESTDIR)$(LIB)/xalt_syshost_32.o:$(DESTDIR)$(LIB)/xalt_syshost_32.o261,11801
-$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o:$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o263,11911
-$(DESTDIR)$(LIB)/xalt_initialize_32.o:$(DESTDIR)$(LIB)/xalt_initialize_32.o265,12031
-$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o:$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o267,12204
-$(DESTDIR)$(LIB)/libxalt_init.so:$(DESTDIR)$(LIB)/libxalt_init.so269,12387
-$(DESTDIR)$(LIB64)/libxalt_init.so:$(DESTDIR)$(LIB64)/libxalt_init.so278,12934
-neat:neat286,13505
-clean:clean288,13521
+XRS_C_SRC 81,3086
+XRS_OBJS 83,3234
+XGA_EXEC 85,3323
+XGA_CXX_SRC 86,3383
+XGA_C_SRC 87,3439
+XGA_OBJS 88,3489
+XGL_EXEC 90,3578
+XGL_CXX_SRC 91,3638
+XGL_C_SRC 94,3909
+XGL_OBJS 95,4009
+XEL_EXEC 97,4098
+XEL_CXX_SRC 98,4155
+XEL_C_SRC 99,4210
+XEL_OBJS 100,4264
+XSL_EXEC 102,4353
+XSL_CXX_SRC 103,4409
+XSL_C_SRC 104,4495
+XSL_OBJS 105,4558
+F2DB_EXEC 107,4647
+F2DB_CXX_SRC 108,4697
+F2DB_C_SRC 111,4928
+F2DB_OBJS 112,4998
+S2DB_EXEC 114,5089
+S2DB_CXX_SRC 115,5141
+S2DB_C_SRC 119,5476
+S2DB_OBJS 120,5546
+XCR_EXEC 122,5637
+XCR_CXX_SRC 123,5696
+XCR_C_SRC 124,5755
+XCR_OBJS 125,5791
+XER_EXEC 127,5895
+XER_CXX_SRC 128,5948
+XER_OBJS 129,6008
+%.d:%.d133,6064
+        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[136,6190
+%.d:%.d139,6275
+        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[142,6401
+all:all145,6486
+ECHO:ECHO153,6945
+$(XRS_EXEC)$(XRS_EXEC158,7015
+$(XGA_EXEC)$(XGA_EXEC161,7128
+$(XGL_EXEC)$(XGL_EXEC164,7199
+$(XEL_EXEC)$(XEL_EXEC167,7310
+$(XSL_EXEC)$(XSL_EXEC170,7382
+$(XCR_EXEC)$(XCR_EXEC173,7454
+$(XER_EXEC)$(XER_EXEC176,7528
+$(F2DB_EXEC)$(F2DB_EXEC179,7602
+$(S2DB_EXEC)$(S2DB_EXEC182,7697
+$(DESTDIR)$(LIBEXEC)/xalt_realpath:$(DESTDIR)$(LIBEXEC)/xalt_realpath185,7792
+$(DESTDIR)$(LIBEXEC)/xalt_epoch:$(DESTDIR)$(LIBEXEC)/xalt_epoch188,7890
+$(DESTDIR)$(LIBEXEC)/xalt_syshost:$(DESTDIR)$(LIBEXEC)/xalt_syshost191,7990
+lex.xalt_env.c:lex.xalt_env.c194,8123
+lex.xalt_env.o:lex.xalt_env.o197,8203
+lex.__XALT_pathR.c:lex.__XALT_pathR.c200,8280
+lex.__XALT_pathL.c:lex.__XALT_pathL.c203,8369
+lex.__XALT_hostR.c:lex.__XALT_hostR.c206,8458
+lex.__XALT_hostL.c:lex.__XALT_hostL.c209,8551
+xalt_syshost.o:xalt_syshost.o212,8644
+xalt_syshost_main.o:xalt_syshost_main.o215,8708
+build_init:build_init219,8855
+build_init_32bit_no:build_init_32bit_no225,9359
+build_init_32bit_yes:build_init_32bit_yes227,9381
+$(DESTDIR)$(LIB64)/lex.__XALT_path.o:$(DESTDIR)$(LIB64)/lex.__XALT_path.o232,9747
+$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o234,9909
+$(DESTDIR)$(LIB64)/lex.__XALT_host.o:$(DESTDIR)$(LIB64)/lex.__XALT_host.o236,10082
+$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o238,10244
+$(DESTDIR)$(LIB64)/xalt_quotestring.o:$(DESTDIR)$(LIB64)/xalt_quotestring.o240,10417
+$(DESTDIR)$(LIB64)/xalt_syshost.o:$(DESTDIR)$(LIB64)/xalt_syshost.o242,10544
+$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o:$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o244,10661
+$(DESTDIR)$(LIB64)/xalt_initialize.o:$(DESTDIR)$(LIB64)/xalt_initialize.o246,10788
+$(DESTDIR)$(LIB64)/xalt_initialize_preload.o:$(DESTDIR)$(LIB64)/xalt_initialize_preload.o248,10958
+$(DESTDIR)$(LIB)/lex.__XALT_path_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_32.o252,11148
+$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o254,11294
+$(DESTDIR)$(LIB)/lex.__XALT_host_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_32.o256,11451
+$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o258,11597
+$(DESTDIR)$(LIB)/xalt_quotestring_32.o:$(DESTDIR)$(LIB)/xalt_quotestring_32.o260,11754
+$(DESTDIR)$(LIB)/xalt_syshost_32.o:$(DESTDIR)$(LIB)/xalt_syshost_32.o262,11875
+$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o:$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o264,11985
+$(DESTDIR)$(LIB)/xalt_initialize_32.o:$(DESTDIR)$(LIB)/xalt_initialize_32.o266,12105
+$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o:$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o268,12278
+$(DESTDIR)$(LIB)/libxalt_init.so:$(DESTDIR)$(LIB)/libxalt_init.so270,12461
+$(DESTDIR)$(LIB64)/libxalt_init.so:$(DESTDIR)$(LIB64)/libxalt_init.so279,13008
+neat:neat287,13579
+clean:clean289,13595
 
 compiled/ConfigParser.C,66
 void trim(11,204
@@ -2449,6 +2448,12 @@ const static char* b64=35,1151
 const static unsigned char unb64[unb6438,1264
 char* base64_encode(70,2928
 unsigned char* base64_decode(120,4334
+
+compiled/xalt_c_utils.c,21
+int isDirectory(1,0
+
+compiled/xalt_c_utils.h,28
+#define XALT_C_UTILS_H2,23
 
 compiled/walkProcessTree.h,34
 #define _WALK_PROCESS_TREE_H2,29
@@ -2596,8 +2601,8 @@ class f2db_Options6,66
 
 compiled/transmit.c,79
 #define  _GNU_SOURCE1,0
-const int syslog_msg_sz 12,215
-void transmit(14,257
+const int syslog_msg_sz 14,266
+void transmit(16,308
 
 compiled/s2db_Options.h,458
 #define S2DB_OPTIONS_H2,23

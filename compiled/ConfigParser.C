@@ -55,8 +55,8 @@ ConfigParser::ConfigParser(const char * fn)
       else if (strcmp(key,"db")     == 0) m_db     = value;
       else if (strcmp(key,"passwd") == 0)
         {
-          char * passwd = base64_decode(value, len(value), &valueLen);
-          m_passwd.assign(passwd);
+          unsigned char * passwd = base64_decode(value, strlen(value), &valueLen);
+          m_passwd.assign(reinterpret_cast<char*>(passwd));
           free(passwd);
         }
     }

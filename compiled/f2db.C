@@ -13,6 +13,7 @@
 #include "buildRmapT.h"
 #include "epoch.h"
 #include "xalt_utils.h"
+#include "xalt_c_utils.h"
 #include "xalt_fgets_alloc.h"
 #include "parseJsonStr.h"
 #include "link_direct2db.h"
