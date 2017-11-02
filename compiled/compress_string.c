@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <zlib.h>
 #include "compress_string.h"
 
 int compress_string(const char* str, int compressionlevel, char* out, int* lenOut)
@@ -15,7 +15,7 @@ int compress_string(const char* str, int compressionlevel, char* out, int* lenOu
   zs.next_in  = (Bytef*)str;
   zs.avail_in = strlen(str)+1;          // set the z_stream's input
 
-  zs.avail_out = lenOut;                // on input lenOut is the space avail in out
+  zs.avail_out = *lenOut;               // on input lenOut is the space avail in out
   zs.next_out  = (Bytef *) out;
 
   // The actual compression work.

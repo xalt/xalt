@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <zlib.h>
 #include "zstring.h"
 
 /** Decompress an STL string using zlib and return the original data. */

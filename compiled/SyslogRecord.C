@@ -36,8 +36,8 @@ void SyslogRecord::value(std::string& jsonStr)
   for (int i = 1; i < m_nblks; ++i)
     b64.append(m_blkA[i]);
   
-  char       *str = base64_decode(b64.c_str(), b64.size(), &lenStr);
-  std::string zs  = str;
+  unsigned char  *str = base64_decode(b64.c_str(), b64.size(), &lenStr);
+  std::string     zs  = reinterpret_cast<char*>(str);
   free(str);
   jsonStr         = decompress_string(zs);
 }

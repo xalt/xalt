@@ -4,12 +4,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <zlib.h>
 #include "transmit.h"
 #include "compress_string.h"
 #include "base64.h"
 #include "xalt_config.h"
 #include "xalt_c_utils.h"
+#include "xalt_base_types.h"
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
@@ -38,7 +40,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         mkdir(dirname, 0700);
       free(dirname);
 
-      FILE fp = fopen(resultFn,"w");
+      FILE* fp = fopen(resultFn,"w");
       if (fp == NULL && xalt_tracing)
         fprintf(stderr,"  Unable to open: %s\n", resultFn);
       else
@@ -57,7 +59,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       int   b64len;
       char* b64     = base64_encode(zs, zslen, &b64len);
       
-      asprint(&cmdline, "%s -t XALT_LOGGING_%s \"%s:%s\"\n",LOGGER, syshost, kind, b64);
+      asprintf(&cmdline, "%s -t XALT_LOGGING_%s \"%s:%s\"\n",LOGGER, syshost, kind, b64);
       system(cmdline);
       free(zs);
       free(b64);
