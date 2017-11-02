@@ -259,7 +259,11 @@ gittag:
 	  @echo "To git tag do: make gittag TAG=?"
         endif
 
-tags:
+
+tags:  build_tags
+	$(RM) file_list.*
+
+build_tags:
 	find . \( -regex '.*~$$\|.*/\.git\|.*/\.git/' -prune \)  \
                -o -type f > file_list.1
 	sed -e 's|.*/.git.*||g'                                  \
@@ -316,7 +320,6 @@ tags:
             -e '/^\s*$$/d'                                       \
 	       < file_list.1 > file_list.2
 	etags  `cat file_list.2`
-	$(RM) file_list.*
 
 dist:
 	git archive --prefix=xalt-$(VERSION)/ $(GIT_BRANCH) > xalt-$(VERSION).tar

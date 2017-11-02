@@ -1,8 +1,15 @@
 #ifndef TRANSMIT_H
 #define TRANSMIT_H
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-#include <string>
-void transmit(const char* transmission, std::string& jsonStr, const char* kind, std::string& key, const char* syshost, const char* resultFn);
+void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
+              const char* syshost, const char* resultFn);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //TRANSMIT_H

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "SyslogRecord.h"
 #include "base64.h"
 #include "zstring.h"
@@ -28,14 +29,17 @@ void SyslogRecord::addblk(long idx, std::string& v)
 
 void SyslogRecord::value(std::string& jsonStr)
 {
+  int         lenStr;
   std::string b64;
 
   b64.assign(m_blkA[0]);
   for (int i = 1; i < m_nblks; ++i)
     b64.append(m_blkA[i]);
   
-  std::string zs = base64_decode(b64);
-  jsonStr        = decompress_string(zs);
+  char       *str = base64_decode(b64.c_str(), b64.size(), &lenStr);
+  std::string zs  = str;
+  free(str);
+  jsonStr         = decompress_string(zs);
 }
 
 void SyslogRecord::prt(const char* name, Vstring& resultA)
