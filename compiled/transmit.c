@@ -83,7 +83,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          asprintf(&cmdline, "%s XALT_LOGGER_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
+          asprintf(&cmdline, "%s -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
                    LOGGER, syshost, kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
           system(cmdline);
           free(cmdline);
