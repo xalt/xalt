@@ -6,3 +6,4 @@ lex.xalt_env.c
 build
 stamp-h
 *.d
+tb64.C
