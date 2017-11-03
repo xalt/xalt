@@ -1,8 +1,18 @@
 #ifndef ZSTRING_H
 #define ZSTRING_H
 
-#include <string>
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-std::string decompress_string(const std::string& str);
+char* compress_string(  const char* in, int* lenOut);
+char* decompress_string(const char* in, int* lenOut);
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 #endif //ZSTRING_H

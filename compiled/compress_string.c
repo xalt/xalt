@@ -2,31 +2,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <zlib.h>
-#include "compress_string.h"
+#include "zstring.h"
 
-int compress_string(const char* str, int compressionlevel, char* out, int* lenOut)
+char* compress_string(const char* str, int* lenOut)
 {
-  z_stream zs;                        // z_stream is zlib's control structure
+  uLong ucompSize = strlen(str)+1;
+  uLong compSize  = compressBound(ucompSize);
+
+  out = (char*) malloc(compSize);
+
+  compress((Bytef *) out, &compSize, (Bytef *) str, ucompSize);
+  *lenOut = (int) compSize;
+
+  return out;
+}
+
+char* uncompress_string(const char* str, int len)
+{
+  z_stream zs;
   memset(&zs, 0, sizeof(zs));
 
-  zs.zalloc   = Z_NULL;
-  zs.zfree    = Z_NULL;
-  zs.opaque   = Z_NULL;
-  zs.next_in  = (Bytef*)str;
-  zs.avail_in = strlen(str)+1;          // set the z_stream's input
-
-  zs.avail_out = *lenOut;               // on input lenOut is the space avail in out
-  zs.next_out  = (Bytef *) out;
-
-  // The actual compression work.
-  if (deflateInit(&zs, compressionlevel) != Z_OK)
+  if (inflateInit(&zs) != Z_OK)
     {
-      fprintf(stderr, "Unable to set compression level with deflateInit\n");
+      fprintf(stderr,"inflateInit failed while decompressing.\n");
       exit(1);
     }
+
+  zs.next_in  = (Bytef*)str;
+  zs.avail_in = len;
+
+  int  ret;
+  char outbuffer[32768];
+
+  int   szOut = 0;
+  char* out   = NULL;
+  char* prev;
+
+  do
+    {
+      zs.next_out = (Bytef *) outbuffer;
+      zs.avail_out = sizeof(outbuffer);
       
-  deflate(&zs, Z_FINISH);
-  deflateEnd(&zs);
-  *lenOut = (int) zs.total_out;
-  return 0;
+      ret = inflate(&zs, 0);
+      
+      oldSz  = szOut;
+      szOut += zs.total_out;
+
+      prev   = out;
+      out    = (char *) malloc(szOut);
+      memcpy(out, prev, oldSz);
+      memcpy(&out[oldSz], outbuffer, zs.total_out);
+    }
+  while(ret == Z_OK);
+
+  inflateEnd(&zs);
+  if (ret != Z_STREAM_END) 
+    {
+      // an error occurred that was not EOF
+      fprintf(stderr,"Exception during zlib decompression: (%d) %s\n",ret, zs.msg);
+      exit(1);
+    }
+  return outstring;
 }
