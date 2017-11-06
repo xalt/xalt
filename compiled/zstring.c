@@ -4,18 +4,60 @@
 #include <zlib.h>
 #include "zstring.h"
 
+#define BUFFSZ 32768
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
+
 char* compress_string(const char* str, int* lenOut)
 {
-  uLong ucompSize = strlen(str)+1;
-  uLong compSize  = compressBound(ucompSize);
+  z_stream zs;
+  memset(&zs, 0, sizeof(zs));
+  if (deflateInit(&zs, Z_BEST_COMPRESSION) != Z_OK)
+    {
+      fprintf(stderr, "Unable to set compression level with deflateInit\n");
+      exit(1);
+    }
 
-  char* out = (char*) malloc(compSize);
+  zs.next_in  = (Bytef *) str;
+  zs.avail_in = strlen(str);
 
-  compress((Bytef *) out, &compSize, (Bytef *) str, ucompSize);
-  *lenOut = (int) compSize;
+  int  ret, oldSz;
+  char outbuffer[BUFFSZ];
 
+  
+  int  szOut   = 0;
+  int  totalSz = zs.avail_in/2;
+  char *prev;
+  char *out    = (char *) malloc(totalSz+1);
+
+  do
+    {
+      zs.next_out  = (Bytef *) outbuffer;
+      zs.avail_out = BUFFSZ;
+
+      ret = deflate(&zs, Z_FINISH);
+
+      oldSz = szOut;
+      szOut = zs.total_out;
+
+      if (szOut > totalSz)
+	{
+	  totalSz = MAX(2*totalSz, 2*szOut);
+	  prev    = out;
+	  out     = (char *)malloc(totalSz+1);
+	  memcpy(out, prev, oldSz);
+	  free(prev);
+	}
+      if (oldSz < szOut)
+	{
+	  memcpy(&out[oldSz], outbuffer, zs.total_out - oldSz);
+	  out[szOut] = '\0';
+	}
+    }
+  while(ret == Z_OK);
+  *lenOut = szOut;
   return out;
 }
+
 
 char* uncompress_string(const char* str, int len)
 {
@@ -32,27 +74,37 @@ char* uncompress_string(const char* str, int len)
   zs.avail_in = len;
 
   int  ret, oldSz;
-  char outbuffer[32768];
+  char outbuffer[BUFFSZ];
 
-  int   szOut = 0;
-  char* out   = NULL;
+  int   totalSz = 4*len;
+  int   szOut   = 0;
   char* prev;
+  char* out     = (char *) malloc(totalSz+1);
 
   do
     {
-      zs.next_out = (Bytef *) outbuffer;
-      zs.avail_out = sizeof(outbuffer);
+      zs.next_out  = (Bytef *) outbuffer;
+      zs.avail_out = BUFFSZ;
       
       ret = inflate(&zs, 0);
       
       oldSz  = szOut;
-      szOut += zs.total_out;
+      szOut  = zs.total_out;
 
-      prev   = out;
-      out    = (char *) malloc(szOut+1);
-      memcpy(out, prev, oldSz);
-      memcpy(&out[oldSz], outbuffer, zs.total_out);
-      out[szOut] = '\0';
+      if ( szOut > totalSz)
+	{
+	  totalSz = MAX(2*totalSz,2*szOut);
+	  prev = out;
+	  out  = (char *) malloc(totalSz+1);
+	  memcpy(out, prev, oldSz);
+	  free(prev);
+	}
+	    
+      if (oldSz < szOut )
+	{
+	  memcpy(&out[oldSz], outbuffer, zs.total_out - oldSz);
+	  out[szOut] = '\0';
+	}
     }
   while(ret == Z_OK);
 

@@ -29,17 +29,18 @@ void SyslogRecord::addblk(long idx, std::string& v)
 
 void SyslogRecord::value(std::string& jsonStr)
 {
-  int         lenStr;
+  int         zslen;
   std::string b64;
 
   b64.assign(m_blkA[0]);
   for (int i = 1; i < m_nblks; ++i)
     b64.append(m_blkA[i]);
   
-  unsigned char  *str = base64_decode(b64.c_str(), b64.size(), &lenStr);
-  std::string     zs  = reinterpret_cast<char*>(str);
+  unsigned char  *zs  = base64_decode(b64.c_str(), b64.size(), &zslen);
+  char           *str = uncompress_string(reinterpret_cast<char*>(zs), zslen);
+  jsonStr.assign(str);
   free(str);
-  jsonStr         = decompress_string(zs);
+  free(zs);
 }
 
 void SyslogRecord::prt(const char* name, Vstring& resultA)
