@@ -1,6 +1,4 @@
 #include "base64.h"
-#include "compress_string.h"
-#include "zstring.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,26 +21,25 @@ int main(int argc, char* argv[])
 
   printf("%d, %d, %s\n",lenJson, lenJ2, jstr);
 
-  int    zslen = 2*lenJson+1;
-  char * zs    = (char *) malloc(zslen);
-  compress_string(jsonStr, Z_BEST_COMPRESSION, zs, &zslen);
+  int zslen;
 
-  std::string s(zs,zslen);
-  std::string js = decompress_string(s);
+  char * zs    = compress_string(jsonStr, &zslen);
 
-  printf("%ld %%%s%%\n",strlen(js.c_str()), js.c_str());
+  char * js = uncompress_string(zs, zslen);
 
+
+  printf("%ld %%%s%%\n",strlen(js), js);
+
+  free(js);
 
   b64 = base64_encode(zs, zslen, &b64len);
 
   zs = (char *) base64_decode(b64, b64len, &zslen);
 
-  s.assign(zs, zslen);
-  js = decompress_string(s);
+  js = uncompress_string(zs,zslen);
   
-  printf("%ld %%%s%%\n",js.size(), js.c_str());
+  printf("%ld %%%s%%\n",strlen(js), js);
 
-  printf("js[16]: %s js[17]: %s\n", js.substr(16,1).c_str(), js.substr(17,1).c_str());
-
+  free(js);
   return 0;
 }

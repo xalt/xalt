@@ -9,7 +9,7 @@ char* compress_string(const char* str, int* lenOut)
   uLong ucompSize = strlen(str)+1;
   uLong compSize  = compressBound(ucompSize);
 
-  out = (char*) malloc(compSize);
+  char* out = (char*) malloc(compSize);
 
   compress((Bytef *) out, &compSize, (Bytef *) str, ucompSize);
   *lenOut = (int) compSize;
@@ -31,7 +31,7 @@ char* uncompress_string(const char* str, int len)
   zs.next_in  = (Bytef*)str;
   zs.avail_in = len;
 
-  int  ret;
+  int  ret, oldSz;
   char outbuffer[32768];
 
   int   szOut = 0;
@@ -49,9 +49,10 @@ char* uncompress_string(const char* str, int len)
       szOut += zs.total_out;
 
       prev   = out;
-      out    = (char *) malloc(szOut);
+      out    = (char *) malloc(szOut+1);
       memcpy(out, prev, oldSz);
       memcpy(&out[oldSz], outbuffer, zs.total_out);
+      out[szOut] = '\0';
     }
   while(ret == Z_OK);
 
@@ -62,5 +63,5 @@ char* uncompress_string(const char* str, int len)
       fprintf(stderr,"Exception during zlib decompression: (%d) %s\n",ret, zs.msg);
       exit(1);
     }
-  return outstring;
+  return out;
 }
