@@ -5,6 +5,7 @@
 #include <strings.h>
 #include <string.h>
 
+#include "xalt_quotestring.h"
 #include "epoch.h"
 #include "walkProcessTree.h"
 #include "Options.h"
@@ -169,6 +170,7 @@ int main(int argc, char* argv[], char* env[])
     }
 
   transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), resultFn);
+  xalt_quotestring_free();
   DEBUG0(stderr,"}\n\n");
   return 0;
 }
