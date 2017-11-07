@@ -26,7 +26,6 @@ CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild -I$(THIS_DIR)
 
 C_SRC       :=                             \
                base64.c                    \
-	       compress_string.c           \
                jsmn.c             	   \
                transmit.c             	   \
 	       xalt_c_utils.c              \
@@ -80,7 +79,7 @@ XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C 
                 parseLDD.C translate.C xalt_mysql_utils.C xalt_utils.C epoch.C walkProcessTree.C       \
                 compute_sha1.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  lex.xalt_env.c transmit.c xalt_c_utils.c \
-                compress_string.c base64.c
+                zstring.c base64.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
 XGA_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly
@@ -93,7 +92,7 @@ XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmap
                 xalt_mysql_utils.C Json.C parseLDTrace.C capture.C link_direct2db.C                  \
                 zstring.C  ConfigParser.C epoch.C compute_sha1.C
 XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c transmit.c xalt_c_utils.c base64.c     \
-                compress_string.c
+                zstring.c
 XGL_OBJS     := $(patsubst %.C, %.o, $(XGL_CXX_SRC)) $(patsubst %.c, %.o, $(XGL_C_SRC))
 
 XEL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_extract_linker

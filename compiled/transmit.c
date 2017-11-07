@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <zlib.h>
 #include "transmit.h"
-#include "compress_string.h"
+#include "zstring.h"
 #include "base64.h"
 #include "xalt_config.h"
 #include "xalt_c_utils.h"
@@ -52,11 +52,9 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
     {
-      int   lenJson = strlen(jsonStr);
-      int   zslen   = 2*lenJson+1;
-      char* zs      = malloc(zslen);
-      compress_string(jsonStr, Z_BEST_COMPRESSION, zs, &zslen);
+      int   zslen;
       int   b64len;
+      char* zs      = compress_string(jsonStr,&zslen);
       char* b64     = base64_encode(zs, zslen, &b64len);
       
       asprintf(&cmdline, "%s -t XALT_LOGGING_%s \"%s:%s\"\n",LOGGER, syshost, kind, b64);
@@ -68,11 +66,9 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "syslog") == 0)
     {
-      int   lenJson = strlen(jsonStr);
-      char* zs      = malloc(2*lenJson+1);
-      int   zslen;
-      compress_string(jsonStr, Z_BEST_COMPRESSION, zs, &zslen);
       int   sz;
+      int   zslen;
+      char* zs      = compress_string(jsonStr, &zslen);
       char* b64     = base64_encode(zs, zslen, &sz);
       
       int   blkSz   = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;

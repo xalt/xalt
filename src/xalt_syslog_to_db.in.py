@@ -375,7 +375,6 @@ def main():
   #----------------------------------------------------------
   # Count the number and sum the run_time for all scalar jobs
 
-  print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
   filter = Filter(100)
   pbar   = ProgressBar(maxVal=fnSz,fd=sys.stdout)
   for fn in fnA:
@@ -390,15 +389,10 @@ def main():
       lineNo += 1    
       count  += len(line)
       pbar.update(count)
-      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
       if (not ("XALT_LOGGING" in line)):
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
         continue
       try:
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
         t, done = parseSyslog.parse(line, args.syshost, old)
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
-        print("done: ",done, "idx:",t['idx'],"kind:",t['kind'])
       except Exception as e:
         print(e, file=sys.stderr)
         print("lineNo:",lineNo,"file:",fn,"line:",line, file=sys.stderr)
@@ -406,10 +400,8 @@ def main():
 
       
       if (not done or t['kind'] != "run"):
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
         continue
 
-      print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
 
       ##################################
       # If the json conversion fails,
@@ -417,18 +409,15 @@ def main():
       value = False
 
       try:
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
         value = json.loads(t['value'])
         filter.register(value)
       except Exception as e:
-        print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
         print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
         continue
 
     f.close()
   pbar.fini()
 
-  print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
   filter.report_stats()
   
   badsyslog   = 0

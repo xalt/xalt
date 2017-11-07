@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 char* compress_string(  const char* in, int* lenOut);
-char* decompress_string(const char* in, int* lenOut);
+char* uncompress_string(const char* in, int  lenOut);
 
 #ifdef __cplusplus
 }

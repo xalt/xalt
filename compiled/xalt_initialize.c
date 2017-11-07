@@ -106,14 +106,14 @@ static char *       ldLibPathArg     = NULL;
 
 #ifdef HAVE_WORKING_LIBUUID
 #  include <uuid/uuid.h>
-   void build_uuid_str(char * my_uuid_str)
+   static void build_uuid_str(char * my_uuid_str)
    {
      uuid_t uuid;
      uuid_generate_random(uuid);
      uuid_unparse_lower(uuid, my_uuid_str);
    }
 #else
-   void build_uuid_str(char * my_uuid_str)
+   static void build_uuid_str(char * my_uuid_str)
    {
      const char* uuid_proc_fn = "/proc/sys/kernel/random/uuid";
      char*       buf          = NULL;
@@ -448,7 +448,7 @@ void myfini()
   free(ldLibPathArg);
 }
 
-xalt_status reject(const char *path, const char * hostname)
+static xalt_status reject(const char *path, const char * hostname)
 {
   xalt_parser results;
   if (path[0] == '\0')
@@ -475,7 +475,7 @@ xalt_status reject(const char *path, const char * hostname)
   return XALT_PATH;
 }
 
-long compute_value(const char **envA)
+static long compute_value(const char **envA)
 {
   long          value = 0L;
   const char ** p;
@@ -493,7 +493,7 @@ long compute_value(const char **envA)
 
 /* Get full absolute path to executable */
 /* works for Linux and Mac OS X */
-void abspath(char * path, int sz)
+static void abspath(char * path, int sz)
 {
   path[0] = '\0';
   #ifdef __MACH__
@@ -508,7 +508,7 @@ void abspath(char * path, int sz)
   #endif
 }
 
-volatile double epoch()
+static volatile double epoch()
 {
   struct timeval tm;
   gettimeofday(&tm, 0);
