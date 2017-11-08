@@ -59,7 +59,9 @@ int main(int argc, char* argv[])
   int    num = 0;
   while (xalt_fgets_alloc(fp, &buf, &sz))
     num++;
+  free(buf);
   fclose(fp);
+  
 
   int          count  = 0;
   int          lnkCnt = 0;

@@ -6,6 +6,7 @@
 #include "transmit.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
+#include "build_uuid.h"
 
 char* build_xalt_dir(const char* user_name, const char* home_dir);
 
@@ -14,7 +15,7 @@ int main(int argc, char* argv[])
   int   len;
   char* run_uuid = NULL;
   char* syshost  = NULL;
-  
+  char  uuid_str[37];
 
   while ((c = getopt(argc,argv, "s:u:")) != -1)
     {
