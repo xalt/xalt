@@ -11,7 +11,6 @@
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
-#include "capture.h"
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
