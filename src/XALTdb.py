@@ -294,7 +294,6 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
 
-      
       translate(nameA, runT['envT'], runT['userT'], runT['userDT']);
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
@@ -383,4 +382,42 @@ class XALTdb(object):
       print(XALT_Stack.contents(),file=sys.stderr)
       print(query.encode("ascii","ignore"),file=sys.stderr)
       print ("run_to_db(): ",e,file=sys.stderr)
+      sys.exit (1)
+
+  def pkg_to_db(self, syshost, pkgT):
+
+    try:
+      conn   = self.connect()
+      cursor = conn.cursor()
+      query  = "USE "+self.db()
+      conn.query(query)
+      query  = "START TRANSACTION"
+      conn.query(query)
+
+      XALT_Stack.push("SYSHOST: "+syshost)
+
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
+      cursor.execute(query,[pkgT['xalt_run_uuid']])
+
+      if (cursor.rowcount > 0):
+        row         = cursor.fetchone()
+        run_id      = int(row[0])
+        program     = pkgT['program'][:12]
+        pkg_name    = pkgT['package_name'][:64]
+        pkg_version = pkgT['package_version'][:32]
+        pkg_file    = pkgT['package_file'][:10]
+        
+        query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
+        cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_file))
+        
+      v = XALT_Stack.pop()
+      carp("SYSHOST",v)
+      query = "COMMIT"
+      conn.query(query)
+      conn.close()
+
+    except Exception as e:
+      print(XALT_Stack.contents(),file=sys.stderr)
+      print(query.encode("ascii","ignore"),file=sys.stderr)
+      print ("pkg_to_db(): ",e,file=sys.stderr)
       sys.exit (1)

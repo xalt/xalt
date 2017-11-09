@@ -351,6 +351,7 @@ def main():
   rmapT  = Rmap(args.rmapD).reverseMapT()
 
   lnkCnt = 0
+  pkgCnt = 0
   runCnt = 0
   badCnt = 0
   count  = 0
@@ -467,6 +468,11 @@ def main():
             xalt.run_to_db(rmapT, value)
             XALT_Stack.pop()
             runCnt += 1
+        elif ( t['kind'] == "pkg" ):
+          XALT_Stack.push("pkg_to_db()")
+          xalt.pkg_to_db(t['syshost'], value)
+          XALT_Stack.pop()
+          pkgCnt += 1
         else:
           print("Error in xalt_syslog_to_db", file=sys.stderr)
         XALT_Stack.pop()

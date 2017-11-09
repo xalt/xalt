@@ -376,8 +376,8 @@ test/check_entries_db.py,119
 class CmdLineOptions(50,1826
   def __init__(53,1894
   def execute(57,1951
-def count_rows(69,2782
-def main(80,3028
+def count_rows(70,2920
+def main(81,3166
 
 build.rtm,309
 PKG_VERSION=23,1082
@@ -1700,6 +1700,10 @@ int a(2,19
 rt/end2end/c.c,12
 int c(2,19
 
+rt/end2end/try_uuid.c,47
+void rtm_build_uuid_str(4,43
+int main(10,177
+
 rt/end2end/omp_pi.f90,38
     subroutine reportresults(88,2549
 
@@ -1738,7 +1742,7 @@ class DirectDB(205,5836
   def __init__(210,5946
   def save(217,6193
 
-src/XALTdb.py,303
+src/XALTdb.py,330
 def __LINE__(44,1648
 def __FILE__(50,1768
 def convertToTinyInt(56,1947
@@ -1751,6 +1755,7 @@ class XALTdb(72,2275
   def link_to_db(151,4836
   def load_objects(234,7980
   def run_to_db(280,9892
+  def pkg_to_db(387,14490
 
 src/build_parser_routine.py,125
 class CmdLineOptions(28,1158
@@ -1781,11 +1786,11 @@ LINKLINE_OUT=189,5144
     RESULT=196,5353
     RESULT=198,5431
   XALT_LIB_DIR=202,5527
-COMP_T=215,6132
-  OBJ=226,6414
-    LIBUUID=259,7351
-EXEC=270,7596
-SHA1SUM_EXEC=278,7770
+COMP_T=215,6189
+  OBJ=226,6471
+    LIBUUID=259,7408
+EXEC=270,7653
+SHA1SUM_EXEC=278,7827
 
 src/xalt_job_id_db.conf,10
 host 2,8
@@ -1955,6 +1960,10 @@ export LD_LIBRARY_PATH=3,13
 compiled/parseJsonStr.h,28
 #define PARSEJSONSTR_H2,23
 
+compiled/build_uuid.c,54
+   void build_uuid(11,220
+   void build_uuid(18,370
+
 compiled/buildRmapT.C,24
 void buildRmapT(13,237
 
@@ -2006,6 +2015,10 @@ void update_xalt_run_record(656,20751
 void run_direct2db(719,22480
 void run_direct2db(776,24371
 
+compiled/test_record_pkg.C,41
+std::string& trim(5,61
+int main(12,219
+
 compiled/xalt_configuration_report.C,68
 const int dateSZ=14,264
 void displayArray(16,287
@@ -2014,88 +2027,81 @@ int main(28,597
 compiled/extractXALTRecord.C,29
 void extractXALTRecord(5,75
 
-compiled/xalt_types.h,957
+compiled/xalt_types.h,844
 #define XALT_TYPES_H2,21
-#define HERE 4,43
-#define DEBUG0(6,101
-#define DEBUG1(7,163
-#define DEBUG2(8,230
-#define DEBUG3(9,302
-typedef std::vector<std::string>                    Vstring;18,491
-typedef std::unordered_set<std::string>             Set;19,552
-typedef std::unordered_map<std::string,std::string20,609
-typedef std::unordered_map<std::string,std::string> Table;20,609
-typedef std::unordered_map<const char*char21,668
-typedef std::unordered_map<const char*,const char*> CTable;21,668
-typedef std::unordered_map<std::string,std::string22,728
-typedef std::unordered_map<std::string,double>      DTable;22,728
-typedef unsigned int                                uint;23,788
-struct Libpair25,847
-  Libpair(27,864
-  std::string lib;30,962
-  std::string sha1;31,981
-struct ProcessTree34,1005
-  ProcessTree(36,1026
-  std::string name;39,1196
-  std::string path;40,1216
-  Vstring     cmdlineA;41,1236
-  pid_t       pid;42,1260
+typedef std::vector<std::string>                    Vstring;12,183
+typedef std::unordered_set<std::string>             Set;13,244
+typedef std::unordered_map<std::string,std::string14,301
+typedef std::unordered_map<std::string,std::string> Table;14,301
+typedef std::unordered_map<const char*char15,360
+typedef std::unordered_map<const char*,const char*> CTable;15,360
+typedef std::unordered_map<std::string,std::string16,420
+typedef std::unordered_map<std::string,double>      DTable;16,420
+typedef unsigned int                                uint;17,480
+struct Libpair19,539
+  Libpair(21,556
+  std::string lib;24,654
+  std::string sha1;25,673
+struct ProcessTree28,697
+  ProcessTree(30,718
+  std::string name;33,888
+  std::string path;34,908
+  Vstring     cmdlineA;35,928
+  pid_t       pid;36,952
 
-compiled/xalt_initialize.c,2442
+compiled/xalt_initialize.c,2405
 #define  _GNU_SOURCE27,1220
-#define DATESZ 49,1692
-typedef enum { SPSR=51,1715
-typedef enum { SPSR=1, KEEP=51,1715
-typedef enum { SPSR=1, KEEP=2, SKIP=51,1715
-typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;51,1715
-typedef enum { XALT_SUCCESS,53,1768
-typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF,53,1768
-typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE,53,1768
-typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,53,1768
-               XALT_MPI_RANK,54,1850
-               XALT_MPI_RANK, XALT_HOSTNAME,54,1850
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH,54,1850
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR,54,1850
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO}XALT_MPI_SIZE_ZERO54,1850
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO} xalt_status;54,1850
-static const char * xalt_reasonA[xalt_reasonA56,1959
-#define STR(77,2745
-#define StR1_(78,2771
-static int          countA[countA80,2792
-static char         uuid_str[uuid_str81,2823
-static char         exec_path[exec_path82,2857
-static char *       usr_cmdline;83,2898
-static const char * my_syshost;84,2931
-static xalt_status  reject_flag	86,2964
-static pid_t        ppid	87,3017
-static int          errfd	88,3052
-static double       start_time	89,3089
-static double       end_time	90,3132
-static long         my_rank	91,3173
-static long         my_size	92,3212
-static int          xalt_tracing 93,3251
-static int          xalt_run_tracing 94,3293
-static int          background	95,3335
-static char *       pathArg	96,3376
-static char *       ldLibPathArg 97,3417
-#define HERE 99,3463
-#define DEBUG0(101,3522
-#define DEBUG1(102,3589
-#define DEBUG2(103,3661
-#define DEBUG3(104,3738
-#define DEBUG4(105,3820
-   void build_uuid_str(109,3961
-   void build_uuid_str(116,4115
-void myinit(136,4602
-void myfini(415,13470
-xalt_status reject(451,14631
-long compute_value(478,15267
-void abspath(496,15593
-volatile double epoch(511,15912
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(520,16043
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(521,16159
-  __attribute__((section(".init_array"))) typeof(523,16281
-  __attribute__((section(".fini_array"))) typeof(524,16356
+#define DATESZ 50,1716
+typedef enum { SPSR=52,1739
+typedef enum { SPSR=1, KEEP=52,1739
+typedef enum { SPSR=1, KEEP=2, SKIP=52,1739
+typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;52,1739
+typedef enum { XALT_SUCCESS,54,1792
+typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF,54,1792
+typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE,54,1792
+typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,54,1792
+               XALT_MPI_RANK,55,1874
+               XALT_MPI_RANK, XALT_HOSTNAME,55,1874
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH,55,1874
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR,55,1874
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO}XALT_MPI_SIZE_ZERO55,1874
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO} xalt_status;55,1874
+static const char * xalt_reasonA[xalt_reasonA57,1983
+#define STR(78,2769
+#define StR1_(79,2795
+static int          countA[countA81,2816
+static char         uuid_str[uuid_str82,2847
+static char         exec_path[exec_path83,2881
+static char *       usr_cmdline;84,2922
+static const char * my_syshost;85,2955
+static xalt_status  reject_flag	87,2988
+static pid_t        ppid	88,3041
+static int          errfd	89,3076
+static double       start_time	90,3113
+static double       end_time	91,3156
+static long         my_rank	92,3197
+static long         my_size	93,3236
+static int          xalt_tracing 94,3275
+static int          xalt_run_tracing 95,3317
+static int          background	96,3359
+static char *       pathArg	97,3400
+static char *       ldLibPathArg 98,3441
+#define HERE 100,3487
+#define DEBUG0(102,3546
+#define DEBUG1(103,3613
+#define DEBUG2(104,3685
+#define DEBUG3(105,3762
+#define DEBUG4(106,3844
+void myinit(108,3932
+void myfini(388,12823
+static xalt_status reject(424,13984
+static long compute_value(451,14627
+static void abspath(469,14960
+static volatile double epoch(484,15286
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(493,15424
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(494,15540
+  __attribute__((section(".init_array"))) typeof(496,15662
+  __attribute__((section(".fini_array"))) typeof(497,15737
 
 compiled/ConfigParser.h,304
 #define CONFIGPARSER_H2,23
@@ -2158,12 +2164,12 @@ void insert_objects(63,1335
 MYSQL* xalt_open_mysql_connection(352,11179
 
 compiled/f2db.C,170
-int buildUserTable(22,434
-int findFilesInDir(64,1422
-void removeFiles(85,1906
-int link_json_fileA_to_db(91,2000
-int run_json_fileA_to_db(123,2868
-int main(161,3982
+int buildUserTable(23,460
+int findFilesInDir(65,1448
+void removeFiles(86,1932
+int link_json_fileA_to_db(92,2026
+int run_json_fileA_to_db(124,2894
+int main(162,4008
 
 compiled/f2db_Options.C,33
 f2db_Options::f2db_Options(6,86
@@ -2215,6 +2221,12 @@ compiled/Options.C,81
 double convert_double(10,165
 long convert_long(24,410
 Options::Options(38,653
+
+compiled/zstring.c,103
+#define BUFFSZ 7,99
+#define MAX(8,120
+char* compress_string(10,162
+char* uncompress_string(62,1158
 
 compiled/ProgressBar.C,141
 int setWidth(7,89
@@ -2270,7 +2282,7 @@ Process::Process(Process10,176
 void Process::cmdline(cmdline42,910
 std::string& Process::exe(exe67,1383
 
-compiled/Makefile.in,4044
+compiled/Makefile.in,4568
 THIS_DIR 1,0
 VPATH 2,35
 CXX 3,57
@@ -2288,93 +2300,118 @@ CF_INIT 23,584
 CXXFLAGS 24,610
 CFLAGS 25,712
 C_SRC 27,774
-CXX_SRC 37,1131
-XRS_EXEC 76,2682
-XRS_CXX_SRC 77,2739
-XRS_C_SRC 81,3086
-XRS_OBJS 83,3234
-XGA_EXEC 85,3323
-XGA_CXX_SRC 86,3383
-XGA_C_SRC 87,3439
-XGA_OBJS 88,3489
-XGL_EXEC 90,3578
-XGL_CXX_SRC 91,3638
-XGL_C_SRC 94,3909
-XGL_OBJS 95,4009
-XEL_EXEC 97,4098
-XEL_CXX_SRC 98,4155
-XEL_C_SRC 99,4210
-XEL_OBJS 100,4264
-XSL_EXEC 102,4353
-XSL_CXX_SRC 103,4409
-XSL_C_SRC 104,4495
-XSL_OBJS 105,4558
-F2DB_EXEC 107,4647
-F2DB_CXX_SRC 108,4697
-F2DB_C_SRC 111,4928
-F2DB_OBJS 112,4998
-S2DB_EXEC 114,5089
-S2DB_CXX_SRC 115,5141
-S2DB_C_SRC 119,5476
-S2DB_OBJS 120,5546
-XCR_EXEC 122,5637
-XCR_CXX_SRC 123,5696
-XCR_C_SRC 124,5755
-XCR_OBJS 125,5791
-XER_EXEC 127,5895
-XER_CXX_SRC 128,5948
-XER_OBJS 129,6008
-%.d:%.d133,6064
-        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[136,6190
-%.d:%.d139,6275
-        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[142,6401
-all:all145,6486
-ECHO:ECHO153,6945
-$(XRS_EXEC)$(XRS_EXEC158,7015
-$(XGA_EXEC)$(XGA_EXEC161,7128
-$(XGL_EXEC)$(XGL_EXEC164,7199
-$(XEL_EXEC)$(XEL_EXEC167,7310
-$(XSL_EXEC)$(XSL_EXEC170,7382
-$(XCR_EXEC)$(XCR_EXEC173,7454
-$(XER_EXEC)$(XER_EXEC176,7528
-$(F2DB_EXEC)$(F2DB_EXEC179,7602
-$(S2DB_EXEC)$(S2DB_EXEC182,7697
-$(DESTDIR)$(LIBEXEC)/xalt_realpath:$(DESTDIR)$(LIBEXEC)/xalt_realpath185,7792
-$(DESTDIR)$(LIBEXEC)/xalt_epoch:$(DESTDIR)$(LIBEXEC)/xalt_epoch188,7890
-$(DESTDIR)$(LIBEXEC)/xalt_syshost:$(DESTDIR)$(LIBEXEC)/xalt_syshost191,7990
-lex.xalt_env.c:lex.xalt_env.c194,8123
-lex.xalt_env.o:lex.xalt_env.o197,8203
-lex.__XALT_pathR.c:lex.__XALT_pathR.c200,8280
-lex.__XALT_pathL.c:lex.__XALT_pathL.c203,8369
-lex.__XALT_hostR.c:lex.__XALT_hostR.c206,8458
-lex.__XALT_hostL.c:lex.__XALT_hostL.c209,8551
-xalt_syshost.o:xalt_syshost.o212,8644
-xalt_syshost_main.o:xalt_syshost_main.o215,8708
-build_init:build_init219,8855
-build_init_32bit_no:build_init_32bit_no225,9359
-build_init_32bit_yes:build_init_32bit_yes227,9381
-$(DESTDIR)$(LIB64)/lex.__XALT_path.o:$(DESTDIR)$(LIB64)/lex.__XALT_path.o232,9747
-$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o234,9909
-$(DESTDIR)$(LIB64)/lex.__XALT_host.o:$(DESTDIR)$(LIB64)/lex.__XALT_host.o236,10082
-$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o238,10244
-$(DESTDIR)$(LIB64)/xalt_quotestring.o:$(DESTDIR)$(LIB64)/xalt_quotestring.o240,10417
-$(DESTDIR)$(LIB64)/xalt_syshost.o:$(DESTDIR)$(LIB64)/xalt_syshost.o242,10544
-$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o:$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o244,10661
-$(DESTDIR)$(LIB64)/xalt_initialize.o:$(DESTDIR)$(LIB64)/xalt_initialize.o246,10788
-$(DESTDIR)$(LIB64)/xalt_initialize_preload.o:$(DESTDIR)$(LIB64)/xalt_initialize_preload.o248,10958
-$(DESTDIR)$(LIB)/lex.__XALT_path_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_32.o252,11148
-$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o254,11294
-$(DESTDIR)$(LIB)/lex.__XALT_host_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_32.o256,11451
-$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o258,11597
-$(DESTDIR)$(LIB)/xalt_quotestring_32.o:$(DESTDIR)$(LIB)/xalt_quotestring_32.o260,11754
-$(DESTDIR)$(LIB)/xalt_syshost_32.o:$(DESTDIR)$(LIB)/xalt_syshost_32.o262,11875
-$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o:$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o264,11985
-$(DESTDIR)$(LIB)/xalt_initialize_32.o:$(DESTDIR)$(LIB)/xalt_initialize_32.o266,12105
-$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o:$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o268,12278
-$(DESTDIR)$(LIB)/libxalt_init.so:$(DESTDIR)$(LIB)/libxalt_init.so270,12461
-$(DESTDIR)$(LIB64)/libxalt_init.so:$(DESTDIR)$(LIB64)/libxalt_init.so279,13008
-neat:neat287,13579
-clean:clean289,13595
+CXX_SRC 39,1221
+TRP_EXEC 79,2861
+TRP_CXX_SRC 80,2914
+TRP_OBJS 81,2958
+XRS_EXEC 83,3012
+XRS_CXX_SRC 84,3069
+XRS_C_SRC 88,3415
+XRS_OBJS 90,3555
+XGA_EXEC 92,3644
+XGA_CXX_SRC 93,3704
+XGA_C_SRC 94,3760
+XGA_OBJS 95,3810
+XGL_EXEC 97,3899
+XGL_CXX_SRC 98,3959
+XGL_C_SRC 101,4230
+XGL_OBJS 103,4359
+XEL_EXEC 105,4448
+XEL_CXX_SRC 106,4505
+XEL_C_SRC 107,4560
+XEL_OBJS 108,4614
+XSL_EXEC 110,4703
+XSL_CXX_SRC 111,4759
+XSL_C_SRC 112,4845
+XSL_OBJS 113,4908
+F2DB_EXEC 115,4997
+F2DB_CXX_SRC 116,5047
+F2DB_C_SRC 119,5278
+F2DB_OBJS 120,5363
+S2DB_EXEC 122,5454
+S2DB_CXX_SRC 123,5506
+S2DB_C_SRC 127,5841
+S2DB_OBJS 128,5911
+XCR_EXEC 130,6002
+XCR_CXX_SRC 131,6061
+XCR_C_SRC 132,6120
+XCR_OBJS 133,6156
+XER_EXEC 135,6260
+XER_CXX_SRC 136,6313
+XER_OBJS 137,6373
+XRP_EXEC 139,6427
+XRP_C_SRC 140,6480
+XRP_OBJS 141,6591
+%.d:%.d145,6645
+        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[148,6771
+%.d:%.d151,6856
+        sed 's,\($*\)\.o[ sed 's,\($*\)\.o[154,6982
+all:all157,7067
+ECHO:ECHO166,7552
+$(TRP_EXEC)$(TRP_EXEC171,7622
+$(XRP_EXEC)$(XRP_EXEC174,7695
+$(XRS_EXEC)$(XRS_EXEC176,7780
+$(XGA_EXEC)$(XGA_EXEC179,7893
+$(XGL_EXEC)$(XGL_EXEC182,7964
+$(XEL_EXEC)$(XEL_EXEC185,8075
+$(XSL_EXEC)$(XSL_EXEC188,8147
+$(XCR_EXEC)$(XCR_EXEC191,8219
+$(XER_EXEC)$(XER_EXEC194,8293
+$(F2DB_EXEC)$(F2DB_EXEC197,8367
+$(S2DB_EXEC)$(S2DB_EXEC200,8462
+$(DESTDIR)$(LIBEXEC)/xalt_realpath:$(DESTDIR)$(LIBEXEC)/xalt_realpath203,8557
+$(DESTDIR)$(LIBEXEC)/xalt_epoch:$(DESTDIR)$(LIBEXEC)/xalt_epoch206,8655
+$(DESTDIR)$(LIBEXEC)/xalt_syshost:$(DESTDIR)$(LIBEXEC)/xalt_syshost209,8755
+lex.xalt_env.c:lex.xalt_env.c212,8888
+lex.xalt_env.o:lex.xalt_env.o215,8968
+lex.__XALT_pathR.c:lex.__XALT_pathR.c218,9045
+lex.__XALT_pathL.c:lex.__XALT_pathL.c221,9134
+lex.__XALT_hostR.c:lex.__XALT_hostR.c224,9223
+lex.__XALT_hostL.c:lex.__XALT_hostL.c227,9316
+xalt_syshost.o:xalt_syshost.o230,9409
+xalt_syshost_main.o:xalt_syshost_main.o233,9473
+build_init:build_init237,9620
+build_init_32bit_no:build_init_32bit_no244,10170
+build_init_32bit_yes:build_init_32bit_yes246,10192
+$(DESTDIR)$(LIB64)/lex.__XALT_path.o:$(DESTDIR)$(LIB64)/lex.__XALT_path.o252,10591
+$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o254,10740
+$(DESTDIR)$(LIB64)/lex.__XALT_host.o:$(DESTDIR)$(LIB64)/lex.__XALT_host.o256,10900
+$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o:$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o258,11049
+$(DESTDIR)$(LIB64)/xalt_quotestring.o:$(DESTDIR)$(LIB64)/xalt_quotestring.o260,11209
+$(DESTDIR)$(LIB64)/xalt_syshost.o:$(DESTDIR)$(LIB64)/xalt_syshost.o262,11323
+$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o:$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o264,11427
+$(DESTDIR)$(LIB64)/build_uuid.o:$(DESTDIR)$(LIB64)/build_uuid.o266,11541
+$(DESTDIR)$(LIB64)/build_uuid_preload.o:$(DESTDIR)$(LIB64)/build_uuid_preload.o268,11716
+$(DESTDIR)$(LIB64)/xalt_initialize.o:$(DESTDIR)$(LIB64)/xalt_initialize.o270,11902
+$(DESTDIR)$(LIB64)/xalt_initialize_preload.o:$(DESTDIR)$(LIB64)/xalt_initialize_preload.o272,12059
+$(DESTDIR)$(LIB)/lex.__XALT_path_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_32.o276,12236
+$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o278,12369
+$(DESTDIR)$(LIB)/lex.__XALT_host_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_32.o280,12513
+$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o:$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o282,12646
+$(DESTDIR)$(LIB)/xalt_quotestring_32.o:$(DESTDIR)$(LIB)/xalt_quotestring_32.o284,12790
+$(DESTDIR)$(LIB)/xalt_syshost_32.o:$(DESTDIR)$(LIB)/xalt_syshost_32.o286,12911
+$(DESTDIR)$(LIB)/build_uuid_32.o:$(DESTDIR)$(LIB)/build_uuid_32.o288,13021
+$(DESTDIR)$(LIB)/build_uuid_preload_32.o:$(DESTDIR)$(LIB)/build_uuid_preload_32.o290,13202
+$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o:$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o292,13394
+$(DESTDIR)$(LIB)/xalt_initialize_32.o:$(DESTDIR)$(LIB)/xalt_initialize_32.o294,13514
+$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o:$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o296,13687
+$(DESTDIR)$(LIB)/libxalt_init.so:$(DESTDIR)$(LIB)/libxalt_init.so298,13870
+$(DESTDIR)$(LIB64)/libxalt_init.so:$(DESTDIR)$(LIB64)/libxalt_init.so308,14510
+neat:neat317,15151
+clean:clean319,15167
+
+compiled/xalt_record_pkg.c,268
+#define _GNU_SOURCE1,0
+#define DATESZ 14,260
+#define HERE 15,282
+#define DEBUG0(16,339
+#define DEBUG1(17,406
+#define DEBUG2(18,478
+#define DEBUG3(19,555
+#define DEBUG4(20,637
+static volatile double epoch(22,725
+int main(31,914
+char* build_xalt_dir(162,3925
 
 compiled/ConfigParser.C,66
 void trim(11,204
@@ -2385,7 +2422,7 @@ compiled/parseSyslog.h,152
 typedef std::unordered_map<std::string,std::string6,95
 typedef std::unordered_map<std::string, SyslogRecord> RecordT;6,95
 
-compiled/xalt_obfuscate.h,1265
+compiled/xalt_obfuscate.h,1300
 #define XALT_OBFUSCATE2,23
 #define PASTE2(4,47
 #define PaStE2(5,82
@@ -2395,7 +2432,7 @@ compiled/xalt_obfuscate.h,1265
 #define UNDERSCORE 13,223
 #define MY_NAME 14,252
 #define abspath 17,323
-#define build_uuid_str 18,403
+#define build_uuid 18,403
 #define compute_value 19,483
 #define hostname 20,563
 #define myfini 21,643
@@ -2407,31 +2444,32 @@ compiled/xalt_obfuscate.h,1265
 #define hostname_parser_cleanup 27,1123
 #define xalt_fgets_alloc 28,1203
 #define xalt_quotestring 29,1280
-#define xalt_syshost 30,1357
-#define xalt_unquotestring 31,1434
-#define hostnameA 35,1521
-#define hostnameSz 36,1601
-#define pathPatternA 37,1681
-#define pathPatternSz 38,1761
-#define envPatternA 39,1841
-#define envPatternSz 40,1921
-#define background 42,2002
-#define countA 43,2082
-#define end_time 44,2162
-#define errfd 45,2242
-#define exec_path 46,2322
-#define ldLibPathArg 47,2402
-#define my_rank 48,2482
-#define my_size 49,2562
-#define my_syshost 50,2642
-#define pathArg 51,2722
-#define ppid 52,2802
-#define reject_flag 53,2882
-#define start_time 54,2962
-#define usr_cmdline 55,3042
-#define uuid_str 56,3122
-#define xalt_reasonA 57,3202
-#define xalt_tracing 58,3282
+#define xalt_quotestring_free 30,1357
+#define xalt_syshost 31,1434
+#define xalt_unquotestring 32,1511
+#define hostnameA 36,1598
+#define hostnameSz 37,1678
+#define pathPatternA 38,1758
+#define pathPatternSz 39,1838
+#define envPatternA 40,1918
+#define envPatternSz 41,1998
+#define background 43,2079
+#define countA 44,2159
+#define end_time 45,2239
+#define errfd 46,2319
+#define exec_path 47,2399
+#define ldLibPathArg 48,2479
+#define my_rank 49,2559
+#define my_size 50,2639
+#define my_syshost 51,2719
+#define pathArg 52,2799
+#define ppid 53,2879
+#define reject_flag 54,2959
+#define start_time 55,3039
+#define usr_cmdline 56,3119
+#define uuid_str 57,3199
+#define xalt_reasonA 58,3279
+#define xalt_tracing 59,3359
 
 compiled/xalt_env_parser.template,178
 static char * strbuf 5,40
@@ -2449,8 +2487,8 @@ const static unsigned char unb64[unb6438,1264
 char* base64_encode(70,2928
 unsigned char* base64_decode(120,4334
 
-compiled/xalt_c_utils.c,21
-int isDirectory(1,0
+compiled/xalt_c_utils.c,22
+int isDirectory(5,66
 
 compiled/xalt_c_utils.h,28
 #define XALT_C_UTILS_H2,23
@@ -2511,6 +2549,12 @@ void link_direct2db(466,15682
 compiled/xalt_epoch.C,15
 int main(4,58
 
+compiled/build_uuid.h,26
+#define BUILD_UUID_H2,21
+
+compiled/tb64.C,17
+int main(10,157
+
 compiled/xalt_env_parser.h,31
 #define XALT_ENV_PARSER_H2,26
 
@@ -2521,7 +2565,7 @@ compiled/parseLDTrace.C,110
 ArgV            argV;9,171
 void addPath2Set(11,194
 void parseLDTrace(22,417
-void readFunctionList(95,2225
+void readFunctionList(94,2231
 
 compiled/Process.h,235
 #define PROCESS_H2,18
@@ -2543,6 +2587,14 @@ compiled/xalt_mysql_utils.h,90
 #  undef min7,119
 #  undef max8,132
 #  undef test9,145
+
+compiled/xalt_base_types.h,138
+#define XALT_BASE_TYPES_H2,26
+#define HERE 4,53
+#define DEBUG0(6,111
+#define DEBUG1(7,173
+#define DEBUG2(8,240
+#define DEBUG3(9,312
 
 compiled/Json.C,455
 Json::Json(Json6,88
@@ -2568,17 +2620,11 @@ void buildUserT(14,234
 compiled/run_direct2db.h,29
 #define RUN_DIRECT2DB_H2,24
 
-compiled/compress_string.c,26
-int compress_string(7,90
-
 compiled/xalt_generate_linkdata.C,17
 int main(20,385
 
 compiled/transmit.h,24
 #define TRANSMIT_H2,19
-
-compiled/zstring.C,37
-std::string decompress_string(8,155
 
 compiled/parseLDD.C,51
 ArgV            argV;10,161
@@ -2601,8 +2647,8 @@ class f2db_Options6,66
 
 compiled/transmit.c,79
 #define  _GNU_SOURCE1,0
-const int syslog_msg_sz 14,266
-void transmit(16,308
+const int syslog_msg_sz 16,307
+void transmit(18,349
 
 compiled/s2db_Options.h,458
 #define S2DB_OPTIONS_H2,23
@@ -2663,7 +2709,7 @@ SyslogRecord::SyslogRecord(8,108
 void SyslogRecord::init(init12,229
 void SyslogRecord::addblk(addblk24,518
 void SyslogRecord::value(value30,608
-void SyslogRecord::prt(prt45,943
+void SyslogRecord::prt(prt46,991
 
 compiled/ProgressBar.h,287
 #define PROGRESSBAR_H2,22
@@ -2683,8 +2729,8 @@ compiled/s2db_Options.C,53
 s2db_Options::s2db_Options(7,144
 
 compiled/xalt_run_submission.C,40
-#define DATESZ 20,377
-int main(22,397
+#define DATESZ 20,386
+int main(22,406
 
 compiled/link_direct2db.h,30
 #define LINK_DIRECT2DB_H2,25
@@ -2693,14 +2739,15 @@ compiled/xalt_extract_linker.C,45
 void extract_linker(9,127
 int main(52,1205
 
-compiled/xalt_quotestring.c,241
+compiled/xalt_quotestring.c,284
 #define HERE 6,108
 static const char *qcharA[qcharA10,242
 static const char escCharA[escCharA16,759
-static char * buff 19,914
-static unsigned int sz 20,941
-const char* xalt_quotestring(23,971
-const char * xalt_unquotestring(90,2647
+static char*        buff 19,914
+static unsigned int sz 20,947
+const char* xalt_quotestring(23,979
+const char * xalt_unquotestring(90,2655
+void xalt_quotestring_free(195,5629
 
 compiled/xalt_hostname_parser.h,36
 #define XALT_HOSTNAME_PARSER_H2,31
@@ -2727,9 +2774,6 @@ class Json6,56
 compiled/epoch.h,21
 #define EPOCH_H2,16
 
-compiled/compress_string.h,31
-#define COMPRESS_STRING_H2,26
-
 compiled/xalt_quotestring.h,27
 #define QUOTESTRING_H2,22
 
@@ -2744,6 +2788,8 @@ the License,107,4482
 the License, or 107,4482
 
 compiled/run.vmijo.zzz.json,0
+
+compiled,0
 
 src/xalt_rmap_lmap.in.py,0
 

@@ -111,7 +111,7 @@ int link_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
 
       while(xalt_fgets_alloc(fp, &buf, &sz))
         jsonStr.append(buf);
-      free(buf);
+      free(buf); sz = 0; buf = NULL;
 
       parseLinkJsonStr(it.c_str(), jsonStr, linkLineA, resultT, libA, funcSet);
 
@@ -148,7 +148,7 @@ int run_json_fileA_to_db(f2db_Options& options, Table& rmapT, Vstring& fileA)
         
       while(xalt_fgets_alloc(fp, &buf, &sz))
         jsonStr.append(buf);
-      free(buf);
+      free(buf); sz = 0; buf = NULL;
 
       parseRunJsonStr(it.c_str(), jsonStr, usr_cmdline, hash_id, envT,
                       userT, userDT, recordT, libA, ptA);

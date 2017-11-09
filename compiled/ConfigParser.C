@@ -60,5 +60,5 @@ ConfigParser::ConfigParser(const char * fn)
           free(passwd);
         }
     }
-  free(buf);
+  free(buf); sz = 0; buf = NULL;
 }

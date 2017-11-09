@@ -306,9 +306,10 @@ def main():
         CREATE TABLE IF NOT EXISTS `xalt_pkg` (
           `pkg_id`        bigint(20)     unsigned NOT NULL auto_increment,
           `run_id`        int(11)        unsigned NOT NULL,
+          `program`       varchar(12)             NOT NULL,
           `pkg_name`      varchar(64)             NOT NULL,
-          `pkg_version`   varchar(32)             NOT NULL,
-          `pkg_file`      varchar(1024)           NOT NULL,
+          `pkg_version`   varchar(32)                     ,
+          `pkg_file`      varchar(1024)                   ,
           PRIMARY KEY (`pkg_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_bin AUTO_INCREMENT=1

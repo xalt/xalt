@@ -43,10 +43,13 @@ int main(int argc, char* argv[])
   cmd.append(" xalt_run_uuid ");
   cmd.append(run_uuid);
   cmd.append(" package_name acme");
-  cmd.append(" package_verion 1.0");
+  cmd.append(" package_version 1.0");
   cmd.append(" package_file /A/B/acme/1.0");
   
-  printf("(2) %s\n",cmd.c_str());
+  printf("%s\n",cmd.c_str());
     
+  system(cmd.c_str());
+
+
   return 0;
 }

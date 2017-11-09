@@ -119,9 +119,13 @@ int main(int argc, char* argv[])
 
   char* resultFn = NULL;
   
+  char  uuid_str[37];
+  build_uuid(uuid_str);
+  //          1         2   |      3
+  //0123456789 123456789 123456789 123456789 
+  //3de2c9d8-e857-4482-9aa4-4979620380fc	  
   if (strcasecmp(transmission, "file") == 0)
     {
-      char  uuid_str[37];
       char  date_str[DATESZ];
       char* c_home = getenv("HOME");
       char* c_user = getenv("USER");
@@ -132,10 +136,6 @@ int main(int argc, char* argv[])
 	  time_t now = epoch();
 	  strftime(date_str, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&now));
 	  
-	  build_uuid(uuid_str);
-          //          1         2   |      3
-          //0123456789 123456789 123456789 123456789 
-	  //3de2c9d8-e857-4482-9aa4-4979620380fc	  
 	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_dir, syshost,date_str,run_uuid,&uuid_str[24]);
 	  DEBUG1(stderr,"resultFn: %s\n",resultFn);
 
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
     }
   
   char* key = NULL;
-  asprintf(&key,"key_%s",run_uuid);
+  asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
 
   transmit(transmission, json_str, "pkg", key, syshost, resultFn);
 
