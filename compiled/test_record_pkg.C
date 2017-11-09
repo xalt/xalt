@@ -1,7 +1,13 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include "capture.h"
+
+std::string& trim(std::string& s, const char* t = " \t\n\r\f\v")
+{
+  s.erase(0, s.find_first_not_of(t));
+  s.erase(s.find_last_not_of(t) + 1);
+  return s;
+}
 
 int main(int argc, char* argv[])
 {
@@ -18,18 +24,16 @@ int main(int argc, char* argv[])
   char* xaltDir = argv[1];
 
   std::string cmd;
-  std::string syshost;
 
   cmd.assign(xaltDir);
   cmd.append("/libexec/xalt_syshost");
 
   Vstring v;
     
-    
-
   capture(cmd,v);
   std::string syshost = v[0];
-
+  trim(syshost);
+  
   cmd.assign(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -s ");
   cmd.append(syshost);
@@ -42,7 +46,7 @@ int main(int argc, char* argv[])
   cmd.append(" package_verion 1.0");
   cmd.append(" package_file /A/B/acme/1.0");
   
-  printf("%s\n",cmd.c_str());
+  printf("(2) %s\n",cmd.c_str());
     
   return 0;
 }

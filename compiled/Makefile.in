@@ -36,7 +36,8 @@ C_SRC       :=                             \
                xalt_quotestring.c 	   \
                xalt_realpath.c
 
-CXX_SRC     := ConfigParser.C         	   \
+CXX_SRC     :=                             \
+               ConfigParser.C         	   \
                Json.C                 	   \
                Options.C              	   \
                Process.C              	   \
@@ -59,6 +60,7 @@ CXX_SRC     := ConfigParser.C         	   \
                parseSyslog.C          	   \
                run_direct2db.C        	   \
                s2db_Options.C         	   \
+               test_record_pkg.C           \
                translate.C            	   \
 	       walkProcessTree.C           \
 	       xalt_configuration_report.C \
@@ -74,6 +76,9 @@ CXX_SRC     := ConfigParser.C         	   \
                zstring.C
 
 
+TRP_EXEC     := $(DESTDIR)$(LIBEXEC)/test_record_pkg
+TRP_CXX_SRC  := test_record_pkg.C capture.C
+TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
 
 XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C            \
@@ -149,24 +154,25 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
-all: ECHO $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC) $(XSL_EXEC) $(F2DB_EXEC) $(S2DB_EXEC) $(XRP_EXEC) \
-                build_init build_init_32bit_$(HAVE_32BIT)       \
-	        $(DESTDIR)$(LIBEXEC)/xalt_syshost               \
-                $(DESTDIR)$(LIBEXEC)/xalt_realpath          	\
-	        $(DESTDIR)$(BIN)/xalt_configuration_report    	\
-	        $(DESTDIR)$(BIN)/xalt_extract_record    	\
-                $(DESTDIR)$(LIBEXEC)/xalt_epoch             	
+all: ECHO $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
+          $(XSL_EXEC) $(F2DB_EXEC) $(S2DB_EXEC) $(XRP_EXEC)     \
+          $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
+	  $(DESTDIR)$(LIBEXEC)/xalt_syshost                     \
+          $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
+	  $(DESTDIR)$(BIN)/xalt_configuration_report    	\
+	  $(DESTDIR)$(BIN)/xalt_extract_record    	        \
+          $(DESTDIR)$(LIBEXEC)/xalt_epoch             	
 
 ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 
 
+$(TRP_EXEC) : $(TRP_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
 
 $(XRP_EXEC) : $(XRP_OBJS)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(LIBUUID)
-
-
 $(XRS_EXEC) : $(XRS_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread $(MYSQL_LDFLAGS) 
 
