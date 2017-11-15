@@ -309,7 +309,7 @@ def main():
           `program`       varchar(12)             NOT NULL,
           `pkg_name`      varchar(64)             NOT NULL,
           `pkg_version`   varchar(32)                     ,
-          `pkg_file`      varchar(1024)                   ,
+          `pkg_path`      varchar(1024)                   ,
           PRIMARY KEY (`pkg_id`),
           FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_bin AUTO_INCREMENT=1

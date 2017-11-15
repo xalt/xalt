@@ -405,10 +405,10 @@ class XALTdb(object):
         program     = pkgT['program'][:12]
         pkg_name    = pkgT['package_name'][:64]
         pkg_version = pkgT['package_version'][:32]
-        pkg_file    = pkgT['package_file'][:10]
+        pkg_path    = pkgT['package_path'][:10]
         
         query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
-        cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_file))
+        cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))
         
       v = XALT_Stack.pop()
       carp("SYSHOST",v)
