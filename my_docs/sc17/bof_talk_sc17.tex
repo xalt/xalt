@@ -1,0 +1,299 @@
+%* installation (deps, build/install procedure, making module/ml work)
+%* configuration (either via ./configure at build time, or via 
+%   $LMOD_FOO), most important configure options
+%* setting up the system spider cache: configuring Lmod, updating spider 
+%  cache, difference between system/user spider cache
+%* + all (other) aspects mentioned on slide #26 in this slide deck: 
+%   explained + example :)
+%* what settarg is all about
+
+\documentclass{beamer}
+
+\usetheme[headernav]{TACC} %%Drop the 'headernav' if you don't like
+                           %%the stuff at the top of your slide
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{alltt}
+\usepackage{graphicx}
+
+\title{ XALT, OGRT and Related Technologies: Job-Level Usage Data on Today's Supercomputers}
+
+
+\author{Robert McLay, Georg Rath}
+\institute{The Texas Advanced Computing Center, NERSC}
+
+\date{November 14, 2017}  %% Use this if you want to fix the date in
+                      %% stone rather than use \today
+
+\newcommand{\bfnabla}{\mbox{\boldmath$\nabla$}}
+\newcommand{\laplacian}[1]{\bfnabla^2 #1}
+\newcommand{\grad}[1]{\bfnabla #1}
+\newcommand{\tgrad}[1]{\bfnabla^T #1}
+\newcommand{\dvg}[1]{\bfnabla \cdot #1}
+\newcommand{\curl}[1]{\bfnabla \times #1}
+\newcommand{\lap}[1]{\bfnabla^2 #1}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{XALT: What runs on the system}
+  \begin{itemize}
+    \item A Census of what programs and libraries are run
+    \item Running at TACC, NICS, U. Florida, KAUST, ...
+    \item Integrates with TACC-Stats.
+    \item Has commercial support from Ellexus 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{History of XALT}
+  \begin{itemize}
+    \item Mark Fahey (was NICS, now ANL): ALT-D (MPI only)
+    \item Robert McLay (TACC) Lariat (MPI only)
+    \item Reuben Budiardja (was NICS now ORL)
+    \item ALT-D $+$ Lariat $\Rightarrow$ XALT 1: (MPI only)
+    \item XALT 2: All programs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design Goals}
+  \begin{itemize}
+    \item Be extremely light-weight
+    \item Provide provenance data: How?
+    \item How many use a library or application?
+    \item Collect Data into a Database for analysis.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Understanding what your users are doing}
+  \begin{itemize}
+    \item What programs, libraries are your users using?
+    \item What are the top programs by node-hours? by counts?
+    \item Are they building their own programs or using someone elses?
+    \item Are Executables implemented in C/C++/Fortran?
+    \item Track MPI: tasks? nodes?
+    \item Track Threading via \$OMP\_NUMTHREADS
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design: Linker}
+  \begin{itemize}
+    \item XALT wraps the linker to enable tracking of exec's
+    \item The linker (ld) wrapper intercepts the user link line.
+    \item Generate assembly code: key-value pairs
+    \item Capture tracemap output from ld
+    \item Transmit collected data in *.json format
+    \item Adds codes that executes before main() and after main() completes
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design: Transmission to DB}
+  \begin{itemize}
+    \item File: collect nightly
+    \item Syslog: Use Syslog filtering (or ELK)
+    \item Direct to DB. (Not in XALT 2)
+    \item Future: RabbitMQ
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lmod to XALT connection}
+  \begin{itemize}
+    \item Lmod spider walks entire module tree.
+    \item Can build a reverse map from paths to modules
+    \item Can map program \& libraries to modules.
+    \item /opt/apps/i15/mv2\_2\_1/phdf5/1.8.14/lib/libhdf5.so.9
+      $\Rightarrow$ phdf5/1.8.14(intel/15.02:mvapich2/2.1)
+    \item Also helps with function tracking.
+    \item Tmod Sites can still use Lmod to build the reverse map.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Protecting XALT: Python to C++}
+    \begin{itemize}
+      \item XALT 1 used python scripts
+      \item It was difficult to protect Python from users in everytime
+      \item Solution: LD\_LIBRARY\_PATH="@ld\_lib\_path@"
+        PATH=/usr/bin:/bin C++-exec ...
+      \item Everything that depends on PATH must be hard coded
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Using XALT Data}
+  \begin{itemize}
+    \item Targetted Outreach: Who will be affected
+    \item Largemem Queue Overuse
+    \item XALT and TACC-Stats
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Tracking Non-mpi jobs (I)}
+  \begin{itemize}
+    \item Originally we tracked only MPI Jobs
+    \item By hijacking mpirun etc.
+    \item Now we can use ELF binary format to track jobs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ELF Binary Format Trick}
+ {\small
+    \begin{alltt}
+void myinit(int argc, char **argv)
+\{
+  /* ... */
+\}
+void myfini()
+\{
+  /* ... */
+\}
+  __attribute__((section(".init_array")))
+       typeof(myinit) *__init = myinit;
+  __attribute__((section(".fini_array")))
+       typeof(myfini) *__fini = myfini;
+    \end{alltt}
+}
+\end{frame}
+
+\begin{frame}{Using the ELF Binary Format Trick}
+  \begin{itemize}
+    \item This C code is compiled and linked in through the hijacked linker
+    \item It can also be used with \texttt{LD\_PRELOAD}
+    \item We are using both...
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Challenges (I)}
+  \begin{itemize}
+    \item Do not want to track mv, cp, etc
+    \item Only want to track some executables on compute nodes
+    \item Do not want to get overwhelmed by the data. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Answers}
+  \begin{itemize}
+    \item XALT Tracking only when told to
+    \item Compute node only by host name filtering
+    \item Executable Filter based on Path
+    \item Protection against closing stderr before fini.
+    \item Site configurable!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Path Filtering}
+  \begin{itemize}
+    \item Accept test, following an Ignore Test,
+    \item Two files containing regex patterns, converted to code.
+    \item Accept List Tests: Track /usr/bin/ddt, /bin/tar
+    \item Ignore List Tests: /usr/bin, /bin, /sbin, ...
+    \item Uses FLEX to compile in patterns
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{TACC\_config.py}
+ {\small
+    \begin{alltt}
+hostname_patterns = [
+  ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
+  ]
+path_patterns = [
+    ['SPSR',  r'.*/python[0-9][^/][^/]*'],
+    ['SPSR',  r'.*/R'],
+    ['KEEP',  r'^/usr/bin/ddt'],
+    ['SKIP',  r'^/usr/.*'],
+    ['SKIP',  r'^/bin/.*'],
+  ]
+env_patterns = [
+    [ 'SKIP', r'^MKLROOT=.*' ],
+    [ 'SKIP', r'^MKL_DIR=.*' ],
+    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_NUM=.*'],
+  ]
+    \end{alltt}
+}
+\end{frame}
+
+
+
+%\begin{frame}{Speeding up XALT 2}
+%  \begin{itemize}
+%    \item XALT 2 generates 2 json records: at start and end
+%    \item Want to minimize measurement: Launcher jobs
+%    \item The most expensive operation is sha1sum of the shared libs
+%    \item Used to system sha1sum call in serial
+%    \item Now up-to 16 threads calls directly
+%    \item Tests show 1 sec first time 0.04 second time on Lustre.
+%  \end{itemize}
+%\end{frame}
+
+\begin{frame}{Speeding up XALT 2}
+  \begin{itemize}
+    \item Minimal impact on jobs ($>$ 0.09 secs)
+    \item Non-mpi jobs only produce end record
+    \item Filter by job\_id after transport.
+    \item No more than 100 executions per job\_id.  (Changable)
+    \item A launcher job 5 million executions in two hours.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Tracking R packages}
+  \begin{itemize}
+    \item XALT 2 can now track R package usage
+    \item James McComb \& Michael Scott from IU developed the R part
+    \item They do this by intercepting the ``imports''
+    \item Still in preliminary stages
+    \item Plan to support Python later.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{New program: xalt\_extract\_record}
+  \begin{itemize}
+    \item This program reads the watermark.
+    \item Find out who built this program on what machine
+    \item Find out what modules where used.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of xalt\_extract\_record output}
+ {\small
+    \begin{alltt}
+****************************************
+XALT Watermark: hello
+****************************************
+Build_Epoch              1510257139.4624
+Build_LMFILES            /opt/apps/modulefiles/intel/17.0.4.lua:...
+Build_LOADEDMODULES      intel/17.0.4:impi/17.0.3:python/2.7.13:TACC:...
+Build_OS                 Linux 3.10.0-514.26.2.el7.x86_64
+Build_Syshost            stampede2
+Build_UUID               586d5943-67eb-480b-a2fe-35e87a1f22c7
+Build_User               mclay
+Build_compiler           icc
+Build_date               Thu Nov 09 13:52:19 2017
+Build_host               c455-011.stampede2.tacc.utexas.edu
+XALT_Version             1.7.7-devel
+    \end{alltt}
+}
+\end{frame}
+
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Lmod:
+      \begin{itemize}
+        \item Source: github.com/TACC/lmod.git, lmod.sf.net
+        \item Documentation: lmod.readthedocs.org
+      \end{itemize}
+    \item XALT:
+      \begin{itemize}
+        \item Source: github.com/Fahey-McLay/xalt.git, xalt.sf.net
+        \item Documentation: doc/*.pdf, xalt.readthedocs.org
+        \item Commercial support from Ellexus: www.ellexus.com/products/xalt-tracking-job-level-activity-supercomputers
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\end{document}
