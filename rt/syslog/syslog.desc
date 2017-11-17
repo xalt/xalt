@@ -63,7 +63,7 @@ test_descript = {
      export LD_PRELOAD=libxalt_init.so
      
      displayThis "test_record_pkg"
-     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg $(outputDir)/XALT/xalt/xalt/
+     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
 
      unset LD_LIBRARY_PATH
      unset LD_PRELOAD

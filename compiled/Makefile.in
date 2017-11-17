@@ -137,7 +137,8 @@ XER_CXX_SRC  := extractMain.C extractXALTRecord.C capture.C
 XER_OBJS     := $(patsubst %.C, %.o, $(XER_CXX_SRC))
 
 XRP_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
-XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c zstring.c base64.c
+XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
+                zstring.c base64.c xalt_syshost.c
 XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
 
 

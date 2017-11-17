@@ -123,7 +123,7 @@ test_descript = {
      gcc -o libabc.so -fPIC -shared a.o b.o c.o
 
      displayThis "test_record_pkg"
-     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg $(outputDir)/XALT/xalt/xalt/
+     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
 
      unset LD_PRELOAD
      displayThis "Extract Watermark"

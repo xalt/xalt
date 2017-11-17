@@ -344,6 +344,7 @@ void myinit(int argc, char **argv)
   time_t time = start_time;
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
   setenv("XALT_DATE_TIME",dateStr,1);
+  setenv("XALT_DIR",XALT_DIR,1);
 
   ppid = getppid();
 

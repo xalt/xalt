@@ -19,23 +19,18 @@
 #define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
 #define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
 
-static volatile double epoch()
-{
-  struct timeval tm;
-  gettimeofday(&tm, 0);
-  return tm.tv_sec + 1.0e-6*tm.tv_usec;
-}
+const  char*           xalt_syshost();
 
-char* build_xalt_dir(const char* user_name, const char* home_dir);
+char* build_xalt_files_dir(const char* user_name, const char* home_dir);
 
 int main(int argc, char* argv[])
 {
-  int   xalt_tracing     = 0;
-  int   len;
-  char* run_uuid = NULL;
-  char* syshost  = NULL;
-  char* p_dbg;
-  char  c;
+  char*       run_uuid	   = NULL;
+  const char* syshost	   = xalt_syshost();
+  int         xalt_tracing = 0;
+  int         len;
+  char*       p_dbg;
+  char        c;
 
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg)
@@ -45,12 +40,6 @@ int main(int argc, char* argv[])
     {
       switch (c)
 	{
-	case 's':
-	  len     = strlen(optarg);
-	  syshost = (char *) malloc(len+1);
-	  memcpy(syshost, optarg, len+1);
-	  break;
-	  
 	case 'u':
 	  len      = strlen(optarg);
 	  run_uuid = (char *) malloc(len+1);
@@ -126,20 +115,18 @@ int main(int argc, char* argv[])
   //3de2c9d8-e857-4482-9aa4-4979620380fc	  
   if (strcasecmp(transmission, "file") == 0)
     {
-      char  date_str[DATESZ];
-      char* c_home = getenv("HOME");
-      char* c_user = getenv("USER");
+      char* date_str = getenv("XALT_DATE_TIME");
+      char* c_home   = getenv("HOME");
+      char* c_user   = getenv("USER");
 
       if (c_home != NULL && c_user != NULL)
 	{
-          char* xalt_dir = build_xalt_dir(c_user, c_home);
-	  time_t now = epoch();
-	  strftime(date_str, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&now));
+          char* xalt_files_dir = build_xalt_files_dir(c_user, c_home);
 	  
-	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_dir, syshost,date_str,run_uuid,&uuid_str[24]);
+	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, syshost, date_str,
+		                                       run_uuid, &uuid_str[24]);
 	  DEBUG1(stderr,"resultFn: %s\n",resultFn);
-
-	  free(xalt_dir);
+	  free(xalt_files_dir);
 	}
     }
   
@@ -151,7 +138,6 @@ int main(int argc, char* argv[])
   if (resultFn)
     free(resultFn);
   free(key);
-  free(syshost);
   free(run_uuid);
   free(json_str);
   xalt_quotestring_free();
@@ -159,15 +145,15 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-char* build_xalt_dir(const char* user_name, const char* home_dir)
+char* build_xalt_files_dir(const char* user_name, const char* home_dir)
 {
-  char* xalt_dir = NULL;
+  char* xalt_files_dir = NULL;
   
 #ifdef HAVE_FILE_PREFIX
-  asprintf(&xalt_dir,"%s/%s/",XALT_FILE_PREFIX, user_name);
+  asprintf(&xalt_files_dir,"%s/%s/",XALT_FILE_PREFIX, user_name);
 #else
-  asprintf(&xalt_dir,"%s/.xalt.d/",home_dir);
+  asprintf(&xalt_files_dir,"%s/.xalt.d/",home_dir);
 #endif
-  return xalt_dir;
+  return xalt_files_dir;
 }
 

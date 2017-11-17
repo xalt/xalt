@@ -2,42 +2,18 @@
 #include <stdlib.h>
 #include "capture.h"
 
-std::string& trim(std::string& s, const char* t = " \t\n\r\f\v")
-{
-  s.erase(0, s.find_first_not_of(t));
-  s.erase(s.find_last_not_of(t) + 1);
-  return s;
-}
-
 int main(int argc, char* argv[])
 {
-  if (argc != 2)
-    {
-      fprintf(stderr,"Need the full path to the directory for xalt_record_pkg => quiting!\n");
-      exit(1);
-    }
-
   char* run_uuid = getenv("XALT_RUN_UUID");
   if (! run_uuid)
     exit(0);
 
-  char* xaltDir = argv[1];
+  char* xaltDir = getenv("XALT_DIR");
 
   std::string cmd;
 
   cmd.assign(xaltDir);
-  cmd.append("/libexec/xalt_syshost");
-
-  Vstring v;
-    
-  capture(cmd,v);
-  std::string syshost = v[0];
-  trim(syshost);
-  
-  cmd.assign(xaltDir);
-  cmd.append("/libexec/xalt_record_pkg -s ");
-  cmd.append(syshost);
-  cmd.append(" -u ");
+  cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
   cmd.append(" program R");
   cmd.append(" xalt_run_uuid ");
@@ -50,11 +26,8 @@ int main(int argc, char* argv[])
     
   system(cmd.c_str());
 
-
   cmd.assign(xaltDir);
-  cmd.append("/libexec/xalt_record_pkg -s ");
-  cmd.append(syshost);
-  cmd.append(" -u ");
+  cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
   cmd.append(" program R");
   cmd.append(" xalt_run_uuid ");
@@ -68,9 +41,7 @@ int main(int argc, char* argv[])
   system(cmd.c_str());
 
   cmd.assign(xaltDir);
-  cmd.append("/libexec/xalt_record_pkg -s ");
-  cmd.append(syshost);
-  cmd.append(" -u ");
+  cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
   cmd.append(" program R");
   cmd.append(" xalt_run_uuid ");
@@ -82,7 +53,6 @@ int main(int argc, char* argv[])
   printf("%s\n",cmd.c_str());
     
   system(cmd.c_str());
-
 
   return 0;
 }
