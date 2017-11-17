@@ -16,8 +16,8 @@ static const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004
 static const char escCharA[] = {'a', '\b', 'c','d','e','\f','g','h','i','j','k','l','m','\n','o','p','q','\r','s',
                                 '\t'};
 
-static char * buff = NULL;
-static unsigned int sz = 0;
+static char*        buff = NULL;
+static unsigned int sz   = 0;
 
 
 const char* xalt_quotestring(const char* input)
@@ -190,4 +190,12 @@ const char * xalt_unquotestring(const char * input, int len)
         }
     } 
   return buff;
+}
+
+void xalt_quotestring_free()
+{
+  if (buff)
+    free(buff);
+  buff = NULL;
+  sz   = 0;
 }

@@ -10,66 +10,6 @@
 #include "xalt_regex.h"
 
 
-int isDirectory(const char *path)
-{
-  struct stat statbuf;
-  if (stat(path, &statbuf) != 0)
-    return 0;
-  return S_ISDIR(statbuf.st_mode);
-}
-
-//bool reject_env_name(const std::string& env_name)
-//{
-//  regex_t regex;
-//  char    msgbuf[100];
-//  bool    ret = (acceptEnvSz != 0);
-//
-//  for (int i = 0; i < acceptEnvSz; ++i)
-//    {
-//      if (regcomp(&regex, acceptEnvA[i], 0))
-//        {
-//          fprintf(stderr,"Could not compile regex \"%s\"\n", acceptEnvA[i]);
-//          exit(1);
-//        }
-//      int iret = regexec(&regex, env_name.c_str(), 0, NULL, 0);
-//      if (iret == 0)
-//        {
-//          ret = false;
-//          break;
-//        }
-//      else if (iret != REG_NOMATCH)
-//        {
-//          regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-//          fprintf(stderr, "acceptEnvA Regex match failed: %s\n", msgbuf);
-//          exit(1);
-//        }
-//      regfree(&regex);
-//    }
-//
-//  if (ret)
-//    return true;
-//  
-//  for (int i = 0; i < ignoreEnvSz; ++i)
-//    {
-//      if (regcomp(&regex, ignoreEnvA[i], 0))
-//        {
-//          fprintf(stderr,"Could not compile regex \"%s\"\n", ignoreEnvA[i]);
-//          exit(1);
-//        }
-//      int iret = regexec(&regex, env_name.c_str(), 0, NULL, 0);
-//      if (iret == 0)
-//        return true;
-//      else if (iret != REG_NOMATCH)
-//        {
-//          regerror(iret, &regex, msgbuf, sizeof(msgbuf));
-//          fprintf(stderr, "ignoreEnvA Regex match failed: %s\n", msgbuf);
-//          exit(1);
-//        }
-//      regfree(&regex);
-//    }
-//  return false;
-//}  
-
 bool path2module(const char* path, Table& rmapT, char* module_name, int module_name_sz)
 {
   std::string p(path);

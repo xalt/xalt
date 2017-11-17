@@ -39,12 +39,13 @@
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
+#include "xalt_obfuscate.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "xalt_fgets_alloc.h"
-#include "xalt_obfuscate.h"
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
+#include "build_uuid.h"
 
 #define DATESZ    100
 
@@ -104,35 +105,6 @@ static char *       ldLibPathArg     = NULL;
 #define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
 #define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
 
-#ifdef HAVE_WORKING_LIBUUID
-#  include <uuid/uuid.h>
-   void build_uuid_str(char * my_uuid_str)
-   {
-     uuid_t uuid;
-     uuid_generate_random(uuid);
-     uuid_unparse_lower(uuid, my_uuid_str);
-   }
-#else
-   void build_uuid_str(char * my_uuid_str)
-   {
-     const char* uuid_proc_fn = "/proc/sys/kernel/random/uuid";
-     char*       buf          = NULL;
-     size_t      sz           = 0;
-     FILE*       fp           = fopen(uuid_proc_fn,"r");
-
-     if (!fp)
-       {
-         fprintf(stderr,"Unable to open: %s\n",uuid_proc_fn);
-         exit(1);
-       }
-
-     xalt_fgets_alloc(fp, &buf, &sz);
-     memcpy(my_uuid_str,buf, 36);
-     my_uuid_str[36] = '\0';
-     fclose(fp);
-   }
-#endif
-
 void myinit(int argc, char **argv)
 {
   int    i;
@@ -182,7 +154,7 @@ void myinit(int argc, char **argv)
               exit(EXIT_FAILURE);
             }
           fprintf(stderr, "---------------------------------------------\n"
-                          " RTM Date:      %s\n"
+                          " Date:          %s\n"
                           " XALT Version:  %s\n"
                           " Nodename:      %s\n"
                           " System:        %s\n"
@@ -314,8 +286,9 @@ void myinit(int argc, char **argv)
       return;
     }
 
+  xalt_quotestring_free();
   
-  build_uuid_str(uuid_str);
+  build_uuid(uuid_str);
   start_time = epoch();
 
   /**********************************************************
@@ -371,6 +344,7 @@ void myinit(int argc, char **argv)
   time_t time = start_time;
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
   setenv("XALT_DATE_TIME",dateStr,1);
+  setenv("XALT_DIR",XALT_DIR,1);
 
   ppid = getppid();
 
@@ -390,8 +364,8 @@ void myinit(int argc, char **argv)
 
   if ( produce_strt_rec )
     {
-      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" %s %s -- %s %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
+	       " --uuid \"%s\" %s %s -- %s %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
 	       start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
       if (xalt_tracing || xalt_run_tracing) 
@@ -435,8 +409,8 @@ void myfini()
 
   /* Do not background this because it might get killed by the epilog cleanup tool! */
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\""
-           " --ntasks %ld --uuid \"%s\" %s %s -- %s", SYS_LD_LIB_PATH, PREFIX "/libexec/xalt_run_submission", ppid, my_syshost,
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\""
+           " --ntasks %ld --uuid \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
 	   start_time, end_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
 
   DEBUG1(my_stderr,"  Recording State at end of user program:\n    %s\n\n}\n\n",cmdline);
@@ -448,7 +422,7 @@ void myfini()
   free(ldLibPathArg);
 }
 
-xalt_status reject(const char *path, const char * hostname)
+static xalt_status reject(const char *path, const char * hostname)
 {
   xalt_parser results;
   if (path[0] == '\0')
@@ -475,7 +449,7 @@ xalt_status reject(const char *path, const char * hostname)
   return XALT_PATH;
 }
 
-long compute_value(const char **envA)
+static long compute_value(const char **envA)
 {
   long          value = 0L;
   const char ** p;
@@ -493,7 +467,7 @@ long compute_value(const char **envA)
 
 /* Get full absolute path to executable */
 /* works for Linux and Mac OS X */
-void abspath(char * path, int sz)
+static void abspath(char * path, int sz)
 {
   path[0] = '\0';
   #ifdef __MACH__
@@ -508,7 +482,7 @@ void abspath(char * path, int sz)
   #endif
 }
 
-volatile double epoch()
+static volatile double epoch()
 {
   struct timeval tm;
   gettimeofday(&tm, 0);

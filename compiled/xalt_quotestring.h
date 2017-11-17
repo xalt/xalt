@@ -9,6 +9,7 @@ extern "C" {
 
   const char* xalt_quotestring(  const char* input);
   const char* xalt_unquotestring(const char* input, int len);
+  void        xalt_quotestring_free();
 
 #ifdef __cplusplus
 }

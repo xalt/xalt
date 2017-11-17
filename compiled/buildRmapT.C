@@ -29,6 +29,7 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
   while(xalt_fgets_alloc(fp, &buf, &sz))
     jsonStr += buf;
   free(buf);
+  sz = 0; buf = NULL;
 
   jsmn_parser parser;
   jsmntok_t*  tokens;

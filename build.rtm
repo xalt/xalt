@@ -1,9 +1,9 @@
 #!/bin/bash
 # -*- shell-script -*-
 #-----------------------------------------------------------------------
-# XALT: A tool that tracks users jobs and environments on a cluster.
-# Copyright (C) 2013-2014 University of Texas at Austin
-# Copyright (C) 2013-2014 University of Tennessee
+#XALT: A tool that tracks users jobs and environments on a cluster.
+#Copyright (C) 2013-2014 University of Texas at Austin Copyright (C)
+#2013-2014 University of Tennessee
 # 
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
@@ -79,12 +79,13 @@ case $SYSHOST in
     CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
     ;;
 
-  stampede | maverick)
+  maverick)
     base="$HOME/l/pkg"
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
     fi
-    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog"
+    CONF_OPTS="CXX=$PWD/g++.sh --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
+    MAKE_OPTS="CXX=$PWD/g++.sh"
     ;;
 
   stampede2)
@@ -120,9 +121,9 @@ esac
 BASE_DIR=$base
 
 pkgName=xalt
-PKG=$BASE_DIR/$pkgName/${PKG_VERSION}${EXTRA}
+PKG=$BASE_DIR
 
-$SUDO rm -rf $PKG
+$SUDO rm -rf $PKG/xalt/$PKG_VERSION
 
 MAKE=make
 command -v remake 2>&1 > /dev/null
@@ -133,13 +134,12 @@ fi
 unset LD_PRELOAD
 
 cmdA=("-$MAKE distclean"
-      "-rm -rf $PKG"
+      "-rm -rf $PKG/xalt/$PKG_VERSION"
       "$SETUP_CMD"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
       "rm -f config.log"
-      "cd $BASE_DIR/$pkgName; $SUDO rm -f xalt; $SUDO ln -s $PKG_VERSION xalt"
       )
 
 

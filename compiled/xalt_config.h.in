@@ -1,12 +1,13 @@
 #ifndef XALT_CONFIG_H
 #define XALT_CONFIG_H
 
+#define XALT_INTERFACE_VERSION     "@XALT_INTERFACE_VERSION@"
 #define OBJDUMP                    "@PATH_TO_OBJDUMP@"
 #define PATH_TO_PRGM_FILE          "@PATH_TO_FILE@"
 #define LDD                        "@PATH_TO_LDD@"
 #define SHA1SUM                    "@PATH_TO_SHA1SUM@"
-#define SYS_LD_LIB_PATH            "@SYS_LD_LIB_PATH@"
-#define PREFIX                     "@prefix@"
+#define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
+#define XALT_DIR                   "@prefix@/xalt/xalt/"
 #define LOGGER                     "@PATH_TO_LOGGER@"
 
 #ifdef HAVE_MYSQL

@@ -3,6 +3,10 @@ AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SUBDIRS(compiled)
 
+AC_SUBST(XALT_INTERFACE_VERSION)
+XALT_INTERFACE_VERSION=3
+
+
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb) [[file]]]),
@@ -112,18 +116,6 @@ AC_ARG_WITH(syslogMsgSz,
     SYSLOG_MSG_SZ="$withval"
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
 
-AC_SUBST(OMNI_PATH_PROFILE_BUG)
-AC_ARG_WITH(omnipathProfileBug,
-    AC_HELP_STRING([--with-omnipathProfileBug,=ans],[]),
-    OMNI_PATH_PROFILE_BUG="$withval"
-    AC_MSG_RESULT([OMNI_PATH_PROFILE_BUG=$with_omnipathProfileBug])
-    AC_DEFINE_UNQUOTED(OMNI_PATH_PROFILE_BUG, "$with_omnipathProfileBug")dnl
-    ,
-    withval="no"
-    AC_MSG_RESULT([OMNI_PATH_PROFILE_BUG=$withval])
-    OMNI_PATH_PROFILE_BUG="$withval"
-    AC_DEFINE_UNQUOTED(OMNI_PATH_PROFILE_BUG, "$withval"))dnl
-
 AC_SUBST(MYSQL_STATIC)
 AC_ARG_WITH(mysqlStatic,
     AC_HELP_STRING([--with-mysqlStatic=ans],[Require that libmysqlclient be linked in statically [[no]]]),
@@ -135,6 +127,18 @@ AC_ARG_WITH(mysqlStatic,
     AC_MSG_RESULT([MYSQL_STATIC=$withval])
     MYSQL_STATIC="$withval"
     AC_DEFINE_UNQUOTED(MYSQL_STATIC, "$withval"))dnl
+
+AC_SUBST(CXX_LD_LIBRARY_PATH)
+AC_ARG_WITH(cxxLDLibraryPath,
+    AC_HELP_STRING([--with-cxxLDLibraryPath=ans],[LD_LIBRARY_PATH for c++ programs[[]]]),
+    CXX_LD_LIBRARY_PATH="$withval"
+    AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath])
+    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$with_cxxLDLibraryPath")dnl
+    ,
+    withval=""
+    AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$withval])
+    CXX_LD_LIBRARY_PATH="$withval"
+    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$withval"))dnl
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
@@ -160,13 +164,12 @@ AC_ARG_WITH(enableBackgrounding,
     ENABLE_BACKGROUNDING="$withval"
     AC_DEFINE_UNQUOTED(ENABLE_BACKGROUNDING, "$withval"))dnl
 
-AC_SUBST(SYS_LD_LIB_PATH)
-SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
-
 AC_SUBST(HAVE_32BIT)
 
 AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
+AC_LANG_PUSH(C++)
 AX_TEST_COMPILE_FLAG([-std=c++11],[HAVE_CXX11=yes],[HAVE_CXX11=no])
+AC_LANG_POP([C++])
 
 AC_SUBST(PATH_TO_AS)
 AC_SUBST(PATH_TO_BASENAME)
@@ -259,10 +262,14 @@ if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
 fi  
 
 
+AC_SUBST(PKGV)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version)
+PKGV=$prefix/xalt/$VERSION
+
+
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
   xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`

@@ -36,7 +36,7 @@ Process::Process(pid_t pid)
   m_name.assign(start, n);
 
   m_parent = (int) strtol(p+3, (char **) NULL, 10);
-  free(buf);
+  free(buf); sz = 0; buf = NULL;
 }
 
 void Process::cmdline(std::vector<std::string>& cmdlineA)
@@ -60,8 +60,7 @@ void Process::cmdline(std::vector<std::string>& cmdlineA)
       p += strlen(p) + 1;
     }
 
-  free(buf);
-  buf = NULL;
+  free(buf); sz = 0; buf = NULL;
 }
 
 std::string& Process::exe()

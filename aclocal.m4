@@ -69,6 +69,7 @@ echo "Package version......................................" : XALT-$VERSION
 echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
+echo "Installation Directory..............................." : $PKGV
 echo
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
@@ -83,7 +84,7 @@ echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIB
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
-echo
+echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
 echo '------------------------------------------------------------------------------'
 echo
 

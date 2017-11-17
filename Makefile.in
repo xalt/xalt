@@ -32,11 +32,9 @@ ifeq ($(OS_NAME),Darwin)
   LIB_OPTIONS     := -bundle -undefined dynamic_lookup
 endif
 
-OMNI_PATH_PROFILE_BUG := @OMNI_PATH_PROFILE_BUG@
-
 OPTLVL               := -g -O2
 package              := xalt
-VERSION              := $(shell cat $(srcdir)/.version)
+VERSION              := $(shell cat $(srcdir)/.version | sed -e 's/-devel//g' )
 TRACKING_MPI_ONLY    := @XALT_TRACKING_MPI_ONLY@
 TRANSMISSION         := @TRANSMISSION@
 SITE_NAME            := @SITE@
@@ -44,10 +42,9 @@ ETC_DIR              := @ETC_DIR@
 prefix               := @prefix@
 GIT_BRANCH           := devel
 XALT_V               := compiled/xalt_version.h
-XALT_DIR             := $(prefix)
 SYSLOG_MSG_SZ        := @SYSLOG_MSG_SZ@
-SYS_LD_LIB_PATH      := @SYS_LD_LIB_PATH@
 HAVE_LIBUUID         := @HAVE_WORKING_LIBUUID@
+CXX_LD_LIBRARY_PATH  := @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           := @HAVE_32BIT@
 PATH_TO_AS           := @PATH_TO_AS@
 PATH_TO_BASENAME     := @PATH_TO_BASENAME@
@@ -78,12 +75,15 @@ GIT_PROG             := @PATH_TO_GIT@
 GIT_VERSION          := $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
 VDATE		     := $(shell date +'%F %H:%M')
 
-LIB                  := $(prefix)/lib
-LIB64                := $(prefix)/lib64
-LIBEXEC              := $(prefix)/libexec
-SITE                 := $(prefix)/site
-BIN                  := $(prefix)/bin
-SBIN                 := $(prefix)/sbin
+XALT_DIR             := $(prefix)/$(package)/$(package)
+PKGV                 := $(prefix)/$(package)/$(VERSION)
+PKG                  := $(prefix)/$(package)/$(package)
+LIB                  := $(prefix)/$(package)/$(VERSION)/lib
+LIB64                := $(prefix)/$(package)/$(VERSION)/lib64
+LIBEXEC              := $(prefix)/$(package)/$(VERSION)/libexec
+SITE                 := $(prefix)/$(package)/$(VERSION)/site
+BIN                  := $(prefix)/$(package)/$(VERSION)/bin
+SBIN                 := $(prefix)/$(package)/$(VERSION)/sbin
 DIRLIST              := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                         $(DESTDIR)$(SITE)    $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN)             \
                         $(DESTDIR)$(ETC_DIR)
@@ -128,7 +128,9 @@ all:
 	@echo done
 
 install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
-          Use_argparse_$(USE_ARGPARSE) build_compiled 
+          Use_argparse_$(USE_ARGPARSE) build_compiled
+	$(RM) $(DESTDIR)$(PKG)
+	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
 build_compiled:
 	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) all
@@ -165,9 +167,9 @@ Inst_TACC: $(TACC_PKG)
 
 
 Use_getent_yes:
-	cd $(srcdir)/contrib;                                        \
-        mkdir -p  $(DESTDIR)$(prefix)/libexec/getent;                     \
-        cp getent/*.py $(DESTDIR)$(prefix)/libexec/getent
+	cd $(srcdir)/contrib;                                           \
+        mkdir -p  $(DESTDIR)$(PKGV)/libexec/getent;                     \
+        cp getent/*.py $(DESTDIR)$(PKGV)/libexec/getent
 
 
 Use_argparse_no:
@@ -188,7 +190,7 @@ __installMe:
 	        -e 's|@date@|$(PATH_TO_DATE)|g'                            	  \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
 	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
-	        -e 's|@omni_path_profile_bug@|$(OMNI_PATH_PROFILE_BUG)|g'  	  \
+	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
 	        -e 's|@file@|$(PATH_TO_FILE)|g'                            	  \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            	  \
@@ -209,7 +211,6 @@ __installMe:
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
 	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
-	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              	  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
 	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      	  \
 	        -e 's|@version@|$(VERSION)|g'                              	  \
@@ -258,7 +259,11 @@ gittag:
 	  @echo "To git tag do: make gittag TAG=?"
         endif
 
-tags:
+
+tags:  build_tags
+	$(RM) file_list.*
+
+build_tags:
 	find . \( -regex '.*~$$\|.*/\.git\|.*/\.git/' -prune \)  \
                -o -type f > file_list.1
 	sed -e 's|.*/.git.*||g'                                  \
@@ -315,7 +320,6 @@ tags:
             -e '/^\s*$$/d'                                       \
 	       < file_list.1 > file_list.2
 	etags  `cat file_list.2`
-	$(RM) file_list.*
 
 dist:
 	git archive --prefix=xalt-$(VERSION)/ $(GIT_BRANCH) > xalt-$(VERSION).tar
