@@ -72,7 +72,7 @@ DIRLIST           := $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(SITE)  $(DESTDIR)$(BIN) \
 
 BIN_PKG           := job_launcher/mpirun.in     job_launcher/mpiexec.in   job_launcher/ibrun.in \
                      job_launcher/ibrun.symm.in job_launcher/aprun.in     job_launcher/srun.in  \
-                     job_launcher/mpirun.lsf.in                                                 \
+                     job_launcher/mpirun.lsf.in job_launcher/jsrun.in \
 	             src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
 
 #BIN_PKG          := src/ld.in src/ld.gold.in src/xalt_helper_functions.sh
@@ -82,7 +82,7 @@ SITE_PKG          := job_launcher/xalt_find_exec_hydra.py       job_launcher/xal
                      job_launcher/xalt_site_pkg.py              job_launcher/xalt_find_exec_ncar.py       \
 		     job_launcher/xalt_find_exec_ibrun.py       job_launcher/xalt_find_exec_aprun.py      \
 		     job_launcher/xalt_find_exec_sgimpt.py      job_launcher/xalt_find_exec_srun.py       \
-                     job_launcher/xalt_parse_mpirun_args.py
+                     job_launcher/xalt_find_exec_jsrun.py       job_launcher/xalt_parse_mpirun_args.py	
 
 SITE_PKG          := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
 
