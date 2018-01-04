@@ -216,7 +216,8 @@ run_real_command()
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EPOCH)
   (
-  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "[]"
+  CmdLine="$MY_CMD $@"
+  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "$CmdLine"
   ) &
 
   status=0
@@ -233,8 +234,9 @@ run_real_command()
   
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
+  CmdLine="$MY_CMD $@"
   eTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T" "[]"
+  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T" "$CmdLine"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"
