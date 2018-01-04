@@ -80,7 +80,7 @@ for option; do
   esac
   
   case $option in
-    --help|--usage|-h|-?|-V|--version)
+    --help|--usage|-h|-\?|-V|--version)
       $MY_CMD "${argA[@]}"
       exit $?
       ;;

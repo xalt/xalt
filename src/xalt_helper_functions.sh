@@ -107,11 +107,15 @@ find_real_command()
     # If this is a bash script (and not a bash script in sh mode) then
     # use type to list all possible "ld" or "ibrun".  
 
+    check=0
     for exe in $(type -p -a $my_name); do
-      if [ $exe != $my_path ]; then
-        #
-        # If the executable is not the same the same as the origin then it is a possible
-        # choice.  Now check to see if this choice has the magic string in the first 5 lines.
+      # Find the next executable down the line after the origin, then check. 
+      # Needed for the case where there are multiple wrappers. 
+      if [ $exe == $my_path ]; then
+        check=1
+      fi
+      if [ $check == 1 ]; then
+        # Now check to see if this choice has the magic string in the first 5 lines.
         # Only if it doesn't contain the magic string then $exe is MY_CMD.
 	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
           my_cmd=$exe
@@ -125,9 +129,13 @@ find_real_command()
     # old fashion way. Otherwise the logic is the same as bash version.
     OLD_IFS=$IFS
     IFS=:
+    check=0
     for dir in $PATH; do
       exe="$dir/$my_name"
-      if [ $exe != $my_path -a -x $exe ]; then
+      if [ $exe == $my_path ]; then
+        check=1
+      fi
+      if [ $check == 1 -a -x $exe ]; then
 	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
           my_cmd=$exe
 	  break
