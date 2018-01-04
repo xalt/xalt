@@ -99,9 +99,7 @@ for option; do
 done
 
 #######################################################################
-# We make the big assumption that the only MPI on a Cray is 
-# Cray's mpi and thay the job launcher is aprun.  So we 
-# use the xalt_find_exec_aprun.py script to parse aprun line.
+# Use the xalt_find_exec_jsrun.py script to parse jsrun line.
 
 FIND_EXEC_PRGM=$XALT_DIR/site/xalt_find_exec_jsrun.py
 

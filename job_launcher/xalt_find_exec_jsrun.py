@@ -52,8 +52,6 @@ argT = {
   '--save_resources'      : 1,
   '-U'                    : 1,
   '--use_resource'        : 1,
-  '-p'                    : 1,
-  '--np'                  : 1,
   '-a'                    : 1,
   '--tasks_per_rs'        : 1,
   '-f'                    : 1,
@@ -93,7 +91,8 @@ argT = {
 }
 
 npT = {
-  '-p'                        : "tasks",
+  '-p'   : "tasks",
+  '--np' : "tasks",
 }  
 
 
