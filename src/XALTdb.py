@@ -178,7 +178,7 @@ class XALTdb(object):
       link_path   = linkT.get('link_path',"UNKNOWN")
       link_mname  = obj2module(link_path,reverseMapT)
       link_line   = json.dumps(linkT.get('link_line',"[]"))
-      cwd         = linkT['wd'][:1024]
+      cwd         = linkT.get('wd', "UNKNOWN")[:1024]
       build_user  = linkT['build_user']
       build_shost = linkT['build_syshost']
 
@@ -323,7 +323,7 @@ class XALTdb(object):
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
         num_threads   = convertToTinyInt(runT['userT'].get('num_threads',0))
-        usr_cmdline   = json.dumps(runT['cmdlineA'])
+        usr_cmdline   = runT.get('cmdlineA', "UNKNOWN")
 
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
         startTime     = "%.f" % float(runT['userT']['start_time'])
