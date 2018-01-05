@@ -20,7 +20,7 @@
 #-----------------------------------------------------------------------
 from __future__  import division
 from __future__  import print_function
-import os, sys, json, base64, zlib
+import os, sys, json, base64, zlib, httplib
 
 try:
   from XALTdb      import XALTdb
@@ -78,6 +78,8 @@ class XALT_transmission_factory(object):
       obj = Syslog(syshost, kind)
     elif (name == "syslogv1"):
       obj = SyslogV1(syshost, kind)
+    elif (name == "broker"):
+      obj = Broker(syshost, kind)
     elif (name == "directdb"):
       obj = DirectDB(syshost, kind)
     else:                 
@@ -164,6 +166,36 @@ class Syslog(XALT_transmission_factory):
       iend   = istart + blkSz
       os.system("".join(sA))
     
+class Broker(XALT_transmission_factory):
+  """
+  This class writes to a message broker
+  """
+
+  def __init__(self, syshost, kind):
+    """
+    This is the ctor for Broker transmission method
+    @param syshost: Name of the system.
+    @param kind:  Type of record: link or run
+    """
+
+    super(Broker, self).__init__(syshost, kind)
+  def save(self, resultT, key):
+    """
+    The json table is written to syslog with the text converted to base64.
+    @param resultT: The json record table
+    """
+    sA = []
+    sA.append("XALT_LOGGING")
+    sA.append(" ")
+    sA.append(self._kind())
+    sA.append(":")
+    sA.append(self._syshost())
+    sA.append(":")
+    sA.append(base64.b64encode(json.dumps(resultT)))
+    s = "".join(sA)
+    h1 = httplib.HTTPConnection(XALT_BROKER_SERVER)
+    headers = {"Content-Type":"text/plain"}
+    h1.request("POST", XALT_BROKER_URI, s, headers)
 
 class File(XALT_transmission_factory):
   """

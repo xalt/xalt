@@ -34,9 +34,16 @@ XALT_Stack              = Stack()
 #                           "file"     : writes a file ~/.xalt.d
 #                           "syslog"   : writes data to syslog
 #                           "directdb" : Calls db directly
+#                           "broker"   : HTTP post to send syslog-like msg
 #------------------------------------------------------------------------
 
 XALT_TRANSMISSION_STYLE = os.environ.get("XALT_TRANSMISSION_STYLE","@transmission@")
+
+#------------------------------------------------------------------------
+# The following two variables only relevant for 'broker' transmission
+#-----------------------------------------------------------------------
+XALT_BROKER_SERVER = os.environ.get("XALT_BROKER_SERVER", "@broker_server@")
+XALT_BROKER_URI    = os.environ.get("XALT_BROKER_URI", "@broker_uri@")
 
 #------------------------------------------------------------------------
 # XALT_ETC_DIR:  Controls where the xalt_db.conf and the Reverse Map
