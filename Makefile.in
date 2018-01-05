@@ -31,6 +31,8 @@ OS_NAME           := $(shell uname -s)
 package           := xalt
 VERSION           := $(shell cat $(srcdir)/.version)
 TRANSMISSION      := @TRANSMISSION@
+BROKER_SERVER     := @BROKER_SERVER@
+BROKER_URI        := @BROKER_URI@
 SITE_NAME         := @SITE@
 ETC_DIR           := @ETC_DIR@
 prefix            := @prefix@
@@ -214,6 +216,8 @@ __installMe:
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          \
 	        -e 's|@sys_ld_lib_path@|$(SYS_LD_LIB_PATH)|g'              \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    \
+	        -e 's|@broker_server@|$(BROKER_SERVER)|g'                  \
+	        -e 's|@broker_uri@|$(BROKER_URI)|g'                        \
 	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      \
 	        -e 's|@version@|$(VERSION)|g'                              \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   \
