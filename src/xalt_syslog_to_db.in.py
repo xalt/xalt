@@ -155,6 +155,7 @@ def parseSyslogV1(s):
   t['kind']    = array[0].strip()
   t['syshost'] = array[1].strip()
   t['value']   = base64.b64decode(array[2])
+    
   return t, True
 
 def parseSyslogV2(s, recordT):
@@ -258,7 +259,15 @@ def main():
     for line in f:
       if (not ("XALT_LOGGING" in line)):
         continue
-      t, done = parseSyslog(line, recordT)
+      try:
+        t, done = parseSyslog(line, recordT)
+      except Exception as e:  
+        print("xalt_syslog_to_db: Error in parsing an entry.", file=sys.stderr)
+        print(e, file=sys.stderr)
+        print("Start of the entry: ", file=sys.stderr)
+        print(line, file=sys.stderr)
+        badCnt += 1
+        continue
       if (not done):
         continue
 
