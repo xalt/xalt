@@ -223,7 +223,7 @@ class XALTdb(object):
       print(XALT_Stack.contents())
       print(query)
       print ("link_to_db(): Error %s" % e)
-      sys.exit (1)
+      
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
     """
@@ -272,7 +272,6 @@ class XALTdb(object):
       print(XALT_Stack.contents())
       print(query)
       print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
-      sys.exit (1)
 
   def run_to_db(self, reverseMapT, runT):
     """
@@ -377,5 +376,5 @@ class XALTdb(object):
       print(XALT_Stack.contents())
       print(query.encode("ascii","ignore"))
       print ("run_to_db(): %s" % e)
-      sys.exit (1)
+      
 
