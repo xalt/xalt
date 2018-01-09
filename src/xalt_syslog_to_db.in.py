@@ -154,7 +154,12 @@ def parseSyslogV1(s):
   array        = s[idx:].split(":")
   t['kind']    = array[0].strip()
   t['syshost'] = array[1].strip()
-  t['value']   = base64.b64decode(array[2])
+  
+  try:
+    t['value']   = base64.b64decode(array[2])
+  except TypeError:  #-- attemp to fix 'incorrect padding' error
+    data = array[2] + '='*64
+    t['value']   = base64.b64decode(data)
     
   return t, True
 
@@ -259,18 +264,19 @@ def main():
     for line in f:
       if (not ("XALT_LOGGING" in line)):
         continue
-      try:
-        t, done = parseSyslog(line, recordT)
-      except Exception as e:  
-        print("xalt_syslog_to_db: Error in parsing an entry.", file=sys.stderr)
-        print(e, file=sys.stderr)
-        print("Start of the entry: ", file=sys.stderr)
-        print(line, file=sys.stderr)
-        badCnt += 1
-        continue
-      if (not done):
-        continue
-
+      
+      delim = 'XALT_LOGGING'
+      for s in line.split(delim): # handle case for bad syslog file 
+                                  # without newline between entries
+        try:
+          t, done = parseSyslog(delim+s, recordT)
+        except Exception as e:
+          print("parseSyslog: %s" % e, file=sys.stderr)
+          badCnt += 1
+        
+        if (not done):
+          continue
+        
       try:
         XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
 
