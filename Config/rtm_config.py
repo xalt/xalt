@@ -79,7 +79,9 @@ path_patterns = [
     ['SKIP',  r'.*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*'],
     ['SKIP',  r'.*\/xalt_file_to_db'],
     ['SKIP',  r'.*\/xalt_syslog_to_db'],
-    ['SKIP',  r'.*\/xalt_configuration_report']
+    ['SKIP',  r'.*\/xalt_configuration_report'],
+    ['SKIP',  r'.*\/xalt_syshost'],
+    ['SKIP',  r'.*\/xalt_record_pkg']
   ]
     
 #------------------------------------------------------------

@@ -35,23 +35,26 @@ test_descript = {
      export XALT_TRANSMISSION_STYLE=syslog
      export XALT_DISABLE_BACKGROUNDING=yes
      
+     NUM=508
+     (( RUNS = 2*NUM ))
+
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
-     displayThis  "for i in {1..508..1} ; do mpirun -n 1 ./hello; done"
-     for i in {1..508..1} ; do mpirun -n 1 ./hello; done
+     displayThis  "for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done"
+     for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done
 
      displayThis  "xalt_syslog_to_db"
      xalt_syslog_to_db  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
 
      mv syslog.log syslog.old
      
-     displayThis  "for i in {1..508..1} ; do mpirun -n 1 ./hello; done"
-     for i in {1..508..1} ; do mpirun -n 1 ./hello; done
+     displayThis  "for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done"
+     for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done
 
      displayThis  "xalt_syslog_to_db"
      xalt_syslog_to_db  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --runs 1016 --functions 4 --links 1
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs $RUNS --functions 4 --links 1
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      STATUS=`cat results.csv`; echo; echo STATUS=$STATUS; echo
    """,

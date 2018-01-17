@@ -37,6 +37,7 @@ ConfigParser::ConfigParser(const char * fn)
 
   while (xalt_fgets_alloc(fp, &buf, &sz))
     {
+      int    valueLen;
       char * key;
       char * value;
       char * p = strchr(buf,'=');
@@ -51,8 +52,13 @@ ConfigParser::ConfigParser(const char * fn)
 
       if      (strcmp(key,"host")   == 0) m_host   = value;
       else if (strcmp(key,"user")   == 0) m_user   = value;
-      else if (strcmp(key,"passwd") == 0) m_passwd = base64_decode(value);
       else if (strcmp(key,"db")     == 0) m_db     = value;
+      else if (strcmp(key,"passwd") == 0)
+        {
+          unsigned char * passwd = base64_decode(value, strlen(value), &valueLen);
+          m_passwd.assign(reinterpret_cast<char*>(passwd));
+          free(passwd);
+        }
     }
-  free(buf);
+  free(buf); sz = 0; buf = NULL;
 }

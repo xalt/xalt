@@ -75,8 +75,7 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
       addPath2Set(path, set);
     }
 
-  free(buf);
-  buf = NULL;
+  free(buf); sz = 0; buf = NULL;
 
   for(auto const & it : set)
     argV.push_back(Arg(it));
@@ -126,4 +125,5 @@ void readFunctionList(const char* fn, Set& funcSet)
       funcName.assign(start, len);
       funcSet.insert(funcName);
     }
+  free(buf); sz  = 0; buf = NULL;
 }

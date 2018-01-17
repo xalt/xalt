@@ -78,9 +78,9 @@ int main(int argc, char* argv[])
     }
   
   Json json;
-  json.add("resultT",resultT);
-  json.add("linkA",libA);
-  json.add("function",funcSet);
+  json.add("resultT",  resultT);
+  json.add("linkA",    libA);
+  json.add("function", funcSet);
   json.add("link_line",linklineA);
   json.fini();
 
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
     resultFn = NULL;
 
   // transmit results to anything that is not "direct2db"
-  transmit(transmission, jsonStr, "link", key, syshost, resultFn);
+  transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, resultFn);
 
   return 0;
 }

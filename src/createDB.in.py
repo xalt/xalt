@@ -301,6 +301,21 @@ def main():
         """)
     print("(%d) create unique key on join_link_function table" % idx); idx += 1
 
+    # 14
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `xalt_pkg` (
+          `pkg_id`        bigint(20)     unsigned NOT NULL auto_increment,
+          `run_id`        int(11)        unsigned NOT NULL,
+          `program`       varchar(12)             NOT NULL,
+          `pkg_name`      varchar(64)             NOT NULL,
+          `pkg_version`   varchar(32)                     ,
+          `pkg_path`      varchar(1024)                   ,
+          PRIMARY KEY (`pkg_id`),
+          FOREIGN KEY (`run_id`)  REFERENCES `xalt_run`(`run_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_bin AUTO_INCREMENT=1
+        """)
+    print("(%d) create xalt_pkg table" % idx); idx += 1
+    
     cursor.close()
   except  MySQLdb.Error as e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))

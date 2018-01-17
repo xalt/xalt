@@ -5,12 +5,12 @@
 #include <strings.h>
 #include <string.h>
 
+#include "xalt_quotestring.h"
 #include "epoch.h"
 #include "walkProcessTree.h"
 #include "Options.h"
 #include "Json.h"
 #include "xalt_config.h"
-#include "capture.h"
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
@@ -24,7 +24,6 @@ int main(int argc, char* argv[], char* env[])
 
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
-
 
   Options options(argc, argv);
   char    dateStr[DATESZ];
@@ -169,7 +168,8 @@ int main(int argc, char* argv[], char* env[])
         }
     }
 
-  transmit(transmission, jsonStr, "run", key, options.syshost().c_str(), resultFn);
+  transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), resultFn);
+  xalt_quotestring_free();
   DEBUG0(stderr,"}\n\n");
   return 0;
 }

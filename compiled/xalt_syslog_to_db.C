@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
   while (xalt_fgets_alloc(fp, &buf, &sz))
     num++;
   fclose(fp);
+  
 
   int          count  = 0;
   int          lnkCnt = 0;
@@ -109,6 +110,8 @@ int main(int argc, char* argv[])
       fclose(fp);
     }
   free(buf);
+  buf = NULL;
+  sz  = 0;
 
   time_t rt = (time_t) (epoch() - t1);
   
