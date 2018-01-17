@@ -86,6 +86,8 @@ case $SYSHOST in
     fi
     CONF_OPTS="CXX=$PWD/g++.sh --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
     MAKE_OPTS="CXX=$PWD/g++.sh"
+    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no"
+    MAKE_OPTS=
     ;;
 
   stampede2)
