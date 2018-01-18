@@ -41,10 +41,6 @@ try:
 except:
   import ConfigParser as configparser
 
-XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR")
-ConfigFn = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
-RMapFn   = os.path.join(XALT_ETC_DIR,"reverseMapD")
-
 parser = argparse.ArgumentParser \
           (description='Update XALT_OBJECT table with module_name from \
                         reverseMap file where module_name is NULL.')
@@ -55,11 +51,19 @@ parser.add_argument \
           ("--syshost", dest='syshost', action="store", \
            help="limit operations to the SYSHOST")
 parser.add_argument \
+          ("--rmapd", dest='rmapd', action="store", \
+           help="directory to reverse map file")
+parser.add_argument \
           ("--exclude_path", dest='exclude_path', action="append", \
            help="exclude objects whose paths partially match EXCLUDE_PATH. \
                  This option can be specified multiple times.")
 args = parser.parse_args()
 
+XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR", ".")
+ConfigFn = os.path.join(XALT_ETC_DIR, "xalt_db.conf")
+RMapFn   = os.path.join(XALT_ETC_DIR, "reverseMapD")
+if args.rmapd:
+  RMapFn   = args.rmapd
 
 config = configparser.ConfigParser()     
 config.read(ConfigFn)
