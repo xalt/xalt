@@ -78,8 +78,6 @@ def main():
 
     print("start")
     
-     ALTER TABLE xalt_link ADD COLUMN cwd varchar(1024) NULL AFTER link_line
-    
     # 1
     cursor.execute("""
         ALTER TABLE `xalt_link`
