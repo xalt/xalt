@@ -57,7 +57,6 @@ source $MY_DIR/xalt_helper_functions.sh
 ##########################################################################
 # Check for user requested tracing.
 request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no/link
-
 tracing_msg "Starting ld"
 
 ########################################################################
@@ -212,7 +211,8 @@ if [ ! -d $WRKDIR ]; then
 fi
 
 # Get the compiler information
-COMP_T=$($EXTRACT_LINKER)
+COMP_T=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
+tracing_msg "COMP_T:" $COMP_T 
 
 EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
 
