@@ -16,6 +16,11 @@ int main(int argc, char* argv[])
   std::string  jsonStr = argv[i++];
   const char * version = XALT_VERSION;
 
+  //--------------------------------------------------
+  // Convert an empty jsonStr to "{}"
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
+
   double tt    = epoch();
   time_t clock = (time_t) tt;
 
