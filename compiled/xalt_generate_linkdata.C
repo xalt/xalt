@@ -32,6 +32,10 @@ int main(int argc, char* argv[])
   const char* resultFn    = argv[i++];
   std::string compT       = argv[i++];
 
+  if (compT.size() == 0)
+    compT = "{}";
+
+
   if (strstr(execname,"conftest") != NULL)
     return 1;
 
