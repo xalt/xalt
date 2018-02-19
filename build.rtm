@@ -67,19 +67,24 @@ fi
 
 SETUP_CMD=
 
+echo SYSHOST: $SYSHOST
+
 case $SYSHOST in
   rios | mijo | jedrik | vmijo | lmod-test | xalt-lmod)
+    echo "Building rios"
     SUDO="sudo"
     base="/opt/apps"
     CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py"
     ;;
 
   xalt)
+    echo "Building xalt"
     base="$HOME/l/pkg"
     CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
     ;;
 
   maverick)
+    echo "Building maverick"
     base="$HOME/l/pkg"
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
@@ -89,6 +94,7 @@ case $SYSHOST in
     ;;
 
   stampede2)
+    echo "Building s2"
     base="$HOME/l/pkg"
     if [ $SYSHOST == "stampede" ]; then
       base="$base/$(uname -m)"
@@ -98,23 +104,20 @@ case $SYSHOST in
     ;;
 
   ls5 )
+    echo "Building ls5"
     base="$HOME/l/pkg"
     CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt --with-etcDir=/home1/moduleData/all --with-site=TACC"
     ;;
 
-  kfs|xc30)
-    base="$HOME/l/pkg"
-    EXTRA="/$SYSHOST"
-    ;;
-
-  
   gligar.os)
+    echo "gligar.os"
     base="$HOME/l/pkg"
     SETUP_CMD="module load mysqlclient/1.3.7-foss-2016a-Python-2.7.11"
     CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/UGENT_config.py --with-transmission=file"
     ;;
 
   *)
+    echo "default"
     base="$HOME/l/pkg"
     ;;
 esac
