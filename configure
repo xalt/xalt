@@ -668,7 +668,9 @@ MYSQLDB
 XALT_CONFIG_PY
 ETC_DIR
 COMPUTE_SHA1SUM
-XALT_TRACKING_MPI_ONLY
+XALT_SCALAR_TRACKING
+XALT_SPSR_TRACKING
+XALT_MPI_TRACKING
 XALT_FILE_PREFIX
 TRANSMISSION
 XALT_INTERFACE_VERSION
@@ -724,7 +726,9 @@ ac_user_opts='
 enable_option_checking
 with_transmission
 with_xaltFilePrefix
-with_trackMPIOnly
+with_trackMPI
+with_trackSPSR
+with_trackScalarPrgms
 with_computeSHA1
 with_etcDir
 with_config
@@ -1368,7 +1372,10 @@ Optional Packages:
   --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
   --with-xaltFilePrefix=ans
                           Prefix where the json files are written [[$HOME]]
-  --with-trackMPIOnly=ans Track only mpi executable, [[no]]
+  --with-trackMPI=ans     Track MPI executables, [[yes]]
+  --with-trackSPSR=ans    Track SPSR executables, [[yes]]
+  --with-trackScalarPrgms=ans
+                          Track non-mpi, non-spsr executables, [[yes]]
   --with-computeSHA1=ans  compute SHA1 sum on libraries, [[no]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -3066,22 +3073,67 @@ fi
 
 
 
-# Check whether --with-trackMPIOnly was given.
-if test "${with_trackMPIOnly+set}" = set; then :
-  withval=$with_trackMPIOnly; XALT_TRACKING_MPI_ONLY="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TRACKING_MPI_ONLY=$with_trackMPIOnly" >&5
-$as_echo "XALT_TRACKING_MPI_ONLY=$with_trackMPIOnly" >&6; }
+
+# Check whether --with-trackMPI was given.
+if test "${with_trackMPI+set}" = set; then :
+  withval=$with_trackMPI; XALT_MPI_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$with_trackMPI" >&5
+$as_echo "XALT_MPI_TRACKING=$with_trackMPI" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define XALT_TRACKING_MPI_ONLY "$with_trackMPIOnly"
+#define XALT_MPI_TRACKING "$with_trackMPI"
 _ACEOF
 
 else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TRACKING_MPI_ONLY=$withval" >&5
-$as_echo "XALT_TRACKING_MPI_ONLY=$withval" >&6; }
-    XALT_TRACKING_MPI_ONLY="$withval"
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$withval" >&5
+$as_echo "XALT_MPI_TRACKING=$withval" >&6; }
+    XALT_MPI_TRACKING="$withval"
     cat >>confdefs.h <<_ACEOF
-#define XALT_TRACKING_MPI_ONLY "$withval"
+#define XALT_MPI_TRACKING "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-trackSPSR was given.
+if test "${with_trackSPSR+set}" = set; then :
+  withval=$with_trackSPSR; XALT_SPSR_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$with_trackSPSR" >&5
+$as_echo "XALT_SPSR_TRACKING=$with_trackSPSR" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SPSR_TRACKING "$with_trackSPSR"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$withval" >&5
+$as_echo "XALT_SPSR_TRACKING=$withval" >&6; }
+    XALT_SPSR_TRACKING="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SPSR_TRACKING "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-trackScalarPrgms was given.
+if test "${with_trackScalarPrgms+set}" = set; then :
+  withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&5
+$as_echo "XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SCALAR_TRACKING "$with_trackScalarPrgms"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$withval" >&5
+$as_echo "XALT_SCALAR_TRACKING=$withval" >&6; }
+    XALT_SCALAR_TRACKING="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SCALAR_TRACKING "$withval"
 _ACEOF
 
 fi
@@ -6640,7 +6692,9 @@ echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
 echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
-echo "XALT_TRACKING_MPI_ONLY..............................." : "$XALT_TRACKING_MPI_ONLY"
+echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
+echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKING
+echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
 echo "XALT build with MySQL support........................" : $Using_MYSQL

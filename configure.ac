@@ -31,17 +31,42 @@ AC_ARG_WITH(xaltFilePrefix,
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
 
-AC_SUBST(XALT_TRACKING_MPI_ONLY)
-AC_ARG_WITH(trackMPIOnly,
-    AC_HELP_STRING([--with-trackMPIOnly=ans],[Track only mpi executable, [[no]]]),
-    XALT_TRACKING_MPI_ONLY="$withval"
-    AC_MSG_RESULT([XALT_TRACKING_MPI_ONLY=$with_trackMPIOnly])
-    AC_DEFINE_UNQUOTED(XALT_TRACKING_MPI_ONLY, "$with_trackMPIOnly")dnl
+
+AC_SUBST(XALT_MPI_TRACKING)
+AC_ARG_WITH(trackMPI,
+    AC_HELP_STRING([--with-trackMPI=ans],[Track MPI executables, [[yes]]]),
+    XALT_MPI_TRACKING="$withval"
+    AC_MSG_RESULT([XALT_MPI_TRACKING=$with_trackMPI])
+    AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$with_trackMPI")dnl
     ,
-    withval="no"
-    AC_MSG_RESULT([XALT_TRACKING_MPI_ONLY=$withval])
-    XALT_TRACKING_MPI_ONLY="$withval"
-    AC_DEFINE_UNQUOTED(XALT_TRACKING_MPI_ONLY, "$withval"))dnl
+    withval="yes"
+    AC_MSG_RESULT([XALT_MPI_TRACKING=$withval])
+    XALT_MPI_TRACKING="$withval"
+    AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$withval"))dnl
+
+AC_SUBST(XALT_SPSR_TRACKING)
+AC_ARG_WITH(trackSPSR,
+    AC_HELP_STRING([--with-trackSPSR=ans],[Track SPSR executables, [[yes]]]),
+    XALT_SPSR_TRACKING="$withval"
+    AC_MSG_RESULT([XALT_SPSR_TRACKING=$with_trackSPSR])
+    AC_DEFINE_UNQUOTED(XALT_SPSR_TRACKING, "$with_trackSPSR")dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_SPSR_TRACKING=$withval])
+    XALT_SPSR_TRACKING="$withval"
+    AC_DEFINE_UNQUOTED(XALT_SPSR_TRACKING, "$withval"))dnl
+
+AC_SUBST(XALT_SCALAR_TRACKING)
+AC_ARG_WITH(trackScalarPrgms,
+    AC_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi, non-spsr executables, [[yes]]]),
+    XALT_SCALAR_TRACKING="$withval"
+    AC_MSG_RESULT([XALT_SCALAR_TRACKING=$with_trackScalarPrgms])
+    AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$with_trackScalarPrgms")dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_SCALAR_TRACKING=$withval])
+    XALT_SCALAR_TRACKING="$withval"
+    AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$withval"))dnl
 
 AC_SUBST(COMPUTE_SHA1SUM)
 AC_ARG_WITH(computeSHA1,

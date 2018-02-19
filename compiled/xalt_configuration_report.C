@@ -52,9 +52,17 @@ int main(int argc, char* argv[])
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
-  const char* xalt_tracking_mpi_only = getenv("XALT_TRACKING_MPI_ONLY");
-  if (xalt_tracking_mpi_only == NULL)
-    xalt_tracking_mpi_only = XALT_TRACKING_MPI_ONLY;
+  const char* xalt_mpi_tracking = getenv("XALT_MPI_TRACKING");
+  if (xalt_mpi_tracking == NULL)
+    xalt_mpi_tracking = XALT_MPI_TRACKING;
+
+  const char* xalt_spsr_tracking = getenv("XALT_SPSR_TRACKING");
+  if (xalt_spsr_tracking == NULL)
+    xalt_spsr_tracking = XALT_SPSR_TRACKING;
+
+  const char* xalt_scalar_tracking = getenv("XALT_SCALAR_TRACKING");
+  if (xalt_scalar_tracking == NULL)
+    xalt_scalar_tracking = XALT_SCALAR_TRACKING;
 
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
@@ -75,7 +83,9 @@ int main(int argc, char* argv[])
       json.add("XALT_CONFIG_PY",              XALT_CONFIG_PY);
       json.add("XALT_SYSTEM_PATH",            XALT_SYSTEM_PATH);
       json.add("XALT_SYSHOST_CONFIG",         SYSHOST_CONFIG);
-      json.add("XALT_TRACKING_MPI_ONLY",      xalt_tracking_mpi_only);
+      json.add("XALT_MPI_TRACKING",           xalt_mpi_tracking);
+      json.add("XALT_SPSR_TRACKING",          xalt_spsr_tracking);
+      json.add("XALT_SCALAR_TRACKING",        xalt_scalar_tracking);
       json.add("XALT_SYSLOG_MSG_SZ",          SYSLOG_MSG_SZ);
       json.add("CXX_LD_LIBRARY_PATH",         CXX_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                  HAVE_32BIT);
@@ -110,7 +120,9 @@ int main(int argc, char* argv[])
   std::cout << "XALT_ENABLE_BACKGROUNDING: " << enable_backgrounding   << "\n";
   std::cout << "XALT_ETC_DIR:              " << xalt_etc_dir           << "\n";
   std::cout << "XALT_CONFIG_PY:            " << XALT_CONFIG_PY         << "\n";
-  std::cout << "XALT_TRACKING_MPI_ONLY:    " << xalt_tracking_mpi_only << "\n";
+  std::cout << "XALT_MPI_TRACKING:         " << xalt_mpi_tracking      << "\n";
+  std::cout << "XALT_SPSR_TRACKING:        " << xalt_spsr_tracking     << "\n";
+  std::cout << "XALT_SCALAR_TRACKING:      " << xalt_scalar_tracking   << "\n";
   std::cout << "XALT_SYSTEM_PATH:          " << XALT_SYSTEM_PATH       << "\n";
   std::cout << "XALT_SYSHOST_CONFIG:       " << SYSHOST_CONFIG         << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ          << "\n";

@@ -78,7 +78,9 @@ echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
 echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
-echo "XALT_TRACKING_MPI_ONLY..............................." : "$XALT_TRACKING_MPI_ONLY"
+echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
+echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKING
+echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
 echo "XALT build with MySQL support........................" : $Using_MYSQL

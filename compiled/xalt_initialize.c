@@ -49,10 +49,11 @@
 
 #define DATESZ    100
 
+typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4} xalt_tracking_flags;
 typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
 
-typedef enum { XALT_SUCCESS, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_MPI_SIZE_ZERO} xalt_status;
+typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP} xalt_status;
 
 static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
@@ -63,11 +64,10 @@ static const char * xalt_reasonA[] = {
   "XALT has found the host does not match hostname pattern",
   "XALT has found the executable does not match path pattern",
   "XALT has problem with a JSON string",
-  "XALT in tracking MPI only, non-mpi executable found",
+  "XALT execute type does not match requested type",
 };
 
 const  char*           xalt_syshost();
-static xalt_status     reject(const char *path, const char * hostname);
 static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
 static volatile double epoch();
@@ -115,6 +115,7 @@ void myinit(int argc, char **argv)
   char * ld_preload_strp = NULL;
   char   dateStr[DATESZ];
   const char * v;
+  xalt_parser  results;
 
   /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
@@ -170,6 +171,11 @@ void myinit(int argc, char **argv)
       fprintf(stderr,"myinit(%s,%s){\n", STR(STATE),exec_path);
     }
 
+  /***********************************************************
+   * Test 0a: Initial State Test?:
+   * Is this is built-in or LD_PRELOAD version of this file?
+   ***********************************************************/
+
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
@@ -178,6 +184,24 @@ void myinit(int argc, char **argv)
       reject_flag = XALT_WRONG_STATE;
       return;
     }
+
+  /***********************************************************
+   * Test 0b: Count test?:
+   * Is the same version of this file run more than once?
+   ***********************************************************/
+  if (countA[IDX] > 0)
+    {
+      DEBUG2(stderr,"    -> countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
+      reject_flag = XALT_RUN_TWICE;
+      unsetenv("XALT_RUN_UUID");
+      return;
+    }
+  countA[IDX]++;
+
+  /***********************************************************
+   * Test 1: XALT_EXECUTABLE_TRACKING?:
+   * Is xalt tracking turned on?
+   ***********************************************************/
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
@@ -190,16 +214,12 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  if (countA[IDX] > 0)
-    {
-      DEBUG2(stderr,"    -> countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
-      reject_flag = XALT_RUN_TWICE;
-      unsetenv("XALT_RUN_UUID");
-      return;
-    }
-  countA[IDX]++;
 
-  /* Stop tracking if my mpi rank is not zero */
+  /***********************************************************
+   * Test 2: MPI Rank > 0?:
+   * Stop tracking if my mpi rank is not zero
+   ***********************************************************/
+
   my_rank = compute_value(rankA);
   DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
@@ -210,37 +230,70 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  my_size = compute_value(sizeA);
-  v = getenv("XALT_TRACKING_MPI_ONLY");
-  if (!v)
-    v = XALT_TRACKING_MPI_ONLY;
-      
-  if (my_size == 0L && (strcmp(v,"yes") == 0))
-    {
-      DEBUG0(stderr,"    -> MPI Tracking turned on and this job is not an MPI job -> exiting\n}\n\n");
-      reject_flag = XALT_MPI_SIZE_ZERO;
-      unsetenv("XALT_RUN_UUID");
-      return;
-    }
-
-
-  if (my_size < 1L)
-    my_size = 1L;
-
+  /***********************************************************
+   * Test 3: Test for acceptable hostname:
+   ***********************************************************/
   errno = 0;
   if (uname(&u) != 0)
     {
       perror("uname");
       exit(EXIT_FAILURE);
     }
+  results = hostname_parser(u.nodename);
+  hostname_parser_cleanup();
+  if (results == SKIP)
+    {
+      DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",u.nodename);
+      reject_flag = XALT_HOSTNAME;
+    }
+
+  /***********************************************************
+   * Test 4: Acceptable Executable && MPI status?
+   ***********************************************************/
+
+  int run_mask = 0;
+
+  int build_mask = 0;
+  v = getenv("XALT_SCALAR_TRACKING");
+  if (!v)
+    v = XALT_SCALAR_TRACKING;
+  if (strcasecmp(v,"yes") == 0)
+    build_mask |= BIT_SCALAR;
+
+  v = getenv("XALT_SPSR_TRACKING");
+  if (!v)
+    v = XALT_SPSR_TRACKING;
+  if (strcasecmp(v,"yes") == 0)
+    build_mask |= BIT_SPSR;
+      
+  v = getenv("XALT_MPI_TRACKING");
+  if (!v)
+    v = XALT_MPI_TRACKING;
+  if (strcasecmp(v,"yes") == 0)
+    build_mask |= BIT_MPI;
+      
+  
+  /* Test for MPI-ness */
+  my_size      = compute_value(sizeA);
+  if (my_size < 1L)
+    my_size = 1L;
 
   /* Get full absolute path to executable */
   abspath(exec_path,sizeof(exec_path));
-  reject_flag = reject(exec_path, u.nodename);
-  DEBUG3(stderr,"  Test for path and hostname, hostname: %s, path: %s, reject: %d\n", u.nodename, exec_path, reject_flag);
-  if (reject_flag != XALT_SUCCESS)
+  results = keep_path(exec_path);
+  
+  if (my_size > 1L)
+    run_mask |= BIT_MPI;
+  else
+    run_mask |= (results == SPSR) ? BIT_SPSR : BIT_SCALAR;
+                      
+    
+  /* Test for an acceptable executable */
+  if ((build_mask & run_mask) == 0)
     {
-      DEBUG0(stderr,"    -> reject_flag is true -> exiting\n}\n\n");
+      DEBUG2(stderr,"    -> Build_mask is: %d, Run mask is: %d.  There is no overlap ->exiting\n}\n\n",
+             build_mask, run_mask);
+      reject_flag = XALT_NO_OVERLAP;
       unsetenv("XALT_RUN_UUID");
       return;
     }
@@ -422,32 +475,6 @@ void myfini()
   free(ldLibPathArg);
 }
 
-static xalt_status reject(const char *path, const char * hostname)
-{
-  xalt_parser results;
-  if (path[0] == '\0')
-    return XALT_PATH;
-
-  // explain why reject happened!!!
-
-  results = hostname_parser(hostname);
-  hostname_parser_cleanup();
-  if (results == SKIP)
-    {
-      DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",hostname);
-      return XALT_HOSTNAME;
-    }
-
-  results = keep_path(path);
-  path_parser_cleanup();
-  if (results != SKIP)
-    {
-      DEBUG1(stderr,"    executable: \"%s\" is accepted\n",path);
-      return XALT_SUCCESS;
-    }
-  DEBUG1(stderr,"    executable: \"%s\" is rejected\n", path);
-  return XALT_PATH;
-}
 
 static long compute_value(const char **envA)
 {
