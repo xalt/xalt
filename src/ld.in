@@ -183,7 +183,6 @@ PyPATH="/usr/bin:/bin"
 
 
 UUID=`$UUIDGEN`
-DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 WRKDIR=/tmp/${USER}_${DATESTR}_${UUID}
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
@@ -191,11 +190,6 @@ ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
-if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
-    RESULT=$XALT_FILE_PREFIX/$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
-else
-    RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
-fi
 
 if [ -z "$BIT32FLAG" ]; then
   XALT_LIB_DIR=$XALT_DIR/lib64
@@ -215,7 +209,15 @@ COMP_T=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 
 EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+DATESTR=`date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S"`
+INT_EPOCH=$(echo "( $EPOCH )/1" | bc)
+FRAC_EPOCH=$(echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
 
+if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
+    RESULT=$XALT_FILE_PREFIX/$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
+else
+    RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
+fi
 #
 # If the $ARGSRC exists then build it
 # otherwise don't try to link with it.
