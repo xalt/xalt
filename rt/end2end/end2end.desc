@@ -28,7 +28,7 @@ test_descript = {
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
@@ -54,7 +54,7 @@ test_descript = {
      
      displayThis "Setting LD_PRELOAD, ./hello"
      export LD_LIBRARY_PATH=$outputDir/XALT/xalt/xalt/lib64:$outputDir/XALT/xalt/xalt/lib:$LD_LIBRARY_PATH
-     export LD_PRELOAD=libxalt_init.so
+     export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
      ./hello --ntasks p "a';'d"
      
      displayThis "build empty_regexp and run it"
