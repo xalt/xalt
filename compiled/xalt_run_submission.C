@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <fstream>
 #include <math.h>
@@ -164,7 +165,7 @@ int main(int argc, char* argv[], char* env[])
 
           std::ostringstream sstream;
           sstream << xaltDir << "run." << options.syshost() << ".";
-          sstream << dateStr << "_" << (int) (frac*10000.0) << "."
+          sstream << dateStr << "_" << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
                   << suffix << "." << options.uuid() << ".json";
 
           fn = sstream.str();
