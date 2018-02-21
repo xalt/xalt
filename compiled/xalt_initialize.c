@@ -282,6 +282,14 @@ void myinit(int argc, char **argv)
   abspath(exec_path,sizeof(exec_path));
   results = keep_path(exec_path);
   
+  if (results == SKIP)
+    {
+      DEBUG1(stderr,"    executable: \"%s\" is rejected\n", exec_path);
+      reject_flag = XALT_PATH;
+      unsetenv("XALT_RUN_UUID");
+      return;
+    }
+
   if (my_size > 1L)
     run_mask |= BIT_MPI;
   else
@@ -453,7 +461,8 @@ void myfini()
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
     {
-      DEBUG1(my_stderr,"    -> exiting because reject is set to: %s\n}\n\n", xalt_reasonA[reject_flag]);
+      DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
+	     xalt_reasonA[reject_flag], exec_path);
       return;
     }
 

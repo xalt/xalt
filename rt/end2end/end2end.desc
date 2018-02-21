@@ -53,12 +53,12 @@ test_descript = {
      mpirun -n 1 Ðì®/helloñ
      
      displayThis "Setting LD_PRELOAD, ./hello"
-     export LD_LIBRARY_PATH=$outputDir/XALT/xalt/xalt/lib64:$outputDir/XALT/xalt/xalt/lib:$LD_LIBRARY_PATH
      export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
      ./hello --ntasks p "a';'d"
      
-     displayThis "build empty_regexp and run it"
+     displayThis "build empty_regexp"
      gcc -o empty_regexp $(testDir)/empty_regexp.c 
+     displayThis "run empty_regexp"
      ./empty_regexp
 
      displayThis "build try_uuid and run it"
