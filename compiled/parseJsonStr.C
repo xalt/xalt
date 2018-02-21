@@ -329,6 +329,9 @@ void parseRunJsonStr(const char* name, std::string& jsonStr, std::string& usr_cm
   // tokens - an array of tokens available
   int ntokens;
 
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
+
   const char * js = jsonStr.c_str();
 
   while (1)
@@ -396,6 +399,8 @@ void parseLinkJsonStr(const char* name, std::string& jsonStr, Vstring& linklineA
   // tokens - an array of tokens available
   int ntokens;
 
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
   const char * js = jsonStr.c_str();
 
   while (1)
@@ -453,6 +458,8 @@ void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& comp
   // tokens - an array of tokens available
   int ntokens;
 
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
   const char * js = jsonStr.c_str();
 
   while (1)
