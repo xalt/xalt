@@ -212,6 +212,7 @@ EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$
 DATESTR=`date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S"`
 INT_EPOCH=$(echo "( $EPOCH )/1" | bc)
 FRAC_EPOCH=$(echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
+DATESTR="${DATESTR}_${FRAC_EPOCH}
 
 if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
     RESULT=$XALT_FILE_PREFIX/$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
