@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <math.h>
 #include <time.h>
 #include <strings.h>
 #include <string.h>
@@ -156,12 +157,15 @@ int main(int argc, char* argv[], char* env[])
 
           build_xaltDir(xaltDir, user, home);
 
+          double start = options.startTime();
+          double frac  = start - floor(start);
           time = options.startTime();
           strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
 
           std::ostringstream sstream;
           sstream << xaltDir << "run." << options.syshost() << ".";
-          sstream << dateStr << "." << suffix << "." << options.uuid() << ".json";
+          sstream << dateStr << "_" << (int) (frac*10000.0) << "."
+                  << suffix << "." << options.uuid() << ".json";
 
           fn = sstream.str();
           resultFn = fn.c_str();

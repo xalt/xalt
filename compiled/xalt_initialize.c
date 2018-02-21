@@ -89,6 +89,7 @@ static pid_t        ppid	     = 0;
 static int          errfd	     = -1;
 static double       start_time	     = 0.0;
 static double       end_time	     = 0.0;
+static double       frac_time        = 0.0;
 static long         my_rank	     = 0L;
 static long         my_size	     = 1L;
 static int          xalt_tracing     = 0;
@@ -114,8 +115,10 @@ void myinit(int argc, char **argv)
   char * cmdline;
   char * ld_preload_strp = NULL;
   char   dateStr[DATESZ];
+  char   fullDateStr[DATESZ];
   const char * v;
   xalt_parser  results;
+  xalt_parser  path_results;
 
   /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
@@ -280,9 +283,9 @@ void myinit(int argc, char **argv)
 
   /* Get full absolute path to executable */
   abspath(exec_path,sizeof(exec_path));
-  results = keep_path(exec_path);
+  path_results = keep_path(exec_path);
   
-  if (results == SKIP)
+  if (path_results == SKIP)
     {
       DEBUG1(stderr,"    executable: \"%s\" is rejected\n", exec_path);
       reject_flag = XALT_PATH;
@@ -293,7 +296,7 @@ void myinit(int argc, char **argv)
   if (my_size > 1L)
     run_mask |= BIT_MPI;
   else
-    run_mask |= (results == SPSR) ? BIT_SPSR : BIT_SCALAR;
+    run_mask |= (path_results == SPSR) ? BIT_SPSR : BIT_SCALAR;
                       
     
   /* Test for an acceptable executable */
@@ -351,6 +354,7 @@ void myinit(int argc, char **argv)
   
   build_uuid(uuid_str);
   start_time = epoch();
+  frac_time  = start_time - (long) (start_time);
 
   /**********************************************************
    * Save LD_PRELOAD and clear it before running
@@ -403,8 +407,11 @@ void myinit(int argc, char **argv)
 
   setenv("XALT_RUN_UUID",uuid_str,1);
   time_t time = start_time;
+  
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
-  setenv("XALT_DATE_TIME",dateStr,1);
+  sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
+
+  setenv("XALT_DATE_TIME",fullDateStr,1);
   setenv("XALT_DIR",XALT_DIR,1);
 
   ppid = getppid();
@@ -419,13 +426,13 @@ void myinit(int argc, char **argv)
     produce_strt_rec = 1;  /*Produce a start record for all MPI jobs. */
   else
     {
-      produce_strt_rec = (keep_path(exec_path) == SPSR);
+      produce_strt_rec = (path_results == SPSR);
       path_parser_cleanup();
     }
 
   if ( produce_strt_rec )
     {
-      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end 0 --exec \"%s\" --ntasks %ld"
+      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --uuid \"%s\" %s %s -- %s %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
 	       start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
@@ -471,7 +478,7 @@ void myfini()
 
   /* Do not background this because it might get killed by the epilog cleanup tool! */
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.3f\" --end \"%.3f\" --exec \"%s\""
+  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
            " --ntasks %ld --uuid \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
 	   start_time, end_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
 
