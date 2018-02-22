@@ -27,6 +27,18 @@ void displayArray(const char *name, int n, const char **A)
 
 int main(int argc, char* argv[])
 {
+  const char* executable_tracking = getenv("XALT_EXECUTABLE_TRACKING");
+  if (executable_tracking == NULL || (strcmp(executable_tracking,"yes") != 0))
+    {
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to yes!!\n"
+      std::cout << "\n"
+      std::cout << "            XALT will not do anything without this variable\n"
+      std::cout << "            set to yes\n"
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      return 1;
+    }
+    
   std::string syshost(xalt_syshost());
   std::string syslog_tag("XALT_LOGGING_");
   syslog_tag.append(syshost);
@@ -68,6 +80,7 @@ int main(int argc, char* argv[])
     {
       Json json;
       json.add("DATE",                        dateStr);
+      json.add("XALT_EXECUTABLE_TRACKING",    executable_tracking);
       json.add("XALT_SYSHOST",                syshost);
       json.add("XALT_VERSION",                XALT_VERSION);
       json.add("XALT_INTERFACE_VERSION",      XALT_INTERFACE_VERSION);
@@ -110,6 +123,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_GIT_VERSION:          " << XALT_GIT_VERSION       << "\n";
   std::cout << "XALT_VERSION_STR:          " << XALT_VERSION_STR       << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n";
+  std::cout << "XALT_EXECUTABLE_TRACKING:  " << executable_tracking    << "\n";
   std::cout << "XALT_SYSHOST:              " << syshost                << "\n";
   std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX       << "\n";
   std::cout << "XALT_INTERFACE_VERSION:    " << XALT_INTERFACE_VERSION << "\n";
