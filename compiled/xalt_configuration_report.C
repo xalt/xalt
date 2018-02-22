@@ -31,10 +31,10 @@ int main(int argc, char* argv[])
   if (executable_tracking == NULL || (strcmp(executable_tracking,"yes") != 0))
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
-      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to yes!!\n";
+      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to \"yes\"!!\n";
       std::cout << "\n";
       std::cout << "            XALT will not do anything without this variable\n";
-      std::cout << "            set to yes\n";
+      std::cout << "            set to \"yes\"\n";
       std::cout << "*------------------------------------------------------------------------------*\n";
       return 1;
     }
