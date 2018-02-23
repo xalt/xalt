@@ -100,7 +100,7 @@ case $SYSHOST in
       base="$base/$(uname -m)"
     fi
     #CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no"
-    CONF_OPTS=" --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file   --with-MySQL=no"
+    CONF_OPTS=" --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file   --with-MySQL=no -with-trackScalarPrgms=no"
     ;;
 
   ls5 )
