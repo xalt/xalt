@@ -43,6 +43,8 @@ void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
   // tokens - an array of tokens available
   int ntokens;
 
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
   const char * js = jsonStr.c_str();
 
   while (1)
