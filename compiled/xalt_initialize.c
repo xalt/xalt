@@ -534,10 +534,10 @@ static volatile double epoch()
 
 
 #ifdef __MACH__
-  static __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(myinit) *__init = myinit;
-  static __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(myfini) *__fini = myfini;
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) typeof(myinit) *__init = myinit;
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) typeof(myfini) *__fini = myfini;
 #else
-  static __attribute__((section(".init_array"))) typeof(myinit) *__init = myinit;
-  static __attribute__((section(".fini_array"))) typeof(myfini) *__fini = myfini;
+  __attribute__((section(".init_array"))) typeof(myinit) *__init = myinit;
+  __attribute__((section(".fini_array"))) typeof(myfini) *__fini = myfini;
 #endif
 
