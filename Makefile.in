@@ -32,6 +32,8 @@ ifeq ($(OS_NAME),Darwin)
   LIB_OPTIONS     := -bundle -undefined dynamic_lookup
 endif
 
+
+MY_HOSTNAME_PARSER   := @MY_HOSTNAME_PARSER@
 OPTLVL               := -g -O2
 package              := xalt
 VERSION              := $(shell cat $(srcdir)/.version | sed -e 's/-devel//g' )
@@ -135,7 +137,10 @@ install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec Use_getent_yes   
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
 build_compiled:
-	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) all
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) \
+                             LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)\
+                             OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                \
+                             XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
 
 echo:
 	@echo srcdir: $(srcdir)

@@ -9,12 +9,19 @@ ifneq ($(MYSQL_CONFIG),UNKNOWN_mysql_config)
   MYSQL_LDFLAGS := $(shell $(THIS_DIR)/addRpath.sh $(MYSQL_LDFLAGS))
 endif
 ifeq ($(HAVE_LIBUUID),yes)
-  LIBUUID=-luuid
-  HAVE_UUID=-DHAVE_LIBUUID
+  LIBUUID:=-luuid
+  HAVE_UUID:=-DHAVE_LIBUUID
 endif
 
 ifneq ($(XALT_FILE_PREFIX),USE_HOME)
-  USE_PREFIX=-DHAVE_FILE_PREFIX
+  USE_PREFIX:=-DHAVE_FILE_PREFIX
+endif
+
+MY_HOSTNAME_PARSER_SRC           := my_hostname_parser_dummy.c
+
+ifneq ($(MY_HOSTNAME_PARSER),no)
+   HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
+   MY_HOSTNAME_PARSER_SRC        := $(MY_HOSTNAME_PARSER)
 endif
 
 LIB_OPTIONS       := -fPIC -shared
@@ -22,9 +29,10 @@ LIB_OPTIONS       := -fPIC -shared
 WARN_FLAGS  := -Wall -Wno-unused-result 
 CF_INIT     := -I. -fPIC 
 CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild -I$(THIS_DIR) $(MYSQL_CFLAGS) $(USE_PREFIX)
-CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild -I$(THIS_DIR)
+CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild -I$(THIS_DIR) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 C_SRC       :=                             \
+	       $(HOST_PARSER_SRC)          \
                base64.c                    \
                build_uuid.c                \
                jsmn.c             	   \
@@ -228,6 +236,7 @@ lex.__XALT_hostR.c: $(CURDIR)/build/xalt_hostname_parser.lex
 lex.__XALT_hostL.c: $(CURDIR)/build/xalt_hostname_parser.lex
 	flex -P __XALT_hostL -o $@ $^
 
+
 xalt_syshost.o: build/xalt_syshost.c
 	$(COMPILE.c) -c -o $@ $^
 
@@ -240,14 +249,15 @@ build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_sy
             $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         \
             $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
             $(DESTDIR)$(LIB64)/lex.__XALT_host.o      $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
-            $(DESTDIR)$(LIB64)/build_uuid.o
+            $(DESTDIR)$(LIB64)/build_uuid.o           $(DESTDIR)$(LIB64)/my_hostname_parser.o
 
 build_init_32bit_no:
 
 build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xalt_syshost_32.o    \
                       $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o \
                       $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
-                      $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/build_uuid_32.o
+                      $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/build_uuid_32.o      \
+                      $(DESTDIR)$(LIB)/my_hostname_parser_32.o
 
 
 $(DESTDIR)$(LIB64)/lex.__XALT_path.o: lex.__XALT_pathR.c xalt_obfuscate.h
@@ -272,6 +282,8 @@ $(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build
 	$(COMPILE.c) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
 	$(LINK.c) $(CFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
+$(DESTDIR)$(LIB64)/my_hostname_parser.o: $(MY_HOSTNAME_PARSER_SRC)
+	$(COMPILE.c) -c -o $@ $^
 
 
 $(DESTDIR)$(LIB)/lex.__XALT_path_32.o: lex.__XALT_pathR.c xalt_obfuscate.h
@@ -296,13 +308,16 @@ $(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h buil
 	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR    -DIDX=1 -Ibuild  -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
 	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -Ibuild  -o $@ -c $<
+$(DESTDIR)$(LIB)/my_hostname_parser_32.o: $(MY_HOSTNAME_PARSER_SRC)
+	$(COMPILE.c) -m32 -c -o $@ $^
 $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o \
                                   $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
                                   $(DESTDIR)$(LIB)/build_uuid_preload_32.o      \
                                   $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
                                   $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o \
                                   $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o \
-                                  $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o
+                                  $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o        \
+                                  $(DESTDIR)$(LIB)/my_hostname_parser_32.o   
 	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
 
@@ -312,6 +327,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
                                     $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
+                                    $(DESTDIR)$(LIB64)/my_hostname_parser.o      \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 

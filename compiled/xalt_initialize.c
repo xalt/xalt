@@ -47,6 +47,15 @@
 #include "xalt_hostname_parser.h"
 #include "build_uuid.h"
 
+#ifdef HAVE_EXTERNAL_HOSTNAME_PARSER
+#  define HOSTNAME_PARSER         my_hostname_parser
+#  define HOSTNAME_PARSER_CLEANUP my_hostname_parser_cleanup
+#else
+#  define HOSTNAME_PARSER         hostname_parser
+#  define HOSTNAME_PARSER_CLEANUP hostname_parser_cleanup
+#endif
+
+
 #define DATESZ    100
 
 typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4} xalt_tracking_flags;
@@ -242,8 +251,9 @@ void myinit(int argc, char **argv)
       perror("uname");
       exit(EXIT_FAILURE);
     }
-  results = hostname_parser(u.nodename);
-  hostname_parser_cleanup();
+
+  results = HOSTNAME_PARSER(u.nodename);
+  HOSTNAME_PARSER_CLEANUP();
   if (results == SKIP)
     {
       DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",u.nodename);

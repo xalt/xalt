@@ -87,6 +87,7 @@ echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
+echo "XALT my_hostname_parser.c............................" : $MY_HOSTNAME_PARSER
 echo '------------------------------------------------------------------------------'
 echo
 

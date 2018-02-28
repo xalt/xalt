@@ -167,7 +167,7 @@ AC_ARG_WITH(cxxLDLibraryPath,
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
-    AC_HELP_STRING([--with-syshostConfig=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
+    AC_HELP_STRING([--with-syshostConfig=ans],[How to convert hostname in syshost[[no default]]]),
     SYSHOST_CONFIG="$withval"
     AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig")dnl
@@ -176,6 +176,18 @@ AC_ARG_WITH(syshostConfig,
     AC_MSG_RESULT([SYSHOST_CONFIG=$withval])
     SYSHOST_CONFIG="$withval"
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval"))dnl
+
+AC_SUBST(MY_HOSTNAME_PARSER)
+AC_ARG_WITH(hostnameParser,
+    AC_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser with external C file[[no]]]),
+    SYSHOST_CONFIG="$withval"
+    AC_MSG_RESULT([MY_HOSTNAME_PARSER=$with_hostnameParser])
+    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_hostnameParser")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([MY_HOSTNAME_PARSER=$withval])
+    MY_HOSTNAME_PARSER="$withval"
+    AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$withval"))dnl
 
 AC_SUBST(ENABLE_BACKGROUNDING)
 AC_ARG_WITH(enableBackgrounding,

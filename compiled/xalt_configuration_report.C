@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
       json.add("CXX_LD_LIBRARY_PATH",         CXX_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                  HAVE_32BIT);
       json.add("USING_LIBUUID",               HAVE_WORKING_LIBUUID);
+      json.add("MY_HOSTNAME_PARSER",          MY_HOSTNAME_PARSER);
       json.add("BUILT_W_MySQL",               BUILT_W_MySQL);
 
       json.add("hostnameA",    hostnameSz,    hostnameA);
@@ -142,6 +143,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ          << "\n";
   std::cout << "CXX_LD_LIBRARY_PATH:       " << CXX_LD_LIBRARY_PATH    << "\n";
   std::cout << "HAVE_32BIT:                " << HAVE_32BIT             << "\n";
+  std::cout << "MY_HOSTNAME_PARSER:        " << MY_HOSTNAME_PARSER     << "\n";
   std::cout << "Using libuuid:             " << HAVE_WORKING_LIBUUID   << "\n";
   std::cout << "Built with MySQL:          " << BUILT_W_MySQL          << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";

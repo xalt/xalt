@@ -659,6 +659,7 @@ CXXFLAGS
 CXX
 HAVE_32BIT
 ENABLE_BACKGROUNDING
+MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
 CXX_LD_LIBRARY_PATH
 MYSQL_STATIC
@@ -738,6 +739,7 @@ with_syslogMsgSz
 with_mysqlStatic
 with_cxxLDLibraryPath
 with_syshostConfig
+with_hostnameParser
 with_enableBackgrounding
 '
       ac_precious_vars='build_alias
@@ -1391,6 +1393,9 @@ Optional Packages:
   --with-syshostConfig=ans
                           Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
+  --with-hostnameParser=ans
+                          Replace built-in lex based hostname parser with
+                          external C file[[no]]
   --with-enableBackgrounding=ans
                           Enable backgrounding of start record of an
                           executable run [[no]]
@@ -3333,6 +3338,28 @@ $as_echo "SYSHOST_CONFIG=$withval" >&6; }
     SYSHOST_CONFIG="$withval"
     cat >>confdefs.h <<_ACEOF
 #define SYSHOST_CONFIG "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-hostnameParser was given.
+if test "${with_hostnameParser+set}" = set; then :
+  withval=$with_hostnameParser; SYSHOST_CONFIG="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$with_hostnameParser" >&5
+$as_echo "MY_HOSTNAME_PARSER=$with_hostnameParser" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$with_hostnameParser"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$withval" >&5
+$as_echo "MY_HOSTNAME_PARSER=$withval" >&6; }
+    MY_HOSTNAME_PARSER="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define MY_HOSTNAME_PARSER "$withval"
 _ACEOF
 
 fi
@@ -6701,6 +6728,7 @@ echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
+echo "XALT my_hostname_parser.c............................" : $MY_HOSTNAME_PARSER
 echo '------------------------------------------------------------------------------'
 echo
 
