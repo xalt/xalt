@@ -17,7 +17,7 @@ ifneq ($(XALT_FILE_PREFIX),USE_HOME)
   USE_PREFIX:=-DHAVE_FILE_PREFIX
 endif
 
-MY_HOSTNAME_PARSER_SRC           := my_hostname_parser_dummy.c
+
 
 ifneq ($(MY_HOSTNAME_PARSER),no)
    HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
@@ -172,15 +172,15 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
-all: ECHO $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
+all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
+          $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(F2DB_EXEC) $(S2DB_EXEC) $(XRP_EXEC)     \
           $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
 	  $(DESTDIR)$(LIBEXEC)/xalt_syshost                     \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
-          $(DESTDIR)$(LIBEXEC)/xalt_epoch             	        \
-	  $(MY_HOSTNAME_PARSER_TARGET)
+          $(DESTDIR)$(LIBEXEC)/xalt_epoch
 
 
 ECHO:

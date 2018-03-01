@@ -19,6 +19,18 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
+AC_SUBST(XALT_FUNCTION_TRACKING)
+AC_ARG_WITH(functionTracking,
+    AC_HELP_STRING([--with-functionTracking=ans],[Track functions from modules [[yes]]]),
+    XALT_FUNCTION_TRACKING="$withval"
+    AC_MSG_RESULT([XALT_FUNCTION_TRACKING=$with_functionTracking])
+    AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$with_functionTracking")dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_FUNCTION_TRACKING=$withval])
+    XALT_FUNCTION_TRACKING="$withval"
+    AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$withval"))dnl
+
 AC_SUBST(XALT_FILE_PREFIX)
 AC_ARG_WITH(xaltFilePrefix,
     AC_HELP_STRING([--with-xaltFilePrefix=ans],[Prefix where the json files are written [[$HOME]]]),
@@ -180,7 +192,7 @@ AC_ARG_WITH(syshostConfig,
 AC_SUBST(MY_HOSTNAME_PARSER)
 AC_ARG_WITH(hostnameParser,
     AC_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser c_file:file.c or library:file.a [[no]]]),
-    SYSHOST_CONFIG="$withval"
+    MY_HOSTNAME_PARSER="$withval"
     AC_MSG_RESULT([MY_HOSTNAME_PARSER=$with_hostnameParser])
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_hostnameParser")dnl
     ,

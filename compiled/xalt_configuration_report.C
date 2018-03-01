@@ -68,6 +68,12 @@ int main(int argc, char* argv[])
   if (xalt_mpi_tracking == NULL)
     xalt_mpi_tracking = XALT_MPI_TRACKING;
 
+  const char* xalt_func_tracking = getenv("XALT_FUNCTION_TRACKING");
+  if (xalt_func_tracking == NULL)
+    xalt_func_tracking = XALT_FUNCTION_TRACKING;
+  else if (strcmp(xalt_func_tracking,"no") != 0)
+    xalt_func_tracking = "yes";
+    
   const char* xalt_spsr_tracking = getenv("XALT_SPSR_TRACKING");
   if (xalt_spsr_tracking == NULL)
     xalt_spsr_tracking = XALT_SPSR_TRACKING;
@@ -89,6 +95,7 @@ int main(int argc, char* argv[])
       json.add("XALT_FILE_PREFIX",            XALT_FILE_PREFIX);
       json.add("XALT_ENABLE_BACKGROUNDING",   enable_backgrounding);
       json.add("XALT_TRANSMISSION_STYLE",     transmission);
+      json.add("XALT_FUNCTION_TRACKING",      xalt_func_tracking);
       if (strcmp(transmission,"syslog") == 0)
         json.add("XALT_LOGGING_TAG",          syslog_tag);
       json.add("XALT_COMPUTE_SHA1",           computeSHA1);
@@ -125,6 +132,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_VERSION_STR:          " << XALT_VERSION_STR       << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "XALT_EXECUTABLE_TRACKING:  " << executable_tracking    << "\n";
+  std::cout << "XALT_FUNCTION_TRACKING:    " << xalt_func_tracking     << "\n";
   std::cout << "XALT_SYSHOST:              " << syshost                << "\n";
   std::cout << "XALT_FILE_PREFIX:          " << XALT_FILE_PREFIX       << "\n";
   std::cout << "XALT_INTERFACE_VERSION:    " << XALT_INTERFACE_VERSION << "\n";

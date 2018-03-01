@@ -51,6 +51,14 @@ if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
    XALT_TRANSMISSION_STYLE=@transmission@
 fi
 
+if [ -z "$XALT_FUNCTION_TRACKING" ]; then
+   XALT_FUNCTION_TRACKING=@xalt_function_tracking@
+elif [ "$XALT_FUNCTION_TRACKING" != no ]; then
+   XALT_FUNCTION_TRACKING=yes
+fi
+
+
+
 
 source $MY_DIR/xalt_helper_functions.sh
 
@@ -163,8 +171,8 @@ if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true -o "$PARTIAL_LINKING" 
   exit $status
 fi
 
-MY_HOSTNAME_PARSER_STRING=@MY_HOSTNAME_PARSER@
-MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING:%%:*}
+MY_HOSTNAME_PARSER_STRING=@my_hostname_parser@
+MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
     
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
@@ -196,12 +204,12 @@ FUNCLIST=$WRKDIR/funclist.txt
 
 if [ -z "$BIT32FLAG" ]; then
   XALT_LIB_DIR=$XALT_DIR/lib64
-  if [ $MY_HOSTNAME_PARSER_KIND = "c_file" ]; then
-      MY_HOSTNAME_PARSER=$XALT_LIB_DIR/my_hostname_parser.o
-  elif [ $MY_HOSTNAME_PARSER_KIND = "library" ]; then
-      MY_HOSTNAME_PARSER=$XALT_LIB_DIR/my_hostname_parser.a
+  if [ "$MY_HOSTNAME_PARSER_KIND" = "c_file" ]; then
+      MY_HOSTNAME_PARSER_OBJ=$XALT_LIB_DIR/my_hostname_parser.o
+  elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
+      MY_HOSTNAME_PARSER_OBJ=$XALT_LIB_DIR/my_hostname_parser.a
   fi
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o $XALT_LIB_DIR/lex.__XALT_path.o $XALT_LIB_DIR/lex.__XALT_host.o $XALT_LIB_DIR/build_uuid.o $MY_HOSTNAME_PARSER"
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o $XALT_LIB_DIR/lex.__XALT_path.o $XALT_LIB_DIR/lex.__XALT_host.o $XALT_LIB_DIR/build_uuid.o $MY_HOSTNAME_PARSER_OBJ"
 else
   XALT_LIB_DIR=$XALT_DIR/lib
   XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o $XALT_LIB_DIR/lex.__XALT_path_32.o $XALT_LIB_DIR/lex.__XALT_host_32.o $XALT_LIB_DIR/build_uuid_32.o $XALT_LIB_DIR/my_hostname_parser_32.o"
@@ -242,8 +250,10 @@ fi
 # failed link for function tracking
 function_tracking()
 {
-   STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
-   $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
+     STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
+     $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  fi
 }
 
 if [ "$XALT_DISABLE_BACKGROUNDING" = yes ]; then

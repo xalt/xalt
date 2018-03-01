@@ -1,0 +1,67 @@
+# -*- python -*-
+
+test_name = "my_hostname_parser"
+test_descript = {
+   'description' : "End to end test",
+   'keywords'    : [ "simple", test_name,],
+
+   'active'      : True,
+   'test_name'   : test_name,
+
+   'run_script'  : """
+     . $(projectDir)/rt/common_funcs.sh
+
+     rm -f libhost.a host.o keep.o hello* results.csv   
+
+     initialize
+
+     gcc -I$(projectDir)/compiled -c $(testDir)/host.c
+     gcc -c $(testDir)/keep.c
+   
+     ar cr libhost.a host.o keep.o
+
+     installXALT library:$(outputDir)/libhost.a
+   
+     displayThis "buildRmapT"
+     buildRmapT
+
+     displayThis "installDB"
+     installDB 
+
+
+     displayThis "module commands"
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+
+     export SBATCH_ACCOUNT=rtm
+     export SLURM_JOB_ID=12345
+     export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_DISABLE_BACKGROUNDING=yes
+
+     displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
+
+     displayThis "mpirun -n 1 ./hello"
+     mpirun -n 1 ./hello 
+     
+     displayThis "xalt_file_to_db"
+
+     export XALT_USERS="$USER;$outputDir"
+
+     xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
+
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 1 --functions 4 --links 1
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
+   """,
+
+   'tests' : [
+      { 'id' : 't1', 'tol' : 1.01e-6},
+   ],
+}

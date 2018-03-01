@@ -673,6 +673,7 @@ XALT_SCALAR_TRACKING
 XALT_SPSR_TRACKING
 XALT_MPI_TRACKING
 XALT_FILE_PREFIX
+XALT_FUNCTION_TRACKING
 TRANSMISSION
 XALT_INTERFACE_VERSION
 subdirs
@@ -726,6 +727,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_transmission
+with_functionTracking
 with_xaltFilePrefix
 with_trackMPI
 with_trackSPSR
@@ -1372,6 +1374,8 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
+  --with-functionTracking=ans
+                          Track functions from modules [[yes]]
   --with-xaltFilePrefix=ans
                           Prefix where the json files are written [[$HOME]]
   --with-trackMPI=ans     Track MPI executables, [[yes]]
@@ -1391,11 +1395,10 @@ Optional Packages:
   --with-cxxLDLibraryPath=ans
                           LD_LIBRARY_PATH for c++ programs[[]]
   --with-syshostConfig=ans
-                          Directory where xalt_db.conf and reverseMapD can be
-                          found [[.]]
+                          How to convert hostname in syshost[[no default]]
   --with-hostnameParser=ans
-                          Replace built-in lex based hostname parser with
-                          external C file[[no]]
+                          Replace built-in lex based hostname parser
+                          c_file:file.c or library:file.a [[no]]
   --with-enableBackgrounding=ans
                           Enable backgrounding of start record of an
                           executable run [[no]]
@@ -3056,6 +3059,28 @@ fi
 
 
 
+# Check whether --with-functionTracking was given.
+if test "${with_functionTracking+set}" = set; then :
+  withval=$with_functionTracking; XALT_FUNCTION_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$with_functionTracking" >&5
+$as_echo "XALT_FUNCTION_TRACKING=$with_functionTracking" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_FUNCTION_TRACKING "$with_functionTracking"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$withval" >&5
+$as_echo "XALT_FUNCTION_TRACKING=$withval" >&6; }
+    XALT_FUNCTION_TRACKING="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_FUNCTION_TRACKING "$withval"
+_ACEOF
+
+fi
+
+
+
 # Check whether --with-xaltFilePrefix was given.
 if test "${with_xaltFilePrefix+set}" = set; then :
   withval=$with_xaltFilePrefix; XALT_FILE_PREFIX="$withval"
@@ -3346,7 +3371,7 @@ fi
 
 # Check whether --with-hostnameParser was given.
 if test "${with_hostnameParser+set}" = set; then :
-  withval=$with_hostnameParser; SYSHOST_CONFIG="$withval"
+  withval=$with_hostnameParser; MY_HOSTNAME_PARSER="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$with_hostnameParser" >&5
 $as_echo "MY_HOSTNAME_PARSER=$with_hostnameParser" >&6; }
     cat >>confdefs.h <<_ACEOF
@@ -6728,7 +6753,7 @@ echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
-echo "XALT my_hostname_parser.c............................" : $MY_HOSTNAME_PARSER
+echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo '------------------------------------------------------------------------------'
 echo
 

@@ -42,7 +42,11 @@ installXALT()
 {
   rm -rf XALT build
   mkdir build
-  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 --with-config=$projectDir/Config/rtm_config.py ; \
+  if [ -n "$1" ]; then
+      HOST_PARSER_OPT=--with-hostnameParser=$1
+  fi
+
+  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-syshostConfig=nth_name:2 --with-config=$projectDir/Config/rtm_config.py $HOST_PARSER_OPT ; \
   echo "<make>"; make OPTLVL="-g -O0" install ;  )
   cp $projectDir/src/removeDataBase.py    XALT/xalt/xalt/sbin
   cp $projectDir/test/check_entries_db.py XALT/xalt/xalt/sbin
