@@ -179,7 +179,7 @@ AC_ARG_WITH(syshostConfig,
 
 AC_SUBST(MY_HOSTNAME_PARSER)
 AC_ARG_WITH(hostnameParser,
-    AC_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser with external C file[[no]]]),
+    AC_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser c_file:file.c or library:file.a [[no]]]),
     SYSHOST_CONFIG="$withval"
     AC_MSG_RESULT([MY_HOSTNAME_PARSER=$with_hostnameParser])
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_hostnameParser")dnl

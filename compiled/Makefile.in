@@ -21,7 +21,16 @@ MY_HOSTNAME_PARSER_SRC           := my_hostname_parser_dummy.c
 
 ifneq ($(MY_HOSTNAME_PARSER),no)
    HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
-   MY_HOSTNAME_PARSER_SRC        := $(MY_HOSTNAME_PARSER)
+   PARSER_TYPE                   := $(firstword $(subst :, ,$(MY_HOSTNAME_PARSER)))
+   ifeq ($(PARSER_TYPE),c_file)
+      MY_HOSTNAME_PARSER_SRC     := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.o
+   endif
+   ifeq ($(PARSER_TYPE),library)
+      MY_HOSTNAME_PARSER_LIBRARY := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_TARGET  := my_hostname_parser_target
+      MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.a
+   endif
 endif
 
 LIB_OPTIONS       := -fPIC -shared
@@ -170,12 +179,15 @@ all: ECHO $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
-          $(DESTDIR)$(LIBEXEC)/xalt_epoch             	
+          $(DESTDIR)$(LIBEXEC)/xalt_epoch             	        \
+	  $(MY_HOSTNAME_PARSER_TARGET)
+
 
 ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
-
+my_hostname_parser_target:
+	cp $(MY_HOSTNAME_PARSER_LIBRARY) $(DESTDIR)$(LIB64)/my_hostname_parser.a
 
 $(TRP_EXEC) : $(TRP_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
@@ -249,7 +261,7 @@ build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_sy
             $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         \
             $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
             $(DESTDIR)$(LIB64)/lex.__XALT_host.o      $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
-            $(DESTDIR)$(LIB64)/build_uuid.o           $(DESTDIR)$(LIB64)/my_hostname_parser.o
+            $(DESTDIR)$(LIB64)/build_uuid.o           $(MY_HOSTNAME_PARSER_OBJ)
 
 build_init_32bit_no:
 
@@ -327,7 +339,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
                                     $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
                                     $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
-                                    $(DESTDIR)$(LIB64)/my_hostname_parser.o      \
+                                    $(MY_HOSTNAME_PARSER_OBJ)                    \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
