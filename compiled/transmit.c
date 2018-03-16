@@ -16,33 +16,35 @@
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
-              const char* syshost, const char* resultFn)
+              const char* syshost, char* resultFn)
 {
   char * cmdline;
   char * p_dbg        = getenv("XALT_TRACING");
-  int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0 ));
+  int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes")  == 0 ||
+				   strcmp(p_dbg,"run")  == 0 ));
 
   if (strcasecmp(transmission, "file") == 0)
     {
-      //*********************************************************************
-      // Build file name for xalt json record.  It is only used when the
-      // file transmission style is used;
       if (resultFn == NULL)
-        return;
+	{
+	  DEBUG0(stderr,"  resultFn is NULL, $HOME might be undefined -> No XALT output\n");
+	  return;
+	}
 
-      int   lenFn   = strlen(resultFn);
-      char* dirname = malloc(lenFn+1);
-      memcpy(dirname, resultFn, lenFn+1);
-
-      char* p       = strrchr(dirname,'/');
-      *p = '\0';
-      if ( ! isDirectory(dirname))
-        mkdir(dirname, 0700);
-      free(dirname);
+      int err = mkpath(resultFn, 0700);
+      if (err)
+	{
+	  if (xalt_tracing)
+	    {
+	      perror("Error: ");
+	      fprintf(stderr,"  unable to mkpath(%s) -> No XALT output\n", resultFn);
+	    }
+	  return;
+	}
 
       FILE* fp = fopen(resultFn,"w");
       if (fp == NULL && xalt_tracing)
-        fprintf(stderr,"  Unable to open: %s\n", resultFn);
+	fprintf(stderr,"  Unable to open: %s -> No XALT output\n", resultFn);
       else
         {
           fprintf(fp, "%s\n", jsonStr);

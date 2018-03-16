@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
   const char* build_epoch = argv[i++];
   const char* funcRawFn   = argv[i++];
   const char* linklineFn  = argv[i++];
-  const char* resultFn    = argv[i++];
+  char*       resultFn    = argv[i++];
   std::string compT       = argv[i++];
 
   if (compT.size() == 0)
@@ -92,11 +92,12 @@ int main(int argc, char* argv[])
   std::string key("link_");
   key.append(uuid);
 
-
-  // if user has wiped out $HOME then set resultFn to NULL so that file transmission will do nothing!
-  const char* home = getenv("HOME");
-  if (home == NULL)
-    resultFn = NULL;
+  #ifndef HAVE_FILE_PREFIX
+    // if user has wiped out $HOME then set resultFn to NULL so that file transmission will do nothing!
+    const char* home = getenv("HOME");
+    if (home == NULL)
+      resultFn = NULL;
+  #endif
 
   // transmit results to anything that is not "direct2db"
   transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, resultFn);

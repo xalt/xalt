@@ -137,7 +137,7 @@ int main(int argc, char* argv[], char* env[])
 
   std::string jsonStr = json.result();
   std::string fn;
-  const char* resultFn = NULL;
+  char* resultFn = NULL;
 
 
   std::string key   = (end_record) ? "run_fini_" : "run_strt_";
@@ -169,12 +169,14 @@ int main(int argc, char* argv[], char* env[])
                   << suffix << "." << options.uuid() << ".json";
 
           fn = sstream.str();
-          resultFn = fn.c_str();
+          resultFn = strdup(fn.c_str());
         }
     }
 
   transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), resultFn);
   xalt_quotestring_free();
+  if (resultFn)
+    free(resultFn);
   DEBUG0(stderr,"}\n\n");
   return 0;
 }
