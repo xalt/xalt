@@ -23,6 +23,13 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes")  == 0 ||
 				   strcmp(p_dbg,"run")  == 0 ));
 
+  if ((strcasecmp(transmission,"file")      != 0 ) &&
+      (strcasecmp(transmission,"syslog")    != 0 ) && 
+      (strcasecmp(transmission,"none")      != 0 ) && 
+      (strcasecmp(transmission,"syslogv1")  != 0 ) && 
+      (strcasecmp(transmission,"direct2db") != 0 ))
+    transmission = "file";
+
   if (strcasecmp(transmission, "file") == 0)
     {
       if (resultFn == NULL)

@@ -51,6 +51,12 @@ int main(int argc, char* argv[])
   const char* transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
+  if ((strcasecmp(transmission,"file")      != 0 ) &&
+      (strcasecmp(transmission,"none")      != 0 ) && 
+      (strcasecmp(transmission,"syslog")    != 0 ) && 
+      (strcasecmp(transmission,"syslogv1")  != 0 ) && 
+      (strcasecmp(transmission,"direct2db") != 0 ))
+    transmission = "file";
 
   const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
   if (computeSHA1 == NULL)
