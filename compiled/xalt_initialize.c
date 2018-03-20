@@ -76,6 +76,27 @@ static const char * xalt_reasonA[] = {
   "XALT execute type does not match requested type",
 };
 
+
+static const char * xalt_build_descriptA[] = {
+  "Not possible",                                 /* 0 */
+  "track scalar programs only",                   /* 1 */
+  "track SPSR programs only"                      /* 2 */
+  "track SPSR and scalar programs only",          /* 3 */
+  "track MPI programs only",                      /* 4 */
+  "track MPI and scalar programs only",           /* 5 */
+  "track MPI and SPSR programs only",             /* 6 */
+  "track all programs",                           /* 7 */
+};
+
+static const char * xalt_run_descriptA[] = {
+  "Not possible",                                 /* 0 */
+  "program is a scalar program",                  /* 1 */
+  "program is a SPSR program"                     /* 2 */
+  "Not possible",                                 /* 3 */
+  "program is an MPI program",                    /* 4 */
+};
+
+
 const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
@@ -312,8 +333,8 @@ void myinit(int argc, char **argv)
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)
     {
-      DEBUG2(stderr,"    -> Build_mask is: %d, Run mask is: %d.  There is no overlap ->exiting\n}\n\n",
-             build_mask, run_mask);
+      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> not tracking and exiting\n}\n\n",
+             xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
       reject_flag = XALT_NO_OVERLAP;
       unsetenv("XALT_RUN_UUID");
       return;
