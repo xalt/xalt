@@ -78,22 +78,22 @@ static const char * xalt_reasonA[] = {
 
 
 static const char * xalt_build_descriptA[] = {
-  "Not possible",                                 /* 0 */
+  "track no programs at all",                     /* 0 */
   "track scalar programs only",                   /* 1 */
-  "track SPSR programs only"                      /* 2 */
+  "track SPSR programs only",                     /* 2 */
   "track SPSR and scalar programs only",          /* 3 */
   "track MPI programs only",                      /* 4 */
   "track MPI and scalar programs only",           /* 5 */
   "track MPI and SPSR programs only",             /* 6 */
-  "track all programs",                           /* 7 */
+  "track all programs"                            /* 7 */
 };
 
 static const char * xalt_run_descriptA[] = {
-  "no programs are being tracked",                /* 0 */
+  "Not possible",                                 /* 0 */
   "program is a scalar program",                  /* 1 */
   "program is a SPSR program"                     /* 2 */
   "Not possible",                                 /* 3 */
-  "program is an MPI program",                    /* 4 */
+  "program is an MPI program"                     /* 4 */
 };
 
 
