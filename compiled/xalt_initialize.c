@@ -78,22 +78,22 @@ static const char * xalt_reasonA[] = {
 
 
 static const char * xalt_build_descriptA[] = {
-  "Not possible",                                 /* 0 */
+  "track no programs at all",                     /* 0 */
   "track scalar programs only",                   /* 1 */
-  "track SPSR programs only"                      /* 2 */
+  "track SPSR programs only",                     /* 2 */
   "track SPSR and scalar programs only",          /* 3 */
   "track MPI programs only",                      /* 4 */
   "track MPI and scalar programs only",           /* 5 */
   "track MPI and SPSR programs only",             /* 6 */
-  "track all programs",                           /* 7 */
+  "track all programs"                            /* 7 */
 };
 
 static const char * xalt_run_descriptA[] = {
   "Not possible",                                 /* 0 */
   "program is a scalar program",                  /* 1 */
-  "program is a SPSR program"                     /* 2 */
+  "program is a SPSR program",                    /* 2 */
   "Not possible",                                 /* 3 */
-  "program is an MPI program",                    /* 4 */
+  "program is an MPI program"                     /* 4 */
 };
 
 
@@ -315,6 +315,7 @@ void myinit(int argc, char **argv)
   /* Get full absolute path to executable */
   abspath(exec_path,sizeof(exec_path));
   path_results = keep_path(exec_path);
+  path_parser_cleanup();
   
   if (path_results == SKIP)
     {
@@ -456,10 +457,7 @@ void myinit(int argc, char **argv)
   if (my_size > 0)
     produce_strt_rec = 1;  /*Produce a start record for all MPI jobs. */
   else
-    {
-      produce_strt_rec = (path_results == SPSR);
-      path_parser_cleanup();
-    }
+    produce_strt_rec = (path_results == SPSR);
 
   if ( produce_strt_rec )
     {
