@@ -571,4 +571,3 @@ static volatile double epoch()
   __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
   __attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
 #endif
-
