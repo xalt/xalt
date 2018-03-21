@@ -89,7 +89,7 @@ static const char * xalt_build_descriptA[] = {
 };
 
 static const char * xalt_run_descriptA[] = {
-  "Not possible",                                 /* 0 */
+  "no programs are being tracked",                /* 0 */
   "program is a scalar program",                  /* 1 */
   "program is a SPSR program"                     /* 2 */
   "Not possible",                                 /* 3 */
@@ -335,6 +335,8 @@ void myinit(int argc, char **argv)
     {
       DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> not tracking and exiting\n}\n\n",
              xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+      DEBUG2(stderr,"    -> XALT is build to %d, Current %d -> not tracking and exiting\n}\n\n",
+             build_mask, run_mask);
       reject_flag = XALT_NO_OVERLAP;
       unsetenv("XALT_RUN_UUID");
       return;
