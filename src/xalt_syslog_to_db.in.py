@@ -348,7 +348,12 @@ def main():
   icnt   = 0
   t1     = time.time()
 
-  rmapT  = Rmap(args.rmapD).reverseMapT()
+  try:
+    rmapT  = Rmap(args.rmapD).reverseMapT()
+  except Exception as e:
+    print(e, file=sys.stderr)
+    print("Failed to read reverseMap file -> exiting")
+    sys.exit(1)
 
   lnkCnt = 0
   pkgCnt = 0
@@ -397,6 +402,7 @@ def main():
       except Exception as e:
         print(e, file=sys.stderr)
         print("lineNo:",lineNo,"file:",fn,"line:",line, file=sys.stderr)
+        print("Now continuing processing!", file=sys.stderr)
         continue
 
       
