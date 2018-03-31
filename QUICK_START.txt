@@ -1,0 +1,99 @@
+
+##############################################################################
+#                                                                            #
+#                      QUICK INSTALLATION GUIDE FOR XALT 2                   #
+#                                                                            #
+##############################################################################
+
+These guarantee that various components (e.g. lua executable, Lmod
+utilities) are found in these next steps.
+
+The steps are divided into three sections:
+
+0)  Chose installation directory for XALT
+1)  Pre-requisite steps where we install Lua and Lmod needed by XALT
+2)  XALT installation itself
+3)  Post installation step to configure XALT
+
+
+
+0) Chose installation directory for XALT
+------------------------------------------------------------------------------
+
+Like all packages that use the autoconf tool, you will specify the
+prefix for where the XALT package will be installed.  It is common
+place to install packages say /apps/xalt/<xalt_version> with
+configure.
+
+------------------------------------------------------------------------------
+DO NOT PUT THE VERSION OF XALT IN THE CONFIGURATION LINE!!
+------------------------------------------------------------------------------
+
+Instead you should specify the directory above xalt for the prefix
+value.  So if you would like to install version 2.0 of xalt in
+/apps/xalt/2.0 you SHOULD set prefix to /apps.  XALT will install
+itself in /apps/xalt/2.0 and make a symlink from /apps/xalt/xalt to
+/apps/xalt/2.0.  This way /apps/xalt/xalt will always point to the
+latest version of the XALT software.
+
+If you do not follow this advice then you will have trouble with
+installing future versions of XALT.
+
+Lets assume that XALT_DIR is the directory above where you where you
+wish to install XALT (say /apps).
+
+
+
+1. PRE-REQUISITE: Lua and Lmod
+------------------------------------------------------------------------------
+
+Lua and Lmod is required to associate modulefile with the tracked library, 
+and to track the external functions (subroutines) resolved to the library. 
+Lmod is a modern Environment Module System.  If you have Lmod
+installed you can bypass this step and 
+
+1.1) Download Lmod and  Lua version from Lmod's sourceforge page
+(http://sourceforge.net/projects/lmod/), which already include
+"luaposix" required by Lmod. The direct link is:
+
+http://sourceforge.net/projects/lmod/files/
+
+(One could use / install Lua from its upstream project, but then one would
+also need to build "luafilesystem" and "luaposix". Using Lua version from
+Lmod sourceforge page is easiest.  It is also possible that you're
+linux distribution already has Lua and luaposix as packages.)
+
+
+1.2) Un-tar, configure, and install, then add the installation to PATH
+
+    $ tar -xf lua-<version>.tar.gz
+    $ cd lua-<version>/
+    $ ./configure --prefix=$XALT_DIR
+    $ make && make install
+
+
+1.3) Download and install Lmod
+
+    $ tar -xf Lmod-<version>.tar.bz2
+    $ ./configure --prefix=$XALT_DIR
+    $ make install
+
+2. XALT INSTALLATION 
+------------------------------------------------------------------------------
+
+2.1) Download XALT, from either its Sourceforge page:
+http://sourceforge.net/projects/xalt/files
+
+or from its GitHub page
+https://github.com/Fahey-McLay/xalt
+
+To clone from its GitHub repository:
+$> git clone https://github.com/Fahey-McLay/xalt.git
+
+
+5. Change directory to XALT (after untar-ing), configure, then install
+
+$> cd xalt
+$> ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR
+$> make 
+$> make install
