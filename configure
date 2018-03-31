@@ -3375,7 +3375,7 @@ if test "${with_hostnameParser+set}" = set; then :
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$with_hostnameParser" >&5
 $as_echo "MY_HOSTNAME_PARSER=$with_hostnameParser" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define SYSHOST_CONFIG "$with_hostnameParser"
+#define MY_HOSTNAME_PARSER "$with_hostnameParser"
 _ACEOF
 
 else
