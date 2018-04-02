@@ -50,7 +50,7 @@ wish to install XALT (say /apps).
 Lua and Lmod is required to associate modulefile with the tracked library, 
 and to track the external functions (subroutines) resolved to the library. 
 Lmod is a modern Environment Module System.  If you have Lmod
-installed you can bypass this step and 
+installed you can bypass this step and skip to XALT INSTALLATION section.
 
 1.1) Download Lmod and  Lua version from Lmod's sourceforge page
 (http://sourceforge.net/projects/lmod/), which already include
@@ -78,22 +78,227 @@ linux distribution already has Lua and luaposix as packages.)
     $ ./configure --prefix=$XALT_DIR
     $ make install
 
-2. XALT INSTALLATION 
+2. XALT INSTALLATION on login and compute nodes (or just for testing)
 ------------------------------------------------------------------------------
 
-2.1) Download XALT, from either its Sourceforge page:
-http://sourceforge.net/projects/xalt/files
-
-or from its GitHub page
+2.1) Download XALT, from its GitHub page
 https://github.com/Fahey-McLay/xalt
 
 To clone from its GitHub repository:
-$> git clone https://github.com/Fahey-McLay/xalt.git
+    $ git clone https://github.com/Fahey-McLay/xalt.git
 
 
-5. Change directory to XALT (after untar-ing), configure, then install
+2.2) XALT needs to know the name of your cluster.  You will want a
+separate database for each cluster you run XALT on at your center.
+There are several ways to specify your cluster's name.  The simpliest
+is to hardcode it:
 
-$> cd xalt
-$> ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR
-$> make 
-$> make install
+    --with-syshostConfig=hardcode:<name>
+
+At TACC we have several clusters, one of which is stampede2 so at TACC
+we could use:
+
+    --with-syshostConfig=hardcode:stampede2
+
+There are other ways to tell XALT the name of the cluster.  See XXX in
+the manual for details.
+
+
+2.3) You must build XALT with the system gcc/g++. If your system g++
+is older than 4.8.5 (on Centos 6 for example) then XALT can support
+that system but it is slightly more complicated (see XXX for details).
+Make sure that when you install XALT that the gcc and g++ are the
+system ones.  Note that user executables can be built with any other
+compilers and will accept an XALT built with system gcc/g++
+
+2.4) You need to tell XALT how you want to transmit the generated
+data.  There are two choices: either file or syslog.  For testing it
+is best to the the "file" transmission style.  By default XALT will
+write json records in files in the ~/.xalt.d directory.  XALT will
+create that directory if needed.  It is also possible for XALT to
+write all json records into a globally writable location by using the
+--with-xaltFilePrefix=/path/to/json/files.  If this is set to
+/global/xalt then XALT will write json files in /global/xalt/$USER.
+
+So you should probably start with the following for testing to write
+the json record to files in ~/.xalt.d:
+
+   --with-transmission=file
+   
+To write to a global location (say /global/xalt), you can do:
+
+   --with-transmission=file --with-xaltFilePrefix=/global/xalt
+
+To write records to syslog do:
+
+   --with-transmission=syslog
+   
+2.5) Turn off MySQL support when on the cluster.  XALT needs MySQL
+support to write to the database.  But this is not necessary on the
+login and compute nodes, just the VM where you expect to install the
+database.  So on your login and compute nodes do:
+
+   --with-MySQL=no
+
+2.6) By default XALT tracks three types of programs: scalar, SPSR and
+MPI. The scalar programs are non-mpi programs, SPSR are special
+programs that you can track the libraries that they use (e.g. python,
+R and MATLAB).  This is not required so this can be delayed until you
+are ready.  Please see XXX in the manual for more details about SPSR.
+
+Finally there are MPI programs.  Note that an MPI capable programs run
+with only one task is considered to be scalar by XALT.  So if you only
+want to track MPI programs you can do:
+
+    --with-trackScalarPrgms=no
+    --with-trackSPSR=no
+
+2.7) XALT requires a configuration file written in python.  There are
+examples in the Config directory.  In particular, the file
+Config/TACC_config.py is the configuration we use at TACC.  This file
+defines three types of filtering.  One is hostname filtering.  It is
+typical to only track program execution on compute nodes.  Note that
+linking of executable is tracked on both login and compute nodes.
+The second type of filtering is by executables path. Finally there is
+filtering of the environment variables.  It turns out that storing the
+environment is expensive in terms of space in the database.  It is
+important to chose a very limited set of variables to save, on the
+order of 5 to 10 variables per execution.  For details about this file
+please read over the Config/TACC_config.py file for details.  Also pay
+attention to the commas.
+
+
+2.8) Typical configure and build instructions for stampede2.
+
+    $ cd xalt
+    $ ./configure --prefix=/opt/apps --with-syshostConfig=hardcode:stampede2 \
+      --with-config=Config/TACC_config.py --with-transmission=file           \
+      --with-MySQL=no --with-trackScalarPrgms=no"
+    $ make install
+
+This will install XALT in /opt/apps/xalt/xalt with the cluster name of
+stampede2, the transmission style is file for testing and with no
+MySQL support.  Finally we are not tracking scalar programs during the
+testing phase
+
+2.9) Below is the XALT modulefile you need to specify to use the
+package.  The first one is a lua modulefile that can be used with Lmod.
+
+    setenv("XALT_EXECUTABLE_TRACKING","yes")
+
+    prepend_path{"PATH",          "/opt/apps/xalt/xalt/bin",  priority="100"}
+    prepend_path("LD_PRELOAD",    "/opt/apps/xalt/xalt/lib64/libxalt_init.so")
+    prepend_path("COMPILER_PATH", "/opt/apps/xalt/xalt/bin")
+
+The following is a TCL modulefile:
+
+    setenv XALT_EXECUTABLE_TRACKING  yes
+
+    prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
+    prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/lib64/libxalt_init.so
+    prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
+
+XALT does not require that your site use Lmod has your module system.
+However, it does require somehow that you make XALT's ld be found in
+the path before the real "ld".  Lmod has a special feature that builds
+paths in priority order.  This means that Lmod guarantees that XALT's
+path appears before other when the other modules are loaded.  If all
+your system has is /bin/ld then having XALT's ld found first in the
+path is easy.  But modern GCC compilers have their own ld so some
+effort will be required to make XALT's ld appear first in $PATH.
+
+So work on your part may be required to make XALT's ld always be first
+in the path.
+
+
+2.10) You should now test to make sure that you can generate the json
+records.  If you any issues you should first read XALT_DEBUGGING.txt
+then contact the XALT mailing list.
+
+3. Building a reverse map for your cluster
+---------------------------------------------------------------------
+
+3.1) Build ReverseMap for your cluster.  The ReverseMap associates
+libraries  and objectfiles with modulefile that specifies them. Libmap
+lists the  library files (.a and .so) whose call to their function will be tracked by
+XALT. ReverseMap and Libmap are stored in the same file.
+
+    $ $LMOD_DIR/spider -o xalt_rmapT $MODULEPATH > xalt_rmapT.json
+
+On a Cray (XC, XE, XK), this is a bit more involved, so a script has been
+provided under contrib/ directory in XALT source distribution to make this
+easier. One can simply use this script and run:
+
+   $ xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
+
+where $XALT_ETC_DIR where you would like to store these files for
+ingestion into the database. 
+
+
+4. Setup the database
+------------------------------------------------------------------------
+
+To setup XALT's MySQL database on a VM, you'll need to do the
+following:
+
+4.1) Install XALT on the VM.  This time with MySQL support.
+You'll need to install the MySQL packages on the VM and the
+python MySQL package as well.  
+
+    $ git clone https://github.com/Fahey-McLay/xalt.git
+    $ cd xalt
+    $ ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR     \
+      --with-syshostConfig=hardcode:$SYSHOST                         \
+      --with-config=Config/TACC_config.py --with-transmission=file   \
+      --with-MySQL=yes --with-trackScalarPrgms=no"
+    $ make install
+
+where XALT_DIR is the location like /opt/apps or where ever you wish
+to install XALT on the VM;  XALT_ETC_DIR is where you are going to
+store the reverseMap and XALT configuration information; SYSHOST is
+the name of your cluster.  You can one MySQL DB server be shared by
+multiple clusters.  Just pick one name for SYSHOST here,  it won't be
+used on the VM so it doesn't matter which name you chose.
+
+4.2) Install MySQL on the VM.  Here you will want to install MySQL
+where the database itself has room to grow.  You should consider
+installing it where the databases have at least a couple of TB of
+space.  If you have more than one cluster where you are collecting
+XALT data, you'll have a separate database for each cluster.  
+
+4.3) Create a database account in the MySQL database.  I recommend
+that you name your database xalt_<clusterName>.  So TACC's db for
+stampede2 is called xalt_stampede2. Then create an account to write to
+that database:
+
+    mysql> GRANT ALL PRIVILEGES ON xalt_stampede2.* To 'xaltUser'@'hostname' IDENTIFIED BY 'password';
+    mysql> GRANT ALL PRIVILEGES ON xalt_stampede2.* To 'xaltUser'@'*' IDENTIFIED BY 'password';
+    
+Where you have correctly set the db name, userName and hostname and
+password to match your setup.
+
+4.4) Create a file to hold the database credentials with
+conf_create.py for each cluster
+
+    $ cd $XALT_ETC_DIR; python $XALT_DIR/xalt/xalt/sbin/conf_create.py
+
+And answer the questions asked to match what you did in step 4.3.
+
+4.5) Create the database for each cluster.
+
+   $ cd $XALT_ETC_DIR; python $XALT_DIR/xalt/xalt/sbin/createDB.py --confFn xalt_<clusterName>_db.conf
+
+5. Load Json records via file transmission style.
+------------------------------------------------------------------------
+
+You will either load the json records via file or syslog.  Use this
+description if you are saving the XALT records using file
+transmission style.
+
+On each cluster create an account where you have installed XALT with
+MySQL support and python-MySQL support with $PREFIX=$HOME.  This means
+that ~/xalt/xalt/* will have the XALT package installed.
+
+5.1) Create a file to hold the 
+
+
