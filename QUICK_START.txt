@@ -87,7 +87,6 @@ https://github.com/Fahey-McLay/xalt
 To clone from its GitHub repository:
     $ git clone https://github.com/Fahey-McLay/xalt.git
 
-
 2.2) XALT needs to know the name of your cluster.  You will want a
 separate database for each cluster you run XALT on at your center.
 There are several ways to specify your cluster's name.  The simpliest
@@ -300,5 +299,4 @@ MySQL support and python-MySQL support with $PREFIX=$HOME.  This means
 that ~/xalt/xalt/* will have the XALT package installed.
 
 5.1) Create a file to hold the 
-
 
