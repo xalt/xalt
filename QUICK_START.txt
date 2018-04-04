@@ -222,7 +222,7 @@ libraries  and objectfiles with modulefile that specifies them. Libmap
 lists the  library files (.a and .so) whose call to their function will be tracked by
 XALT. ReverseMap and Libmap are stored in the same file.
 
-    $ $LMOD_DIR/spider -o xalt_rmapT $MODULEPATH > xalt_rmapT.json
+    $ $LMOD_DIR/spider -o jsonReverseMapT $MODULEPATH > jsonReverseMapT.json
 
 On a Cray (XC, XE, XK), this is a bit more involved, so a script has been
 provided under contrib/ directory in XALT source distribution to make this

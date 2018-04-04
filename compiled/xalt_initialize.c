@@ -279,6 +279,8 @@ void myinit(int argc, char **argv)
     {
       DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",u.nodename);
       reject_flag = XALT_HOSTNAME;
+      unsetenv("XALT_RUN_UUID");
+      return; 
     }
 
   /***********************************************************
