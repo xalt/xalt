@@ -103,7 +103,8 @@ BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
 SBIN_PKG             	:= src/conf_create.in.py  	     src/createDB.in.py               \
                            src/xalt_db.conf                  src/xalt_syslog_to_db.in.py      \
-                           src/xalt_split_syslog_fn.in.py
+                           src/xalt_split_syslog_fn.in.py    src/xalt_file_to_db.in.py
+
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG          	:= src/XALTdb.py                     src/progressBar.py               \
