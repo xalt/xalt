@@ -197,6 +197,13 @@ def passwd_generator():
 
 
 
+def build_xaltDir(user, hdir):
+  prefix = "@xalt_file_prefix@"
+  if (prefix == "USE_HOME"):
+    return os.path.join(hdir,".xalt.d")
+
+  return os.path.join(prefix,user)
+
 def main():
   """
   Walks the list of users via the passwd_generator and load the
@@ -227,7 +234,8 @@ def main():
 
   for user, hdir in passwd_generator():
     XALT_Stack.push("User: " + user)
-    xaltDir = os.path.join(hdir,".xalt.d")
+    xaltDir = build_xaltDir(user, hdir)
+
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")

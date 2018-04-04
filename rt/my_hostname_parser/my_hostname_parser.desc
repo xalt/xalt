@@ -11,7 +11,7 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
-     rm -f libhost.a host.o keep.o hello* results.csv   
+     rm -rf libhost.a host.o keep.o hello* results.csv LOG
 
      initialize
 
@@ -45,11 +45,11 @@ test_descript = {
      displayThis "mpirun -n 1 ./hello"
      mpirun -n 1 ./hello 
      
-     displayThis "xalt_file_to_db"
 
-     export XALT_USERS="$USER;$outputDir"
+     export XALT_USERS="$USER"
 
-     xalt_file_to_db  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
+     displayThis "xalt_file_to_db.py"
+     xalt_file_to_db.py  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 1 --functions 4 --links 1
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
