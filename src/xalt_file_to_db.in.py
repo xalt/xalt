@@ -80,7 +80,7 @@ class CmdLineOptions(object):
     return args
 
 
-def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
+def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
 
@@ -115,6 +115,12 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
       f.close()
       xalt.link_to_db(reverseMapT, linkT)
       num  += 1
+      try:
+        if (deleteFlg):
+          os.remove(fn)
+      except:
+        pass
+
       v     = XALT_Stack.pop()
       carp("fn",v)
 
@@ -126,7 +132,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
   return num
 
 
-def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
+def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
@@ -159,6 +165,12 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
       f.close()
 
       xalt.run_to_db(reverseMapT, runT)
+      try:
+        if (deleteFlg):
+          os.remove(fn)
+      except:
+        pass
+        
       v = XALT_Stack.pop()  
       carp("fn",v)
 
@@ -240,19 +252,14 @@ def main():
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
       XALT_Stack.push("link_json_to_db()")
-      lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, linkFnA)
+      lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
       XALT_Stack.pop()
-      if (args.delete):
-        remove_files(linkFnA)
-        #remove_files(files_in_tree(xaltDir, "*/.link.*.json"))
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
       XALT_Stack.push("run_json_to_db()")
-      runCnt  += run_json_to_db(xalt, args.listFn, rmapT, runFnA)
+      runCnt  += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
       XALT_Stack.pop()
-      if (args.delete):
-        remove_files(runFnA)
-        #remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
+
     icnt += 1
     v = XALT_Stack.pop()
     carp("User",v)
