@@ -3,7 +3,9 @@
 # The patterns listed here are the hosts that can track executable with XALT.
 # Typical usage is that compute nodes track executable with XALT while login
 # nodes do not.
-#
+
+import sys
+
 # Note that linking an executable is everywhere and is independent of
 # hostname_patterns
 
@@ -149,5 +151,41 @@ env_patterns = [
     [ 'KEEP', r'^PYTHON.*'],
     [ 'KEEP', r'^R_.*'],
     [ 'KEEP', r'^TACC_AFFINITY_ENABLED=.*'],
-    [ 'KEEP', r'^_LMFILES_=.*'],
+    [ 'KEEP', r'^_LMFILES_=.*']
   ]
+
+#------------------------------------------------------------
+# XALT samples non-mpi executions based on this table.
+# The first number is the left edge of the time range.  The
+# second number is the probability of being sampled. Where a
+# probability of 1.0 means a 100% chance of being recorded and a
+# value of 0.01 means a 1% chance of being recorded. 
+#
+# So a table that looks like this:
+#     interval_array = [
+#                       [ 0.0,                0.0001 ],
+#                       [ 300.0,              0.01   ],
+#                       [ 600.0,              1.0    ],   
+#                       [ sys.float_info.max, 1.0    ]
+#     ]
+#
+# would say that program with execution time that is between
+# 0.0 and 30.0 seconds has a 0.01% chance of being recorded.
+# Execution times between 300.0 and 600.0 seconds have a 1% 
+# chance of being recorded and and programs that take longer
+# than 600 seconds will always be recorded.
+#
+# The absolute minimum table would look like:
+#
+#     interval_array = [
+#                       [ 0.0,                1.0 ],
+#                       [ sys.float_info.max, 1.0 ]
+#     ]
+#
+# which says to record every scalar (non-mpi) program no matter
+# the execution time.
+
+interval_array = [
+    [ 0.0,                1.0 ],
+    [ sys.float_info.max, 1.0 ]
+]

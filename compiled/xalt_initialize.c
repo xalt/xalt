@@ -33,6 +33,7 @@
 #include <sys/time.h>
 #include <limits.h>
 #include "xalt_regex.h"
+#include "xalt_interval.h"
 #include <errno.h>
 #include <sys/utsname.h>
 #include <unistd.h>
@@ -101,6 +102,9 @@ const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
 static volatile double epoch();
+static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
+static volatile double gen_rand();
+static volatile int    keep_program();
 
 void myinit(int argc, char **argv);
 void myfini();
@@ -561,6 +565,44 @@ static volatile double epoch()
   struct timeval tm;
   gettimeofday(&tm, 0);
   return tm.tv_sec + 1.0e-6*tm.tv_usec;
+}
+
+static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
+{
+  a=a-b;  a=a-c;  a=a^(c >> 13);
+  b=b-c;  b=b-a;  b=b^(a << 8);
+  c=c-a;  c=c-b;  c=c^(b >> 13);
+  a=a-b;  a=a-c;  a=a^(c >> 12);
+  b=b-c;  b=b-a;  b=b^(a << 16);
+  c=c-a;  c=c-b;  c=c^(b >> 5);
+  a=a-b;  a=a-c;  a=a^(c >> 3);
+  b=b-c;  b=b-a;  b=b^(a << 10);
+  c=c-a;  c=c-b;  c=c^(b >> 15);
+  return c;
+}
+
+static int keep_program(double runtime)
+{
+  double prob = 1.0;
+  int i;
+  for (i = 0; i < rangeSz-1; ++i)
+    {
+      if (runtime < rangeA[i+1].left)
+	{
+	  prob = rangeA[i].prob;
+	  break;
+	}
+    }
+  
+  unsigned int a = (unsigned int) clock();
+  unsigned int b = (unsigned int) time(NULL);
+  unsigned int c = (unsigned int) getpid();
+  
+  unsigned int seed = mix(a,b,c);
+  srand(seed);
+  double my_rand = (double) rand()/(double) RAND_MAX;
+
+  return my_rand < prob;
 }
 
 

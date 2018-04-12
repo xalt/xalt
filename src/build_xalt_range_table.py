@@ -43,15 +43,12 @@ class CmdLineOptions(object):
     return args
 
 
-def convert_pattern(list):
+def convert_to_string(intervalA):
   a = []
-  for entry in list:
-    token = entry[0]
-    value = entry[1].replace("\\","\\\\")
-    
-    a.append('"'+token+' => '+value+'"')
+  for entry in intervalA:
+    a.append('{' + str(entry[0]) + ', ' + str(entry[1]) + '}')
 
-  return ",".join(a)
+  return ', '.join(a)
 
 def convert_template(a, inputFn, outputFn):
   try:
@@ -91,17 +88,28 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  hostPatternStr = convert_pattern( namespace.get('hostname_patterns',       {}))
-  pathPatternStr = convert_pattern( namespace.get('path_patterns',           {}))
-  envPatternStr  = convert_pattern( namespace.get('env_patterns',            {}))
+  intervalA = namespace.get('interval_array',       {})
 
+  if (len(intervalA) < 2):
+    print("The interval_array table is incorrect in ",args.confFn)
+    sys.exit(-1)
+    
+
+  #check first and last entry
+  if (intervalA[0][0] > 1.e-8):
+    print("First entry in interval_array is too big, it should be zero")
+    sys.exit(-1)
+  if (intervalA[-1][0] < 1.e37):
+    print("Last entry in wrong.  It should be sys.float_info.max!",)
+    sys.exit(-1)
+
+  intervalStr = convert_to_string(intervalA)
   pattA = [
-    ['@hostname_patterns@', hostPatternStr],
-    ['@path_patterns@',     pathPatternStr],
-    ['@env_patterns@',      envPatternStr]
+    ['@rangeA@', intervalStr]
   ]
-
   convert_template(pattA, args.input, args.output)
+      
+
 
 
 if ( __name__ == '__main__'): main()

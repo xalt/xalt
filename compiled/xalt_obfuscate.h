@@ -43,6 +43,8 @@
 #define pathPatternSz               PASTE2(__XALT_pathPatternSz,              MY_NAME)
 #define envPatternA                 PASTE2(__XALT_envPatternA,                MY_NAME)
 #define envPatternSz                PASTE2(__XALT_envPatternSz,               MY_NAME)
+#define rangeA                      PASTE2(__XALT_rangeA,                     MY_NAME)
+#define rangeSz                     PASTE2(__XALT_rangeSz,                    MY_NAME)
 
 #define background                  PASTE2(__XALT_background,                 MY_NAME)
 #define countA                      PASTE2(__XALT_countA,                     MY_NAME)

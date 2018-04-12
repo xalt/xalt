@@ -308,7 +308,7 @@ if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
    echo "======================================================="
    rm -f makefile
    exit 1
-fi  
+fi
 
 
 AC_SUBST(PKGV)
@@ -376,7 +376,7 @@ if test "$MYSQLDB" = yes; then
       echo "======================================================="
       rm -f makefile
       exit 1
-   fi 
+   fi
 else
    MYSQL_CONFIG=UNKNOWN_mysql_config
    echo
@@ -400,7 +400,7 @@ if test "$SYSHOST_CONFIG" = no; then
    rm -f makefile
    exit 1
 fi
-   
+
 
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
@@ -424,6 +424,12 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    else
       export PYTHONPATH=$ac_confdir/contrib/argparse:$PYTHONPATH
    fi
+fi
+
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_interval.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_interval.template --output compiled/build/xalt_interval.h
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
 fi
 
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build/xalt_regex.h

@@ -1,0 +1,16 @@
+#ifndef XALT_INTERVAL_H
+#define XALT_INTERVAL_H
+
+#include "xalt_obfuscate.h"
+
+#define N_ELEMENTS(a) (sizeof(a)/sizeof((a)[0]))
+
+const char* rangeA[] = { @rangeA@ };
+
+const int   rangeSz = N_ELEMENTS(rangeA);
+
+#endif
+
+/* Local Variables: */
+/* mode: c */
+/* End: */

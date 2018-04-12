@@ -114,7 +114,6 @@ class Record(object):
       self.__blkA[idx]  = t['value']
       self.__blkCnt    += 1
     elif (idx < 0 or idx >= self.__nblks):
-      print("idx:",idx,", nblks: ",self.__nblks, file=sys.stderr)
       raise ValueError("Bad block index")
         
     
@@ -400,9 +399,9 @@ def main():
       try:
         t, done = parseSyslog.parse(line, args.syshost, old)
       except Exception as e:
-        print(e, file=sys.stderr)
-        print("lineNo:",lineNo,"file:",fn,"line:",line, file=sys.stderr)
-        print("Now continuing processing!", file=sys.stderr)
+        #print(e, file=sys.stderr)
+        #print("lineNo:",lineNo,"file:",fn,"line:",line, file=sys.stderr)
+        #print("Now continuing processing!", file=sys.stderr)
         continue
 
       
@@ -419,7 +418,7 @@ def main():
         value = json.loads(t['value'])
         filter.register(value)
       except Exception as e:
-        print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
+        #print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
         continue
 
     f.close()
