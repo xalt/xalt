@@ -119,7 +119,7 @@ def read_file(fname,output):
   f.write(s)
   f.close()
 
-  
+
 def nth_name(nth,output):
   nth = int(nth)
   if (nth < 1 ):
@@ -162,6 +162,45 @@ def nth_name(nth,output):
   f.write(s)
   f.close()
 
+
+def strip_nodename(output):
+  sA = []
+
+  sA.append("#include <string.h>")
+  sA.append("#include <sys/utsname.h>")
+  sA.append("#include \"xalt_obfuscate.h\"")
+  sA.append("const char* xalt_syshost()")
+  sA.append("{")
+  sA.append("  struct utsname u;")
+  sA.append("  uname(&u);")
+  sA.append("  char * my_hostname = strdup(u.nodename);")
+  sA.append("  char buf[25];")
+  sA.append("")
+  sA.append("  int i;")
+  sA.append("  int j = 0;")
+  sA.append("")
+  sA.append("  for(i = 0; i < strlen(my_hostname); i++)")
+  sA.append("    {")
+  sA.append("      // Check if character is a number or not")
+  sA.append("      if(isalpha(my_hostname[i]))")
+  sA.append("        // if it isn't then add to buf string")
+  sA.append("        {")
+  sA.append("          buf[j] = my_hostname[i];")
+  sA.append("          j++;")
+  sA.append("        }")
+  sA.append("    }")
+  sA.append("")
+  sA.append("  buf[j] = '\\0';")
+  sA.append("  free(my_hostname);")
+  sA.append("  char* syshost = strdup(buf);")
+  sA.append("  return syshost;")
+  sA.append("}")
+  xalt_syshost_main(sA)
+
+  s   = "\n".join(sA)
+  f   = open(output,"w")
+  f.write(s)
+  f.close()
 
 def mapping(file,output):
   sA = []
@@ -241,7 +280,8 @@ class CmdLineOptions(object):
     return args
 
 kindA = [ ['hardcode', hardcode ], ['nth_name', nth_name],
-          ['read_file', read_file], ['mapping', mapping] ]
+          ['read_file', read_file], ['mapping', mapping], 
+          ['strip_nodename', strip_nodename] ]
 
 def main():
   args = CmdLineOptions().execute()
@@ -261,7 +301,7 @@ def main():
   found = False
   for entry in kindA:
     if (kind == entry[0]):
-      if (not opt):
+      if (not opt and kind != 'strip_nodename'):
         print("=================================================================")
         print("Unable to install XALT")
         print("Syshost config option \"%s\" does not have the required options" % kind)
@@ -281,8 +321,11 @@ def main():
     print("=================================================================")
     sys.exit(1)
 
-
-  # Build the user requested xalt_syshost.c routine
-  func(opt, args.output)
+  if (kind != 'strip_nodename'):
+    # Build the user requested xalt_syshost.c routine
+    func(opt, args.output)
+  else:
+    # strip_nodename doesn't need an option given to it
+    func(args.output)
 
 if ( __name__ == '__main__'): main()
