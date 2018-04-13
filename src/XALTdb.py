@@ -332,7 +332,7 @@ class XALTdb(object):
         probability   = runT['userDT'].get('probability', 1.0)
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
-        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, COMPRESS(%s))"
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
                                runT['userT']['account'],     runT['userT']['exec_type'],   startTime,

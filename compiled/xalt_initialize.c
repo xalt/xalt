@@ -103,8 +103,7 @@ static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
 static volatile double epoch();
 static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
-static volatile double gen_rand();
-static double          scalar_program_sample_probability(double runtime)
+static double          scalar_program_sample_probability(double runtime);
 
 void myinit(int argc, char **argv);
 void myfini();
@@ -512,7 +511,7 @@ void myfini()
     {
       const char * v;
       v = getenv("XALT_SCALAR_SAMPLING");
-      if (v && strcmp(v,"yes") == 0
+      if (v && strcmp(v,"yes") == 0)
 	{
 	  double       run_time	= end_time - start_time;
 	  probability           = scalar_program_sample_probability(run_time);
@@ -609,15 +608,15 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
 static  double scalar_program_sample_probability(double runtime)
 {
   double prob = 1.0;
-  int i;
-  for (i = 0; i < rangeSz-1; ++i)
-    {
-      if (runtime < rangeA[i+1].left)
-	{
-	  prob = rangeA[i].prob;
-	  break;
-	}
-    }
+  //int i;
+  //for (i = 0; i < rangeSz-1; ++i)
+  //  {
+  //    if (runtime < rangeA[i+1].left)
+  //	{
+  //	  prob = rangeA[i].prob;
+  //	  break;
+  //	}
+  //  }
   return prob;
 }  
 
