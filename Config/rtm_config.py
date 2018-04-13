@@ -156,6 +156,20 @@ env_patterns = [
 
 #------------------------------------------------------------
 # XALT samples non-mpi executions based on this table.
+# All mpi executions are sampled at 100% when there are two
+# more tasks.
+#
+# The array of array used by interval_array has the following
+# structure:
+#
+#   interval_array = [
+#                     [ t_0,     probability_0],
+#                     [ t_1,     probability_1],
+#                     ...
+#                     [ t_n,     probability_n],
+#                     [ 1.0e308, 1.0],
+#                      
+#
 # The first number is the left edge of the time range.  The
 # second number is the probability of being sampled. Where a
 # probability of 1.0 means a 100% chance of being recorded and a
@@ -170,7 +184,7 @@ env_patterns = [
 #     ]
 #
 # would say that program with execution time that is between
-# 0.0 and 30.0 seconds has a 0.01% chance of being recorded.
+# 0.0 and 300.0 seconds has a 0.01% chance of being recorded.
 # Execution times between 300.0 and 600.0 seconds have a 1% 
 # chance of being recorded and and programs that take longer
 # than 600 seconds will always be recorded.
@@ -184,6 +198,9 @@ env_patterns = [
 #
 # which says to record every scalar (non-mpi) program no matter
 # the execution time.
+#
+# Note that scalar execution only uses this table IFF
+# $XALT_SCALAR_SAMPLING equals yes
 
 interval_array = [
     [ 0.0,                1.0 ],

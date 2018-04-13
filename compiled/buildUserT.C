@@ -76,6 +76,7 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   userDT["start_time"]   = options.startTime();
   userDT["end_time"]     = options.endTime();
   userDT["run_time"]     = runTime;
+  userDT["probability"]  = options.probability()
   userDT["num_tasks"]    = options.ntasks();
   userDT["currentEpoch"] = utc;
   userDT["num_threads"]  = num_threads;

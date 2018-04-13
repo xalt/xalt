@@ -14,6 +14,7 @@ public:
   pid_t         ppid()        { return m_ppid;        }
   double        startTime()   { return m_start;       }
   double        endTime()     { return m_end;         }
+  double        probability() { return m_probability; }
   std::string&  exec()        { return m_exec;        }
   std::string&  syshost()     { return m_syshost;     }
   std::string&  uuid()        { return m_uuid;        }
@@ -26,6 +27,7 @@ public:
 private:
   double      m_start;
   double      m_end;
+  double      m_probability;
   long        m_ntasks;
   long        m_interfaceV;
   pid_t       m_ppid;

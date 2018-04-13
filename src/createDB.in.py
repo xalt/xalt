@@ -162,6 +162,7 @@ def main():
 
           `end_time`      double               NOT NULL,
           `run_time`      double               NOT NULL,
+          `probability`   double               NOT NULL,
           `num_cores`     int(11)     unsigned NOT NULL,
 
           `num_nodes`     int(11)     unsigned NOT NULL,

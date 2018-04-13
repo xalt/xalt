@@ -48,6 +48,12 @@ path_patterns = [
     ['KEEP',  r'^\/usr\/bin\/gawk'],
     ['KEEP',  r'^\/usr\/bin\/sed'],
     ['KEEP',  r'^\/usr\/bin\/perl'],
+    ['KEEP',  r'^\/usr\/bin\/python'],
+    ['KEEP',  r'^\/usr\/bin\/grep'],
+    ['KEEP',  r'^\/usr\/bin\/bzip2'],
+    ['KEEP',  r'^\/usr\/bin\/gzip'],
+    ['KEEP',  r'^\/usr\/bin\/tar'],
+    ['KEEP',  r'.*\/python'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],
     ['SKIP',  r'^\/bin\/.*'],
@@ -170,7 +176,18 @@ env_patterns = [
 #------------------------------------------------------------
 # XALT samples non-mpi executions based on this table.
 # All mpi executions are sampled at 100% when there are two
-# more tasks. 
+# more tasks.
+#
+# The array of array used by interval_array has the following
+# structure:
+#
+#   interval_array = [
+#                     [ t_0,     probability_0],
+#                     [ t_1,     probability_1],
+#                     ...
+#                     [ t_n,     probability_n],
+#                     [ 1.0e308, 1.0],
+#                      
 #
 # The first number is the left edge of the time range.  The
 # second number is the probability of being sampled. Where a
@@ -186,7 +203,7 @@ env_patterns = [
 #     ]
 #
 # would say that program with execution time that is between
-# 0.0 and 30.0 seconds has a 0.01% chance of being recorded.
+# 0.0 and 300.0 seconds has a 0.01% chance of being recorded.
 # Execution times between 300.0 and 600.0 seconds have a 1% 
 # chance of being recorded and and programs that take longer
 # than 600 seconds will always be recorded.

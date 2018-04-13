@@ -58,6 +58,7 @@ Options::Options(int argc, char** argv)
         {"confFn",     required_argument, NULL, 'c'},
         {"ppid",       required_argument, NULL, 'p'},
         {"path",       required_argument, NULL, 'P'},
+        {"prob",       required_argument, NULL, 'b'},
         {"ld_libpath", required_argument, NULL, 'L'},
         {0,         0,                 0,     0 }
       };
@@ -77,6 +78,10 @@ Options::Options(int argc, char** argv)
         case 'p':
           if (optarg)
             m_ppid = (pid_t) convert_long("ppid", optarg);
+          break;
+        case 'b':
+          if (optarg)
+            m_probability = convert_double("prob", optarg);
           break;
 	case 's':
           if (optarg)

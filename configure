@@ -5385,6 +5385,12 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
+$PATH_TO_PYTHON $ac_confdir/src/build_xalt_interval.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_interval.template --output compiled/build/xalt_interval.h
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi
+
 $PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile

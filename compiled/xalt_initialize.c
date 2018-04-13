@@ -59,7 +59,7 @@
 
 #define DATESZ    100
 
-typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4} xalt_tracking_flags;
+typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4, BIT_START_RECORD = 6} xalt_tracking_flags;
 typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
@@ -104,7 +104,7 @@ static void            abspath(char * path, int sz);
 static volatile double epoch();
 static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
 static volatile double gen_rand();
-static volatile int    keep_program();
+static double          scalar_program_sample_probability(double runtime)
 
 void myinit(int argc, char **argv);
 void myfini();
@@ -118,7 +118,10 @@ static char         exec_path[PATH_MAX];
 static char *       usr_cmdline;
 static const char * my_syshost;
 
+
 static xalt_status  reject_flag	     = XALT_SUCCESS;
+static int          run_mask         = 0;
+static double       probability      = 1.0;
 static pid_t        ppid	     = 0;
 static int          errfd	     = -1;
 static double       start_time	     = 0.0;
@@ -291,8 +294,6 @@ void myinit(int argc, char **argv)
    * Test 4: Acceptable Executable && MPI status?
    ***********************************************************/
 
-  int run_mask = 0;
-
   int build_mask = 0;
   v = getenv("XALT_SCALAR_TRACKING");
   if (!v)
@@ -454,22 +455,17 @@ void myinit(int argc, char **argv)
 
   ppid = getppid();
 
-  /* my_size == 0 when the user executable is a scalar (non-mpi) program.
+  /* 
    * XALT is only recording the end record for scalar executables and
    * not the start record.  The only exception to this is when the exec_path
    * matches one of the patterns in path_patterns returns SPSR.
    */
 
-  if (my_size > 0)
-    produce_strt_rec = 1;  /*Produce a start record for all MPI jobs. */
-  else
-    produce_strt_rec = (path_results == SPSR);
-
-  if ( produce_strt_rec )
+  if ( run_mask & BIT_START_RECORD)  /* BIT_START_RECORD = BIT_SPSR | BIT_MPI */
     {
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" %s %s -- %s %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
-	       start_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
+	       " --uuid \"%s\" --prob %g %s %s -- %s %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
+	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
       if (xalt_tracing || xalt_run_tracing) 
 	fprintf(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
@@ -493,6 +489,7 @@ void myfini()
 {
   FILE * my_stderr = NULL;
   char * cmdline;
+  double run_time;
 
   if (xalt_tracing)
     {
@@ -511,11 +508,39 @@ void myfini()
   end_time = epoch();
   unsetenv("LD_PRELOAD");
 
+  if (run_mask & BIT_SCALAR)
+    {
+      const char * v;
+      v = getenv("XALT_SCALAR_SAMPLING");
+      if (v && strcmp(v,"yes") == 0
+	{
+	  double       run_time	= end_time - start_time;
+	  probability           = scalar_program_sample_probability(run_time);
+	  unsigned int a	= (unsigned int) clock();
+	  unsigned int b	= (unsigned int) time(NULL);
+	  unsigned int c	= (unsigned int) getpid();
+	  unsigned int seed	= mix(a,b,c);
+
+	  srand(seed);
+	  double my_rand    = (double) rand()/(double) RAND_MAX;
+	  
+	  if (my_rand >= probability)
+	    {
+	      DEBUG3(my_stderr, "    -> exiting because scalar sampling. "
+		     "(my_rand: %g > prob: %g) for program %s\n}\n\n",
+		     my_rand, probability, exec_path);
+	      return;
+	    }
+	}
+    }
+  
+
+
   /* Do not background this because it might get killed by the epilog cleanup tool! */
 
   asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-           " --ntasks %ld --uuid \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
-	   start_time, end_time, exec_path, my_size, uuid_str, pathArg, ldLibPathArg, usr_cmdline);
+           " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
+	   start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
 
   DEBUG1(my_stderr,"  Recording State at end of user program:\n    %s\n\n}\n\n",cmdline);
 
@@ -581,7 +606,7 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
   return c;
 }
 
-static int keep_program(double runtime)
+static  double scalar_program_sample_probability(double runtime)
 {
   double prob = 1.0;
   int i;
@@ -593,17 +618,8 @@ static int keep_program(double runtime)
 	  break;
 	}
     }
-  
-  unsigned int a = (unsigned int) clock();
-  unsigned int b = (unsigned int) time(NULL);
-  unsigned int c = (unsigned int) getpid();
-  
-  unsigned int seed = mix(a,b,c);
-  srand(seed);
-  double my_rand = (double) rand()/(double) RAND_MAX;
-
-  return my_rand < prob;
-}
+  return prob;
+}  
 
 
 #ifdef __MACH__

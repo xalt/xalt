@@ -86,6 +86,7 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
                             std::string& usr_cmdline, std::string& hash_id, unsigned int* run_id)
 {
 
+  int         j=-1;
   const char* stmt_sql = "INSERT INTO xalt_run VALUES (NULL, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, COMPRESS(?))";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
@@ -100,26 +101,29 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
       exit(1);
     }
 
-  MYSQL_BIND param[22];
+  MYSQL_BIND param[23];
   memset((void *) param,  0, sizeof(param));
 
   // STRING PARAM[0] job_id
+  j++;
   std::string& job_id    = userT["job_id"];
   std::string::size_type len_job_id = job_id.size();
-  param[0].buffer_type   = MYSQL_TYPE_STRING;
-  param[0].buffer        = (void *) job_id.c_str();
-  param[0].buffer_length = job_id.capacity();
-  param[0].length        = &len_job_id;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) job_id.c_str();
+  param[j].buffer_length = job_id.capacity();
+  param[j].length        = &len_job_id;
     
   // STRING PARAM[1] run_uuid
+  j++;
   std::string& run_uuid  = userT["run_uuid"];
   std::string::size_type len_run_uuid = run_uuid.size();
-  param[1].buffer_type   = MYSQL_TYPE_STRING;
-  param[1].buffer        = (void *) run_uuid.c_str();
-  param[1].buffer_length = run_uuid.capacity();
-  param[1].length        = &len_run_uuid;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) run_uuid.c_str();
+  param[j].buffer_length = run_uuid.capacity();
+  param[j].length        = &len_run_uuid;
   
   // DATETIME PARAM[2] date 
+  j++;
   MYSQL_TIME my_datetime;
   double     sTimeD       = userDT["start_time"];
   time_t     sTimeI       = (time_t) sTimeD;
@@ -131,22 +135,24 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
   my_datetime.minute      = sTime->tm_min;
   my_datetime.second      = sTime->tm_sec;
   my_datetime.second_part = 0;
-  param[2].buffer_type    = MYSQL_TYPE_DATETIME;
-  param[2].buffer         = &my_datetime;
+  param[j].buffer_type    = MYSQL_TYPE_DATETIME;
+  param[j].buffer         = &my_datetime;
   
   // STRING PARAM[3] syshost
+  j++;
   std::string& syshost   = userT["syshost"];
   std::string::size_type len_syshost = syshost.size();
-  param[3].buffer_type   = MYSQL_TYPE_STRING;
-  param[3].buffer        = (void *) syshost.c_str();
-  param[3].buffer_length = syshost.capacity();
-  param[3].length        = &len_syshost;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) syshost.c_str();
+  param[j].buffer_length = syshost.capacity();
+  param[j].length        = &len_syshost;
   
   // STRING PARAM[4] build_uuid (it can be NULL!)
+  j++;
   my_bool                build_uuid_null_flag;
   std::string::size_type len_build_uuid = 0;
   std::string            build_uuid;
-  param[4].buffer_type    = MYSQL_TYPE_STRING;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
   if (recordT.count("Build.UUID") > 0 )
     {
       build_uuid_null_flag = 0;
@@ -162,112 +168,133 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
   else
     build_uuid_null_flag   = 1;
 
-  param[4].buffer        = (void *) build_uuid.c_str();
-  param[4].buffer_length = build_uuid.capacity();
-  param[4].is_null       = &build_uuid_null_flag;
-  param[4].length        = &len_build_uuid;
+  param[j].buffer        = (void *) build_uuid.c_str();
+  param[j].buffer_length = build_uuid.capacity();
+  param[j].is_null       = &build_uuid_null_flag;
+  param[j].length        = &len_build_uuid;
   
   // STRING PARAM[5] hash_id (sha1sum of executable)
+  j++;
   std::string::size_type len_hash_id = hash_id.size();
-  param[5].buffer_type   = MYSQL_TYPE_STRING;
-  param[5].buffer        = (void *) hash_id.c_str();
-  param[5].buffer_length = hash_id.capacity();
-  param[5].length        = &len_hash_id;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) hash_id.c_str();
+  param[j].buffer_length = hash_id.capacity();
+  param[j].length        = &len_hash_id;
 
   // STRING PARAM[6] account
+  j++;
   std::string& account   = userT["account"];
   std::string::size_type len_account = account.size();
-  param[6].buffer_type   = MYSQL_TYPE_STRING;
-  param[6].buffer        = (void *) account.c_str();
-  param[6].buffer_length = account.capacity();
-  param[6].length        = &len_account;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) account.c_str();
+  param[j].buffer_length = account.capacity();
+  param[j].length        = &len_account;
 
   // STRING PARAM[7] exec_type
+  j++;
   std::string& exec_type = userT["exec_type"];
   std::string::size_type len_exec_type = exec_type.size();
-  param[7].buffer_type   = MYSQL_TYPE_STRING;
-  param[7].buffer        = (void *) exec_type.c_str();
-  param[7].buffer_length = exec_type.capacity();
-  param[7].length        = &len_exec_type;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) exec_type.c_str();
+  param[j].buffer_length = exec_type.capacity();
+  param[j].length        = &len_exec_type;
 
   // DOUBLE PARAM[8] start_time
-  param[8].buffer_type   = MYSQL_TYPE_DOUBLE;
-  param[8].buffer        = (void *) &sTimeD;
+  j++;
+  param[j].buffer_type   = MYSQL_TYPE_DOUBLE;
+  param[j].buffer        = (void *) &sTimeD;
 
   // DOUBLE PARAM[9] end_time
+  j++;
   double eTimeD          = userDT["end_time"];
-  param[9].buffer_type   = MYSQL_TYPE_DOUBLE;
-  param[9].buffer        = (void *) &eTimeD;
+  param[j].buffer_type   = MYSQL_TYPE_DOUBLE;
+  param[j].buffer        = (void *) &eTimeD;
 
   // DOUBLE PARAM[10] run_time
-  double rTimeD         = userDT["run_time"];
-  param[10].buffer_type = MYSQL_TYPE_DOUBLE;
-  param[10].buffer      = (void *) &rTimeD;
+  j++;
+  double rTimeD        = userDT["run_time"];
+  param[j].buffer_type = MYSQL_TYPE_DOUBLE;
+  param[j].buffer      = (void *) &rTimeD;
 
-  // INT PARAM[11] num_cores
-  uint num_cores         = (uint) userDT["num_cores"];
-  param[11].buffer_type = MYSQL_TYPE_LONG;
-  param[11].buffer      = (void *) &num_cores;
-  param[11].is_unsigned = 1;
+  // DOUBLE PARAM[11] probability
+  j++;
+  double probD         = userDT["probability"];
+  param[j].buffer_type = MYSQL_TYPE_DOUBLE;
+  param[j].buffer      = (void *) &probD;
 
-  // INT PARAM[12] num_nodes
-  uint num_nodes        = (uint) userDT["num_nodes"];
-  param[12].buffer_type = MYSQL_TYPE_LONG;
-  param[12].buffer      = (void *) &num_nodes;
-  param[12].is_unsigned = 1;
+  // INT PARAM[12] num_cores
+  j++;
+  uint num_cores       = (uint) userDT["num_cores"];
+  param[j].buffer_type = MYSQL_TYPE_LONG;
+  param[j].buffer      = (void *) &num_cores;
+  param[j].is_unsigned = 1;
 
-  // SHORT PARAM[13] num_threads
+  // INT PARAM[13] num_nodes
+  j++;
+  uint num_nodes       = (uint) userDT["num_nodes"];
+  param[j].buffer_type = MYSQL_TYPE_LONG;
+  param[j].buffer      = (void *) &num_nodes;
+  param[j].is_unsigned = 1;
+
+  // SHORT PARAM[14] num_threads
+  j++;
   unsigned short int num_threads = (unsigned short int) userDT["num_threads"];
-  param[13].buffer_type = MYSQL_TYPE_SHORT;
-  param[13].buffer      = (void *) &num_threads;
-  param[13].is_unsigned = 1;
+  param[j].buffer_type = MYSQL_TYPE_SHORT;
+  param[j].buffer      = (void *) &num_threads;
+  param[j].is_unsigned = 1;
 
-  // STRING PARAM[14] queue
-  std::string& queue      = userT["queue"];
+  // STRING PARAM[15] queue
+  j++;
+  std::string& queue     = userT["queue"];
   std::string::size_type len_queue = queue.size();
-  param[14].buffer_type   = MYSQL_TYPE_STRING;
-  param[14].buffer        = (void *) queue.c_str();
-  param[14].buffer_length = queue.capacity();
-  param[14].length        = &len_queue;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) queue.c_str();
+  param[j].buffer_length = queue.capacity();
+  param[j].length        = &len_queue;
 
-  // Int PARAM[15] sum_runs
-  uint sum_runs         = 0;
-  param[15].buffer_type = MYSQL_TYPE_LONG;
-  param[15].buffer      = (void *) &sum_runs;
-  param[15].is_unsigned = 1;
+  // Int PARAM[16] sum_runs
+  j++;
+  uint sum_runs        = 0;
+  param[j].buffer_type = MYSQL_TYPE_LONG;
+  param[j].buffer      = (void *) &sum_runs;
+  param[j].is_unsigned = 1;
   
-  // DOUBLE PARAM[16] sum_times
-  double sum_times      = 0.0;
-  param[16].buffer_type = MYSQL_TYPE_DOUBLE;
-  param[16].buffer      = (void *) &sum_times;
+  // DOUBLE PARAM[17] sum_times
+  j++;
+  double sum_times     = 0.0;
+  param[j].buffer_type = MYSQL_TYPE_DOUBLE;
+  param[j].buffer      = (void *) &sum_times;
 
 
-  // STRING PARAM[17] user
-  std::string& user       = userT["user"];
+  // STRING PARAM[18] user
+  j++;
+  std::string& user      = userT["user"];
   std::string::size_type len_user = user.size();
-  param[17].buffer_type   = MYSQL_TYPE_STRING;
-  param[17].buffer        = (void *) user.c_str();
-  param[17].buffer_length = user.capacity();
-  param[17].length        = &len_user;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) user.c_str();
+  param[j].buffer_length = user.capacity();
+  param[j].length        = &len_user;
 
-  // STRING PARAM[18] exec_path
+  // STRING PARAM[19] exec_path
+  j++;
   std::string& exec_path  = userT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[18].buffer_type   = MYSQL_TYPE_STRING;
-  param[18].buffer        = (void *) exec_path.c_str();
-  param[18].buffer_length = exec_path.capacity();
-  param[18].length        = &len_exec_path;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) exec_path.c_str();
+  param[j].buffer_length = exec_path.capacity();
+  param[j].length        = &len_exec_path;
 
-  // STRING PARAM[19] module_name
+  // STRING PARAM[20] module_name
+  j++;
   const int              module_name_sz = 64;
   char                   module_name[module_name_sz];
   std::string::size_type len_module_name = 0;
   my_bool                module_name_null_flag = 0;
-  param[19].buffer_type   = MYSQL_TYPE_STRING;
-  param[19].buffer        = (void *) &module_name[0];
-  param[19].buffer_length = module_name_sz;
-  param[19].is_null       = &module_name_null_flag;
-  param[19].length        = &len_module_name;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) &module_name[0];
+  param[j].buffer_length = module_name_sz;
+  param[j].is_null       = &module_name_null_flag;
+  param[j].length        = &len_module_name;
   if (path2module(exec_path.c_str(), rmapT, module_name,module_name_sz))
     {
       module_name_null_flag = 0;
@@ -276,20 +303,22 @@ void insert_xalt_run_record(MYSQL* conn, Table& rmapT, Table& userT, DTable& use
   else
     module_name_null_flag = 1;
 
-  // STRING PARAM[20] cwd
-  std::string& cwd        = userT["cwd"];
+  // STRING PARAM[21] cwd
+  j++;
+  std::string& cwd       = userT["cwd"];
   std::string::size_type len_cwd = cwd.size();
-  param[20].buffer_type   = MYSQL_TYPE_STRING;
-  param[20].buffer        = (void *) cwd.c_str();
-  param[20].buffer_length = cwd.capacity();
-  param[20].length        = &len_cwd;
+  param[j].buffer_type   = MYSQL_TYPE_STRING;
+  param[j].buffer        = (void *) cwd.c_str();
+  param[j].buffer_length = cwd.capacity();
+  param[j].length        = &len_cwd;
 
-  // BLOB PARAM[21] cmdline
+  // BLOB PARAM[22] cmdline
+  j++;
   std::string::size_type len_cmdline = usr_cmdline.size();
-  param[21].buffer_type   = MYSQL_TYPE_BLOB;
-  param[21].buffer        = (void *) usr_cmdline.c_str();
-  param[21].buffer_length = usr_cmdline.capacity();
-  param[21].length        = &len_cmdline;
+  param[j].buffer_type   = MYSQL_TYPE_BLOB;
+  param[j].buffer        = (void *) usr_cmdline.c_str();
+  param[j].buffer_length = usr_cmdline.capacity();
+  param[j].length        = &len_cmdline;
 
   if (mysql_stmt_bind_param(stmt, param))
     {
