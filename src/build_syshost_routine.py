@@ -281,7 +281,7 @@ class CmdLineOptions(object):
 
 kindA = [ ['hardcode', hardcode ], ['nth_name', nth_name],
           ['read_file', read_file], ['mapping', mapping], 
-          ['strip_nodename', strip_nodename] ]
+          ['strip_nodename_numbers', strip_nodename] ]
 
 def main():
   args = CmdLineOptions().execute()
@@ -301,7 +301,7 @@ def main():
   found = False
   for entry in kindA:
     if (kind == entry[0]):
-      if (not opt and kind != 'strip_nodename'):
+      if (not opt and kind != 'strip_nodename_numbers'):
         print("=================================================================")
         print("Unable to install XALT")
         print("Syshost config option \"%s\" does not have the required options" % kind)
