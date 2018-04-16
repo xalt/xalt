@@ -26,7 +26,7 @@ char* build_xalt_files_dir(const char* user_name, const char* home_dir);
 int main(int argc, char* argv[])
 {
   char*       run_uuid	   = NULL;
-  const char* syshost	   = xalt_syshost();
+  const char* my_host      = xalt_syshost();
   int         xalt_tracing = 0;
   int         len;
   char*       p_dbg;
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	}
     }
   
-  if (! syshost)
+  if (! my_host)
     {
       DEBUG0(stderr,"Syshost is not set => quitting!\n");
       exit(0);
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 	{
           char* xalt_files_dir = build_xalt_files_dir(c_user, c_home);
 	  
-	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, syshost, date_str,
+	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, my_host, date_str,
 		                                       run_uuid, &uuid_str[24]);
 	  DEBUG1(stderr,"resultFn: %s\n",resultFn);
 	  free(xalt_files_dir);
@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
   char* key = NULL;
   asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
 
-  transmit(transmission, json_str, "pkg", key, syshost, resultFn);
+  transmit(transmission, json_str, "pkg", key, my_host, resultFn);
 
   if (resultFn)
     free(resultFn);

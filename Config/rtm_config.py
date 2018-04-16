@@ -202,7 +202,7 @@ env_patterns = [
 # Note that scalar execution only uses this table IFF
 # $XALT_SCALAR_SAMPLING equals yes
 
-interval_array = [
-    [ 0.0,                1.0 ],
-    [ sys.float_info.max, 1.0 ]
-]
+#interval_array = [
+#    [ 0.0,                1.0 ],
+#    [ sys.float_info.max, 1.0 ]
+#]

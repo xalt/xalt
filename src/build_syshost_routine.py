@@ -163,7 +163,7 @@ def nth_name(nth,output):
   f.close()
 
 
-def strip_nodename(output):
+def strip_nodename_numbers(output):
   sA = []
 
   sA.append("#include <string.h>")
@@ -171,29 +171,19 @@ def strip_nodename(output):
   sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("const char* xalt_syshost()")
   sA.append("{")
-  sA.append("  struct utsname u;")
-  sA.append("  uname(&u);")
-  sA.append("  char * my_hostname = strdup(u.nodename);")
-  sA.append("  char buf[25];")
+  sA.append("  char * my_hostname = hostname();")
   sA.append("")
   sA.append("  int i;")
   sA.append("  int j = 0;")
   sA.append("")
-  sA.append("  for(i = 0; i < strlen(my_hostname); i++)")
-  sA.append("    {")
-  sA.append("      // Check if character is a number or not")
-  sA.append("      if(isalpha(my_hostname[i]))")
-  sA.append("        // if it isn't then add to buf string")
-  sA.append("        {")
-  sA.append("          buf[j] = my_hostname[i];")
-  sA.append("          j++;")
-  sA.append("        }")
-  sA.append("    }")
+  sA.append("  char * p = strchr(my_hostname,'.');")
+  sA.append("  if (p)")
+  sA.append("    *p = '\\0';")
   sA.append("")
-  sA.append("  buf[j] = '\\0';")
-  sA.append("  free(my_hostname);")
-  sA.append("  char* syshost = strdup(buf);")
-  sA.append("  return syshost;")
+  sA.append("  j = strcspn(my_hostname,\"0123456789\");")
+  sA.append("")
+  sA.append("  my_hostname[j] = '\\0';")
+  sA.append("  return my_hostname;")
   sA.append("}")
   xalt_syshost_main(sA)
 
@@ -281,7 +271,7 @@ class CmdLineOptions(object):
 
 kindA = [ ['hardcode', hardcode ], ['nth_name', nth_name],
           ['read_file', read_file], ['mapping', mapping], 
-          ['strip_nodename_numbers', strip_nodename] ]
+          ['strip_nodename_numbers', strip_nodename_numbers] ]
 
 def main():
   args = CmdLineOptions().execute()
@@ -291,7 +281,7 @@ def main():
   idx = arg.find(":")
   if (idx == -1):
     kind = arg.lower()
-    opt  = None
+    opt  = kind != 'strip_nodename_numbers'
   else:
     kind = arg[:idx].lower()
     opt  = arg[idx+1:]
@@ -301,7 +291,7 @@ def main():
   found = False
   for entry in kindA:
     if (kind == entry[0]):
-      if (not opt and kind != 'strip_nodename_numbers'):
+      if (not opt):
         print("=================================================================")
         print("Unable to install XALT")
         print("Syshost config option \"%s\" does not have the required options" % kind)
