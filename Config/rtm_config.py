@@ -43,6 +43,7 @@ hostname_patterns = [
 path_patterns = [
     ['SPSR',  r'.*\/python[0-9][^/][^/]*'],
     ['SPSR',  r'.*\/R'],
+    ['SPSR',  r'.*\/test_record_pkg'],
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],

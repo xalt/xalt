@@ -399,6 +399,7 @@ class XALTdb(object):
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,[pkgT['xalt_run_uuid']])
+      #print ("run_uuid: '%s', rowcount: %d" % (pkgT['xalt_run_uuid'], cursor.rowcount), file=sys.stderr)
 
       if (cursor.rowcount > 0):
         row         = cursor.fetchone()
