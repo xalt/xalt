@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
   std::cout << " Array: interval\n";
   std::cout << "*----------------------*\n";
   for (int i = 0; i < rangeSz-1; ++i)
-    std::cout << "Range: [" << rangeA[i].left << ", " << rangeA[i+1].left
+    std::cout << "Time Range(seconds): [" << rangeA[i].left << ", " << rangeA[i+1].left
               << "]: probability: "<< rangeA[i].prob << "\n";
   std::cout << "\n";
     
