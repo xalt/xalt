@@ -20,7 +20,7 @@ test_descript = {
    
      ar cr libhost.a host.o keep.o
 
-     installXALT --with-hostnameParser=library:$(outputDir)/libhost.a --with-xaltFilePrefix=$(outputDir)/LOG
+     installXALT --with-hostnameParser=library:$(outputDir)/libhost.a --with-xaltFilePrefix=$(outputDir)/LOG --with-syshostConfig=nth_name:2 
    
      displayThis "buildRmapT"
      buildRmapT

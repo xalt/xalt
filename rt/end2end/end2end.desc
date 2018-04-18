@@ -13,7 +13,7 @@ test_descript = {
 
      initialize
 
-     installXALT
+     installXALT --with-syshostConfig=nth_name:2 
      displayThis "buildRmapT"
      buildRmapT
 

@@ -19,7 +19,8 @@ test_descript = {
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
 
      initialize
-     installXALT
+     export MY_HOST=`uname -n`
+     installXALT --with-syshostConfig=env_var:MY_HOST
      displayThis "buildRmapT"
      buildRmapT
 

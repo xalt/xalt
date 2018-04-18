@@ -98,7 +98,7 @@ def env_var(var, output):
   sA.append("")
   sA.append("const char * xalt_syshost()")
   sA.append("{")
-  sA.append("  const char* var = getenv(\"" + var + "\";")
+  sA.append("  const char* var = getenv(\"" + var + "\");")
   sA.append("  if (!var) var = \"unknown\";")
   sA.append("  return var;")
   sA.append("}")
