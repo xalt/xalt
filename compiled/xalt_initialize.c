@@ -611,15 +611,15 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
 static  double scalar_program_sample_probability(double runtime)
 {
   double prob = 1.0;
-  //int i;
-  //for (i = 0; i < rangeSz-1; ++i)
-  //  {
-  //    if (runtime < rangeA[i+1].left)
-  //	{
-  //	  prob = rangeA[i].prob;
-  //	  break;
-  //	}
-  //  }
+  int i;
+  for (i = 0; i < rangeSz-1; ++i)
+    {
+      if (runtime < rangeA[i+1].left)
+  	{
+  	  prob = rangeA[i].prob;
+  	  break;
+  	}
+    }
   return prob;
 }  
 
