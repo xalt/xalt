@@ -3,6 +3,7 @@
 #include "xalt_config.h"
 #include "xalt_regex.h"
 #include "xalt_version.h"
+#include "xalt_interval.h"
 #include <iostream>
 #include <iomanip>
 #include <time.h>
@@ -88,6 +89,12 @@ int main(int argc, char* argv[])
   if (xalt_scalar_tracking == NULL)
     xalt_scalar_tracking = XALT_SCALAR_TRACKING;
 
+  const char* xalt_scalar_sampling = getenv("XALT_SCALAR_SAMPLING");
+  if (xalt_scalar_tracking == NULL || strcmp(xalt_scalar_sampling,"yes") != 0)
+    xalt_scalar_sampling = "no";
+  
+
+
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
       Json json;
@@ -112,6 +119,7 @@ int main(int argc, char* argv[])
       json.add("XALT_MPI_TRACKING",           xalt_mpi_tracking);
       json.add("XALT_SPSR_TRACKING",          xalt_spsr_tracking);
       json.add("XALT_SCALAR_TRACKING",        xalt_scalar_tracking);
+      json.add("XALT_SCALAR_SAMPLING",        xalt_scalar_sampling);
       json.add("XALT_SYSLOG_MSG_SZ",          SYSLOG_MSG_SZ);
       json.add("CXX_LD_LIBRARY_PATH",         CXX_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                  HAVE_32BIT);
@@ -152,6 +160,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_MPI_TRACKING:         " << xalt_mpi_tracking      << "\n";
   std::cout << "XALT_SPSR_TRACKING:        " << xalt_spsr_tracking     << "\n";
   std::cout << "XALT_SCALAR_TRACKING:      " << xalt_scalar_tracking   << "\n";
+  std::cout << "XALT_SCALAR_SAMPLING:      " << xalt_scalar_sampling   << "\n";
   std::cout << "XALT_SYSTEM_PATH:          " << XALT_SYSTEM_PATH       << "\n";
   std::cout << "XALT_SYSHOST_CONFIG:       " << SYSHOST_CONFIG         << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:        " << SYSLOG_MSG_SZ          << "\n";
@@ -167,5 +176,13 @@ int main(int argc, char* argv[])
   displayArray("pathPatternA", pathPatternSz, pathPatternA);
   displayArray("envPatternA",  envPatternSz,  envPatternA);
 
+  std::cout << "*----------------------*\n";
+  std::cout << " Array: interval\n";
+  std::cout << "*----------------------*\n";
+  for (int i = 0; i < rangeSz-1; ++i)
+    std::cout << "Range: [" << rangeA[i].left << ", " rangeA[i+1].left
+              << "]: probability: "<< rangeA[i].prob << "\n";
+  std::cout << "\n";
+    
   return 0;
 }
