@@ -526,12 +526,12 @@ void myfini()
 	  if (my_rand >= probability)
 	    {
 	      DEBUG4(my_stderr, "    -> exiting because scalar sampling. "
-		     "run_time: %g, (my_rand: %g > prob: %g) for program %s\n}\n\n",
+		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
 		     run_time, my_rand, probability, exec_path);
 	      return;
 	    }
 	  else
-	    DEBUG4(my_stderr, "    -> Scalar Sampling program run_time: %g: (my_rand %g <= prob %g) for program: %s\n", 
+	    DEBUG4(my_stderr, "    -> Scalar Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n", 
 		   run_time, my_rand, probability, exec_path);
 	}
     }
