@@ -509,7 +509,6 @@ void myfini()
 
   if (run_mask & BIT_SCALAR)
     {
-      DEBUG0(my_stderr, "    -> Scalar program\n");
       const char * v;
       v = getenv("XALT_SCALAR_SAMPLING");
       if (v && strcmp(v,"yes") == 0)
@@ -524,8 +523,6 @@ void myfini()
 	  srand(seed);
 	  double my_rand    = (double) rand()/(double) RAND_MAX;
 
-	  DEBUG1(my_stderr, "    -> Scalar Sampling program w/ prob: %g\n",probability);
-	  
 	  if (my_rand >= probability)
 	    {
 	      DEBUG3(my_stderr, "    -> exiting because scalar sampling. "
@@ -533,6 +530,9 @@ void myfini()
 		     my_rand, probability, exec_path);
 	      return;
 	    }
+	  else
+	    DEBUG3(my_stderr, "    -> Scalar Sampling program (my_rand %g <= prob: %g) for program\n",
+		   my_rand, probability, exec_path);
 	}
     }
   
