@@ -168,6 +168,19 @@ order of 5 to 10 variables per execution.  For details about this file
 please read over the Config/TACC_config.py file for details.  Also pay
 attention to the commas.
 
+XALT supports scalar (non-MPI) program sampling based on execution
+time.  If you have setup XALT to track scalar programs then you can
+also control what percentage will be sampled.  Note that the
+environment variable:
+
+    XALT_SCALAR_SAMPLING=yes
+
+must be set to "yes" in order for sampling to occur.  If this variable
+is unset or is not set to "yes" then all scalar program execution are
+tracked.  This designed this way to make testing easier.
+
+
+
 
 2.8) Typical configure and build instructions for stampede2.
 
@@ -185,15 +198,18 @@ testing phase
 2.9) Below is the XALT modulefile you need to specify to use the
 package.  The first one is a lua modulefile that can be used with Lmod.
 
-    setenv("XALT_EXECUTABLE_TRACKING","yes")
+    setenv("XALT_EXECUTABLE_TRACKING", "yes")
+    setenv("XALT_SCALAR_SAMPLING",     "yes")
 
     prepend_path{"PATH",          "/opt/apps/xalt/xalt/bin",  priority="100"}
     prepend_path("LD_PRELOAD",    "/opt/apps/xalt/xalt/lib64/libxalt_init.so")
     prepend_path("COMPILER_PATH", "/opt/apps/xalt/xalt/bin")
 
+
 The following is a TCL modulefile:
 
     setenv XALT_EXECUTABLE_TRACKING  yes
+    setenv XALT_SCALAR_SAMPLING      yes
 
     prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
     prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/lib64/libxalt_init.so

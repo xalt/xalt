@@ -394,8 +394,8 @@ if test "$SYSHOST_CONFIG" = no; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without setting --with-syshostConfig=..."
-   echo "Your choices are hardcode, nth_name, read_file, mapping and"
-   echo "strip_nodename_numbers."
+   echo "Your choices are hardcode, nth_name, read_file, mapping,"
+   echo "strip_nodename_numbers and env_var."
    echo "See the manual for details."
    echo "======================================================="
    rm -f makefile

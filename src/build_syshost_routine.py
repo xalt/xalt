@@ -89,6 +89,26 @@ def add_hostname_routine(sA):
   sA.append("}")
 
 
+def env_var(var, output):
+  sA = []
+
+  sA.append("#include <stdio.h>")
+  sA.append("#include <stdlib.h>")
+  sA.append("#include \"xalt_obfuscate.h\"")
+  sA.append("")
+  sA.append("const char * xalt_syshost()")
+  sA.append("{")
+  sA.append("  const char* var = getenv(\"" + var + "\";")
+  sA.append("  if (!var) var = \"unknown\";")
+  sA.append("  return var;")
+  sA.append("}")
+  xalt_syshost_main(sA)
+
+  s   = "\n".join(sA)
+  f   = open(output,"w")
+  f.write(s)
+  f.close()
+
 def read_file(fname,output):
   sA = []
 
@@ -271,7 +291,8 @@ class CmdLineOptions(object):
 
 kindA = [ ['hardcode', hardcode ], ['nth_name', nth_name],
           ['read_file', read_file], ['mapping', mapping], 
-          ['strip_nodename_numbers', strip_nodename_numbers] ]
+          ['strip_nodename_numbers', strip_nodename_numbers],
+          ['env_var', env_var] ]
 
 def main():
   args = CmdLineOptions().execute()
