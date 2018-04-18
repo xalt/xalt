@@ -531,7 +531,7 @@ void myfini()
 	      return;
 	    }
 	  else
-	    DEBUG3(my_stderr, "    -> Scalar Sampling program (my_rand %g <= prob: %g) for program\n",
+	    DEBUG3(my_stderr, "    -> Scalar Sampling program (my_rand %g <= prob: %g) for program: %s\n",
 		   my_rand, probability, exec_path);
 	}
     }
