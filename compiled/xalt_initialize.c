@@ -524,7 +524,7 @@ void myfini()
 	  srand(seed);
 	  double my_rand    = (double) rand()/(double) RAND_MAX;
 
-	  DEBUG0(my_stderr, "    -> Scalar Sampling program w/ prob: %g\n",probability);
+	  DEBUG1(my_stderr, "    -> Scalar Sampling program w/ prob: %g\n",probability);
 	  
 	  if (my_rand >= probability)
 	    {
