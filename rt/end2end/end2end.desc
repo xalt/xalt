@@ -85,8 +85,8 @@ test_descript = {
      ./helloñññ
 
 
-     displayThis "XALT_SCALAR_AND_SPSR_TRACKING=no ./helloñññ"
-     XALT_SCALAR_AND_SPSR_TRACKING=no ./helloñññ
+     displayThis "XALT_SCALAR_TRACKING=no ./helloñññ"
+     XALT_SCALAR_TRACKING=no ./helloñññ
 
      displayThis "gfortran -fopenmp -o omp_pi"
      gfortran -fopenmp -o omp_pi $(testDir)/omp_pi.f90
