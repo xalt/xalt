@@ -63,7 +63,7 @@ path_patterns = [
     ['KEEP',  r'^\/bin\/bzip2'],
     ['KEEP',  r'^\/bin\/gzip'],
     ['KEEP',  r'^\/bin\/tar'],
-    ['KEEP',  r'.*\/python'],
+    ['SPSR',  r'.*\/python[0-9.]*'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],
     ['SKIP',  r'^\/bin\/.*'],
