@@ -99,6 +99,14 @@ static const char * xalt_run_descriptA[] = {
   "program is an MPI program"                     /* 4 */
 };
 
+static const char * xalt_run_short_descriptA[] = {
+  "Not possible",                                 /* 0 */
+  "scalar",                                       /* 1 */
+  "SPSR",                                         /* 2 */
+  "Not possible",                                 /* 3 */
+  "MPI"                                           /* 4 */
+};
+
 
 const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
@@ -234,7 +242,6 @@ void myinit(int argc, char **argv)
     {
       DEBUG2(stderr,"    -> countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
       reject_flag = XALT_RUN_TWICE;
-      unsetenv("XALT_RUN_UUID");
       return;
     }
   countA[IDX]++;
@@ -341,7 +348,7 @@ void myinit(int argc, char **argv)
   if (build_mask & run_mask & BIT_SPSR)
     {
       const char * v;
-      v = getenv("XALT_SCALAR_SAMPLING");
+      v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
       if (v && strcmp(v,"yes") == 0)
 	{
 	  unsigned int a	= (unsigned int) clock();
@@ -357,6 +364,7 @@ void myinit(int argc, char **argv)
 		     "(my_rand: %g >= SPSR sampling: %g) for program: %s\n}\n\n",
 		     my_rand, spsr_sampling_rate, exec_path);
 	      reject_flag = XALT_SPSR_SAMPLING;
+	      unsetenv("XALT_RUN_UUID");
 	      return;
 	    }
 	  else
@@ -501,7 +509,8 @@ void myinit(int argc, char **argv)
 	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
       if (xalt_tracing || xalt_run_tracing) 
-	fprintf(stderr, "  Recording state at beginning of user program:\n    %s\n\n}\n\n",cmdline);
+	fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
+		xalt_run_short_descriptA[run_mask], cmdline);
       system(cmdline);
       free(cmdline);
     }
@@ -544,7 +553,7 @@ void myfini()
   if (run_mask & BIT_SCALAR)
     {
       const char * v;
-      v = getenv("XALT_SCALAR_SAMPLING");
+      v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
       if (v && strcmp(v,"yes") == 0)
 	{
 	  double       run_time	= end_time - start_time;
@@ -578,7 +587,8 @@ void myfini()
            " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
 	   start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
 
-  DEBUG1(my_stderr,"  Recording State at end of user program:\n    %s\n\n}\n\n",cmdline);
+  DEBUG2(my_stderr,"  Recording State at end of %s user program:\n    %s\n\n}\n\n",
+	 xalt_run_short_descriptA[run_mask], cmdline);
 
   system(cmdline);
   free(cmdline);

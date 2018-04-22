@@ -229,7 +229,7 @@ env_patterns = [
 # the execution time.
 #
 # Note that scalar execution only uses this table IFF
-# $XALT_SCALAR_SAMPLING equals yes
+# $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
 
 interval_array = [
     [ 0.0,                0.0001 ],
@@ -245,6 +245,9 @@ interval_array = [
 #
 # By default SPSR programs are sampled at a 100% rate but sites can
 # override this by this configuration file. 
+
+# Note that SPSR execution only uses this table IFF
+# $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
 
 SPSR_sampling = 0.01  # == 1%
 

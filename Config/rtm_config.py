@@ -201,7 +201,7 @@ env_patterns = [
 # the execution time.
 #
 # Note that scalar execution only uses this table IFF
-# $XALT_SCALAR_SAMPLING equals yes
+# $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
 
 #interval_array = [
 #    [ 0.0,                1.0 ],
@@ -217,7 +217,7 @@ env_patterns = [
 # override this by this configuration file. 
 
 # Note that for this sampling to be turned on you must
-# set XALT_SPSR_SAMPLING to "yes".  Otherwise there is 100% sampling.
+# set XALT_SCALAR_AND_SPSR_SAMPLING to "yes".  Otherwise there is 100% sampling.
 # This is to simplify initial testing.
 
 SPSR_sampling = 0.02  # == 2%

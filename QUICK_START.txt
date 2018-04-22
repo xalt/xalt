@@ -169,18 +169,23 @@ please read over the Config/TACC_config.py file for details.  Also pay
 attention to the commas.
 
 XALT supports scalar (non-MPI) program sampling based on execution
-time.  If you have setup XALT to track scalar programs then you can
-also control what percentage will be sampled.  Note that the
+time.  If you have setup XALT to track scalar or SPSR programs then
+you can also control what percentage will be sampled.  Note that the
 environment variable:
 
-    XALT_SCALAR_SAMPLING=yes
+    XALT_SCALAR_AND_SPSR_SAMPLING=yes
 
 must be set to "yes" in order for sampling to occur.  If this variable
 is unset or is not set to "yes" then all scalar program execution are
 tracked.  This designed this way to make testing easier.
 
-
-
+XALT also provides tracking of certain scalar programs (assuming your
+config.py file turns this option on) that can track the internal
+package use.  These programs could be python, R and matlab.  For these
+programs a start record must be produced.  By default XALT will track
+100% of these programs, but this might be overwhelming so XALT allows
+a site to specify a percentage of these jobs to be tracked.  See
+Config/TACC_config.py for more details.
 
 2.8) Typical configure and build instructions for stampede2.
 
@@ -198,8 +203,8 @@ testing phase
 2.9) Below is the XALT modulefile you need to specify to use the
 package.  The first one is a lua modulefile that can be used with Lmod.
 
-    setenv("XALT_EXECUTABLE_TRACKING", "yes")
-    setenv("XALT_SCALAR_SAMPLING",     "yes")
+    setenv("XALT_EXECUTABLE_TRACKING",       "yes")
+    setenv("XALT_SCALAR_AND_SPSR_SAMPLING",  "yes")
 
     prepend_path{"PATH",          "/opt/apps/xalt/xalt/bin",  priority="100"}
     prepend_path("LD_PRELOAD",    "/opt/apps/xalt/xalt/lib64/libxalt_init.so")
@@ -208,8 +213,8 @@ package.  The first one is a lua modulefile that can be used with Lmod.
 
 The following is a TCL modulefile:
 
-    setenv XALT_EXECUTABLE_TRACKING  yes
-    setenv XALT_SCALAR_SAMPLING      yes
+    setenv XALT_EXECUTABLE_TRACKING       yes
+    setenv XALT_SCALAR_AND_SPSR_SAMPLING  yes
 
     prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
     prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/lib64/libxalt_init.so
