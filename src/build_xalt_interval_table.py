@@ -125,7 +125,7 @@ def main():
   intervalStr = convert_to_string(intervalA)
   pattA = [
     ['@rangeA@',    intervalStr],
-    ['@SPSR_rate@', SPSR_sampling]
+    ['@SPSR_rate@', str(SPSR_sampling)]
   ]
   convert_template(pattA, args.input, args.output)
 

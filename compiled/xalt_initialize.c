@@ -353,14 +353,14 @@ void myinit(int argc, char **argv)
 
 	  if (my_rand >= spsr_sampling_rate)
 	    {
-	      DEBUG3(my_stderr, "    -> exiting because spsr sampling. "
+	      DEBUG3(stderr, "    -> exiting because spsr sampling. "
 		     "(my_rand: %g >= SPSR sampling: %g) for program: %s\n}\n\n",
 		     my_rand, spsr_sampling_rate, exec_path);
 	      reject_flag = XALT_SPSR_SAMPLING;
 	      return;
 	    }
 	  else
-	    DEBUG3(my_stderr, "    -> spsr sampling. "
+	    DEBUG3(stderr, "    -> spsr sampling. "
 		     "(my_rand: %g < SPSR sampling: %g) for program: %s\n}\n\n",
 		     my_rand, spsr_sampling_rate, exec_path);
 	}
