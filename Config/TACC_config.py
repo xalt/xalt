@@ -184,9 +184,9 @@ env_patterns = [
   ]
 
 #------------------------------------------------------------
-# XALT samples non-mpi executions based on this table.
-# All mpi executions are sampled at 100% when there are two
-# more tasks.
+# XALT samples non-mpi executions, but not SPSR programs,
+# based on this table. All mpi executions are sampled at 100%
+# when there are two more tasks.
 #
 # The array of array used by interval_array has the following
 # structure:
@@ -237,3 +237,16 @@ interval_array = [
     [ 600.0,              1.0    ],
     [ sys.float_info.max, 1.0    ]
 ]
+
+#------------------------------------------------------------
+# XALT samples SPSR programs at one rate no matter the runtime.
+# SPSR programs are programs like R and python where the internal
+# package use is tracked as well.
+#
+# By default SPSR programs are sampled at a 100% rate but sites can
+# override this by this configuration file. 
+
+SPSR_sampling = 0.01  # == 1%
+
+
+

@@ -207,3 +207,18 @@ env_patterns = [
 #    [ 0.0,                1.0 ],
 #    [ sys.float_info.max, 1.0 ]
 #]
+
+#------------------------------------------------------------
+# XALT samples SPSR programs at one rate no matter the runtime.
+# SPSR programs are programs like R and python where the internal
+# package use is tracked as well.
+#
+# By default SPSR programs are sampled at a 100% rate but sites can
+# override this by this configuration file. 
+
+# Note that for this sampling to be turned on you must
+# set XALT_SPSR_SAMPLING to "yes".  Otherwise there is 100% sampling.
+# This is to simplify initial testing.
+
+SPSR_sampling = 0.02  # == 2%
+

@@ -54,6 +54,17 @@ void Json::add(const char* name, int          value)
   m_s += ",";
 }
 
+void Json::add(const char* name, double       value)
+{
+  char buf[30];
+  sprintf(&buf[0],"%g",value);
+  m_s += "\"";
+  m_s += name;
+  m_s += "\":";
+  m_s += buf;
+  m_s += ",";
+}
+
 void Json::add_json_string(const char* name, std::string& value)
 {
   m_s += "\"";

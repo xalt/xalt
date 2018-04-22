@@ -20,6 +20,7 @@ public:
   void add(const char* name, std::string&              value);
   void add(const char* name, const char*               value);
   void add(const char* name, int                       value);
+  void add(const char* name, double                    value);
   void add(const char* name, Vstring&                  v);
   void add(const char* name, Set&                      s);
   void add(const char* name, std::vector<Libpair>&     lddA);

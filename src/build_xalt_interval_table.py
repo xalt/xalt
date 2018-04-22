@@ -88,7 +88,8 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  intervalA = namespace.get('interval_array',       {})
+  intervalA     = namespace.get('interval_array',       {})
+  SPSR_sampling = namespace.get('SPSR_sampling',       None)
 
   if (len(intervalA) < 2):
     intervalA = [
@@ -96,6 +97,8 @@ def main():
       [ sys.float_info.max, 1.0 ]
     ]
 
+  if (not SPSR_sampling):
+    SPSR_sampling = 1.0
 
   #check first and last entry
   if (intervalA[0][0] > 1.e-8):
@@ -121,7 +124,8 @@ def main():
 
   intervalStr = convert_to_string(intervalA)
   pattA = [
-    ['@rangeA@', intervalStr]
+    ['@rangeA@',    intervalStr],
+    ['@SPSR_rate@', SPSR_sampling]
   ]
   convert_template(pattA, args.input, args.output)
 

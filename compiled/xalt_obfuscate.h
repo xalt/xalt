@@ -45,6 +45,7 @@
 #define envPatternSz                PASTE2(__XALT_envPatternSz,               MY_NAME)
 #define rangeA                      PASTE2(__XALT_rangeA,                     MY_NAME)
 #define rangeSz                     PASTE2(__XALT_rangeSz,                    MY_NAME)
+#define spsr_sampling_rate          PASTE2(__XALT_spsr_sampling_rate,         MY_NAME)
 
 #define background                  PASTE2(__XALT_background,                 MY_NAME)
 #define countA                      PASTE2(__XALT_countA,                     MY_NAME)

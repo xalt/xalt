@@ -63,7 +63,8 @@ typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4, BIT_START_RECORD = 6} 
 typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP} xalt_status;
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
+	       XALT_SPSR_SAMPLING} xalt_status;
 
 static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
@@ -75,6 +76,7 @@ static const char * xalt_reasonA[] = {
   "XALT has found the executable does not match path pattern",
   "XALT has problem with a JSON string",
   "XALT execute type does not match requested type",
+  "XALT SPSR sampling -> not recorded",
 };
 
 
@@ -336,6 +338,38 @@ void myinit(int argc, char **argv)
   else
     run_mask |= (path_results == SPSR) ? BIT_SPSR : BIT_SCALAR;
                       
+  if (build_mask & run_mask & BIT_SPSR)
+    {
+      const char * v;
+      v = getenv("XALT_SCALAR_SAMPLING");
+      if (v && strcmp(v,"yes") == 0)
+	{
+	  unsigned int a	= (unsigned int) clock();
+	  unsigned int b	= (unsigned int) time(NULL);
+	  unsigned int c	= (unsigned int) getpid();
+	  unsigned int seed	= mix(a,b,c);
+	  srand(seed);
+	  double my_rand        = (double) rand()/(double) RAND_MAX;
+
+	  if (my_rand >= spsr_sampling_rate)
+	    {
+	      DEBUG3(my_stderr, "    -> exiting because spsr sampling. "
+		     "(my_rand: %g >= SPSR sampling: %g) for program: %s\n}\n\n",
+		     my_rand, spsr_sampling_rate, exec_path);
+	      reject_flag = XALT_SPSR_SAMPLING;
+	      return;
+	    }
+	  else
+	    DEBUG3(my_stderr, "    -> spsr sampling. "
+		     "(my_rand: %g < SPSR sampling: %g) for program: %s\n}\n\n",
+		     my_rand, spsr_sampling_rate, exec_path);
+	}
+    }
+  
+      
+
+
+
     
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)

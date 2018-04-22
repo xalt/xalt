@@ -11,9 +11,9 @@ typedef struct
   double prob;
 } interval;
 
-interval rangeA[] = { @rangeA@ };
-
-const int   rangeSz = N_ELEMENTS(rangeA);
+interval     rangeA[]	      = { @rangeA@ };
+const int    rangeSz	      = N_ELEMENTS(rangeA);
+const double spsr_sample_rate = @SPSR_rate@;
 
 #endif
 
