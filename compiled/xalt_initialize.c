@@ -352,8 +352,8 @@ void myinit(int argc, char **argv)
       if (v && strcmp(v,"yes") == 0)
 	{
 	  const char* xalt_spsr_sampling_rate_str = getenv("XALT_SPSR_SAMPLING_RATE");
-	  if (xalt_scalar_and_spsr_sampling)
-	    spsr_sampling_rate = strtod(xalt_scalar_and_spsr_sampling);
+	  if (xalt_spsr_sampling_rate_str)
+	    spsr_sampling_rate = strtod(xalt_spsr_sampling_rate_str, NULL);
 	  
 	  unsigned int a	= (unsigned int) clock();
 	  unsigned int b	= (unsigned int) time(NULL);
