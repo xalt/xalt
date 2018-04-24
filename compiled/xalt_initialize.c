@@ -351,6 +351,10 @@ void myinit(int argc, char **argv)
       v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
       if (v && strcmp(v,"yes") == 0)
 	{
+	  const char* xalt_spsr_sampling_rate_str = getenv("XALT_SPSR_SAMPLING_RATE");
+	  if (xalt_scalar_and_spsr_sampling)
+	    spsr_sampling_rate = strtod(xalt_scalar_and_spsr_sampling);
+	  
 	  unsigned int a	= (unsigned int) clock();
 	  unsigned int b	= (unsigned int) time(NULL);
 	  unsigned int c	= (unsigned int) getpid();
@@ -373,12 +377,7 @@ void myinit(int argc, char **argv)
 		     my_rand, spsr_sampling_rate, exec_path);
 	}
     }
-  
-      
 
-
-
-    
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)
     {

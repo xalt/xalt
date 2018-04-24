@@ -13,7 +13,7 @@ typedef struct
 
 interval     rangeA[]	        = { @rangeA@ };
 const int    rangeSz	        = N_ELEMENTS(rangeA);
-const double spsr_sampling_rate = @SPSR_rate@;
+double       spsr_sampling_rate = @SPSR_rate@;
 
 #endif
 

@@ -93,6 +93,10 @@ int main(int argc, char* argv[])
   if (xalt_scalar_and_spsr_sampling == NULL || strcmp(xalt_scalar_and_spsr_sampling,"yes") != 0)
     xalt_scalar_and_spsr_sampling = "no";
 
+  const char* xalt_spsr_sampling_rate_str = getenv("XALT_SPSR_SAMPLING_RATE");
+  if (xalt_scalar_and_spsr_sampling)
+    spsr_sampling_rate = strtod(xalt_scalar_and_spsr_sampling);
+
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
       Json json;
