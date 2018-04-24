@@ -248,6 +248,14 @@ interval_array = [
 
 # Note that SPSR execution only uses this table IFF
 # $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
+#
+# Also note that this value can be overridden. For example the
+# following setting:
+#
+#     export XALT_SPSR_SAMPING_RATE=0.02
+#
+# would change the SPSR sampling rate to 2%.
+#
 
 SPSR_sampling = 0.01  # == 1%
 

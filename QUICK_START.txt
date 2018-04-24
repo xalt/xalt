@@ -187,6 +187,12 @@ programs a start record must be produced.  By default XALT will track
 a site to specify a percentage of these jobs to be tracked.  See
 Config/TACC_config.py for more details.
 
+Also note that sites can control the sampling rate for SPSR programs
+by setting the env var. XALT_SPSR_SAMPLING_RATE to a number between
+0.0 and 1.0 where 0.0 would mean no tracking at all of SPSR programs
+and 1.0 would mean that 100% of SPSR programs are tracked.
+
+
 2.8) Typical configure and build instructions for stampede2.
 
     $ cd xalt
