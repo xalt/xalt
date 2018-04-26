@@ -43,6 +43,7 @@ hostname_patterns = [
 
 path_patterns = [
     ['SPSR',  r'.*\/R'],
+    ['SPSR',  r'.*\/MATLAB'],
     ['KEEP',  r'^\/usr\/bin\/cp'],
     ['KEEP',  r'^\/usr\/bin\/mv'],
     ['KEEP',  r'^\/usr\/bin\/gawk'],
