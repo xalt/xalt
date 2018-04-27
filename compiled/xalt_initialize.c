@@ -187,7 +187,8 @@ void myinit(int argc, char **argv)
       background       = 0;  /* backgrounding the start record is always off when tracing is on*/
       xalt_tracing     = (strcmp(p_dbg,"yes") == 0);
       xalt_run_tracing = (strcmp(p_dbg,"run") == 0);
-      errfd	       = dup(STDERR_FILENO);
+      if (xalt_tracing  || xalt_run_tracing)
+	errfd	       = dup(STDERR_FILENO);
     }
 
   v = getenv("__XALT_INITIAL_STATE__");
@@ -389,7 +390,6 @@ void myinit(int argc, char **argv)
     }
 
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
-  errfd = dup(STDERR_FILENO);
 
   my_syshost = xalt_syshost();
 
@@ -543,7 +543,7 @@ void myfini()
     {
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
 	     xalt_reasonA[reject_flag], exec_path);
-      fclose(my_stderr);
+      if (xalt_tracing) fclose(my_stderr);
       return;
     }
 
@@ -571,7 +571,7 @@ void myfini()
 	      DEBUG4(my_stderr, "    -> exiting because scalar sampling. "
 		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
 		     run_time, my_rand, probability, exec_path);
-	      fclose(my_stderr);
+	      if (xalt_tracing) fclose(my_stderr);
 	      return;
 	    }
 	  else
@@ -596,7 +596,7 @@ void myfini()
   free(usr_cmdline);
   free(pathArg);
   free(ldLibPathArg);
-  fclose(my_stderr);
+  if (xalt_tracing) fclose(my_stderr);
 }
 
 
