@@ -531,8 +531,9 @@ void myfini()
   FILE * my_stderr = NULL;
   char * cmdline;
   double run_time;
+  int    xalt_err = xalt_tracing || xalt_run_tracing;
 
-  if (xalt_tracing)
+  if (xalt_err)
     {
       my_stderr = fdopen(errfd,"w");
       DEBUG1(my_stderr,"\nmyfini(%s){\n", STR(STATE));
@@ -543,7 +544,7 @@ void myfini()
     {
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
 	     xalt_reasonA[reject_flag], exec_path);
-      if (xalt_tracing) fclose(my_stderr);
+      if (xalt_err) fclose(my_stderr);
       return;
     }
 
@@ -571,7 +572,7 @@ void myfini()
 	      DEBUG4(my_stderr, "    -> exiting because scalar sampling. "
 		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
 		     run_time, my_rand, probability, exec_path);
-	      if (xalt_tracing) fclose(my_stderr);
+	      if (xalt_err) fclose(my_stderr);
 	      return;
 	    }
 	  else
@@ -588,15 +589,16 @@ void myfini()
            " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
 	   start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
 
-  DEBUG2(my_stderr,"  Recording State at end of %s user program:\n    %s\n\n}\n\n",
-	 xalt_run_short_descriptA[run_mask], cmdline);
+  if (xalt_tracing || xalt_run_tracing )
+    fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n\n}\n\n",
+            xalt_run_short_descriptA[run_mask], cmdline);
 
   system(cmdline);
   free(cmdline);
   free(usr_cmdline);
   free(pathArg);
   free(ldLibPathArg);
-  if (xalt_tracing) fclose(my_stderr);
+  if (xalt_err) fclose(my_stderr);
 }
 
 
