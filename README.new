@@ -1,0 +1,7 @@
+XALT 2.0+
+   (2.0.1-devel) Now TACC systems will track /bin/cp, /usr/bin/perl, etc with sampling
+   (2.0.2-devel) Support for SPSR sampling added
+   (2.0.3-devel) Now using XALT_SPSR_SAMPLING_RATE env var to override config'ed SPSR
+                 sampling rate
+   (2.0.4-devel) close stderr file and only dup(stderr) when XALT_TRACING is "yes" or "run"
+   
