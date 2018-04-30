@@ -535,6 +535,7 @@ void myfini()
 
   if (xalt_err)
     {
+      close(STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
       DEBUG1(my_stderr,"\nmyfini(%s){\n", STR(STATE));
     }
@@ -548,7 +549,6 @@ void myfini()
 	{
 	  fclose(my_stderr);
 	  close(errfd);
-	  close(STDERR_FILENO);
 	}
       return;
     }
@@ -581,7 +581,6 @@ void myfini()
 		{
 		  fclose(my_stderr);
 		  close(errfd);
-		  close(STDERR_FILENO);
 		}
 	      return;
 	    }
@@ -612,7 +611,6 @@ void myfini()
     {
       fclose(my_stderr);
       close(errfd);
-      close(STDERR_FILENO);
     }
 }
 
