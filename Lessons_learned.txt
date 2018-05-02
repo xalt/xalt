@@ -1,0 +1,8 @@
+Here are some notes about lessons learned when deploying XALT in the
+field.
+
+
+* When building Intel PIN library, it caused problems when building a
+  shared library.  So XALT now doesn't include xalt_initialize.o etc
+  when building a shared library.
+  

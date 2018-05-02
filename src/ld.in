@@ -124,6 +124,10 @@ do
       prev='EXEC'
       ;;
 
+    -shared)
+      SHARED_LIB=true
+      ;;
+
     -r)
       PARTIAL_LINKING=true
       ;;
@@ -279,6 +283,17 @@ fi
 if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
     LIBUUID="-luuid"
 fi
+
+
+#############################################################
+#  do not include xalt_initialize.*, -luuid, etc when building
+#  a shared library.
+
+if [ "$SHARED_LIB" = true ]; then
+    XALT_INIT_ROUTINE_OBJ=
+    LIBUUID=
+fi
+
 
 $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID -t > $LINKLINE_OUT  2>&1
 status=$?
