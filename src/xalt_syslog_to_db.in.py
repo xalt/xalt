@@ -82,7 +82,6 @@ class CmdLineOptions(object):
                                                                                help="Name of the leftover file")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
-    parser.add_argument("--dbname",      dest='dbname',   action="store",      default="xalt", help="Name of the database")
     parser.add_argument("--confFn",      dest='confFn',   action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
     return args
