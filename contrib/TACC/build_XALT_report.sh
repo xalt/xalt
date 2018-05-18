@@ -1,0 +1,50 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+export PATH=$HOME/l/pkg/xalt/xalt/sbin:$PATH
+
+# setup gcc
+export PATH=/opt/apps/gcc/4.9.1/bin:$PATH
+export LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
+export GCC_LIB=/opt/apps/gcc/4.9.1/lib64
+
+# setup python
+export PATH=/opt/apps/gcc4_9/python/2.7.12/bin:$PATH
+export LD_LIBRARY_PATH=/opt/apps/gcc4_9/python/2.7.12/lib:/opt/apps/intel/15/composer_xe_2015.2.164/mkl/lib/intel64:/opt/apps/intel/15/composer_xe_2015.2.164/compiler/lib/intel64:$LD_LIBRARY_PATH
+
+
+XALT_START_DATE='2018-03-01'
+
+today=$(date +%F)
+ystrday=$(date -d "-1day" +%F)
+last30=$(date -d "-30days" +%F)
+last365=$(date -d "-365days" +%F)
+
+last365s=$(date -d "-365days" +%s)
+xalt_start_s=$(date -d $XALT_START_DATE +%s)
+
+if [ "$xalt_start_s" -gt "$last365s" ]
+   last365=$(date -d $XALT_START_DATE +%F)
+fi   
+
+SYSHOSTS=( maverick stampede2 )
+
+if [ "$1" = "--mail" ]; then
+   sendTo="$2"
+fi
+
+cd $HOME/xalt_usage
+
+for i in "${SYSHOSTS[@]"; do
+   fn30="XALT-Report-${i}-last30-$today.txt"
+   fn365="XALT-Report-${i}-last365-$today.txt"
+
+   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --start $last30  --end $today > $i/last30/$fn30
+   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --start $last365 --end $today > $i/last365/$fn365
+
+end
+
+if [ -n "$sendTo" ]; then
+   echo "XALT Report for S2 for the last 30 days"  | mail -s $fn30  -a stampede2/last30/$fn30   $sendTo
+   echo "XALT Report for S2 for the last 365 days" | mail -s $fn365 -a stampede2/last365/$fn365 $sendTo
+fi
