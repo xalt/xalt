@@ -78,7 +78,6 @@ class ExecRun:
     self.__cursor = cursor
 
   def build(self, args, startdate, enddate):
-    cpn            = args.cpn
     equiv_patternA = name_mapping()
     sA = []
     sA.append("SELECT CASE ")
@@ -118,7 +117,7 @@ class ExecRun:
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
-    sumCH = 0.0
+    sumNH = 0.0
     for i in range(num):
       entryT = sortA[i]
       resultA.append(["%.0f" % (entryT['nodehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
@@ -175,7 +174,7 @@ class ExecRunLink:
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
-    sumCH = 0.0
+    sumNH = 0.0
     for i in range(num):
       entryT = sortA[i]
       resultA.append(["%.0f" % (entryT['nodehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
@@ -473,13 +472,13 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
 
 def running_other_exec(cursor, args, startdate, enddate):
 
-  query = "SELECT ROUND(SUM(t1.num_node*t1.run_time/3600.0)) as nodehours, \
-           COUNT(t1.date)                                    as n_runs,    \
-           COUNT(DISTINCT(t1.user))                          as n_users    \
-           FROM xalt_run AS t1, xalt_link AS t2                            \
-           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid                 \
-           and t1.syshost like %s                                          \
-           and t1.user != t2.build_user and t1.module_name is NULL         \
+  query = "SELECT ROUND(SUM(t1.num_nodes*t1.run_time/3600.0)) as nodehours, \
+           COUNT(t1.date)                                     as n_runs,    \
+           COUNT(DISTINCT(t1.user))                           as n_users    \
+           FROM xalt_run AS t1, xalt_link AS t2                             \
+           WHERE t1.uuid is not NULL and t1.uuid = t2.uuid                  \
+           and t1.syshost like %s                                           \
+           and t1.user != t2.build_user and t1.module_name is NULL          \
            and t1.date >= %s and t1.date < %s"
 
   resultT = {}
@@ -594,21 +593,21 @@ def main():
   
   ############################################################
   #  Report of Top EXEC by Node Hours
-  resultA, sumCH = execA.report_by(args,"nodehours")
+  resultA, sumNH = execA.report_by(args,"nodehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by Node-hours (Total Node Hours(M):",sumCH*1.0e-6,")\n")
+  print("\nTop",args.num, "MPI Executables sorted by Node-hours (Total Node Hours(M):",sumNH*1.0e-6,")\n")
   print(bt.build_tbl())
   
   ############################################################
   #  Report of Top EXEC by Num Jobs
-  resultA, sumCH  = execA.report_by(args,"n_jobs")
+  resultA, sumNH  = execA.report_by(args,"n_jobs")
   bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Executables sorted by # Jobs\n")
   print(bt.build_tbl())
   
   ############################################################
   #  Report of Top EXEC by Users
-  resultA, sumCH = execA.report_by(args,"n_users")
+  resultA, sumNH = execA.report_by(args,"n_users")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
@@ -618,7 +617,7 @@ def main():
     #  Report of Top EXEC by Nodehours for gcc
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"gcc")
-    resultA, sumCH = execA.report_by(args,"nodehours")
+    resultA, sumNH = execA.report_by(args,"nodehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Node-hours for gcc\n")
     print(bt.build_tbl())
@@ -627,7 +626,7 @@ def main():
     #  Report of Top EXEC by Nodehours for g++
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"g++")
-    resultA, sumCH = execA.report_by(args,"nodehours")
+    resultA, sumNH = execA.report_by(args,"nodehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Node-hours for g++\n")
     print(bt.build_tbl())
@@ -636,7 +635,7 @@ def main():
     #  Report of Top EXEC by Nodehours for gfortran
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"gfortran")
-    resultA, sumCH = execA.report_by(args,"nodehours")
+    resultA, sumNH = execA.report_by(args,"nodehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Node-hours for gfortran\n")
     print(bt.build_tbl())
@@ -645,7 +644,7 @@ def main():
     #  Report of Top EXEC by Nodehours for ifort
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"ifort")
-    resultA, sumCH = execA.report_by(args,"nodehours")
+    resultA, sumNH = execA.report_by(args,"nodehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Node-hours for ifort\n")
     print(bt.build_tbl())
@@ -654,7 +653,7 @@ def main():
     #  Report of Top EXEC by Nodehours for icc
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"icc")
-    resultA, sumCH = execA.report_by(args,"nodehours")
+    resultA, sumNH = execA.report_by(args,"nodehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Node-hours for icc\n")
     print(bt.build_tbl())
@@ -663,7 +662,7 @@ def main():
     #  Report of Top EXEC by Nodehours for icpc
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"icpc")
-    resultA, sumCH = execA.report_by(args,"nodehours")
+    resultA, sumNH = execA.report_by(args,"nodehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Node-hours for icpc\n")
     print(bt.build_tbl())
