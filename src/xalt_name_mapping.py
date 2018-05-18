@@ -12,6 +12,7 @@ equiv_patternA = [
     [ r'^pmemd'                         , 'Amber*'                         ],
     [ r'^sander'                        , 'Amber*'                         ],
     [ r'^analysis016'                   , 'Analysis016*'                   ],
+    [ r'^baddi3'                        , 'BADDI3*'                        ],
     [ r'^absorption\.real\.x'           , 'BerkeleyGW*'                    ],
     [ r'^absorption\.cplx\.x'           , 'BerkeleyGW*'                    ],
     [ r'^epsilon\.real\.x'              , 'BerkeleyGW*'                    ],
