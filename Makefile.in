@@ -124,7 +124,7 @@ TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py
                            contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
                            contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
                            contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
-                           contrib/TACC/quarter2months.in
+                           contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.sh
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 INIT_SRC             	:= src/xalt_initialize.c
 INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
