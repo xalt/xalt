@@ -432,17 +432,15 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
       sys.exit(1)
     
     row = cursor.fetchall()[0]
-    node_hours = row[0]
-    if (node_hours == None):
-      node_hours = 0.0
-    resultT[name] = {'nodehours' : float(node_hours),
+    node_hours = float(row[0] or 0.0)
+    resultT[name] = {'nodehours' : node_hours,
                      'n_runs'    : int(row[1]),
                      'n_jobs'    : int(row[2]),
                      'n_users'   : int(row[3]),
                      'name'      : name
                      }
 
-    totalT['nodehours'] += float(node_hours)
+    totalT['nodehours'] += node_hours
     totalT['n_runs'   ] += int(row[1])
     totalT['n_jobs'   ] += int(row[2])
 
@@ -489,7 +487,9 @@ def running_other_exec(cursor, args, startdate, enddate):
     
   row = cursor.fetchall()[0]
   
-  resultT['diff'] = {'nodehours' : float(row[0]),
+  node_hours = float(row[0] or 0.0)
+
+  resultT['diff'] = {'nodehours' : node_hours,
                      'n_runs'    : int(row[1]),
                      'n_users'   : int(row[2])
                     }
@@ -509,10 +509,7 @@ def running_other_exec(cursor, args, startdate, enddate):
     sys.exit(1)
     
   row = cursor.fetchall()[0]
-  node_hours = row[0]
-  if (node_hours == None):
-    node_hours = 0.0
-  resultT['same'] = {'nodehours' : float(node_hours),
+  resultT['same'] = {'nodehours' : float(row[0] or 0.0),
                      'n_runs'    : int(row[1]),
                      'n_users'   : int(row[2])
                     }
@@ -723,12 +720,13 @@ def main():
   libA = Libraries(cursor)
   libA.build(args, startdate, enddate, "largemem")
   resultA = libA.report_by(args,"nodehours")
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
-  print("")
-  print("-------------------------------------------------------------------")
-  print("Libraries used by MPI Executables sorted by Node Hours for largemem")
-  print("-------------------------------------------------------------------")
-  print("")
-  print(bt.build_tbl())
+  if (resultA):
+    bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
+    print("")
+    print("-------------------------------------------------------------------")
+    print("Libraries used by MPI Executables sorted by Node Hours for largemem")
+    print("-------------------------------------------------------------------")
+    print("")
+    print(bt.build_tbl())
 
 if ( __name__ == '__main__'): main()
