@@ -32,8 +32,10 @@ test_descript = {
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 
+     export COMPILER_PATH=$XALT_BIN
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=syslog
      export XALT_DISABLE_BACKGROUNDING=yes

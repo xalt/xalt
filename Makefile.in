@@ -95,8 +95,10 @@ DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64
 #                    	    src/ibrun.symm.in src/aprun.in src/srun.in                         \
 #                    	    src/mpirun.lsf.in src/xalt_helper_functions.sh
 
-BIN_PKG              	:= src/ld.in src/ld.gold.in src/xalt_helper_functions.sh              \
-                           src/xalt_extract_record.in                                         \
+BIN_PKG              	:= src/ld.in src/ld.gold.in                                            \
+	                   src/x86_64-linux-gnu-ld.in                                          \
+                           src/xalt_helper_functions.sh                                        \
+                           src/xalt_extract_record.in                                          \
                            src/xalt_configuration_report.in 
 
 BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))

@@ -28,8 +28,10 @@ test_descript = {
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 
+     export COMPILER_PATH=$XALT_BIN
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
@@ -115,9 +117,9 @@ test_descript = {
      displayThis "./get_XALT_env"
      ./get_XALT_env
 
-     gcc -c -o a.o $(testDir)/a.c
-     gcc -c -o b.o $(testDir)/b.c
-     gcc -c -o c.o $(testDir)/c.c
+     gcc -fPIC -c -o a.o $(testDir)/a.c
+     gcc -fPIC -c -o b.o $(testDir)/b.c
+     gcc -fPIC -c -o c.o $(testDir)/c.c
      
      displayThis "Build shared library"
      gcc -o libabc.so -fPIC -shared a.o b.o c.o

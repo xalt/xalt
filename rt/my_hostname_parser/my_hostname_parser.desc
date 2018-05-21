@@ -15,8 +15,8 @@ test_descript = {
 
      initialize
 
-     gcc -I$(projectDir)/compiled -c $(testDir)/host.c
-     gcc -c $(testDir)/keep.c
+     gcc -fPIC -I$(projectDir)/compiled -c $(testDir)/host.c
+     gcc -fPIC -c $(testDir)/keep.c
    
      ar cr libhost.a host.o keep.o
 
@@ -32,8 +32,10 @@ test_descript = {
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 
+     export COMPILER_PATH=$XALT_BIN
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes

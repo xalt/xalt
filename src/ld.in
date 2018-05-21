@@ -292,6 +292,7 @@ fi
 if [ "$SHARED_LIB" = true ]; then
     XALT_INIT_ROUTINE_OBJ=
     LIBUUID=
+    tracing_msg "Shared library build detected not adding XALT initialize routines to user code"
 fi
 
 
