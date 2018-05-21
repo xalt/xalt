@@ -23,7 +23,7 @@ last365=$(date -d "-365days" +%F)
 last365s=$(date -d "-365days" +%s)
 xalt_start_s=$(date -d $XALT_START_DATE +%s)
 
-if [ "$xalt_start_s" -gt "$last365s" ]
+if [ "$xalt_start_s" -gt "$last365s" ]; then
    last365=$(date -d $XALT_START_DATE +%F)
 fi   
 
@@ -35,14 +35,14 @@ fi
 
 cd $HOME/xalt_usage
 
-for i in "${SYSHOSTS[@]"; do
+for i in "${SYSHOSTS[@]}"; do
    fn30="XALT-Report-${i}-last30-$today.txt"
    fn365="XALT-Report-${i}-last365-$today.txt"
 
    python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --start $last30  --end $today > $i/last30/$fn30
    python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --start $last365 --end $today > $i/last365/$fn365
 
-end
+done
 
 if [ -n "$sendTo" ]; then
    echo "XALT Report for S2 for the last 30 days"  | mail -s $fn30  -a stampede2/last30/$fn30   $sendTo
