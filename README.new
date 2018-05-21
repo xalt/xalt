@@ -4,3 +4,6 @@ XALT 2.0+
    (2.0.3-devel) Now using XALT_SPSR_SAMPLING_RATE env var to override config'ed SPSR
                  sampling rate
    (2.0.4-devel) close stderr file and only dup(stderr) when XALT_TRACING is "yes" or "run"
+   (2.0.5-devel) Change xalt_usage_report to use node hours instead of core hours,
+                 ld.in now does not try to add xalt_initialize.so etc when building *.so
+		 
