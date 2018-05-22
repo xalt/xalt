@@ -1,4 +1,3 @@
-
 # This is the config file for specifying tables necessary to configure XALT:
 
 # The patterns listed here are the hosts that can track executable with XALT.
@@ -30,7 +29,7 @@ hostname_patterns = [
 # end of the string.  Finally slash is a special character and must
 # be quoted with a backslash.
 
-# The path are conceptionally matched from the first regular 
+# The path are conceptionally matched from the first regular
 # expression to the last.  Once a match is found no other later
 # matches are checked. The upshot of this is that if you want to
 # track say /usr/bin/ddt, but ignore everything in /usr, then keep
@@ -117,7 +116,7 @@ path_patterns = [
     ['SKIP',  r'.*\/xalt_syshost'],
     ['SKIP',  r'.*\/xalt_record_pkg']
   ]
-    
+
 #------------------------------------------------------------
 # XALT filter environment variables.  Those variables
 # which pass through the filter are save in an SQL table that is
@@ -198,24 +197,24 @@ env_patterns = [
 #                     ...
 #                     [ t_n,     probability_n],
 #                     [ 1.0e308, 1.0],
-#                      
+#
 #
 # The first number is the left edge of the time range.  The
 # second number is the probability of being sampled. Where a
 # probability of 1.0 means a 100% chance of being recorded and a
-# value of 0.01 means a 1% chance of being recorded. 
+# value of 0.01 means a 1% chance of being recorded.
 #
 # So a table that looks like this:
 #     interval_array = [
 #                       [ 0.0,                0.0001 ],
 #                       [ 300.0,              0.01   ],
-#                       [ 600.0,              1.0    ],   
+#                       [ 600.0,              1.0    ],
 #                       [ sys.float_info.max, 1.0    ]
 #     ]
 #
 # would say that program with execution time that is between
 # 0.0 and 300.0 seconds has a 0.01% chance of being recorded.
-# Execution times between 300.0 and 600.0 seconds have a 1% 
+# Execution times between 300.0 and 600.0 seconds have a 1%
 # chance of being recorded and and programs that take longer
 # than 600 seconds will always be recorded.
 #
@@ -245,7 +244,7 @@ interval_array = [
 # package use is tracked as well.
 #
 # By default SPSR programs are sampled at a 100% rate but sites can
-# override this by this configuration file. 
+# override this by this configuration file.
 
 # Note that SPSR execution only uses this table IFF
 # $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
@@ -259,6 +258,3 @@ interval_array = [
 #
 
 SPSR_sampling = 0.01  # == 1%
-
-
-
