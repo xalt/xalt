@@ -180,6 +180,8 @@ env_patterns = [
     [ 'KEEP', r'^PYTHON.*'],
     [ 'KEEP', r'^R_.*'],
     [ 'KEEP', r'^TACC_AFFINITY_ENABLED=.*'],
+    [ 'KEEP', r'^LAUNCHER_TSK_ID=.*'],
+    [ 'KEEP', r'^PYLAUNCHER_ENABLED=.*'],
     [ 'KEEP', r'^_LMFILES_=.*'],
   ]
 
