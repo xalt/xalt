@@ -18,6 +18,13 @@ Process::Process(pid_t pid)
   char fn[40];
   sprintf(fn,"/proc/%d/stat",m_pid);
   FILE* fp    = fopen(fn,"r");
+  if (fp == NULL)
+    {
+      m_name   = "";
+      m_parent = -1;
+      return;
+    }
+  
   
   char*  buf  = NULL;
   size_t sz   = 0;
@@ -48,6 +55,12 @@ void Process::cmdline(std::vector<std::string>& cmdlineA)
   sprintf(fn,"/proc/%d/cmdline",m_pid);
   FILE* fp    = fopen(fn,"r");
   
+  if (fp == NULL)
+    {
+      cmdlineA.push_back("");
+      return;
+    }
+
   char*  buf  = NULL;
   size_t sz   = 0;
   xalt_fgets_alloc(fp, &buf, &sz);
@@ -72,7 +85,6 @@ std::string& Process::exe()
   //**************************************************
   //Use readlink to get full path to executable.
   sprintf(fn,"/proc/%d/exe",m_pid);
-
 
   ssize_t  r   = readlink(fn, buf, bufSz);
   if (r < 0)

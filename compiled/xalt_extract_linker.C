@@ -23,7 +23,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& l
     {
       Process proc(my_pid);
       pid_t parent = proc.parent();
-      if (parent == 1) break;
+      if (parent < 2) break;
 
       std::string name = proc.name();
 
