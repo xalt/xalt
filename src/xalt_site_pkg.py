@@ -46,7 +46,7 @@
 # may not be useful.
 #
 from __future__ import print_function
-import os, re
+import os, re, sys
 
 
 def translate(nameA, envT, userT, userDT):
@@ -67,25 +67,22 @@ def translate(nameA, envT, userT, userDT):
     queueType = "LSF"
       
   if (queueType == "SGE"):
-    userDT['num_cores']    = "NSLOTS"
-    sysT['num_nodes']      = "NHOSTS"
+    userDT['num_cores']    = userDT['num_tasks']
+    userDT['num_nodes']    = int(sysT.get("NHOSTS"))
     sysT['account']        = "SGE_ACCOUNT"
     sysT['job_id']         = "JOB_ID"
     sysT['queue']          = "QUEUE"
       
   elif (queueType == "SLURM_TACC"):
-    num_nodes              = int(envT.get("SLURM_NNODES",0))
     userDT['num_cores']    = userDT['num_tasks']
-    sysT['num_nodes']      = "SLURM_NNODES"
+    userDT['num_nodes']    = int(sysT.get("SLURM_NNODES",1))
     sysT['account']        = "SLURM_TACC_ACCOUNT"
     sysT['job_id']         = "SLURM_JOB_ID"
     sysT['queue']          = "SLURM_QUEUE"
     sysT['submit_host']    = "SLURM_SUBMIT_HOST"
   
   elif (queueType == "SLURM"):
-    num_nodes              = int(envT.get("SLURM_NNODES",0))
-    coresPerNode           = int(envT.get("SLURM_CPUS_ON_NODE",0))
-    userDT['num_cores']    = num_nodes*coresPerNode
+    userDT['num_cores']    = userDT['num_tasks']
     sysT['num_nodes']      = "SLURM_JOB_NUM_NODES"   # or SLURM_NNODES
     sysT['job_id']         = "SLURM_JOB_ID"
     sysT['queue']          = "SLURM_QUEUE"
@@ -100,7 +97,7 @@ def translate(nameA, envT, userT, userDT):
     sysT['submit_host']    = "PBS_O_HOST"
   
   elif (queueType == "LSF"):
-    userDT['num_cores']    = "LSB_DJOB_NUMPROC"
+    userDT['num_cores']    = userDT['num_tasks']
     mcpu_hostA             = envT.get("LSB_MCPU_HOSTS","a 1").split()
     userDT['num_nodes']    = len(mcpu_hostsA)/2
     sysT['account']        = "%%_UNKNOWN_%%"
@@ -119,66 +116,7 @@ def translate(nameA, envT, userT, userDT):
   keyA = [ 'num_cores', 'num_nodes' ]
 
   for key in keyA:
-    value = userDT.get(key,"unknown")
-    if ( value == "unknown" ):
-      userDT[key] = 0
-    else:
-      userDT[key] = int(userDT[key])    
+    userDT[key] = int(userDT.get(key,1.0))
   
   if (userT['job_id'] == "unknown"):
     userT['job_id'] = envT.get('JOB_ID','unknown')
-
-AcceptListA = [
-    re.compile(r"^.*PATH.*"),
-    re.compile(r"^I_MPI.*"),
-    re.compile(r"^KMP.*"),
-    re.compile(r"^LC_.*"),
-    re.compile(r"^LD.*"),
-    re.compile(r"^LOADEDMODULES$"),
-    re.compile(r"^MIC_.*"),
-    re.compile(r"^MKL.*"),
-    re.compile(r"^MPICH_.*"),
-    re.compile(r"^MV2_.*"),
-    re.compile(r"^OFFLOAD.*"),
-    re.compile(r"^OMP.*"),
-    re.compile(r"^PYTHON.*"),
-    re.compile(r"^R_*"),
-    re.compile(r"^SHELL$"),
-    re.compile(r"^TARG$"),
-    re.compile(r"^_LMFILES_$")
-  ]    
-
-RejectListA = [
-    re.compile(r"^DDTPATH$"),
-    re.compile(r"^INFOPATH$"),
-    re.compile(r"^LMOD*"),
-    re.compile(r"^MAKE_INC_PATH$"),
-    re.compile(r"^MANPATH$"),
-    re.compile(r"^MIC_ENV_PREFIX$"),
-    re.compile(r"^MIC_TACC.*_DIR$"),
-    re.compile(r"^MIC_TACC.*_INC"),
-    re.compile(r"^MIC_TACC.*_LIB$"),
-    re.compile(r"^MKLROOT$"),
-    re.compile(r"^MODULEPATH_ROOT$"),
-    re.compile(r"^MPICH_HOME$"),
-    re.compile(r"^PKG_CONFIG_PATH$"),
-    re.compile(r"^__.*")
-  ]
-
-def keep_env_var(var):
-  keep = False
-  for pat in AcceptListA:
-    m = pat.search(var)
-    if (m):
-      keep = True
-      break
-  if (not keep):
-    return keep
-
-  for pat in RejectListA:
-    m = pat.search(var)
-    if (m):
-      keep = False
-      return keep
-  return keep
-    
