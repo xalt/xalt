@@ -284,7 +284,7 @@ class XALTdb(object):
     @param: runT:        The run data stored in a table
     """
     
-    nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' , 'submit_host']
+    nameA = [ 'account', 'job_id', 'queue' , 'submit_host']
     query = ""
     try:
       conn   = self.connect()
