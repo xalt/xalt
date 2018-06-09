@@ -30,7 +30,6 @@ import MySQLdb, getpass, time
 import warnings
 from   xalt_util        import *
 from   xalt_global      import *
-from   xalt_site_pkg    import translate
 
 try:
   import configparser
