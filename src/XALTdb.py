@@ -284,7 +284,6 @@ class XALTdb(object):
     @param: runT:        The run data stored in a table
     """
     
-    nameA = [ 'account', 'job_id', 'queue' , 'submit_host']
     query = ""
     try:
       conn   = self.connect()
@@ -294,7 +293,6 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
 
-      translate(nameA, runT['envT'], runT['userT'], runT['userDT']);
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
       runTime     = "%.2f" % (runT['userDT']['run_time'])

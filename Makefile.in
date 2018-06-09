@@ -118,9 +118,6 @@ LIBEXEC_PKG          	:= src/XALTdb.py                     src/progressBar.py   
 
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
-SITE_PKG             	:= src/new_job_id.in.py src/xalt_site_pkg.py             
-
-SITE_PKG             	:= $(patsubst %, $(srcdir)/%, $(SITE_PKG))
 
 TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
                            contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
@@ -136,7 +133,7 @@ INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
+install:  $(DIRLIST) Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
           Use_argparse_$(USE_ARGPARSE) build_compiled
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
@@ -151,7 +148,6 @@ echo:
 	@echo srcdir: $(srcdir)
 	@echo CURDIR: $(CURDIR)
 	@echo srcdir: $(srcdir)
-	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
@@ -164,9 +160,6 @@ $(DIRLIST) :
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
-
-Inst_site: $(SITE_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SITE)    __installMe
 
 Inst_sbin: $(SBIN_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
