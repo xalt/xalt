@@ -7,3 +7,5 @@ XALT 2.0+
    (2.0.5-devel) Change xalt_usage_report to use node hours instead of core hours,
                  ld.in now does not try to add xalt_initialize.so etc when building *.so
    (2.0.6-devel) Support x86_64-gnu-linux-ld as yet another linker.
+   (2.0.7-devel) Now check status of fopen when opening files in /proc/*
+   
