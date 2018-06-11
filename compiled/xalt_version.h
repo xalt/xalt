@@ -1,1 +1,1 @@
-#define XALT_VERSION_STR "XALT 2.0.6-devel 2018-05-21 17:27"
+#define XALT_VERSION_STR "XALT 2.0.7-devel 2018-06-11 11:00"
