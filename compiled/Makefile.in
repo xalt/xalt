@@ -25,15 +25,17 @@ ifneq ($(MY_HOSTNAME_PARSER),no)
    ifeq ($(PARSER_TYPE),c_file)
       MY_HOSTNAME_PARSER_SRC     := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
       MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.o
+      MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.o
    endif
    ifeq ($(PARSER_TYPE),library)
       MY_HOSTNAME_PARSER_LIBRARY := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
       MY_HOSTNAME_PARSER_TARGET  := my_hostname_parser_target
       MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.a
+      MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.a
    endif
 endif
 
-LIB_OPTIONS       := -fPIC -shared
+LIB_OPTIONS := -fPIC -shared
 
 WARN_FLAGS  := -Wall -Wno-unused-result 
 CF_INIT     := -I. -fPIC 
@@ -269,7 +271,7 @@ build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xa
                       $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o \
                       $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
                       $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/build_uuid_32.o      \
-                      $(DESTDIR)$(LIB)/my_hostname_parser_32.o
+                      $(MY_HOSTNAME_PARSER_OBJ_32)
 
 
 $(DESTDIR)$(LIB64)/lex.__XALT_path.o: lex.__XALT_pathR.c xalt_obfuscate.h
@@ -329,7 +331,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o \
                                   $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o        \
-                                  $(DESTDIR)$(LIB)/my_hostname_parser_32.o   
+                                  $(MY_HOSTNAME_PARSER_OBJ_32)
 	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
 
