@@ -312,7 +312,7 @@ if test -z "$PATH_TO_FLEX" ; then
 fi
 
 
-if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
+if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without uuid and"
@@ -328,16 +328,15 @@ AC_SUBST(PKGV)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
 
-VERSION=$(cat $ac_confdir/.version)
+VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
 
-
-if test $BAD_INSTALL=no; then
+if test $BAD_INSTALL = no; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
       echo
       echo "===================================================="
-      echo "Do not install XALT with $VERSION as part of the
-      echo "prefix.  It will lead to many many problems with future
+      echo "Do not install XALT with $VERSION as part of the"
+      echo "prefix.  It will lead to many many problems with future"
       echo "installs of XALT"
       echo
       echo "Executables built with the current version of XALT"
@@ -359,8 +358,6 @@ if test $BAD_INSTALL=no; then
       exit 1
    fi
 fi
-
-
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then

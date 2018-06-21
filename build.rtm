@@ -141,7 +141,7 @@ unset LD_PRELOAD
 cmdA=("-$MAKE distclean"
       "-rm -rf $PKG/xalt/$PKG_VERSION"
       "$SETUP_CMD"
-      "./configure --prefix=$PKG $CONF_OPTS"
+      "./configure --prefix=$PKG/xalt/2.0.7 $CONF_OPTS"
       "$SUDO $MAKE $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
       "rm -f config.log"

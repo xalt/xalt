@@ -659,6 +659,7 @@ CXXFLAGS
 CXX
 HAVE_32BIT
 ENABLE_BACKGROUNDING
+BAD_INSTALL
 MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
 CXX_LD_LIBRARY_PATH
@@ -742,6 +743,7 @@ with_mysqlStatic
 with_cxxLDLibraryPath
 with_syshostConfig
 with_hostnameParser
+with_IrefuseToInstallXALTCorrectly
 with_enableBackgrounding
 '
       ac_precious_vars='build_alias
@@ -1399,6 +1401,8 @@ Optional Packages:
   --with-hostnameParser=ans
                           Replace built-in lex based hostname parser
                           c_file:file.c or library:file.a [[no]]
+  --with-IrefuseToInstallXALTCorrectly=ans
+                          Install XALT incorrectly [[no]]
   --with-enableBackgrounding=ans
                           Enable backgrounding of start record of an
                           executable run [[no]]
@@ -3391,6 +3395,29 @@ fi
 
 
 
+# Check whether --with-IrefuseToInstallXALTCorrectly was given.
+if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
+  withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
+$as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
+$as_echo "BAD_INSTALL=$withval" >&6; }
+    BAD_INSTALL="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define BAD_INSTALL "$withval"
+_ACEOF
+
+fi
+
+
+
+
 # Check whether --with-enableBackgrounding was given.
 if test "${with_enableBackgrounding+set}" = set; then :
   withval=$with_enableBackgrounding; ENABLE_BACKGROUNDING="$withval"
@@ -5258,7 +5285,7 @@ if test -z "$PATH_TO_FLEX" ; then
 fi
 
 
-if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
+if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without uuid and"
@@ -5274,9 +5301,36 @@ fi
 
 
 
-VERSION=$(cat $ac_confdir/.version)
+VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
 
+if test $BAD_INSTALL = no; then
+   if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
+      echo
+      echo "===================================================="
+      echo "Do not install XALT with $VERSION as part of the"
+      echo "prefix.  It will lead to many many problems with future"
+      echo "installs of XALT"
+      echo
+      echo "Executables built with the current version of XALT"
+      echo "will not work with future installs of XALT!!!"
+      echo
+      echo "If you feel that you know better than the developer"
+      echo "of XALT then you can configure XALT with the configure"
+      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
+      echo "to include the version"
+      echo
+      echo "If you wanted to install XALT in /apps/xalt/$version"
+      echo "set the prefix as:"
+      echo
+      echo "  ./configure --prefix=/apps"
+      echo
+      echo "===================================================="
+      echo
+      rm -f makefile
+      exit 1
+   fi
+fi
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
