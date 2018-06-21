@@ -201,6 +201,19 @@ AC_ARG_WITH(hostnameParser,
     MY_HOSTNAME_PARSER="$withval"
     AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$withval"))dnl
 
+AC_SUBST(BAD_INSTALL)
+AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
+    AC_HELP_STRING([--with-IrefuseToInstallXALTCorrectly=ans],[Install XALT incorrectly [[no]]]),
+    BAD_INSTALL="$withval"
+    AC_MSG_RESULT([BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly])
+    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$with_IrefuseToInstallXALTCorrectly")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([BAD_INSTALL=$withval])
+    BAD_INSTALL="$withval"
+    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval"))dnl
+
+
 AC_SUBST(ENABLE_BACKGROUNDING)
 AC_ARG_WITH(enableBackgrounding,
     AC_HELP_STRING([--with-enableBackgrounding=ans],[Enable backgrounding of start record of an executable run [[no]]]),
@@ -317,6 +330,36 @@ AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version)
 PKGV=$prefix/xalt/$VERSION
+
+
+if test $BAD_INSTALL=no; then
+   if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
+      echo
+      echo "===================================================="
+      echo "Do not install XALT with $VERSION as part of the
+      echo "prefix.  It will lead to many many problems with future
+      echo "installs of XALT"
+      echo
+      echo "Executables built with the current version of XALT"
+      echo "will not work with future installs of XALT!!!"
+      echo
+      echo "If you feel that you know better than the developer"
+      echo "of XALT then you can configure XALT with the configure"
+      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
+      echo "to include the version"
+      echo 
+      echo "If you wanted to install XALT in /apps/xalt/$version"
+      echo "set the prefix as:"
+      echo
+      echo "  ./configure --prefix=/apps"
+      echo
+      echo "===================================================="
+      echo
+      rm -f makefile
+      exit 1
+   fi
+fi
+
 
 
 echo "VERSION=$VERSION"
