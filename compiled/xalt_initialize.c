@@ -64,7 +64,7 @@ typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
-	       XALT_SPSR_SAMPLING} xalt_status;
+	       XALT_SPSR_SAMPLING, XALT_MISSING_RUN_SUBMISSION} xalt_status;
 
 static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
@@ -77,6 +77,7 @@ static const char * xalt_reasonA[] = {
   "XALT has problem with a JSON string",
   "XALT execute type does not match requested type",
   "XALT SPSR sampling -> not recorded",
+  "XALT Cannot find XALT_DIR/libexec/xalt_run_submission",
 };
 
 
@@ -128,21 +129,22 @@ static char *       usr_cmdline;
 static const char * my_syshost;
 
 
-static xalt_status  reject_flag	     = XALT_SUCCESS;
-static int          run_mask         = 0;
-static double       probability      = 1.0;
-static pid_t        ppid	     = 0;
-static int          errfd	     = -1;
-static double       start_time	     = 0.0;
-static double       end_time	     = 0.0;
-static double       frac_time        = 0.0;
-static long         my_rank	     = 0L;
-static long         my_size	     = 1L;
-static int          xalt_tracing     = 0;
-static int          xalt_run_tracing = 0;
-static int          background	     = 0;
-static char *       pathArg	     = NULL;
-static char *       ldLibPathArg     = NULL;
+static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
+static xalt_status  reject_flag	          = XALT_SUCCESS;
+static int          run_mask              = 0;
+static double       probability           = 1.0;
+static pid_t        ppid	          = 0;
+static int          errfd	          = -1;
+static double       start_time	          = 0.0;
+static double       end_time	          = 0.0;
+static double       frac_time             = 0.0;
+static long         my_rank	          = 0L;
+static long         my_size	          = 1L;
+static int          xalt_tracing          = 0;
+static int          xalt_run_tracing      = 0;
+static int          background	          = 0;
+static char *       pathArg	          = NULL;
+static char *       ldLibPathArg          = NULL;
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
@@ -503,8 +505,20 @@ void myinit(int argc, char **argv)
 
   if ( run_mask & BIT_START_RECORD)  /* BIT_START_RECORD = BIT_SPSR | BIT_MPI */
     {
+      const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
+      int runable = access(run_submission, X_OK);
+      if (runable == -1)
+        {
+          run_submission_exists = 0;
+          DEBUG1(stderr, "    -> Quitting => Cannot find %s\n", run_submission);
+          reject_flag = XALT_MISSING_RUN_SUBMISSION;
+          unsetenv("XALT_RUN_UUID");
+          return;
+        }
+      run_submission_exists = 1;
+
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" --prob %g %s %s -- %s %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
+	       " --uuid \"%s\" --prob %g %s %s -- %s %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
 	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
 
       if (xalt_tracing || xalt_run_tracing) 
@@ -590,20 +604,30 @@ void myfini()
 	}
     }
   
+  const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
+  int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
 
+  if (runable == -1)
+    {
+      DEBUG1(stderr, "    -> Quitting => Cannot find %s\n", run_submission);
+      reject_flag = XALT_MISSING_RUN_SUBMISSION;
+    }
+  else
+    {
 
-  /* Do not background this because it might get killed by the epilog cleanup tool! */
+      /* Do not background this because it might get killed by the epilog cleanup tool! */
 
-  asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-           " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_DIR "/libexec/xalt_run_submission", XALT_INTERFACE_VERSION, ppid, my_syshost,
-	   start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+               " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+               start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
 
-  if (xalt_tracing || xalt_run_tracing )
-    fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n\n}\n\n",
-            xalt_run_short_descriptA[run_mask], cmdline);
+      if (xalt_tracing || xalt_run_tracing )
+        fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n\n}\n\n",
+                xalt_run_short_descriptA[run_mask], cmdline);
 
-  system(cmdline);
-  free(cmdline);
+      system(cmdline);
+      free(cmdline);
+    }
   free(usr_cmdline);
   free(pathArg);
   free(ldLibPathArg);
