@@ -133,10 +133,10 @@ INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 all:
 	@echo done
 
-pre-install:  $(DIRLIST) Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
-          Use_argparse_$(USE_ARGPARSE) build_compiled
 
-install: pre-install
+
+install: $(DIRLIST) Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
+         Use_argparse_$(USE_ARGPARSE) build_compiledpre-install
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
