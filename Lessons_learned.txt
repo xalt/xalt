@@ -6,3 +6,16 @@ field.
   shared library.  So XALT now doesn't include xalt_initialize.o etc
   when building a shared library.
   
+* Installers of XALT really want to install XALT by setting the prefix
+  to /apps/xalt/$VERSION.  which means that the real location is
+  /apps/xalt/$VERSION/xalt/xalt/*
+
+  This is a problem because they will say set:
+  /apps/xalt/2.0.7/xalt/xalt.  Then when they install the next version
+  (say /apps/xalt/2.0.8/xalt/xalt) all the old apps built with 2.0.7
+  won't be able to find xalt_run_submission.
+
+* As of 2.0.9 XALT checks to see if it can find xalt_run_submission.
+  It also records in xalt_configuration_report whether it was a
+  "BAD_INSTALL" or not.
+  
