@@ -131,7 +131,7 @@ test_descript = {
      displayThis "Extract Watermark"
      xalt_extract_record libabc.so
    
-     displayThis "rm xalt_run_submission; ./hello
+     displayThis "rm xalt_run_submission; ./hello"
      rm XALT/xalt/xalt/libexec/xalt_run_submission
 
      XALT_TRACING=yes ./hello
