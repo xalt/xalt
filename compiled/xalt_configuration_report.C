@@ -115,6 +115,8 @@ int main(int argc, char* argv[])
         json.add("XALT_LOGGING_TAG",            syslog_tag);
       json.add("XALT_COMPUTE_SHA1",             computeSHA1);
       json.add("XALT_ETC_DIR",                  xalt_etc_dir);
+      json.add("XALT_DIR",                      XALT_DIR);
+      json.add("BAD_INSTALL",                   BAD_INSTALL);
       json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
       json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
       json.add("XALT_SYSHOST_CONFIG",           SYSHOST_CONFIG);
@@ -159,6 +161,8 @@ int main(int argc, char* argv[])
   std::cout << "XALT_COMPUTE_SHA1:             " << computeSHA1                    << "\n";
   std::cout << "XALT_ENABLE_BACKGROUNDING:     " << enable_backgrounding           << "\n";
   std::cout << "XALT_ETC_DIR:                  " << xalt_etc_dir                   << "\n";
+  std::cout << "XALT_DIR:                      " << XALT_DIR                       << "\n";
+  std::cout << "BAD_INSTALL:                   " << BAD_INSTALL                    << "\n";
   std::cout << "XALT_CONFIG_PY:                " << XALT_CONFIG_PY                 << "\n";
   std::cout << "XALT_MPI_TRACKING:             " << xalt_mpi_tracking              << "\n";
   std::cout << "XALT_SPSR_TRACKING:            " << xalt_spsr_tracking             << "\n";

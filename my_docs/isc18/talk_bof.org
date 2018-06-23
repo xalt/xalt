@@ -1,0 +1,98 @@
+Notes on what should go into the ISC 18 BoF:
+
+* Intro to XALT 2:
+* Remove direct DB support for XALT 2
+* Make XALT 1 a branch
+* Move XALT 2 from devel branch to master.
+* Fix library support for my_hostname_parser
+* XALT support 64bit and 32bit programs.
+
+* New Features of XALT:
+* Change to version 2.0.
+* XALT knows about the following Queuing systems: SLURM, PBS, LSF, SGE
+  e.g. translates SLURM_NNODES or PBS_NUM_NODES -> XALT's num_nodes
+* Adding another queuing system will require a patch to XALT.
+* Support for tracking R packages
+* Tracking Scalar jobs at Scale
+** Stampede2 is big with thousands of nodes
+** Maverick is a 132 node cluster.
+** Tracking every job leads to too much data even on small to medium size clusters.
+** Explain the dark enery example.
+*** 5 million execution in an hour => 4.5 days to ingest!
+** Must find a way to understand what is happening w/o tracking everything!
+** Solution -> sampling
+
+* Solution Come in three parts
+** There are 3 kinds of executables:
+** Scalar, SPSR, MPI
+** Scalar are non-mpi executables
+** SPSR -> Scalar Program Start Record:  Python, Matlab, R
+** MPI Programs
+
+* Sampling allows the sampled tracking of programs like grep, awk, cp, mv, etc.
+
+* Normal XALT behavior is to produce a start record before main()
+  and an end record after main() completes
+
+* Main purpose of end record is to know runtime.
+
+* Can use accounting info to compute endtime for jobs
+  where the endtime is unknown.
+
+* Why produce both?
+   Many MPI programs run until they are killed by running out of time.
+
+* Scalar program are frequent and typically short.
+   A scalar job is any program where the number of mpi task < 2
+   => No start record is produced.
+   => Any scalar program that aborts before main() completes is ignored.
+
+* A threaded/Open MP programs (w/o MPI) is a scalar program.
+
+* Sampling:
+** All MPI jobs are tracked. (MPI_TASKS > 1)
+** Scalar jobs are sampled:  TACC is using:
+
+     0 - 300 secs   0.01% chance
+   300 - 600 secs   1%    chance
+   600 - inf secs 100%    chance.
+
+   Sites control this through a configuration file
+
+** SPSR programs are sampled as well. 
+
+   SPSR programs generate a start record => we don't know how long the
+   python or R program will run so we sample those with a site
+   controllable parameter.  TACC is using: 
+
+    1% of the jobs 
+
+** Runtime and probability recorded for each sampled job.
+
+   This way an estimate of short programs can be produced:
+  
+* Limitations of XALT:
+** Cannot tell the difference between:
+
+    #! NNODES 10
+
+    scalar_program
+
+VS:
+  
+    #! NNODES 10
+
+    ibrun -o 0 -n 1 scalar_program &
+    ibrun -o 0 -n 2 scalar_program &
+    ibrun -o 0 -n 3 scalar_program &
+    ibrun -o 0 -n 4 scalar_program &
+    ...
+
+==> Can not use XALT for accounting
+
+** We are sampling scalar jobs so we have to estimate how many times grep, awk, perl were run and for how long.
+   ==> An Estimate is better than not knowing anything.
+
+** All an executable can tell is how many mpi_tasks (i.e. cores) not number of nodes.
+** XALT records OMP_NUM_THREADS from the environment when the end record is generated.
+

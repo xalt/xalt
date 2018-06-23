@@ -304,14 +304,15 @@ class XALTdb(object):
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,[runT['userT']['run_uuid']])
+      num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
 
       if (cursor.rowcount > 0):
         #print("found")
         row    = cursor.fetchone()
         run_id = int(row[0])
         if (runT['userDT']['end_time'] > 0):
-          query  = "UPDATE xalt_run SET run_time=%s, end_time=%s WHERE run_id=%s" 
-          cursor.execute(query,(runTime, endTime, run_id))
+          query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s WHERE run_id=%s" 
+          cursor.execute(query,(runTime, endTime, num_threads, run_id))
           query = "COMMIT"
           conn.query(query)
         v = XALT_Stack.pop()
@@ -322,7 +323,6 @@ class XALTdb(object):
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
-        num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
         usr_cmdline   = json.dumps(runT['cmdlineA'])
         sum_runs      = runT['userDT'].get('sum_runs' ,   0)
         sum_times     = runT['userDT'].get('sum_times',   0.0)
