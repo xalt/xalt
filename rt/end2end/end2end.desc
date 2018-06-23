@@ -131,6 +131,11 @@ test_descript = {
      displayThis "Extract Watermark"
      xalt_extract_record libabc.so
    
+     displayThis "rm xalt_run_submission; ./hello
+     rm XALT/xalt/xalt/libexec/xalt_run_submission
+
+     XALT_TRACING=yes ./hello
+
      export XALT_USERS="$USER;$outputDir"
 
      displayThis "xalt_file_to_db.py"

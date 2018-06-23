@@ -507,10 +507,11 @@ void myinit(int argc, char **argv)
     {
       const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
       int runable = access(run_submission, X_OK);
+
       if (runable == -1)
         {
           run_submission_exists = 0;
-          DEBUG1(stderr, "    -> Quitting => Cannot find %s\n", run_submission);
+          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n}\n\n", run_submission);
           reject_flag = XALT_MISSING_RUN_SUBMISSION;
           unsetenv("XALT_RUN_UUID");
           return;
@@ -527,6 +528,14 @@ void myinit(int argc, char **argv)
       system(cmdline);
       free(cmdline);
     }
+  else
+    {
+      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n}\n\n",
+             xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+    }
+      
+
+
 
   /**********************************************************
    * Restore LD_PRELOAD after running xalt_run_submission.
@@ -606,10 +615,9 @@ void myfini()
   
   const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
-
   if (runable == -1)
     {
-      DEBUG1(stderr, "    -> Quitting => Cannot find %s\n", run_submission);
+      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n}\n\n", run_submission);
       reject_flag = XALT_MISSING_RUN_SUBMISSION;
     }
   else
@@ -622,7 +630,7 @@ void myfini()
                start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
 
       if (xalt_tracing || xalt_run_tracing )
-        fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n\n}\n\n",
+        fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                 xalt_run_short_descriptA[run_mask], cmdline);
 
       system(cmdline);
