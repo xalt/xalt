@@ -1,0 +1,390 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+\begin{document}
+\title[XALT]{XALT: Understanding HPC Usage via Job Level Collection}
+\author{Robert McLay} 
+\date{June 25, 2018} 
+
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{XALT: What runs on the system}
+  \begin{itemize}
+    \item A U.S. NSF Funded project: PI: Mark Fahey and Robert McLay
+    \item A Census of what programs and libraries are run
+    \item Running at TACC, NICS, U. Florida, KAUST, ...
+    \item Integrates with TACC-Stats.
+    \item Has commercial support from Ellexus 
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{History of XALT}
+  \begin{itemize}
+    \item Mark Fahey (was NICS, now ANL): ALT-D (MPI only)
+    \item Robert McLay (TACC) Lariat (MPI only)
+    \item Reuben Budiardja (was NICS now ORL)
+    \item ALT-D $+$ Lariat $\Rightarrow$ XALT 1: (MPI only)
+    \item XALT 2: All programs
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{Design Goals}
+  \begin{itemize}
+    \item Be extremely light-weight
+    \item Provide provenance data: How?
+    \item How many use a library or application?
+    \item Collect Data into a Database for analysis.
+    \item Minimum Hardware Requirements $\Rightarrow$ Cluster and a VM
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{Understanding what your users are doing}
+  \begin{itemize}
+    \item What programs, libraries are your users using?
+    \item What are the top programs by node-hours? by counts?
+    \item Are they building their own programs or using someone elses?
+    \item Are Executables implemented in C/C++/Fortran?
+    \item Track MPI: tasks? nodes?
+    \item Track Threading via \$OMP\_NUMTHREADS
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{Design: Linker}
+  \begin{itemize}
+    \item XALT wraps the linker to enable tracking of exec's
+    \item The linker (ld) wrapper intercepts the user link line.
+    \item Generate assembly code: key-value pairs
+    \item Capture tracemap output from ld
+    \item Transmit collected data in *.json format
+    \item Adds codes that executes before main() and after main()
+      completes
+    \item Knows about SLURM, PBS, LSF, SGE
+    \item Translates SLURM\_NNODES or PBS\_NUM\_NODES $\Rightarrow$ num\_nodes
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{Design: Transmission to DB}
+  \begin{itemize}
+    \item File: collect nightly
+    \item Syslog: Use Syslog filtering (or ELK)
+    \item Future: RabbitMQ
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{Lmod to XALT connection}
+  \begin{itemize}
+    \item Lmod spider walks entire module tree.
+    \item Can build a reverse map from paths to modules
+    \item Can map program \& libraries to modules.
+    \item /opt/apps/i15/mv2\_2\_1/phdf5/1.8.14/lib/libhdf5.so.9
+      $\Rightarrow$ phdf5/1.8.14(intel/15.02:mvapich2/2.1)
+    \item Also helps with function tracking.
+    \item Tmod Sites can still use Lmod to build the reverse map.
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{Protecting XALT: Python to C++}
+    \begin{itemize}
+      \item XALT 1 used python scripts
+      \item It was difficult to protect Python from users in everytime
+      \item Solution: LD\_LIBRARY\_PATH="@ld\_lib\_path@"
+        PATH=/usr/bin:/bin C++-exec ...
+      \item Everything that depends on PATH must be hard coded
+    \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Using XALT Data}
+  \begin{itemize}
+    \item Targetted Outreach: Who will be affected
+    \item Largemem Queue Overuse
+    \item XALT and TACC-Stats
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Tracking Non-mpi jobs (I)}
+  \begin{itemize}
+    \item Originally we tracked only MPI Jobs
+    \item By hijacking mpirun etc.
+    \item Now we can use ELF binary format to track jobs
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}[fragile]
+    \frametitle{ELF Binary Format Trick}
+ {\small
+    \begin{semiverbatim}
+void myinit(int argc, char **argv)
+\{
+  /* ... */
+\}
+void myfini()
+\{
+  /* ... */
+\}
+  static __attribute__((section(".init_array")))
+       typeof(myinit) *__init = myinit;
+  static __attribute__((section(".fini_array")))
+       typeof(myfini) *__fini = myfini;
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 13
+\begin{frame}{Using the ELF Binary Format Trick}
+  \begin{itemize}
+    \item This C code is compiled and linked in through the hijacked linker
+    \item It can also be used with \texttt{LD\_PRELOAD}
+    \item We are using both...
+  \end{itemize}
+\end{frame}
+
+% page 14
+\begin{frame}{Challenges (I)}
+  \begin{itemize}
+    \item Only want to track some executables on compute nodes
+    \item Do not want to get overwhelmed by the data. 
+  \end{itemize}
+\end{frame}
+
+% page 15
+\begin{frame}{Answers}
+  \begin{itemize}
+    \item XALT Tracking only when told to
+    \item Compute node only by host name filtering
+    \item Executable Filter based on Path
+    \item Protection against closing stderr before fini.
+    \item Site configurable!
+  \end{itemize}
+\end{frame}
+
+% page 16
+\begin{frame}{Path Filtering}
+  \begin{itemize}
+    \item Uses FLEX to compile in patterns
+    \item Use regex expression to control what to keep and ignore.
+    \item Three files containing regex patterns, converted to code.
+    \item Accept List Tests: Track /usr/bin/ddt, /bin/tar
+    \item Ignore List Tests: /usr/bin, /bin, /sbin, ...
+  \end{itemize}
+\end{frame}
+
+% page 17
+\begin{frame}[fragile]
+    \frametitle{TACC\_config.py}
+ {\small
+    \begin{semiverbatim}
+hostname_patterns = [
+  ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
+  ]
+path_patterns = [
+    ['SPSR',  r'.*/python[0-9][^/][^/]*'],
+    ['SPSR',  r'.*/R'],
+    ['KEEP',  r'^/usr/bin/ddt'],
+    ['SKIP',  r'^/usr/.*'],
+    ['SKIP',  r'^/bin/.*'],
+  ]
+env_patterns = [
+    [ 'SKIP', r'^MKLROOT=.*' ],
+    [ 'SKIP', r'^MKL_DIR=.*' ],
+    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_NUM=.*'],
+  ]
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 18
+\begin{frame}{Protecting XALT (I): UTF8 Characters}
+  \begin{itemize}
+    \item Linux supports UTF8 Characters in file names, env. vars.
+    \item Python supports UTF8 if you know what you are doing.
+    \item Switch XALT to use prepared statements
+    \item Where \texttt{query="INSERT INTO table VALUE(?,?)"}
+    \item This prevent SQL injection: ``johnny drop tables;''
+    \item Also supports UTF8 characters.
+  \end{itemize}
+\end{frame}
+
+% page 19
+\begin{frame}{Protecting XALT (II): Python to C++}
+    \begin{itemize}
+      \item Difficult to protect Python from users in every case
+      \item Solution: LD\_LIBRARY\_PATH="@ld\_lib\_path@"
+        PATH=/usr/bin:/bin C++-exec ...
+      \item Everything that depends on PATH must be hard coded
+      \item basename $\Rightarrow$ /bin/basename
+      \item Unique install for each operating system.
+      \item Certain programs aren't in the same place: \texttt{basename}
+    \end{itemize}
+\end{frame}
+
+% page 20
+\begin{frame}{Speeding up XALT 2}
+  \begin{itemize}
+    \item Minimal impact on jobs ($>$ 0.09 secs)
+    \item Non-mpi jobs only produce end record
+    \item Filter by job\_id after transport.
+    \item No more than 100 executions per job\_id.  (Changable)
+    \item A launcher job 5 million executions in two hours.
+  \end{itemize}
+\end{frame}
+
+% page 21
+\begin{frame}{Tracking R packages}
+  \begin{itemize}
+    \item XALT 2 can now track R package usage
+    \item James McComb \& Michael Scott from IU developed the R part
+    \item They do this by intercepting the ``imports''
+    \item Still in preliminary stages
+    \item Plan to support Python later.
+  \end{itemize}
+\end{frame}
+
+% page 22
+\begin{frame}{New program: xalt\_extract\_record}
+  \begin{itemize}
+    \item This program reads the watermark.
+    \item Find out who built this program on what machine
+    \item Find out what modules where used.
+  \end{itemize}
+\end{frame}
+
+% page 23
+\begin{frame}[fragile]
+    \frametitle{Example of xalt\_extract\_record output}
+ {\tiny
+    \begin{semiverbatim}
+****************************************
+XALT Watermark: hello
+****************************************
+Build_Epoch              1510257139.4624
+Build_LMFILES            /opt/apps/modulefiles/intel/17.0.4.lua:...
+Build_LOADEDMODULES      intel/17.0.4:impi/17.0.3:python/2.7.13:TACC:...
+Build_OS                 Linux 3.10.0-514.26.2.el7.x86_64
+Build_Syshost            stampede2
+Build_UUID               586d5943-67eb-480b-a2fe-35e87a1f22c7
+Build_User               mclay
+Build_compiler           icc
+Build_date               Thu Nov 09 13:52:19 2017
+Build_host               c455-011.stampede2.tacc.utexas.edu
+XALT_Version             1.7.7-devel
+    \end{semiverbatim}
+}
+\end{frame}
+
+
+% page 24
+\begin{frame}{Tracking at Scale)}
+  \begin{itemize}
+    \item TACC's Stampede2 has 1000's of nodes. (\# 15)
+    \item TACC's Maverick has 132 nodes
+    \item A single 1 hour Job generated 5 million records on Maverick
+    \item It took 4.5 days to ingest!
+    \item Cannot record everything so now what?
+    \item Sampling
+  \end{itemize}
+\end{frame}
+
+
+% page 25
+\begin{frame}{Sampling: Three kinds of executables}
+  \begin{itemize}
+    \item Scalar: Non-mpi executables (Ntasks $==$ 1)
+    \item SPSR: Scalar Program Start Record: Python, R, Matlab
+    \item MPI Programs (Ntasks $>$ 1)
+  \end{itemize}
+\end{frame}
+
+% page 26
+\begin{frame}{Changes in XALT behavior}
+  \begin{itemize}
+    \item Generate a start record before main()
+    \item Generate an end record after main()
+    \item Many MPI jobs run until time-out
+    \item Can use accounting to set endtime
+    \item Scalar now only produce an end record!
+    \item Means that XALT won't know about Scalars that abort.
+    \item An OpenMP program is a scalar program.
+  \end{itemize}
+\end{frame}
+
+% page 27
+\begin{frame}[fragile]
+    \frametitle{Sampling of Scalar \& SPSR Prgms}
+    \begin{itemize}
+      \item TACC is using the following for Scalar programs:
+ {\small
+    \begin{semiverbatim}
+     0 - 300 secs   0.01% chance
+   300 - 600 secs   1%    chance
+   600 - inf secs 100%    chance.
+    \end{semiverbatim}
+}
+      \item Do not runtime at start of SPSR's
+      \item TACC is 1\% for SPSR programs
+      \item Run time and probability are recorded.
+      \item Can estimate total behavior from sampled data
+      \item Can now sample usage of cp, mv, tar, perl, awk, ...
+    \end{itemize}
+\end{frame}
+
+% page 28
+\begin{frame}[fragile]
+    \frametitle{Limitations of XALT}
+ {\small
+   \begin{itemize}
+     \item XALT only knows the number of cores (Ntasks) really
+     \item XALT can not tell the difference between
+       \begin{semiverbatim}
+    #SBATCH -N 10
+    scalar_program
+and
+    #SBATCH -N 10
+    ibrun -o 0 -n 1 scalar_program &
+    ibrun -o 1 -n 1 scalar_program &
+    ibrun -o 2 -n 1 scalar_program &
+    ...
+       \end{semiverbatim}
+     \item num\_cores $=$ 1, num\_nodes $=$ 10 everywhere
+     \item Cannot use XALT for accounting!
+   \end{itemize}
+}
+\end{frame}
+
+% page 29
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Lmod:
+      \begin{itemize}
+        \item Source: github.com/TACC/lmod.git, lmod.sf.net
+        \item Documentation: lmod.readthedocs.org
+      \end{itemize}
+    \item XALT:
+      \begin{itemize}
+        \item Source: github.com/Fahey-McLay/xalt.git, xalt.sf.net
+        \item Documentation: xalt.readthedocs.org
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}
