@@ -379,7 +379,7 @@ def main():
     # parse command line options:
     args     = CmdLineOptions().execute()
     runA     = json.loads(args.execA[0])
-    usr_cmdA = json.loads(args.execA[1])
+    usr_cmdA = args.execA[1]
     dateStr  = time.strftime("%Y_%m_%d_%H_%M_%S",time.localtime(args.startTime))
 
     # build output file name (it is only use by the file transmission method)

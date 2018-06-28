@@ -63,6 +63,8 @@ def translate(nameA, envT, userT):
     queueType = "SLURM"
   elif (envT.get("PBS_JOBID")):
     queueType = "PBS"
+  elif (envT.get("LSF_VERSION") and envT.get('XALT_OLCF')):
+    queueType = "LSF_OLCF"
   elif (envT.get("LSF_VERSION")):
     queueType = "LSF"
       
@@ -104,10 +106,20 @@ def translate(nameA, envT, userT):
     sysT['queue']          = "PBS_QUEUE"
     sysT['submit_host']    = "PBS_O_HOST"
   
+  elif (queueType == "LSF_OLCF"):
+    userT['job_num_cores'] = int(envT.get("LSB_MAX_NUM_PROCESSORS", 0)) - 1
+    userT['num_cores']     = userT['num_tasks']
+    mcpu_hostsA            = envT.get("LSB_MCPU_HOSTS","a 1").split()
+    userT['num_nodes']     = len(mcpu_hostsA)/2 - 1
+    userT['account']       = envT.get("LSB_PROJECT_NAME", "").upper()
+    sysT['job_id']         = "LSB_JOBID"
+    sysT['queue']          = "LSB_QUEUE"
+    sysT['submit_host']    = "LSB_SUB_HOST"
+  
   elif (queueType == "LSF"):
     userT['job_num_cores'] = "LSB_MAX_NUM_PROCESSORS"
     userT['num_cores']     = "LSB_DJOB_NUMPROC"
-    mcpu_hostA             = envT.get("LSB_MCPU_HOSTS","a 1").split()
+    mcpu_hostsA            = envT.get("LSB_MCPU_HOSTS","a 1").split()
     userT['num_nodes']     = len(mcpu_hostsA)/2
     sysT['account']        = "%%_UNKNOWN_%%"
     sysT['job_id']         = "LSB_JOBID"

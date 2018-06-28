@@ -107,11 +107,15 @@ find_real_command()
     # If this is a bash script (and not a bash script in sh mode) then
     # use type to list all possible "ld" or "ibrun".  
 
+    check=0
     for exe in $(type -p -a $my_name); do
-      if [ $exe != $my_path ]; then
-        #
-        # If the executable is not the same the same as the origin then it is a possible
-        # choice.  Now check to see if this choice has the magic string in the first 5 lines.
+      # Find the next executable down the line after the origin, then check. 
+      # Needed for the case where there are multiple wrappers. 
+      if [ $exe == $my_path ]; then
+        check=1
+      fi
+      if [ $check == 1 ]; then
+        # Now check to see if this choice has the magic string in the first 5 lines.
         # Only if it doesn't contain the magic string then $exe is MY_CMD.
 	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
           my_cmd=$exe
@@ -125,9 +129,13 @@ find_real_command()
     # old fashion way. Otherwise the logic is the same as bash version.
     OLD_IFS=$IFS
     IFS=:
+    check=0
     for dir in $PATH; do
       exe="$dir/$my_name"
-      if [ $exe != $my_path -a -x $exe ]; then
+      if [ $exe == $my_path ]; then
+        check=1
+      fi
+      if [ $check == 1 -a -x $exe ]; then
 	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
           my_cmd=$exe
 	  break
@@ -208,7 +216,8 @@ run_real_command()
   tracing_msg "run_real_command: XALT Start Record"
   sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EPOCH)
   (
-  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "[]"
+  CmdLine="$MY_CMD $@"
+  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "$CmdLine"
   ) &
 
   status=0
@@ -225,8 +234,9 @@ run_real_command()
   
   tracing_msg "run_real_command: XALT End Record"
   # Record the job record at the end of the job.
+  CmdLine="$MY_CMD $@"
   eTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T" "[]"
+  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T" "$CmdLine"
 
   #----------------------------------------------------------------------
   # The $status variable is used to report the exit status of $MY_CMD"

@@ -13,6 +13,30 @@ AC_ARG_WITH(transmission,
     TRANSMISSION="$withval"
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
 
+AC_SUBST(BROKER_SERVER)
+AC_ARG_WITH(broker_server,
+    AC_HELP_STRING([--with-broker_server=ans],[server for 'broker' transmission style [[localhost]]]),
+    BROKER_SERVER="$withval"
+    AC_MSG_RESULT([BROKER_SERVER=$with_broker_server])
+    AC_DEFINE_UNQUOTED(BROKER_SERVER, "$with_broker_server")dnl
+    ,
+    withval="localhost"
+    AC_MSG_RESULT([BROKER_SERVER=$withval])
+    BROKER_SERVER="$withval"
+    AC_DEFINE_UNQUOTED(BROKER_SERVER, "$withval"))dnl
+
+AC_SUBST(BROKER_URI)
+AC_ARG_WITH(broker_uri,
+    AC_HELP_STRING([--with-broker_uri=ans],[URI for 'broker' transmission style [[logger]]]),
+    BROKER_URI="$withval"
+    AC_MSG_RESULT([BROKER_URI=$with_broker_uri])
+    AC_DEFINE_UNQUOTED(BROKER_URI, "$with_broker_uri")dnl
+    ,
+    withval="logger"
+    AC_MSG_RESULT([BROKER_URI=$withval])
+    BROKER_URI="$withval"
+    AC_DEFINE_UNQUOTED(BROKER_URI, "$withval"))dnl
+
 AC_SUBST(SITE)
 AC_ARG_WITH(site,
     AC_HELP_STRING([--with-site=ans],[Site name [[default]]]),

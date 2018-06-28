@@ -178,15 +178,17 @@ class XALTdb(object):
       link_path   = linkT.get('link_path',"UNKNOWN")
       link_mname  = obj2module(link_path,reverseMapT)
       link_line   = json.dumps(linkT.get('link_line',"[]"))
+      cwd         = linkT.get('wd', "UNKNOWN")[:1024]
       build_user  = linkT['build_user']
       build_shost = linkT['build_syshost']
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
+      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s,%s, %s,%s,%s)"
       cursor.execute(query, (linkT['uuid'], linkT['hash_id'],     dateTimeStr, 
                              link_prg,      link_path,            link_mname,
-                             link_line,     build_user,           build_shost,
-                             build_epoch,   exit_code,            exec_path))
+                             link_line,     cwd,                  build_user,
+                             build_shost,   build_epoch,          exit_code,
+                             exec_path))
 
       link_id = cursor.lastrowid
 
@@ -221,7 +223,7 @@ class XALTdb(object):
       print(XALT_Stack.contents())
       print(query)
       print ("link_to_db(): Error %s" % e)
-      sys.exit (1)
+      
 
   def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
     """
@@ -270,7 +272,6 @@ class XALTdb(object):
       print(XALT_Stack.contents())
       print(query)
       print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
-      sys.exit (1)
 
   def run_to_db(self, reverseMapT, runT):
     """
@@ -321,7 +322,7 @@ class XALTdb(object):
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
         num_threads   = convertToTinyInt(runT['userT'].get('num_threads',0))
-        usr_cmdline   = json.dumps(runT['cmdlineA'])
+        usr_cmdline   = runT.get('cmdlineA', "UNKNOWN")
 
         job_num_cores = int(runT['userT'].get('job_num_cores',0))
         startTime     = "%.f" % float(runT['userT']['start_time'])
@@ -375,5 +376,5 @@ class XALTdb(object):
       print(XALT_Stack.contents())
       print(query.encode("ascii","ignore"))
       print ("run_to_db(): %s" % e)
-      sys.exit (1)
+      
 

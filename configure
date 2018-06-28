@@ -658,6 +658,8 @@ PATH_TO_AS
 SYS_LD_LIB_PATH
 ETC_DIR
 SITE
+BROKER_URI
+BROKER_SERVER
 TRANSMISSION
 target_alias
 host_alias
@@ -701,6 +703,8 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_transmission
+with_broker_server
+with_broker_uri
 with_site
 with_etcDir
 '
@@ -1320,6 +1324,9 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
+  --with-broker_server=ans
+                          server for 'broker' transmission style [[localhost]]
+  --with-broker_uri=ans   URI for 'broker' transmission style [[logger]]
   --with-site=ans         Site name [[default]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -2020,6 +2027,50 @@ $as_echo "TRANSMISSION=$withval" >&6; }
     TRANSMISSION="$withval"
     cat >>confdefs.h <<_ACEOF
 #define TRANSMISSION "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-broker_server was given.
+if test "${with_broker_server+set}" = set; then :
+  withval=$with_broker_server; BROKER_SERVER="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_SERVER=$with_broker_server" >&5
+$as_echo "BROKER_SERVER=$with_broker_server" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define BROKER_SERVER "$with_broker_server"
+_ACEOF
+
+else
+  withval="localhost"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_SERVER=$withval" >&5
+$as_echo "BROKER_SERVER=$withval" >&6; }
+    BROKER_SERVER="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define BROKER_SERVER "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-broker_uri was given.
+if test "${with_broker_uri+set}" = set; then :
+  withval=$with_broker_uri; BROKER_URI="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_URI=$with_broker_uri" >&5
+$as_echo "BROKER_URI=$with_broker_uri" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define BROKER_URI "$with_broker_uri"
+_ACEOF
+
+else
+  withval="logger"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_URI=$withval" >&5
+$as_echo "BROKER_URI=$withval" >&6; }
+    BROKER_URI="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define BROKER_URI "$withval"
 _ACEOF
 
 fi
