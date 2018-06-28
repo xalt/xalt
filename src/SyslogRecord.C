@@ -45,7 +45,7 @@ void SyslogRecord::value(std::string& jsonStr)
 
 void SyslogRecord::prt(const char* name, Vstring& resultA)
 {
-  const int sz = 15;
+  const int sz = 25;
   char buf[sz];
   std::string prefix;
   std::string result;

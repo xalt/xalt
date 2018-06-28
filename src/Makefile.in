@@ -1,4 +1,4 @@
-THIS_DIR := $(PARENT_DIR)/compiled
+THIS_DIR := $(PARENT_DIR)/src
 VPATH = .:$(THIS_DIR)
 CXX := g++
 CC  := gcc
@@ -39,8 +39,9 @@ LIB_OPTIONS := -fPIC -shared
 
 WARN_FLAGS  := -Wall -Wno-unused-result 
 CF_INIT     := -I. -fPIC 
-CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild -I$(THIS_DIR) $(MYSQL_CFLAGS) $(USE_PREFIX)
-CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild -I$(THIS_DIR) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+COMMON_FLGS := $(OPTLVL) $(WARN_FLAGS)  -I__build__ -I$(THIS_DIR) 
+CXXFLAGS    := $(COMMON_FLGS) -std=c++11 $(MYSQL_CFLAGS) $(USE_PREFIX)
+CFLAGS      := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER) 
 
 C_SRC       :=                             \
 	       $(HOST_PARSER_SRC)          \
@@ -104,7 +105,7 @@ XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C 
                 buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C parseJsonStr.C \
                 parseLDD.C translate.C xalt_mysql_utils.C xalt_utils.C epoch.C walkProcessTree.C       \
                 compute_sha1.C
-XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  lex.xalt_env.c transmit.c xalt_c_utils.c \
+XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c \
                 zstring.c base64.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
@@ -232,29 +233,29 @@ $(DESTDIR)$(LIBEXEC)/xalt_epoch: xalt_epoch.o epoch.o
 $(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
 	$(LINK.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
 
-lex.xalt_env.c: $(CURDIR)/build/xalt_env_parser.lex
+__build__/lex.xalt_env.c: $(CURDIR)/__build__/xalt_env_parser.lex
 	flex -P xalt_env -o $@ $^
 
-lex.xalt_env.o: lex.xalt_env.c
+__build__/lex.xalt_env.o: __build__/lex.xalt_env.c
 	$(COMPILE.c) -Wno-unused-function  -o $@ $^
 
-lex.__XALT_pathR.c: $(CURDIR)/build/xalt_path_parser.lex
+__build__/lex.__XALT_pathR.c: $(CURDIR)/__build__/xalt_path_parser.lex
 	flex -P __XALT_pathR -o $@ $^
 
-lex.__XALT_pathL.c: $(CURDIR)/build/xalt_path_parser.lex
+__build__/lex.__XALT_pathL.c: $(CURDIR)/__build__/xalt_path_parser.lex
 	flex -P __XALT_pathL -o $@ $^
 
-lex.__XALT_hostR.c: $(CURDIR)/build/xalt_hostname_parser.lex
+__build__/lex.__XALT_hostR.c: $(CURDIR)/__build__/xalt_hostname_parser.lex
 	flex -P __XALT_hostR -o $@ $^
 
-lex.__XALT_hostL.c: $(CURDIR)/build/xalt_hostname_parser.lex
+__build__/lex.__XALT_hostL.c: $(CURDIR)/__build__/xalt_hostname_parser.lex
 	flex -P __XALT_hostL -o $@ $^
 
 
-xalt_syshost.o: build/xalt_syshost.c
+xalt_syshost.o: __build__/xalt_syshost.c
 	$(COMPILE.c) -c -o $@ $^
 
-xalt_syshost_main.o: $(CURDIR)/build/xalt_syshost.c xalt_fgets_alloc.h
+xalt_syshost_main.o: $(CURDIR)/__build__/xalt_syshost.c xalt_fgets_alloc.h
 	$(LINK.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) -o $@ $<
 
 
@@ -274,54 +275,54 @@ build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xa
                       $(MY_HOSTNAME_PARSER_OBJ_32)
 
 
-$(DESTDIR)$(LIB64)/lex.__XALT_path.o: lex.__XALT_pathR.c xalt_obfuscate.h
+$(DESTDIR)$(LIB64)/lex.__XALT_path.o: __build__/lex.__XALT_pathR.c xalt_obfuscate.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
-$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o: lex.__XALT_pathL.c xalt_obfuscate.h
+$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o: __build__/lex.__XALT_pathL.c xalt_obfuscate.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
-$(DESTDIR)$(LIB64)/lex.__XALT_host.o: lex.__XALT_hostR.c xalt_obfuscate.h
+$(DESTDIR)$(LIB64)/lex.__XALT_host.o: __build__/lex.__XALT_hostR.c xalt_obfuscate.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
-$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o: lex.__XALT_hostL.c xalt_obfuscate.h
+$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o: __build__/lex.__XALT_hostL.c xalt_obfuscate.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
-$(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/build/xalt_syshost.c
+$(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/__build__/xalt_syshost.c
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
-$(DESTDIR)$(LIB64)/build_uuid.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+$(DESTDIR)$(LIB64)/build_uuid.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
 	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
-$(DESTDIR)$(LIB64)/build_uuid_preload.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+$(DESTDIR)$(LIB64)/build_uuid_preload.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
 	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
-$(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
+$(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
 	$(COMPILE.c) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
-$(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
+$(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
 	$(LINK.c) $(CFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
 $(DESTDIR)$(LIB64)/my_hostname_parser.o: $(MY_HOSTNAME_PARSER_SRC)
 	$(COMPILE.c) -c -o $@ $^
 
 
-$(DESTDIR)$(LIB)/lex.__XALT_path_32.o: lex.__XALT_pathR.c xalt_obfuscate.h
+$(DESTDIR)$(LIB)/lex.__XALT_path_32.o: __build__/lex.__XALT_pathR.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
-$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o: lex.__XALT_pathL.c xalt_obfuscate.h
+$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o: __build__/lex.__XALT_pathL.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
-$(DESTDIR)$(LIB)/lex.__XALT_host_32.o: lex.__XALT_hostR.c xalt_obfuscate.h
+$(DESTDIR)$(LIB)/lex.__XALT_host_32.o: __build__/lex.__XALT_hostR.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
-$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: lex.__XALT_hostL.c xalt_obfuscate.h
+$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: __build__/lex.__XALT_hostL.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
 	$(COMPILE.c) -m32  $(CF_INIT) -o $@ -c $<
-$(DESTDIR)$(LIB)/xalt_syshost_32.o: $(CURDIR)/build/xalt_syshost.c
+$(DESTDIR)$(LIB)/xalt_syshost_32.o: $(CURDIR)/__build__/xalt_syshost.c
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 
-$(DESTDIR)$(LIB)/build_uuid_32.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+$(DESTDIR)$(LIB)/build_uuid_32.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
 	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
-$(DESTDIR)$(LIB)/build_uuid_preload_32.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+$(DESTDIR)$(LIB)/build_uuid_preload_32.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
 	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
-$(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
-	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR    -DIDX=1 -Ibuild  -o $@ -c $<
-$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
-	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -Ibuild  -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
+	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR    -DIDX=1 -I__build__  -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
+	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -I__build__  -o $@ -c $<
 $(DESTDIR)$(LIB)/my_hostname_parser_32.o: $(MY_HOSTNAME_PARSER_SRC)
 	$(COMPILE.c) -m32 -c -o $@ $^
 $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o \

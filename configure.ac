@@ -1,7 +1,7 @@
 AC_INIT(Makefile.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
-AC_CONFIG_SUBDIRS(compiled)
+AC_CONFIG_SUBDIRS(src)
 
 AC_SUBST(XALT_INTERFACE_VERSION)
 XALT_INTERFACE_VERSION=3
@@ -455,8 +455,8 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-if ! test -d compiled/build; then
-   mkdir -p compiled/build
+if ! test -d src/__build__; then
+   mkdir -p src/__build__
 fi
 
 if test "$USE_CONTRIB_ARGPARSE" = yes; then
@@ -467,43 +467,43 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_interval.template --output compiled/build/xalt_interval.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/build/xalt_syshost.c
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/compiled/xalt_env_parser.template --output compiled/build/xalt_env_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/compiled/xalt_path_parser.template --output compiled/build/xalt_path_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/compiled/xalt_hostname_parser.template --output compiled/build/xalt_hostname_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
 
-AC_OUTPUT(makefile:Makefile.in compiled/build/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in)
+AC_OUTPUT(makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in)
 
 AX_SUMMARIZE_CONFIG

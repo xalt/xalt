@@ -45,7 +45,6 @@ installXALT()
 
   (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; \
   echo "<make>"; make OPTLVL="-g -O0" install ;  )
-  cp $projectDir/src/removeDataBase.py    XALT/xalt/xalt/sbin
   cp $projectDir/test/check_entries_db.py XALT/xalt/xalt/sbin
   PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
   echo "<end make>"
@@ -61,11 +60,8 @@ installDB()
 
   conf_create.py     --dbhost localhost --dbuser $DBUSER \
                      --passwd $PASSWD   --dbname $DBNAME
-  echo "<remove old DB>"
-  removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
-
   echo "<create new DB>"
-  createDB.py        --confFn $DB_CONF_FN
+  createDB.py        --drop --confFn $DB_CONF_FN
   rm -f xalt_db.conf 
   ln -s testxalt_db.conf xalt_db.conf 
   echo "<end create db>"
