@@ -2,12 +2,6 @@ THIS_DIR := $(PARENT_DIR)/src
 VPATH = .:$(THIS_DIR)
 CXX := g++
 CC  := gcc
-MYSQL_CONFIG     := @MYSQL_CONFIG@
-ifneq ($(MYSQL_CONFIG),UNKNOWN_mysql_config)
-  MYSQL_CFLAGS  := $(shell $(MYSQL_CONFIG) --cflags) -DHAVE_MYSQL
-  MYSQL_LDFLAGS := $(shell $(MYSQL_CONFIG) --libs)  
-  MYSQL_LDFLAGS := $(shell $(THIS_DIR)/addRpath.sh $(MYSQL_LDFLAGS))
-endif
 ifeq ($(HAVE_LIBUUID),yes)
   LIBUUID:=-luuid
   HAVE_UUID:=-DHAVE_LIBUUID
@@ -44,7 +38,7 @@ LIB_OPTIONS := -fPIC -shared
 WARN_FLAGS  := -Wall -Wno-unused-result 
 CF_INIT     := -I. -fPIC 
 COMMON_FLGS := $(OPTLVL) $(WARN_FLAGS)  -I__build__ -I$(THIS_DIR) 
-CXXFLAGS    := $(COMMON_FLGS) -std=c++11 $(MYSQL_CFLAGS) $(USE_PREFIX)
+CXXFLAGS    := $(COMMON_FLGS) -std=c++11 $(USE_PREFIX)
 CFLAGS      := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER) 
 
 C_SRC       :=                             \
@@ -77,7 +71,6 @@ CXX_SRC     :=                             \
                extractXALTRecord.C    	   \
                f2db.C                 	   \
                f2db_Options.C         	   \
-               link_direct2db.C       	   \
                parseJsonStr.C         	   \
                parseLDD.C             	   \
                parseLDTrace.C         	   \
@@ -92,7 +85,6 @@ CXX_SRC     :=                             \
                xalt_extract_linker.C  	   \
                xalt_generate_assembly.C    \
                xalt_generate_linkdata.C    \
-               xalt_mysql_utils.C          \
                xalt_run_submission.C       \
                xalt_strip_linklib.C        \
                xalt_syslog_to_db.C         \
@@ -105,10 +97,9 @@ TRP_CXX_SRC  := test_record_pkg.C capture.C
 TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
 
 XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
-XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C            \
-                buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C parseJsonStr.C \
-                parseLDD.C translate.C xalt_mysql_utils.C xalt_utils.C epoch.C walkProcessTree.C       \
-                compute_sha1.C
+XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C      \
+                buildRmapT.C buildUserT.C capture.C extractXALTRecord.C parseJsonStr.C           \
+                parseLDD.C translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c \
                 zstring.c base64.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
@@ -120,8 +111,7 @@ XGA_OBJS     := $(patsubst %.C, %.o, $(XGA_CXX_SRC)) $(patsubst %.c, %.o, $(XGA_
 
 XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
 XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
-                xalt_mysql_utils.C Json.C parseLDTrace.C capture.C link_direct2db.C                  \
-                zstring.C  ConfigParser.C epoch.C compute_sha1.C
+                Json.C parseLDTrace.C capture.C zstring.C  ConfigParser.C epoch.C compute_sha1.C
 XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c transmit.c xalt_c_utils.c base64.c     \
                 zstring.c
 XGL_OBJS     := $(patsubst %.C, %.o, $(XGL_CXX_SRC)) $(patsubst %.c, %.o, $(XGL_C_SRC))
@@ -181,7 +171,7 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
 
 all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
           $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
-          $(XSL_EXEC) $(F2DB_EXEC) $(S2DB_EXEC) $(XRP_EXEC)     \
+          $(XSL_EXEC) $(XRP_EXEC)                               \
           $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
 	  $(DESTDIR)$(LIBEXEC)/xalt_syshost                     \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
@@ -191,7 +181,7 @@ all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
 
 
 ECHO:
-	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
+	@echo "XALT_EXECUTABLE_TRACKING: '$(XALT_EXECUTABLE_TRACKING)'"
 
 my_hostname_parser_target:
 	cp $(MY_HOSTNAME_PARSER_LIBRARY)   $(DESTDIR)$(LIB64)/my_hostname_parser.a
@@ -205,13 +195,13 @@ $(TRP_EXEC) : $(TRP_OBJS)
 $(XRP_EXEC) : $(XRP_OBJS)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(LIBUUID)
 $(XRS_EXEC) : $(XRS_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread $(MYSQL_LDFLAGS) 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread 
 
 $(XGA_EXEC): $(XGA_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
 
 $(XGL_EXEC): $(XGL_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ $(MYSQL_LDFLAGS) -lz -lcrypto -lpthread
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread
 
 $(XEL_EXEC) : $(XEL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^

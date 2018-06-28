@@ -104,19 +104,19 @@ int main(int argc, char* argv[], char* env[])
   
   DEBUG1(stderr,"  Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
-  if (strcasecmp(transmission, "direct2db") == 0)
-    {
-      std::string rmapD = ""; // must use XALT_ETC_DIR to specify where rmapD is!
-      Table       rmapT;
-      Vstring     xlibmapA;
-
-      buildRmapT(rmapD, rmapT, xlibmapA);
-      run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, userDT, recordT, libA);
-      DEBUG0(stderr,"  Completed run direct to DB\n");
-      DEBUG0(stderr,"}\n\n");
-      
-      return 0;
-    }
+  //if (strcasecmp(transmission, "direct2db") == 0)
+  //  {
+  //    std::string rmapD = ""; // must use XALT_ETC_DIR to specify where rmapD is!
+  //    Table       rmapT;
+  //    Vstring     xlibmapA;
+  //
+  //    buildRmapT(rmapD, rmapT, xlibmapA);
+  //    run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, userDT, recordT, libA);
+  //    DEBUG0(stderr,"  Completed run direct to DB\n");
+  //    DEBUG0(stderr,"}\n\n");
+  //    
+  //    return 0;
+  //  }
   
   //*********************************************************************
   // If here then we need the json string.  So build it!

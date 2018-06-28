@@ -67,8 +67,7 @@ test_descript = {
      gcc -o try_uuid $(testDir)/try_uuid.c -luuid
      ./try_uuid
 
-     displayThis "Setting direct2db; mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
-     export XALT_TRANSMISSION_STYLE=direct2db
+     displayThis "mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
      
      displayThis "mpirun -n 1 ./helloññ"
@@ -82,7 +81,6 @@ test_descript = {
 
      displayThis "Enable XALT TRACKING"
      displayThis "./helloñññ"
-     export XALT_TRANSMISSION_STYLE=file
      export XALT_EXECUTABLE_TRACKING=yes
      ./helloñññ
 

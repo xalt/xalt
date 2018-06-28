@@ -84,12 +84,10 @@ PKG                  	:= $(prefix)/$(package)/$(package)
 LIB                  	:= $(prefix)/$(package)/$(VERSION)/lib
 LIB64                	:= $(prefix)/$(package)/$(VERSION)/lib64
 LIBEXEC              	:= $(prefix)/$(package)/$(VERSION)/libexec
-SITE                 	:= $(prefix)/$(package)/$(VERSION)/site
 BIN                  	:= $(prefix)/$(package)/$(VERSION)/bin
 SBIN                 	:= $(prefix)/$(package)/$(VERSION)/sbin
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
-                           $(DESTDIR)$(SITE)    $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN)             \
-                           $(DESTDIR)$(ETC_DIR)
+                           $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
 
 #BIN_PKG             	 := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
 #                    	    src/ibrun.symm.in src/aprun.in src/srun.in                         \

@@ -9,7 +9,7 @@ XALT_INTERFACE_VERSION=3
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,directdb) [[file]]]),
+    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission")dnl
@@ -119,9 +119,9 @@ AC_ARG_WITH(config,
 
 AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
-    AC_HELP_STRING([--with-MySQL=ans],[Require MySQL and the MySQL-python module [[yes]]]),
+    AC_HELP_STRING([--with-MySQL=ans],[Require the MySQL-python module [[yes]]]),
     MYSQLDB="$withval"
-    AC_MSG_RESULT([MYSQLDB=$with_pymodMySQL])
+    AC_MSG_RESULT([MYSQLDB=$with_MySQL])
     AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL")dnl
     ,
     withval="yes"
@@ -152,18 +152,6 @@ AC_ARG_WITH(syslogMsgSz,
     AC_MSG_RESULT([SYSLOG_MSG_SZ=$withval])
     SYSLOG_MSG_SZ="$withval"
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
-
-AC_SUBST(MYSQL_STATIC)
-AC_ARG_WITH(mysqlStatic,
-    AC_HELP_STRING([--with-mysqlStatic=ans],[Require that libmysqlclient be linked in statically [[no]]]),
-    MYSQL_STATIC="$withval"
-    AC_MSG_RESULT([MYSQL_STATIC=$with_mysqlStatic])
-    AC_DEFINE_UNQUOTED(MYSQL_STATIC, "$with_mysqlStatic")dnl
-    ,
-    withval="no"
-    AC_MSG_RESULT([MYSQL_STATIC=$withval])
-    MYSQL_STATIC="$withval"
-    AC_DEFINE_UNQUOTED(MYSQL_STATIC, "$withval"))dnl
 
 AC_SUBST(CXX_LD_LIBRARY_PATH)
 AC_ARG_WITH(cxxLDLibraryPath,
@@ -253,7 +241,6 @@ AC_SUBST(PATH_TO_SHA1SUM)
 AC_SUBST(PATH_TO_UUIDGEN)
 
 AC_SUBST(USE_CONTRIB_ARGPARSE)
-AC_SUBST(MYSQL_CONFIG)
 
 AC_PATH_PROG(PATH_TO_GIT,git, [])
 AC_PATH_PROG(PATH_TO_AS,as, [])
@@ -278,10 +265,15 @@ AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
 
-if test "$MYSQLDB" == yes; then
-  AC_PATH_PROG(MYSQL_CONFIG,[mysql_config],UNKNOWN_mysql_config)
-else
-  MYSQL_CONFIG=UNKNOWN_mysql_config
+if test "$TRANSMISSION" == "direct2db"; then
+   echo
+   echo "======================================================="
+   echo "XALT 2 does not support direct2db"
+   echo "See the manual for supported methods"
+   echo "======================================================="
+   echo
+   rm -f makefile
+   exit 1
 fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
@@ -407,27 +399,6 @@ if test "$MYSQLDB" = yes; then
       rm -f makefile
       exit 1
    fi
-   if test "$MYSQL_CONFIG" = UNKNOWN_mysql_config; then
-      echo
-      echo "======================================================="
-      echo "Unable to install XALT without the program mysql_config"
-      echo "This program is used to find the MySQL installation"
-      echo "See the manual for details"
-      echo "======================================================="
-      rm -f makefile
-      exit 1
-   fi
-else
-   MYSQL_CONFIG=UNKNOWN_mysql_config
-   echo
-   echo "======================================================="
-   echo "XALT only requires MySQL libraries and MySQL-python module"
-   echo "when loading and analyzing the XALT Data. Make sure"
-   echo "that you install the MySQL libraries, Devel packages"
-   echo "and MySQL-python module where every you are analyzing"
-   echo "the XALT data."
-   echo "======================================================="
-   echo
 fi
 
 if test "$SYSHOST_CONFIG" = no; then
