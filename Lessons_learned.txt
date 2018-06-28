@@ -1,6 +1,14 @@
 Here are some notes about lessons learned when deploying XALT in the
 field.
 
+* How the compiler finds the linker: The GCC compilers find the linker
+  by using $COMPILER_PATH.  If this isn't set then it finds the one
+  with the built-in binutils.  However $COMPILER_PATH is set before
+  linking then it uses that instead.
+
+  Note that one can configure gcc to hardcode the path to ld.
+
+* The linker can be called ld, ld.gold or x86_64-linux-gnu-ld
 
 * When building Intel PIN library, it caused problems when building a
   shared library.  So XALT now doesn't include xalt_initialize.o etc
