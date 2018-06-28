@@ -104,17 +104,16 @@ BIN_PKG              	:= src/ld.in src/ld.gold.in                               
 BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
 SBIN_PKG             	:= src/conf_create.in.py  	     src/createDB.in.py               \
-                           src/xalt_db.conf                  src/xalt_syslog_to_db.in.py      \
-                           src/xalt_split_syslog_fn.in.py    src/xalt_file_to_db.in.py        \
-                           src/xalt_usage_report.in.py
+                           src/xalt_syslog_to_db.in.py       src/xalt_split_syslog_fn.in.py   \
+                           src/xalt_file_to_db.in.py         src/xalt_usage_report.in.py
 
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
 LIBEXEC_PKG          	:= src/XALTdb.py                     src/progressBar.py               \
-	             	   src/xalt_epoch.py                 src/BeautifulTbl.py              \
-                           src/xalt_global.py                src/xalt_transmission_factory.py \
-                           src/xalt_stack.py                 src/Rmap_XALT.py                 \
+                           src/xalt_stack.py                 src/BeautifulTbl.py              \
+                           src/xalt_global.py                src/Rmap_XALT.py                 \
                            src/xalt_util.py                  src/xalt_name_mapping.py
+
 
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
