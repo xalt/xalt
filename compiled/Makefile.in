@@ -28,7 +28,8 @@ ifneq ($(MY_HOSTNAME_PARSER),no)
       MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.o
    endif
    ifeq ($(PARSER_TYPE),library)
-      MY_HOSTNAME_PARSER_LIBRARY := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_LIBRARY := $(word  1, $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_LIB32   := $(word  2, $(subst :, ,$(MY_HOSTNAME_PARSER)))
       MY_HOSTNAME_PARSER_TARGET  := my_hostname_parser_target
       MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.a
       MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.a
@@ -189,7 +190,9 @@ ECHO:
 	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
 
 my_hostname_parser_target:
-	cp $(MY_HOSTNAME_PARSER_LIBRARY) $(DESTDIR)$(LIB64)/my_hostname_parser.a
+	cp $(MY_HOSTNAME_PARSER_LIBRARY)    $(DESTDIR)$(LIB64)/my_hostname_parser.a
+	[ -n "$(MY_HOSTNAME_PARSER_LIB32)" ] && \
+           cp $(MY_HOSTNAME_PARSER_LIB32)   $(DESTDIR)$(LIB)/my_hostname_parser_32.a
 
 $(TRP_EXEC) : $(TRP_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
