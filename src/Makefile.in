@@ -57,10 +57,7 @@ C_SRC       :=                             \
 CXX_SRC     :=                             \
                ConfigParser.C         	   \
                Json.C                 	   \
-               Options.C              	   \
-               Process.C              	   \
-               ProgressBar.C          	   \
-               SyslogRecord.C         	   \
+	       Options.C                   \
                buildEnvT.C            	   \
                buildRmapT.C           	   \
                buildUserT.C           	   \
@@ -69,14 +66,9 @@ CXX_SRC     :=                             \
                epoch.C                	   \
                extractMain.C    	   \
                extractXALTRecord.C    	   \
-               f2db.C                 	   \
-               f2db_Options.C         	   \
                parseJsonStr.C         	   \
                parseLDD.C             	   \
                parseLDTrace.C         	   \
-               parseSyslog.C          	   \
-               run_direct2db.C        	   \
-               s2db_Options.C         	   \
                test_record_pkg.C           \
                translate.C            	   \
 	       walkProcessTree.C           \
@@ -87,7 +79,6 @@ CXX_SRC     :=                             \
                xalt_generate_linkdata.C    \
                xalt_run_submission.C       \
                xalt_strip_linklib.C        \
-               xalt_syslog_to_db.C         \
                xalt_utils.C                \
                zstring.C
 
@@ -194,6 +185,7 @@ $(TRP_EXEC) : $(TRP_OBJS)
 
 $(XRP_EXEC) : $(XRP_OBJS)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(LIBUUID)
+
 $(XRS_EXEC) : $(XRS_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread 
 

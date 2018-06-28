@@ -16,7 +16,7 @@
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
-#include "run_direct2db.h"
+//#include "run_direct2db.h"
 #include "xalt_utils.h"
 
 #define DATESZ 100
