@@ -67,7 +67,7 @@ class CmdLineOptions(object):
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
     parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
     parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
-    parser.add_argument("--full",    dest='full',      action="store_true",                            help="report node hours by compiler")
+    parser.add_argument("--full",    dest='full',      action="store_true",                            help="report core hours by compiler")
     args = parser.parse_args()
     return args
 
@@ -88,7 +88,7 @@ class ExecRun:
       sA.append(s)
 
     sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
-    sA.append(" AS execname, ROUND(SUM(run_time*num_nodes/3600)) as totalcput, ")
+    sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
     sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
@@ -102,28 +102,28 @@ class ExecRun:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, nodehours, n_jobs, n_users in resultA:
+    for execname, corehours, n_jobs, n_users in resultA:
       entryT = {'execname'  : execname,
-                'nodehours' : nodehours,
+                'corehours' : corehours,
                 'n_jobs'    : n_jobs,
                 'n_users'   : n_users}
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["NodeHrs", "# Jobs","# Users", "Exec"])
+    resultA.append(["CoreHrs", "# Jobs","# Users", "Exec"])
     resultA.append(["-------", "------","-------", "----"])
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
-    sumNH = 0.0
+    sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['nodehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
-      sumNH += entryT['nodehours']
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      sumCH += entryT['corehours']
     
-    return resultA, sumNH
+    return resultA, sumCH
 
 
 class ExecRunLink:
@@ -143,7 +143,7 @@ class ExecRunLink:
       sA.append(s)
 
     sA.append(" ELSE SUBSTRING_INDEX(t1.exec_path,'/',-1) END ")
-    sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_nodes/3600)) as totalcput, ")
+    sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
     sA.append(" COUNT(t1.date) as n_jobs, COUNT(DISTINCT(t1.user)) as n_users")
     sA.append("   FROM xalt_run as t1, xalt_link as t2 ")
     sA.append("  WHERE t1.syshost like '%s' ")
@@ -159,28 +159,28 @@ class ExecRunLink:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, nodehours, n_jobs, n_users in resultA:
+    for execname, corehours, n_jobs, n_users in resultA:
       entryT = {'execname'  : execname,
-                'nodehours' : nodehours,
+                'corehours' : corehours,
                 'n_jobs'    : n_jobs,
                 'n_users'   : n_users}
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["NodeHrs", "# Jobs","# Users", "Exec"])
+    resultA.append(["CoreHrs", "# Jobs","# Users", "Exec"])
     resultA.append(["-------", "------","-------", "----"])
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
-    sumNH = 0.0
+    sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['nodehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
-      sumNH += entryT['nodehours']
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      sumCH += entryT['corehours']
     
-    return resultA, sumNH
+    return resultA, sumCH
 
 
 class CompilerUsageByCount:
@@ -217,7 +217,7 @@ class CompilerUsageByCount:
     
     return resultA
 
-class CompilerUsageByNodeHours:
+class CompilerUsageByCoreHours:
   def __init__(self, cursor):
     self.__linkA  = []
     self.__cursor = cursor
@@ -225,7 +225,7 @@ class CompilerUsageByNodeHours:
   def build(self, args, startdate, enddate):
     query = """
     SELECT
-    ROUND(SUM(t1.run_time*t1.num_nodes/3600.0)) as nodehours,
+    ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as corehours,
     COUNT(t1.date)                              as n_runs,
     COUNT(DISTINCT(t1.user))                    as n_users,
     t2.link_program                             as link_program
@@ -240,8 +240,8 @@ class CompilerUsageByNodeHours:
     cursor.execute(query, (args.syshost, startdate, enddate))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
-    for nodehours, n_runs, n_users, link_program in resultA:
-      entryT = { 'nodehours'   : nodehours,
+    for corehours, n_runs, n_users, link_program in resultA:
+      entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
                  'n_runs'      : n_runs,
                  'link_program': link_program
@@ -251,7 +251,7 @@ class CompilerUsageByNodeHours:
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['NodeHrs', '# Users','# Runs','Link Program'])
+    resultA.append(['CoreHrs', '# Users','# Runs','Link Program'])
     resultA.append(['-------', '-------','------','------------'])
 
     linkA = self.__linkA
@@ -259,7 +259,7 @@ class CompilerUsageByNodeHours:
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['nodehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       entryT['link_program']])
     return resultA
 
@@ -271,7 +271,7 @@ class Libraries:
 
   def build(self, args, startdate, enddate, queue="%"):
     
-    query = "select ROUND(SUM(t3.num_nodes*t3.run_time/3600.0)) as nodehours,        \
+    query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,        \
                     COUNT(DISTINCT(t3.user)) as n_users,                             \
                     COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs,  \
                     t1.object_path, t1.module_name as module                         \
@@ -280,15 +280,15 @@ class Libraries:
                     and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id              \
                     and t3.syshost like %s and t3.queue like %s                      \
                     and t3.date >= %s and t3.date < %s                               \
-                    group by t1.object_path order by nodehours desc"
+                    group by t1.object_path order by corehours desc"
 
     cursor  = self.__cursor
     cursor.execute(query,(args.syshost, queue, startdate, enddate))
     resultA = cursor.fetchall()
 
     libA = self.__libA
-    for nodehours, n_users, n_runs, n_jobs, object_path, module in resultA:
-      entryT = { 'nodehours'   : nodehours,
+    for corehours, n_users, n_runs, n_jobs, object_path, module in resultA:
+      entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
                  'n_runs'      : n_runs,
                  'n_jobs'      : n_jobs,
@@ -298,11 +298,11 @@ class Libraries:
       libA.append(entryT)
       
 
-    #q2 = "select ROUND(SUM(t3.num_nodes*t3.run_time/3600.0)) as nodehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by nodehours desc"
+    #q2 = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours, COUNT(DISTINCT(t3.user)) as n_users, COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs, t1.object_path from xalt_object as t1, join_run_object as t2, xalt_run as t3  where t1.module_name is NULL and t1.obj_id = t2.obj_id and t2.run_id = t3.run_id and t3.date >= '2016-04-04' and t3.date < '2016-04-05' group by t1.object_path order by corehours desc"
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['NodeHrs', '# Users','# Runs','# Jobs','Library Module'])
+    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
     resultA.append(['-------', '-------','------','------','--------------'])
 
     libA = self.__libA
@@ -311,20 +311,20 @@ class Libraries:
     for entryT in libA:
       module = entryT['module']
       if (module in libT):
-        if (entryT['nodehours'] > libT[module]['nodehours']):
+        if (entryT['corehours'] > libT[module]['corehours']):
           libT[module] = entryT
       else:
         libT[module] = entryT
     
         
     for k, entryT in sorted(libT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
-      resultA.append(["%.0f" % (entryT['nodehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
     return resultA
   def group_report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['NodeHrs', '# Users','# Runs','# Jobs','Library Module'])
+    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
     resultA.append(['-------', '-------','------','------','--------------'])
 
     libA = self.__libA
@@ -333,7 +333,7 @@ class Libraries:
     for entryT in libA:
       module = entryT['module']
       if (module in libT):
-        if (entryT['nodehours'] > libT[module]['nodehours']):
+        if (entryT['corehours'] > libT[module]['corehours']):
           libT[module] = entryT
       else:
         libT[module] = entryT
@@ -352,7 +352,7 @@ class Libraries:
             g_entry[key] += entry[key]
         
     for k, entryT in sorted(groupT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
-      resultA.append(["%.0f" % (entryT['nodehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
     return resultA
@@ -365,7 +365,7 @@ class ModuleExec:
   def build(self, args, startdate, enddate):
     query = """
     SELECT 
-    ROUND(SUM(run_time*num_nodes/3600)) as nodehours,
+    ROUND(SUM(run_time*num_cores/3600)) as corehours,
     count(date)                         as n_jobs,
     COUNT(DISTINCT(user))               as n_users,
     module_name                         as modules
@@ -377,8 +377,8 @@ class ModuleExec:
     cursor.execute(query, (args.syshost, startdate, enddate))
     resultA = cursor.fetchall()
     modA   = self.__modA
-    for nodehours, n_jobs, n_users, modules in resultA:
-      entryT = { 'nodehours' : nodehours,
+    for corehours, n_jobs, n_users, modules in resultA:
+      entryT = { 'corehours' : corehours,
                  'n_jobs'    : n_jobs,
                  'n_users'   : n_users,
                  'modules'   : modules }
@@ -386,7 +386,7 @@ class ModuleExec:
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["NodeHrs", "# Jobs","# Users", "Modules"])
+    resultA.append(["CoreHrs", "# Jobs","# Users", "Modules"])
     resultA.append(["-------", "------","-------", "-------"])
 
     modA = self.__modA
@@ -394,13 +394,13 @@ class ModuleExec:
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['nodehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['modules']])
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['modules']])
     
     return resultA
         
 def kinds_of_jobs(cursor, args, startdate, enddate):
 
-  query = "SELECT ROUND(SUM(run_time*num_nodes/3600)) as nodehours,                \
+  query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
                   COUNT(*) as n_runs, COUNT(DISTINCT(job_id)) as n_jobs,           \
                   COUNT(DISTINCT(user)) as n_users                                 \
                   from xalt_run where syshost like %s                              \
@@ -417,7 +417,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
   resultT = {}
 
   
-  totalT  = {'nodehours' : 0.0,
+  totalT  = {'corehours' : 0.0,
              'n_jobs'    : 0.0,
              'n_runs'    : 0.0}
 
@@ -432,45 +432,45 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
       sys.exit(1)
     
     row = cursor.fetchall()[0]
-    node_hours = float(row[0] or 0.0)
-    resultT[name] = {'nodehours' : node_hours,
+    core_hours = float(row[0] or 0.0)
+    resultT[name] = {'corehours' : core_hours,
                      'n_runs'    : int(row[1]),
                      'n_jobs'    : int(row[2]),
                      'n_users'   : int(row[3]),
                      'name'      : name
                      }
 
-    totalT['nodehours'] += node_hours
+    totalT['corehours'] += core_hours
     totalT['n_runs'   ] += int(row[1])
     totalT['n_jobs'   ] += int(row[2])
 
 
   resultA = []
-  resultA.append(["Kind", "NodeHrs", "   ", "Runs", "   ", "Jobs", "   ", "Users"])
+  resultA.append(["Kind", "CoreHrs", "   ", "Runs", "   ", "Jobs", "   ", "Users"])
   resultA.append(["    ", "  N    ", " % ", " N  ", " % ", " N  ", " % ", "  N  "])
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", "-----"])
   
 
      
-  for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['nodehours'], reverse=True):
-    pSU = "%.0f" % (100.0 * entryT['nodehours']/totalT['nodehours'])
+  for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['corehours'], reverse=True):
+    pSU = "%.0f" % (100.0 * entryT['corehours']/totalT['corehours'])
     pR  = "%.0f" % (100.0 * entryT['n_runs']   /float(totalT['n_runs']))
     pJ  = "%.0f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
 
     resultA.append([k,
-      "%.0f" % (entryT['nodehours']), pSU,
+      "%.0f" % (entryT['corehours']), pSU,
       entryT['n_runs'], pR,
       entryT['n_jobs'], pJ,
       entryT['n_users']])
                  
 
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", " "])
-  resultA.append(["Total", "%.0f" % (totalT['nodehours']), "100", "%.0f" % (totalT['n_runs']), "100", "%.0f" % (totalT['n_jobs']), "100", " "])
+  resultA.append(["Total", "%.0f" % (totalT['corehours']), "100", "%.0f" % (totalT['n_runs']), "100", "%.0f" % (totalT['n_jobs']), "100", " "])
   return resultA
 
 def running_other_exec(cursor, args, startdate, enddate):
 
-  query = "SELECT ROUND(SUM(t1.num_nodes*t1.run_time/3600.0)) as nodehours, \
+  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time/3600.0)) as corehours, \
            COUNT(t1.date)                                     as n_runs,    \
            COUNT(DISTINCT(t1.user))                           as n_users    \
            FROM xalt_run AS t1, xalt_link AS t2                             \
@@ -487,14 +487,14 @@ def running_other_exec(cursor, args, startdate, enddate):
     
   row = cursor.fetchall()[0]
   
-  node_hours = float(row[0] or 0.0)
+  core_hours = float(row[0] or 0.0)
 
-  resultT['diff'] = {'nodehours' : node_hours,
+  resultT['diff'] = {'corehours' : core_hours,
                      'n_runs'    : int(row[1]),
                      'n_users'   : int(row[2])
                     }
 
-  query = "SELECT ROUND(SUM(t1.num_nodes*t1.run_time/3600.0)) as nodehours, \
+  query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time/3600.0)) as corehours, \
            COUNT(t1.date)                                     as n_runs,    \
            COUNT(DISTINCT(t1.user))                           as n_users    \
            FROM xalt_run AS t1, xalt_link AS t2                             \
@@ -509,17 +509,17 @@ def running_other_exec(cursor, args, startdate, enddate):
     sys.exit(1)
     
   row = cursor.fetchall()[0]
-  resultT['same'] = {'nodehours' : float(row[0] or 0.0),
+  resultT['same'] = {'corehours' : float(row[0] or 0.0),
                      'n_runs'    : int(row[1]),
                      'n_users'   : int(row[2])
                     }
 
   resultA = []
-  resultA.append(["Kind", "NodeHrs", "# Runs", "# Users"])
+  resultA.append(["Kind", "CoreHrs", "# Runs", "# Users"])
   resultA.append(["----", "-------", "------", "-------"])
 
-  resultA.append(["diff user","%.0f" % (resultT['diff']['nodehours']), resultT['diff']['n_runs'], resultT['diff']['n_users']])
-  resultA.append(["same user","%.0f" % (resultT['same']['nodehours']), resultT['same']['n_runs'], resultT['same']['n_users']])
+  resultA.append(["diff user","%.0f" % (resultT['diff']['corehours']), resultT['diff']['n_runs'], resultT['diff']['n_users']])
+  resultA.append(["same user","%.0f" % (resultT['same']['corehours']), resultT['same']['n_runs'], resultT['same']['n_users']])
 
   return resultA
 
@@ -589,88 +589,88 @@ def main():
   execA.build(args, startdate, enddate)
   
   ############################################################
-  #  Report of Top EXEC by Node Hours
-  resultA, sumNH = execA.report_by(args,"nodehours")
+  #  Report of Top EXEC by Core Hours
+  resultA, sumCH = execA.report_by(args,"corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by Node-hours (Total Node Hours(M):",sumNH*1.0e-6,")\n")
+  print("\nTop",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
   print(bt.build_tbl())
   
   ############################################################
   #  Report of Top EXEC by Num Jobs
-  resultA, sumNH  = execA.report_by(args,"n_jobs")
+  resultA, sumCH  = execA.report_by(args,"n_jobs")
   bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Executables sorted by # Jobs\n")
   print(bt.build_tbl())
   
   ############################################################
   #  Report of Top EXEC by Users
-  resultA, sumNH = execA.report_by(args,"n_users")
+  resultA, sumCH = execA.report_by(args,"n_users")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Executables sorted by # Users\n")
   print(bt.build_tbl())
   
   if (args.full):
     ############################################################
-    #  Report of Top EXEC by Nodehours for gcc
+    #  Report of Top EXEC by Corehours for gcc
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"gcc")
-    resultA, sumNH = execA.report_by(args,"nodehours")
+    resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "MPI Executables sorted by Node-hours for gcc\n")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for gcc\n")
     print(bt.build_tbl())
 
     ############################################################
-    #  Report of Top EXEC by Nodehours for g++
+    #  Report of Top EXEC by Corehours for g++
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"g++")
-    resultA, sumNH = execA.report_by(args,"nodehours")
+    resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "MPI Executables sorted by Node-hours for g++\n")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for g++\n")
     print(bt.build_tbl())
   
     ############################################################
-    #  Report of Top EXEC by Nodehours for gfortran
+    #  Report of Top EXEC by Corehours for gfortran
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"gfortran")
-    resultA, sumNH = execA.report_by(args,"nodehours")
+    resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "MPI Executables sorted by Node-hours for gfortran\n")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for gfortran\n")
     print(bt.build_tbl())
 
     ############################################################
-    #  Report of Top EXEC by Nodehours for ifort
+    #  Report of Top EXEC by Corehours for ifort
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"ifort")
-    resultA, sumNH = execA.report_by(args,"nodehours")
+    resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "MPI Executables sorted by Node-hours for ifort\n")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for ifort\n")
     print(bt.build_tbl())
 
     ############################################################
-    #  Report of Top EXEC by Nodehours for icc
+    #  Report of Top EXEC by Corehours for icc
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"icc")
-    resultA, sumNH = execA.report_by(args,"nodehours")
+    resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "MPI Executables sorted by Node-hours for icc\n")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for icc\n")
     print(bt.build_tbl())
   
     ############################################################
-    #  Report of Top EXEC by Nodehours for icpc
+    #  Report of Top EXEC by Corehours for icpc
     execA          = ExecRunLink(cursor)
     execA.build(args, startdate, enddate,"icpc")
-    resultA, sumNH = execA.report_by(args,"nodehours")
+    resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "MPI Executables sorted by Node-hours for icpc\n")
+    print("\nTop",args.num, "MPI Executables sorted by Core-hours for icpc\n")
     print(bt.build_tbl())
 
   ############################################################
-  #  Report of Top Modules by Node Hours
+  #  Report of Top Modules by Core Hours
   modA = ModuleExec(cursor)
   modA.build(args, startdate, enddate)
-  resultA = modA.report_by(args,"nodehours")
+  resultA = modA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Modules sorted by Node-hours \n")
+  print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
   print(bt.build_tbl())
   
   ############################################################
@@ -683,48 +683,48 @@ def main():
   print(bt.build_tbl())
   
   ############################################################
-  # Report on Compiler (linker) usage by Node Hours
-  linkA = CompilerUsageByNodeHours(cursor)
+  # Report on Compiler (linker) usage by Core Hours
+  linkA = CompilerUsageByCoreHours(cursor)
   linkA.build(args, startdate, enddate)
-  resultA = linkA.report_by(args, "nodehours")
+  resultA = linkA.report_by(args, "corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nCompiler usage by Nodehours\n")
+  print("\nCompiler usage by Corehours\n")
   print(bt.build_tbl())
   
   ############################################################
-  #  Report of Library by short module name usage by Node Hours.
+  #  Report of Library by short module name usage by Core Hours.
   libA = Libraries(cursor)
   libA.build(args, startdate, enddate)
-  resultA = libA.group_report_by(args,"nodehours")
+  resultA = libA.group_report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
   print("---------------------------------------------------------------------------------")
-  print("Libraries used by MPI Executables sorted by Node Hours grouped by module families")
+  print("Libraries used by MPI Executables sorted by Core Hours grouped by module families")
   print("---------------------------------------------------------------------------------")
   print("")
   print(bt.build_tbl())
   
   ############################################################
-  #  Report of Library usage by Node Hours.
-  resultA = libA.report_by(args,"nodehours")
+  #  Report of Library usage by Core Hours.
+  resultA = libA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
   print("------------------------------------------------------")
-  print("Libraries used by MPI Executables sorted by Node Hours")
+  print("Libraries used by MPI Executables sorted by Core Hours")
   print("------------------------------------------------------")
   print("")
   print(bt.build_tbl())
   
   ############################################################
-  #  Report of Library usage by Node Hours for largemem.
+  #  Report of Library usage by Core Hours for largemem.
   libA = Libraries(cursor)
   libA.build(args, startdate, enddate, "largemem")
-  resultA = libA.report_by(args,"nodehours")
+  resultA = libA.report_by(args,"corehours")
   if (resultA):
     bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
     print("")
     print("-------------------------------------------------------------------")
-    print("Libraries used by MPI Executables sorted by Node Hours for largemem")
+    print("Libraries used by MPI Executables sorted by Core Hours for largemem")
     print("-------------------------------------------------------------------")
     print("")
     print(bt.build_tbl())
