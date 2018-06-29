@@ -18,21 +18,18 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
+    now    = time.strftime("%Y-%m-%d")
+    confFn = "xalt_db.conf"
     parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
-    parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
+    parser.add_argument("--confFn",       dest='confFn',       action="store" ,      default = confFn,        help="db name")
+    parser.add_argument("--syshost",      dest='syshost',      action="store",       default = None,          help="system host name")
+    parser.add_argument("--start",        dest='startDate',    action="store",       default = "1970-01-01",  help="start date")
+    parser.add_argument("--end",          dest='endDate',      action="store",       default = now,           help="end date")
     args = parser.parse_args()
     return args
 
 
-def dbConfigFn(dbname):
-  """
-  Build config file name from dbname.
-  @param dbname: db name
-  """
-  return dbname + "_db.conf"
-
-
-def fix_record(cursor, acctT):
+def fix_record(cursor, args, acctT):
   """
   This routine replaces the account name when it is unknown and it computes the run_time for the job.
   There are two conditions to handle:
@@ -52,8 +49,8 @@ def fix_record(cursor, acctT):
   @param acctT:    account record
   """
 
-  query = "select run_id, job_id, account, start_time, end_time from xalt_run"
-  cursor.execute(query)
+  query = "select run_id, job_id, account, start_time, end_time from xalt_run where date >= %s AND date < %s"
+  cursor.execute(query,(args.startDate, args.endDate))
 
   n_update = 0
   for run_id, job_id, account, start_time, end_time in cursor:
@@ -108,7 +105,7 @@ def read_tacc_acct_records():
   f = open(fn,"r")
   for line in f:
     fieldA          = line.split(":")
-    if (len(fieldA) < 6):
+    if (len(fieldA) < 13):
       continue
     jobId           = fieldA[0]
     chargeAcct      = fieldA[2]
@@ -117,7 +114,7 @@ def read_tacc_acct_records():
     num_cores       = fieldA[12]
     acctT[jobId]    = { 'chargeAcct' : chargeAcct,
                         'end_time'   : end_time,
-                        'num_nodes'  : num_node,
+                        'num_nodes'  : num_nodes,
                         'num_cores'  : num_cores
                       }
   f.close()
@@ -128,8 +125,7 @@ def read_tacc_acct_records():
 def main():
   args     = CmdLineOptions().execute()
   config   = configparser.ConfigParser()     
-  configFn = dbConfigFn(args.dbname)
-  config.read(configFn)
+  config.read(args.confFn)
 
   conn = MySQLdb.connect \
          (config.get("MYSQL","HOST"), \
@@ -138,10 +134,9 @@ def main():
           config.get("MYSQL","DB"))
   cursor = conn.cursor()
 
-  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   acctT = read_tacc_acct_records()
 
-  fix_record(cursor, acctT)
+  fix_record(cursor, args, acctT)
   
 
 if ( __name__ == '__main__'): main()
