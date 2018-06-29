@@ -142,7 +142,6 @@ class XALTdb(object):
           raise
     return self.__conn
 
-
   def db(self):
     """ Return name of db"""
     return self.__db
@@ -261,6 +260,9 @@ class XALTdb(object):
           obj_kind   = obj_type(object_path)
 
           query      = "INSERT into xalt_object VALUES (NULL,%s,%s,%s,%s,NOW(),%s)"
+          
+          if (moduleName and len(moduleName) > 64):
+            moduleName = moduleName[:63]
                       
           cursor.execute(query,(object_path, syshost, hash_id, moduleName, obj_kind))
           obj_id   = conn.insert_id()
@@ -323,6 +325,7 @@ class XALTdb(object):
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
+        num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
         usr_cmdline   = json.dumps(runT['cmdlineA'])
         sum_runs      = runT['userDT'].get('sum_runs' ,   0)
         sum_times     = runT['userDT'].get('sum_times',   0.0)
@@ -363,7 +366,7 @@ class XALTdb(object):
           found  = True
         else:
           query  = "INSERT INTO xalt_env_name VALUES(NULL, %s)"
-          cursor.execute(query,[key])
+          cursor.execute(query,[key[:64]])
           env_id = cursor.lastrowid
           found  = False
         
