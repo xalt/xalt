@@ -3,7 +3,7 @@
 # Git Version: @git@
 
 #-----------------------------------------------------------------------
-# XALT: A tool to track the programs on a cluster.
+# XALT: A tool that tracks users jobs and environments on a cluster.
 # Copyright (C) 2013-2014 University of Texas at Austin
 # Copyright (C) 2013-2014 University of Tennessee
 # 
@@ -22,18 +22,41 @@
 # Software Foundation, Inc., 59 Temple Place, Suite 330,
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
-from __future__      import print_function
+from __future__             import print_function
+import os, sys
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
+
+from xalt_parse_mpirun_args import find_exec
+
+ignoreT = {
+  'env'              : True,
+  'time'             : True,
+}
+
+# these args work for SGI MPT 2.01 on an SGI UV1000
+argT = {
+  '-a'                        : 1,
+  '-array'                    : 1,
+  '-d'                        : 1,
+  '-dir'                      : 1,
+  '-f'                        : 1,
+  '-file'                     : 1,
+  '-p'                        : 1,
+  '-prefix'                   : 1,
+  '-np'                       : 1,
+  '-up'                       : 1,
+}
+
+npT = {
+  '-np'                       : "tasks",
+  }
 
 def main():
   """
-  Test for working print_function from __future__
+  Find name of executable when using sgimpt
   """
-  if ("@have_pymod_psutil@" == "yes"):
-     from psutil import Process
+  print(find_exec(ignoreT, npT, argT, None, sys.argv[1:]))
 
-
-  print ("GOOD")
-
-if ( __name__ == '__main__'):
-  main()
-
+if ( __name__ == '__main__'): main()

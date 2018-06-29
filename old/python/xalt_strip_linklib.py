@@ -21,16 +21,12 @@
 #
 # Git Version: @git@
 
-from __future__                import print_function
-import os, sys, json
-from   collections import defaultdict
-
-dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
-sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
-sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
-
+import os
+import sys
+import json
 from   xalt_global import *
 from   Rmap_XALT   import Rmap
+from   collections import defaultdict
 
 RMapFn = os.path.join(XALT_ETC_DIR,"reverseMapD")
 libmap = Rmap(RMapFn).libMap()
@@ -42,13 +38,14 @@ for lib in libmap:
 
 # Remove libraries that are in reference lib
 linkline = sys.argv[1:]
-aLibs    = []
+xLibs    = []
 for iLib in linkline:
   testLib = os.path.basename(iLib.replace("-l", "lib") \
                              .replace('.a','').replace('.so','').strip())
   if testLib in refLibs:
-    continue
+    xLibs.append(iLib)
     
-  aLibs.append(iLib)
-    
-print(" ".join(aLibs))
+for iLib in xLibs:
+  linkline.remove(iLib)
+  
+print " ".join(linkline)

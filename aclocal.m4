@@ -70,6 +70,7 @@ echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
+echo "XALT installed incorrectly..........................." : $BAD_INSTALL
 echo
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION

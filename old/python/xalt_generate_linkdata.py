@@ -24,7 +24,7 @@
 #-----------------------------------------------------------------------
 
 from __future__                import print_function
-import os, sys, json
+import os, sys
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -34,40 +34,21 @@ from xalt_util                 import *
 from xalt_transmission_factory import XALT_transmission_factory
 from xalt_global               import *
 
-import inspect
-
-def __LINE__():
-    try:
-        raise Exception
-    except:
-        return sys.exc_info()[2].tb_frame.f_back.f_lineno
-
-def __FILE__():
-    fnA = os.path.split(inspect.currentframe().f_code.co_filename)
-    return fnA[1]
-
-#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
-
 logger    = config_logger()
 parenPat  = re.compile(r'.*\((.*)\).*')
 tmpObjPat = re.compile(r'/tmp/[_a-zA-Z0-9-]+.o')
 
 def readFunctionList(fn):
   """
-  read the raw list of tracked function
-  @param fn:  The file path that contains the raw function list
+  read the list of tracked function
+  @param fn:  The file path that contains the function list
   """
-  f           = open(fn,"r")
-  lines       = f.readlines()
-  d           = set()
-  funcNamePat = re.compile(r".* undefined reference to `?(.*)'?$")
-
+  f     = open(fn,"r")
+  lines = f.readlines()
+  d     = set()
   for s in lines:
-    m = funcNamePat.search(s)
-    if (m):
-      d.add(m.group(1))
+    d.add(s.strip())
   
-  f.close()
   return list(d)
     
 def cleanup(xaltobj, fn):
@@ -144,35 +125,36 @@ def main():
   XALT_Stack.push(s)
 
   try:
-    i           = 1
-    uuid        = sys.argv[i]; i += 1
-    status      = sys.argv[i]; i += 1
-    wd          = sys.argv[i]; i += 1
-    syshost     = sys.argv[i]; i += 1
-    execname    = sys.argv[i]; i += 1
-    hash_id     = sys.argv[i]; i += 1
-    xaltobj     = sys.argv[i]; i += 1
-    build_epoch = sys.argv[i]; i += 1
-    funcRawFn   = sys.argv[i]; i += 1
-    linklineFn  = sys.argv[i]; i += 1
-    resultFn    = sys.argv[i]; i += 1
-    compT       = json.loads(sys.argv[i])
+    uuid        = sys.argv[ 1]
+    status      = sys.argv[ 2]
+    wd          = sys.argv[ 3]
+    syshost     = sys.argv[ 4]
+    execname    = sys.argv[ 5]
+    xaltobj     = sys.argv[ 6]
+    build_epoch = sys.argv[ 7]
+    funclistFn  = sys.argv[ 8]
+    linklineFn  = sys.argv[ 9]
+    resultFn    = sys.argv[10]
 
-    if (execname == "conftest"):
+    if (execname.find("conftest") != -1):
       return 1
   
+    hash_line   = capture(['@sha1sum@', execname])  
+    if (hash_line.find("No such file or directory") != -1):
+      return 1
+    hash_id     = hash_line.split()[0]
+    
+    sB = readFunctionList(funclistFn)
     
     # Step one clean up linkline data
     sA = cleanup(xaltobj, linklineFn)
-
-    # Step two extract functions from raw output from linker
-    sB = readFunctionList(funcRawFn)
-
+    link_program, link_path, link_line  = extract_compiler()
+  
     resultT                  = {}
     resultT['uuid']          = uuid
-    resultT['link_program']  = compT['compiler']
-    resultT['link_path']     = compT['full_path']
-    resultT['link_line']     = compT['link_line']
+    resultT['link_program']  = link_program
+    resultT['link_path']     = link_path
+    resultT['link_line']     = link_line
     resultT['build_user']    = User
     resultT['exit_code']     = int(status)
     resultT['build_epoch']   = float(build_epoch)
