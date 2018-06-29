@@ -15,7 +15,7 @@ test_descript = {
 
      initialize
 
-     gcc -fPIC -I$(projectDir)/compiled -c $(testDir)/host.c
+     gcc -fPIC -I$(projectDir)/src -c $(testDir)/host.c
      gcc -fPIC -c $(testDir)/keep.c
    
      ar cr libhost.a host.o keep.o

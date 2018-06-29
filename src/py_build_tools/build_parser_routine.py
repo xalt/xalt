@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 # -*- python -*-
-#
 # Git Version: @git@
 
 #-----------------------------------------------------------------------
@@ -25,14 +23,8 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, sys, re, MySQLdb
+import os, sys, re, argparse
 
-dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
-sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
-
-from XALTdb     import XALTdb
-from xalt_util  import dbConfigFn
-import argparse
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -43,41 +35,52 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dbname",      dest='dbname', action="store",      default = "xalt", help="xalt")
+    parser.add_argument("--confFn",   dest='confFn',   action="store", help="python config file")
+    parser.add_argument("--pattern",  dest='pattern',  action="store", help="name of pattern")
+    parser.add_argument("--input",    dest='input',    action="store", help="input template file")
+    parser.add_argument("--output",   dest='output',   action="store", help="output file")
     args = parser.parse_args()
+    
     return args
 
-def main():
-  """
-  This program removes the Database used by XALT.
-  """
-
-  args     = CmdLineOptions().execute()
-  configFn = dbConfigFn(args.dbname)
-
-  if (not os.path.isfile(configFn)):
-    dirNm, exe = os.path.split(sys.argv[0])
-    fn         = os.path.join(dirNm, configFn)
-    if (os.path.isfile(fn)):
-      configFn = fn
-    else:
-      configFn = os.path.abspath(os.path.join(dirNm, "../site", configFn))
-      
-  xalt = XALTdb(configFn)
-  db   = xalt.db()
-
+def convert_template(pattern, replaceA  ,inputFn, outputFn):
   try:
-    conn   = xalt.connect()
-    cursor = conn.cursor()
+    f = open(inputFn,"r")
+  except IOError as e:
+    print("Unable to open \"%s\", aborting!" % (inputFn))
+    sys.exit(-1)
 
-    # If MySQL version < 4.1, comment out the line below
-    cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
-    # If the database does not exist, create it, otherwise, switch to the database.
-    cursor.execute("DROP DATABASE IF EXISTS %s " % xalt.db())
+  
+  outA = []
+  for line in f:
+    idx = line.find(pattern)
+    if (idx == -1):
+      outA.append(line)
+    else:
+      for entry in replaceA:
+        regexp = entry[1]
+        value  = entry[0]
+        line   = regexp + "  { return " + value + "; }\n"
+        outA.append(line)
 
-    cursor.close()
-  except  MySQLdb.Error as e:
-    print ("Error %d: %s" % (e.args[0], e.args[1]))
-    sys.exit (1)
+  f.close()
+  
+  try:
+    of = open(outputFn,"w")
+  except IOError as e:
+    print("Unable to open \"%s\", aborting!" % (outputFn))
+    sys.exit(-1)
+        
+  of.write("".join(outA))
+  of.close()
+
+def main():
+
+  args = CmdLineOptions().execute()
+  namespace = {}
+  exec(open(args.confFn).read(), namespace)
+  patternStr = "@" + args.pattern + "@"
+
+  convert_template(patternStr, namespace.get(args.pattern, []), args.input, args.output)
 
 if ( __name__ == '__main__'): main()

@@ -682,6 +682,7 @@ CXXFLAGS
 CXX
 HAVE_32BIT
 ENABLE_BACKGROUNDING
+BAD_INSTALL
 MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
 CXX_LD_LIBRARY_PATH
@@ -772,6 +773,7 @@ with_mysqlStatic
 with_cxxLDLibraryPath
 with_syshostConfig
 with_hostnameParser
+with_IrefuseToInstallXALTCorrectly
 with_enableBackgrounding
 >>>>>>> origin/devel
 '
@@ -787,7 +789,7 @@ CXX
 CXXFLAGS
 CCC
 CPP'
-ac_subdirs_all='compiled'
+ac_subdirs_all='src'
 
 # Initialize some variables set by options.
 ac_init_help=
@@ -1438,6 +1440,8 @@ Optional Packages:
   --with-hostnameParser=ans
                           Replace built-in lex based hostname parser
                           c_file:file.c or library:file.a [[no]]
+  --with-IrefuseToInstallXALTCorrectly=ans
+                          Install XALT incorrectly [[no]]
   --with-enableBackgrounding=ans
                           Enable backgrounding of start record of an
                           executable run [[no]]
@@ -3391,7 +3395,7 @@ ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
 
-subdirs="$subdirs compiled"
+subdirs="$subdirs src"
 
 
 
@@ -3801,6 +3805,29 @@ $as_echo "MY_HOSTNAME_PARSER=$withval" >&6; }
 _ACEOF
 
 fi
+
+
+
+# Check whether --with-IrefuseToInstallXALTCorrectly was given.
+if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
+  withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
+$as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
+$as_echo "BAD_INSTALL=$withval" >&6; }
+    BAD_INSTALL="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define BAD_INSTALL "$withval"
+_ACEOF
+
+fi
+
 
 
 
@@ -6212,9 +6239,13 @@ fi
 rm -f conftest*
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 fi
 =======
 if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
+=======
+if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
+>>>>>>> origin/devel
    echo
    echo "======================================================="
    echo "Unable to install XALT without uuid and"
@@ -6290,7 +6321,7 @@ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
 fi
 =======
 
-VERSION=$(cat $ac_confdir/.version)
+VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
 >>>>>>> origin/devel
 
@@ -6300,6 +6331,7 @@ fi
 $as_echo "$ac_cv_header_stdc" >&6; }
 if test $ac_cv_header_stdc = yes; then
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 $as_echo "#define STDC_HEADERS 1" >>confdefs.h
 
@@ -6329,6 +6361,35 @@ if test "x$ac_cv_header_curses_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_CURSES_H 1
 _ACEOF
+=======
+if test $BAD_INSTALL = no; then
+   if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
+      echo
+      echo "===================================================="
+      echo "Do not install XALT with $VERSION as part of the"
+      echo "prefix.  It will lead to many many problems with future"
+      echo "installs of XALT"
+      echo
+      echo "Executables built with the current version of XALT"
+      echo "will not work with future installs of XALT!!!"
+      echo
+      echo "If you feel that you know better than the developer"
+      echo "of XALT then you can configure XALT with the configure"
+      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
+      echo "to include the version"
+      echo
+      echo "If you wanted to install XALT in /apps/xalt/$version"
+      echo "set the prefix as:"
+      echo
+      echo "  ./configure --prefix=/apps"
+      echo
+      echo "===================================================="
+      echo
+      rm -f makefile
+      exit 1
+   fi
+fi
+>>>>>>> origin/devel
 
 fi
 
@@ -6438,12 +6499,17 @@ fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 ac_config_files="$ac_config_files makefile:Makefile.in"
 =======
 if ! test -d compiled/build; then
    mkdir -p compiled/build
+=======
+if ! test -d src/__build__; then
+   mkdir -p src/__build__
+>>>>>>> origin/devel
 fi
 
 if test "$USE_CONTRIB_ARGPARSE" = yes; then
@@ -6454,44 +6520,48 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_interval.template --output compiled/build/xalt_interval.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/compiled/xalt_regex.template --output compiled/build/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_syshost_routine.py --input $SYSHOST_CONFIG --output compiled/build/xalt_syshost.c
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/compiled/xalt_env_parser.template --output compiled/build/xalt_env_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/compiled/xalt_path_parser.template --output compiled/build/xalt_path_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/src/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/compiled/xalt_hostname_parser.template --output compiled/build/xalt_hostname_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
 
+<<<<<<< HEAD
 ac_config_files="$ac_config_files makefile:Makefile.in compiled/build/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in"
+>>>>>>> origin/devel
+=======
+ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in"
 >>>>>>> origin/devel
 
 cat >confcache <<\_ACEOF
@@ -7201,9 +7271,14 @@ do
   case $ac_config_target in
     "makefile") CONFIG_FILES="$CONFIG_FILES makefile:Makefile.in" ;;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     "compiled/build/xalt_config.h") CONFIG_FILES="$CONFIG_FILES compiled/build/xalt_config.h:compiled/xalt_config.h.in" ;;
     "compiled/makefile") CONFIG_FILES="$CONFIG_FILES compiled/makefile:compiled/Makefile.in" ;;
+>>>>>>> origin/devel
+=======
+    "src/__build__/xalt_config.h") CONFIG_FILES="$CONFIG_FILES src/__build__/xalt_config.h:src/xalt_config.h.in" ;;
+    "src/makefile") CONFIG_FILES="$CONFIG_FILES src/makefile:src/Makefile.in" ;;
 >>>>>>> origin/devel
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -7815,6 +7890,7 @@ echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
+echo "XALT installed incorrectly..........................." : $BAD_INSTALL
 echo
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION

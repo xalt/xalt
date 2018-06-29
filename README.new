@@ -8,4 +8,8 @@ XALT 2.0+
                  ld.in now does not try to add xalt_initialize.so etc when building *.so
    (2.0.6-devel) Support x86_64-gnu-linux-ld as yet another linker.
    (2.0.7-devel) Now check status of fopen when opening files in /proc/*
-   
+   (2.0.8-devel) Fix issue #25: Fix bug with my_hostname_processor and 32bit
+                 Force users to install XALT correctly.
+   (2.0.9-devel) Check that XALT_DIR/libexec/xalt_run_submission exists before running it.
+                 Report XALT_DIR and BAD_INSTALL with xalt_configuration_report
+                 
