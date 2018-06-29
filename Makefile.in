@@ -27,6 +27,11 @@ endif
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
 OS_NAME           := $(shell uname -s)
+LIB_OPTIONS       := -fPIC -shared
+ifeq ($(OS_NAME),Darwin)
+  LIB_OPTIONS     := -bundle -undefined dynamic_lookup
+endif
+
 
 package           := xalt
 VERSION           := $(shell cat $(srcdir)/.version)
@@ -124,22 +129,28 @@ INIT_SRC          := $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 all:
 	@echo done
 
-install:  $(DIRLIST) Inst_site Inst_sbin Inst_bin Inst_libexec \
-          Use_getent_yes Use_argparse_$(USE_ARGPARSE)          \
-          Build_pstree_$(BUILD_PSTREE)
+install:  $(DIRLIST) Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
+          Use_argparse_$(USE_ARGPARSE) build_compiled
+	$(RM) $(DESTDIR)$(PKG)
+	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
 build_compiled:
-	cd $(srcdir)/compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= THIS_DIR=$(CURDIR) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) all
-
-
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) \
+                             LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)\
+                             OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                \
+                             XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
 
 echo:
+	@echo srcdir: $(srcdir)
 	@echo CURDIR: $(CURDIR)
 	@echo srcdir: $(srcdir)
 	@echo SITE_PKG: $(SITE_PKG)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
+
+remove_genfiles:
+	cd compiled; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -159,18 +170,6 @@ Inst_bin: $(BIN_PKG)
 Inst_TACC: $(TACC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
-
-Build_pstree_no:
-
-Build_pstree_yes:
-	cd contrib;                                                       \
-        tar xf psmisc-22.21.tar.gz;                                       \
-        cd psmisc-22.21;                                                  \
-        ./configure --prefix=$(prefix)/psmisc;                            \
-        make CFLAGS="-g -O0";                                             \
-        make DESTDIR=$(DESTDIR) install;                                  \
-        ln -s $(prefix)/psmisc/bin/pstree $(DESTDIR)$(prefix)/libexec;    \
-	cd ..; rm -rf psmisc-22.21
 
 Use_getent_yes:
 	cd $(srcdir)/contrib;                                        \
@@ -231,43 +230,62 @@ __installMe:
         done
 
 world_update:
-	@git status -s > /tmp/git_st_$$$$;                                 \
-        if [ -s /tmp/git_st_$$$$ ]; then                                   \
-            echo "All files not checked in => try again";                  \
-        else                                                               \
-            git push github;                                               \
-            git push --tags github;                                        \
-        fi;                                                                \
+	@git status -s > /tmp/git_st_$$$$                                     ; \
+        if [ -s /tmp/git_st_$$$$ ]; then                                       	\
+            echo "All files not checked in => try again"                      ; \
+	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then           \
+            echo "configure is out of date => try again"                      ; \
+        else                                                                   	\
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` ; \
+            git push        github $$branchName                               ; \
+            git push --tags github $$branchName                               ; \
+        fi                                                                    ; \
         rm -f /tmp/git_st_$$$$
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/git_st_$$$$;                               \
-          if [ -s /tmp/git_st_$$$$ ]; then                                 \
-	    echo "All files not checked in => try again";                  \
-	  else                                                             \
-	    echo "$(TAG)" >                                      .version; \
-            git commit -m "moving to TAG_VERSION $(TAG)"         .version; \
-            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'         ; \
-	    git push --tags                                              ; \
-          fi;                                                              \
+	  @git status -s > /tmp/git_st_$$$$                                      ; \
+          if [ -s /tmp/git_st_$$$$ ]; then                                 	   \
+	    echo "All files not checked in => try again"                         ; \
+	  else                                                             	   \
+	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V); \
+	    echo "$(TAG)"                                            >  .version ; \
+            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version ; \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                 ; \
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`    ; \
+            git push        origin $$branchName                                  ; \
+	    git push --tags origin $$branchName                                  ; \
+          fi                                                                     ; \
           rm -f /tmp/git_st_$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
         endif
 
-tags:
+
+tags:  build_tags
+	$(RM) file_list.*
+
+build_tags:
 	find . \( -regex '.*~$$\|.*/\.git\|.*/\.git/' -prune \)  \
                -o -type f > file_list.1
 	sed -e 's|.*/.git.*||g'                                  \
             -e 's|.*/rt/.*/t1/.*||g'                             \
             -e 's|./TAGS||g'                                     \
             -e 's|.*/epydoc/.*$$||g'                             \
-            -e 's|./makefile||g'                                 \
-            -e 's|./configure$$||g'                              \
+            -e 's|.*/old/.*$$||g'                                \
+            -e 's|.*/stamp-h1$$||g'                              \
+            -e 's|.*/stamp-h$$||g'                               \
+            -e 's|.*/makefile||g'                                \
+            -e 's|.*/configure$$||g'                             \
             -e 's|.*/.DS_Store$$||g'                             \
             -e 's|.DS_Store$$||g'                                \
             -e 's|.*\.tgz$$||g'                                  \
+            -e 's|.*\.d$$||g'                                    \
+            -e 's|.*/install$$||g'                               \
+            -e 's|.*/xalt_syshost.c$$||g'                        \
+            -e 's|.*/xalt_env_parser.lex||g'                     \
+            -e 's|.*/xalt_regex.h$$||g'                          \
+            -e 's|.*/xalt_config.h$$||g'                         \
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
             -e 's|.*\.pyc$$||g'                                  \
@@ -284,6 +302,13 @@ tags:
 	    -e 's|.*\.toc$$||g'                                  \
 	    -e 's|.*\.vrb$$||g'                                  \
 	    -e 's|.*syslogTest$$||g'                             \
+            -e 's|.*/build_uuid_32/.*$$||g'                      \
+            -e 's|.*/build_uuid_64/.*$$||g'                      \
+	    -e 's|.*\/\.libs/.*$$||g'                            \
+	    -e 's|.*\/\.deps/.*$$||g'                            \
+            -e 's|.*\.o$$||g'                                    \
+            -e 's|.*\.lo$$||g'                                   \
+            -e 's|.*\.Plo$$||g'                                  \
             -e 's|^#.*||g'                                       \
             -e 's|/#.*||g'                                       \
             -e 's|\.#.*||g'                                      \
@@ -291,21 +316,21 @@ tags:
             -e 's|.*\.used$$||g'                                 \
             -e 's|./.*\.log$$||g'                                \
             -e 's|./testreports/.*||g'                           \
-            -e 's|./config\.status$$||g'                         \
+	    -e 's|.*/lex.*\.c||g'                                \
+            -e 's|.*/config\.status$$||g'                        \
             -e 's|.*\~$$||g'                                     \
             -e 's|./file_list\..*||g'                            \
             -e '/^\s*$$/d'                                       \
 	       < file_list.1 > file_list.2
 	etags  `cat file_list.2`
-	$(RM) file_list.*
 
 dist:
-	git archive --prefix=xalt-$(VERSION)/ master > xalt-$(VERSION).tar
+	git archive --prefix=xalt-$(VERSION)/ $(GIT_BRANCH) > xalt-$(VERSION).tar
 	$(RM) -rf DIST;                                                 	   \
 	mkdir DIST;                                                     	   \
         cd DIST;                                                        	   \
         tar xf ../xalt-$(VERSION).tar;                                             \
-	perl -pi -e 's/\@git\@/$(GIT_VERSION)/g' $$(find xalt-$(VERSION) -type f); \
+	sed -i 's/\@git\@/$(GIT_VERSION)/g' $$(find xalt-$(VERSION) -type f);      \
         $(RM) ../xalt-$(VERSION).tar;                                    	   \
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION);           	   \
 	cd ..; $(RM) -rf DIST
@@ -313,11 +338,14 @@ dist:
 makefile: $(srcdir)/Makefile.in config.status
 	./config.status $@
 
+compiled/makefile: $(srcdir)/compiled/Makefile.in config.status
+	./config.status $@
+
 neat:
 	$(RM) *~ src/*~
-	cd compiled ; $(MAKE) $@
+	cd compiled ; $(MAKE) PARENT_DIR=$(srcdir) $@
 clean:  neat
-	cd compiled ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
+	cd compiled ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
 clobber: clean
 
 

@@ -43,12 +43,13 @@ class CmdLineOptions(object):
     return args
 
 
-
-def convert_to_string(list):
-
+def convert_pattern(list):
   a = []
-  for s in list:
-    a.append('"'+s+'"')
+  for entry in list:
+    token = entry[0]
+    value = entry[1].replace("\\","\\\\")
+    
+    a.append('"'+token+' => '+value+'"')
 
   return ",".join(a)
 
@@ -79,7 +80,7 @@ def convert_template(a, inputFn, outputFn):
   except IOError as e:
     print("Unable to open \"%s\", aborting!" % (outputFn))
     sys.exit(-1)
-        
+
   of.write("".join(outA))
   of.close()
 
@@ -90,18 +91,14 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  ignorePathStr = convert_to_string(namespace.get('ignore_path_patterns',{}))
-  acceptPathStr = convert_to_string(namespace.get('accept_path_patterns',{}))
-  ignoreEnvStr  = convert_to_string(namespace.get('ignore_env_patterns', {}))
-  acceptEnvStr  = convert_to_string(namespace.get('accept_env_patterns', {}))
-  hostStr       = convert_to_string(namespace.get('hostname_patterns',   {}))
+  hostPatternStr = convert_pattern( namespace.get('hostname_patterns',       {}))
+  pathPatternStr = convert_pattern( namespace.get('path_patterns',           {}))
+  envPatternStr  = convert_pattern( namespace.get('env_patterns',            {}))
 
   pattA = [
-    ['@accept_path_list@', acceptPathStr],
-    ['@ignore_path_list@', ignorePathStr],
-    ['@accept_env_list@',  acceptEnvStr],
-    ['@ignore_env_list@',  ignoreEnvStr],
-    ['@hostname_list@',    hostStr],
+    ['@hostname_patterns@', hostPatternStr],
+    ['@path_patterns@',     pathPatternStr],
+    ['@env_patterns@',      envPatternStr]
   ]
 
   convert_template(pattA, args.input, args.output)

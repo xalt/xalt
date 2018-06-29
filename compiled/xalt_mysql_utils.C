@@ -1,6 +1,10 @@
 #include <string.h>
 #include "xalt_utils.h"
 #include "xalt_mysql_utils.h"
+#include "xalt_types.h"
+#include <time.h>   // for nanosleep
+
+#ifdef HAVE_MYSQL
 
 static const int issueWarning = 1;
 
@@ -14,25 +18,26 @@ void finish_with_error(MYSQL *conn)
   exit(1);        
 }
 
-void print_stmt_error(MYSQL_STMT *stmt, const char *message)
+void print_stmt_error(MYSQL_STMT *stmt, const char *message, const char* file, int line)
 {
   fprintf(stderr,"%s\n", message);
   if (stmt != NULL)
     {
-      fprintf(stderr,"Error %u (%s): %s\n",
+      fprintf(stderr,"%s:%d: Error %u (%s): %s\n",
+              file, line,
               mysql_stmt_errno(stmt),
               mysql_stmt_sqlstate(stmt),
               mysql_stmt_error(stmt));
     }
 }
 
-std::string object_type(std::string& path)
+void object_type(const char* path, char* result)
 {
   std::string s(path);
   std::string extA[] = {"a", "o", "so", "--"};
   int nExtA = sizeof(extA)/sizeof(extA[0]);
 
-  std::string result = "--";
+  int resultIdx = 3;
 
   while (1)
     {
@@ -45,18 +50,20 @@ std::string object_type(std::string& path)
         {
           if (ext == extA[i])
             {
-              result = ext;
-              return result;
+              resultIdx = i;
+              goto done;
             }
         }
-      path.erase(idx, std::string::npos);
+      s.erase(idx, std::string::npos);
     }
-  return result;
+ done:
+  strcpy(result, extA[resultIdx].c_str());
 }
 
-void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector<Libpair>& lddA,
+void insert_objects(MYSQL* conn, const char* table_name, time_t epoch, uint index, std::vector<Libpair>& lddA,
                     std::string& syshost, Table& rmapT)
 {
+
   //************************************************************
   // build SELECT obj_id INTO xalt_object stmt
   //************************************************************
@@ -66,13 +73,13 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
     {
-      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_s, stmt_sql_s, strlen(stmt_sql_s)))
     {
-      print_stmt_error(stmt_s, "Could not prepare stmt_s for select obj_id");
+      print_stmt_error(stmt_s, "Could not prepare stmt_s for select obj_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -80,21 +87,24 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   memset((void *) param_s,  0, sizeof(param_s));
   memset((void *) result_s, 0, sizeof(result_s));
 
-  std::string hash_id;       hash_id.reserve(41);
-  std::string object_path;   object_path.reserve(2048);
+  const int hash_id_sz = 41;
+  char hash_id[hash_id_sz];
+
+  const int objSz = 2048;
+  char object_path[objSz];
 
   // STRING PARAM_S[0] hash_id;
   std::string::size_type len_hash_id = 0;          // set length later in loop.
   param_s[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[0].buffer        = (void *) hash_id.c_str();
-  param_s[0].buffer_length = hash_id.capacity();
+  param_s[0].buffer        = (void *) &hash_id[0];
+  param_s[0].buffer_length = hash_id_sz;
   param_s[0].length        = &len_hash_id;
 
   // STRING PARAM_S[1] object_path
   std::string::size_type len_object_path = 0;      // set length later in loop.
   param_s[1].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[1].buffer        = (void *) object_path.c_str();
-  param_s[1].buffer_length = object_path.capacity();
+  param_s[1].buffer        = (void *) &object_path[0];
+  param_s[1].buffer_length = objSz;
   param_s[1].length        = &len_object_path;
 
   // STRING PARAM_S[2] syshost
@@ -106,7 +116,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -119,7 +129,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -131,13 +141,13 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
-      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)");
+      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_object");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -146,8 +156,8 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
 
   // STRING PARAM_I[0] object_path
   param_i[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[0].buffer        = (void *) object_path.c_str();
-  param_i[0].buffer_length = object_path.capacity();
+  param_i[0].buffer        = (void *) &object_path[0];
+  param_i[0].buffer_length = objSz;
   param_i[0].length        = &len_object_path;
 
   // STRING PARAM_I[1] syshost
@@ -157,21 +167,19 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_i[1].length        = &len_syshost;
 
   // STRING PARAM_I[2] hash_id
-  hash_id.reserve(41);
   param_i[2].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[2].buffer        = (void *) hash_id.c_str();
-  param_i[2].buffer_length = hash_id.capacity();
+  param_i[2].buffer        = (void *) &hash_id[0];
+  param_i[2].buffer_length = hash_id_sz;
   param_i[2].length        = &len_hash_id;
 
   // STRING PARAM_I[3] module_name
+  const int                  module_name_sz = 64;
+  char                       module_name[module_name_sz];
+  std::string::size_type     len_module_name = 0;      // set length in loop
+  my_bool                    module_name_null_flag;
   param_i[3].buffer_type   = MYSQL_TYPE_STRING;
-  std::string::size_type len_module_name = 0;      // set length in loop
-  my_bool                module_name_null_flag;
-  std::string            module_name;
-  module_name.reserve(2048);
-  len_module_name          = module_name.size();
-  param_i[3].buffer        = (void *) module_name.c_str();
-  param_i[3].buffer_length = module_name.capacity();
+  param_i[3].buffer        = (void *) &module_name[0];
+  param_i[3].buffer_length = module_name_sz;
   param_i[3].is_null       = &module_name_null_flag;
   param_i[3].length        = &len_module_name;
 
@@ -191,44 +199,45 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_i[4].buffer       = &my_datetime;
 
   // STRING PARAM_I[5] lib_type
+  const int lib_type_sz = 3;
+  char lib_type[lib_type_sz];
+
   std::string::size_type len_lib_type = 0;      // set length in loop.
-  std::string            lib_type;
-  lib_type.reserve(10);
   param_i[5].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[5].buffer        = (void *) lib_type.c_str();
-  param_i[5].buffer_length = lib_type.capacity();
+  param_i[5].buffer        = (void *) &lib_type[0];
+  param_i[5].buffer_length = lib_type_sz;
   param_i[5].length        = &len_lib_type;
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
       
 
   //************************************************************
-  // "INSERT into <TABLE_NAME> VALUES (NULL, ?, ?)"
+  // "INSERT into <TABLE_NAME> VALUES (NULL, ?, ?, ?)"
   //************************************************************
 
   std::string s2("INSERT INTO ");
   s2.append(table_name);
-  s2.append(" VALUES (NULL,?,?)");
+  s2.append(" VALUES (NULL,?,?,?)");
   const char* stmt_sql_ii = s2.c_str();
 
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
   if (!stmt_ii)
     {
-      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)");
+      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_ii, stmt_sql_ii, strlen(stmt_sql_ii)))
     {
-      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into <table_name>");
+      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into <table_name>",__FILE__,__LINE__);
       exit(1);
     }
 
-  MYSQL_BIND param_ii[2];
+  MYSQL_BIND param_ii[3];
   memset((void *) param_ii,  0, sizeof(param_ii));
 
   // UINT PARAM_II[0] obj_id
@@ -243,46 +252,69 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   param_ii[1].buffer_length = 0;
   param_ii[1].is_unsigned   = 1;
 
+  // DATE PARAM_II[2] date
+  MYSQL_TIME my_date;
+  curr_time                 = localtime(&epoch);
+  my_date.year              = curr_time->tm_year + 1900;
+  my_date.month             = curr_time->tm_mon  + 1;
+  my_date.day               = curr_time->tm_mday;
+  my_date.hour              = 0;
+  my_date.minute            = 0;
+  my_date.second            = 0;
+  my_date.second_part       = 0;
+  param_ii[2].buffer_type   = MYSQL_TYPE_DATE;
+  param_ii[2].buffer        = &my_date;
+
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
-      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
       
-  
-  for ( auto it = lddA.begin(); it != lddA.end(); ++it)
+  for ( auto const & it : lddA)
     {
-      object_path     = (*it).lib;
-      hash_id         = (*it).sha1;
-      len_object_path = object_path.size();
-      len_hash_id     = hash_id.size();
+      len_object_path =   it.lib.size();
+      strcpy(object_path, it.lib.c_str());
+
+      len_hash_id     = it.sha1.size();
+      strcpy(hash_id,   it.sha1.c_str());
 
       // "SELECT obj_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not execute stmt for selecting run_id");
+          print_stmt_error(stmt_s, "Could not execute stmt for selecting obj_id",__FILE__,__LINE__);
+          exit(1);
+        }
+      if (mysql_stmt_store_result(stmt_s))
+        {
+          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting obj_id",__FILE__,__LINE__);
           exit(1);
         }
       
+
+
       // mysql_stmt_fetch(stmt_s) will return 0 if successful.  That means it found obj_id
       if (mysql_stmt_fetch(stmt_s) != 0)  
         {
           // If here then the object is NOT in the db so store it and compute obj_id
-          if (path2module(object_path, rmapT, module_name))
-            len_module_name = module_name.size();
+          if (path2module(object_path, rmapT, module_name, module_name_sz))
+            {
+              module_name_null_flag = 0;
+              len_module_name = strlen(module_name);
+            }
           else
             {
               module_name_null_flag = 1;
               len_module_name = 0;
             }
 
-          lib_type     = object_type(object_path);
-          len_lib_type = lib_type.size();
+          object_type(object_path, &lib_type[0]);
+          len_lib_type = strlen(lib_type);
 
           // "INSERT INTO xalt_object ..."
           if (mysql_stmt_execute(stmt_i))
             {
-              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object");
+              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object",__FILE__,__LINE__);
               exit(1);
             }
           obj_id = (uint)  mysql_stmt_insert_id(stmt_i);
@@ -291,7 +323,7 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
       // "INSERT INTO <table_name>"
       if (mysql_stmt_execute(stmt_ii))
         {
-          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into <table_name>");
+          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into <table_name>",__FILE__,__LINE__);
           exit(1);
         }
     }
@@ -299,17 +331,43 @@ void insert_objects(MYSQL* conn, const char* table_name, uint index, std::vector
   mysql_stmt_free_result(stmt_s);
   if (mysql_stmt_close(stmt_s))
     {
-      print_stmt_error(stmt_s, "Could not close stmt for selecting obj_id");
+      print_stmt_error(stmt_s, "Could not close stmt for selecting obj_id",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_ii))
     {
-      print_stmt_error(stmt_ii, "Could not close stmt for inserting into <table_name>");
+      print_stmt_error(stmt_ii, "Could not close stmt for inserting into <table_name>",__FILE__,__LINE__);
       exit(1);
     }
 }
+
+// This routine opens the socket connection to the db.  It tries 100 times and waits i*50 milliseconds
+// before quiting.
+
+MYSQL* xalt_open_mysql_connection(MYSQL* conn, ConfigParser& cp)
+{
+  int N    = 100;
+  int msec = 50;
+
+  for (int i = 1; i < N; ++i)
+    {
+      if (mysql_real_connect(conn, cp.host().c_str(), cp.user().c_str(), cp.passwd().c_str(), cp.db().c_str(), 3306, NULL, 0) != NULL)
+        return conn;
+      
+      int milliseconds = i*msec;
+
+      // convert milliseconds to ts and then sleep!
+      struct timespec ts;
+      ts.tv_sec = milliseconds / 1000;
+      ts.tv_nsec = (milliseconds % 1000) * 1000000;
+      nanosleep(&ts, NULL);
+    }
+  return conn;
+}
+
+#endif //HAVE_MYSQL

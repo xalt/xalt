@@ -1,0 +1,84 @@
+Here are some notes on talk to give to Joe Stubb, Rich Cardone, David
+Walling, etc
+
+* What is XALT.
+XALT is a tool to record almost all executables and their libraries on
+a cluster.
+
+* XALT has filters to avoid tracking every user executable
+** Tracks only on compute nodes
+** Tracks programs from $HOME, $WORK, $SCRATCH, not /bin/* or /usr/*
+** Can be set to track mpi only or all.
+
+
+* Current Design (link)
+** A single link contains the *.a and *.so that are used to build that executable
+** It also has the function that call
+** Each executable is "watermarked" => gets a build uuid
+** A json file is generated for each link.
+** Code is added to each program so that an XALT routine is run before main and after main completes 
+
+* Current Design (run)
+** A run produces two json files.  One at the start and another at the end.
+** The reason for two is the executable might not complete. Also want run time.
+** Each json file from a run has the environment, the shared libraries
+** Optionally for R programs: R libraries
+** Optionally for Python: Python libraries
+
+
+* 1 to N relationships
+** LINKS:
+*** functions
+*** libraries: *.a, *.so
+** Runs:
+*** Environment
+*** Shared libraries
+*** Python libraries  (optionally)
+*** R libraries (optionally)
+*** Call tree (optionally)
+
+* Kinds of queries:
+** Top executables: by number of times, by Node-hours, most unique users, /opt/apps executables
+** Top libraries: by number of times, by Node-hours, most unique users.
+** What users used what executables, libraries
+** Top compilers usage
+** Top libraries usage from modules
+
+
+* Current Implementation
+** Stampede 2 is MPI Only
+** Maverick is both
+** Stampede2 is big (obviously)
+** Maverick is a normal size cluster.
+** In a ten day period Maverick has had  3M runs
+** Where as s2 has had: 40K runs (MPI only)
+** It has taken more than 24 hours for one day's data from maverick!!!
+
+
+* The 1 to N relationships are important.
+** It looks to me that time-series DB cannot handle table of tables.  
+   They want simple rows not { foo = { bar=1, baz=2}, A=4, B=3} tables
+
+
+* Ideas
+** Must keep 1 to N relationships
+** Must collapse launcher jobs 
+** Store some, Summarize alot
+   Maybe throw anything that is less than 60 seconds (summary only)
+   Keep only for 13 months, shorter?
+** Use one db to filter?
+** Want solutions that any site can use.
+   I could use Wrangler, but almost no-one has Wrangler.
+   I'd like the simpliest solution that works.  But the important
+   point is that it has to work.
+** Need run time.
+   I need runtime to tell which programs are important.  This means 
+   I need both the start record at the beginning of a program and the
+   end record to know about the runtime (assuming that the program
+   lasts that long).
+
+* How to summarize?
+** Number of short duration jobs (< 60, 120 seconds)
+** I could summarize like monthly results for say the top 100 jobs, libs, etc
+   and throw away everything after say 13 months
+** 

@@ -25,6 +25,7 @@
 *.fdb_latexmk
 *.bbl
 *.blg
+*.out
 
 ########################################################################
 # Mac OS X file
@@ -41,9 +42,13 @@ autom4te.cache
 *.pyc
 *.pyo
 
+make.log
 config.log
 makefile
 config.status
 testreports
 t1
+src/xalt_regex.h
 install
+uuid_32
+uuid_64

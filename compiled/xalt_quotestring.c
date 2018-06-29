@@ -4,32 +4,37 @@
 #include <ctype.h>
 #include "xalt_quotestring.h"
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__);fflush(stderr)
-const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0005","\\u0006","\\u0007",
-		       	 "\\b"    ,"\\t"    ,"\\n"    ,"\\u000b","\\f"    ,"\\r"    ,"\\u000e","\\u000f",
-		       	 "\\u0010","\\u0011",    "\\r","\\u0013","\\u0014","\\u0015","\\u0016","\\u0017",
-		       	 "\\u0018","\\u0019","\\u001a","\\u001b","\\u001c","\\u001d","\\u001e","\\u001f",		       
-		       	 " "      ,      "!",     "\\\""};
 
-const char escCharA[] = {'a', '\b', 'c','d','e','\f','g','h','i','j','k','l','m','\n','o','p','q','\r','s',
-                         '\t'};
+// qchar maps ascii character value to their quoted version
 
-static char * buff = NULL;
-static unsigned int sz = 0;
+static const char *qcharA[] = { "\\u0000","\\u0001","\\u0002","\\u0003","\\u0004","\\u0005","\\u0006","\\u0007",
+                                "\\b"    ,"\\t"    ,"\\n"    ,"\\u000b","\\f"    ,"\\r"    ,"\\u000e","\\u000f",
+                                "\\u0010","\\u0011",    "\\r","\\u0013","\\u0014","\\u0015","\\u0016","\\u0017",
+                                "\\u0018","\\u0019","\\u001a","\\u001b","\\u001c","\\u001d","\\u001e","\\u001f",
+                                " "      ,      "!",   "\\\""};
+
+static const char escCharA[] = {'a', '\b', 'c','d','e','\f','g','h','i','j','k','l','m','\n','o','p','q','\r','s',
+                                '\t'};
+
+static char*        buff = NULL;
+static unsigned int sz   = 0;
 
 
 const char* xalt_quotestring(const char* input)
 {
-  const char   *p = input;
-  char         *s;
+  const char    *p = input;
+  char          *s;
   unsigned char a,b,c,d;
-  int high, low, len, currSz;
+  unsigned int  currSz;
+  int           high, low, len;
+
   len    = strlen(input);
   currSz = 3*len+1;
   if (sz < currSz)
     {
       sz = currSz;
       if (buff)
-	free(buff);
+        free(buff);
       buff = (char *) malloc(sz);
     }
   s = buff;
@@ -38,28 +43,28 @@ const char* xalt_quotestring(const char* input)
     {
       a = *p;
       if (a < 0x023)
-	{
-	  const char *r = qcharA[a];
-	  len = strlen(r);
-	  memcpy(s,r,len);
-	  s += len;
-	}
+        {
+          const char *r = qcharA[a];
+          len = strlen(r);
+          memcpy(s,r,len);
+          s += len;
+        }
       else if (a == '\\')
-	{
-	  memcpy(s,"\\\\",2);
-	  s += 2;
-	}
+        {
+          memcpy(s,"\\\\",2);
+          s += 2;
+        }
       else if (a < 0x07f)
-	*s++ = a;
+        *s++ = a;
       else
         {
           int value;
-	  b = *++p;
-          if (0xc0 <= a && a < 0xdf && b >= 0x80)
+          b = *++p;
+          if (0xc0 <= a &&  a <= 0xdf &&  b >= 0x80)
             value = (a - 0xc0) * 0x40 + b - 0x80;
-          else if ( 0xe0 <= a && a <= 0xef && b >= 0x80 && (c = *++p) >= 0x80)
+          else if ( 0xe0 <= a &&  a <= 0xef &&  b >= 0x80 &&  (c = *++p) >= 0x80)
             value = ((a - 0xe0) * 0x40 + b - 0x80) * 0x40 + c - 0x80;
-          else if (  0xf0 <= a && a <= 0xf7 && b >= 0x80 && c >= 0x80 && (d = *++p) >= 0x80 )
+          else if (  0xf0 <= a &&  a <= 0xf7 &&  b >= 0x80 && (c = *++p) >= 0x80 && (d = *++p) >= 0x80 )
             value = (((a - 0xf0) * 0x40 + b - 0x80) * 0x40 + c - 0x80) * 0x40 + d - 0x80;
           else
             value = 0;
@@ -70,7 +75,7 @@ const char* xalt_quotestring(const char* input)
             }
           else if (value <= 0x10ffff)
             {
-              value -= 0x10ffff;
+              value -= 0x10000;
               high   = 0xD800 + (value/0x400);
               low    = 0xDC00 + (value % 0x400);
               sprintf(s,"\\u%.4x\\u%.4x",high,low);
@@ -82,46 +87,47 @@ const char* xalt_quotestring(const char* input)
   return buff;
 }
 
-const char * xalt_unquotestring(const char * input)
+const char * xalt_unquotestring(const char * input, int len)
 {
-  const char *p = input;
-  const char *start;
-  char       c;
-  char       *s;
-  int        len, slen;
-  int        currSz;
-  char       numBuf[5];
-  long       value, value2;
-    
-    
-  len    = strlen(input);
+  const char   *p   = input;
+  const char   *end = input + len;
+  char         c;
+  char         *s;
+  int          slen;
+  unsigned int currSz;
+  char         numBuf[5];
+  long         value, value2;
+
   currSz = 2*len+1;
 
   if (sz < currSz)
     {
       sz = currSz;
       if (buff)
-	free(buff);
+        free(buff);
       buff = (char *) malloc(sz);
     }
   s = buff;
 
   while (1)
     {
-      start = p;
-      p = strchr(p,'\\');
+      const char * start = p;
+      int          wlen  = end - start;
+      p = (const char *) memchr(p, '\\', wlen);
       if (p == NULL)
-	{
-	  strcpy(s,start);
-	  break;
-	}
+        {
+          memcpy(s,start, wlen);
+          s[wlen] = '\0';
+          break;
+        }
       else
-	{
-	  slen = p - start;
-	  memcpy(s, p, slen);
+        {
+          slen = p - start;
+          memcpy(s, start, slen);
+          s += slen;
           ++p;
           c = tolower(*p);
-          if (c = '"')
+          if (c == '"')
             *s++ = '"';
           else if (c == '\\')
             *s++ = '\\';
@@ -142,11 +148,14 @@ const char * xalt_unquotestring(const char * input)
               numBuf[4] = '\0';
               p += 4;
               value = strtol(numBuf, (char **) NULL, 16);
+
               if (0xD800 <= value &&  value <= 0xDBFF)
                 {
                   // We have the high surrogate of a UTF-16 character. Find low surrogate.
-                  memcpy(&numBuf[0],p+7,4);
-                  p += 11;
+                  p += 2;
+                  memcpy(&numBuf[0],p,4);
+                  p += 4;
+
                   numBuf[4] = '\0';
                   value2 = strtol(numBuf, (char **) NULL, 16);
                   if (value2 > 0 && 0xDC00 <= value2 && value2 <= 0xDFFF)
@@ -174,12 +183,19 @@ const char * xalt_unquotestring(const char * input)
                 }
             }
         }
-      ++p;
-      if (*p == '\0')
+      if (p >= end)
         {
           *s = '\0';
           break;
         }
     } 
   return buff;
+}
+
+void xalt_quotestring_free()
+{
+  if (buff)
+    free(buff);
+  buff = NULL;
+  sz   = 0;
 }

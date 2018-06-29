@@ -28,20 +28,15 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
 import MySQLdb, getpass, time
 import warnings
-from   xalt_util     import *
-from   xalt_global   import *
-from   xalt_site_pkg import translate, keep_env_var
+from   xalt_util        import *
+from   xalt_global      import *
+
 try:
   import configparser
 except:
   import ConfigParser as configparser
 
 warnings.filterwarnings("ignore", "Unknown table.*")
-
-# In 'directdb' transmission, print goes to syslog (for exception, etc)
-if (XALT_TRANSMISSION_STYLE == 'directdb' and not XALT_TRACING):
-  logger = config_logger()
-  print = logger.exception
 
 import inspect
 
@@ -121,25 +116,30 @@ class XALTdb(object):
     else:
       self.__readFromUser()
 
-    try:
-      self.__conn = MySQLdb.connect \
-                      (self.__host,self.__user,self.__passwd, use_unicode=True, \
-                       charset="utf8", connect_timeout=120)
-      if (databaseName):
-        cursor = self.__conn.cursor()
-        
-        # If MySQL version < 4.1, comment out the line below
-        cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
-        cursor.execute("USE "+xalt.db())
+    n = 100
+    for i in range(0,n+1):
+      try:
+        self.__conn = MySQLdb.connect (self.__host,self.__user,self.__passwd, use_unicode=True, charset="utf8")
+        if (databaseName):
+          cursor = self.__conn.cursor()
+          
+          # If MySQL version < 4.1, comment out the line below
+          cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
+          cursor.execute("USE "+xalt.db())
 
-        self.__conn.set_character_set('utf8')
-        cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
-        cursor.execute("SET CHARACTER SET utf8;") #same as above
-        cursor.execute("SET character_set_connection=utf8;") #same as above
+          self.__conn.set_character_set('utf8')
+          cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
+          cursor.execute("SET CHARACTER SET utf8;") #same as above
+          cursor.execute("SET character_set_connection=utf8;") #same as above
+        break
 
-    except MySQLdb.Error as e:
-      print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
-      raise
+      except MySQLdb.Error as e:
+        if (i < n):
+          sleep(i*0.1)
+          pass
+        else:
+          print ("XALTdb(%d): Error %d: %s" % (i, e.args[0], e.args[1]), file=sys.stderr)
+          raise
     return self.__conn
 
   def db(self):
@@ -155,6 +155,13 @@ class XALTdb(object):
     query = ""
 
     try:
+      link_lineA = linkT.get('link_line',[])
+      linkA      = linkT.get('linkA',[])
+      functionA  = linkT.get('function',[])
+      resultT    = linkT.get("resultT")
+      if (resultT == None):
+        resultT    = linkT
+
       conn   = self.connect()
       cursor = conn.cursor()
       query  = "USE "+self.db()
@@ -162,57 +169,54 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
       
+      uuid   = resultT['uuid']
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
-      cursor.execute(query, [linkT['uuid']])
+      cursor.execute(query, [uuid])
       if (cursor.rowcount > 0):
         return
 
-      build_epoch = float(linkT['build_epoch'])
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                  time.localtime(float(linkT['build_epoch'])))
+      build_epoch = float(resultT['build_epoch'])
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(resultT['build_epoch'])))
+      dateStr     = time.strftime("%Y-%m-%d",          time.localtime(float(resultT['build_epoch'])))
 
-      #paranoid conversion:  Protect DB from bad input:
-      exit_code   = convertToTinyInt(linkT['exit_code'])
-      exec_path   = linkT['exec_path']
-      link_prg    = linkT['link_program'][:64]
-      link_path   = linkT.get('link_path',"UNKNOWN")
+      exec_path   = resultT['exec_path']
+      link_prg    = resultT['link_program'][:64]
+      link_path   = resultT['link_path']
       link_mname  = obj2module(link_path,reverseMapT)
-      link_line   = json.dumps(linkT.get('link_line',"[]"))
-      cwd         = linkT.get('wd', "UNKNOWN")[:1024]
-      build_user  = linkT['build_user']
-      build_shost = linkT['build_syshost']
+      link_line   = json.dumps(link_lineA)
+      build_user  = resultT['build_user']
+      build_shost = resultT['build_syshost']
+      hash_id     = resultT['hash_id']
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s,%s, %s,%s,%s)"
-      cursor.execute(query, (linkT['uuid'], linkT['hash_id'],     dateTimeStr, 
-                             link_prg,      link_path,            link_mname,
-                             link_line,     cwd,                  build_user,
-                             build_shost,   build_epoch,          exit_code,
-                             exec_path))
+      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s)"
+      cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
+                             link_prg,    link_path,   link_mname,
+                             link_line,   build_user,  build_shost,
+                             build_epoch, exec_path))
 
       link_id = cursor.lastrowid
 
-      XALT_Stack.push("load_xalt_objects():"+linkT['exec_path'])
-      self.load_objects(conn, linkT['linkA'], reverseMapT, linkT['build_syshost'],
+      XALT_Stack.push("load_xalt_objects():"+resultT['exec_path'])
+      self.load_objects(conn, linkA, reverseMapT, resultT['build_syshost'], dateStr,
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
       
       # store tracked functions
-      if ('function' in linkT):
-        for func_name in linkT['function']:
-          query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
+      for func_name in functionA:
+        query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
+        cursor.execute(query, [func_name[:255]])
+        if (cursor.rowcount > 0):
+          func_id = int(cursor.fetchone()[0])
+        else:
+          query = "INSERT INTO xalt_function VALUES (NULL, %s)"
           cursor.execute(query, [func_name[:255]])
-          if (cursor.rowcount > 0):
-            func_id = int(cursor.fetchone()[0])
-          else:
-            query = "INSERT INTO xalt_function VALUES (NULL, %s)"
-            cursor.execute(query, [func_name[:255]])
-            func_id = cursor.lastrowid
-        
-          query = "INSERT INTO join_link_function VALUES(NULL, %s, %s) \
-                       ON DUPLICATE KEY UPDATE func_id = %s, link_id = %s"
-          cursor.execute(query, (func_id, link_id, func_id, link_id))
+          func_id = cursor.lastrowid
+      
+        query = "INSERT INTO join_link_function VALUES(NULL, %s, %s, %s) \
+                     ON DUPLICATE KEY UPDATE func_id = %s, link_id = %s"
+        cursor.execute(query, (func_id, link_id, dateStr, func_id, link_id))
         
       query = "COMMIT"
       conn.query(query)
@@ -220,12 +224,12 @@ class XALTdb(object):
       conn.close()
 
     except Exception as e:
-      print(XALT_Stack.contents())
-      print(query)
-      print ("link_to_db(): Error %s" % e)
-      
+      print(XALT_Stack.contents(), file=sys.stderr)
+      print(query, file=sys.stderr)
+      print ("link_to_db(): Error ",e, file=sys.stderr)
+      sys.exit (1)
 
-  def load_objects(self, conn, objA, reverseMapT, syshost, tableName, index):
+  def load_objects(self, conn, objA, reverseMapT, syshost, dateStr, tableName, index):
     """
     Stores the objects that make an executable into the XALT DB.
     @param conn:         The db connection object
@@ -246,7 +250,7 @@ class XALTdb(object):
 
         query = "SELECT obj_id, object_path FROM xalt_object WHERE hash_id=%s AND object_path=%s AND syshost=%s"
           
-        cursor.execute(query,(hash_id, object_path, syshost))
+        cursor.execute(query,(hash_id, object_path[:1024], syshost[:64]))
 
         if (cursor.rowcount > 0):
           row    = cursor.fetchone()
@@ -265,13 +269,14 @@ class XALTdb(object):
           #print("obj_id: ",obj_id, ", obj_kind: ", obj_kind,", path: ", object_path, "moduleName: ", moduleName)
 
         # Now link libraries to xalt_link record:
-        query = "INSERT into " + tableName + " VALUES (NULL,%s,%s) "  
-        cursor.execute(query,(obj_id, index))
+        query = "INSERT into " + tableName + " VALUES (NULL,%s,%s,%s) "
+        cursor.execute(query,(obj_id, index, dateStr))
   
     except Exception as e:
-      print(XALT_Stack.contents())
-      print(query)
-      print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]))
+      print(XALT_Stack.contents(),file=sys.stderr)
+      print(query,file=sys.stderr)
+      print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]),file=sys.stderr)
+      sys.exit (1)
 
   def run_to_db(self, reverseMapT, runT):
     """
@@ -280,7 +285,6 @@ class XALTdb(object):
     @param: runT:        The run data stored in a table
     """
     
-    nameA = [ 'num_cores', 'num_nodes', 'account', 'job_id', 'queue' , 'submit_host']
     query = ""
     try:
       conn   = self.connect()
@@ -290,27 +294,27 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
 
-      
-      translate(nameA, runT['envT'], runT['userT']);
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
-      runTime     = "%.2f" % float(runT['userT']['run_time'])
-      endTime     = "%.2f" % float(runT['userT']['end_time'])
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S",
-                                  time.localtime(float(runT['userT']['start_time'])))
-      uuid        = runT['xaltLinkT'].get('Build.UUID',None)
+      runTime     = "%.2f" % (runT['userDT']['run_time'])
+      endTime     = "%.2f" % (runT['userDT']['end_time'])
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(runT['userDT']['start_time'])))
+      dateStr     = time.strftime("%Y-%m-%d", time.localtime(float(runT['userDT']['start_time'])))
+      xaltLinkT   = runT['xaltLinkT']
+      uuid        = xaltLinkT.get('Build.UUID') or xaltLinkT.get('Build_UUID') 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,[runT['userT']['run_uuid']])
+      num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
 
       if (cursor.rowcount > 0):
         #print("found")
         row    = cursor.fetchone()
         run_id = int(row[0])
-        if (runT['userT']['end_time'] > 0):
-          query  = "UPDATE xalt_run SET run_time=%s, end_time=%s WHERE run_id=%s" 
-          cursor.execute(query,(runTime, endTime, run_id))
+        if (runT['userDT']['end_time'] > 0):
+          query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s WHERE run_id=%s" 
+          cursor.execute(query,(runTime, endTime, num_threads, run_id))
           query = "COMMIT"
           conn.query(query)
         v = XALT_Stack.pop()
@@ -321,38 +325,41 @@ class XALTdb(object):
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
-        num_threads   = convertToTinyInt(runT['userT'].get('num_threads',0))
-        usr_cmdline   = runT.get('cmdlineA', "UNKNOWN")
+        num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
+        usr_cmdline   = json.dumps(runT['cmdlineA'])
+        sum_runs      = runT['userDT'].get('sum_runs' ,   0)
+        sum_times     = runT['userDT'].get('sum_times',   0.0)
+        probability   = runT['userDT'].get('probability', 1.0)
 
-        job_num_cores = int(runT['userT'].get('job_num_cores',0))
-        startTime     = "%.f" % float(runT['userT']['start_time'])
-        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, COMPRESS(%s))"
+        startTime     = "%.f" % float(runT['userDT']['start_time'])
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
-                               runT['userT']['account'][:20],runT['userT']['exec_type'],   startTime,
-                               endTime,                      runTime,                      runT['userT']['num_cores'],
-                               job_num_cores,                runT['userT']['num_nodes'],   num_threads,
-                               runT['userT']['queue'],       exit_status,                  runT['userT']['user'],
-                               runT['userT']['exec_path'],   moduleName,                   runT['userT']['cwd'],
-                               usr_cmdline))
+                               runT['userT']['account'],     runT['userT']['exec_type'],   startTime,
+                               endTime,                      runTime,                      probability,
+                               runT['userDT']['num_cores'],  runT['userDT']['num_nodes'],  num_threads,
+                               runT['userT']['queue'],       sum_runs,                     sum_times,
+                               runT['userT']['user'],        runT['userT']['exec_path'],   moduleName,
+                               runT['userT']['cwd'],         usr_cmdline))
         run_id   = cursor.lastrowid
 
 
-      self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'],
+      self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
                         "join_run_object", run_id)
 
       envT    = runT['envT']
-      jsonStr = json.dumps(envT)
-      query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, COMPRESS(%s))"
-      cursor.execute(query, [run_id, jsonStr])
+
+      # Not storing the total environment.
+      #jsonStr = json.dumps(envT)
+      #query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
+      #cursor.execute(query, [run_id, dateStr, jsonStr])
       
       # loop over env. vars.
       for key in envT:
-        if (not keep_env_var(key)):
-          continue
+
         value = envT[key]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
-        cursor.execute(query,[key])
+        cursor.execute(query,[key[:64]])
         if (cursor.rowcount > 0):
           row    = cursor.fetchone()
           env_id = int(row[0])
@@ -363,8 +370,8 @@ class XALTdb(object):
           env_id = cursor.lastrowid
           found  = False
         
-        query = "INSERT INTO join_run_env VALUES (NULL, %s, %s, %s)"
-        cursor.execute(query,(env_id, run_id, value))
+        query = "INSERT INTO join_run_env VALUES (NULL, %s, %s, %s, %s)"
+        cursor.execute(query,(env_id, run_id, dateStr, value))
           
       v = XALT_Stack.pop()
       carp("SUBMIT_HOST",v)
@@ -373,8 +380,46 @@ class XALTdb(object):
       conn.close()
 
     except Exception as e:
-      print(XALT_Stack.contents())
-      print(query.encode("ascii","ignore"))
-      print ("run_to_db(): %s" % e)
-      
+      print(XALT_Stack.contents(),file=sys.stderr)
+      print(query.encode("ascii","ignore"),file=sys.stderr)
+      print ("run_to_db(): ",e,file=sys.stderr)
+      sys.exit (1)
 
+  def pkg_to_db(self, syshost, pkgT):
+
+    try:
+      conn   = self.connect()
+      cursor = conn.cursor()
+      query  = "USE "+self.db()
+      conn.query(query)
+      query  = "START TRANSACTION"
+      conn.query(query)
+
+      XALT_Stack.push("SYSHOST: "+syshost)
+
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
+      cursor.execute(query,[pkgT['xalt_run_uuid']])
+      #print ("run_uuid: '%s', rowcount: %d" % (pkgT['xalt_run_uuid'], cursor.rowcount), file=sys.stderr)
+
+      if (cursor.rowcount > 0):
+        row         = cursor.fetchone()
+        run_id      = int(row[0])
+        program     = pkgT['program'][:12]
+        pkg_name    = pkgT['package_name'][:64]
+        pkg_version = pkgT['package_version'][:32]
+        pkg_path    = pkgT['package_path'][:10]
+        
+        query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
+        cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))
+        
+      v = XALT_Stack.pop()
+      carp("SYSHOST",v)
+      query = "COMMIT"
+      conn.query(query)
+      conn.close()
+
+    except Exception as e:
+      print(XALT_Stack.contents(),file=sys.stderr)
+      print(query.encode("ascii","ignore"),file=sys.stderr)
+      print ("pkg_to_db(): ",e,file=sys.stderr)
+      sys.exit (1)

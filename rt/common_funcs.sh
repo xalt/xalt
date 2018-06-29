@@ -4,8 +4,8 @@
 initialize()
 {
   unset LD_PRELOAD
+  unset XALT_TRANSMISSION_STYLE
   export XALT_EXECUTABLE_TRACKING=no
-  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
 
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
@@ -13,14 +13,25 @@ initialize()
   COUNT=0
 
   rm -f  _stderr.* _stdout.* out.* err.* 
-  rm -rf .xalt.d syslog.log
+  rm -rf .xalt.d syslog.* reverseMapD
+  XALT_EPOCH_T0=$(python $projectDir/rt/xalt_epoch.py)
 
 }
+
+displayThis()
+{
+  XALT_EPOCH_T1=$(LD_PRELOAD= $outputDir/XALT/xalt/xalt/libexec/xalt_epoch "$XALT_EPOCH_T0")
+  echo 
+  echo "#==========================================================#"
+  echo "  $@"
+  echo "  ($XALT_EPOCH_T1)"
+  echo "#==========================================================#"
+}
+
 buildRmapT()
 {
   echo "<build xalt_rmapT.json and jsonReverseMapT.json files>"
-  rm -rf reverseMapD
-  mkdir  reverseMapD
+  mkdir reverseMapD
   MPATH=${LMOD_DEFAULT_MODULEPATH-$MODULEPATH}
   $LMOD_DIR/spider -o xalt_rmapT      $MPATH > $outputDir/reverseMapD/xalt_rmapT.json
   $LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
@@ -31,27 +42,29 @@ installXALT()
 {
   rm -rf XALT build
   mkdir build
-  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT ; \
-  echo "<make>"; make install ;  )
-  cp $projectDir/src/removeDataBase.py    XALT/sbin
-  cp $projectDir/test/check_entries_db.py XALT/sbin
-  PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+
+  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; \
+  echo "<make>"; make OPTLVL="-g -O0" install ;  )
+  cp $projectDir/test/check_entries_db.py XALT/xalt/xalt/sbin
+  PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
   echo "<end make>"
 }
 
 installDB()
 {
+  echo "<create db>"
   DBNAME=testxalt
+  DB_CONF_FN=testxalt_db.conf
   DBUSER=xaltTest
   PASSWD=kutwgbh
 
   conf_create.py     --dbhost localhost --dbuser $DBUSER \
                      --passwd $PASSWD   --dbname $DBNAME
-  echo "<remove old DB>"  1>&2
-  removeDataBase.py  --dbname $DBNAME  > /dev/null 2>&1
-  echo "<create DB>"      1>&2
-  createDB.py        --dbname $DBNAME
-  echo "<done instalDB>"  1>&2
+  echo "<create new DB>"
+  createDB.py        --drop --confFn $DB_CONF_FN
+  rm -f xalt_db.conf 
+  ln -s testxalt_db.conf xalt_db.conf 
+  echo "<end create db>"
 }
 
 runMe ()

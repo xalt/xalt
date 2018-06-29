@@ -30,10 +30,6 @@ def __FILE__():
 #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()))
 
 
-
-
-
-
 def field_of_science(account):
   s       = "https://tas.tacc.utexas.edu/api/web/project?name=%s" % account
   request = Request(s)
@@ -524,13 +520,13 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--start",      dest='startDate', action="store",    help="The day to collect")
     parser.add_argument("--end",        dest='endDate',   action="store",    help="The month to collect")
-    parser.add_argument("--dbname",     dest='dbname', action="store",  default="xalt", help="Name of the database")
+    parser.add_argument("--confFn",     dest='confFn',    action="store",    help="Name of db config file")
     args = parser.parse_args()
     return args
 
 def main():
   args = CmdLineOptions().execute()
-  xalt = XALTdb(dbConfigFn(args.dbname))
+  xalt = XALTdb(args.confFn))
   xalt.runs(args.startDate,args.endDate)
   
 if ( __name__ == '__main__'): main()

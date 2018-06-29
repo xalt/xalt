@@ -34,24 +34,37 @@
 #
 ##########################################################################
 
-LD_LIB_PATH=@sys_ld_lib_path@
+
+unset LD_PRELOAD
+CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
 DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
+SHA1SUM=@sha1sum@
+XALT_FILE_PREFIX=@xalt_file_prefix@
+HAVE_WORKING_LIBUUID=@have_working_libuuid@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
-EXTRACT_COMPILER=$XALT_DIR/libexec/xalt_extract_linker.py
-SHA1SUM=@sha1sum@
 
-export MY_CMD=unknown
+if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
+   XALT_TRANSMISSION_STYLE=@transmission@
+fi
+
+if [ -z "$XALT_FUNCTION_TRACKING" ]; then
+   XALT_FUNCTION_TRACKING=@xalt_function_tracking@
+elif [ "$XALT_FUNCTION_TRACKING" != no ]; then
+   XALT_FUNCTION_TRACKING=yes
+fi
+
+
+
 
 source $MY_DIR/xalt_helper_functions.sh
 
-########################################################################
+##########################################################################
 # Check for user requested tracing.
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no
-
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no/link
 tracing_msg "Starting ld"
 
 ########################################################################
@@ -60,15 +73,6 @@ tracing_msg "Starting ld"
 EXEC_X=/usr/bin/${MY_NAME}.x
 find_real_command $0 $EXEC_X # this command sets $MY_CMD
 
-########################################################################
-# Make sure that the python setup is valid. 
-
-find_working_python  # This function sets MY_PYTHON
-
-########################################################################
-# Find compiler calling this ld
-
-export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EXTRACT_COMPILER)
 
 ########################################################################
 # Loop over command line arguments to ld. This code is used instead of
@@ -76,6 +80,7 @@ export COMP_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+PARTIAL_LINKING=
 printOptA=()
 PrintOptions=
 EXEC="a.out"
@@ -106,17 +111,25 @@ do
       USER_TRACE="true"
       ;;
 
+    elf_i386)
+      BIT32FLAG=--32
+      ;;
+
     -M|--print-map|--print-output-format|--print-memory-usage)
       PrintOptions="true"
       printOptA+=("$option")
       ;;
 
-    elf_i386)
-      BIT32FLAG=--32
-      ;;
-
     -o)
       prev='EXEC'
+      ;;
+
+    -shared)
+      SHARED_LIB=true
+      ;;
+
+    -r)
+      PARTIAL_LINKING=true
       ;;
   esac
 
@@ -136,24 +149,55 @@ if [ -n "$USER_TRACE" -a -n "$PrintOptions" ]; then
     printOptA+=("--trace")
     unset USER_TRACE
 fi
+    
+############################################################
+# Test to see if the executable is an autoconf or cmake build
+# => skip those.
 
-PyPATH="/usr/bin:/bin"
+SKIP=
+case "$EXEC" in
+  conftest)
+    SKIP=true;;
+  cmTryCompileExec[0-9]*)
+    SKIP=true;;
+  cmTC_[a-f0-9]*)
+    SKIP=true;;
+esac
+if [ -z "$HOME" -o -z "$USER" ]; then
+   SKIP=true
+fi
+
+if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true -o "$PARTIAL_LINKING" = true ]; then
+  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP, PARTIAL_LINKING: $PARTIAL_LINKING"
+
+  $MY_CMD "${argA[@]}"
+  status=$?
+  exit $status
+fi
+
+MY_HOSTNAME_PARSER_STRING=@my_hostname_parser@
+MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
+    
+
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_SITE_DIR=$XALT_DIR/site
-GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly.py
-GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata.py
-SYS_HOST_CMD=$XALT_SITE_DIR/xalt_syshost_@site_name@.py
-SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $SYS_HOST_CMD)
+GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly
+GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
+STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
+EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
+SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
+REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
+SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
 CAT=@path_to_cat@
 MKDIR=@path_to_mkdir@
 GREP=@grep@
+PyPATH="/usr/bin:/bin"
 
 
 UUID=`$UUIDGEN`
-DATESTR=`date +%Y_%m_%d_%H_%M_%S`
 WRKDIR=/tmp/${USER}_${DATESTR}_${UUID}
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
@@ -161,14 +205,40 @@ ARGSRC=$WRKDIR/xalt.s
 ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
-RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
+
+if [ -z "$BIT32FLAG" ]; then
+  XALT_LIB_DIR=$XALT_DIR/lib64
+  if [ "$MY_HOSTNAME_PARSER_KIND" = "c_file" ]; then
+      MY_HOSTNAME_PARSER_OBJ=$XALT_LIB_DIR/my_hostname_parser.o
+  elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
+      MY_HOSTNAME_PARSER_OBJ=$XALT_LIB_DIR/my_hostname_parser.a
+  fi
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o $XALT_LIB_DIR/lex.__XALT_path.o $XALT_LIB_DIR/lex.__XALT_host.o $XALT_LIB_DIR/build_uuid.o $MY_HOSTNAME_PARSER_OBJ"
+else
+  XALT_LIB_DIR=$XALT_DIR/lib
+  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o $XALT_LIB_DIR/lex.__XALT_path_32.o $XALT_LIB_DIR/lex.__XALT_host_32.o $XALT_LIB_DIR/build_uuid_32.o $XALT_LIB_DIR/my_hostname_parser_32.o"
+fi
+  
 
 if [ ! -d $WRKDIR ]; then
   $MKDIR -p $WRKDIR
 fi
 
-EPOCH=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC")
+# Get the compiler information
+COMP_T=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
+tracing_msg "COMP_T:" $COMP_T 
 
+EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+DATESTR=`date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S"`
+INT_EPOCH=$(echo "( $EPOCH )/1" | bc)
+FRAC_EPOCH=$(echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
+DATESTR="${DATESTR}_${FRAC_EPOCH}"
+
+if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
+    RESULT=$XALT_FILE_PREFIX/$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
+else
+    RESULT=$HOME/.xalt.d/link.${SYSHOST}.${DATESTR}.$UUID.json
+fi
 #
 # If the $ARGSRC exists then build it
 # otherwise don't try to link with it.
@@ -179,10 +249,26 @@ else
   OBJ=""
 fi
 
-(   # start intentional fail link for function tracking
-  STRIP=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $XALT_LIBEXEC_DIR/xalt_strip_linklib.py  "${argA[@]}") 
-  $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
-) &
+###################################################################
+# start a subshell in the background for the intentional
+# failed link for function tracking
+function_tracking()
+{
+  if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
+     STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
+     $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  fi
+}
+
+if [ "$XALT_DISABLE_BACKGROUNDING" = yes ]; then
+    function_tracking
+else
+    (
+       function_tracking
+    )&
+fi
+
+tracing_msg $MY_CMD "${argA[@]}"
 
 #############################################################
 # If the user requested print options such as --print-map
@@ -192,36 +278,49 @@ if [ -n "$PrintOptions" ]; then
     $MY_CMD "${printOptA[@]}" "${argA[@]}"
 fi
 
-tracing_msg $MY_CMD "${argA[@]}"
+#############################################################
+#  Only use the uuid library for 64bit apps not for 32bit apps
+if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
+    LIBUUID="-luuid"
+fi
 
-$MY_CMD "${argA[@]}" $OBJ -t > $LINKLINE_OUT 
+
+#############################################################
+#  do not include xalt_initialize.*, -luuid, etc when building
+#  a shared library.
+
+if [ "$SHARED_LIB" = true ]; then
+    XALT_INIT_ROUTINE_OBJ=
+    LIBUUID=
+    tracing_msg "Shared library build detected not adding XALT initialize routines to user code"
+fi
+
+
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID -t > $LINKLINE_OUT  2>&1
 status=$?
+
+if [ ! -f "$EXEC" -o $status -ne 0 ]; then
+   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID
+   exit $status
+fi
+
+EXEC=$($REALPATH $EXEC)
+
 
 if [ -n "$USER_TRACE" ]; then
   $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
 fi
-
-tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 # Get the sha1sum for the executable because it might move or disappear!
 SHA1SUM_EXEC=$($SHA1SUM $EXEC)
 
 wait #-- wait for subshell to finish
 
-########################################################################
-# start asynchronous subshell while the 'main' can return to user
-( 
+tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
-    if [ $EXEC == "conftest" ]; then
-      $RM -rf $WRKDIR
-      exit 0
-    fi
-
-    LD_LIBRARY_PATH=$LD_LIB_PATH  LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $GEN_LINKDATA "$UUID" "$status" "`pwd`" "$SYSHOST" \
-       "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T" 
-
-    $RM -rf $WRKDIR
-
-) & # end subshell
+###################################################################
+# Generate link data.  
+LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+$RM -rf $WRKDIR  
 
 exit $status

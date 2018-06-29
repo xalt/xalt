@@ -40,6 +40,7 @@ def xalt_syshost_main(sA):
 def hardcode(name,output):
   sA = []
   sA.append("#include <stdio.h>")
+  sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("const char * xalt_syshost() {")
   sA.append("  return \"" + name + "\";")
   sA.append("}")
@@ -61,9 +62,11 @@ def add_hostname_routine(sA):
   sA.append("#include <sys/socket.h>")
   sA.append("#include <netdb.h>")
   sA.append("#include <string.h>")
+  sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("")
   sA.append("char * hostname()")
   sA.append("{")
+  sA.append("  char* my_hostname;")
   sA.append("  struct addrinfo hints, *info;")
   sA.append("  int gai_result;")
   sA.append("  struct utsname u;")
@@ -76,15 +79,35 @@ def add_hostname_routine(sA):
   sA.append("  ")
   sA.append("  if ((gai_result = getaddrinfo(u.nodename, \"http\", &hints, &info)) != 0) ")
   sA.append("    {")
-  sA.append("      fprintf(stderr, \"getaddrinfo: %s\\n\", gai_strerror(gai_result));")
-  sA.append("      exit(1);")
+  sA.append("      my_hostname = strdup(u.nodename);")
+  sA.append("      return my_hostname;")
   sA.append("    }")
   sA.append("")
-  sA.append("  char* my_hostname = strdup(info->ai_canonname);")
+  sA.append("  my_hostname = strdup(info->ai_canonname);")
   sA.append("  freeaddrinfo(info);")
   sA.append("  return my_hostname;")
   sA.append("}")
 
+
+def env_var(var, output):
+  sA = []
+
+  sA.append("#include <stdio.h>")
+  sA.append("#include <stdlib.h>")
+  sA.append("#include \"xalt_obfuscate.h\"")
+  sA.append("")
+  sA.append("const char * xalt_syshost()")
+  sA.append("{")
+  sA.append("  const char* var = getenv(\"" + var + "\");")
+  sA.append("  if (!var) var = \"unknown\";")
+  sA.append("  return var;")
+  sA.append("}")
+  xalt_syshost_main(sA)
+
+  s   = "\n".join(sA)
+  f   = open(output,"w")
+  f.write(s)
+  f.close()
 
 def read_file(fname,output):
   sA = []
@@ -92,7 +115,8 @@ def read_file(fname,output):
   sA.append("#include <stdio.h>")
   sA.append("#include <stdlib.h>")
   sA.append("#include <string.h>")
-  sA.append("#include \"fgets_alloc.h\"")
+  sA.append("#include \"xalt_obfuscate.h\"")
+  sA.append("#include \"xalt_fgets_alloc.h\"")
   sA.append("")
   sA.append("const char * xalt_syshost()")
   sA.append("{")
@@ -103,7 +127,7 @@ def read_file(fname,output):
   sA.append("")
   sA.append("  size_t sz         = 0;")
   sA.append("  char * my_syshost = NULL;")
-  sA.append("  fgets_alloc(fp, &my_syshost, &sz);")
+  sA.append("  xalt_fgets_alloc(fp, &my_syshost, &sz);")
   sA.append("  int len = strlen(my_syshost);")
   sA.append("  my_syshost[len-1] = '\\0'; // overwrite trailing newline")
   sA.append("  return my_syshost;")
@@ -115,7 +139,7 @@ def read_file(fname,output):
   f.write(s)
   f.close()
 
-  
+
 def nth_name(nth,output):
   nth = int(nth)
   if (nth < 1 ):
@@ -146,7 +170,7 @@ def nth_name(nth,output):
   sA.append("    }")
   sA.append("")
   sA.append("  int    len = p - start;")
-  sA.append("  char * w   = malloc(len+1);")
+  sA.append("  char * w   = (char *) malloc(len+1);")
   sA.append("  memcpy(w,start,len);")
   sA.append("  w[len] = '\\0';")
   sA.append("  return w;")
@@ -158,6 +182,35 @@ def nth_name(nth,output):
   f.write(s)
   f.close()
 
+
+def strip_nodename_numbers(output):
+  sA = []
+
+  sA.append("#include <string.h>")
+  sA.append("#include <sys/utsname.h>")
+  sA.append("#include \"xalt_obfuscate.h\"")
+  sA.append("const char* xalt_syshost()")
+  sA.append("{")
+  sA.append("  char * my_hostname = hostname();")
+  sA.append("")
+  sA.append("  int i;")
+  sA.append("  int j = 0;")
+  sA.append("")
+  sA.append("  char * p = strchr(my_hostname,'.');")
+  sA.append("  if (p)")
+  sA.append("    *p = '\\0';")
+  sA.append("")
+  sA.append("  j = strcspn(my_hostname,\"0123456789\");")
+  sA.append("")
+  sA.append("  my_hostname[j] = '\\0';")
+  sA.append("  return my_hostname;")
+  sA.append("}")
+  xalt_syshost_main(sA)
+
+  s   = "\n".join(sA)
+  f   = open(output,"w")
+  f.write(s)
+  f.close()
 
 def mapping(file,output):
   sA = []
@@ -175,7 +228,7 @@ def mapping(file,output):
   sA.append("};")
   sA.append("")
 
-  sA.append("struct Pair pair[] = {")
+  sA.append("static struct Pair pair[] = {")
   for entry in pairs:
     sA.append("  {\"" + entry[0] + "\", \"" + entry[1] + "\"},")
   sA.append("};")
@@ -237,7 +290,9 @@ class CmdLineOptions(object):
     return args
 
 kindA = [ ['hardcode', hardcode ], ['nth_name', nth_name],
-          ['read_file', read_file], ['mapping', mapping] ]
+          ['read_file', read_file], ['mapping', mapping], 
+          ['strip_nodename_numbers', strip_nodename_numbers],
+          ['env_var', env_var] ]
 
 def main():
   args = CmdLineOptions().execute()
@@ -247,7 +302,7 @@ def main():
   idx = arg.find(":")
   if (idx == -1):
     kind = arg.lower()
-    opt  = None
+    opt  = kind != 'strip_nodename_numbers'
   else:
     kind = arg[:idx].lower()
     opt  = arg[idx+1:]
@@ -258,7 +313,10 @@ def main():
   for entry in kindA:
     if (kind == entry[0]):
       if (not opt):
+        print("=================================================================")
+        print("Unable to install XALT")
         print("Syshost config option \"%s\" does not have the required options" % kind)
+        print("=================================================================")
         sys.exit(1)
       found = True
       func = entry[1]
@@ -268,11 +326,17 @@ def main():
     choices = ""
     for entry in kindA:
       choices += "\"" + entry[0] + "\", "
+    print("=================================================================")
+    print("Unable to install XALT")
     print("Syshost config \"%s\" is not valid, it must be one of %s" % (kind, choices))
+    print("=================================================================")
     sys.exit(1)
 
-
-  # Build the user requested xalt_syshost.c routine
-  func(opt, args.output)
+  if (kind != 'strip_nodename'):
+    # Build the user requested xalt_syshost.c routine
+    func(opt, args.output)
+  else:
+    # strip_nodename doesn't need an option given to it
+    func(args.output)
 
 if ( __name__ == '__main__'): main()

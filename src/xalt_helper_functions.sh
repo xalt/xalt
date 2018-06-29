@@ -25,42 +25,36 @@
 #-----------------------------------------------------------------------
 
 ########################################################################
-# Helper functions used by XALT scripts such as ld, ibrun, aprun, etc.
+# Helper functions used by XALT script ld
 ########################################################################
 
 ########################################################################
 #  Global variables:
 LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
-RUN_SUBMIT=$XALT_DIR/libexec/xalt_run_submission.py
-UUIDGEN=@uuidgen@
-WORKING_PYTHON=$XALT_DIR/libexec/xalt_working_python.py
-EPOCH=$XALT_DIR/libexec/xalt_epoch.py
 BASENAME=@path_to_basename@
-DIRNAME=@path_to_dirname@
-PyPATH=/usr/bin:/bin
 
 ##########################################################################
 #  Check command line arguments to see if user has requested tracing
 #  This function returns argA and a value for XALT_TRACING
 request_tracing()
 {
-  if [ -n "${XALT_TRACING:-}" ]; then
-    XALT_TRACING="yes"
+  if [ "${XALT_TRACING:-}" = "yes" -o  "${XALT_TRACING:-}" = "link" ]; then
+    export XALT_TRACING=yes
+  else
+    unset XALT_TRACING
   fi
+
   argA=()
   for i in "$@"; do
     if [ "$i" = "--xalt_tracing" ]; then
-      XALT_TRACING=yes
+      export XALT_TRACING=yes
     elif [ "$i" = "-M" -o "$i" = "--print-map" -o "$i" = "--print-output-format" -o "$i" = "--print-memory-usage" ]; then
       :
     else
       argA+=("$i")
     fi
   done
-  if [ -n "${XALT_TRACING:-}" ]; then
-    export XALT_TRACING
-  fi
   tracing_msg "XALT Tracing Activated for version: @git@"
 }
 
@@ -151,103 +145,4 @@ find_real_command()
   fi
   MY_CMD=$my_cmd  
   tracing_msg "find_real_command: found $MY_CMD"
-}
-
-########################################################################
-# Do not mess around.  Use the python and the value of LD_LIBRARY_PATH
-# that existed at configure time.  Assume that it is possible that the
-# user will do something to mess things up.
-
-# Note that the xalt_working_program.py just prints "GOOD" if it works.
-
-find_working_python()
-{
-  MY_PYTHON="@python@"
-  WORKING=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E  $WORKING_PYTHON 2> /dev/null)
-  if [ "$WORKING" != "GOOD" ]; then
-     MY_PYTHON="broken"
-  fi
-
-  tracing_msg "find_working_python: Setting MY_PYTHON to $MY_PYTHON"
-
-  if [ "$MY_PYTHON" = "broken" ]; then
-    builtin echo "XALT: Error in users' python setup.  Please report this error!"
-    $MY_CMD "$@"
-    exit $?
-  fi
-}
-
-########################################################################
-# Run the real command and wrap the call to real program with
-# xalt_run_submission.py
-
-run_real_command()
-{
-  # Strip leading arguments off of command line
-  # This will leave "$@" to be the same as the original in
-  # user's call to the wrapper.
-
-  FIND_EXEC_PRGM="$1"
-  shift
-  MY_PYTHON="$1"
-  shift
-
-  # Build the filename for the results.
-  SYSHOST=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $XALT_DIR/site/xalt_syshost_@site_name@.py)
-  
-  # Find the user executable by walking the original command line.
-  EXEC_T="[{\"exec_prog\": \"unknown\", \"ntasks\": 1, \"uuid\": \"$($UUIDGEN)\"} ]"
-  if [ "$FIND_EXEC_PRGM" != "unknown" -a -f "$FIND_EXEC_PRGM" ]; then
-    EXEC_T=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= $MY_PYTHON -E $FIND_EXEC_PRGM "$@")
-  fi
-
-  tracing_msg "run_real_command: User's EXEC_T: $EXEC_T"
-  
-  # Hand it over to the real command if there is exception and return
-  if [ "$EXEC_T" == "find_exec_exception" ]; then
-    $MY_CMD "$@"
-    return $?
-  fi
-
-  # Record the run record at the start of the job.  This way if the run
-  # doesn't complete there will be a record. Use async subshell to workaround
-  # slow transmission method.
-
-  tracing_msg "run_real_command: XALT Start Record"
-  sTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EPOCH)
-  (
-  CmdLine="$MY_CMD $@"
-  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end 0      --syshost "$SYSHOST" -- "$EXEC_T" "$CmdLine"
-  ) &
-
-  status=0
-  if [ -z "${testMe:-}" ]; then
-
-    tracing_msg "run_real_command: Running: $MY_CMD"
-    # Run the real command and save the status
-    $MY_CMD "$@"
-    status="$?"
-
-  fi
-  
-  wait
-  
-  tracing_msg "run_real_command: XALT End Record"
-  # Record the job record at the end of the job.
-  CmdLine="$MY_CMD $@"
-  eTime=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $EPOCH)
-  LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E $RUN_SUBMIT --start "$sTime" --end "$eTime" --syshost "$SYSHOST" --status $status -- "$EXEC_T" "$CmdLine"
-
-  #----------------------------------------------------------------------
-  # The $status variable is used to report the exit status of $MY_CMD"
-}
-
-########################################################################
-# Find compiler calling ld to be passed to as arguments to $GEN_LINDATA 
-# later (in a subshell)
-
-find_compiler()
-{
-  COMPILER=$(LD_LIBRARY_PATH=$LD_LIB_PATH LD_PRELOAD= PATH=$PyPATH $MY_PYTHON -E )
-  tracing_msg "find_compiler: Setting COMPILER to $COMPILER"
 }

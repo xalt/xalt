@@ -1,80 +1,25 @@
+#include <stdio.h>
 #include <stdlib.h>
+
+#include "epoch.h"
 #include "xalt_config.h"
 #include "buildRmapT.h"
 #include "xalt_quotestring.h"
 #include "jsmn.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_utils.h"
+#include "parseJsonStr.h"
 
-void processRmapT(const char* js, int& i, int ntokens, jsmntok_t*  tokens, Table& rmapT)
-{
-  if (tokens[i].type != JSMN_OBJECT)
-    {
-      fprintf(stderr,"(1) Bad xalt_rmapT.json file\n");
-      exit(1);
-    }
-
-  int iend = tokens[i].end;
-
-  ++i;
-  while (i < ntokens)
-    {
-      if (tokens[i].start > iend)
-        {
-          --i;
-          return;
-        }
-
-      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
-        {
-          fprintf(stderr,"(2) Bad xalt_rmapT.json file\n");
-          exit(1);
-        }
-      std::string key(  js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      key   = xalt_unquotestring(key.c_str());
-      value = xalt_unquotestring(value.c_str());
-      rmapT[key] = value;
-    }
-}
-
-void processXlibmap(const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& xlibmapA)
-{
-  if (tokens[i].type != JSMN_ARRAY)
-    {
-      fprintf(stderr,"(3) Bad xalt_rmapT.json file\n");
-      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n", i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
-      exit(1);
-    }
-
-  int iend = tokens[i].end;
-
-  ++i;
-  while (i < ntokens)
-    {
-      if (tokens[i].start > iend)
-        {
-          --i;
-          return;
-        }
-
-      if (tokens[i].type != JSMN_STRING)
-        {
-          fprintf(stderr,"(4) Bad xalt_rmapT.json file\n");
-          exit(1);
-        }
-      std::string value(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
-      value = xalt_unquotestring(value.c_str());
-      xlibmapA.push_back(value);
-    }
-}
-
-void buildRmapT(Table& rmapT, Vstring xlibmapA)
+void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
 {
   
-  FILE *fp = xalt_file_open("xalt_rmapT");
+  FILE *fp = xalt_json_file_open(rmapD, "reverseMapD/xalt_rmapT");
   if (fp == NULL)
-    return;
+    {
+      fp = xalt_json_file_open(rmapD, "xalt_rmapT");
+      if (fp == NULL)
+        return;
+    }
   
   std::string jsonStr = "";
 
@@ -84,6 +29,7 @@ void buildRmapT(Table& rmapT, Vstring xlibmapA)
   while(xalt_fgets_alloc(fp, &buf, &sz))
     jsonStr += buf;
   free(buf);
+  sz = 0; buf = NULL;
 
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -97,6 +43,8 @@ void buildRmapT(Table& rmapT, Vstring xlibmapA)
   // tokens - an array of tokens available
   int ntokens;
 
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
   const char * js = jsonStr.c_str();
 
   while (1)
@@ -111,26 +59,26 @@ void buildRmapT(Table& rmapT, Vstring xlibmapA)
         }
     }      
 
-
   if (tokens[0].type != JSMN_OBJECT)
     {
-      fprintf(stderr,"Bad xalt_rmapT.json file\n");
+      fprintf(stderr,"(5) Bad xalt_rmapT.json file\n");
       exit(1);
     }
+
 
   int i = 1;
   while (i < ntokens)
     {
       if (tokens[i].type != JSMN_STRING )
         {
-          fprintf(stderr,"Bad xalt_rmapT.json file\n");
+          fprintf(stderr,"(6) Bad xalt_rmapT.json file: i: %d, Type: %d\n", i, tokens[i].type);
           exit(1);
         }
       std::string mapName(js, tokens[i].start, tokens[i].end - tokens[i].start); ++i;
       if (mapName == "reverseMapT")
-        processRmapT(js, i, ntokens, tokens, rmapT);
+        processTable("xalt_rmapT.json",js, i, ntokens, tokens, rmapT);
       else if (mapName == "xlibmap")
-        processXlibmap(js, i, ntokens, tokens, xlibmapA);
-      
+        processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
     }
+  free(tokens);
 }

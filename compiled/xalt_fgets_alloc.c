@@ -2,7 +2,9 @@
 #include <string.h>
 #include "xalt_fgets_alloc.h"
 
-const int SZ = 100;
+#define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
+
+static const int SZ = 4096;
 
 int xalt_fgets_alloc(FILE *fp, char ** buffer, size_t* sz)
 {

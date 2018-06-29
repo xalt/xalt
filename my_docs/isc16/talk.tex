@@ -1,0 +1,335 @@
+%* installation (deps, build/install procedure, making module/ml work)
+%* configuration (either via ./configure at build time, or via 
+%   $LMOD_FOO), most important configure options
+%* setting up the system spider cache: configuring Lmod, updating spider 
+%  cache, difference between system/user spider cache
+%* + all (other) aspects mentioned on slide #26 in this slide deck: 
+%   explained + example :)
+%* what settarg is all about
+
+\documentclass{beamer}
+
+\usetheme[headernav]{TACC} %%Drop the 'headernav' if you don't like
+                           %%the stuff at the top of your slide
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{alltt}
+\usepackage{graphicx}
+
+\title{XALT: Understanding HPC Usage via Job Level Collection}
+
+
+\author{Robert McLay, Mark Fahey, Reuben Budiardja, Sandra Sweat}
+\institute{The Texas Advanced Computing Center, Argonne National Labs, NICS}
+
+\date{June 22, 2016}  %% Use this if you want to fix the date in
+                      %% stone rather than use \today
+
+\newcommand{\bfnabla}{\mbox{\boldmath$\nabla$}}
+\newcommand{\laplacian}[1]{\bfnabla^2 #1}
+\newcommand{\grad}[1]{\bfnabla #1}
+\newcommand{\tgrad}[1]{\bfnabla^T #1}
+\newcommand{\dvg}[1]{\bfnabla \cdot #1}
+\newcommand{\curl}[1]{\bfnabla \times #1}
+\newcommand{\lap}[1]{\bfnabla^2 #1}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{XALT}
+
+\begin{frame}{XALT: What runs on the system}
+  \begin{itemize}
+    \item A U.S. NSF Funded project: PI: Mark Fahey and Robert McLay
+    \item A Census of what programs and libraries are run
+    \item Running at TACC, NICS, U. Florida, KAUST, ...
+    \item Integrates with TACC-Stats.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design Goals}
+  \begin{itemize}
+    \item Be extremely light-weight
+    \item Provide provenance data: How?
+    \item How many use a library or application?
+    \item Collect Data into a Database for analysis.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design: Linker }
+  \begin{itemize}
+    \item The linker (ld) wrapper intercepts the user link line.
+      \begin{itemize}
+        \item A shell script wrapper, \texttt{ld} which uses python
+          scripts
+        \item Generate assembly code: key-value pairs
+        \item Capture tracemap output from ld
+        \item Transmit collected data in *.json format
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design: Launcher}
+  \begin{itemize}
+    \item Program Launcher: mpirun, aprun, ibrun ...
+      \begin{itemize}
+        \item A shell script wrapper is called which uses python scripts
+        \item Find Executable by parsing command
+        \item Collect executable info, shared libraries, env.
+        \item Transmit collected data in *.json format
+      \end{itemize}
+    \item The future is now.  This is nolonger necessary!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Design: Transmission to DB}
+  \begin{itemize}
+    \item File: collect nightly
+    \item Syslog: Use Syslog filtering
+    \item Direct to DB.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lmod to XALT connection}
+  \begin{itemize}
+    \item Sites can use Tmod but use Lmod to help with XALT
+    \item Lmod spider walks entire module tree.
+    \item Can build A Reverse Map from paths to modules
+    \item Can map program \& libraries to modules.
+    \item /opt/apps/i15/mv2\_2\_1/phdf5/1.8.14/lib/libhdf5.so.9
+      $\Rightarrow$ phdf5/1.8.14(intel/15.02:mvapich2/2.1)
+    \item Also helps with function tracking.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Database Changes (I)}
+  \begin{itemize}
+      \item Tables sizes in XALT:
+ {\small
+    \begin{alltt}
++------------------+------------+
+| Table            | Size in MB |
++------------------+------------+
+| join_run_env     |  199603.00 |
+| join_run_object  |    9388.00 |
+| join_link_object |    5013.00 |
+| xalt_run         |    4613.00 |
+| xalt_object      |    4175.00 |
+| xalt_link        |     814.00 |
++------------------+------------+
+    \end{alltt}
+}
+    \item \texttt{join\_run\_env} has 2.1 billion rows
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Database Changes (II)}
+  \begin{itemize}
+    \item Environment variables are important.
+    \item But mainly for reproducing results
+    \item Not SQL tests (mostly)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Database Changes (III): New Design}
+  \begin{itemize}
+    \item Store complete env $\Rightarrow$ compressed json blob
+    \item Filter Env's with Accept Test followed by Reject Test
+    \item Instead of 250 vars per job $\Rightarrow$ 10!
+    \item The Filter is site controllable.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Database Changes (IV): New Design}
+  \begin{itemize}
+    \item The ``join'' tables are large 
+    \item Partition ``join'' tables by dates or index
+    \item Precompute views nightly.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Protecting XALT (I): UTF8 Characters}
+  \begin{itemize}
+    \item Linux supports UTF8 Characters in file names, env. vars.
+    \item Python supports UTF8 if you know what you are doing.
+    \item Switch XALT to use prepared statements
+    \item Where \texttt{query="INSERT INTO table VALUE(?,?)"}
+    \item This prevent SQL injection: ``johnny drop tables;''
+    \item Also supports UTF8 characters.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Protecting XALT (II): Python to C++}
+    \begin{itemize}
+      \item Difficult to protect python from users in every case
+      \item Solution: LD\_LIBRARY\_PATH="@ld\_lib\_path@"
+        PATH=/usr/bin:/bin C++-exec ...
+      \item Everything that depends on PATH must be hard coded
+      \item basename $\Rightarrow$ /bin/basename
+      \item Unique install for each operating system.
+      \item Programs move around: basename
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Using XALT Data}
+  \begin{itemize}
+    \item Targetted Outreach: Who will be affected
+    \item Largemem Queue Overuse
+    \item XALT and TACC-Stats
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Publishing XALT Data}
+  \begin{itemize}
+    \item Student Sandra Sweat
+    \item Sanitized Data
+    \item Community Codes Reported: Vasp*, WRF*, OpenFOAM*,
+    \item users names : U012354, Charge Accounts: A12345
+    \item Unique mapping, Added Field of Science
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{XALT Report Script (I)}
+  \begin{itemize}
+    \item Currently MPI only tracking
+    \item About 70\% of Core-hours
+    \item About 50\% of Jobs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{XALT Report Script (II)}
+  \begin{itemize}
+    \item Over MPI Job Counts: User vs System
+    \item Self Build vs Build User $\neq$ Run User
+    \item Top MPI Executables
+    \item Compiler Usage: C/C++ vs Fortran
+    \item Library usage
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Tracking Non-mpi jobs (I)}
+  \begin{itemize}
+    \item Originally we tracked only MPI Jobs
+    \item By hijacking mpirun etc.
+    \item Now we can use ELF binary format to track jobs
+    \item This is the XALT 2 project.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ELF Binary Format Trick}
+ {\small
+    \begin{alltt}
+void myinit(int argc, char **argv)
+\{
+  /* ... */
+\}
+void myfini()
+\{
+  /* ... */
+\}
+  __attribute__((section(".init_array")))
+       typeof(myinit) *__init = myinit;
+  __attribute__((section(".fini_array")))
+       typeof(myfini) *__fini = myfini;
+    \end{alltt}
+}
+\end{frame}
+
+\begin{frame}{Using the ELF Binary Format Trick}
+  \begin{itemize}
+    \item This C code is compiled and linked in through the hijacked linker
+    \item It can also be used with \texttt{LD\_PRELOAD}
+    \item We are using both...
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{New Features to XALT 2}
+  \begin{itemize}
+    \item Track task 0 programs.
+    \item Track Non-MPI programs
+    \item Track program not built under XALT.
+    \item Support for 32 bit applications.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Other Safety Features}
+  \begin{itemize}
+    \item XALT Tracking only told to
+    \item Compute node only
+    \item Filter based on Path
+    \item Protection against closing stderr before fini.
+    \item Site configurable!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Path Filtering}
+  \begin{itemize}
+    \item Accept test, following an Ignore Test,
+    \item Two files containing regex patterns, converted to code.
+    \item Accept List Tests: Track /usr/bin/ddt, /bin/tar
+    \item Ignore List Tests: /usr, /bin, /sbin, ...
+    \item Filter out mv, cp, compilers, etc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{XALT 2 Status}
+  \begin{itemize}
+    \item Currently in alpha testing at TACC
+    \item Testing new Database features
+    \item New Design for CheckExec
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CheckExec}
+  \begin{itemize}
+    \item At TACC we require Build Env. match Submit Env.
+    \item Must have the similar compiler and mpi modules loaded.
+    \item Do other sites require the same?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CheckExec Questions}
+  \begin{itemize}
+    \item Sites running modules?
+    \item Build Env. matches Submit Env?
+    \item Would a CheckExec tool be helpful?
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{XALT Demo}
+  \begin{itemize}
+    \item Show modules hierarchy
+    \item ml --raw show xalt
+    \item Show debugging output
+    \item type -a {ld,mpirun}
+    \item Build programs
+    \item Run tests
+    \item Run utf8 program
+    \item Show database results
+  \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Lmod:
+      \begin{itemize}
+        \item Source: github.com/TACC/lmod.git, lmod.sf.net
+        \item Documentation: lmod.readthedocs.org
+      \end{itemize}
+    \item XALT:
+      \begin{itemize}
+        \item Source: github.com/Fahey-McLay/xalt.git, xalt.sf.net
+        \item Documentation: doc/*.pdf, xalt.readthedocs.org
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\end{document}

@@ -1,8 +1,8 @@
-Quick Start Guide - Prerequistes and Decisions
-==============================================
+Quick Start Guide
+=================
 
-Prerequisites
-^^^^^^^^^^^^^
+Prequisites
+^^^^^^^^^^^
 - Python 2.6 or later
 
 - Python MySQLDb module
@@ -27,40 +27,20 @@ Choose an installation directory, the directory will be referred to as XALT_DIR
 
 For XALT on multiple machines, you need to decide if you want to have one database or multiple databases.
 
-Either mode is supported.
-
-You will need a file/syslog to datbase scripts for each machine for both options.
+Either mode is supported
 
 **Lmod/ReverseMap**
 
-Lmod on multiple machines
+Lmod per machine etc
 
-- Machines have different software installations (module lists) AND you want ReverseMAP support.
-- Machines with different architectures.
+**Intercepting**
 
-Lmod provides the spider utility which creates the map. TLC module system does not need to be replaced.
+code launchers/linkers
 
-**Intercepting: linkers and launchers**
-If you have multiple code launchers and linkers, you must choose a method to intercept them. There are currently three options for wrapping.
+**etc dir**
 
-#. Aliasing  
-#. XALT modulefile
-#. Move the launcher
-	
-	:doc:`021_interception`
+location for new files
 
-**File Location**
-
-Choose a location for files the following files: xalt_db.conf and the reverse MapD directory. We recommend they go in XALT_DIR/etc, but
-In the case that you want the xalt_db.conf file hidden or secured, by overrunning at runtime with XALT_ETC_DIR or with the configuration option*::
-
-	--with-etcDir=ans 
-
-If your site contains more than one cluster AND you have a
-common location for installation it is important that each cluster has
-its own XALT_ETC_DIR.
-
-
-Next Steps - Installation
-^^^^^^^^^^^^^^^^^^^^^^^^^
-  :doc:`030_installation`
+Next Steps - Testing
+^^^^^^^^^^^^^^^^^^^^
+  :doc:`010_installation`

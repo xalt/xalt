@@ -1,0 +1,352 @@
+THIS_DIR := $(PARENT_DIR)/compiled
+VPATH = .:$(THIS_DIR)
+CXX := g++
+CC  := gcc
+MYSQL_CONFIG     := @MYSQL_CONFIG@
+ifneq ($(MYSQL_CONFIG),UNKNOWN_mysql_config)
+  MYSQL_CFLAGS  := $(shell $(MYSQL_CONFIG) --cflags) -DHAVE_MYSQL
+  MYSQL_LDFLAGS := $(shell $(MYSQL_CONFIG) --libs)  
+  MYSQL_LDFLAGS := $(shell $(THIS_DIR)/addRpath.sh $(MYSQL_LDFLAGS))
+endif
+ifeq ($(HAVE_LIBUUID),yes)
+  LIBUUID:=-luuid
+  HAVE_UUID:=-DHAVE_LIBUUID
+endif
+
+ifneq ($(XALT_FILE_PREFIX),USE_HOME)
+  USE_PREFIX:=-DHAVE_FILE_PREFIX
+endif
+
+
+
+ifneq ($(MY_HOSTNAME_PARSER),no)
+   HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
+   PARSER_TYPE                   := $(firstword $(subst :, ,$(MY_HOSTNAME_PARSER)))
+   ifeq ($(PARSER_TYPE),c_file)
+      MY_HOSTNAME_PARSER_SRC     := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.o
+   endif
+   ifeq ($(PARSER_TYPE),library)
+      MY_HOSTNAME_PARSER_LIBRARY := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_TARGET  := my_hostname_parser_target
+      MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.a
+   endif
+endif
+
+LIB_OPTIONS       := -fPIC -shared
+
+WARN_FLAGS  := -Wall -Wno-unused-result 
+CF_INIT     := -I. -fPIC 
+CXXFLAGS    := $(OPTLVL) $(WARN_FLAGS) -std=c++11 -Ibuild -I$(THIS_DIR) $(MYSQL_CFLAGS) $(USE_PREFIX)
+CFLAGS      := $(OPTLVL) $(WARN_FLAGS) -Ibuild -I$(THIS_DIR) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+
+C_SRC       :=                             \
+	       $(HOST_PARSER_SRC)          \
+               base64.c                    \
+               build_uuid.c                \
+               jsmn.c             	   \
+               transmit.c             	   \
+	       xalt_c_utils.c              \
+	       xalt_fgets_alloc.c 	   \
+               xalt_initialize.c  	   \
+               xalt_record_pkg.c           \
+               xalt_quotestring.c 	   \
+               xalt_realpath.c
+
+CXX_SRC     :=                             \
+               ConfigParser.C         	   \
+               Json.C                 	   \
+               Options.C              	   \
+               Process.C              	   \
+               ProgressBar.C          	   \
+               SyslogRecord.C         	   \
+               buildEnvT.C            	   \
+               buildRmapT.C           	   \
+               buildUserT.C           	   \
+               capture.C              	   \
+	       compute_sha1.C              \
+               epoch.C                	   \
+               extractMain.C    	   \
+               extractXALTRecord.C    	   \
+               f2db.C                 	   \
+               f2db_Options.C         	   \
+               link_direct2db.C       	   \
+               parseJsonStr.C         	   \
+               parseLDD.C             	   \
+               parseLDTrace.C         	   \
+               parseSyslog.C          	   \
+               run_direct2db.C        	   \
+               s2db_Options.C         	   \
+               test_record_pkg.C           \
+               translate.C            	   \
+	       walkProcessTree.C           \
+	       xalt_configuration_report.C \
+               xalt_epoch.C           	   \
+               xalt_extract_linker.C  	   \
+               xalt_generate_assembly.C    \
+               xalt_generate_linkdata.C    \
+               xalt_mysql_utils.C          \
+               xalt_run_submission.C       \
+               xalt_strip_linklib.C        \
+               xalt_syslog_to_db.C         \
+               xalt_utils.C                \
+               zstring.C
+
+
+TRP_EXEC     := $(DESTDIR)$(LIBEXEC)/test_record_pkg
+TRP_CXX_SRC  := test_record_pkg.C capture.C
+TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
+
+XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
+XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C            \
+                buildRmapT.C buildUserT.C capture.C run_direct2db.C extractXALTRecord.C parseJsonStr.C \
+                parseLDD.C translate.C xalt_mysql_utils.C xalt_utils.C epoch.C walkProcessTree.C       \
+                compute_sha1.C
+XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  lex.xalt_env.c transmit.c xalt_c_utils.c \
+                zstring.c base64.c
+XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
+
+XGA_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly
+XGA_CXX_SRC  := xalt_generate_assembly.C parseJsonStr.C
+XGA_C_SRC    := epoch.c jsmn.c xalt_quotestring.c
+XGA_OBJS     := $(patsubst %.C, %.o, $(XGA_CXX_SRC)) $(patsubst %.c, %.o, $(XGA_C_SRC))
+
+XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
+XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
+                xalt_mysql_utils.C Json.C parseLDTrace.C capture.C link_direct2db.C                  \
+                zstring.C  ConfigParser.C epoch.C compute_sha1.C
+XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c transmit.c xalt_c_utils.c base64.c     \
+                zstring.c
+XGL_OBJS     := $(patsubst %.C, %.o, $(XGL_CXX_SRC)) $(patsubst %.c, %.o, $(XGL_C_SRC))
+
+XEL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_extract_linker
+XEL_CXX_SRC  := xalt_extract_linker.C Process.C Json.C
+XEL_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c
+XEL_OBJS     := $(patsubst %.C, %.o, $(XEL_CXX_SRC)) $(patsubst %.c, %.o, $(XEL_C_SRC))
+
+XSL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib
+XSL_CXX_SRC  := xalt_strip_linklib.C parseJsonStr.C buildRmapT.C xalt_utils.C epoch.C
+XSL_C_SRC    := jsmn.c  xalt_fgets_alloc.c xalt_quotestring.c 
+XSL_OBJS     := $(patsubst %.C, %.o, $(XSL_CXX_SRC)) $(patsubst %.c, %.o, $(XSL_C_SRC))
+
+F2DB_EXEC    := $(DESTDIR)$(SBIN)/xalt_file_to_db
+F2DB_CXX_SRC := f2db.C f2db_Options.C buildRmapT.C parseJsonStr.C Json.C epoch.C xalt_utils.C \
+                link_direct2db.C run_direct2db.C ProgressBar.C translate.C xalt_mysql_utils.C \
+                ConfigParser.C epoch.C
+F2DB_C_SRC   := xalt_quotestring.c jsmn.c xalt_fgets_alloc.c base64.c xalt_c_utils.c
+F2DB_OBJS    := $(patsubst %.C, %.o, $(F2DB_CXX_SRC)) $(patsubst %.c, %.o, $(F2DB_C_SRC))
+
+S2DB_EXEC    := $(DESTDIR)$(SBIN)/xalt_syslog_to_db
+S2DB_CXX_SRC := xalt_syslog_to_db.C s2db_Options.C epoch.C ProgressBar.C SyslogRecord.C       \
+                parseJsonStr.C translate.C xalt_mysql_utils.C ConfigParser.C                  \
+                zstring.C buildRmapT.C parseSyslog.C xalt_utils.C link_direct2db.C            \
+                run_direct2db.C Json.C epoch.C
+S2DB_C_SRC   := xalt_fgets_alloc.c jsmn.c xalt_quotestring.c base64.c
+S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2DB_C_SRC))
+
+XCR_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
+XCR_CXX_SRC  := xalt_configuration_report.C epoch.C Json.C
+XCR_C_SRC    := xalt_quotestring.c 
+XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC)) $(patsubst %.c, %.o, $(XCR_C_SRC)) xalt_syshost.o
+
+XER_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x
+XER_CXX_SRC  := extractMain.C extractXALTRecord.C capture.C
+XER_OBJS     := $(patsubst %.C, %.o, $(XER_CXX_SRC))
+
+XRP_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
+XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
+                zstring.c base64.c xalt_syshost.c
+XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
+
+
+
+%.d: %.c
+	@set -e; rm -f $@;                                  \
+        $(CC) -MM $(CFLAGS) $< > $@.$$$$;                   \
+        sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+        rm -f $@.$$$$
+
+%.d: %.C
+	@set -e; rm -f $@;                                  \
+        $(CXX) -MM $(CXXFLAGS) $< > $@.$$$$;                \
+        sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+        rm -f $@.$$$$
+
+all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
+          $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
+          $(XSL_EXEC) $(F2DB_EXEC) $(S2DB_EXEC) $(XRP_EXEC)     \
+          $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
+	  $(DESTDIR)$(LIBEXEC)/xalt_syshost                     \
+          $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
+	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
+	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
+          $(DESTDIR)$(LIBEXEC)/xalt_epoch
+
+
+ECHO:
+	@echo XALT_EXECUTABLE_TRACKING: $(XALT_EXECUTABLE_TRACKING)
+
+my_hostname_parser_target:
+	cp $(MY_HOSTNAME_PARSER_LIBRARY) $(DESTDIR)$(LIB64)/my_hostname_parser.a
+
+$(TRP_EXEC) : $(TRP_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
+
+$(XRP_EXEC) : $(XRP_OBJS)
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(LIBUUID)
+$(XRS_EXEC) : $(XRS_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz -lcrypto -lpthread $(MYSQL_LDFLAGS) 
+
+$(XGA_EXEC): $(XGA_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+
+$(XGL_EXEC): $(XGL_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ $(MYSQL_LDFLAGS) -lz -lcrypto -lpthread
+
+$(XEL_EXEC) : $(XEL_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+
+$(XSL_EXEC) : $(XSL_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+
+$(XCR_EXEC) : $(XCR_OBJS) 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
+
+$(XER_EXEC) : $(XER_OBJS) 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ 
+
+$(F2DB_EXEC) : $(F2DB_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(MYSQL_LDFLAGS)
+
+$(S2DB_EXEC) : $(S2DB_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lz $(MYSQL_LDFLAGS)
+
+$(DESTDIR)$(LIBEXEC)/xalt_realpath: xalt_realpath.o
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+
+$(DESTDIR)$(LIBEXEC)/xalt_epoch: xalt_epoch.o epoch.o
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+
+$(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
+	$(LINK.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -o $@ $^
+
+lex.xalt_env.c: $(CURDIR)/build/xalt_env_parser.lex
+	flex -P xalt_env -o $@ $^
+
+lex.xalt_env.o: lex.xalt_env.c
+	$(COMPILE.c) -Wno-unused-function  -o $@ $^
+
+lex.__XALT_pathR.c: $(CURDIR)/build/xalt_path_parser.lex
+	flex -P __XALT_pathR -o $@ $^
+
+lex.__XALT_pathL.c: $(CURDIR)/build/xalt_path_parser.lex
+	flex -P __XALT_pathL -o $@ $^
+
+lex.__XALT_hostR.c: $(CURDIR)/build/xalt_hostname_parser.lex
+	flex -P __XALT_hostR -o $@ $^
+
+lex.__XALT_hostL.c: $(CURDIR)/build/xalt_hostname_parser.lex
+	flex -P __XALT_hostL -o $@ $^
+
+
+xalt_syshost.o: build/xalt_syshost.c
+	$(COMPILE.c) -c -o $@ $^
+
+xalt_syshost_main.o: $(CURDIR)/build/xalt_syshost.c xalt_fgets_alloc.h
+	$(LINK.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) -o $@ $<
+
+
+build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
+            $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o     $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
+            $(DESTDIR)$(LIB64)/libxalt_init.so        $(DESTDIR)$(LIB64)/xalt_initialize.o         \
+            $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
+            $(DESTDIR)$(LIB64)/lex.__XALT_host.o      $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
+            $(DESTDIR)$(LIB64)/build_uuid.o           $(MY_HOSTNAME_PARSER_OBJ)
+
+build_init_32bit_no:
+
+build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xalt_syshost_32.o    \
+                      $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o \
+                      $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
+                      $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/build_uuid_32.o      \
+                      $(DESTDIR)$(LIB)/my_hostname_parser_32.o
+
+
+$(DESTDIR)$(LIB64)/lex.__XALT_path.o: lex.__XALT_pathR.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o: lex.__XALT_pathL.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB64)/lex.__XALT_host.o: lex.__XALT_hostR.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o: lex.__XALT_hostL.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
+	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
+$(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/build/xalt_syshost.c
+	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
+$(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
+	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
+$(DESTDIR)$(LIB64)/build_uuid.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB64)/build_uuid_preload.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
+	$(COMPILE.c) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
+$(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
+	$(LINK.c) $(CFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
+$(DESTDIR)$(LIB64)/my_hostname_parser.o: $(MY_HOSTNAME_PARSER_SRC)
+	$(COMPILE.c) -c -o $@ $^
+
+
+$(DESTDIR)$(LIB)/lex.__XALT_path_32.o: lex.__XALT_pathR.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o: lex.__XALT_pathL.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB)/lex.__XALT_host_32.o: lex.__XALT_hostR.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: lex.__XALT_hostL.c xalt_obfuscate.h
+	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
+	$(COMPILE.c) -m32  $(CF_INIT) -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_syshost_32.o: $(CURDIR)/build/xalt_syshost.c
+	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 
+$(DESTDIR)$(LIB)/build_uuid_32.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+$(DESTDIR)$(LIB)/build_uuid_preload_32.o: build_uuid.c build/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
+	$(COMPILE.c) -m32 $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
+	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
+	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR    -DIDX=1 -Ibuild  -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h build/xalt_config.h 
+	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -Ibuild  -o $@ -c $<
+$(DESTDIR)$(LIB)/my_hostname_parser_32.o: $(MY_HOSTNAME_PARSER_SRC)
+	$(COMPILE.c) -m32 -c -o $@ $^
+$(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o \
+                                  $(DESTDIR)$(LIB)/xalt_syshost_32.o            \
+                                  $(DESTDIR)$(LIB)/build_uuid_preload_32.o      \
+                                  $(DESTDIR)$(LIB)/xalt_quotestring_32.o        \
+                                  $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o \
+                                  $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o \
+                                  $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o        \
+                                  $(DESTDIR)$(LIB)/my_hostname_parser_32.o   
+	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
+
+
+$(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
+                                    $(DESTDIR)$(LIB64)/xalt_syshost.o            \
+                                    $(DESTDIR)$(LIB64)/build_uuid_preload.o      \
+                                    $(DESTDIR)$(LIB64)/xalt_quotestring.o        \
+                                    $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
+                                    $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
+                                    $(MY_HOSTNAME_PARSER_OBJ)                    \
+                                    $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
+	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
+
+neat:
+	$(RM) *~
+clean: 
+	$(RM) *.o 
+
+
+include $(patsubst %.c, %.d, $(C_SRC)) $(patsubst %.C, %.d, $(CXX_SRC))

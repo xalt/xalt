@@ -12,33 +12,68 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
+     rm -f results.csv
+
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
      PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
 
      initialize
+     export MY_HOST=`uname -n`
+     installXALT --with-syshostConfig=env_var:MY_HOST
+     displayThis "buildRmapT"
      buildRmapT
-     installXALT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
-     installDB 
+     displayThis "installDB"
+     installDB
 
+     displayThis "module commands"
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+
+     export COMPILER_PATH=$XALT_BIN
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=syslog
+     export XALT_DISABLE_BACKGROUNDING=yes
      
+     displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
-     mpirun -n 1 ./hello 
+     displayThis  "mpirun -n 1 ./hello"
+     mpirun -n 1 ./hello "a';'d"
 
-     export XALT_TRANSMISSION_STYLE=syslogV1
+     displayThis  "mpicc -o hello2 $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello.x $(projectDir)/rt/mpi_hello_world.c
+     displayThis  "mpirun -n 1 ./hello"
      mpirun -n 1 ./hello.x
 
-     export XALT_USERS="$USER;$outputDir"
-     xalt_syslog_to_db.py  --dbname $DBNAME --syslog_file syslog.log --reverseMapD $outputDir/reverseMapD
+     displayThis  "mpirun -n 1 ./hello"
+     mpirun -n 1 ./hello.x
+     
+     export LD_LIBRARY_PATH=$outputDir/XALT/xalt/xalt/lib64:$outputDir/XALT/xalt/xalt/lib:$LD_LIBRARY_PATH
+     export LD_PRELOAD=libxalt_init.so
+     
+     displayThis "test_record_pkg"
+     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
 
-     check_entries_db.py --dbname $DBNAME --results results.csv
+     unset LD_LIBRARY_PATH
+     unset LD_PRELOAD
+
+     displayThis  "xalt_syslog_to_db.py"
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
+
+
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 4 --functions 4 --links 2 --pkgs 3
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
    """,
 
    'tests' : [

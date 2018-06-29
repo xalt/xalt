@@ -1,4 +1,3 @@
-xalt_config.h
-xalt_syshost.c
-xalt_regex.h
+__build__
 stamp-h
+*.d

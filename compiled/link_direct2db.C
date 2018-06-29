@@ -1,29 +1,31 @@
 #include <time.h>
-#include <my_global.h>
-#include <mysql.h>
 #include <string>
 #include <string.h>
 #include <stdlib.h>
 
 #include "link_submission.h"
+#include "link_direct2db.h"
 #include "ConfigParser.h"
 #include "Json.h"
 #include "xalt_mysql_utils.h"
+#include "xalt_utils.h"
+
+#ifdef HAVE_MYSQL
 
 uint select_link_id(MYSQL* conn, std::string& link_uuid)
 {
-  const char* stmt_sql = "SELECT `link_uuid` FROM `xalt_link` WHERE `uuid` = ? limit 1";
+  const char* stmt_sql = "SELECT `link_id` FROM `xalt_link` WHERE `uuid` = ? LIMIT 1";
 
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting link_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -31,7 +33,7 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
   memset((void *) param,  0, sizeof(param));
   memset((void *) result, 0, sizeof(result));
 
-  // STRING PARAM[0] run_uuid;
+  // STRING PARAM[0] link_uuid;
   std::string::size_type len_link_uuid = link_uuid.size();
   param[0].buffer_type   = MYSQL_TYPE_STRING;
   param[0].buffer        = (void *) link_uuid.c_str();
@@ -40,11 +42,11 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
       
-  // UNSIGNED INT RESULT[0] run_id;
+  // UNSIGNED INT RESULT[0] link_id;
   uint                    link_id;
   result[0].buffer_type   = MYSQL_TYPE_LONG;
   result[0].buffer        = (void *) &link_id;
@@ -52,13 +54,13 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   if (mysql_stmt_bind_result(stmt, result))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id");
+      print_stmt_error(stmt, "Could not bind paramaters for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for selecting link_id");
+      print_stmt_error(stmt, "Could not execute stmt for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -67,33 +69,33 @@ uint select_link_id(MYSQL* conn, std::string& link_uuid)
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for selecting link_id");
+      print_stmt_error(stmt, "Could not close stmt for selecting link_id",__FILE__,__LINE__);
       exit(1);
     }
 
   // Clean up!
   mysql_stmt_free_result(stmt);
-  return iret == 0 ? 0 : link_id;
+  return (iret == MYSQL_NO_DATA) ? 0 : link_id;
 }
 
-void insert_xalt_link(MYSQL* conn, Table& resultT, Vstring& linklineA, uint* link_id)
+void insert_xalt_link(MYSQL* conn, Table& resultT, Table& rmapT, Vstring& linklineA, uint* link_id)
 {
 
-  const char* stmt_sql = "INSERT into xalt_link VALUES (NULL,?,?,?, ?,?,?, COMPRESS(?),?,?, ?,?,?)"
+  const char* stmt_sql = "INSERT into xalt_link VALUES (NULL,?,?,?, ?,?,?, COMPRESS(?),?,?, ?,?)";
   MYSQL_STMT *stmt = mysql_stmt_init(conn);
   if (!stmt)
     {
-      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt, stmt_sql, strlen(stmt_sql)))
     {
-      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id");
+      print_stmt_error(stmt, "Could not prepare stmt for selecting run_id",__FILE__,__LINE__);
       exit(1);
     }
 
-  MYSQL_BIND param[12];
+  MYSQL_BIND param[11];
   memset((void *) param,  0, sizeof(param));
   
   // STRING PARAM[0] link_uuid
@@ -144,29 +146,33 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Vstring& linklineA, uint* lin
   param[4].length        = &len_link_path;
   
   // STRING PARAM[5] link_module_name
-  param[5].buffer_type    = MYSQL_TYPE_STRING;
-  std::string::size_type len_module_name = 0;
-  std::string            module_name;
-  my_bool                module_name_null_flag = 0;
-  param[5].buffer        = (void *) module_name.c_str();
-  param[5].buffer_length = module_name.capacity();
+  const int                  module_name_sz = 64;
+  char                       module_name[module_name_sz];
+  std::string::size_type     len_module_name = 0;      // set length in loop
+  my_bool                    module_name_null_flag;
+  param[5].buffer_type   = MYSQL_TYPE_STRING;
+  param[5].buffer        = (void *) &module_name[0];
+  param[5].buffer_length = module_name_sz;
   param[5].is_null       = &module_name_null_flag;
   param[5].length        = &len_module_name;
-  if (path2module(link_path, rmapT, module_name))
-    len_module_name         = module_name.size();
+  if (path2module(link_path.c_str(), rmapT, module_name,module_name_sz))
+    {
+      module_name_null_flag = 0;
+      len_module_name       = strlen(module_name);
+    }
   else
     module_name_null_flag = 1;
 
   // STRING PARAM[6] link line (json string) (db compresses object)
-  Json json;
+  Json json(Json::Kind::Json_ARRAY);
   json.add(NULL,linklineA);
   json.fini();
   std::string linkline   = json.result();
   std::string::size_type len_linkline = linkline.size();
-  param[4].buffer_type   = MYSQL_TYPE_STRING;
-  param[4].buffer        = (void *) linkline.c_str();
-  param[4].buffer_length = linkline.capacity();
-  param[4].length        = &len_linkline;
+  param[6].buffer_type   = MYSQL_TYPE_STRING;
+  param[6].buffer        = (void *) linkline.c_str();
+  param[6].buffer_length = linkline.capacity();
+  param[6].length        = &len_linkline;
   
   // STRING PARAM[7] build_user
   std::string& build_user = resultT["build_user"];
@@ -189,28 +195,23 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Vstring& linklineA, uint* lin
   param[9].buffer_type   = MYSQL_TYPE_DOUBLE;
   param[9].buffer        = (void *) &build_epoch;
 
-  // TINYINT PARAM[10] exit_code
-  char exit_code        = (char ) strtol(resultT["exit_code"],(char**) NULL, 10);
-  param[10].buffer_type = MYSQL_TYPE_TINY;
-  param[10].buffer      = (void *) &exit_code;
-
-  // STRING PARAM[11] build_syshost
-  std::string& exec_path = resultT["exec_path"];
+  // STRING PARAM[10] exec_path
+  std::string& exec_path   = resultT["exec_path"];
   std::string::size_type len_exec_path = exec_path.size();
-  param[11].buffer_type   = MYSQL_TYPE_STRING;
-  param[11].buffer        = (void *) exec_path.c_str();
-  param[11].buffer_length = exec_path.capacity();
-  param[11].length        = &len_exec_path;
+  param[10].buffer_type   = MYSQL_TYPE_STRING;
+  param[10].buffer        = (void *) exec_path.c_str();
+  param[10].buffer_length = exec_path.capacity();
+  param[10].length        = &len_exec_path;
   
   if (mysql_stmt_bind_param(stmt, param))
     {
-      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_link");
+      print_stmt_error(stmt, "Could not bind paramaters for insert xalt_link",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_execute(stmt))
     {
-      print_stmt_error(stmt, "Could not execute stmt for insert xalt_link");
+      print_stmt_error(stmt, "Could not execute stmt for insert xalt_link",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -218,29 +219,29 @@ void insert_xalt_link(MYSQL* conn, Table& resultT, Vstring& linklineA, uint* lin
 
   if (mysql_stmt_close(stmt))
     {
-      print_stmt_error(stmt, "Could not close stmt for insert xalt_link");
+      print_stmt_error(stmt, "Could not close stmt for insert xalt_link",__FILE__,__LINE__);
       exit(1);
     }
 }
 
-void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
+void insert_functions(MYSQL* conn, time_t epoch, Set& funcSet, uint link_id)
 {
   //************************************************************
   // build SELECT obj_id INTO xalt_object stmt
   //************************************************************
 
-  const char* stmt_sql_s = "SELECT func_id FROM xalt_function WHERE function_name=?"
+  const char* stmt_sql_s = "SELECT func_id FROM xalt_function WHERE function_name=? LIMIT 1";
 
   MYSQL_STMT *stmt_s = mysql_stmt_init(conn);
   if (!stmt_s)
     {
-      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory");
+      print_stmt_error(stmt_s, "mysql_stmt_init(), out of memmory",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_s, stmt_sql_s, strlen(stmt_sql_s)))
     {
-      print_stmt_error(stmt_s, "Could not prepare stmt_s for select func_id");
+      print_stmt_error(stmt_s, "Could not prepare stmt_s for select func_id",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -248,18 +249,19 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   memset((void *) param_s,  0, sizeof(param_s));
   memset((void *) result_s, 0, sizeof(result_s));
 
-  std::string funcName;      funcName.reserve(512);
+  const int funcNameSz = 512;
+  char funcName[funcNameSz];
 
   // STRING PARAM_S[0] funcName;
   std::string::size_type len_funcName = 0;          // set length later in loop.
   param_s[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_s[0].buffer        = (void *) funcName.c_str();
-  param_s[0].buffer_length = funcName.capacity();
+  param_s[0].buffer        = (void *) &funcName;
+  param_s[0].buffer_length = funcNameSz;
   param_s[0].length        = &len_funcName;
 
   if (mysql_stmt_bind_param(stmt_s, param_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(1)",__FILE__,__LINE__);
       exit(1);
     }
       
@@ -271,7 +273,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
 
   if (mysql_stmt_bind_result(stmt_s, result_s))
     {
-      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)");
+      print_stmt_error(stmt_s, "Could not bind paramaters for selecting obj_id(2)",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -283,13 +285,13 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   MYSQL_STMT *stmt_i = mysql_stmt_init(conn);
   if (!stmt_i)
     {
-      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)");
+      print_stmt_error(stmt_i, "mysql_stmt_init(), out of memmory(2)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_i, stmt_sql_i, strlen(stmt_sql_i)))
     {
-      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_function");
+      print_stmt_error(stmt_i, "Could not prepare stmt_i for insert into xalt_function",__FILE__,__LINE__);
       exit(1);
     }
 
@@ -298,37 +300,37 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
 
   // STRING PARAM_I[0] funcName
   param_i[0].buffer_type   = MYSQL_TYPE_STRING;
-  param_i[0].buffer        = (void *) funcName.c_str();
-  param_i[0].buffer_length = funcName.capacity();
+  param_i[0].buffer        = (void *) &funcName;
+  param_i[0].buffer_length = funcNameSz;
   param_i[0].length        = &len_funcName;
 
   if (mysql_stmt_bind_param(stmt_i, param_i))
     {
-      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_i, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
   
   //************************************************************
-  // "INSERT into join_link_function VALUES (NULL, ?, ?)"
+  // "INSERT into join_link_function VALUES (NULL, ?, ?, ?)"
   //************************************************************
 
-  const char* stmt_sql_ii = "INSERT INTO join_link_function VALUES(NULL, ?, ?) "
-                       "ON DUPLICATE KEY UPDATE func_id = ?, link_id = ?"
+  const char* stmt_sql_ii = "INSERT INTO join_link_function VALUES(NULL, ?, ?, ?) "
+                            "ON DUPLICATE KEY UPDATE func_id = ?, link_id = ?";
 
   MYSQL_STMT *stmt_ii     = mysql_stmt_init(conn);
   if (!stmt_ii)
     {
-      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)");
+      print_stmt_error(stmt_ii, "mysql_stmt_init(), out of memmory(3)",__FILE__,__LINE__);
       exit(1);
     }
 
   if (mysql_stmt_prepare(stmt_ii, stmt_sql_ii, strlen(stmt_sql_ii)))
     {
-      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into join_link_function");
+      print_stmt_error(stmt_ii, "Could not prepare stmt_ii for insert into join_link_function",__FILE__,__LINE__);
       exit(1);
     }
 
-  MYSQL_BIND param_ii[4];
+  MYSQL_BIND param_ii[5];
   memset((void *) param_ii,  0, sizeof(param_ii));
 
   // UINT PARAM_II[0] func_id
@@ -341,31 +343,49 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   param_ii[1].buffer        = (void *) &link_id;
   param_ii[1].is_unsigned   = 1;
 
-  // UINT PARAM_II[2] func_id
-  param_ii[2].buffer_type   = MYSQL_TYPE_LONG;
-  param_ii[2].buffer        = (void *) &func_id;
-  param_ii[2].is_unsigned   = 1;
+  // DATE PARAM_II[2] date
+  MYSQL_TIME my_datetime;
+  struct tm* curr_time      = localtime(&epoch);
+  my_datetime.year          = curr_time->tm_year + 1900;
+  my_datetime.month         = curr_time->tm_mon  + 1;
+  my_datetime.day           = curr_time->tm_mday;
+  my_datetime.hour          = 0;
+  my_datetime.minute        = 0;
+  my_datetime.second        = 0;
+  my_datetime.second_part   = 0;
+  param_ii[2].buffer_type   = MYSQL_TYPE_DATE;
+  param_ii[2].buffer        = &my_datetime;
 
-  // UINT PARAM_II[3] link_id
+  // UINT PARAM_II[3] func_id
   param_ii[3].buffer_type   = MYSQL_TYPE_LONG;
-  param_ii[3].buffer        = (void *) &link_id;
+  param_ii[3].buffer        = (void *) &func_id;
   param_ii[3].is_unsigned   = 1;
+
+  // UINT PARAM_II[4] link_id
+  param_ii[4].buffer_type   = MYSQL_TYPE_LONG;
+  param_ii[4].buffer        = (void *) &link_id;
+  param_ii[4].is_unsigned   = 1;
 
   if (mysql_stmt_bind_param(stmt_ii, param_ii))
     {
-      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object");
+      print_stmt_error(stmt_ii, "Could not bind paramaters for inserting into xalt_object",__FILE__,__LINE__);
       exit(1);
     }
 
-  for (auto it = funcSet.begin(); it != funcSet.end(); ++it)
+  for (auto const & it : funcSet)
     {
-      funcName     = *it;
-      len_funcName = funcName.size()
+      len_funcName = it.size();
+      strcpy(&funcName[0], it.c_str());
 
       // "SELECT func_id ..."
       if (mysql_stmt_execute(stmt_s))
         {
-          print_stmt_error(stmt_s, "Could not execute stmt for selecting func_id");
+          print_stmt_error(stmt_s, "Could not execute stmt for selecting func_id",__FILE__,__LINE__);
+          exit(1);
+        }
+      if (mysql_stmt_store_result(stmt_s))
+        {
+          print_stmt_error(stmt_s, "Could not mysql_stmt_store_result() selecting func_id",__FILE__,__LINE__);
           exit(1);
         }
       
@@ -375,7 +395,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
           // "INSERT INTO xalt_function ..."
           if (mysql_stmt_execute(stmt_i))
             {
-              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object");
+              print_stmt_error(stmt_i, "Could not execute stmt for inserting into xalt_object",__FILE__,__LINE__);
               exit(1);
             }
           func_id = (uint) mysql_stmt_insert_id(stmt_i);
@@ -384,7 +404,7 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
       // "INSERT INTO join_link_function ..."
       if (mysql_stmt_execute(stmt_ii))
         {
-          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into join_link_function");
+          print_stmt_error(stmt_ii, "Could not execute stmt for inserting into join_link_function",__FILE__,__LINE__);
           exit(1);
         }
     }
@@ -392,24 +412,24 @@ void insert_functions(MYSQL* conn, Set& funcSet, uint link_id)
   mysql_stmt_free_result(stmt_s);
   if (mysql_stmt_close(stmt_s))
     {
-      print_stmt_error(stmt_s, "Could not close stmt for selecting func_id");
+      print_stmt_error(stmt_s, "Could not close stmt for selecting func_id",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_i))
     {
-      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_function");
+      print_stmt_error(stmt_i, "Could not close stmt for inserting into xalt_function",__FILE__,__LINE__);
       exit(1);
     }
   if (mysql_stmt_close(stmt_ii))
     {
-      print_stmt_error(stmt_ii, "Could not close stmt for inserting into join_link_function");
+      print_stmt_error(stmt_ii, "Could not close stmt for inserting into join_link_function",__FILE__,__LINE__);
       exit(1);
     }
 }
 
-void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
+void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
 {
-  ConfigParser cp("xalt_db.conf");
+  ConfigParser cp(confFn);
 
   MYSQL *conn = mysql_init(NULL);
 
@@ -422,16 +442,31 @@ void link_direct2db(Vstring& linklineA, Table& resultT, std::vector<Libpair>& li
   // Note the interface is in autocommit mode.  This should probably change to transaction for the entire link record.
 
   /* (1) Open DB */
-  if (mysql_real_connect(conn, cp.host().c_str(), cp.user().c_str(), cp.passwd().c_str(), cp.db().c_str(), 3306, NULL, 0) == NULL) 
+  if (xalt_open_mysql_connection(conn, cp) == NULL)
     finish_with_error(conn);
+
+  // Start the transaction
+  mysql_query(conn, "START TRANSACTION");
 
   // Check to see if we have already stored this link record.  If so then return.
   std::string link_uuid = resultT["uuid"];
-  if (select_link_id(conn, link_uuid) == 0)
+  if (select_link_id(conn, link_uuid) != 0)
     return;
   
-  insert_xalt_link(conn, resultT, linklineA, &link_id);
-  insert_objects(conn, "join_link_object", link_id, libA, resultT["syshost"], rmapT);
-  insert_functions(conn, funcSet, link_id);
+  uint link_id;
+  time_t build_epoch = (time_t) strtod(resultT["build_epoch"].c_str(), NULL);
+  insert_xalt_link(conn, resultT, rmapT, linklineA, &link_id);
+  insert_objects(conn, "join_link_object", build_epoch, link_id, libA, resultT["build_syshost"], rmapT);
+  insert_functions(conn, build_epoch, funcSet, link_id);
+  mysql_query(conn, "COMMIT");
+  mysql_close(conn);
 }
 
+#else
+void link_direct2db(const char* confFn, Vstring& linklineA, Table& resultT, std::vector<Libpair>& libA, Set& funcSet, Table& rmapT)
+{
+  fprintf(stderr,"This version of XALT was not built with MySQL support.\n"
+          "You can not use the direct2db transmission style.  Aborting!\n");
+  exit(1);
+}
+#endif //HAVE_MYSQL

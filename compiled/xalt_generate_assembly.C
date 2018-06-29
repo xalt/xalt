@@ -3,22 +3,23 @@
 #include <stdio.h>
 #include <sys/utsname.h>
 
-#include "extract_linker.h"
+#include "epoch.h"
 #include "xalt_config.h"
-
-double epoch()
-{
-  struct timeval tm;
-  gettimeofday(&tm, NULL);
-  return tm.tv_sec + 1.0e-6*tm.tv_usec;
-}
+#include "parseJsonStr.h"
 
 int main(int argc, char* argv[])
 {
-  const char * uuid    = argv[1];
-  const char * syshost = argv[2];
-  const char * fn      = argv[3];
+  int          i       = 1;
+  const char * uuid    = argv[i++];
+  const char * syshost = argv[i++];
+  const char * fn      = argv[i++];
+  std::string  jsonStr = argv[i++];
   const char * version = XALT_VERSION;
+
+  //--------------------------------------------------
+  // Convert an empty jsonStr to "{}"
+  if (jsonStr.size() == 0)
+    jsonStr = "{}";
 
   double tt    = epoch();
   time_t clock = (time_t) tt;
@@ -38,7 +39,7 @@ int main(int argc, char* argv[])
   std::string compiler;
   std::string compilerPath;
   Vstring     linklineA;
-  extract_linker(compiler, compilerPath, linklineA);
+  parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, linklineA);
   
   //--------------------------------------------------
   // Build user, osName and system;
@@ -49,11 +50,20 @@ int main(int argc, char* argv[])
   if (user == NULL)
     user = "unknown";
 
+  const char * loadedmodules = getenv("LOADEDMODULES");
+  if (loadedmodules == NULL)
+    loadedmodules = "";
+
+  const char * lmfiles = getenv("_LMFILES_");
+  if (lmfiles == NULL)
+    lmfiles = "";
+
   std::string osName = u.sysname;
   osName.append("_%_%_");
   osName.append(u.release);
   
   std::string system = u.sysname;
+  std::string host   = u.nodename;
 
   FILE* fp = fopen(fn,"w");
 
@@ -91,15 +101,19 @@ int main(int argc, char* argv[])
   // Print cushion
   fprintf(fp,"\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"<XALT_Version>%%%%%s%%%%\"\n",version);
-  fprintf(fp,"\t.asciz \"<Build.Syshost>%%%%%s%%%%\"\n",syshost);
-  fprintf(fp,"\t.asciz \"<Build.compiler>%%%%%s%%%%\"\n",compiler.c_str());
-  fprintf(fp,"\t.asciz \"<Build.compilerPath>%%%%%s%%%%\"\n",compilerPath.c_str());
-  fprintf(fp,"\t.asciz \"<Build.OS>%%%%%s%%%%\"\n",osName.c_str());
-  fprintf(fp,"\t.asciz \"<Build.User>%%%%%s%%%%\"\n",user);
-  fprintf(fp,"\t.asciz \"<Build.UUID>%%%%%s%%%%\"\n",uuid);
-  fprintf(fp,"\t.asciz \"<Build.Year>%%%%%s%%%%\"\n",year);
-  fprintf(fp,"\t.asciz \"<Build.date>%%%%%s%%%%\"\n",date);
-  fprintf(fp,"\t.asciz \"<Build.Epoch>%%%%%s%%%%\"\n",epochStr);
+  fprintf(fp,"\t.asciz \"<Build_host>%%%%%s%%%%\"\n",host.c_str());
+  fprintf(fp,"\t.asciz \"<Build_Syshost>%%%%%s%%%%\"\n",syshost);
+  fprintf(fp,"\t.asciz \"<Build_compiler>%%%%%s%%%%\"\n",compiler.c_str());
+  fprintf(fp,"\t.asciz \"<Build_compilerPath>%%%%%s%%%%\"\n",compilerPath.c_str());
+  fprintf(fp,"\t.asciz \"<Build_OS>%%%%%s%%%%\"\n",osName.c_str());
+  fprintf(fp,"\t.asciz \"<Build_User>%%%%%s%%%%\"\n",user);
+  fprintf(fp,"\t.asciz \"<Build_UUID>%%%%%s%%%%\"\n",uuid);
+  fprintf(fp,"\t.asciz \"<Build_Year>%%%%%s%%%%\"\n",year);
+  fprintf(fp,"\t.asciz \"<Build_date>%%%%%s%%%%\"\n",date);
+  fprintf(fp,"\t.asciz \"<Build_Epoch>%%%%%s%%%%\"\n",epochStr);
+  fprintf(fp,"\t.asciz \"<Build_LOADEDMODULES>%%%%%s%%%%\"\n",loadedmodules);
+  fprintf(fp,"\t.asciz \"<Build_LMFILES>%%%%%s%%%%\"\n",lmfiles);
+  fprintf(fp,"\t.asciz \"<Build_Epoch>%%%%%s%%%%\"\n",epochStr);
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
 

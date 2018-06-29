@@ -1,7 +1,6 @@
 # -*- python -*-
 
 test_name = "end2end"
-
 test_descript = {
    'description' : "End to end test",
    'keywords'    : [ "simple", test_name,],
@@ -13,36 +12,141 @@ test_descript = {
      . $(projectDir)/rt/common_funcs.sh
 
      initialize
+
+     installXALT --with-syshostConfig=nth_name:2 
+     displayThis "buildRmapT"
      buildRmapT
-     installXALT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
-     installDB  
 
+     displayThis "installDB"
+     installDB 
+
+     rm -f get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv
+
+     displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 
+     export COMPILER_PATH=$XALT_BIN
+     export SBATCH_ACCOUNT=rtm
+     export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_DISABLE_BACKGROUNDING=yes
+
+     displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
 
-     export PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
+     export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
-     export PATH=.:$PATH
-     mpirun -n 1 hello 
+     displayThis "mpirun -n 1 ./hello"
+     mpirun -n 1 ./hello 
      
-     
-     [ -d Ðì® ] || mkdir Ðì®
-     mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c
-      
+     displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
+     rm -rf Ðì®
+     mkdir  Ðì®
+     mpicc -o helloñ -Wl,--print-map $(projectDir)/rt/mpi_hello_world.c > map.log 2>&1
+     mv helloñ Ðì®
+
+     displayThis "mpirun -n 1 Ðì®/helloñ"
      mpirun -n 1 Ðì®/helloñ
      
-     export XALT_USERS="$USER;$outputDir"
-     xalt_file_to_db.py  --dbname $DBNAME
+     displayThis "Setting LD_PRELOAD, ./hello"
+     export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
+     ./hello --ntasks p "a';'d"
+     
+     displayThis "build empty_regexp"
+     gcc -o empty_regexp $(testDir)/empty_regexp.c 
+     displayThis "run empty_regexp"
+     ./empty_regexp
 
-     check_entries_db.py --dbname $DBNAME --results result.csv
-     finishTest -o $(resultFn) -t $(runtimeFn) result.csv
+     displayThis "build try_uuid and run it"
+     gcc -o try_uuid $(testDir)/try_uuid.c -luuid
+     ./try_uuid
+
+     displayThis "mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
+     
+     displayThis "mpirun -n 1 ./helloññ"
+     export RTM_PATH="RTM path FOO"
+     mpirun -n 1 ./helloññ
+
+     displayThis "Disable XALT TRACKING"
+     displayThis "mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c"
+     unset XALT_EXECUTABLE_TRACKING
+     mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c
+
+     displayThis "Enable XALT TRACKING"
+     displayThis "./helloñññ"
+     export XALT_EXECUTABLE_TRACKING=yes
+     ./helloñññ
+
+
+     displayThis "XALT_SCALAR_TRACKING=no ./helloñññ"
+     XALT_SCALAR_TRACKING=no ./helloñññ
+
+     displayThis "gfortran -fopenmp -o omp_pi"
+     gfortran -fopenmp -o omp_pi $(testDir)/omp_pi.f90
+
+     displayThis "OMP_NUM_THREADS=4 ./omp_pi"
+     OMP_NUM_THREADS=4 ./omp_pi
+
+     displayThis "mpif90 -fopenmp -o hybrid_daxpy"
+     mpif90 -fopenmp -o hybrid_daxpy $(testDir)/hybrid_daxpy.f90
+     
+
+     displayThis "OMP_NUM_THREADS=2 ./mpirun -n 2 ./hybrid_daxpy"
+     OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy
+
+     g++ -o try.rd $(testDir)/try.C -rdynamic
+
+     displayThis "XALT_TRACING=yes ./try.rd > try.log 2>&1"
+     XALT_TRACING=yes ./try.rd > try.PRELOAD.log 2>&1
+
+     displayThis "XALT_TRACING=yes LD_PRELOAD= ./try.rd > try.log 2>&1"
+     LD_PRELOAD= XALT_TRACING=yes ./try.rd > try.REGULAR.log 2>&1
+
+
+     displayThis "XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c"
+     XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c
+     displayThis "./get_XALT_env"
+     ./get_XALT_env
+
+     gcc -fPIC -c -o a.o $(testDir)/a.c
+     gcc -fPIC -c -o b.o $(testDir)/b.c
+     gcc -fPIC -c -o c.o $(testDir)/c.c
+     
+     displayThis "Build shared library"
+     gcc -o libabc.so -fPIC -shared a.o b.o c.o
+
+     displayThis "test_record_pkg"
+     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
+
+     unset LD_PRELOAD
+     displayThis "Extract Watermark"
+     xalt_extract_record libabc.so
+   
+     displayThis "rm xalt_run_submission; ./hello"
+     rm XALT/xalt/xalt/libexec/xalt_run_submission
+
+     XALT_TRACING=yes ./hello
+
+     export XALT_USERS="$USER;$outputDir"
+
+     displayThis "xalt_file_to_db.py"
+     xalt_file_to_db.py  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
+
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 13 --functions 4 --links 10
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
    """,
 
    'tests' : [

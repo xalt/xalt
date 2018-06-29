@@ -1,16 +1,24 @@
-#include <iostream>
+#include <stdlib.h>
+#include <string.h>
+#include "compute_sha1.h"
 #include "run_submission.h"
 #include "capture.h"
 #include "xalt_config.h"
+#include "epoch.h"
 
-void parseLDD(std::string& exec, std::vector<Libpair>& libA)
+
+ArgV            argV;
+
+void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, double& t_sha1)
 {
   std::string  cmd;
   Vstring      result;
 
   // Capture the result from running ldd on the executable
   cmd  = LDD " " + exec + " 2> /dev/null";
+  double t1 = epoch();
   capture(cmd, result);
+  t_ldd = epoch() - t1;
 
   /*
    * The result of ldd look something like this:
@@ -26,31 +34,29 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA)
    *    libuuid.so.1 => /lib/x86_64-linux-gnu/libuuid.so.1 (0x00002baa39ba7000)
    */
 
+  t1 = epoch();
   std::string::size_type s1,s2;
   std::string            lib, sha1;
+    
   int sz = result.size();
   for (int i = 0; i < sz; ++i)
     {
-      Vstring      sha1_result;
-      
       std::string& s = result[i];
       s1 = s.find("=> /");
       if (s1 == std::string::npos)
         continue;
-      s2 = s.find(" (",s1);
-      lib = s.substr(s1+3, s2-(s1+3)); 
+      s2  = s.find(" (",s1);
+      lib = s.substr(s1+3, s2-(s1+3));
+      argV.push_back(Arg(lib));
+    }
+  long fnSzG = argV.size();
 
-      // Find sha1sum of the library just found.
-      // The output of sha1sum looks like:
-      //   % sha1sum /lib/x86_64-linux-gnu/libm.so.6
-      //   3dfbedb82b999ae7bb14a873439810a0a7cf94a0  /lib/x86_64-linux-gnu/libm.so.6
+  compute_sha1_master(fnSzG);  // compute sha1sum for all files.
 
-      cmd = SHA1SUM " " + lib;
-      capture(cmd, sha1_result);
-      s1 = sha1_result[0].find(" ");
-      sha1 = sha1_result[0].substr(0, s1);
-
-      Libpair libpair(lib, sha1);
+  for (long i = 0; i < fnSzG; ++i)
+    {
+      Libpair libpair(argV[i].fn, argV[i].sha1);
       libA.push_back(libpair);
     }
+  t_sha1 = epoch() - t1;
 }

@@ -57,9 +57,12 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dbname",      dest='dbname',   action="store",      default="xalt",       help="Name of the database")
-    parser.add_argument("--results",     dest='resultFn', action="store",      default="result.csv", help="result filename")
-    parser.add_argument("--runs",        dest='runs',     action="store",      default="2",          help="number of runs required to pass")
+    parser.add_argument("--dbname",    dest='dbname',   action="store", default="xalt",       help="Name of the database")
+    parser.add_argument("--results",   dest='resultFn', action="store", default="result.csv", help="result filename")
+    parser.add_argument("--runs",      dest='runs',     action="store", default="2",          help="number of runs required to pass")
+    parser.add_argument("--links",     dest='links',    action="store", default="1",          help="number of links required to pass")
+    parser.add_argument("--functions", dest='nfuncs',   action="store", default="0",          help="number of functions required to pass")
+    parser.add_argument("--pkgs",      dest='pkgs',     action="store", default="0",          help="number of packages required to pass")
     
     args = parser.parse_args()
     return args
@@ -89,7 +92,7 @@ def main():
 
   tableA = [ 'join_link_object', 'join_run_env', 'join_run_object', \
              'xalt_env_name', 'xalt_link', 'xalt_object', 'xalt_run',
-             'xalt_function', 'join_link_function','xalt_total_env']
+             'xalt_function', 'join_link_function','xalt_pkg']
   tableT = {}
   for tableName in tableA:
     count = count_rows(conn, tableName)
@@ -100,19 +103,28 @@ def main():
 
   result = 'diff'
   num    = int(args.runs)
-  if (tableT['xalt_link']     >    1 and
-      tableT['xalt_run']      == num and
-      tableT['xalt_object']   >   10 and
-      tableT['xalt_env_name'] >   5 ):
+  nfuncs = int(args.nfuncs)
+  nlinks = int(args.links)
+  pkgs   = int(args.pkgs)
+  if (tableT['xalt_link']       == nlinks and
+      tableT['xalt_run']        == num    and
+      tableT['xalt_pkg']        == pkgs   and
+      tableT['xalt_function']   >= nfuncs and
+      tableT['xalt_object']     >   10    and
+      tableT['xalt_env_name']   >   4 ):
 
     result = "passed"
+  else:
+    print("Expected:")
+    print(" links:       ",nlinks)
+    print(" runs:        ",num)
+    print(" pkgs:        ",pkgs)
+    print(" functions >= ",nfuncs)
+    print(" objects   >  10")
+    print(" env names >  4")
+
   f = open(args.resultFn,"w")
   f.write(result+"\n")
   f.close()
-  
     
-   
-
-
 if ( __name__ == '__main__'): main()
-  

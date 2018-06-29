@@ -40,7 +40,6 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
 from XALTdb        import XALTdb
-from xalt_site_pkg import translate
 from xalt_util     import *
 from xalt_global   import *
 from progressBar   import ProgressBar
@@ -75,12 +74,12 @@ class CmdLineOptions(object):
     parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn', action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',  action="store",      help="Path to the directory containing the json reverseMap")
-    parser.add_argument("--dbname",      dest='dbname', action="store",      default="xalt", help="Name of the database")
+    parser.add_argument("--confFn",      dest='confFn', action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
     return args
 
 
-def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
+def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
 
@@ -115,6 +114,12 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
       f.close()
       xalt.link_to_db(reverseMapT, linkT)
       num  += 1
+      try:
+        if (deleteFlg):
+          os.remove(fn)
+      except:
+        pass
+
       v     = XALT_Stack.pop()
       carp("fn",v)
 
@@ -126,7 +131,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, linkFnA):
   return num
 
 
-def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
+def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
@@ -159,6 +164,12 @@ def run_json_to_db(xalt, listFn, reverseMapT, runFnA):
       f.close()
 
       xalt.run_to_db(reverseMapT, runT)
+      try:
+        if (deleteFlg):
+          os.remove(fn)
+      except:
+        pass
+        
       v = XALT_Stack.pop()  
       carp("fn",v)
 
@@ -197,6 +208,13 @@ def passwd_generator():
 
 
 
+def build_xaltDir(user, hdir):
+  prefix = "@xalt_file_prefix@"
+  if (prefix == "USE_HOME"):
+    return os.path.join(hdir,".xalt.d")
+
+  return os.path.join(prefix,user)
+
 def main():
   """
   Walks the list of users via the passwd_generator and load the
@@ -211,7 +229,7 @@ def main():
   XALT_Stack.push(" ".join(sA))
 
   args   = CmdLineOptions().execute()
-  xalt   = XALTdb(dbConfigFn(args.dbname))
+  xalt   = XALTdb(args.confFn)
 
   num    = int(capture("getent passwd | wc -l"))
   pbar   = ProgressBar(maxVal=num)
@@ -227,24 +245,20 @@ def main():
 
   for user, hdir in passwd_generator():
     XALT_Stack.push("User: " + user)
-    xaltDir = os.path.join(hdir,".xalt.d")
+    xaltDir = build_xaltDir(user, hdir)
+
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
       XALT_Stack.push("link_json_to_db()")
-      lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, linkFnA)
+      lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
       XALT_Stack.pop()
-      if (args.delete):
-        remove_files(linkFnA)
-        #remove_files(files_in_tree(xaltDir, "*/.link.*.json"))
 
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
       XALT_Stack.push("run_json_to_db()")
-      runCnt  += run_json_to_db(xalt, args.listFn, rmapT, runFnA)
+      runCnt  += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
       XALT_Stack.pop()
-      if (args.delete):
-        remove_files(runFnA)
-        #remove_files(files_in_tree(xaltDir, "*/.run.*.json"))
+
     icnt += 1
     v = XALT_Stack.pop()
     carp("User",v)

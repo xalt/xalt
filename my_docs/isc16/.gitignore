@@ -1,1 +1,4 @@
-XALT-Report-last365-2016-06-16.txt
+*.log
+XALT-Report*.txt
+*.pdf
+

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <getopt.h>
 #include <vector>
 #include "Options.h"
@@ -36,28 +37,33 @@ long convert_long(const char* name, const char* s)
 
 Options::Options(int argc, char** argv)
   : m_start(0.0), m_end(0.0), m_ntasks(1L),
+    m_interfaceV(0L),         m_ppid(0L),
     m_syshost("unknown"),     m_uuid("unknown"),
     m_exec("unknown"),        m_userCmdLine("[]"),
     m_exec_type("unknown"),   m_confFn("xalt_db.conf")
 {
   int   c;
-  char *p;
 
   while(1)
     {
       int option_index       = 0;
       static struct option long_options[] = {
-        {"start",   required_argument, NULL, 's'},
-        {"end",     required_argument, NULL, 'e'},
-        {"syshost", required_argument, NULL, 'h'},
-        {"exec",    required_argument, NULL, 'x'},
-        {"ntasks",  required_argument, NULL, 'n'},
-        {"uuid",    required_argument, NULL, 'u'},
-        {"confFn",  optional_argument, NULL, 'c'},
+        {"interfaceV", required_argument, NULL, 'V'},
+        {"start",      required_argument, NULL, 's'},
+        {"end",        required_argument, NULL, 'e'},
+        {"syshost",    required_argument, NULL, 'h'},
+        {"exec",       required_argument, NULL, 'x'},
+        {"ntasks",     required_argument, NULL, 'n'},
+        {"uuid",       required_argument, NULL, 'u'},
+        {"confFn",     required_argument, NULL, 'c'},
+        {"ppid",       required_argument, NULL, 'p'},
+        {"path",       required_argument, NULL, 'P'},
+        {"prob",       required_argument, NULL, 'b'},
+        {"ld_libpath", required_argument, NULL, 'L'},
         {0,         0,                 0,     0 }
       };
       
-      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:",
+      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:p:P:L:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -65,26 +71,53 @@ Options::Options(int argc, char** argv)
 
       switch(c)
 	{
+        case 'V':
+          if (optarg)
+            m_interfaceV = (pid_t) convert_long("ppid", optarg);
+          break;
+        case 'p':
+          if (optarg)
+            m_ppid = (pid_t) convert_long("ppid", optarg);
+          break;
+        case 'b':
+          if (optarg)
+            m_probability = convert_double("prob", optarg);
+          break;
 	case 's':
-          m_start = convert_double("start", optarg);
+          if (optarg)
+            m_start = convert_double("start", optarg);
 	  break;
 	case 'e':
-	  m_end = convert_double("end", optarg);
+          if (optarg)
+            m_end = convert_double("end", optarg);
 	  break;
 	case 'c':
-	  m_confFn = optarg;
+          if (optarg)
+            m_confFn = optarg;
 	  break;
 	case 'h':
-	  m_syshost = optarg;
+          if (optarg)
+            m_syshost = optarg;
 	  break;
         case 'x':
-	  m_exec = optarg;
+          if (optarg)
+            m_exec = optarg;
 	  break;
 	case 'n':
-	  m_ntasks = convert_long("ntasks", optarg);
+          if (optarg)
+            m_ntasks = convert_long("ntasks", optarg);
 	  break;
         case 'u':
-	  m_uuid = optarg;
+          if (optarg)
+            m_uuid = optarg;
+	  break;
+        case 'P':
+          if (optarg)
+            m_path = optarg;
+	  break;
+        case 'L':
+          if (optarg)
+            m_ldLibPath = optarg;
 	  break;
 	case '?':
 	  printf("Huh?\n");
@@ -94,9 +127,20 @@ Options::Options(int argc, char** argv)
         }
     }
   
-  if (optind < argc)
+  if (optind + 1 == argc && argv[optind][0] == '[')
     m_userCmdLine = argv[optind];
-
+  else if (optind < argc)
+    {
+      m_userCmdLine = "[";
+      for (int i = optind; i < argc; ++i)
+        {
+          m_userCmdLine += "\"";
+          m_userCmdLine += argv[i];
+          m_userCmdLine += "\",";
+        }
+      if (m_userCmdLine.back() == ',')
+        m_userCmdLine.replace(m_userCmdLine.size()-1,1,"]");
+    }
 
   if (m_exec != "unknown")
     {

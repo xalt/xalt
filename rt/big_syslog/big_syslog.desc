@@ -1,0 +1,65 @@
+# -*- python -*-
+
+test_name = "big_syslog"
+
+test_descript = {
+   'description' : "Test syslog transfer (New and old)",
+   'keywords'    : [ test_name ],
+
+   'active'      : False,
+   'test_name'   : test_name,
+
+   'run_script'  : """
+     . $(projectDir)/rt/common_funcs.sh
+
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$(testDir)/bin:$PATH;
+
+     initialize
+     installXALT
+     displayThis "buildRmapT"
+     buildRmapT
+
+     export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
+
+     displayThis "installDB"
+     installDB
+
+     displayThis "module commands"
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     PATH=$outputDir/XALT/bin:$outputDir/XALT/sbin:$PATH;
+
+     export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_TRANSMISSION_STYLE=syslog
+     export XALT_DISABLE_BACKGROUNDING=yes
+     
+     NUM=508
+     (( RUNS = 2*NUM ))
+
+     displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
+     displayThis  "for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done"
+     for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done
+
+     displayThis  "xalt_syslog_to_db"
+     xalt_syslog_to_db  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
+
+     mv syslog.log syslog.old
+     
+     displayThis  "for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done"
+     for i in {1..$NUM..1} ; do mpirun -n 1 ./hello; done
+
+     displayThis  "xalt_syslog_to_db"
+     xalt_syslog_to_db  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
+
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs $RUNS --functions 4 --links 1
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     STATUS=`cat results.csv`; echo; echo STATUS=$STATUS; echo
+   """,
+
+   'tests' : [
+      { 'id' : 't1', 'tol' : 1.01e-6},
+   ],
+}

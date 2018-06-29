@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+#define JSMN_PARENT_LINKS 1
+
 /**
  * JSON type identifier. Basic types are:
  * 	o Object
