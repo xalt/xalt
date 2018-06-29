@@ -179,9 +179,10 @@ class XALTdb(object):
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(resultT['build_epoch'])))
       dateStr     = time.strftime("%Y-%m-%d",          time.localtime(float(resultT['build_epoch'])))
 
-      exec_path   = resultT['exec_path']
+      exec_path   = resultT['exec_path'][:1024]
       link_prg    = resultT['link_program'][:64]
       link_path   = resultT['link_path']
+      cwd         = linkT.get('wd',"UNKNOWN")[:1024]
       link_mname  = obj2module(link_path,reverseMapT)
       link_line   = json.dumps(link_lineA)
       build_user  = resultT['build_user']
@@ -189,11 +190,11 @@ class XALTdb(object):
       hash_id     = resultT['hash_id']
 
       # It is unique: lets store this link record
-      query = "INSERT into xalt_link VALUES (NULL,%s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s)"
+      query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
       cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
                              link_prg,    link_path,   link_mname,
-                             link_line,   build_user,  build_shost,
-                             build_epoch, exec_path))
+                             link_line,   cwd,         build_user,
+                             build_shost, build_epoch, exec_path))
 
       link_id = cursor.lastrowid
 

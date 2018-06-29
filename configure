@@ -623,20 +623,6 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-<<<<<<< HEAD
-EGREP
-GREP
-CPP
-OBJEXT
-EXEEXT
-ac_ct_CC
-CPPFLAGS
-LDFLAGS
-CFLAGS
-CC
-pstree_prog
-HAVE_PYMOD_PSUTIL
-=======
 XALT_GIT_VERSION
 VERSION
 PKGV
@@ -645,11 +631,9 @@ EGREP
 GREP
 CPP
 HAVE_PYMOD_MYSQLDB
->>>>>>> origin/devel
 PATH_TO_PYTHON
 PATH_TO_OTOOL
 PATH_TO_FLEX
-MYSQL_CONFIG
 USE_CONTRIB_ARGPARSE
 PATH_TO_UUIDGEN
 PATH_TO_SHA1SUM
@@ -669,14 +653,6 @@ PATH_TO_DATE
 PATH_TO_CAT
 PATH_TO_BASENAME
 PATH_TO_AS
-<<<<<<< HEAD
-SYS_LD_LIB_PATH
-ETC_DIR
-SITE
-BROKER_URI
-BROKER_SERVER
-TRANSMISSION
-=======
 ac_ct_CXX
 CXXFLAGS
 CXX
@@ -686,7 +662,6 @@ BAD_INSTALL
 MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
 CXX_LD_LIBRARY_PATH
-MYSQL_STATIC
 SYSLOG_MSG_SZ
 SYSTEM_PATH
 MYSQLDB
@@ -708,7 +683,6 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
->>>>>>> origin/devel
 target_alias
 host_alias
 build_alias
@@ -752,12 +726,6 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_transmission
-<<<<<<< HEAD
-with_broker_server
-with_broker_uri
-with_site
-with_etcDir
-=======
 with_functionTracking
 with_xaltFilePrefix
 with_trackMPI
@@ -769,13 +737,11 @@ with_config
 with_MySQL
 with_systemPath
 with_syslogMsgSz
-with_mysqlStatic
 with_cxxLDLibraryPath
 with_syshostConfig
 with_hostnameParser
 with_IrefuseToInstallXALTCorrectly
 with_enableBackgrounding
->>>>>>> origin/devel
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1406,15 +1372,7 @@ if test -n "$ac_init_help"; then
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-transmission=ans transmission style (file,syslog,directdb) [[file]]
-<<<<<<< HEAD
-  --with-broker_server=ans
-                          server for 'broker' transmission style [[localhost]]
-  --with-broker_uri=ans   URI for 'broker' transmission style [[logger]]
-  --with-site=ans         Site name [[default]]
-  --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
-                          found [[.]]
-=======
+  --with-transmission=ans transmission style (file,syslog) [[file]]
   --with-functionTracking=ans
                           Track functions from modules [[yes]]
   --with-xaltFilePrefix=ans
@@ -1428,24 +1386,22 @@ Optional Packages:
                           found [[.]]
   --with-config=ans       A python file defining the accept, ignore, hostname
                           pattern lists [[NO DEFAULT]]
-  --with-MySQL=ans        Require MySQL and the MySQL-python module [[yes]]
+  --with-MySQL=ans        Require the MySQL-python module [[yes]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
-  --with-mysqlStatic=ans  Require that libmysqlclient be linked in statically
-                          [[no]]
   --with-cxxLDLibraryPath=ans
                           LD_LIBRARY_PATH for c++ programs[[]]
   --with-syshostConfig=ans
                           How to convert hostname in syshost[[no default]]
   --with-hostnameParser=ans
                           Replace built-in lex based hostname parser
-                          c_file:file.c or library:file.a [[no]]
+                          c_file:file.c or library:file_64.a or
+                          library:file_64.a:file_32.a [[no]]
   --with-IrefuseToInstallXALTCorrectly=ans
                           Install XALT incorrectly [[no]]
   --with-enableBackgrounding=ans
                           Enable backgrounding of start record of an
                           executable run [[no]]
->>>>>>> origin/devel
 
 Some influential environment variables:
   CC          C compiler command
@@ -2282,7 +2238,802 @@ done
   done
 IFS=$as_save_IFS
 
-<<<<<<< HEAD
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_prog_CC"; then
+  ac_ct_CC=$CC
+  # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_CC"; then
+  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_CC="gcc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_CC=$ac_cv_prog_ac_ct_CC
+if test -n "$ac_ct_CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
+$as_echo "$ac_ct_CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+  if test "x$ac_ct_CC" = x; then
+    CC=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    CC=$ac_ct_CC
+  fi
+else
+  CC="$ac_cv_prog_CC"
+fi
+
+if test -z "$CC"; then
+          if test -n "$ac_tool_prefix"; then
+    # Extract the first word of "${ac_tool_prefix}cc", so it can be a program name with args.
+set dummy ${ac_tool_prefix}cc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CC="${ac_tool_prefix}cc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  fi
+fi
+if test -z "$CC"; then
+  # Extract the first word of "cc", so it can be a program name with args.
+set dummy cc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+  ac_prog_rejected=no
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    if test "$as_dir/$ac_word$ac_exec_ext" = "/usr/ucb/cc"; then
+       ac_prog_rejected=yes
+       continue
+     fi
+    ac_cv_prog_CC="cc"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+if test $ac_prog_rejected = yes; then
+  # We found a bogon in the path, so make sure we never use it.
+  set dummy $ac_cv_prog_CC
+  shift
+  if test $# != 0; then
+    # We chose a different compiler from the bogus one.
+    # However, it has the same basename, so the bogon will be chosen
+    # first if we set CC to just the basename; use the full file name.
+    shift
+    ac_cv_prog_CC="$as_dir/$ac_word${1+' '}$@"
+  fi
+fi
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+fi
+if test -z "$CC"; then
+  if test -n "$ac_tool_prefix"; then
+  for ac_prog in cl.exe
+  do
+    # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
+set dummy $ac_tool_prefix$ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CC"; then
+  ac_cv_prog_CC="$CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CC="$ac_tool_prefix$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+CC=$ac_cv_prog_CC
+if test -n "$CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
+$as_echo "$CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+    test -n "$CC" && break
+  done
+fi
+if test -z "$CC"; then
+  ac_ct_CC=$CC
+  for ac_prog in cl.exe
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_CC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_CC"; then
+  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_CC="$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_CC=$ac_cv_prog_ac_ct_CC
+if test -n "$ac_ct_CC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
+$as_echo "$ac_ct_CC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  test -n "$ac_ct_CC" && break
+done
+
+  if test "x$ac_ct_CC" = x; then
+    CC=""
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    CC=$ac_ct_CC
+  fi
+fi
+
+fi
+
+
+test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "no acceptable C compiler found in \$PATH
+See \`config.log' for more details" "$LINENO" 5; }
+
+# Provide some information about the compiler.
+$as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
+set X $ac_compile
+ac_compiler=$2
+for ac_option in --version -v -V -qversion; do
+  { { ac_try="$ac_compiler $ac_option >&5"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_compiler $ac_option >&5") 2>conftest.err
+  ac_status=$?
+  if test -s conftest.err; then
+    sed '10a\
+... rest of stderr output deleted ...
+         10q' conftest.err >conftest.er1
+    cat conftest.er1 >&5
+  fi
+  rm -f conftest.er1 conftest.err
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }
+done
+
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+ac_clean_files_save=$ac_clean_files
+ac_clean_files="$ac_clean_files a.out a.out.dSYM a.exe b.out"
+# Try to create an executable without -o first, disregard a.out.
+# It will help us diagnose broken compilers, and finding out an intuition
+# of exeext.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the C compiler works" >&5
+$as_echo_n "checking whether the C compiler works... " >&6; }
+ac_link_default=`$as_echo "$ac_link" | sed 's/ -o *conftest[^ ]*//'`
+
+# The possible output files:
+ac_files="a.out conftest.exe conftest a.exe a_out.exe b.out conftest.*"
+
+ac_rmfiles=
+for ac_file in $ac_files
+do
+  case $ac_file in
+    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM | *.o | *.obj ) ;;
+    * ) ac_rmfiles="$ac_rmfiles $ac_file";;
+  esac
+done
+rm -f $ac_rmfiles
+
+if { { ac_try="$ac_link_default"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_link_default") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then :
+  # Autoconf-2.13 could set the ac_cv_exeext variable to `no'.
+# So ignore a value of `no', otherwise this would lead to `EXEEXT = no'
+# in a Makefile.  We should not override ac_cv_exeext if it was cached,
+# so that the user can short-circuit this test for compilers unknown to
+# Autoconf.
+for ac_file in $ac_files ''
+do
+  test -f "$ac_file" || continue
+  case $ac_file in
+    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM | *.o | *.obj )
+	;;
+    [ab].out )
+	# We found the default executable, but exeext='' is most
+	# certainly right.
+	break;;
+    *.* )
+	if test "${ac_cv_exeext+set}" = set && test "$ac_cv_exeext" != no;
+	then :; else
+	   ac_cv_exeext=`expr "$ac_file" : '[^.]*\(\..*\)'`
+	fi
+	# We set ac_cv_exeext here because the later test for it is not
+	# safe: cross compilers may not add the suffix if given an `-o'
+	# argument, so we may need to know it at that point already.
+	# Even if this section looks crufty: it has the advantage of
+	# actually working.
+	break;;
+    * )
+	break;;
+  esac
+done
+test "$ac_cv_exeext" = no && ac_cv_exeext=
+
+else
+  ac_file=''
+fi
+if test -z "$ac_file"; then :
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+$as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error 77 "C compiler cannot create executables
+See \`config.log' for more details" "$LINENO" 5; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler default output file name" >&5
+$as_echo_n "checking for C compiler default output file name... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_file" >&5
+$as_echo "$ac_file" >&6; }
+ac_exeext=$ac_cv_exeext
+
+rm -f -r a.out a.out.dSYM a.exe conftest$ac_cv_exeext b.out
+ac_clean_files=$ac_clean_files_save
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for suffix of executables" >&5
+$as_echo_n "checking for suffix of executables... " >&6; }
+if { { ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then :
+  # If both `conftest.exe' and `conftest' are `present' (well, observable)
+# catch `conftest.exe'.  For instance with Cygwin, `ls conftest' will
+# work properly (i.e., refer to `conftest.exe'), while it won't with
+# `rm'.
+for ac_file in conftest.exe conftest conftest.*; do
+  test -f "$ac_file" || continue
+  case $ac_file in
+    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM | *.o | *.obj ) ;;
+    *.* ) ac_cv_exeext=`expr "$ac_file" : '[^.]*\(\..*\)'`
+	  break;;
+    * ) break;;
+  esac
+done
+else
+  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot compute suffix of executables: cannot compile and link
+See \`config.log' for more details" "$LINENO" 5; }
+fi
+rm -f conftest conftest$ac_cv_exeext
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_exeext" >&5
+$as_echo "$ac_cv_exeext" >&6; }
+
+rm -f conftest.$ac_ext
+EXEEXT=$ac_cv_exeext
+ac_exeext=$EXEEXT
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdio.h>
+int
+main ()
+{
+FILE *f = fopen ("conftest.out", "w");
+ return ferror (f) || fclose (f) != 0;
+
+  ;
+  return 0;
+}
+_ACEOF
+ac_clean_files="$ac_clean_files conftest.out"
+# Check that the compiler produces executables we can run.  If not, either
+# the compiler is broken, or we cross compile.
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are cross compiling" >&5
+$as_echo_n "checking whether we are cross compiling... " >&6; }
+if test "$cross_compiling" != yes; then
+  { { ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }
+  if { ac_try='./conftest$ac_cv_exeext'
+  { { case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then
+    cross_compiling=no
+  else
+    if test "$cross_compiling" = maybe; then
+	cross_compiling=yes
+    else
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot run C compiled programs.
+If you meant to cross compile, use \`--host'.
+See \`config.log' for more details" "$LINENO" 5; }
+    fi
+  fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $cross_compiling" >&5
+$as_echo "$cross_compiling" >&6; }
+
+rm -f conftest.$ac_ext conftest$ac_cv_exeext conftest.out
+ac_clean_files=$ac_clean_files_save
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for suffix of object files" >&5
+$as_echo_n "checking for suffix of object files... " >&6; }
+if ${ac_cv_objext+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.o conftest.obj
+if { { ac_try="$ac_compile"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_compile") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then :
+  for ac_file in conftest.o conftest.obj conftest.*; do
+  test -f "$ac_file" || continue;
+  case $ac_file in
+    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM ) ;;
+    *) ac_cv_objext=`expr "$ac_file" : '.*\.\(.*\)'`
+       break;;
+  esac
+done
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot compute suffix of object files: cannot compile
+See \`config.log' for more details" "$LINENO" 5; }
+fi
+rm -f conftest.$ac_cv_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_objext" >&5
+$as_echo "$ac_cv_objext" >&6; }
+OBJEXT=$ac_cv_objext
+ac_objext=$OBJEXT
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C compiler" >&5
+$as_echo_n "checking whether we are using the GNU C compiler... " >&6; }
+if ${ac_cv_c_compiler_gnu+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+#ifndef __GNUC__
+       choke me
+#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_compiler_gnu=yes
+else
+  ac_compiler_gnu=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ac_cv_c_compiler_gnu=$ac_compiler_gnu
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_compiler_gnu" >&5
+$as_echo "$ac_cv_c_compiler_gnu" >&6; }
+if test $ac_compiler_gnu = yes; then
+  GCC=yes
+else
+  GCC=
+fi
+ac_test_CFLAGS=${CFLAGS+set}
+ac_save_CFLAGS=$CFLAGS
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC accepts -g" >&5
+$as_echo_n "checking whether $CC accepts -g... " >&6; }
+if ${ac_cv_prog_cc_g+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_save_c_werror_flag=$ac_c_werror_flag
+   ac_c_werror_flag=yes
+   ac_cv_prog_cc_g=no
+   CFLAGS="-g"
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_g=yes
+else
+  CFLAGS=""
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+else
+  ac_c_werror_flag=$ac_save_c_werror_flag
+	 CFLAGS="-g"
+	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_g=yes
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+   ac_c_werror_flag=$ac_save_c_werror_flag
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_g" >&5
+$as_echo "$ac_cv_prog_cc_g" >&6; }
+if test "$ac_test_CFLAGS" = set; then
+  CFLAGS=$ac_save_CFLAGS
+elif test $ac_cv_prog_cc_g = yes; then
+  if test "$GCC" = yes; then
+    CFLAGS="-g -O2"
+  else
+    CFLAGS="-g"
+  fi
+else
+  if test "$GCC" = yes; then
+    CFLAGS="-O2"
+  else
+    CFLAGS=
+  fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to accept ISO C89" >&5
+$as_echo_n "checking for $CC option to accept ISO C89... " >&6; }
+if ${ac_cv_prog_cc_c89+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_cv_prog_cc_c89=no
+ac_save_CC=$CC
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdarg.h>
+#include <stdio.h>
+struct stat;
+/* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
+struct buf { int x; };
+FILE * (*rcsopen) (struct buf *, struct stat *, int);
+static char *e (p, i)
+     char **p;
+     int i;
+{
+  return p[i];
+}
+static char *f (char * (*g) (char **, int), char **p, ...)
+{
+  char *s;
+  va_list v;
+  va_start (v,p);
+  s = g (p, va_arg (v,int));
+  va_end (v);
+  return s;
+}
+
+/* OSF 4.0 Compaq cc is some sort of almost-ANSI by default.  It has
+   function prototypes and stuff, but not '\xHH' hex character constants.
+   These don't provoke an error unfortunately, instead are silently treated
+   as 'x'.  The following induces an error, until -std is added to get
+   proper ANSI mode.  Curiously '\x00'!='x' always comes out true, for an
+   array size at least.  It's necessary to write '\x00'==0 to get something
+   that's true only with -std.  */
+int osf4_cc_array ['\x00' == 0 ? 1 : -1];
+
+/* IBM C 6 for AIX is almost-ANSI by default, but it replaces macro parameters
+   inside strings and character constants.  */
+#define FOO(x) 'x'
+int xlc6_cc_array[FOO(a) == 'x' ? 1 : -1];
+
+int test (int i, double x);
+struct s1 {int (*f) (int a);};
+struct s2 {int (*f) (double a);};
+int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, int);
+int argc;
+char **argv;
+int
+main ()
+{
+return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];
+  ;
+  return 0;
+}
+_ACEOF
+for ac_arg in '' -qlanglvl=extc89 -qlanglvl=ansi -std \
+	-Ae "-Aa -D_HPUX_SOURCE" "-Xc -D__EXTENSIONS__"
+do
+  CC="$ac_save_CC $ac_arg"
+  if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_prog_cc_c89=$ac_arg
+fi
+rm -f core conftest.err conftest.$ac_objext
+  test "x$ac_cv_prog_cc_c89" != "xno" && break
+done
+rm -f conftest.$ac_ext
+CC=$ac_save_CC
+
+fi
+# AC_CACHE_VAL
+case "x$ac_cv_prog_cc_c89" in
+  x)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: none needed" >&5
+$as_echo "none needed" >&6; } ;;
+  xno)
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: unsupported" >&5
+$as_echo "unsupported" >&6; } ;;
+  *)
+    CC="$CC $ac_cv_prog_cc_c89"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_c89" >&5
+$as_echo "$ac_cv_prog_cc_c89" >&6; } ;;
+esac
+if test "x$ac_cv_prog_cc_c89" != xno; then :
+
+fi
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+ac_aux_dir=
+for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
+  if test -f "$ac_dir/install-sh"; then
+    ac_aux_dir=$ac_dir
+    ac_install_sh="$ac_aux_dir/install-sh -c"
+    break
+  elif test -f "$ac_dir/install.sh"; then
+    ac_aux_dir=$ac_dir
+    ac_install_sh="$ac_aux_dir/install.sh -c"
+    break
+  elif test -f "$ac_dir/shtool"; then
+    ac_aux_dir=$ac_dir
+    ac_install_sh="$ac_aux_dir/shtool install -c"
+    break
+  fi
+done
+if test -z "$ac_aux_dir"; then
+  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
+fi
+
+# These three variables are undocumented and unsupported,
+# and are intended to be withdrawn in a future Autoconf release.
+# They can cause serious problems if a builder's source tree is in a directory
+# whose full name contains unusual characters.
+ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
+ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
+ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
+
+
+
+
+subdirs="$subdirs src"
+
+
+
+XALT_INTERFACE_VERSION=3
+
 
 
 
@@ -2308,69 +3059,137 @@ fi
 
 
 
-# Check whether --with-broker_server was given.
-if test "${with_broker_server+set}" = set; then :
-  withval=$with_broker_server; BROKER_SERVER="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_SERVER=$with_broker_server" >&5
-$as_echo "BROKER_SERVER=$with_broker_server" >&6; }
+# Check whether --with-functionTracking was given.
+if test "${with_functionTracking+set}" = set; then :
+  withval=$with_functionTracking; XALT_FUNCTION_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$with_functionTracking" >&5
+$as_echo "XALT_FUNCTION_TRACKING=$with_functionTracking" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define BROKER_SERVER "$with_broker_server"
+#define XALT_FUNCTION_TRACKING "$with_functionTracking"
 _ACEOF
 
 else
-  withval="localhost"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_SERVER=$withval" >&5
-$as_echo "BROKER_SERVER=$withval" >&6; }
-    BROKER_SERVER="$withval"
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$withval" >&5
+$as_echo "XALT_FUNCTION_TRACKING=$withval" >&6; }
+    XALT_FUNCTION_TRACKING="$withval"
     cat >>confdefs.h <<_ACEOF
-#define BROKER_SERVER "$withval"
+#define XALT_FUNCTION_TRACKING "$withval"
 _ACEOF
 
 fi
 
 
 
-# Check whether --with-broker_uri was given.
-if test "${with_broker_uri+set}" = set; then :
-  withval=$with_broker_uri; BROKER_URI="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_URI=$with_broker_uri" >&5
-$as_echo "BROKER_URI=$with_broker_uri" >&6; }
+# Check whether --with-xaltFilePrefix was given.
+if test "${with_xaltFilePrefix+set}" = set; then :
+  withval=$with_xaltFilePrefix; XALT_FILE_PREFIX="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FILE_PREFIX=$with_xaltFilePrefix" >&5
+$as_echo "XALT_FILE_PREFIX=$with_xaltFilePrefix" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define BROKER_URI "$with_broker_uri"
+#define XALT_FILE_PREFIX "$with_xaltFilePrefix"
 _ACEOF
 
 else
-  withval="logger"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BROKER_URI=$withval" >&5
-$as_echo "BROKER_URI=$withval" >&6; }
-    BROKER_URI="$withval"
+  withval="USE_HOME"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FILE_PREFIX=$withval" >&5
+$as_echo "XALT_FILE_PREFIX=$withval" >&6; }
+    XALT_FILE_PREFIX="$withval"
     cat >>confdefs.h <<_ACEOF
-#define BROKER_URI "$withval"
+#define XALT_FILE_PREFIX "$withval"
 _ACEOF
 
 fi
 
 
 
-# Check whether --with-site was given.
-if test "${with_site+set}" = set; then :
-  withval=$with_site; SITE="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE=$with_site" >&5
-$as_echo "SITE=$with_site" >&6; }
+
+# Check whether --with-trackMPI was given.
+if test "${with_trackMPI+set}" = set; then :
+  withval=$with_trackMPI; XALT_MPI_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$with_trackMPI" >&5
+$as_echo "XALT_MPI_TRACKING=$with_trackMPI" >&6; }
     cat >>confdefs.h <<_ACEOF
-#define SITE "$with_site"
+#define XALT_MPI_TRACKING "$with_trackMPI"
 _ACEOF
 
 else
-  withval="default"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE=$withval" >&5
-$as_echo "SITE=$withval" >&6; }
-    SITE="$withval"
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$withval" >&5
+$as_echo "XALT_MPI_TRACKING=$withval" >&6; }
+    XALT_MPI_TRACKING="$withval"
     cat >>confdefs.h <<_ACEOF
-#define SITE "$withval"
+#define XALT_MPI_TRACKING "$withval"
 _ACEOF
 
 fi
+
+
+
+# Check whether --with-trackSPSR was given.
+if test "${with_trackSPSR+set}" = set; then :
+  withval=$with_trackSPSR; XALT_SPSR_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$with_trackSPSR" >&5
+$as_echo "XALT_SPSR_TRACKING=$with_trackSPSR" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SPSR_TRACKING "$with_trackSPSR"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$withval" >&5
+$as_echo "XALT_SPSR_TRACKING=$withval" >&6; }
+    XALT_SPSR_TRACKING="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SPSR_TRACKING "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-trackScalarPrgms was given.
+if test "${with_trackScalarPrgms+set}" = set; then :
+  withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&5
+$as_echo "XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SCALAR_TRACKING "$with_trackScalarPrgms"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$withval" >&5
+$as_echo "XALT_SCALAR_TRACKING=$withval" >&6; }
+    XALT_SCALAR_TRACKING="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SCALAR_TRACKING "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-computeSHA1 was given.
+if test "${with_computeSHA1+set}" = set; then :
+  withval=$with_computeSHA1; COMPUTE_SHA1SUM="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$with_computeSHA1" >&5
+$as_echo "COMPUTE_SHA1SUM=$with_computeSHA1" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define COMPUTE_SHA1SUM "$with_computeSHA1"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$withval" >&5
+$as_echo "COMPUTE_SHA1SUM=$withval" >&6; }
+    COMPUTE_SHA1SUM="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define COMPUTE_SHA1SUM "$withval"
+_ACEOF
+
+fi
+
 
 
 
@@ -2395,7 +3214,564 @@ _ACEOF
 fi
 
 
-SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
+
+# Check whether --with-config was given.
+if test "${with_config+set}" = set; then :
+  withval=$with_config; XALT_CONFIG_PY="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$with_config" >&5
+$as_echo "XALT_CONFIG_PY=$with_config" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_CONFIG_PY "$with_config"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$withval" >&5
+$as_echo "XALT_CONFIG_PY=$withval" >&6; }
+    XALT_CONFIG_PY="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_CONFIG_PY "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-MySQL was given.
+if test "${with_MySQL+set}" = set; then :
+  withval=$with_MySQL; MYSQLDB="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$with_MySQL" >&5
+$as_echo "MYSQLDB=$with_MySQL" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define MYSQLDB "$with_MySQL"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$withval" >&5
+$as_echo "MYSQLDB=$withval" >&6; }
+    MYSQLDB="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define MYSQLDB "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-systemPath was given.
+if test "${with_systemPath+set}" = set; then :
+  withval=$with_systemPath; SYSTEM_PATH="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$with_systemPath" >&5
+$as_echo "SYSTEM_PATH=$with_systemPath" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSTEM_PATH "$with_systemPath"
+_ACEOF
+
+else
+  withval="/usr/bin:/bin"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$withval" >&5
+$as_echo "SYSTEM_PATH=$withval" >&6; }
+    SYSTEM_PATH="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSTEM_PATH "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-syslogMsgSz was given.
+if test "${with_syslogMsgSz+set}" = set; then :
+  withval=$with_syslogMsgSz; SYSLOG_MSG_SZ="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$with_syslogMsgSz" >&5
+$as_echo "SYSLOG_MSG_SZ=$with_syslogMsgSz" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSLOG_MSG_SZ "$with_syslogMsgSz"
+_ACEOF
+
+else
+  withval="512"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$withval" >&5
+$as_echo "SYSLOG_MSG_SZ=$withval" >&6; }
+    SYSLOG_MSG_SZ="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSLOG_MSG_SZ "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-cxxLDLibraryPath was given.
+if test "${with_cxxLDLibraryPath+set}" = set; then :
+  withval=$with_cxxLDLibraryPath; CXX_LD_LIBRARY_PATH="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&5
+$as_echo "CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define CXX_LD_LIBRARY_PATH "$with_cxxLDLibraryPath"
+_ACEOF
+
+else
+  withval=""
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$withval" >&5
+$as_echo "CXX_LD_LIBRARY_PATH=$withval" >&6; }
+    CXX_LD_LIBRARY_PATH="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define CXX_LD_LIBRARY_PATH "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-syshostConfig was given.
+if test "${with_syshostConfig+set}" = set; then :
+  withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$with_syshostConfig" >&5
+$as_echo "SYSHOST_CONFIG=$with_syshostConfig" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$with_syshostConfig"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$withval" >&5
+$as_echo "SYSHOST_CONFIG=$withval" >&6; }
+    SYSHOST_CONFIG="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define SYSHOST_CONFIG "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-hostnameParser was given.
+if test "${with_hostnameParser+set}" = set; then :
+  withval=$with_hostnameParser; MY_HOSTNAME_PARSER="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$with_hostnameParser" >&5
+$as_echo "MY_HOSTNAME_PARSER=$with_hostnameParser" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define MY_HOSTNAME_PARSER "$with_hostnameParser"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$withval" >&5
+$as_echo "MY_HOSTNAME_PARSER=$withval" >&6; }
+    MY_HOSTNAME_PARSER="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define MY_HOSTNAME_PARSER "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-IrefuseToInstallXALTCorrectly was given.
+if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
+  withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
+$as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
+$as_echo "BAD_INSTALL=$withval" >&6; }
+    BAD_INSTALL="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define BAD_INSTALL "$withval"
+_ACEOF
+
+fi
+
+
+
+
+# Check whether --with-enableBackgrounding was given.
+if test "${with_enableBackgrounding+set}" = set; then :
+  withval=$with_enableBackgrounding; ENABLE_BACKGROUNDING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ENABLE_BACKGROUNDING=$with_enableBackgrounding" >&5
+$as_echo "ENABLE_BACKGROUNDING=$with_enableBackgrounding" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define ENABLE_BACKGROUNDING "$with_enableBackgrounding"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ENABLE_BACKGROUNDING=$withval" >&5
+$as_echo "ENABLE_BACKGROUNDING=$withval" >&6; }
+    ENABLE_BACKGROUNDING="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define ENABLE_BACKGROUNDING "$withval"
+_ACEOF
+
+fi
+
+
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler can build and run with -m32" >&5
+$as_echo_n "checking whether C compiler can build and run with -m32... " >&6; }
+if ${ax_cv_check_cflags___m32+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CFLAGS
+  CFLAGS="$CFLAGS  -m32"
+  if test "$cross_compiling" = yes; then :
+  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot run test program while cross compiling
+See \`config.log' for more details" "$LINENO" 5; }
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_run "$LINENO"; then :
+  ax_cv_check_cflags___m32=yes
+else
+  ax_cv_check_cflags___m32=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+  CFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___m32" >&5
+$as_echo "$ax_cv_check_cflags___m32" >&6; }
+if test "x$ax_cv_check_cflags___m32" = xyes; then :
+  HAVE_32BIT=yes
+else
+  HAVE_32BIT=no
+fi
+
+ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+if test -z "$CXX"; then
+  if test -n "$CCC"; then
+    CXX=$CCC
+  else
+    if test -n "$ac_tool_prefix"; then
+  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+  do
+    # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
+set dummy $ac_tool_prefix$ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CXX+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CXX"; then
+  ac_cv_prog_CXX="$CXX" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CXX="$ac_tool_prefix$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+CXX=$ac_cv_prog_CXX
+if test -n "$CXX"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CXX" >&5
+$as_echo "$CXX" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+    test -n "$CXX" && break
+  done
+fi
+if test -z "$CXX"; then
+  ac_ct_CXX=$CXX
+  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_ac_ct_CXX+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$ac_ct_CXX"; then
+  ac_cv_prog_ac_ct_CXX="$ac_ct_CXX" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_ac_ct_CXX="$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+ac_ct_CXX=$ac_cv_prog_ac_ct_CXX
+if test -n "$ac_ct_CXX"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CXX" >&5
+$as_echo "$ac_ct_CXX" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  test -n "$ac_ct_CXX" && break
+done
+
+  if test "x$ac_ct_CXX" = x; then
+    CXX="g++"
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    CXX=$ac_ct_CXX
+  fi
+fi
+
+  fi
+fi
+# Provide some information about the compiler.
+$as_echo "$as_me:${as_lineno-$LINENO}: checking for C++ compiler version" >&5
+set X $ac_compile
+ac_compiler=$2
+for ac_option in --version -v -V -qversion; do
+  { { ac_try="$ac_compiler $ac_option >&5"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_compiler $ac_option >&5") 2>conftest.err
+  ac_status=$?
+  if test -s conftest.err; then
+    sed '10a\
+... rest of stderr output deleted ...
+         10q' conftest.err >conftest.er1
+    cat conftest.er1 >&5
+  fi
+  rm -f conftest.er1 conftest.err
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }
+done
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
+$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
+if ${ac_cv_cxx_compiler_gnu+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+#ifndef __GNUC__
+       choke me
+#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ac_compiler_gnu=yes
+else
+  ac_compiler_gnu=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ac_cv_cxx_compiler_gnu=$ac_compiler_gnu
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_cxx_compiler_gnu" >&5
+$as_echo "$ac_cv_cxx_compiler_gnu" >&6; }
+if test $ac_compiler_gnu = yes; then
+  GXX=yes
+else
+  GXX=
+fi
+ac_test_CXXFLAGS=${CXXFLAGS+set}
+ac_save_CXXFLAGS=$CXXFLAGS
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CXX accepts -g" >&5
+$as_echo_n "checking whether $CXX accepts -g... " >&6; }
+if ${ac_cv_prog_cxx_g+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_save_cxx_werror_flag=$ac_cxx_werror_flag
+   ac_cxx_werror_flag=yes
+   ac_cv_prog_cxx_g=no
+   CXXFLAGS="-g"
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ac_cv_prog_cxx_g=yes
+else
+  CXXFLAGS=""
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+  ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+	 CXXFLAGS="-g"
+	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  ac_cv_prog_cxx_g=yes
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+   ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cxx_g" >&5
+$as_echo "$ac_cv_prog_cxx_g" >&6; }
+if test "$ac_test_CXXFLAGS" = set; then
+  CXXFLAGS=$ac_save_CXXFLAGS
+elif test $ac_cv_prog_cxx_g = yes; then
+  if test "$GXX" = yes; then
+    CXXFLAGS="-g -O2"
+  else
+    CXXFLAGS="-g"
+  fi
+else
+  if test "$GXX" = yes; then
+    CXXFLAGS="-O2"
+  else
+    CXXFLAGS=
+  fi
+fi
+ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler can build and run with -std=c++11" >&5
+$as_echo_n "checking whether C++ compiler can build and run with -std=c++11... " >&6; }
+if ${ax_cv_check_cxxflags___std_cpp11+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+  ax_check_save_flags=$CXXFLAGS
+  CXXFLAGS="$CXXFLAGS  -std=c++11"
+  if test "$cross_compiling" = yes; then :
+  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot run test program while cross compiling
+See \`config.log' for more details" "$LINENO" 5; }
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_run "$LINENO"; then :
+  ax_cv_check_cxxflags___std_cpp11=yes
+else
+  ax_cv_check_cxxflags___std_cpp11=no
+fi
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+
+  CXXFLAGS=$ax_check_save_flags
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___std_cpp11" >&5
+$as_echo "$ax_cv_check_cxxflags___std_cpp11" >&6; }
+if test "x$ax_cv_check_cxxflags___std_cpp11" = xyes; then :
+  HAVE_CXX11=yes
+else
+  HAVE_CXX11=no
+fi
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
@@ -2415,6 +3791,48 @@ SYS_LD_LIB_PATH=$LD_LIBRARY_PATH
 
 
 
+
+
+
+
+# Extract the first word of "git", so it can be a program name with args.
+set dummy git; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_PATH_TO_GIT+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $PATH_TO_GIT in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PATH_TO_GIT="$PATH_TO_GIT" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_PATH_TO_GIT="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PATH_TO_GIT=$ac_cv_path_PATH_TO_GIT
+if test -n "$PATH_TO_GIT"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GIT" >&5
+$as_echo "$PATH_TO_GIT" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
 
 
 # Extract the first word of "as", so it can be a program name with args.
@@ -2451,14 +3869,46 @@ PATH_TO_AS=$ac_cv_path_PATH_TO_AS
 if test -n "$PATH_TO_AS"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_AS" >&5
 $as_echo "$PATH_TO_AS" >&6; }
-=======
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
 fi
+
+
+# Extract the first word of "flex", so it can be a program name with args.
+set dummy flex; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_PATH_TO_FLEX+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $PATH_TO_FLEX in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PATH_TO_FLEX="$PATH_TO_FLEX" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_PATH_TO_FLEX="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
 fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
->>>>>>> origin/devel
+PATH_TO_FLEX=$ac_cv_path_PATH_TO_FLEX
+if test -n "$PATH_TO_FLEX"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_FLEX" >&5
+$as_echo "$PATH_TO_FLEX" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -3110,7 +4560,6 @@ $as_echo "no" >&6; }
 fi
 
 
-<<<<<<< HEAD
 # Extract the first word of "sha1sum", so it can be a program name with args.
 set dummy sha1sum; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -3194,2358 +4643,15 @@ fi
 
 
 
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking python module: psutil" >&5
-$as_echo_n "checking python module: psutil... " >&6; }
-	python -c "import psutil" > /dev/null 2>&1
-	if test $? -eq 0;
-	then
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-		eval HAVE_PYMOD_PSUTIL=yes
-	else
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-		eval HAVE_PYMOD_PSUTIL=no
-		#
-		if test -n ""
-		then
-			as_fn_error $? "failed to find required module psutil" "$LINENO" 5
-			exit 1
-		fi
-	fi
-
-
-if test "$HAVE_PYMOD_PSUTIL" = yes; then
-  BUILD_PSTREE=no
-
-else
-   # Extract the first word of "pstree", so it can be a program name with args.
-set dummy pstree; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_pstree_prog+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $pstree_prog in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_pstree_prog="$pstree_prog" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_pstree_prog="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-pstree_prog=$ac_cv_path_pstree_prog
-if test -n "$pstree_prog"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $pstree_prog" >&5
-$as_echo "$pstree_prog" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-   PATH_TO_PSTREE=$pstree_prog
-
-   printf "Use contrib pstree"
-   BUILD_PSTREE=yes
-   if test x$pstree_prog != x; then
-     versionStr=$($pstree_prog --version 2>&1 | head -1)
-     name=`expr "$versionStr" : '.*(\(PSmisc\))'`
-     if test x$name = "xPSmisc" ; then
-       major_version=`expr "$versionStr" : '.*(PSmisc) \([0-9]\+\)\.'`
-       minor_version=`expr "$versionStr" : '.*(PSmisc) \+[0-9]\+\.\([0-9]\+\)'`
-       version=`expr $major_version \* 100000 + $minor_version`
-       contrib_version=2200020
-       if test $version -ge $contrib_version ; then
-         BUILD_PSTREE=no
-       fi
-     fi
-   fi
-   echo "... $BUILD_PSTREE"
-
-   if test x$BUILD_PSTREE = xyes; then
-      PATH_TO_PSTREE=$prefix/libexec/pstree
-      ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-if test -n "$ac_tool_prefix"; then
-  # Extract the first word of "${ac_tool_prefix}gcc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}gcc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}gcc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-fi
-if test -z "$ac_cv_prog_CC"; then
-  ac_ct_CC=$CC
-  # Extract the first word of "gcc", so it can be a program name with args.
-set dummy gcc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ac_ct_CC"; then
-  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="gcc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-ac_ct_CC=$ac_cv_prog_ac_ct_CC
-if test -n "$ac_ct_CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
-$as_echo "$ac_ct_CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-=======
-ac_aux_dir=
-for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
-  if test -f "$ac_dir/install-sh"; then
-    ac_aux_dir=$ac_dir
-    ac_install_sh="$ac_aux_dir/install-sh -c"
-    break
-  elif test -f "$ac_dir/install.sh"; then
-    ac_aux_dir=$ac_dir
-    ac_install_sh="$ac_aux_dir/install.sh -c"
-    break
-  elif test -f "$ac_dir/shtool"; then
-    ac_aux_dir=$ac_dir
-    ac_install_sh="$ac_aux_dir/shtool install -c"
-    break
-  fi
-done
-if test -z "$ac_aux_dir"; then
-  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
-fi
-
-# These three variables are undocumented and unsupported,
-# and are intended to be withdrawn in a future Autoconf release.
-# They can cause serious problems if a builder's source tree is in a directory
-# whose full name contains unusual characters.
-ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
-ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
-ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
-
-
-
-
-subdirs="$subdirs src"
-
-
-
-XALT_INTERFACE_VERSION=3
-
-
-
-
-# Check whether --with-transmission was given.
-if test "${with_transmission+set}" = set; then :
-  withval=$with_transmission; TRANSMISSION="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$with_transmission" >&5
-$as_echo "TRANSMISSION=$with_transmission" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define TRANSMISSION "$with_transmission"
-_ACEOF
-
-else
-  withval="file"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$withval" >&5
-$as_echo "TRANSMISSION=$withval" >&6; }
-    TRANSMISSION="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define TRANSMISSION "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-functionTracking was given.
-if test "${with_functionTracking+set}" = set; then :
-  withval=$with_functionTracking; XALT_FUNCTION_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$with_functionTracking" >&5
-$as_echo "XALT_FUNCTION_TRACKING=$with_functionTracking" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_FUNCTION_TRACKING "$with_functionTracking"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$withval" >&5
-$as_echo "XALT_FUNCTION_TRACKING=$withval" >&6; }
-    XALT_FUNCTION_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_FUNCTION_TRACKING "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-xaltFilePrefix was given.
-if test "${with_xaltFilePrefix+set}" = set; then :
-  withval=$with_xaltFilePrefix; XALT_FILE_PREFIX="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FILE_PREFIX=$with_xaltFilePrefix" >&5
-$as_echo "XALT_FILE_PREFIX=$with_xaltFilePrefix" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_FILE_PREFIX "$with_xaltFilePrefix"
-_ACEOF
-
-else
-  withval="USE_HOME"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FILE_PREFIX=$withval" >&5
-$as_echo "XALT_FILE_PREFIX=$withval" >&6; }
-    XALT_FILE_PREFIX="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_FILE_PREFIX "$withval"
-_ACEOF
-
-fi
-
-
-
-
-# Check whether --with-trackMPI was given.
-if test "${with_trackMPI+set}" = set; then :
-  withval=$with_trackMPI; XALT_MPI_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$with_trackMPI" >&5
-$as_echo "XALT_MPI_TRACKING=$with_trackMPI" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_MPI_TRACKING "$with_trackMPI"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$withval" >&5
-$as_echo "XALT_MPI_TRACKING=$withval" >&6; }
-    XALT_MPI_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_MPI_TRACKING "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-trackSPSR was given.
-if test "${with_trackSPSR+set}" = set; then :
-  withval=$with_trackSPSR; XALT_SPSR_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$with_trackSPSR" >&5
-$as_echo "XALT_SPSR_TRACKING=$with_trackSPSR" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SPSR_TRACKING "$with_trackSPSR"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$withval" >&5
-$as_echo "XALT_SPSR_TRACKING=$withval" >&6; }
-    XALT_SPSR_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SPSR_TRACKING "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-trackScalarPrgms was given.
-if test "${with_trackScalarPrgms+set}" = set; then :
-  withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&5
-$as_echo "XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SCALAR_TRACKING "$with_trackScalarPrgms"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$withval" >&5
-$as_echo "XALT_SCALAR_TRACKING=$withval" >&6; }
-    XALT_SCALAR_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SCALAR_TRACKING "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-computeSHA1 was given.
-if test "${with_computeSHA1+set}" = set; then :
-  withval=$with_computeSHA1; COMPUTE_SHA1SUM="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$with_computeSHA1" >&5
-$as_echo "COMPUTE_SHA1SUM=$with_computeSHA1" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define COMPUTE_SHA1SUM "$with_computeSHA1"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$withval" >&5
-$as_echo "COMPUTE_SHA1SUM=$withval" >&6; }
-    COMPUTE_SHA1SUM="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define COMPUTE_SHA1SUM "$withval"
-_ACEOF
-
-fi
-
-
-
-
-# Check whether --with-etcDir was given.
-if test "${with_etcDir+set}" = set; then :
-  withval=$with_etcDir; ETC_DIR="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$with_etcDir" >&5
-$as_echo "ETC_DIR=$with_etcDir" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define ETC_DIR "$with_etcDir"
-_ACEOF
-
-else
-  withval="."
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$withval" >&5
-$as_echo "ETC_DIR=$withval" >&6; }
-    ETC_DIR="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define ETC_DIR "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-config was given.
-if test "${with_config+set}" = set; then :
-  withval=$with_config; XALT_CONFIG_PY="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$with_config" >&5
-$as_echo "XALT_CONFIG_PY=$with_config" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_CONFIG_PY "$with_config"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$withval" >&5
-$as_echo "XALT_CONFIG_PY=$withval" >&6; }
-    XALT_CONFIG_PY="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_CONFIG_PY "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-MySQL was given.
-if test "${with_MySQL+set}" = set; then :
-  withval=$with_MySQL; MYSQLDB="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$with_pymodMySQL" >&5
-$as_echo "MYSQLDB=$with_pymodMySQL" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define MYSQLDB "$with_MySQL"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$withval" >&5
-$as_echo "MYSQLDB=$withval" >&6; }
-    MYSQLDB="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define MYSQLDB "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-systemPath was given.
-if test "${with_systemPath+set}" = set; then :
-  withval=$with_systemPath; SYSTEM_PATH="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$with_systemPath" >&5
-$as_echo "SYSTEM_PATH=$with_systemPath" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define SYSTEM_PATH "$with_systemPath"
-_ACEOF
-
-else
-  withval="/usr/bin:/bin"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$withval" >&5
-$as_echo "SYSTEM_PATH=$withval" >&6; }
-    SYSTEM_PATH="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define SYSTEM_PATH "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-syslogMsgSz was given.
-if test "${with_syslogMsgSz+set}" = set; then :
-  withval=$with_syslogMsgSz; SYSLOG_MSG_SZ="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$with_syslogMsgSz" >&5
-$as_echo "SYSLOG_MSG_SZ=$with_syslogMsgSz" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define SYSLOG_MSG_SZ "$with_syslogMsgSz"
-_ACEOF
->>>>>>> origin/devel
-
-  if test "x$ac_ct_CC" = x; then
-    CC=""
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    CC=$ac_ct_CC
-  fi
-else
-<<<<<<< HEAD
-  CC="$ac_cv_prog_CC"
-fi
-
-if test -z "$CC"; then
-          if test -n "$ac_tool_prefix"; then
-    # Extract the first word of "${ac_tool_prefix}cc", so it can be a program name with args.
-set dummy ${ac_tool_prefix}cc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CC="${ac_tool_prefix}cc"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-=======
-  withval="512"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$withval" >&5
-$as_echo "SYSLOG_MSG_SZ=$withval" >&6; }
-    SYSLOG_MSG_SZ="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define SYSLOG_MSG_SZ "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-mysqlStatic was given.
-if test "${with_mysqlStatic+set}" = set; then :
-  withval=$with_mysqlStatic; MYSQL_STATIC="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQL_STATIC=$with_mysqlStatic" >&5
-$as_echo "MYSQL_STATIC=$with_mysqlStatic" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define MYSQL_STATIC "$with_mysqlStatic"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQL_STATIC=$withval" >&5
-$as_echo "MYSQL_STATIC=$withval" >&6; }
-    MYSQL_STATIC="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define MYSQL_STATIC "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-cxxLDLibraryPath was given.
-if test "${with_cxxLDLibraryPath+set}" = set; then :
-  withval=$with_cxxLDLibraryPath; CXX_LD_LIBRARY_PATH="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&5
-$as_echo "CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define CXX_LD_LIBRARY_PATH "$with_cxxLDLibraryPath"
-_ACEOF
-
-else
-  withval=""
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$withval" >&5
-$as_echo "CXX_LD_LIBRARY_PATH=$withval" >&6; }
-    CXX_LD_LIBRARY_PATH="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define CXX_LD_LIBRARY_PATH "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-syshostConfig was given.
-if test "${with_syshostConfig+set}" = set; then :
-  withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$with_syshostConfig" >&5
-$as_echo "SYSHOST_CONFIG=$with_syshostConfig" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define SYSHOST_CONFIG "$with_syshostConfig"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$withval" >&5
-$as_echo "SYSHOST_CONFIG=$withval" >&6; }
-    SYSHOST_CONFIG="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define SYSHOST_CONFIG "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-hostnameParser was given.
-if test "${with_hostnameParser+set}" = set; then :
-  withval=$with_hostnameParser; MY_HOSTNAME_PARSER="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$with_hostnameParser" >&5
-$as_echo "MY_HOSTNAME_PARSER=$with_hostnameParser" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define MY_HOSTNAME_PARSER "$with_hostnameParser"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$withval" >&5
-$as_echo "MY_HOSTNAME_PARSER=$withval" >&6; }
-    MY_HOSTNAME_PARSER="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define MY_HOSTNAME_PARSER "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-IrefuseToInstallXALTCorrectly was given.
-if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
-  withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
-$as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
-$as_echo "BAD_INSTALL=$withval" >&6; }
-    BAD_INSTALL="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define BAD_INSTALL "$withval"
-_ACEOF
-
-fi
-
-
-
-
-# Check whether --with-enableBackgrounding was given.
-if test "${with_enableBackgrounding+set}" = set; then :
-  withval=$with_enableBackgrounding; ENABLE_BACKGROUNDING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ENABLE_BACKGROUNDING=$with_enableBackgrounding" >&5
-$as_echo "ENABLE_BACKGROUNDING=$with_enableBackgrounding" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define ENABLE_BACKGROUNDING "$with_enableBackgrounding"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ENABLE_BACKGROUNDING=$withval" >&5
-$as_echo "ENABLE_BACKGROUNDING=$withval" >&6; }
-    ENABLE_BACKGROUNDING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define ENABLE_BACKGROUNDING "$withval"
-_ACEOF
-
-fi
-
-
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler can build and run with -m32" >&5
-$as_echo_n "checking whether C compiler can build and run with -m32... " >&6; }
-if ${ax_cv_check_cflags___m32+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-  ax_check_save_flags=$CFLAGS
-  CFLAGS="$CFLAGS  -m32"
-  if test "$cross_compiling" = yes; then :
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot run test program while cross compiling
-See \`config.log' for more details" "$LINENO" 5; }
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ax_cv_check_cflags___m32=yes
-else
-  ax_cv_check_cflags___m32=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-  CFLAGS=$ax_check_save_flags
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cflags___m32" >&5
-$as_echo "$ax_cv_check_cflags___m32" >&6; }
-if test "x$ax_cv_check_cflags___m32" = xyes; then :
-  HAVE_32BIT=yes
->>>>>>> origin/devel
-else
-  HAVE_32BIT=no
-fi
-
-ac_ext=cpp
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
-<<<<<<< HEAD
-  fi
-fi
-if test -z "$CC"; then
-  # Extract the first word of "cc", so it can be a program name with args.
-set dummy cc; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-else
-  ac_prog_rejected=no
-=======
-ac_ext=cpp
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-if test -z "$CXX"; then
-  if test -n "$CCC"; then
-    CXX=$CCC
-  else
-    if test -n "$ac_tool_prefix"; then
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
-  do
-    # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
-set dummy $ac_tool_prefix$ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CXX+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CXX"; then
-  ac_cv_prog_CXX="$CXX" # Let the user override the test.
-else
->>>>>>> origin/devel
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-<<<<<<< HEAD
-    if test "$as_dir/$ac_word$ac_exec_ext" = "/usr/ucb/cc"; then
-       ac_prog_rejected=yes
-       continue
-     fi
-    ac_cv_prog_CC="cc"
-=======
-    ac_cv_prog_CXX="$ac_tool_prefix$ac_prog"
->>>>>>> origin/devel
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-<<<<<<< HEAD
-if test $ac_prog_rejected = yes; then
-  # We found a bogon in the path, so make sure we never use it.
-  set dummy $ac_cv_prog_CC
-  shift
-  if test $# != 0; then
-    # We chose a different compiler from the bogus one.
-    # However, it has the same basename, so the bogon will be chosen
-    # first if we set CC to just the basename; use the full file name.
-    shift
-    ac_cv_prog_CC="$as_dir/$ac_word${1+' '}$@"
-  fi
-fi
-fi
-fi
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-=======
-fi
-fi
-CXX=$ac_cv_prog_CXX
-if test -n "$CXX"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CXX" >&5
-$as_echo "$CXX" >&6; }
->>>>>>> origin/devel
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-<<<<<<< HEAD
-fi
-if test -z "$CC"; then
-  if test -n "$ac_tool_prefix"; then
-  for ac_prog in cl.exe
-  do
-    # Extract the first word of "$ac_tool_prefix$ac_prog", so it can be a program name with args.
-set dummy $ac_tool_prefix$ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$CC"; then
-  ac_cv_prog_CC="$CC" # Let the user override the test.
-=======
-    test -n "$CXX" && break
-  done
-fi
-if test -z "$CXX"; then
-  ac_ct_CXX=$CXX
-  for ac_prog in g++ c++ gpp aCC CC cxx cc++ cl.exe FCC KCC RCC xlC_r xlC
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_CXX+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ac_ct_CXX"; then
-  ac_cv_prog_ac_ct_CXX="$ac_ct_CXX" # Let the user override the test.
->>>>>>> origin/devel
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-<<<<<<< HEAD
-    ac_cv_prog_CC="$ac_tool_prefix$ac_prog"
-=======
-    ac_cv_prog_ac_ct_CXX="$ac_prog"
->>>>>>> origin/devel
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-<<<<<<< HEAD
-CC=$ac_cv_prog_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-=======
-ac_ct_CXX=$ac_cv_prog_ac_ct_CXX
-if test -n "$ac_ct_CXX"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CXX" >&5
-$as_echo "$ac_ct_CXX" >&6; }
->>>>>>> origin/devel
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-<<<<<<< HEAD
-    test -n "$CC" && break
-  done
-fi
-if test -z "$CC"; then
-  ac_ct_CC=$CC
-  for ac_prog in cl.exe
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_ac_ct_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$ac_ct_CC"; then
-  ac_cv_prog_ac_ct_CC="$ac_ct_CC" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_ac_ct_CC="$ac_prog"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-=======
-  test -n "$ac_ct_CXX" && break
->>>>>>> origin/devel
-done
-
-<<<<<<< HEAD
-fi
-fi
-ac_ct_CC=$ac_cv_prog_ac_ct_CC
-if test -n "$ac_ct_CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_CC" >&5
-$as_echo "$ac_ct_CC" >&6; }
-=======
-  if test "x$ac_ct_CXX" = x; then
-    CXX="g++"
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    CXX=$ac_ct_CXX
-  fi
-fi
-
-  fi
-fi
-# Provide some information about the compiler.
-$as_echo "$as_me:${as_lineno-$LINENO}: checking for C++ compiler version" >&5
-set X $ac_compile
-ac_compiler=$2
-for ac_option in --version -v -V -qversion; do
-  { { ac_try="$ac_compiler $ac_option >&5"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_compiler $ac_option >&5") 2>conftest.err
-  ac_status=$?
-  if test -s conftest.err; then
-    sed '10a\
-... rest of stderr output deleted ...
-         10q' conftest.err >conftest.er1
-    cat conftest.er1 >&5
-  fi
-  rm -f conftest.er1 conftest.err
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }
-done
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C++ compiler" >&5
-$as_echo_n "checking whether we are using the GNU C++ compiler... " >&6; }
-if ${ac_cv_cxx_compiler_gnu+:} false; then :
-  $as_echo_n "(cached) " >&6
->>>>>>> origin/devel
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-#ifndef __GNUC__
-       choke me
-#endif
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  ac_compiler_gnu=yes
-else
-  ac_compiler_gnu=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-ac_cv_cxx_compiler_gnu=$ac_compiler_gnu
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_cxx_compiler_gnu" >&5
-$as_echo "$ac_cv_cxx_compiler_gnu" >&6; }
-if test $ac_compiler_gnu = yes; then
-  GXX=yes
-else
-  GXX=
-fi
-ac_test_CXXFLAGS=${CXXFLAGS+set}
-ac_save_CXXFLAGS=$CXXFLAGS
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CXX accepts -g" >&5
-$as_echo_n "checking whether $CXX accepts -g... " >&6; }
-if ${ac_cv_prog_cxx_g+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_save_cxx_werror_flag=$ac_cxx_werror_flag
-   ac_cxx_werror_flag=yes
-   ac_cv_prog_cxx_g=no
-   CXXFLAGS="-g"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-<<<<<<< HEAD
-  test -n "$ac_ct_CC" && break
-=======
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  ac_cv_prog_cxx_g=yes
-else
-  CXXFLAGS=""
-      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-
-else
-  ac_cxx_werror_flag=$ac_save_cxx_werror_flag
-	 CXXFLAGS="-g"
-	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  ac_cv_prog_cxx_g=yes
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-   ac_cxx_werror_flag=$ac_save_cxx_werror_flag
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cxx_g" >&5
-$as_echo "$ac_cv_prog_cxx_g" >&6; }
-if test "$ac_test_CXXFLAGS" = set; then
-  CXXFLAGS=$ac_save_CXXFLAGS
-elif test $ac_cv_prog_cxx_g = yes; then
-  if test "$GXX" = yes; then
-    CXXFLAGS="-g -O2"
-  else
-    CXXFLAGS="-g"
-  fi
-else
-  if test "$GXX" = yes; then
-    CXXFLAGS="-O2"
-  else
-    CXXFLAGS=
-  fi
-fi
-ac_ext=cpp
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler can build and run with -std=c++11" >&5
-$as_echo_n "checking whether C++ compiler can build and run with -std=c++11... " >&6; }
-if ${ax_cv_check_cxxflags___std_cpp11+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-  ax_check_save_flags=$CXXFLAGS
-  CXXFLAGS="$CXXFLAGS  -std=c++11"
-  if test "$cross_compiling" = yes; then :
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot run test program while cross compiling
-See \`config.log' for more details" "$LINENO" 5; }
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_run "$LINENO"; then :
-  ax_cv_check_cxxflags___std_cpp11=yes
-else
-  ax_cv_check_cxxflags___std_cpp11=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-  CXXFLAGS=$ax_check_save_flags
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___std_cpp11" >&5
-$as_echo "$ax_cv_check_cxxflags___std_cpp11" >&6; }
-if test "x$ax_cv_check_cxxflags___std_cpp11" = xyes; then :
-  HAVE_CXX11=yes
-else
-  HAVE_CXX11=no
-fi
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Extract the first word of "git", so it can be a program name with args.
-set dummy git; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_GIT+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_GIT in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_GIT="$PATH_TO_GIT" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_GIT="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
->>>>>>> origin/devel
-done
-
-  if test "x$ac_ct_CC" = x; then
-    CC=""
-  else
-    case $cross_compiling:$ac_tool_warned in
-yes:)
-{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
-$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
-ac_tool_warned=yes ;;
-esac
-    CC=$ac_ct_CC
-  fi
-fi
-<<<<<<< HEAD
-
-fi
-
-
-test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "no acceptable C compiler found in \$PATH
-See \`config.log' for more details" "$LINENO" 5; }
-
-# Provide some information about the compiler.
-$as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
-set X $ac_compile
-ac_compiler=$2
-for ac_option in --version -v -V -qversion; do
-  { { ac_try="$ac_compiler $ac_option >&5"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_compiler $ac_option >&5") 2>conftest.err
-  ac_status=$?
-  if test -s conftest.err; then
-    sed '10a\
-... rest of stderr output deleted ...
-         10q' conftest.err >conftest.er1
-    cat conftest.er1 >&5
-=======
-PATH_TO_GIT=$ac_cv_path_PATH_TO_GIT
-if test -n "$PATH_TO_GIT"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GIT" >&5
-$as_echo "$PATH_TO_GIT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "as", so it can be a program name with args.
-set dummy as; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_AS+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_AS in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_AS="$PATH_TO_AS" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_AS="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
->>>>>>> origin/devel
-  fi
-  rm -f conftest.er1 conftest.err
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }
-done
-
-<<<<<<< HEAD
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-=======
-  ;;
-esac
-fi
-PATH_TO_AS=$ac_cv_path_PATH_TO_AS
-if test -n "$PATH_TO_AS"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_AS" >&5
-$as_echo "$PATH_TO_AS" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
->>>>>>> origin/devel
-
-int
-main ()
-{
-
-<<<<<<< HEAD
-  ;
-  return 0;
-}
-_ACEOF
-ac_clean_files_save=$ac_clean_files
-ac_clean_files="$ac_clean_files a.out a.out.dSYM a.exe b.out"
-# Try to create an executable without -o first, disregard a.out.
-# It will help us diagnose broken compilers, and finding out an intuition
-# of exeext.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether the C compiler works" >&5
-$as_echo_n "checking whether the C compiler works... " >&6; }
-ac_link_default=`$as_echo "$ac_link" | sed 's/ -o *conftest[^ ]*//'`
-
-# The possible output files:
-ac_files="a.out conftest.exe conftest a.exe a_out.exe b.out conftest.*"
-
-ac_rmfiles=
-for ac_file in $ac_files
-do
-  case $ac_file in
-    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM | *.o | *.obj ) ;;
-    * ) ac_rmfiles="$ac_rmfiles $ac_file";;
-  esac
-=======
-# Extract the first word of "flex", so it can be a program name with args.
-set dummy flex; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_FLEX+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_FLEX in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_FLEX="$PATH_TO_FLEX" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_FLEX="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
->>>>>>> origin/devel
-done
-rm -f $ac_rmfiles
-
-<<<<<<< HEAD
-if { { ac_try="$ac_link_default"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_link_default") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then :
-  # Autoconf-2.13 could set the ac_cv_exeext variable to `no'.
-# So ignore a value of `no', otherwise this would lead to `EXEEXT = no'
-# in a Makefile.  We should not override ac_cv_exeext if it was cached,
-# so that the user can short-circuit this test for compilers unknown to
-# Autoconf.
-for ac_file in $ac_files ''
-do
-  test -f "$ac_file" || continue
-  case $ac_file in
-    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM | *.o | *.obj )
-	;;
-    [ab].out )
-	# We found the default executable, but exeext='' is most
-	# certainly right.
-	break;;
-    *.* )
-	if test "${ac_cv_exeext+set}" = set && test "$ac_cv_exeext" != no;
-	then :; else
-	   ac_cv_exeext=`expr "$ac_file" : '[^.]*\(\..*\)'`
-	fi
-	# We set ac_cv_exeext here because the later test for it is not
-	# safe: cross compilers may not add the suffix if given an `-o'
-	# argument, so we may need to know it at that point already.
-	# Even if this section looks crufty: it has the advantage of
-	# actually working.
-	break;;
-    * )
-	break;;
-  esac
-done
-test "$ac_cv_exeext" = no && ac_cv_exeext=
-
-=======
-  ;;
-esac
-fi
-PATH_TO_FLEX=$ac_cv_path_PATH_TO_FLEX
-if test -n "$PATH_TO_FLEX"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_FLEX" >&5
-$as_echo "$PATH_TO_FLEX" >&6; }
->>>>>>> origin/devel
-else
-  ac_file=''
-fi
-if test -z "$ac_file"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-$as_echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-<<<<<<< HEAD
-{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error 77 "C compiler cannot create executables
-See \`config.log' for more details" "$LINENO" 5; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler default output file name" >&5
-$as_echo_n "checking for C compiler default output file name... " >&6; }
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_file" >&5
-$as_echo "$ac_file" >&6; }
-ac_exeext=$ac_cv_exeext
-=======
-# Extract the first word of "basename", so it can be a program name with args.
-set dummy basename; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_BASENAME+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_BASENAME in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_BASENAME="$PATH_TO_BASENAME" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_BASENAME="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
->>>>>>> origin/devel
-
-rm -f -r a.out a.out.dSYM a.exe conftest$ac_cv_exeext b.out
-ac_clean_files=$ac_clean_files_save
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for suffix of executables" >&5
-$as_echo_n "checking for suffix of executables... " >&6; }
-if { { ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-<<<<<<< HEAD
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_link") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then :
-  # If both `conftest.exe' and `conftest' are `present' (well, observable)
-# catch `conftest.exe'.  For instance with Cygwin, `ls conftest' will
-# work properly (i.e., refer to `conftest.exe'), while it won't with
-# `rm'.
-for ac_file in conftest.exe conftest conftest.*; do
-  test -f "$ac_file" || continue
-  case $ac_file in
-    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM | *.o | *.obj ) ;;
-    *.* ) ac_cv_exeext=`expr "$ac_file" : '[^.]*\(\..*\)'`
-	  break;;
-    * ) break;;
-  esac
-done
-=======
-fi
-PATH_TO_BASENAME=$ac_cv_path_PATH_TO_BASENAME
-if test -n "$PATH_TO_BASENAME"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_BASENAME" >&5
-$as_echo "$PATH_TO_BASENAME" >&6; }
->>>>>>> origin/devel
-else
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot compute suffix of executables: cannot compile and link
-See \`config.log' for more details" "$LINENO" 5; }
-fi
-rm -f conftest conftest$ac_cv_exeext
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_exeext" >&5
-$as_echo "$ac_cv_exeext" >&6; }
-
-rm -f conftest.$ac_ext
-EXEEXT=$ac_cv_exeext
-ac_exeext=$EXEEXT
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdio.h>
-int
-main ()
-{
-FILE *f = fopen ("conftest.out", "w");
- return ferror (f) || fclose (f) != 0;
-
-<<<<<<< HEAD
-  ;
-  return 0;
-}
-_ACEOF
-ac_clean_files="$ac_clean_files conftest.out"
-# Check that the compiler produces executables we can run.  If not, either
-# the compiler is broken, or we cross compile.
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are cross compiling" >&5
-$as_echo_n "checking whether we are cross compiling... " >&6; }
-if test "$cross_compiling" != yes; then
-  { { ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-=======
-# Extract the first word of "cat", so it can be a program name with args.
-set dummy cat; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_CAT+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_CAT in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_CAT="$PATH_TO_CAT" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_CAT="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_CAT=$ac_cv_path_PATH_TO_CAT
-if test -n "$PATH_TO_CAT"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_CAT" >&5
-$as_echo "$PATH_TO_CAT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "date", so it can be a program name with args.
-set dummy date; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_DATE+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_DATE in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_DATE="$PATH_TO_DATE" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_DATE="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_DATE=$ac_cv_path_PATH_TO_DATE
-if test -n "$PATH_TO_DATE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_DATE" >&5
-$as_echo "$PATH_TO_DATE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "dirname", so it can be a program name with args.
-set dummy dirname; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_DIRNAME+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_DIRNAME in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_DIRNAME="$PATH_TO_DIRNAME" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_DIRNAME="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_DIRNAME=$ac_cv_path_PATH_TO_DIRNAME
-if test -n "$PATH_TO_DIRNAME"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_DIRNAME" >&5
-$as_echo "$PATH_TO_DIRNAME" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "file", so it can be a program name with args.
-set dummy file; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_FILE+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_FILE in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_FILE="$PATH_TO_FILE" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_FILE="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_FILE" && ac_cv_path_PATH_TO_FILE=""""
-  ;;
-esac
-fi
-PATH_TO_FILE=$ac_cv_path_PATH_TO_FILE
-if test -n "$PATH_TO_FILE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_FILE" >&5
-$as_echo "$PATH_TO_FILE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "git", so it can be a program name with args.
-set dummy git; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_GIT+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_GIT in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_GIT="$PATH_TO_GIT" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_GIT="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_GIT" && ac_cv_path_PATH_TO_GIT=""""
-  ;;
-esac
-fi
-PATH_TO_GIT=$ac_cv_path_PATH_TO_GIT
-if test -n "$PATH_TO_GIT"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GIT" >&5
-$as_echo "$PATH_TO_GIT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "grep", so it can be a program name with args.
-set dummy grep; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_GREP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_GREP in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_GREP="$PATH_TO_GREP" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_GREP="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_GREP=$ac_cv_path_PATH_TO_GREP
-if test -n "$PATH_TO_GREP"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GREP" >&5
-$as_echo "$PATH_TO_GREP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "head", so it can be a program name with args.
-set dummy head; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_HEAD+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_HEAD in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_HEAD="$PATH_TO_HEAD" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_HEAD="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
->>>>>>> origin/devel
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_link") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }
-  if { ac_try='./conftest$ac_cv_exeext'
-  { { case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_try") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; }; then
-    cross_compiling=no
-  else
-    if test "$cross_compiling" = maybe; then
-	cross_compiling=yes
-    else
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot run C compiled programs.
-If you meant to cross compile, use \`--host'.
-See \`config.log' for more details" "$LINENO" 5; }
-    fi
-  fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $cross_compiling" >&5
-$as_echo "$cross_compiling" >&6; }
-
-rm -f conftest.$ac_ext conftest$ac_cv_exeext conftest.out
-ac_clean_files=$ac_clean_files_save
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for suffix of object files" >&5
-$as_echo_n "checking for suffix of object files... " >&6; }
-if ${ac_cv_objext+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.o conftest.obj
-if { { ac_try="$ac_compile"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
-$as_echo "$ac_try_echo"; } >&5
-  (eval "$ac_compile") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then :
-  for ac_file in conftest.o conftest.obj conftest.*; do
-  test -f "$ac_file" || continue;
-  case $ac_file in
-    *.$ac_ext | *.xcoff | *.tds | *.d | *.pdb | *.xSYM | *.bb | *.bbg | *.map | *.inf | *.dSYM ) ;;
-    *) ac_cv_objext=`expr "$ac_file" : '.*\.\(.*\)'`
-       break;;
-  esac
-done
-else
-  $as_echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "cannot compute suffix of object files: cannot compile
-See \`config.log' for more details" "$LINENO" 5; }
-fi
-rm -f conftest.$ac_cv_objext conftest.$ac_ext
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_objext" >&5
-$as_echo "$ac_cv_objext" >&6; }
-OBJEXT=$ac_cv_objext
-ac_objext=$OBJEXT
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether we are using the GNU C compiler" >&5
-$as_echo_n "checking whether we are using the GNU C compiler... " >&6; }
-if ${ac_cv_c_compiler_gnu+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-#ifndef __GNUC__
-       choke me
-#endif
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_compiler_gnu=yes
-else
-  ac_compiler_gnu=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-ac_cv_c_compiler_gnu=$ac_compiler_gnu
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_c_compiler_gnu" >&5
-$as_echo "$ac_cv_c_compiler_gnu" >&6; }
-if test $ac_compiler_gnu = yes; then
-  GCC=yes
-else
-  GCC=
-fi
-ac_test_CFLAGS=${CFLAGS+set}
-ac_save_CFLAGS=$CFLAGS
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $CC accepts -g" >&5
-$as_echo_n "checking whether $CC accepts -g... " >&6; }
-if ${ac_cv_prog_cc_g+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_save_c_werror_flag=$ac_c_werror_flag
-   ac_c_werror_flag=yes
-   ac_cv_prog_cc_g=no
-   CFLAGS="-g"
-   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_prog_cc_g=yes
-else
-  CFLAGS=""
-      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-
-else
-  ac_c_werror_flag=$ac_save_c_werror_flag
-	 CFLAGS="-g"
-	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_prog_cc_g=yes
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-   ac_c_werror_flag=$ac_save_c_werror_flag
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_g" >&5
-$as_echo "$ac_cv_prog_cc_g" >&6; }
-if test "$ac_test_CFLAGS" = set; then
-  CFLAGS=$ac_save_CFLAGS
-elif test $ac_cv_prog_cc_g = yes; then
-  if test "$GCC" = yes; then
-    CFLAGS="-g -O2"
-  else
-    CFLAGS="-g"
-  fi
-else
-  if test "$GCC" = yes; then
-    CFLAGS="-O2"
-  else
-    CFLAGS=
-  fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to accept ISO C89" >&5
-$as_echo_n "checking for $CC option to accept ISO C89... " >&6; }
-if ${ac_cv_prog_cc_c89+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_cv_prog_cc_c89=no
-ac_save_CC=$CC
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdarg.h>
-#include <stdio.h>
-struct stat;
-/* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
-struct buf { int x; };
-FILE * (*rcsopen) (struct buf *, struct stat *, int);
-static char *e (p, i)
-     char **p;
-     int i;
-{
-  return p[i];
-}
-static char *f (char * (*g) (char **, int), char **p, ...)
-{
-  char *s;
-  va_list v;
-  va_start (v,p);
-  s = g (p, va_arg (v,int));
-  va_end (v);
-  return s;
-}
-
-/* OSF 4.0 Compaq cc is some sort of almost-ANSI by default.  It has
-   function prototypes and stuff, but not '\xHH' hex character constants.
-   These don't provoke an error unfortunately, instead are silently treated
-   as 'x'.  The following induces an error, until -std is added to get
-   proper ANSI mode.  Curiously '\x00'!='x' always comes out true, for an
-   array size at least.  It's necessary to write '\x00'==0 to get something
-   that's true only with -std.  */
-int osf4_cc_array ['\x00' == 0 ? 1 : -1];
-
-/* IBM C 6 for AIX is almost-ANSI by default, but it replaces macro parameters
-   inside strings and character constants.  */
-#define FOO(x) 'x'
-int xlc6_cc_array[FOO(a) == 'x' ? 1 : -1];
-
-int test (int i, double x);
-struct s1 {int (*f) (int a);};
-struct s2 {int (*f) (double a);};
-int pairnames (int, char **, FILE *(*)(struct buf *, struct stat *, int), int, int);
-int argc;
-char **argv;
-int
-main ()
-{
-return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];
-  ;
-  return 0;
-}
-_ACEOF
-for ac_arg in '' -qlanglvl=extc89 -qlanglvl=ansi -std \
-	-Ae "-Aa -D_HPUX_SOURCE" "-Xc -D__EXTENSIONS__"
-do
-  CC="$ac_save_CC $ac_arg"
-  if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_prog_cc_c89=$ac_arg
-fi
-rm -f core conftest.err conftest.$ac_objext
-  test "x$ac_cv_prog_cc_c89" != "xno" && break
-done
-rm -f conftest.$ac_ext
-CC=$ac_save_CC
-
-fi
-# AC_CACHE_VAL
-case "x$ac_cv_prog_cc_c89" in
-  x)
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: none needed" >&5
-$as_echo "none needed" >&6; } ;;
-  xno)
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: unsupported" >&5
-$as_echo "unsupported" >&6; } ;;
-  *)
-    CC="$CC $ac_cv_prog_cc_c89"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_cc_c89" >&5
-$as_echo "$ac_cv_prog_cc_c89" >&6; } ;;
-esac
-if test "x$ac_cv_prog_cc_c89" != xno; then :
-
-fi
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking how to run the C preprocessor" >&5
-$as_echo_n "checking how to run the C preprocessor... " >&6; }
-# On Suns, sometimes $CPP names a directory.
-if test -n "$CPP" && test -d "$CPP"; then
-  CPP=
-fi
-if test -z "$CPP"; then
-  if ${ac_cv_prog_CPP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-      # Double quotes because CPP needs to be expanded
-    for CPP in "$CC -E" "$CC -E -traditional-cpp" "/lib/cpp"
-    do
-      ac_preproc_ok=false
-for ac_c_preproc_warn_flag in '' yes
-do
-  # Use a header file that comes with gcc, so configuring glibc
-  # with a fresh cross-compiler works.
-  # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
-  # <limits.h> exists even on freestanding compilers.
-  # On the NeXT, cc -E runs the code through the compiler's parser,
-  # not just through cpp. "Syntax error" is here to catch this case.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#ifdef __STDC__
-# include <limits.h>
-#else
-# include <assert.h>
-#endif
-		     Syntax error
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-
-else
-  # Broken: fails on valid input.
-continue
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-  # OK, works on sane cases.  Now check whether nonexistent headers
-  # can be detected and how.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <ac_nonexistent.h>
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-  # Broken: success on invalid input.
-continue
-else
-  # Passes both tests.
-ac_preproc_ok=:
-break
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-done
-# Because of `break', _AC_PREPROC_IFELSE's cleaning code was skipped.
-rm -f conftest.i conftest.err conftest.$ac_ext
-if $ac_preproc_ok; then :
-  break
-fi
-
-    done
-    ac_cv_prog_CPP=$CPP
-
-fi
-  CPP=$ac_cv_prog_CPP
-else
-  ac_cv_prog_CPP=$CPP
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $CPP" >&5
-$as_echo "$CPP" >&6; }
-ac_preproc_ok=false
-for ac_c_preproc_warn_flag in '' yes
-do
-  # Use a header file that comes with gcc, so configuring glibc
-  # with a fresh cross-compiler works.
-  # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
-  # <limits.h> exists even on freestanding compilers.
-  # On the NeXT, cc -E runs the code through the compiler's parser,
-  # not just through cpp. "Syntax error" is here to catch this case.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#ifdef __STDC__
-# include <limits.h>
-#else
-# include <assert.h>
-#endif
-		     Syntax error
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-
-else
-  # Broken: fails on valid input.
-continue
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-  # OK, works on sane cases.  Now check whether nonexistent headers
-  # can be detected and how.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <ac_nonexistent.h>
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-  # Broken: success on invalid input.
-continue
-else
-  # Passes both tests.
-ac_preproc_ok=:
-break
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-done
-# Because of `break', _AC_PREPROC_IFELSE's cleaning code was skipped.
-rm -f conftest.i conftest.err conftest.$ac_ext
-if $ac_preproc_ok; then :
-
-else
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "C preprocessor \"$CPP\" fails sanity check
-See \`config.log' for more details" "$LINENO" 5; }
-fi
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for grep that handles long lines and -e" >&5
-$as_echo_n "checking for grep that handles long lines and -e... " >&6; }
-if ${ac_cv_path_GREP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -z "$GREP"; then
-  ac_path_GREP_found=false
-  # Loop through the user's path and test for each of PROGNAME-LIST
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH$PATH_SEPARATOR/usr/xpg4/bin
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_prog in grep ggrep; do
-    for ac_exec_ext in '' $ac_executable_extensions; do
-<<<<<<< HEAD
-=======
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_SHA1SUM="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_SHA1SUM" && ac_cv_path_PATH_TO_SHA1SUM=""""
-  ;;
-esac
-fi
-PATH_TO_SHA1SUM=$ac_cv_path_PATH_TO_SHA1SUM
-if test -n "$PATH_TO_SHA1SUM"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_SHA1SUM" >&5
-$as_echo "$PATH_TO_SHA1SUM" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "uuidgen", so it can be a program name with args.
-set dummy uuidgen; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_UUIDGEN+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_UUIDGEN in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_UUIDGEN="$PATH_TO_UUIDGEN" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_UUIDGEN="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_UUIDGEN=$ac_cv_path_PATH_TO_UUIDGEN
-if test -n "$PATH_TO_UUIDGEN"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_UUIDGEN" >&5
-$as_echo "$PATH_TO_UUIDGEN" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-
-if test "$MYSQLDB" == yes; then
-  # Extract the first word of "mysql_config", so it can be a program name with args.
-set dummy mysql_config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_MYSQL_CONFIG+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $MYSQL_CONFIG in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_MYSQL_CONFIG="$MYSQL_CONFIG" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_MYSQL_CONFIG="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_MYSQL_CONFIG" && ac_cv_path_MYSQL_CONFIG="UNKNOWN_mysql_config"
-  ;;
-esac
-fi
-MYSQL_CONFIG=$ac_cv_path_MYSQL_CONFIG
-if test -n "$MYSQL_CONFIG"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MYSQL_CONFIG" >&5
-$as_echo "$MYSQL_CONFIG" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-else
-  MYSQL_CONFIG=UNKNOWN_mysql_config
+if test "$TRANSMISSION" == "direct2db"; then
+   echo
+   echo "======================================================="
+   echo "XALT 2 does not support direct2db"
+   echo "See the manual for supported methods"
+   echo "======================================================="
+   echo
+   rm -f makefile
+   exit 1
 fi
 
 
@@ -5723,7 +4829,6 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_prog in grep ggrep; do
     for ac_exec_ext in '' $ac_executable_extensions; do
->>>>>>> origin/devel
       ac_path_GREP="$as_dir/$ac_prog$ac_exec_ext"
       as_fn_executable_p "$ac_path_GREP" || continue
 # Check for GNU ac_path_GREP and select it if it is found.
@@ -5762,10 +4867,6 @@ IFS=$as_save_IFS
   if test -z "$ac_cv_path_GREP"; then
     as_fn_error $? "no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
   fi
-<<<<<<< HEAD
-else
-  ac_cv_path_GREP=$GREP
-=======
 else
   ac_cv_path_GREP=$GREP
 fi
@@ -6045,108 +5146,10 @@ if test "$ac_res" != no; then :
 
 else
   as_fn_error $? "Unable to build XALT without libcrypto" "$LINENO" 5
->>>>>>> origin/devel
 fi
 
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_path_GREP" >&5
-$as_echo "$ac_cv_path_GREP" >&6; }
- GREP="$ac_cv_path_GREP"
 
 
-<<<<<<< HEAD
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for egrep" >&5
-$as_echo_n "checking for egrep... " >&6; }
-if ${ac_cv_path_EGREP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if echo a | $GREP -E '(a|b)' >/dev/null 2>&1
-   then ac_cv_path_EGREP="$GREP -E"
-   else
-     if test -z "$EGREP"; then
-  ac_path_EGREP_found=false
-  # Loop through the user's path and test for each of PROGNAME-LIST
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH$PATH_SEPARATOR/usr/xpg4/bin
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_prog in egrep; do
-    for ac_exec_ext in '' $ac_executable_extensions; do
-      ac_path_EGREP="$as_dir/$ac_prog$ac_exec_ext"
-      as_fn_executable_p "$ac_path_EGREP" || continue
-# Check for GNU ac_path_EGREP and select it if it is found.
-  # Check for GNU $ac_path_EGREP
-case `"$ac_path_EGREP" --version 2>&1` in
-*GNU*)
-  ac_cv_path_EGREP="$ac_path_EGREP" ac_path_EGREP_found=:;;
-*)
-  ac_count=0
-  $as_echo_n 0123456789 >"conftest.in"
-  while :
-  do
-    cat "conftest.in" "conftest.in" >"conftest.tmp"
-    mv "conftest.tmp" "conftest.in"
-    cp "conftest.in" "conftest.nl"
-    $as_echo 'EGREP' >> "conftest.nl"
-    "$ac_path_EGREP" 'EGREP$' < "conftest.nl" >"conftest.out" 2>/dev/null || break
-    diff "conftest.out" "conftest.nl" >/dev/null 2>&1 || break
-    as_fn_arith $ac_count + 1 && ac_count=$as_val
-    if test $ac_count -gt ${ac_path_EGREP_max-0}; then
-      # Best one so far, save it but keep looking for a better one
-      ac_cv_path_EGREP="$ac_path_EGREP"
-      ac_path_EGREP_max=$ac_count
-    fi
-    # 10*(2^10) chars as input seems more than enough
-    test $ac_count -gt 10 && break
-  done
-  rm -f conftest.in conftest.tmp conftest.nl conftest.out;;
-esac
-
-      $ac_path_EGREP_found && break 3
-    done
-  done
-  done
-IFS=$as_save_IFS
-  if test -z "$ac_cv_path_EGREP"; then
-    as_fn_error $? "no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
-  fi
-else
-  ac_cv_path_EGREP=$EGREP
-fi
-
-   fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_path_EGREP" >&5
-$as_echo "$ac_cv_path_EGREP" >&6; }
- EGREP="$ac_cv_path_EGREP"
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
-$as_echo_n "checking for ANSI C header files... " >&6; }
-if ${ac_cv_header_stdc+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-#include <float.h>
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  ac_cv_header_stdc=yes
-else
-  ac_cv_header_stdc=no
-=======
 HAVE_WORKING_LIBUUID=no
 
 if test $ac_cv_header_uuid_uuid_h = yes; then
@@ -6205,21 +5208,8 @@ if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
   $as_echo "#define HAVE_LIBUUID 1" >>confdefs.h
  HAVE_WORKING_LIBUUID=yes
->>>>>>> origin/devel
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 
-<<<<<<< HEAD
-if test $ac_cv_header_stdc = yes; then
-  # SunOS 4.x string.h does not declare mem*, contrary to ANSI.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <string.h>
-
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "memchr" >/dev/null 2>&1; then :
-=======
 fi
 
 if test -z "$PATH_TO_FLEX" ; then
@@ -6231,21 +5221,9 @@ if test -z "$PATH_TO_FLEX" ; then
    rm -f makefile
    exit 1
 fi
->>>>>>> origin/devel
 
-else
-  ac_cv_header_stdc=no
-fi
-rm -f conftest*
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-fi
-=======
-if test $HAVE_WORKING_LIBUUID=no -a ! -f /proc/sys/kernel/random/uuid; then
-=======
 if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
->>>>>>> origin/devel
    echo
    echo "======================================================="
    echo "Unable to install XALT without uuid and"
@@ -6256,112 +5234,14 @@ if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    exit 1
 fi
 
->>>>>>> origin/devel
 
-if test $ac_cv_header_stdc = yes; then
-  # ISC 2.0.2 stdlib.h does not declare free, contrary to ANSI.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdlib.h>
 
-<<<<<<< HEAD
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "free" >/dev/null 2>&1; then :
-=======
->>>>>>> origin/devel
 
-else
-  ac_cv_header_stdc=no
-fi
-rm -f conftest*
 
-<<<<<<< HEAD
-fi
-
-if test $ac_cv_header_stdc = yes; then
-  # /bin/cc in Irix-4.0.5 gets non-ANSI ctype macros unless using -ansi.
-  if test "$cross_compiling" = yes; then :
-  :
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <ctype.h>
-#include <stdlib.h>
-#if ((' ' & 0x0FF) == 0x020)
-# define ISLOWER(c) ('a' <= (c) && (c) <= 'z')
-# define TOUPPER(c) (ISLOWER(c) ? 'A' + ((c) - 'a') : (c))
-#else
-# define ISLOWER(c) \
-		   (('a' <= (c) && (c) <= 'i') \
-		     || ('j' <= (c) && (c) <= 'r') \
-		     || ('s' <= (c) && (c) <= 'z'))
-# define TOUPPER(c) (ISLOWER(c) ? ((c) | 0x40) : (c))
-#endif
-
-#define XOR(e, f) (((e) && !(f)) || (!(e) && (f)))
-int
-main ()
-{
-  int i;
-  for (i = 0; i < 256; i++)
-    if (XOR (islower (i), ISLOWER (i))
-	|| toupper (i) != TOUPPER (i))
-      return 2;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-
-else
-  ac_cv_header_stdc=no
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-=======
 
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
->>>>>>> origin/devel
 
-fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_header_stdc" >&5
-$as_echo "$ac_cv_header_stdc" >&6; }
-if test $ac_cv_header_stdc = yes; then
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-$as_echo "#define STDC_HEADERS 1" >>confdefs.h
-
-fi
-
-# On IRIX 5.3, sys/types and inttypes.h are conflicting.
-for ac_header in sys/types.h sys/stat.h stdlib.h string.h memory.h strings.h \
-		  inttypes.h stdint.h unistd.h
-do :
-  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
-ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default
-"
-if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
-  cat >>confdefs.h <<_ACEOF
-#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
-
-fi
-
-done
-
-
-for ac_header in curses.h
-do :
-  ac_fn_c_check_header_mongrel "$LINENO" "curses.h" "ac_cv_header_curses_h" "$ac_includes_default"
-if test "x$ac_cv_header_curses_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_CURSES_H 1
-_ACEOF
-=======
 if test $BAD_INSTALL = no; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
       echo
@@ -6389,18 +5269,7 @@ if test $BAD_INSTALL = no; then
       exit 1
    fi
 fi
->>>>>>> origin/devel
 
-fi
-
-done
-
-      if test x$ac_cv_header_curses_h != xyes; then
-         echo "Error: must have curses.h before building psmisc"
-         exit 1
-      fi
-   fi
-=======
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
   xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`
@@ -6449,27 +5318,6 @@ if test "$MYSQLDB" = yes; then
       rm -f makefile
       exit 1
    fi
-   if test "$MYSQL_CONFIG" = UNKNOWN_mysql_config; then
-      echo
-      echo "======================================================="
-      echo "Unable to install XALT without the program mysql_config"
-      echo "This program is used to find the MySQL installation"
-      echo "See the manual for details"
-      echo "======================================================="
-      rm -f makefile
-      exit 1
-   fi
-else
-   MYSQL_CONFIG=UNKNOWN_mysql_config
-   echo
-   echo "======================================================="
-   echo "XALT only requires MySQL libraries and MySQL-python module"
-   echo "when loading and analyzing the XALT Data. Make sure"
-   echo "that you install the MySQL libraries, Devel packages"
-   echo "and MySQL-python module where every you are analyzing"
-   echo "the XALT data."
-   echo "======================================================="
-   echo
 fi
 
 if test "$SYSHOST_CONFIG" = no; then
@@ -6482,7 +5330,6 @@ if test "$SYSHOST_CONFIG" = no; then
    echo "======================================================="
    rm -f makefile
    exit 1
->>>>>>> origin/devel
 fi
 
 
@@ -6498,18 +5345,8 @@ if test $version -lt $contrib_version ; then
 fi
 echo "... $USE_CONTRIB_ARGPARSE"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-ac_config_files="$ac_config_files makefile:Makefile.in"
-=======
-if ! test -d compiled/build; then
-   mkdir -p compiled/build
-=======
 if ! test -d src/__build__; then
    mkdir -p src/__build__
->>>>>>> origin/devel
 fi
 
 if test "$USE_CONTRIB_ARGPARSE" = yes; then
@@ -6557,12 +5394,7 @@ if test "$?" != 0; then
 fi
 
 
-<<<<<<< HEAD
-ac_config_files="$ac_config_files makefile:Makefile.in compiled/build/xalt_config.h:compiled/xalt_config.h.in compiled/makefile:compiled/Makefile.in"
->>>>>>> origin/devel
-=======
 ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in"
->>>>>>> origin/devel
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -7270,16 +6102,8 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "makefile") CONFIG_FILES="$CONFIG_FILES makefile:Makefile.in" ;;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    "compiled/build/xalt_config.h") CONFIG_FILES="$CONFIG_FILES compiled/build/xalt_config.h:compiled/xalt_config.h.in" ;;
-    "compiled/makefile") CONFIG_FILES="$CONFIG_FILES compiled/makefile:compiled/Makefile.in" ;;
->>>>>>> origin/devel
-=======
     "src/__build__/xalt_config.h") CONFIG_FILES="$CONFIG_FILES src/__build__/xalt_config.h:src/xalt_config.h.in" ;;
     "src/makefile") CONFIG_FILES="$CONFIG_FILES src/makefile:src/Makefile.in" ;;
->>>>>>> origin/devel
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

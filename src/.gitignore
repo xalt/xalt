@@ -6,4 +6,4 @@ lex.xalt_env.c
 __build__
 stamp-h
 *.d
-
+xalt_syshost.c

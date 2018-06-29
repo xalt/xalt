@@ -1,9 +1,0 @@
-#!/bin/bash
-# -*- shell -*-
-
-DIRNAME=@path_to_dirname@
-READLINK=@path_to_readlink@
-MY_DIR=$($DIRNAME $($READLINK -f $0))
-
-LD_LIBRARY_PATH=@cxx_ld_library_path@ $MY_DIR/../libexec/xalt_configuration_report.x "$@"
-

@@ -94,18 +94,23 @@ def main():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_link` (
           `link_id`          int(11)   unsigned NOT NULL auto_increment,
+
           `uuid`             char(36)           NOT NULL,
           `hash_id`          char(40)           NOT NULL,
           `date`             DATETIME           NOT NULL,
+
           `link_program`     varchar(64)        NOT NULL,
           `link_path`        varchar(1024)      NOT NULL,
           `link_module_name` varchar(64)                ,
+
           `link_line`        blob                       ,
           `cwd`              varchar(1024)              ,
           `build_user`       varchar(64)        NOT NULL,
+
           `build_syshost`    varchar(64)        NOT NULL,
           `build_epoch`      double             NOT NULL,
           `exec_path`        varchar(1024)      NOT NULL,
+
           PRIMARY KEY  (`link_id`),
           INDEX  `index_date` (`date`),
           UNIQUE  KEY  `uuid` (`uuid`)
