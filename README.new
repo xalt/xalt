@@ -13,3 +13,7 @@ XALT 2.0+
    (2.0.9-devel) Check that XALT_DIR/libexec/xalt_run_submission exists before running it.
                  Report XALT_DIR and BAD_INSTALL with xalt_configuration_report
                  
+XALT 2.1+
+   (2.1) Moved devel branch to master branch. xalt_usage_report.py now report usage in
+         core-hours and not node-hours.  Direct2db option support removed. Added cwd
+	 field to xalt_link in db.
