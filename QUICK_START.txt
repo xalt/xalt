@@ -1,9 +1,9 @@
 
-##############################################################################
-#                                                                            #
-#                      QUICK INSTALLATION GUIDE FOR XALT 2                   #
-#                                                                            #
-##############################################################################
+######################################################################
+#                                                                    #
+#             QUICK INSTALLATION GUIDE FOR XALT 2                    #
+#                                                                    #
+######################################################################
 
 These guarantee that various components (e.g. lua executable, Lmod
 utilities) are found in these next steps.
@@ -20,16 +20,16 @@ The steps are divided into the following sections:
 
 
 0) Chose installation directory for XALT
-------------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 Like all packages that use the autoconf tool, you will specify the
 prefix for where the XALT package will be installed.  It is common
 place to install packages say /apps/xalt/<xalt_version> with
 configure.
 
-------------------------------------------------------------------------------
+----------------------------------------------------------------------
 DO NOT PUT THE VERSION OF XALT IN THE CONFIGURATION LINE!!
-------------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 Instead you should specify the directory above xalt for the prefix
 value.  So if you would like to install version 2.0 of xalt in
@@ -47,12 +47,13 @@ wish to install XALT (say /apps).
 
 
 1. PRE-REQUISITE: Lua and Lmod
-------------------------------------------------------------------------------
+----------------------------------------------------------------------
 
-Lua and Lmod is required to associate modulefile with the tracked library, 
-and to track the external functions (subroutines) resolved to the library. 
-Lmod is a modern Environment Module System.  If you have Lmod
-installed you can bypass this step and skip to XALT INSTALLATION section.
+Lua and Lmod is required to associate modulefile with the tracked
+library, and to track the external functions (subroutines) resolved to
+the library.  Lmod is a modern Environment Module System.  If you have
+Lmod installed you can bypass this step and skip to XALT INSTALLATION
+section.
 
 1.1) Download Lmod and  Lua version from Lmod's sourceforge page
 (http://sourceforge.net/projects/lmod/), which already include
@@ -60,13 +61,12 @@ installed you can bypass this step and skip to XALT INSTALLATION section.
 
 http://sourceforge.net/projects/lmod/files/
 
-(One could use / install Lua from its upstream project, but then one would
-also need to build "luafilesystem" and "luaposix". Using Lua version from
-Lmod sourceforge page is easiest.  It is also possible that you're
-linux distribution already has Lua and luaposix as packages.)
+(One could use / install Lua from its upstream project, but then one
+would also need to build "luafilesystem" and "luaposix". Using Lua
+version from Lmod sourceforge page is easiest.  It is also possible
+that you're linux distribution already has Lua and luaposix as
 
-
-1.2) Un-tar, configure, and install, then add the installation to PATH
+1.2) Un-tar, configure, install, and then add the installation to PATH
 
     $ tar -xf lua-<version>.tar.gz
     $ cd lua-<version>/
@@ -81,7 +81,7 @@ linux distribution already has Lua and luaposix as packages.)
     $ make install
 
 2. XALT INSTALLATION on login and compute nodes (or just for testing)
-------------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 2.1) Download XALT, from its GitHub page
 https://github.com/Fahey-McLay/xalt
@@ -196,9 +196,11 @@ and 1.0 would mean that 100% of SPSR programs are tracked.
 2.8) Typical configure and build instructions for stampede2.
 
     $ cd xalt
-    $ ./configure --prefix=/opt/apps --with-syshostConfig=hardcode:stampede2 \
-      --with-config=Config/TACC_config.py --with-transmission=file           \
-      --with-MySQL=no --with-trackScalarPrgms=no"
+    $ ./configure --prefix=/opt/apps              \
+      --with-syshostConfig=hardcode:stampede2     \
+      --with-config=Config/TACC_config.py         \
+      --with-transmission=file                    \
+      --with-trackScalarPrgms=no
     $ make install
 
 This will install XALT in /opt/apps/xalt/xalt with the cluster name of
@@ -209,22 +211,25 @@ testing phase
 2.9) Below is the XALT modulefile you need to specify to use the
 package.  The first one is a lua modulefile that can be used with Lmod.
 
-    setenv("XALT_EXECUTABLE_TRACKING",       "yes")
-    setenv("XALT_SCALAR_AND_SPSR_SAMPLING",  "yes")
+  setenv("XALT_EXECUTABLE_TRACKING",       "yes")
+  setenv("XALT_SCALAR_AND_SPSR_SAMPLING",  "yes")
+  local base  = "/opt/apps/xalt/xalt"
+  local bin   = pathJoin(base,"bin")
+  local lib64 = pathJoin(base,"lib64")
 
-    prepend_path{"PATH",          "/opt/apps/xalt/xalt/bin",  priority="100"}
-    prepend_path("LD_PRELOAD",    "/opt/apps/xalt/xalt/lib64/libxalt_init.so")
-    prepend_path("COMPILER_PATH", "/opt/apps/xalt/xalt/bin")
+  prepend_path{"PATH",          bin, priority="100"}
+  prepend_path("LD_PRELOAD",    pathJoin(lib64,"ibxalt_init.so")
+  prepend_path("COMPILER_PATH", bin)
 
 
 The following is a TCL modulefile:
 
-    setenv XALT_EXECUTABLE_TRACKING       yes
-    setenv XALT_SCALAR_AND_SPSR_SAMPLING  yes
+  setenv XALT_EXECUTABLE_TRACKING       yes
+  setenv XALT_SCALAR_AND_SPSR_SAMPLING  yes
 
-    prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
-    prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/lib64/libxalt_init.so
-    prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
+  prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
+  prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/lib64/libxalt_init.so
+  prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
 
 XALT does not require that your site use Lmod has your module system.
 However, it does require somehow that you make XALT's ld be found in
@@ -244,7 +249,7 @@ records.  If you any issues you should first read XALT_DEBUGGING.txt
 then contact the XALT mailing list.
 
 3. Building a reverse map for your cluster
----------------------------------------------------------------------
+----------------------------------------------------------------------
 
 3.1) Build ReverseMap for your cluster.  The ReverseMap associates
 libraries  and objectfiles with modulefile that specifies them. Libmap
@@ -264,7 +269,7 @@ ingestion into the database.
 
 
 4. Setup the database
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 To setup XALT's MySQL database on a VM, you'll need to do the
 following:
@@ -275,18 +280,16 @@ python MySQL package as well.
 
     $ git clone https://github.com/Fahey-McLay/xalt.git
     $ cd xalt
-    $ ./configure --prefix=$XALT_DIR --with-etcDir=$XALT_ETC_DIR     \
-      --with-syshostConfig=hardcode:$SYSHOST                         \
-      --with-config=Config/TACC_config.py --with-transmission=file   \
-      --with-MySQL=yes --with-trackScalarPrgms=no"
+    $ ./configure --prefix=$XALT_DIR                               \
+      --with-syshostConfig=hardcode:$SYSHOST                       \
+      --with-config=Config/TACC_config.py 
     $ make install
 
 where XALT_DIR is the location like /opt/apps or where ever you wish
-to install XALT on the VM;  XALT_ETC_DIR is where you are going to
-store the reverseMap and XALT configuration information; SYSHOST is
-the name of your cluster.  You can one MySQL DB server be shared by
-multiple clusters.  Just pick one name for SYSHOST here,  it won't be
-used on the VM so it doesn't matter which name you chose.
+to install XALT on the VM; SYSHOST is the name of your cluster.  You
+can one MySQL DB server be shared by multiple clusters.  Just pick one
+name for SYSHOST here, it won't be used on the VM so it doesn't matter
+which name you chose.
 
 4.2) Install MySQL on the VM.  Here you will want to install MySQL
 where the database itself has room to grow.  You should consider
@@ -317,7 +320,7 @@ And answer the questions asked to match what you did in step 4.3.
     $ cd $XALT_ETC_DIR; python $XALT_DIR/xalt/xalt/sbin/createDB.py --confFn xalt_<clusterName>_db.conf
 
 5. Load Json records via file transmission style.
-------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 You will either load the json records via file or syslog.  Use this
 description if you are saving the XALT records using file
@@ -364,7 +367,8 @@ the directories that contain the json record files.
 
 
 6. Load Json records via the syslog transmission style
-------------------------------------------------------------------------
+----------------------------------------------------------------------
+
 
 If you are syslog, you will follow these instructions instead of the
 ones in step 5.
