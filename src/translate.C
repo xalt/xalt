@@ -35,29 +35,29 @@ void translate(Table& envT, Table& userT, DTable& userDT)
   // Now fill in num_cores, num_nodes, account, job_id, queue, submit_host in userT from the environment
   if (queueType == SGE)
     {
-      userDT["num_nodes"]  = strtod(safe_get(envT, "NHOSTS",      "1"),        (char **) NULL);
       userT["account"]     = safe_get(envT,        "SGE_ACCOUNT", "unknown");
       userT["job_id"]      = safe_get(envT,        "JOB_ID",      "unknown");
       userT["queue"]       = safe_get(envT,        "QUEUE",       "unknown");
       userT["submit_host"] = "unknown";
+      userDT["num_nodes"]  = strtod(safe_get(envT, "NHOSTS",      "1"),        (char **) NULL);
     }
   else if (queueType == SLURM_TACC || queueType == SLURM )
     {
-      userDT["num_nodes"]  = strtod(safe_get(envT, "SLURM_NNODES",        "1"),       (char **) NULL);
       userT["job_id"]      = safe_get(envT,        "SLURM_JOB_ID",        "unknown");
       userT["queue"]       = safe_get(envT,        "SLURM_QUEUE",         "unknown");
       userT["submit_host"] = safe_get(envT,        "SLURM_SUBMIT_HOST",   "unknown");
       userT["account"]     = safe_get(envT,        "SLURM_TACC_ACCOUNT",  "unknown");
+      userDT["num_nodes"]  = strtod(safe_get(envT, "SLURM_NNODES",        "1"),       (char **) NULL);
     }
   else if (queueType == PBS)
     {
       std::string job_id   = safe_get(envT,        "PBS_JOBID",     "unknown");
       std::size_t idx      = job_id.find_first_not_of("0123456789");
       userT["job_id"]      = job_id.substr(0,idx);
-      userDT["num_nodes"]  = strtod(safe_get(envT, "PBS_NUM_NODES", "1"),       (char **) NULL);;
       userT["queue"]       = safe_get(envT,        "PBS_QUEUE",     "unknown");
       userT["submit_host"] = safe_get(envT,        "PBS_O_HOST",    "unknown");
       userT["account"]     = safe_get(envT,        "PBS_ACCOUNT",   "unknown");
+      userDT["num_nodes"]  = strtod(safe_get(envT, "PBS_NUM_NODES", "1"),       (char **) NULL);;
     }
   else if (queueType == LSF)
     {
@@ -78,18 +78,18 @@ void translate(Table& envT, Table& userT, DTable& userDT)
         }
       count /= 2;
 
-      userDT["num_nodes"]  = (double) count;
       userT["job_id"]      = safe_get(envT,  "LSB_JOBID",        "unknown");
       userT["queue"]       = safe_get(envT,  "LSB_QUEUE",        "unknown");
       userT["submit_host"] = safe_get(envT,  "LSB_EXEC_CLUSTER", "unknown");
       userT["account"]     = "unknown";
+      userDT["num_nodes"]  = (double) count;
     }
   else
     {
-      userDT["num_nodes"]  = 1.0;
       userT["job_id"]      = "unknown";
       userT["queue"]       = "unknown";
       userT["submit_host"] = "unknown";
       userT["account"]     = "unknown";
+      userDT["num_nodes"]  = 1.0;
     }
 }
