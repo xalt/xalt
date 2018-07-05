@@ -83,9 +83,9 @@ if not args.run_only:
 
   for module_name in modules:
       
-    query = "SELECT date, build_user FROM xalt_link \
-              WHERE date = \
-               ( SELECT max(date) \
+    query = "SELECT xalt_link.date, build_user FROM xalt_link \
+              WHERE xalt_link.date = \
+               ( SELECT max(xalt_link.date) \
                    FROM xalt_link xl, join_link_object jl, xalt_object xo \
                   WHERE xl.link_id = jl.link_id \
                     AND jl.obj_id = xo.obj_id \

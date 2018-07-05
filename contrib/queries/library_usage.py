@@ -84,12 +84,12 @@ cursor = conn.cursor()
 
 #-- Build query
 query = "SELECT u.module_name, COUNT(u.date) AS count \
-           FROM (SELECT module_name, object_path, date \
+           FROM (SELECT module_name, object_path, join_link_object.date \
                    FROM xalt_link, join_link_object, xalt_object \
                   WHERE build_syshost = '%s' \
                     AND xalt_link.link_id = join_link_object.link_id \
                     AND join_link_object.obj_id = xalt_object.obj_id \
-                    AND date >= '%s' AND date <= '%s' \
+                    AND join_link_object.date >= '%s' AND join_link_object.date <= '%s' \
         " % (args.syshost, startdate, enddate)
 if excludePatterns is not None:
   for x in excludePatterns:
@@ -136,7 +136,7 @@ for module_name, count in results:
             WHERE build_syshost = '%s' \
               AND xalt_link.link_id = join_link_object.link_id \
               AND join_link_object.obj_id = xalt_object.obj_id \
-              AND date >= '%s' AND date <= '%s' \
+              AND join_link_object.date >= '%s' AND join_link_object.date <= '%s' \
               AND module_name = '%s'" \
                 % ( args.syshost, startdate, enddate, module_name )
   cursor.execute(query)
@@ -164,7 +164,7 @@ for module_name, count in sorted_x:
             WHERE build_syshost = '%s' \
               AND xalt_link.link_id = join_link_object.link_id \
               AND join_link_object.obj_id = xalt_object.obj_id \
-              AND date >= '%s' AND date <= '%s' \
+              AND join_link_object.date >= '%s' AND join_link_object.date <= '%s' \
               AND module_name LIKE '%s/%%'" \
                 % ( args.syshost, startdate, enddate, module_name )
   cursor.execute(query)
