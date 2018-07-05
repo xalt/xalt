@@ -18,4 +18,5 @@ XALT 2.1+
            core-hours and not node-hours.  Direct2db option support removed. Added cwd
 	   field to xalt_link in db.
    (2.1.1) Truncate non-numeric characters for PBS job_id.
-   
+   (2.1.2) Fix of issue #29: updated contrib scripts,
+           Fix of issue #30: protecting from divide by zero errors.
