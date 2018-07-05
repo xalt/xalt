@@ -453,20 +453,27 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
 
      
   for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['corehours'], reverse=True):
-    pSU = "%.0f" % (100.0 * entryT['corehours']/totalT['corehours'])
-    pR  = "%.0f" % (100.0 * entryT['n_runs']   /float(totalT['n_runs']))
-    pJ  = "%.0f" % (100.0 * entryT['n_jobs']   /float(totalT['n_jobs']))
+    pSU = percent_str(entryT['corehours'], totalT['corehours'])
+    pR  = percent_str(entryT['n_runs'],    float(totalT['n_runs']))
+    pJ  = percent_str(entryT['n_jobs'],    float(totalT['n_jobs']))
 
     resultA.append([k,
       "%.0f" % (entryT['corehours']), pSU,
-      entryT['n_runs'], pR,
-      entryT['n_jobs'], pJ,
+      entryT['n_runs'],               pR,
+      entryT['n_jobs'],               pJ,
       entryT['n_users']])
                  
 
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", " "])
   resultA.append(["Total", "%.0f" % (totalT['corehours']), "100", "%.0f" % (totalT['n_runs']), "100", "%.0f" % (totalT['n_jobs']), "100", " "])
   return resultA
+
+def percent_str(entry, total):
+  result = 0.0
+  if (total != 0.0):
+    result = "%.0f" % (100.0 * entry/total)
+  return result
+
 
 def running_other_exec(cursor, args, startdate, enddate):
 
