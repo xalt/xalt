@@ -52,7 +52,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
   else if (queueType == PBS)
     {
       std::string job_id   = safe_get(envT,        "PBS_JOBID",     "unknown");
-      std::size_t idx      = job_id.find_first_not_of("0123456789");
+      std::size_t idx      = job_id.find_first_not_of("0123456789[]");
       userT["job_id"]      = job_id.substr(0,idx);
       userT["queue"]       = safe_get(envT,        "PBS_QUEUE",     "unknown");
       userT["submit_host"] = safe_get(envT,        "PBS_O_HOST",    "unknown");
