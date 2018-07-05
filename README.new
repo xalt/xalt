@@ -14,6 +14,8 @@ XALT 2.0+
                  Report XALT_DIR and BAD_INSTALL with xalt_configuration_report
                  
 XALT 2.1+
-   (2.1) Moved devel branch to master branch. xalt_usage_report.py now report usage in
-         core-hours and not node-hours.  Direct2db option support removed. Added cwd
-	 field to xalt_link in db.
+   (2.1)   Moved devel branch to master branch. xalt_usage_report.py now report usage in
+           core-hours and not node-hours.  Direct2db option support removed. Added cwd
+	   field to xalt_link in db.
+   (2.1.1) Truncate non-numeric characters for PBS job_id.
+   
