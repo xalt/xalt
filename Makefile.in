@@ -113,7 +113,8 @@ SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py            \
                            py_src/xalt_stack.py              py_src/BeautifulTbl.py           \
                            py_src/xalt_global.py             py_src/Rmap_XALT.py              \
-                           py_src/xalt_util.py               py_src/xalt_name_mapping.py
+                           py_src/xalt_util.py               py_src/xalt_name_mapping.py      \
+                           py_src/xalt_transmission_factory.py
 
 
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
@@ -281,6 +282,7 @@ build_tags:
             -e 's|.*/epydoc/.*$$||g'                             \
             -e 's|.*/old/.*$$||g'                                \
             -e 's|.*/stamp-h1$$||g'                              \
+            -e 's|.*/__build__.*$$||g'                           \
             -e 's|.*/stamp-h$$||g'                               \
             -e 's|.*/makefile||g'                                \
             -e 's|.*/configure$$||g'                             \
