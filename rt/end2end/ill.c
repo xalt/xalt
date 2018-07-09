@@ -1,6 +1,5 @@
 int main()
 {
-  int c=6;
-  ((void(*)())&c)();
+  asm("ud2");
   return 0;
 }
