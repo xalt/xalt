@@ -12,7 +12,9 @@ void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& l
   //--------------------------------------------------
   // Walk process tree to find compiler name and path
 
-  std::string ignorePrgA[] = {"ld", "ld.gold", "collect2","bash","Python", "python", "sh" };
+  std::string ignorePrgA[] = {"ld", "ld.gold", "collect2","bash","Python", "python", "sh",
+                              "x86_64-linux-gn", "x86_64-linux-gnu-ld", "x86_64-linux-gnu-ld.bfd",
+                              "x86_64-linux-gnu-ld.gold" };
   int         ignorePrgSz  = sizeof(ignorePrgA)/sizeof(ignorePrgA[0]);
 
   compiler     = "unknown";
@@ -24,6 +26,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, Vstring& l
       Process proc(my_pid);
       pid_t parent = proc.parent();
       if (parent < 2) break;
+
 
       std::string name = proc.name();
 

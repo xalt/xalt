@@ -25,6 +25,7 @@
 
 
 #define  _GNU_SOURCE
+#include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -118,7 +119,7 @@ static double          scalar_program_sample_probability(double runtime);
 
 void myinit(int argc, char **argv);
 void myfini();
-
+void wrapper_for_myfini(int signum);
 #define STR(x)   StR1_(x)
 #define StR1_(x) #x
 
@@ -533,9 +534,6 @@ void myinit(int argc, char **argv)
       DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n}\n\n",
              xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
-      
-
-
 
   /**********************************************************
    * Restore LD_PRELOAD after running xalt_run_submission.
@@ -548,7 +546,34 @@ void myinit(int argc, char **argv)
       setenv("LD_PRELOAD", ld_preload_strp, 1);
       free(ld_preload_strp);
     }
+
+  /************************************************************
+   * Register a signal handler wrapper_for_myfini for all the
+   * important signals. This way a program terminated by
+   * ^C, SIGFPE, SIGSEGV, etc will produce an end record.
+   *********************************************************/
+  int signalA[] = {1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 24, 30};
+  int signalSz  = N_ELEMENTS(signalA);
+  struct sigaction action;
+  struct sigaction old;
+  memset(&action, 0, sizeof(struct sigaction));
+  action.sa_handler = wrapper_for_myfini;
+  for (int i = 0; i < signalSz; ++i)
+    {
+      int signum = signalA[i];
+
+      sigaction(signum, NULL, &old);
+
+      if (old.sa_handler == NULL)
+	sigaction(signum, &action, NULL);
+    }
 }
+void wrapper_for_myfini(int signum)
+{
+  myfini();
+  exit(0);
+}
+
 void myfini()
 {
   FILE * my_stderr = NULL;
@@ -634,11 +659,7 @@ void myfini()
                 xalt_run_short_descriptA[run_mask], cmdline);
 
       system(cmdline);
-      free(cmdline);
     }
-  free(usr_cmdline);
-  free(pathArg);
-  free(ldLibPathArg);
   if (xalt_err) 
     {
       fclose(my_stderr);

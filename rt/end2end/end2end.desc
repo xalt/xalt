@@ -129,6 +129,18 @@ test_descript = {
      displayThis "Extract Watermark"
      xalt_extract_record libabc.so
    
+     displayThis "build and run segv program"
+     gcc -o segv $(testDir)/segv.c
+     ./segv
+
+     displayThis "build and run fpe program"
+     gcc -o fpe $(testDir)/fpe.c
+     ./fpe
+
+     displayThis "build and run bus program"
+     gcc -o bus $(testDir)/bus.c
+     ./bus
+
      displayThis "rm xalt_run_submission; ./hello"
      rm XALT/xalt/xalt/libexec/xalt_run_submission
 
@@ -139,7 +151,7 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --runs 13 --functions 4 --links 10
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 16 --functions 4 --links 13
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 
