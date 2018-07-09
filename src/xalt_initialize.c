@@ -129,8 +129,6 @@ static char         exec_path[PATH_MAX];
 static char *       usr_cmdline;
 static const char * my_syshost;
 
-
-static int          hcount                = 0;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
