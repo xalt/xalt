@@ -22,3 +22,4 @@ XALT 2.1+
            Fix of issue #30: protecting from divide by zero errors.
    (2.1.3) XALT registers a signal handler so that programs that seg-faults, fpe
            and other signals will generate an end record.
+           XALT nolonger frees any malloc'ed memory in myfini().
