@@ -557,7 +557,7 @@ void myinit(int argc, char **argv)
   struct sigaction old;
   memset(&action, 0, sizeof(struct sigaction));
   action.sa_handler = wrapper_for_myfini;
-  for (int i = 0; i < signalSz; ++i)
+  for (i = 0; i < signalSz; ++i)
     {
       int signum = signalA[i];
 
