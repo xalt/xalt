@@ -22,7 +22,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     queueType = SGE;
   else if (envT.count("SLURM_TACC_ACCOUNT") || envT.count("SLURM_TACC_JOBNAME"))
     queueType = SLURM_TACC;
-  else if (envT.count("SBATCH_ACCOUNT"))
+  else if (envT.count("SBATCH_ACCOUNT") || envT.count("SLURM_JOB_ID"))
     queueType = SLURM;
   else if (envT.count("PBS_JOBID"))
     queueType = PBS;
@@ -52,7 +52,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
   else if (queueType == PBS)
     {
       std::string job_id   = safe_get(envT,        "PBS_JOBID",     "unknown");
-      std::size_t idx      = job_id.find_first_not_of("0123456789");
+      std::size_t idx      = job_id.find_first_not_of("0123456789[]");
       userT["job_id"]      = job_id.substr(0,idx);
       userT["queue"]       = safe_get(envT,        "PBS_QUEUE",     "unknown");
       userT["submit_host"] = safe_get(envT,        "PBS_O_HOST",    "unknown");
