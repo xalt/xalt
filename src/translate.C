@@ -12,7 +12,7 @@ const char * safe_get(Table& t, const char* key, const char* defaultValue)
 
 void translate(Table& envT, Table& userT, DTable& userDT)
 {
-  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, SLURM_TACC, PBS, LSF };
+  enum QueueType { UNKNOWN = -1, SLURM = 1, SGE, PBS, LSF };
   QueueType queueType = UNKNOWN;
 
   // Pick type of queuing system.
@@ -20,9 +20,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
 
   if (envT.count("SGE_ACCOUNT"))
     queueType = SGE;
-  else if (envT.count("SLURM_TACC_ACCOUNT") || envT.count("SLURM_TACC_JOBNAME"))
-    queueType = SLURM_TACC;
-  else if (envT.count("SBATCH_ACCOUNT") || envT.count("SLURM_JOB_ID"))
+  else if (envT.count("SLURM_JOB_ID"))
     queueType = SLURM;
   else if (envT.count("PBS_JOBID"))
     queueType = PBS;
@@ -41,7 +39,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
       userT["submit_host"] = "unknown";
       userDT["num_nodes"]  = strtod(safe_get(envT, "NHOSTS",      "1"),        (char **) NULL);
     }
-  else if (queueType == SLURM_TACC || queueType == SLURM )
+  else if (queueType == SLURM )
     {
       userT["job_id"]      = safe_get(envT,        "SLURM_JOB_ID",        "unknown");
       userT["queue"]       = safe_get(envT,        "SLURM_QUEUE",         "unknown");
