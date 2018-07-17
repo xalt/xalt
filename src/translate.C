@@ -22,7 +22,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     queueType = SGE;
   else if (envT.count("SLURM_TACC_ACCOUNT") || envT.count("SLURM_TACC_JOBNAME"))
     queueType = SLURM_TACC;
-  else if (envT.count("SBATCH_ACCOUNT"))
+  else if (envT.count("SBATCH_ACCOUNT") || envT.count("SLURM_JOB_ID"))
     queueType = SLURM;
   else if (envT.count("PBS_JOBID"))
     queueType = PBS;
