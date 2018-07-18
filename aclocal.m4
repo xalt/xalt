@@ -82,8 +82,10 @@ echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
 echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKING
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
+echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
+echo "XALT Using DCGM......................................" : $HAVE_DCGM
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM

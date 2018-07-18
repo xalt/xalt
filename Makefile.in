@@ -48,6 +48,7 @@ GIT_BRANCH           	:= devel
 XALT_V               	:= src/xalt_version.h
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_LIBUUID         	:= @HAVE_WORKING_LIBUUID@
+HAVE_DCGM         	:= @HAVE_DCGM@
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 PATH_TO_AS           	:= @PATH_TO_AS@
@@ -144,6 +145,7 @@ build_compiled:
 	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
                         LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)     \
                         OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                     \
+                        HAVE_DCGM=$(HAVE_DCGM)                                                       \
                         XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
 
 echo:
