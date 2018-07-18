@@ -121,8 +121,20 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // If here then we need the json string.  So build it!
   measureT["07____total_____"] = epoch() - t0;
+
+
+  std::string usr_cmdline;
+  if (options.interfaceV() > 3)
+    {
+      int jLen;
+      usr_cmdline = base64_decode(options.userCmdLine().c_str(), options.userCmdLine().len(), &jLen);
+    }
+  else
+    usr_cmdline   = options.userCmdLine();
+
+
   Json json;
-  json.add_json_string("cmdlineA",options.userCmdLine());
+  json.add_json_string("cmdlineA",usr_cmdline);
   json.add("ptA", ptA);
   json.add("envT",envT);
   json.add("userT",userT);

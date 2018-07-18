@@ -42,6 +42,7 @@
 #  include <libproc.h>
 #endif
 #include "xalt_obfuscate.h"
+#include "base64.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "xalt_fgets_alloc.h"
@@ -127,6 +128,7 @@ static int          countA[2];
 static char         uuid_str[37];
 static char         exec_path[PATH_MAX];
 static char *       usr_cmdline;
+static char *       b64_usr_cmdline;
 static const char * my_syshost;
 
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
@@ -404,11 +406,11 @@ void myinit(int argc, char **argv)
 
   /* this size formula uses 3 facts:
    *   1) if every character was a utf-16 character that is four bytes converts to 12 (sz*3)
-   *   2) Each entry has two quotes and a comma (argc*3)
-   *   3) There are two square brackets and a null byte (+3)
+   *   2) Each entry has two quotes and a space (argc*3)
+   *   3) There are a null byte (+1)
    */
 
-  sz = sz*3 + argc*3 + 3;
+  sz = sz*3 + argc*3 + 1;
 
   usr_cmdline = (char *) malloc(sz);
   p	      = &usr_cmdline[0];
@@ -423,6 +425,9 @@ void myinit(int argc, char **argv)
       *p++= ' ';
     }
   *--p = '\0';
+  int qsLen   = p - usr_cmdline;
+  int b64_len;
+
   if (p > &usr_cmdline[sz])
     {
       fprintf(stderr,"XALT: Failure in building user command line json string!\n");
@@ -430,9 +435,9 @@ void myinit(int argc, char **argv)
       unsetenv("XALT_RUN_UUID");
       return;
     }
-
   xalt_quotestring_free();
-  
+  b64_usr_cmdline = base64_encode(usr_cmdline, qslen, &b64_len);
+
   build_uuid(uuid_str);
   start_time = epoch();
   frac_time  = start_time - (long) (start_time);
@@ -520,7 +525,7 @@ void myinit(int argc, char **argv)
 
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --uuid \"%s\" --prob %g %s %s -- %s %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline, (background ? "&":" "));
+	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_usr_cmdline, (background ? "&":" "));
 
       if (xalt_tracing || xalt_run_tracing) 
 	fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
@@ -653,7 +658,7 @@ void myfini()
 
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-               start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+               start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_usr_cmdline);
 
       if (xalt_tracing || xalt_run_tracing )
         fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",

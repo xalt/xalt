@@ -1,6 +1,8 @@
 #ifndef BASE64_H
 #define BASE64_H
 
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {

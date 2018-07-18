@@ -16,6 +16,7 @@
 // Functions
 #define abspath                     PASTE2(__XALT_abspath,                    MY_NAME)
 #define build_uuid                  PASTE2(__XALT_build_uuid,                 MY_NAME)
+#define base64_encode               PASTE2(__XALT_base64_encode,              MY_NAME)
 #define compute_value               PASTE2(__XALT_compute_value,              MY_NAME)
 #define hostname                    PASTE2(__XALT_hostname,                   MY_NAME)
 #define myfini                      PASTE2(__XALT_myfini,                     MY_NAME)
