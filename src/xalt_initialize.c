@@ -25,6 +25,7 @@
 
 
 #define  _GNU_SOURCE
+#include <assert.h>
 #include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -128,7 +129,7 @@ static int          countA[2];
 static char         uuid_str[37];
 static char         exec_path[PATH_MAX];
 static char *       usr_cmdline;
-static char *       b64_usr_cmdline;
+static char *       b64_cmdline;
 static const char * my_syshost;
 
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
@@ -144,7 +145,6 @@ static long         my_rank	          = 0L;
 static long         my_size	          = 1L;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
-static int          background	          = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
 
@@ -177,18 +177,9 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
-  /* Check to see if backgrounding should be turned on*/
-  v = getenv("XALT_ENABLE_BACKGROUNDING");
-  if (v == NULL)
-    v = XALT_ENABLE_BACKGROUNDING;
-  
-  if (strcmp(v,"yes") == 0)
-    background = 1;
-
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg)
     {
-      background       = 0;  /* backgrounding the start record is always off when tracing is on*/
       xalt_tracing     = (strcmp(p_dbg,"yes") == 0);
       xalt_run_tracing = (strcmp(p_dbg,"run") == 0);
       if (xalt_tracing  || xalt_run_tracing)
@@ -407,13 +398,14 @@ void myinit(int argc, char **argv)
   /* this size formula uses 3 facts:
    *   1) if every character was a utf-16 character that is four bytes converts to 12 (sz*3)
    *   2) Each entry has two quotes and a space (argc*3)
-   *   3) There are a null byte (+1)
+   *   3) There are a pair of square brackets and a null byte (+3)
    */
 
-  sz = sz*3 + argc*3 + 1;
+  sz = sz*3 + argc*3 + 3;
 
   usr_cmdline = (char *) malloc(sz);
   p	      = &usr_cmdline[0];
+  *p++        = '[';
   for (i = 0; i < argc; ++i)
     {
       *p++ = '"';
@@ -422,11 +414,13 @@ void myinit(int argc, char **argv)
       memcpy(p,qs,len);
       p += len;
       *p++= '"';
-      *p++= ' ';
+      *p++= ',';
     }
-  *--p = '\0';
-  int qsLen   = p - usr_cmdline;
+  *--p = ']';
+  *++p = '\0';
+
   int b64_len;
+  int qsLen   = p - usr_cmdline;
 
   if (p > &usr_cmdline[sz])
     {
@@ -436,7 +430,7 @@ void myinit(int argc, char **argv)
       return;
     }
   xalt_quotestring_free();
-  b64_usr_cmdline = base64_encode(usr_cmdline, qslen, &b64_len);
+  b64_cmdline = base64_encode(usr_cmdline, qsLen, &b64_len);
 
   build_uuid(uuid_str);
   start_time = epoch();
@@ -523,13 +517,20 @@ void myinit(int argc, char **argv)
         }
       run_submission_exists = 1;
 
+      if (xalt_tracing || xalt_run_tracing)
+        {
+	  char * cmd2;
+          asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+                   " --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+                   start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
+                  xalt_run_short_descriptA[run_mask], cmd2);
+	  free(cmd2);
+        }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" --prob %g %s %s -- %s %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_usr_cmdline, (background ? "&":" "));
+	       " --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
 
-      if (xalt_tracing || xalt_run_tracing) 
-	fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
-		xalt_run_short_descriptA[run_mask], cmdline);
       system(cmdline);
       free(cmdline);
     }
@@ -653,16 +654,18 @@ void myfini()
     }
   else
     {
-
-      /* Do not background this because it might get killed by the epilog cleanup tool! */
-
+      if (xalt_tracing || xalt_run_tracing )
+        {
+	  char * cmd2;
+          asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+                   " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+                   start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+          fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
+                  xalt_run_short_descriptA[run_mask], cmd2);
+        }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-               start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_usr_cmdline);
-
-      if (xalt_tracing || xalt_run_tracing )
-        fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
-                xalt_run_short_descriptA[run_mask], cmdline);
+               start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
     }

@@ -207,16 +207,16 @@ FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 
 if [ -z "$BIT32FLAG" ]; then
-  XALT_LIB_DIR=$XALT_DIR/lib64
+  XLD=$XALT_DIR/lib64
   if [ "$MY_HOSTNAME_PARSER_KIND" = "c_file" ]; then
-      MY_HOSTNAME_PARSER_OBJ=$XALT_LIB_DIR/my_hostname_parser.o
+      MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.o
   elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
-      MY_HOSTNAME_PARSER_OBJ=$XALT_LIB_DIR/my_hostname_parser.a
+      MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.a
   fi
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize.o $XALT_LIB_DIR/xalt_syshost.o $XALT_LIB_DIR/xalt_quotestring.o $XALT_LIB_DIR/xalt_fgets_alloc.o $XALT_LIB_DIR/lex.__XALT_path.o $XALT_LIB_DIR/lex.__XALT_host.o $XALT_LIB_DIR/build_uuid.o $MY_HOSTNAME_PARSER_OBJ"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_syshost.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/build_uuid.o $XLD/base64.o $MY_HOSTNAME_PARSER_OBJ"
 else
-  XALT_LIB_DIR=$XALT_DIR/lib
-  XALT_INIT_ROUTINE_OBJ="$XALT_LIB_DIR/xalt_initialize_32.o $XALT_LIB_DIR/xalt_syshost_32.o $XALT_LIB_DIR/xalt_quotestring_32.o $XALT_LIB_DIR/xalt_fgets_alloc_32.o $XALT_LIB_DIR/lex.__XALT_path_32.o $XALT_LIB_DIR/lex.__XALT_host_32.o $XALT_LIB_DIR/build_uuid_32.o $XALT_LIB_DIR/my_hostname_parser_32.o"
+  XLD=$XALT_DIR/lib
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o"
 fi
   
 

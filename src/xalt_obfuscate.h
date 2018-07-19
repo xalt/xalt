@@ -16,7 +16,6 @@
 // Functions
 #define abspath                     PASTE2(__XALT_abspath,                    MY_NAME)
 #define build_uuid                  PASTE2(__XALT_build_uuid,                 MY_NAME)
-#define base64_encode               PASTE2(__XALT_base64_encode,              MY_NAME)
 #define compute_value               PASTE2(__XALT_compute_value,              MY_NAME)
 #define hostname                    PASTE2(__XALT_hostname,                   MY_NAME)
 #define myfini                      PASTE2(__XALT_myfini,                     MY_NAME)
@@ -28,6 +27,7 @@
 #define hostname_parser_cleanup     PASTE2(__XALT_hostname_parser_cleanup,    MY_NAME)
 #define __init                      PASTE2(__XALT__init,                      MY_NAME)
 #define __fini                      PASTE2(__XALT__fini,                      MY_NAME)
+#define base64_encode               PASTE2(__XALT_base64_encode,              HIDE)
 #define my_hostname_parser          PASTE2(__XALT_my_hostname_parser,         HIDE)
 #define my_hostname_parser_cleanup  PASTE2(__XALT_my_hostname_parser_cleanup, HIDE)
 #define xalt_fgets_alloc            PASTE2(__XALT_fgets_alloc,                HIDE)

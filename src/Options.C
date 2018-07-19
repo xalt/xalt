@@ -6,6 +6,7 @@
 #include "Options.h"
 #include "capture.h"
 #include "xalt_config.h"
+#include "base64.h"
 
 double convert_double(const char* name, const char* s)
 {
@@ -131,15 +132,24 @@ Options::Options(int argc, char** argv)
     m_userCmdLine = argv[optind];
   else if (optind < argc)
     {
-      m_userCmdLine = "[";
-      for (int i = optind; i < argc; ++i)
+      if (m_interfaceV < 4)
         {
-          m_userCmdLine += "\"";
-          m_userCmdLine += argv[i];
-          m_userCmdLine += "\",";
+          m_userCmdLine = "[";
+          for (int i = optind; i < argc; ++i)
+            {
+              m_userCmdLine += "\"";
+              m_userCmdLine += argv[i];
+              m_userCmdLine += "\",";
+            }
+          if (m_userCmdLine.back() == ',')
+            m_userCmdLine.replace(m_userCmdLine.size()-1,1,"]");
         }
-      if (m_userCmdLine.back() == ',')
-        m_userCmdLine.replace(m_userCmdLine.size()-1,1,"]");
+      else
+        {
+          int jLen;
+          int len = strlen(argv[optind]);
+          m_userCmdLine = reinterpret_cast<char*>(base64_decode(argv[optind], len, &jLen));
+        }
     }
 
   if (m_exec != "unknown")
