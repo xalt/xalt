@@ -63,10 +63,6 @@ int main(int argc, char* argv[])
   if (computeSHA1 == NULL)
     computeSHA1 = XALT_COMPUTE_SHA1;
 
-  const char* enable_backgrounding = getenv("XALT_ENABLE_BACKGROUNDING");
-  if (enable_backgrounding == NULL)
-    enable_backgrounding = XALT_ENABLE_BACKGROUNDING;
-
   const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
@@ -78,7 +74,9 @@ int main(int argc, char* argv[])
   const char* xalt_gpu_tracking = getenv("XALT_GPU_TRACKING");
   if (xalt_gpu_tracking == NULL)
     xalt_gpu_tracking = XALT_GPU_TRACKING;
-
+  if (strcmp(HAVE_DCGM,"no") == 0)
+    xalt_gpu_tracking = HAVE_DCGM;
+          
   const char* xalt_func_tracking = getenv("XALT_FUNCTION_TRACKING");
   if (xalt_func_tracking == NULL)
     xalt_func_tracking = XALT_FUNCTION_TRACKING;
@@ -112,7 +110,6 @@ int main(int argc, char* argv[])
       json.add("XALT_GIT_VERSION",              XALT_GIT_VERSION);
       json.add("XALT_VERSION_STR",              XALT_VERSION_STR);
       json.add("XALT_FILE_PREFIX",              XALT_FILE_PREFIX);
-      json.add("XALT_ENABLE_BACKGROUNDING",     enable_backgrounding);
       json.add("XALT_TRANSMISSION_STYLE",       transmission);
       json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
       if (strcmp(transmission,"syslog") == 0)
@@ -136,6 +133,7 @@ int main(int argc, char* argv[])
       json.add("USING_LIBUUID",                 HAVE_WORKING_LIBUUID);
       json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
       json.add("BUILT_W_MySQL",                 BUILT_W_MySQL);
+      json.add("HAVE_DCGM",                     HAVE_DCGM);
 
       json.add("hostnameA",    hostnameSz,      hostnameA);
       json.add("pathPatternA", pathPatternSz,   pathPatternA);
@@ -164,7 +162,6 @@ int main(int argc, char* argv[])
   if (strcmp(transmission,"syslog") == 0)
     std::cout << "XALT_LOGGING_TAG:              " << syslog_tag                   << "\n";
   std::cout << "XALT_COMPUTE_SHA1:             " << computeSHA1                    << "\n";
-  std::cout << "XALT_ENABLE_BACKGROUNDING:     " << enable_backgrounding           << "\n";
   std::cout << "XALT_ETC_DIR:                  " << xalt_etc_dir                   << "\n";
   std::cout << "XALT_DIR:                      " << XALT_DIR                       << "\n";
   std::cout << "BAD_INSTALL:                   " << BAD_INSTALL                    << "\n";
@@ -183,6 +180,7 @@ int main(int argc, char* argv[])
   std::cout << "MY_HOSTNAME_PARSER:            " << MY_HOSTNAME_PARSER             << "\n";
   std::cout << "Using libuuid:                 " << HAVE_WORKING_LIBUUID           << "\n";
   std::cout << "Built with MySQL:              " << BUILT_W_MySQL                  << "\n";
+  std::cout << "Built with DCGM:               " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
   displayArray("hostnameA",    hostnameSz,    hostnameA);

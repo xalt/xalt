@@ -8,7 +8,6 @@ ifeq ($(HAVE_LIBUUID),yes)
 endif
 ifeq ($(HAVE_DCGM),yes)
   LIBDCGM:=-ldcgm
-  CPPFLAGS_DCGM:=-DHAVE_DCGM
 endif
 
 ifneq ($(XALT_FILE_PREFIX),USE_HOME)
@@ -290,9 +289,9 @@ $(DESTDIR)$(LIB64)/build_uuid.o: build_uuid.c __build__/xalt_config.h xalt_obfus
 $(DESTDIR)$(LIB64)/build_uuid_preload.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
 	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
-	$(COMPILE.c) $(CPPFLAGS_DCGM) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
+	$(COMPILE.c) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
-	$(LINK.c) $(CFLAGS) $(CPPFLAGS_DCGM) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
+	$(LINK.c) $(CFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
 $(DESTDIR)$(LIB64)/my_hostname_parser.o: $(MY_HOSTNAME_PARSER_SRC)
 	$(COMPILE.c) -c -o $@ $^
 

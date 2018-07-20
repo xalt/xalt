@@ -81,6 +81,7 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   userDT["currentEpoch"] = utc;
   userDT["num_threads"]  = num_threads;
   userDT["exec_epoch"]   = mtime;
+  userDT["num_gpus"]     = options.ngpus();
 
   // Use this translate routine to extract values from the environment to provide standard values.
   // These are stored in userT and userDT.  Later these values are written to the xalt_run table in DB;

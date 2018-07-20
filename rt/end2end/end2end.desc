@@ -65,7 +65,7 @@ test_descript = {
 
      displayThis "build try_uuid and run it"
      gcc -o try_uuid $(testDir)/try_uuid.c -luuid
-     ./try_uuid
+     ./try_uuid '`i+1`'
 
      displayThis "mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c

@@ -10,6 +10,7 @@ public:
   Options(int argc, char **argv);
   ~Options() {}
   long          ntasks()      { return m_ntasks;      }
+  long          ngpus()       { return m_ngpus;       }
   long          interfaceV()  { return m_interfaceV;  }
   pid_t         ppid()        { return m_ppid;        }
   double        startTime()   { return m_start;       }
@@ -29,6 +30,7 @@ private:
   double      m_end;
   double      m_probability;
   long        m_ntasks;
+  long        m_ngpus;
   long        m_interfaceV;
   pid_t       m_ppid;
   std::string m_syshost;

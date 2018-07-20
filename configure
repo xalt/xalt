@@ -658,7 +658,6 @@ ac_ct_CXX
 CXXFLAGS
 CXX
 HAVE_32BIT
-ENABLE_BACKGROUNDING
 BAD_INSTALL
 MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
@@ -704,6 +703,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -743,7 +743,6 @@ with_cxxLDLibraryPath
 with_syshostConfig
 with_hostnameParser
 with_IrefuseToInstallXALTCorrectly
-with_enableBackgrounding
 '
       ac_precious_vars='build_alias
 host_alias
@@ -795,6 +794,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1047,6 +1047,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1184,7 +1193,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1337,6 +1346,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1391,9 +1401,6 @@ Optional Packages:
                           library:file_64.a:file_32.a [[no]]
   --with-IrefuseToInstallXALTCorrectly=ans
                           Install XALT incorrectly [[no]]
-  --with-enableBackgrounding=ans
-                          Enable backgrounding of start record of an
-                          executable run [[no]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -3405,28 +3412,6 @@ fi
 
 
 
-# Check whether --with-enableBackgrounding was given.
-if test "${with_enableBackgrounding+set}" = set; then :
-  withval=$with_enableBackgrounding; ENABLE_BACKGROUNDING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ENABLE_BACKGROUNDING=$with_enableBackgrounding" >&5
-$as_echo "ENABLE_BACKGROUNDING=$with_enableBackgrounding" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define ENABLE_BACKGROUNDING "$with_enableBackgrounding"
-_ACEOF
-
-else
-  withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ENABLE_BACKGROUNDING=$withval" >&5
-$as_echo "ENABLE_BACKGROUNDING=$withval" >&6; }
-    ENABLE_BACKGROUNDING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define ENABLE_BACKGROUNDING "$withval"
-_ACEOF
-
-fi
-
-
-
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler can build and run with -m32" >&5
 $as_echo_n "checking whether C compiler can build and run with -m32... " >&6; }
@@ -5313,7 +5298,7 @@ $as_echo "$ac_cv_search_dcgmInit" >&6; }
 ac_res=$ac_cv_search_dcgmInit
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  $as_echo "#define HAVE_DCGM 1" >>confdefs.h
+  $as_echo "#define USE_DCGM 1" >>confdefs.h
  HAVE_DCGM=yes
 else
   as_fn_error $? "Unable to include GPU tracking without DCGM" "$LINENO" 5

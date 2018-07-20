@@ -37,7 +37,7 @@ long convert_long(const char* name, const char* s)
 }
 
 Options::Options(int argc, char** argv)
-  : m_start(0.0), m_end(0.0), m_ntasks(1L),
+  : m_start(0.0), m_end(0.0), m_ntasks(1L), m_ngpus(0L),
     m_interfaceV(0L),         m_ppid(0L),
     m_syshost("unknown"),     m_uuid("unknown"),
     m_exec("unknown"),        m_userCmdLine("[]"),
@@ -55,6 +55,7 @@ Options::Options(int argc, char** argv)
         {"syshost",    required_argument, NULL, 'h'},
         {"exec",       required_argument, NULL, 'x'},
         {"ntasks",     required_argument, NULL, 'n'},
+        {"ngpus",      required_argument, NULL, 'g'},
         {"uuid",       required_argument, NULL, 'u'},
         {"confFn",     required_argument, NULL, 'c'},
         {"ppid",       required_argument, NULL, 'p'},
@@ -64,7 +65,7 @@ Options::Options(int argc, char** argv)
         {0,         0,                 0,     0 }
       };
       
-      c = getopt_long(argc, argv, "c:s:e:h:x:n:u:p:P:L:",
+      c = getopt_long(argc, argv, "c:s:e:h:x:n:g:u:p:P:L:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -107,6 +108,10 @@ Options::Options(int argc, char** argv)
 	case 'n':
           if (optarg)
             m_ntasks = convert_long("ntasks", optarg);
+	  break;
+	case 'g':
+          if (optarg)
+            m_ngpus = convert_long("ngpus", optarg);
 	  break;
         case 'u':
           if (optarg)

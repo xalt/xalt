@@ -51,7 +51,7 @@
 #include "xalt_hostname_parser.h"
 #include "build_uuid.h"
 
-#ifdef HAVE_DCGM
+#ifdef USE_DCGM
 #include <dcgm_agent.h>
 #include <dcgm_structs.h>
 #endif
@@ -150,10 +150,11 @@ static long         my_rank	          = 0L;
 static long         my_size	          = 1L;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
+static int          xalt_gpu_tracing      = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
 static int num_gpus                       = 0;
-#ifdef HAVE_DCGM
+#ifdef USE_DCGM
 static dcgmHandle_t dcgm_handle           = NULL;
 #endif
 
@@ -443,9 +444,15 @@ void myinit(int argc, char **argv)
 
   build_uuid(uuid_str);
 
-#ifdef HAVE_DCGM
-    DEBUG0(stderr, "  GPU tracing\n");
+#ifdef USE_DCGM
+  v  = getenv("XALT_GPU_TRACKING");
+  if (v == NULL)
+    v = XALT_GPU_TRACKING;
+  xalt_gpu_tracing = (strcmp(v,"yes") == 0);
+
+  if (xalt_gpu_tracing)
     {
+      DEBUG0(stderr, "  GPU tracing\n");
       dcgmReturn_t result;
 
       result = dcgmInit();
@@ -578,14 +585,14 @@ void myinit(int argc, char **argv)
         {
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+                   " --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
                    start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+	       " --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
 	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
@@ -668,9 +675,10 @@ void myfini()
   end_time = epoch();
   unsetenv("LD_PRELOAD");
 
-#ifdef HAVE_DCGM
-    /* Collect DCGM job stats */
+#ifdef USE_DCGM
+  if (xalt_gpu_tracing)
     {
+      /* Collect DCGM job stats */
       dcgmReturn_t result;
       dcgmJobInfo_t job_info;
 
@@ -747,14 +755,14 @@ void myfini()
         {
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+                   " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+                   start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, usr_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --uuid \"%s\" --prob %g %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-               start_time, end_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
+               " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+               start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
     }

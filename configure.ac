@@ -213,18 +213,6 @@ AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval"))dnl
 
 
-AC_SUBST(ENABLE_BACKGROUNDING)
-AC_ARG_WITH(enableBackgrounding,
-    AC_HELP_STRING([--with-enableBackgrounding=ans],[Enable backgrounding of start record of an executable run [[no]]]),
-    ENABLE_BACKGROUNDING="$withval"
-    AC_MSG_RESULT([ENABLE_BACKGROUNDING=$with_enableBackgrounding])
-    AC_DEFINE_UNQUOTED(ENABLE_BACKGROUNDING, "$with_enableBackgrounding")dnl
-    ,
-    withval="no"
-    AC_MSG_RESULT([ENABLE_BACKGROUNDING=$withval])
-    ENABLE_BACKGROUNDING="$withval"
-    AC_DEFINE_UNQUOTED(ENABLE_BACKGROUNDING, "$withval"))dnl
-
 AC_SUBST(HAVE_32BIT)
 
 AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
@@ -333,7 +321,7 @@ if test $XALT_GPU_TRACKING = yes; then
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
                   [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
-  AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(HAVE_DCGM) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+  AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
 fi
 
 AC_SUBST(PKGV)

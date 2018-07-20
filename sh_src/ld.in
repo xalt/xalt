@@ -42,6 +42,7 @@ DIRNAME=@path_to_dirname@
 BASENAME=@path_to_basename@
 READLINK=@path_to_readlink@
 SHA1SUM=@sha1sum@
+HAVE_DCGM=@have_dcgm@
 XALT_FILE_PREFIX=@xalt_file_prefix@
 HAVE_WORKING_LIBUUID=@have_working_libuuid@
 MY_NAME=$($BASENAME $0)
@@ -284,6 +285,15 @@ if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
     LIBUUID="-luuid"
 fi
 
+#############################################################
+#  Only use the dcgm library for 64bit apps not for 32bit apps
+if [ "$HAVE_DCGM" = "yes" -a -z "$BIT32FLAG" ]; then
+    LIBDCGM="-ldcgm"
+fi
+
+
+
+
 
 #############################################################
 #  do not include xalt_initialize.*, -luuid, etc when building
@@ -292,15 +302,16 @@ fi
 if [ "$SHARED_LIB" = true ]; then
     XALT_INIT_ROUTINE_OBJ=
     LIBUUID=
+    LIBDCGM=
     tracing_msg "Shared library build detected not adding XALT initialize routines to user code"
 fi
 
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID -t > $LINKLINE_OUT  2>&1
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
-   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID
+   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID $LIBDCGM 
    exit $status
 fi
 
