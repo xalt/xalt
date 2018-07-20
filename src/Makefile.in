@@ -6,6 +6,10 @@ ifeq ($(HAVE_LIBUUID),yes)
   LIBUUID:=-luuid
   HAVE_UUID:=-DHAVE_LIBUUID
 endif
+ifeq ($(HAVE_DCGM),yes)
+  LIBDCGM:=-ldcgm
+  CPPFLAGS_DCGM:=-DHAVE_DCGM
+endif
 
 ifneq ($(XALT_FILE_PREFIX),USE_HOME)
   USE_PREFIX:=-DHAVE_FILE_PREFIX
@@ -286,9 +290,9 @@ $(DESTDIR)$(LIB64)/build_uuid.o: build_uuid.c __build__/xalt_config.h xalt_obfus
 $(DESTDIR)$(LIB64)/build_uuid_preload.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
 	$(COMPILE.c) $(HAVE_UUID) $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
-	$(COMPILE.c) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
+	$(COMPILE.c) $(CPPFLAGS_DCGM) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_initialize_preload.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
-	$(LINK.c) $(CFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
+	$(LINK.c) $(CFLAGS) $(CPPFLAGS_DCGM) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
 $(DESTDIR)$(LIB64)/my_hostname_parser.o: $(MY_HOSTNAME_PARSER_SRC)
 	$(COMPILE.c) -c -o $@ $^
 
@@ -328,7 +332,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o        \
                                   $(DESTDIR)$(LIB)/base64.o                     \
                                   $(MY_HOSTNAME_PARSER_OBJ_32)
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
+	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID) $(LIBDCGM)
 
 
 $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
@@ -340,7 +344,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/base64.o                  \
                                     $(MY_HOSTNAME_PARSER_OBJ)                    \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
+	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID) $(LIBDCGM)
 
 neat:
 	$(RM) *~

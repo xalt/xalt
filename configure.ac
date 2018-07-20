@@ -43,6 +43,17 @@ AC_ARG_WITH(xaltFilePrefix,
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
 
+AC_SUBST(XALT_GPU_TRACKING)
+AC_ARG_WITH(trackGPU,
+    AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables, [[no]]]),
+    XALT_GPU_TRACKING="$withval"
+    AC_MSG_RESULT([XALT_GPU_TRACKING=$with_trackGPU])
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$with_trackGPU")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([XALT_GPU_TRACKING=$withval])
+    XALT_GPU_TRACKING="$withval"
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$withval"))dnl
 
 AC_SUBST(XALT_MPI_TRACKING)
 AC_ARG_WITH(trackMPI,
@@ -315,6 +326,15 @@ if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    exit 1
 fi
 
+AC_SUBST(HAVE_DCGM)
+HAVE_DCGM=no
+if test $XALT_GPU_TRACKING = yes; then
+  AC_CHECK_HEADER(dcgm_agent.h,
+                  [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
+                     [Define to 1 if you have DCGM.])],
+                  [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+  AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(HAVE_DCGM) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+fi
 
 AC_SUBST(PKGV)
 AC_SUBST(VERSION)
