@@ -75,6 +75,10 @@ int main(int argc, char* argv[])
   if (xalt_mpi_tracking == NULL)
     xalt_mpi_tracking = XALT_MPI_TRACKING;
 
+  const char* xalt_gpu_tracking = getenv("XALT_GPU_TRACKING");
+  if (xalt_gpu_tracking == NULL)
+    xalt_gpu_tracking = XALT_GPU_TRACKING;
+
   const char* xalt_func_tracking = getenv("XALT_FUNCTION_TRACKING");
   if (xalt_func_tracking == NULL)
     xalt_func_tracking = XALT_FUNCTION_TRACKING;
@@ -121,6 +125,7 @@ int main(int argc, char* argv[])
       json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
       json.add("XALT_SYSHOST_CONFIG",           SYSHOST_CONFIG);
       json.add("XALT_MPI_TRACKING",             xalt_mpi_tracking);
+      json.add("XALT_GPU_TRACKING",             xalt_gpu_tracking);
       json.add("XALT_SCALAR_TRACKING",          xalt_scalar_tracking);
       json.add("XALT_SCALAR_AND_SPSR_SAMPLING", xalt_scalar_and_spsr_sampling);
       json.add("XALT_SPSR_TRACKING",            xalt_spsr_tracking);
@@ -165,6 +170,7 @@ int main(int argc, char* argv[])
   std::cout << "BAD_INSTALL:                   " << BAD_INSTALL                    << "\n";
   std::cout << "XALT_CONFIG_PY:                " << XALT_CONFIG_PY                 << "\n";
   std::cout << "XALT_MPI_TRACKING:             " << xalt_mpi_tracking              << "\n";
+  std::cout << "XALT_GPU_TRACKING:             " << xalt_gpu_tracking              << "\n";
   std::cout << "XALT_SPSR_TRACKING:            " << xalt_spsr_tracking             << "\n";
   std::cout << "SPSR_sampling_rate             " << spsr_sampling_rate             << "\n";
   std::cout << "XALT_SCALAR_TRACKING:          " << xalt_scalar_tracking           << "\n";

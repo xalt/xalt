@@ -48,6 +48,11 @@
 #include "xalt_hostname_parser.h"
 #include "build_uuid.h"
 
+#ifdef HAVE_DCGM
+#include <dcgm_agent.h>
+#include <dcgm_structs.h>
+#endif
+
 #ifdef HAVE_EXTERNAL_HOSTNAME_PARSER
 #  define HOSTNAME_PARSER         my_hostname_parser
 #  define HOSTNAME_PARSER_CLEANUP my_hostname_parser_cleanup
@@ -145,6 +150,10 @@ static int          xalt_run_tracing      = 0;
 static int          background	          = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
+static int num_gpus                       = 0;
+#ifdef HAVE_DCGM
+static dcgmHandle_t dcgm_handle           = NULL;
+#endif
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
@@ -434,6 +443,54 @@ void myinit(int argc, char **argv)
   xalt_quotestring_free();
   
   build_uuid(uuid_str);
+
+#ifdef HAVE_DCGM
+    DEBUG0(stderr, "  GPU tracing\n");
+    {
+      dcgmReturn_t result;
+
+      result = dcgmInit();
+      if (result != DCGM_ST_OK)
+        {
+          DEBUG1(stderr, "    -> Quitting => Cannot initialize DCGM: %s\n}\n\n", errorString(result));
+          unsetenv("XALT_RUN_UUID");
+          return;
+        }
+
+      result = dcgmStartEmbedded(DCGM_OPERATION_MODE_MANUAL, &dcgm_handle);
+      if (result != DCGM_ST_OK)
+        {
+          DEBUG1(stderr, "    -> Quitting => Cannot start DCGM: %s\n}\n\n", errorString(result));
+          unsetenv("XALT_RUN_UUID");
+          return;
+        }
+
+      result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
+      if (result != DCGM_ST_OK)
+        {
+          DEBUG1(stderr, "    -> Quitting => Cannot start DCGM job stats: %s\n}\n\n", errorString(result));
+          unsetenv("XALT_RUN_UUID");
+          return;
+        }
+
+      result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
+      if (result != DCGM_ST_OK)
+        {
+          DEBUG1(stderr, "    -> Quitting => Cannot start DCGM job watch: %s\n}\n\n", errorString(result));
+          unsetenv("XALT_RUN_UUID");
+          return;
+        }
+
+      result = dcgmUpdateAllFields(dcgm_handle, 1);
+      if (result != DCGM_ST_OK)
+        {
+          DEBUG1(stderr, "    -> Quitting => Cannot update DCGM job fields: %s\n}\n\n", errorString(result));
+          unsetenv("XALT_RUN_UUID");
+          return;
+        }
+    }
+#endif
+
   start_time = epoch();
   frac_time  = start_time - (long) (start_time);
 
@@ -578,6 +635,38 @@ void myfini()
 
   end_time = epoch();
   unsetenv("LD_PRELOAD");
+
+#ifdef HAVE_DCGM
+    /* Collect DCGM job stats */
+    {
+      dcgmReturn_t result;
+      dcgmJobInfo_t job_info;
+
+      DEBUG0(my_stderr, "  GPU tracing\n");
+
+      dcgmUpdateAllFields(dcgm_handle, 1);
+      dcgmJobStopStats(dcgm_handle, uuid_str);
+
+      job_info.version = dcgmJobInfo_version2;
+      result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
+      if (result == DCGM_ST_OK)
+	{
+	  int i = 0;
+	  DEBUG1(my_stderr, "  %d GPUs detected\n", job_info.numGpus);
+	  for (i = 0 ; i < job_info.numGpus ; i++)
+	    {
+	      DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, job_info.gpus[i].numComputePids);
+	      if (job_info.gpus[i].numComputePids > 0)
+		num_gpus++;
+	    }
+	  DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
+	}
+
+      dcgmJobRemove(dcgm_handle, uuid_str);
+      dcgmStopEmbedded(dcgm_handle);
+      dcgmShutdown();
+    }
+#endif
 
   if (run_mask & BIT_SCALAR)
     {
