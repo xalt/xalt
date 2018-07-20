@@ -150,7 +150,7 @@ static long         my_rank	          = 0L;
 static long         my_size	          = 1L;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
-static int          xalt_gpu_tracing      = 0;
+static int          xalt_gpu_tracking     = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
 static int num_gpus                       = 0;
@@ -448,9 +448,9 @@ void myinit(int argc, char **argv)
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
-  xalt_gpu_tracing = (strcmp(v,"yes") == 0);
+  xalt_gpu_tracking = (strcmp(v,"yes") == 0);
 
-  if (xalt_gpu_tracing)
+  if (xalt_gpu_tracking)
     {
       DEBUG0(stderr, "  GPU tracing\n");
       dcgmReturn_t result;
@@ -676,7 +676,7 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
-  if (xalt_gpu_tracing)
+  if (xalt_gpu_tracking)
     {
       /* Collect DCGM job stats */
       dcgmReturn_t result;
