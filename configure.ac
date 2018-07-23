@@ -1,4 +1,5 @@
 AC_INIT(Makefile.in)
+AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/xalt_header.h.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SUBDIRS(src)
@@ -323,7 +324,6 @@ if test $XALT_GPU_TRACKING = yes; then
                   [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
 fi
-
 AC_SUBST(PKGV)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)

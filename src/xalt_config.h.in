@@ -12,8 +12,6 @@
 #define LOGGER                     "@PATH_TO_LOGGER@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"
 
-#undef USE_DCGM
-
 #ifdef HAVE_MYSQL
 #  define BUILT_W_MySQL            "yes"
 #else

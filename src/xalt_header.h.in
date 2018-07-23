@@ -1,0 +1,7 @@
+#ifndef XALT_HEADER_H
+#define XALT_HEADER_H
+
+/* Define if you have DCGM support */
+#undef USE_DCGM
+
+#endif /* XALT_HEADER_H */
