@@ -28,5 +28,6 @@ GPU Branch
    (2.1.2-gpu) Support for using the DCGM library to record gpu info.
                Correct support for defining the USE_DCGM macro.
 	       Updated DCGM messages.
+	       Wrap dcgmStartEmbedded() call to send stderr to /dev/null temporarily.
 	       
    

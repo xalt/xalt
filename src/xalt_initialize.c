@@ -39,6 +39,7 @@
 #include <errno.h>
 #include <sys/utsname.h>
 #include <unistd.h>
+#include <fcntl.h>
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
@@ -157,6 +158,22 @@ static char *       ldLibPathArg          = NULL;
 static int num_gpus                       = 0;
 #ifdef USE_DCGM
 static dcgmHandle_t dcgm_handle           = NULL;
+/* Temporarily disable any stderr messages from DCGM */
+#define DCGMFUNC2(FUNC,x1,x2,out)    \
+{                                    \
+  dcgmReturn_t __result;             \
+  int fd1, fd2;                      \
+  fflush(stderr);                    \
+  fd1 = dup(STDERR_FILENO);          \
+  fd2 = open("/dev/null", O_WRONLY); \
+  dup2(fd2, STDERR_FILENO);          \
+  close(fd2);                        \
+  __result = FUNC(x1, x2);           \
+  fflush(stderr);                    \
+  dup2(fd1, STDERR_FILENO);          \
+  close(fd1);                        \
+  (*(out)) = __result;               \
+}
 #endif
 
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
@@ -464,7 +481,7 @@ void myinit(int argc, char **argv)
           return;
         }
 
-      result = dcgmStartEmbedded(DCGM_OPERATION_MODE_MANUAL, &dcgm_handle);
+      DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
       if (result != DCGM_ST_OK)
         {
           DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n}\n\n", errorString(result));
