@@ -26,5 +26,7 @@ XALT 2.1+
 
 GPU Branch
    (2.1.2-gpu) Support for using the DCGM library to record gpu info.
-   
+               Correct support for defining the USE_DCGM macro.
+	       Updated DCGM messages.
+	       
    

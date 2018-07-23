@@ -11,13 +11,6 @@
 #define XALT_DIR                   "@prefix@/xalt/xalt/"
 #define LOGGER                     "@PATH_TO_LOGGER@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"
-
-#ifdef HAVE_MYSQL
-#  define BUILT_W_MySQL            "yes"
-#else
-#  define BUILT_W_MySQL            "no"
-#endif
-
 #define XALT_FUNCTION_TRACKING     "@XALT_FUNCTION_TRACKING@"
 #define MY_HOSTNAME_PARSER         "@MY_HOSTNAME_PARSER@"
 #define XALT_GPU_TRACKING          "@XALT_GPU_TRACKING@"
