@@ -688,6 +688,7 @@ void myfini()
 	{
 	  fclose(my_stderr);
 	  close(errfd);
+	  close(STDERR_FILENO);
 	}
       return;
     }
@@ -753,6 +754,7 @@ void myfini()
 		{
 		  fclose(my_stderr);
 		  close(errfd);
+		  close(STDERR_FILENO);
 		}
 	      return;
 	    }
