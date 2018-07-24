@@ -177,5 +177,7 @@ int main(int argc, char* argv[], char* env[])
   if (resultFn)
     free(resultFn);
   DEBUG0(stderr,"}\n\n");
+  if (xalt_tracing)
+    fflush(stderr);
   return 0;
 }

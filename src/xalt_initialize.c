@@ -190,7 +190,7 @@ void myinit(int argc, char **argv)
   int    produce_strt_rec = 0;
   char * p;
   char * p_dbg;
-  char * cmdline;
+  char * cmdline         = NULL;
   char * ld_preload_strp = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[DATESZ];
@@ -672,7 +672,9 @@ void myfini()
 
   if (xalt_err)
     {
+      fflush(stderr);
       close(STDERR_FILENO);
+      dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
       DEBUG1(my_stderr,"\nmyfini(%s){\n", STR(STATE));
     }
@@ -771,12 +773,13 @@ void myfini()
     {
       if (xalt_tracing || xalt_run_tracing )
         {
-	  char * cmd2;
+	  char * cmd2 = NULL;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
                    start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, usr_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
+	  fflush(my_stderr);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
@@ -788,6 +791,7 @@ void myfini()
     {
       fclose(my_stderr);
       close(errfd);
+      close(STDERR_FILENO);
     }
 }
 
