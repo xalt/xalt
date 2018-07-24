@@ -29,5 +29,4 @@ GPU Branch
                Correct support for defining the USE_DCGM macro.
 	       Updated DCGM messages.
 	       Wrap dcgmStartEmbedded() call to send stderr to /dev/null temporarily.
-	       
-   
+	       Allow xalt_run_submission to write to stderr when it is called from my_fini().
