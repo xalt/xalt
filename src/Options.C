@@ -151,9 +151,10 @@ Options::Options(int argc, char** argv)
         }
       else
         {
-          int jLen;
-          int len = strlen(argv[optind]);
-          m_userCmdLine = reinterpret_cast<char*>(base64_decode(argv[optind], len, &jLen));
+          int   jLen;
+          char* decoded = reinterpret_cast<char*>(base64_decode(argv[optind], strlen(argv[optind]), &jLen));
+          m_userCmdLine = decoded;
+          free(decoded);
         }
     }
 
