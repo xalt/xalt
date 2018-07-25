@@ -172,6 +172,7 @@ unsigned char* base64_decode( const char* ascii, int len, int *flen )
     
     bin[cb++] = (A<<2) | (B>>4) ;
   }
+  bin[cb] = '\0';
   
   return bin ;
 }
