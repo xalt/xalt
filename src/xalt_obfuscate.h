@@ -28,6 +28,7 @@
 #define __init                      PASTE2(__XALT__init,                      MY_NAME)
 #define __fini                      PASTE2(__XALT__fini,                      MY_NAME)
 #define base64_encode               PASTE2(__XALT_base64_encode,              HIDE)
+#define base64_decode               PASTE2(__XALT_base64_decode,              HIDE)
 #define my_hostname_parser          PASTE2(__XALT_my_hostname_parser,         HIDE)
 #define my_hostname_parser_cleanup  PASTE2(__XALT_my_hostname_parser_cleanup, HIDE)
 #define xalt_fgets_alloc            PASTE2(__XALT_fgets_alloc,                HIDE)

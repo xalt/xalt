@@ -155,7 +155,8 @@ static int          xalt_run_tracing      = 0;
 static int          xalt_gpu_tracking     = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
-static int num_gpus                       = 0;
+static int          num_gpus              = 0;
+static int          b64_len               = 0;
 #ifdef USE_DCGM
 static dcgmHandle_t dcgm_handle           = NULL;
 /* Temporarily disable any stderr messages from DCGM */
@@ -447,7 +448,6 @@ void myinit(int argc, char **argv)
   *--p = ']';
   *++p = '\0';
 
-  int b64_len;
   int qsLen   = p - usr_cmdline;
 
   if (p > &usr_cmdline[sz])
@@ -775,10 +775,14 @@ void myfini()
     {
       if (xalt_tracing || xalt_run_tracing )
         {
-	  char * cmd2 = NULL;
+          int    dLen;
+	  char * cmd2    = NULL;
+	  fprintf(my_stderr,"b64_len: %d, strlen(b64_cmdline): %ld, b64: %s\n", b64_len, strlen(b64_cmdline), b64_cmdline);
+          char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
+	  fprintf(my_stderr,"dLen: %d, strlen(decoded): %ld, cmdline: %s\n", dLen, strlen(decoded), decoded);
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, usr_cmdline);
+                   start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
