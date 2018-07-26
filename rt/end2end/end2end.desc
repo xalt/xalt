@@ -80,7 +80,7 @@ test_descript = {
      mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c
 
      displayThis "Enable XALT TRACKING"
-     displayThis "XALT_TRACING=yes ./helloñññ '`i+1`' \"a;'\""
+     displayThis "XALT_TRACING=yes ./helloñññ" '`i+1`' "a;'"
      export XALT_EXECUTABLE_TRACKING=yes
      XALT_TRACING=yes ./helloñññ '`i+1`' "a;'"
 

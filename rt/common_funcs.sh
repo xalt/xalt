@@ -23,7 +23,7 @@ displayThis()
   XALT_EPOCH_T1=$(LD_PRELOAD= $outputDir/XALT/xalt/xalt/libexec/xalt_epoch "$XALT_EPOCH_T0")
   echo 
   echo "#==========================================================#"
-  echo "  $@"
+  echo "  ""$@"
   echo "  ($XALT_EPOCH_T1)"
   echo "#==========================================================#"
 }
