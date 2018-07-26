@@ -777,9 +777,7 @@ void myfini()
         {
           int    dLen;
 	  char * cmd2    = NULL;
-	  fprintf(my_stderr,"b64_len: %d, strlen(b64_cmdline): %ld, b64: %s\n", b64_len, strlen(b64_cmdline), b64_cmdline);
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
-	  fprintf(my_stderr,"dLen: %d, strlen(decoded): %ld, cmdline: %s\n", dLen, strlen(decoded), decoded);
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
                    start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
