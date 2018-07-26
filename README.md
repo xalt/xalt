@@ -56,16 +56,30 @@ data transmission, creation of reverse maps, and examples with
 accompanying results for database queries.
 
 
+## ChangeLog
+
+### XALT 2.2:
+
+Features:
+
+   1. XALT registers a signal handler so that programs that seg-faults, fpe
+      and other signals will generate an end record.
+
+   2. XALT now optional supports detecting GPU usage through the NVIDIA DCGM library.
+
+   3. Direct to database option has been removed.
+
+### XALT 2.1:
+
+Features:
+
+   1. XALT can now tracks both MPI and non-MPI programs subject to site controlled filtering
+
+
 ## Known Issues and Current Solutions
 
-1. With tools like the debugger Totalview, the debugger must interact
-with the job launcher rather than a wrapper.  Two solutions currently
-exist: unload XALT when Totalview (or similar tools) are loaded OR
-edit the debugger wrapper to interact with the renamed job
-launcher. With either solution, Totalview runs will not show up in the
-XALT database.
 
-2. Because the Cray compile wrapper uses a binutils linker, the Cray
+1. Because the Cray compile wrapper uses a binutils linker, the Cray
 environment variable ALT_LINKER in the XALT modulefile must be set to
 point to the XALT wrapper.
 
