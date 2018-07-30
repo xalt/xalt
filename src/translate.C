@@ -42,9 +42,9 @@ void translate(Table& envT, Table& userT, DTable& userDT)
   else if (queueType == SLURM )
     {
       userT["job_id"]      = safe_get(envT,        "SLURM_JOB_ID",        "unknown");
-      userT["queue"]       = safe_get(envT,        "SLURM_QUEUE",         "unknown");
+      userT["queue"]       = safe_get(envT,        "SLURM_JOB_PARTITION", "unknown");
       userT["submit_host"] = safe_get(envT,        "SLURM_SUBMIT_HOST",   "unknown");
-      userT["account"]     = safe_get(envT,        "SLURM_TACC_ACCOUNT",  "unknown");
+      userT["account"]     = safe_get(envT,        "SLURM_JOB_ACCOUNT",   "unknown");
       userDT["num_nodes"]  = strtod(safe_get(envT, "SLURM_NNODES",        "1"),       (char **) NULL);
     }
   else if (queueType == PBS)
