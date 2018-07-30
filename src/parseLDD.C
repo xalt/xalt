@@ -5,6 +5,7 @@
 #include "capture.h"
 #include "xalt_config.h"
 #include "epoch.h"
+#include <stdio.h>
 
 
 ArgV            argV;
@@ -13,6 +14,9 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
 {
   std::string  cmd;
   Vstring      result;
+
+  char * p_dbg        = getenv("XALT_TRACING");
+  int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
   // Capture the result from running ldd on the executable
   cmd  = LDD " " + exec + " 2> /dev/null";
@@ -42,11 +46,13 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
   for (int i = 0; i < sz; ++i)
     {
       std::string& s = result[i];
+      if (xalt_tracing) fprintf(stderr,"string: %s\n",s.c_str());
       s1 = s.find("=> /");
       if (s1 == std::string::npos)
         continue;
       s2  = s.find(" (",s1);
       lib = s.substr(s1+3, s2-(s1+3));
+      if (xalt_tracing) fprintf(stderr,"  found lib:: %s\n",lib.c_str());
       argV.push_back(Arg(lib));
     }
   long fnSzG = argV.size();
