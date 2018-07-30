@@ -10,7 +10,8 @@
 
 ArgV            argV;
 
-void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, double& t_sha1)
+void parseLDD(std::string& exec, std::string& ldlibpath, std::vector<Libpair>& libA,
+              double& t_ldd, double& t_sha1)
 {
   std::string  cmd;
   Vstring      result;
@@ -19,7 +20,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
   int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
   // Capture the result from running ldd on the executable
-  cmd  = LDD " " + exec + " 2> /dev/null";
+  cmd  = "LD_LIBRARY_PATH=" + ldlibpath + " " + LDD " " + exec + " 2> /dev/null";
   double t1 = epoch();
   capture(cmd, result);
   t_ldd = epoch() - t1;

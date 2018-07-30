@@ -90,7 +90,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Parse the output of ldd for this executable (start record only)
   std::vector<Libpair> libA;
-  parseLDD(options.exec(), libA, t_ldd, t_sha1);
+  parseLDD(options.exec(), options.ldLibPath(), libA, t_ldd, t_sha1);
   DEBUG0(stderr,"  Parsed LDD\n");
 
   measureT["06_ParseLDD_ldd_"] = t_ldd;
