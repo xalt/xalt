@@ -46,7 +46,7 @@ void parseLDD(std::string& exec, std::vector<Libpair>& libA, double& t_ldd, doub
   for (int i = 0; i < sz; ++i)
     {
       std::string& s = result[i];
-      if (xalt_tracing) fprintf(stderr,"string: %s\n",s.c_str());
+      if (xalt_tracing) fprintf(stderr,"string: %s",s.c_str());
       s1 = s.find("=> /");
       if (s1 == std::string::npos)
         continue;
