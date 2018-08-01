@@ -86,8 +86,8 @@ path_patterns = [
     ['SKIP',  r'.*\/xalt_file_to_db'],
     ['SKIP',  r'.*\/xalt_run_submission'],
     ['SKIP',  r'.*\/xalt_syslog_to_db'],
-    ['SKIP',  r'.*\/xalt_configuration_report'],
-    ['SKIP',  r'.*\/xalt_extract_record'],
+    ['SKIP',  r'.*\/xalt_configuration_report\.x'],
+    ['SKIP',  r'.*\/xalt_extract_record\.x'],
     ['SKIP',  r'.*\/xalt_syshost'],
     ['SKIP',  r'.*\/xalt_record_pkg']
   ]
