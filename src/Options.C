@@ -159,6 +159,7 @@ Options::Options(int argc, char** argv)
           HERE;
           char* decoded = reinterpret_cast<char*>(base64_decode(argv[optind], strlen(argv[optind]), &jLen));
           HERE;
+          fprintf(stderr,"decoded %s\n",decoded);
           m_userCmdLine = decoded;
           HERE;
           free(decoded);
