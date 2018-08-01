@@ -1,7 +1,10 @@
 #ifndef XALT_HEADER_H
 #define XALT_HEADER_H
 
+#ifndef IN_32_BIT_MODE
 /* Define if you have DCGM support */
 #undef USE_DCGM
+
+#endif
 
 #endif /* XALT_HEADER_H */

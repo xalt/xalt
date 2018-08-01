@@ -279,6 +279,9 @@ if [ -n "$PrintOptions" ]; then
     $MY_CMD "${printOptA[@]}" "${argA[@]}"
 fi
 
+LIBUUID=
+LIBDCGM=
+
 #############################################################
 #  Only use the uuid library for 64bit apps not for 32bit apps
 if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
@@ -290,10 +293,6 @@ fi
 if [ "$HAVE_DCGM" = "yes" -a -z "$BIT32FLAG" ]; then
     LIBDCGM="-ldcgm"
 fi
-
-
-
-
 
 #############################################################
 #  do not include xalt_initialize.*, -luuid, etc when building

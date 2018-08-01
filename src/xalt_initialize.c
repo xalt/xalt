@@ -54,8 +54,9 @@
 #include "build_uuid.h"
 
 #ifdef USE_DCGM
-#include <dcgm_agent.h>
-#include <dcgm_structs.h>
+/* This code will only every be active in 64 bit mode and not 32 bit mode*/
+#  include <dcgm_agent.h>
+#  include <dcgm_structs.h>
 #endif
 
 #ifdef HAVE_EXTERNAL_HOSTNAME_PARSER
@@ -159,6 +160,7 @@ static int          num_gpus              = 0;
 static int          b64_len               = 0;
 #ifdef USE_DCGM
 static dcgmHandle_t dcgm_handle           = NULL;
+/* This code will only every be active in 64 bit mode and not 32 bit mode*/
 /* Temporarily disable any stderr messages from DCGM */
 #define DCGMFUNC2(FUNC,x1,x2,out)    \
 {                                    \
@@ -463,6 +465,7 @@ void myinit(int argc, char **argv)
   build_uuid(uuid_str);
 
 #ifdef USE_DCGM
+  /* This code will only every be active in 64 bit mode and not 32 bit mode*/
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
@@ -697,6 +700,7 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
+  /* This code will only every be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
     {
       /* Collect DCGM job stats */

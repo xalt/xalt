@@ -1,1 +1,3 @@
-XALT 2.2+
+XALT 2.3+
+   (2.3.1) Turn off DCGM library in 32 bit mode.
+   

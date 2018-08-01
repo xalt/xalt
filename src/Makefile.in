@@ -317,9 +317,9 @@ $(DESTDIR)$(LIB)/build_uuid_preload_32.o: build_uuid.c __build__/xalt_config.h x
 $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_32.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
-	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR    -DIDX=1 -I__build__  -o $@ -c $<
+	$(COMPILE.c) -m32 $(CF_INIT) -DIN_32_BIT_MODE -Wno-unused-variable -DSTATE=REGULAR    -DIDX=1 -I__build__  -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o: xalt_initialize.c xalt_quotestring.h __build__/xalt_config.h 
-	$(COMPILE.c) -m32 $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -I__build__  -o $@ -c $<
+	$(COMPILE.c) -m32 $(CF_INIT) -DIN_32_BIT_MODE -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -I__build__  -o $@ -c $<
 $(DESTDIR)$(LIB)/my_hostname_parser_32.o: $(MY_HOSTNAME_PARSER_SRC)
 	$(COMPILE.c) -m32 -c -o $@ $^
 $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o \
@@ -331,7 +331,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o        \
                                   $(DESTDIR)$(LIB)/base64.o                     \
                                   $(MY_HOSTNAME_PARSER_OBJ_32)
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID) $(LIBDCGM)
+	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@  $^ $(LIBUUID)
 
 
 $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o \
