@@ -23,10 +23,13 @@
 
 int main(int argc, char* argv[], char* env[])
 {
+  HERE;
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
+  HERE;
   Options options(argc, argv);
+  HERE;
   char    dateStr[DATESZ];
   time_t  time;
   double  t0, t1;
@@ -34,9 +37,11 @@ int main(int argc, char* argv[], char* env[])
   DTable  measureT;
   bool    end_record = (options.endTime() > 0.0);
   
+  HERE;
   std::string suffix = end_record ? "zzz" : "aaa";
   DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix.c_str());
   
+  HERE;
   t0 = epoch();
   t1 = t0;
   std::vector<ProcessTree> ptA;
