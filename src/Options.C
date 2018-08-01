@@ -154,6 +154,8 @@ Options::Options(int argc, char** argv)
         {
           HERE;
           int   jLen;
+          fprintf(stderr,"len: %ld, b64_cmd: %s\n",strlen(argv[optind]),argv[optind]);
+
           char* decoded = reinterpret_cast<char*>(base64_decode(argv[optind], strlen(argv[optind]), &jLen));
           m_userCmdLine = decoded;
           HERE;
