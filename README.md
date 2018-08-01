@@ -58,6 +58,13 @@ accompanying results for database queries.
 
 ## ChangeLog
 
+### XALT 2.3:
+
+Bug Fix:
+
+   1. Fix bug where XALT would miss libraries that depended on LD_LIBRARY_PATH.
+   
+
 ### XALT 2.2:
 
 Features:
