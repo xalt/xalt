@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "base64.h"
 
 const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
@@ -174,5 +175,8 @@ unsigned char* base64_decode( const char* ascii, int len, int *flen )
   }
   bin[cb] = '\0';
   
+  assert(cb <= *flen);
+
+
   return bin ;
 }
