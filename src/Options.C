@@ -45,6 +45,7 @@ Options::Options(int argc, char** argv)
 {
   int   c;
 
+  HERE;
   while(1)
     {
       int option_index       = 0;
@@ -133,6 +134,7 @@ Options::Options(int argc, char** argv)
         }
     }
   
+  HERE;
   if (optind + 1 == argc && argv[optind][0] == '[')
     m_userCmdLine = argv[optind];
   else if (optind < argc)
@@ -158,6 +160,7 @@ Options::Options(int argc, char** argv)
         }
     }
 
+  HERE;
   if (m_exec != "unknown")
     {
       std::vector<std::string> result;
@@ -171,4 +174,5 @@ Options::Options(int argc, char** argv)
       else
         m_exec_type = "binary";
     }
+  HERE;
 }
