@@ -45,7 +45,6 @@ Options::Options(int argc, char** argv)
 {
   int   c;
 
-  HERE;
   while(1)
     {
       int option_index       = 0;
@@ -153,10 +152,13 @@ Options::Options(int argc, char** argv)
         }
       else
         {
+          HERE;
           int   jLen;
           char* decoded = reinterpret_cast<char*>(base64_decode(argv[optind], strlen(argv[optind]), &jLen));
           m_userCmdLine = decoded;
+          HERE;
           free(decoded);
+          HERE;
         }
     }
 
