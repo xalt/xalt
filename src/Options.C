@@ -133,7 +133,6 @@ Options::Options(int argc, char** argv)
         }
     }
   
-  HERE;
   if (optind + 1 == argc && argv[optind][0] == '[')
     m_userCmdLine = argv[optind];
   else if (optind < argc)
@@ -152,22 +151,13 @@ Options::Options(int argc, char** argv)
         }
       else
         {
-          HERE;
           int   jLen;
-          fprintf(stderr,"len: %ld, b64_cmd: %s\n",strlen(argv[optind]),argv[optind]);
-
-          HERE;
           char* decoded = reinterpret_cast<char*>(base64_decode(argv[optind], strlen(argv[optind]), &jLen));
-          HERE;
-          fprintf(stderr,"decoded %s\n",decoded);
           m_userCmdLine = decoded;
-          HERE;
           free(decoded);
-          HERE;
         }
     }
 
-  HERE;
   if (m_exec != "unknown")
     {
       std::vector<std::string> result;
@@ -181,5 +171,4 @@ Options::Options(int argc, char** argv)
       else
         m_exec_type = "binary";
     }
-  HERE;
 }
