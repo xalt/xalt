@@ -136,7 +136,7 @@ unsigned char* base64_decode( const char* ascii, int len, int *flen )
   if( safeAsciiPtr[ len-1 ]=='=' )  ++pad ;
   if( safeAsciiPtr[ len-2 ]=='=' )  ++pad ;
   
-  *flen = 3*len/4 - pad ;
+  *flen = 3*len/4 - pad + 1;
   bin = (unsigned char*)malloc( *flen ) ;
   if( !bin )
   {
@@ -174,9 +174,6 @@ unsigned char* base64_decode( const char* ascii, int len, int *flen )
     bin[cb++] = (A<<2) | (B>>4) ;
   }
   bin[cb] = '\0';
-  
-  assert(cb <= *flen);
-
 
   return bin ;
 }
