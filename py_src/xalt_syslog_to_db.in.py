@@ -427,7 +427,7 @@ def main():
   badsyslog   = 0
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
-  pbar        = ProgressBar(maxVal=fnSz,fd=sys.stdout)
+  pbar        = ProgressBar(maxVal=max(fnSz,1),fd=sys.stdout)
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
