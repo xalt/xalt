@@ -171,6 +171,7 @@ all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
+          $(DESTDIR)$(LIBEXEC)/xalt_test                        \
           $(DESTDIR)$(LIBEXEC)/xalt_epoch
 
 

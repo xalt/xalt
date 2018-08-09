@@ -10,7 +10,7 @@ XALT_INTERFACE_VERSION=4
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog) [[file]]]),
+    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission")dnl
@@ -212,7 +212,6 @@ AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     AC_MSG_RESULT([BAD_INSTALL=$withval])
     BAD_INSTALL="$withval"
     AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval"))dnl
-
 
 AC_SUBST(HAVE_32BIT)
 

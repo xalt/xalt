@@ -80,7 +80,7 @@ class ProgressBar(object):
     if (not maxVal):
       ValueError('Must specify maxVal')
 
-    self.__maxVal = maxVal
+    self.__maxVal = max(1,maxVal)
     if (not barWidth):
       barWidth = termWidth
       if (not barWidth):
