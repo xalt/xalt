@@ -102,20 +102,6 @@ int main(int argc, char* argv[], char* env[])
   
   DEBUG1(stderr,"  Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
-  //if (strcasecmp(transmission, "direct2db") == 0)
-  //  {
-  //    std::string rmapD = ""; // must use XALT_ETC_DIR to specify where rmapD is!
-  //    Table       rmapT;
-  //    Vstring     xlibmapA;
-  //
-  //    buildRmapT(rmapD, rmapT, xlibmapA);
-  //    run_direct2db(options.confFn().c_str(), options.userCmdLine(), sha1_exec, rmapT, envT, userT, userDT, recordT, libA);
-  //    DEBUG0(stderr,"  Completed run direct to DB\n");
-  //    DEBUG0(stderr,"}\n\n");
-  //    
-  //    return 0;
-  //  }
-  
   //*********************************************************************
   // If here then we need the json string.  So build it!
   measureT["07____total_____"] = epoch() - t0;
@@ -142,7 +128,7 @@ int main(int argc, char* argv[], char* env[])
   std::string key   = (end_record) ? "run_fini_" : "run_strt_";
   key.append(options.uuid());
 
-  if (strcasecmp(transmission, "file") == 0)
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       //*********************************************************************
       // Build file name for xalt json record.  It is only used when the
@@ -155,7 +141,7 @@ int main(int argc, char* argv[], char* env[])
           std::string user   = c_user;
           std::string xaltDir;
 
-          build_xaltDir(xaltDir, user, home);
+          build_xaltDir(xaltDir, user, home, transmission);
 
           double start = options.startTime();
           double frac  = start - floor(start);

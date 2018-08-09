@@ -26,11 +26,10 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"syslog")    != 0 ) && 
       (strcasecmp(transmission,"none")      != 0 ) && 
-      (strcasecmp(transmission,"syslogv1")  != 0 ) && 
-      (strcasecmp(transmission,"direct2db") != 0 ))
+      (strcasecmp(transmission,"syslogv1")  != 0 ))
     transmission = "file";
 
-  if (strcasecmp(transmission, "file") == 0)
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0 )
     {
       if (resultFn == NULL)
 	{

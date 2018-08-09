@@ -304,6 +304,7 @@ class XALTdb(object):
       cursor.execute(query,[runT['userT']['run_uuid']])
       num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
       num_gpus      = convertToTinyInt(runT['userDT'].get('num_gpus',0))
+      stored        = False 
 
       if (cursor.rowcount > 0):
         #print("found")
@@ -338,6 +339,7 @@ class XALTdb(object):
                                sum_times,                    runT['userT']['user'],        runT['userT']['exec_path'],
                                moduleName,                   runT['userT']['cwd'],         usr_cmdline))
         run_id   = cursor.lastrowid
+        stored   = True
 
 
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
@@ -380,6 +382,8 @@ class XALTdb(object):
       print(query.encode("ascii","ignore"),file=sys.stderr)
       print ("run_to_db(): ",e,file=sys.stderr)
       sys.exit (1)
+
+    return stored
 
   def pkg_to_db(self, syshost, pkgT):
 

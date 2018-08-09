@@ -70,11 +70,12 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--delete",      dest='delete', action="store_true", help="delete files after reading")
-    parser.add_argument("--timer",       dest='timer',  action="store_true", help="Time runtime")
-    parser.add_argument("--report_file", dest='listFn', action="store_true", help="list file")
-    parser.add_argument("--reverseMapD", dest='rmapD',  action="store",      help="Path to the directory containing the json reverseMap")
-    parser.add_argument("--confFn",      dest='confFn', action="store",      default="xalt_db.conf", help="Name of the database")
+    parser.add_argument("--delete",      dest='delete',  action="store_true", help="delete files after reading")
+    parser.add_argument("--timer",       dest='timer',   action="store_true", help="Time runtime")
+    parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
+    parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--syshost",     dest='syshost', action="store",      default="unknown",      help="name of the cluster")
+    parser.add_argument("--confFn",      dest='confFn',  action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
     return args
 
@@ -86,6 +87,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
   @param xalt:        An XALTdb object.
   @param listFn:      A flag that causes the name of the file to be written to stderr.
   @param reverseMapT: The Reverse Map Table.
+  @param deleteFlg:   A flag that says to delete files after processing.
   @param linkFnA:     An array of link file names
 
   """
@@ -130,6 +132,58 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
     sys.exit (1)
   return num
 
+def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA):
+  """
+  Reads in each link file name and converts json to python table and sends it to be written to DB.
+
+  @param xalt:        An XALTdb object.
+  @param listFn:      A flag that causes the name of the file to be written to stderr.
+  @param syshost:     The name of the cluster being processed.
+  @param deleteFlg:   A flag that says to delete files after processing.
+  @param pkgFnA:      An array of link file names
+
+  """
+  num = 0
+  query = ""
+
+  try:
+    for fn in pkgFnA:
+      if (listFn):
+        sys.stderr.write(fn+"\n")
+      XALT_Stack.push("fn: "+fn)   # push fn
+
+      try:
+        f     = open(fn,"r")
+      except FileNotFoundError:
+        continue
+  
+      try:
+        pkgT = json.loads(f.read())
+      except:  
+        f.close()
+        v = XALT_Stack.pop()
+        carp("fn",v)
+        continue
+
+      f.close()
+      xalt.pkg_to_db(syshost, linkT)
+      num  += 1
+      try:
+        if (deleteFlg):
+          os.remove(fn)
+      except:
+        pass
+
+      v     = XALT_Stack.pop()
+      carp("fn",v)
+
+  except Exception as e:
+    print(XALT_Stack.contents())
+    print(query)
+    print ("pkg_json_to_db(): Error: ",e)
+    sys.exit (1)
+  return num
+
 
 def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
   """
@@ -138,6 +192,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
   @param xalt:        An XALTdb object.
   @param listFn:      A flag that causes the name of the file to be written to stderr.
   @param reverseMapT: The Reverse Map Table.
+  @param deleteFlg:   A flag that says to delete files after processing.
   @param runFnA:      An array of run file names
 
   """
@@ -148,7 +203,6 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
       if (listFn):
         sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)
-      num   += 1
       try:
         f      = open(fn,"r")
       except FileNotFoundError:
@@ -163,12 +217,14 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
         continue
       f.close()
 
-      xalt.run_to_db(reverseMapT, runT)
+      stored = xalt.run_to_db(reverseMapT, runT)
       try:
         if (deleteFlg):
           os.remove(fn)
       except:
         pass
+      if (stored):
+        num += 1
         
       v = XALT_Stack.pop()  
       carp("fn",v)
@@ -208,18 +264,33 @@ def passwd_generator():
 
 
 
-def build_xaltDir(user, hdir):
+def build_xaltDir(user, hdir, transmission, kind):
+  tail = ""
+  if (transmission == "file_separate_dirs"):
+    tail = kind
+
   prefix = "@xalt_file_prefix@"
   if (prefix == "USE_HOME"):
-    return os.path.join(hdir,".xalt.d")
+    return os.path.join(hdir,".xalt.d",tail)
 
-  return os.path.join(prefix,user)
+  return os.path.join(prefix,user,tail)
 
 def main():
   """
   Walks the list of users via the passwd_generator and load the
   link and run files.
   """
+
+  # Find transmission style
+  transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
+  if (not transmission):
+    transmission = "@XALT_TRANSMISSION_STYLE@"
+
+  if (not transmission):
+    tranmission = "file"
+    
+  transmission = transmission.lower()
+
 
   # Push command line on to XALT_Stack
   sA = []
@@ -242,11 +313,13 @@ def main():
   iuser  = 0
   lnkCnt = 0
   runCnt = 0
+  pkgCnt = 0
 
   for user, hdir in passwd_generator():
     XALT_Stack.push("User: " + user)
-    xaltDir = build_xaltDir(user, hdir)
 
+
+    xaltDir = build_xaltDir(user, hdir, transmission, "link")
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
@@ -254,10 +327,20 @@ def main():
       lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
       XALT_Stack.pop()
 
+    xaltDir = build_xaltDir(user, hdir, transmission, "run")
+    if (os.path.isdir(xaltDir)):
       runFnA   = files_in_tree(xaltDir, "*/run.*.json")
       XALT_Stack.push("run_json_to_db()")
       runCnt  += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
       XALT_Stack.pop()
+
+    xaltDir = build_xaltDir(user, hdir, transmission, "pkg")
+    if (os.path.isdir(xaltDir)):
+      pkgFnA   = files_in_tree(xaltDir, "*/pkg.*.json")
+      XALT_Stack.push("pkg_json_to_db()")
+      pkgCnt  += pkg_json_to_db(xalt, args.listFn, args.syshost, args.delete, pkgFnA)
+      XALT_Stack.pop()
+
 
     icnt += 1
     v = XALT_Stack.pop()
@@ -271,6 +354,6 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("num users: ", iuser, ", num links: ", lnkCnt, ", num runs: ", runCnt)
+  print("num users: ", iuser, ", num links: ", lnkCnt, ", num pkgs: ", pkgCnt, ", num runs: ", runCnt)
 
 if ( __name__ == '__main__'): main()
