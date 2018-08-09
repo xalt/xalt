@@ -49,9 +49,9 @@ void filterEnvT(char* env[], Table& envT)
             }
         }
     }
+  env_parser_cleanup();
 
   // free memory used by keep_env_name()
-  env_parser_cleanup();
 }
 
 

@@ -55,7 +55,8 @@ C_SRC       :=                             \
                xalt_initialize.c  	   \
                xalt_record_pkg.c           \
                xalt_quotestring.c 	   \
-               xalt_realpath.c
+               xalt_realpath.c             \
+               xalt_test.c
 
 CXX_SRC     :=                             \
                ConfigParser.C         	   \
@@ -84,6 +85,7 @@ CXX_SRC     :=                             \
                xalt_strip_linklib.C        \
                xalt_utils.C                \
                zstring.C
+
 
 
 TRP_EXEC     := $(DESTDIR)$(LIBEXEC)/test_record_pkg
@@ -171,11 +173,12 @@ all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
-          $(DESTDIR)$(LIBEXEC)/xalt_epoch
-
+          $(DESTDIR)$(LIBEXEC)/xalt_epoch                       \
+          $(DESTDIR)$(BIN)/xalt_test 
 
 ECHO:
 	@echo "XALT_EXECUTABLE_TRACKING: '$(XALT_EXECUTABLE_TRACKING)'"
+
 
 my_hostname_parser_target:
 	cp $(MY_HOSTNAME_PARSER_LIBRARY)   $(DESTDIR)$(LIB64)/my_hostname_parser.a
@@ -266,6 +269,19 @@ build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xa
                       $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
                       $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/build_uuid_32.o      \
 	              $(DESTDIR)$(LIB)/base64.o              $(MY_HOSTNAME_PARSER_OBJ_32)
+
+
+
+$(DESTDIR)$(LIB64)/xalt_test.o: xalt_test.c
+	$(COMPILE.c) -g -O0 -fPIC -c -o $@ $^
+
+$(DESTDIR)$(BIN)/xalt_test : $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_syshost.o            \
+                             $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o     $(DESTDIR)$(LIB64)/xalt_initialize.o         \
+                             $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_host.o         \
+                             $(DESTDIR)$(LIB64)/build_uuid.o           $(DESTDIR)$(LIB64)/base64.o                  \
+                             $(MY_HOSTNAME_PARSER_OBJ)                 $(DESTDIR)$(LIB64)/xalt_test.o
+	$(LINK.c) -g -O0 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) -o $@ $^ $(LIBUUID) $(LIBDCGM)
+
 
 
 $(DESTDIR)$(LIB64)/lex.__XALT_path.o: __build__/lex.__XALT_pathR.c xalt_obfuscate.h

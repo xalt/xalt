@@ -194,7 +194,6 @@ void Json::add(const char* name, CTable& t)
 
 void Json::add(const char* name, std::vector<ProcessTree>& ptA)
 {
-  char * strbuff = NULL;
   if (name)
     {
       m_s += "\"";
@@ -203,6 +202,7 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
     }
   for ( auto const & it : ptA)
     {
+      char * strbuff = NULL;
       pid_t              pid      = it.pid;
       const std::string& name     = it.name;
       const std::string& path     = it.path;
@@ -226,9 +226,9 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
         m_s.replace(m_s.size()-1,2,"]},");
       else
         m_s += "]},";
+      if (strbuff)
+        free(strbuff);
     }
-  if (strbuff)
-    free(strbuff);
   if (name)
     {
       if (m_s.back() == ',')
@@ -241,7 +241,6 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
 
 void Json::add(const char* name, DTable& t)
 {
-  char * strbuff = NULL;
   if (name)
     {
       m_s += "\"";
@@ -250,6 +249,7 @@ void Json::add(const char* name, DTable& t)
     }
   for ( auto const & it : t)
     {
+      char * strbuff = NULL;
       const std::string& k = it.first;
       double             v = it.second;
       asprintf(&strbuff, "%f", v);
@@ -258,9 +258,9 @@ void Json::add(const char* name, DTable& t)
       m_s += "\":";
       m_s += strbuff;
       m_s += ",";
+      if (strbuff)
+        free(strbuff);
     }
-  if (strbuff)
-    free(strbuff);
   if (name)
     {
       if (m_s.back() == ',')
