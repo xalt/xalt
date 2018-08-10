@@ -21,7 +21,7 @@
 
 const  char*           xalt_syshost();
 
-char* build_xalt_files_dir(const char* user_name, const char* home_dir);
+char* build_xalt_files_dir(const char* user_name, const char* home_dir, const char * transmission);
 
 int main(int argc, char* argv[])
 {
@@ -59,8 +59,6 @@ int main(int argc, char* argv[])
       DEBUG0(stderr,"The run_uuid value is not set => quitting!\n");
       exit(0);
     }
-
-
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
@@ -113,7 +111,7 @@ int main(int argc, char* argv[])
   //          1         2   |      3
   //0123456789 123456789 123456789 123456789 
   //3de2c9d8-e857-4482-9aa4-4979620380fc	  
-  if (strcasecmp(transmission, "file") == 0)
+  if ( (strcasecmp(transmission, "file") == 0) || strcasecmp(transmission, "file_separate_dirs") == 0))
     {
       char* date_str = getenv("XALT_DATE_TIME");
       char* c_home   = getenv("HOME");
@@ -121,7 +119,7 @@ int main(int argc, char* argv[])
 
       if (c_home != NULL && c_user != NULL)
 	{
-          char* xalt_files_dir = build_xalt_files_dir(c_user, c_home);
+          char* xalt_files_dir = build_xalt_files_dir(c_user, c_home, transmission);
 	  
 	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, my_host, date_str,
 		                                       run_uuid, &uuid_str[24]);
@@ -145,14 +143,18 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-char* build_xalt_files_dir(const char* user_name, const char* home_dir)
+char* build_xalt_files_dir(const char* user_name, const char* home_dir, const char* transmission)
 {
   char* xalt_files_dir = NULL;
-  
+  const char* pkg = "";
+
+  if (strcasecmp(transmission,"file_separate_dirs") == 0)
+    pkg = "pkg/";
+
 #ifdef HAVE_FILE_PREFIX
-  asprintf(&xalt_files_dir,"%s/%s/",XALT_FILE_PREFIX, user_name);
+  asprintf(&xalt_files_dir,"%s/%s%s/",XALT_FILE_PREFIX, pkg, user_name);
 #else
-  asprintf(&xalt_files_dir,"%s/.xalt.d/",home_dir);
+  asprintf(&xalt_files_dir,"%s/.xalt.d/%s",home_dir, pkg);
 #endif
   return xalt_files_dir;
 }
