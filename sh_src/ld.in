@@ -35,6 +35,9 @@
 ##########################################################################
 
 
+
+
+
 unset LD_PRELOAD
 CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
@@ -49,12 +52,13 @@ HAVE_WORKING_LIBUUID=@have_working_libuuid@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
 
+declare -l XALT_TRANSMISSION_STYLE
+
 if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
    XALT_TRANSMISSION_STYLE=@transmission@
 fi
 
-# convert it to lower case!
-XALT_TRANSMISSION_STYLE=${XALT_TRANSMISSION_STYLE,,}
+# XALT_TRANSMISSION_STYLE is already lower case!
 if [ $XALT_TRANSMISSION_STYLE = file_separate_dirs ]; then
    SEP_DIR=link/
 fi
