@@ -35,7 +35,6 @@ test_descript = {
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
-     export XALT_DISABLE_BACKGROUNDING=yes
 
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 

@@ -33,7 +33,6 @@ test_descript = {
 
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=syslog
-     export XALT_DISABLE_BACKGROUNDING=yes
      
      NUM=508
      (( RUNS = 2*NUM ))

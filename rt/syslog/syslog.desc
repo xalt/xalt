@@ -38,7 +38,6 @@ test_descript = {
      export COMPILER_PATH=$XALT_BIN
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=syslog
-     export XALT_DISABLE_BACKGROUNDING=yes
      
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c

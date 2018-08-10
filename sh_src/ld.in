@@ -272,13 +272,7 @@ function_tracking()
   fi
 }
 
-if [ "$XALT_DISABLE_BACKGROUNDING" = yes ]; then
-    function_tracking
-else
-    (
-       function_tracking
-    )&
-fi
+function_tracking
 
 tracing_msg $MY_CMD "${argA[@]}"
 
