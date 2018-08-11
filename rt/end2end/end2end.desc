@@ -35,6 +35,7 @@ test_descript = {
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_TRANSMISSION_STYLE=file_separate_dirs
 
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
@@ -153,7 +154,7 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 14 --runs 17 
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 14 --runs 17 --pkgs 3
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

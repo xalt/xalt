@@ -110,7 +110,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
       except:  
         f.close()
         v = XALT_Stack.pop()
-        carp("fn",v)
+        #carp("fn",v)
         continue
 
       f.close()
@@ -162,11 +162,11 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA):
       except:  
         f.close()
         v = XALT_Stack.pop()
-        carp("fn",v)
+        #carp("fn",v)
         continue
 
       f.close()
-      xalt.pkg_to_db(syshost, linkT)
+      xalt.pkg_to_db(syshost, pkgT)
       num  += 1
       try:
         if (deleteFlg):
@@ -213,7 +213,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
       except:
         f.close()
         v = XALT_Stack.pop()
-        carp("fn",v)
+        #carp("fn",v)
         continue
       f.close()
 

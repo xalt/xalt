@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
   //          1         2   |      3
   //0123456789 123456789 123456789 123456789 
   //3de2c9d8-e857-4482-9aa4-4979620380fc	  
-  if ( (strcasecmp(transmission, "file") == 0) || strcasecmp(transmission, "file_separate_dirs") == 0))
+  if ( (strcasecmp(transmission, "file") == 0) || (strcasecmp(transmission, "file_separate_dirs") == 0))
     {
       char* date_str = getenv("XALT_DATE_TIME");
       char* c_home   = getenv("HOME");

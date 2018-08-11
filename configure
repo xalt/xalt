@@ -4656,7 +4656,7 @@ done
 if test found = no; then
    echo
    echo "======================================================="
-   echo "XALT 2 does not support transmission style: $TRANSMISSION
+   echo "XALT 2 does not support transmission style: $TRANSMISSION"
    echo "See the manual for supported methods"
    echo "======================================================="
    echo
