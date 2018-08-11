@@ -264,10 +264,20 @@ AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
 
-if test "$TRANSMISSION" == "direct2db"; then
+transmission=`echo $TRANSMISSION | tr A-Z a-z`
+
+found=no
+for i in file file_separate_dirs syslog none; do
+   if test $transmission = $i ; then
+      found=yes
+      break
+   fi
+done
+
+if test found = no; then
    echo
    echo "======================================================="
-   echo "XALT 2 does not support direct2db"
+   echo "XALT 2 does not support transmission style: $TRANSMISSION
    echo "See the manual for supported methods"
    echo "======================================================="
    echo

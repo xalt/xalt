@@ -120,9 +120,9 @@ int main(int argc, char* argv[], char* env[])
 
   DEBUG0(stderr,"  Built json string\n");
 
-  std::string jsonStr = json.result();
+  char*       resultFn = NULL;
+  std::string jsonStr  = json.result();
   std::string fn;
-  char* resultFn = NULL;
 
 
   std::string key   = (end_record) ? "run_fini_" : "run_strt_";
@@ -150,8 +150,8 @@ int main(int argc, char* argv[], char* env[])
 
           std::ostringstream sstream;
           sstream << xaltDir << "run." << options.syshost() << ".";
-          sstream << dateStr << "_" << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
-                  << suffix << "." << options.uuid() << ".json";
+          sstream << dateStr << "_"    << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
+                  << suffix  << "."    << options.uuid()    << ".json";
 
           fn = sstream.str();
           resultFn = strdup(fn.c_str());
