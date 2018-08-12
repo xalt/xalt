@@ -33,7 +33,7 @@
 #
 
 from __future__  import print_function
-import os, sys, re, MySQLdb, json, time, argparse
+import os, sys, re, MySQLdb, json, time, argparse, time
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -48,6 +48,8 @@ import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 logger       = config_logger()
+
+my_epoch     = time.time()
 
 import inspect
 
@@ -80,6 +82,11 @@ class CmdLineOptions(object):
     return args
 
 
+def keep_or_delete(fn, deleteFlg):
+  delta = my_epoch - os.stat(fn).st_mtime
+  if (delta > 86400 and deleteFlg):
+    os.remove(fn)
+
 def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
@@ -110,7 +117,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA):
       except:  
         f.close()
         v = XALT_Stack.pop()
-        #carp("fn",v)
+        keep_or_delete(fn, deleteFlg)
         continue
 
       f.close()
@@ -162,7 +169,7 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA):
       except:  
         f.close()
         v = XALT_Stack.pop()
-        #carp("fn",v)
+        keep_or_delete(fn, deleteFlg)
         continue
 
       f.close()
@@ -213,7 +220,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
       except:
         f.close()
         v = XALT_Stack.pop()
-        #carp("fn",v)
+        keep_or_delete(fn, deleteFlg)
         continue
       f.close()
 
