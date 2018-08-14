@@ -785,7 +785,7 @@ void myfini()
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
                    start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
-	  fprintf(my_stderr,"  len: %ld, b64_cmd: %s\n", strlen(b64_cmdline), b64_cmdline);
+	  fprintf(my_stderr,"  len: %ud, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
