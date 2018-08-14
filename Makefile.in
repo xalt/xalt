@@ -130,14 +130,14 @@ TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 INIT_SRC             	:= src/xalt_initialize.c
 INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 
-.PHONY:
+.PHONY: LINKS
 
 all:
 	@echo done
 
 
 
-install: $(DIRLIST) Inst_sbin Inst_bin Inst_libexec Use_getent_yes             \
+install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
          Use_argparse_$(USE_ARGPARSE) build_compiled
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
@@ -162,6 +162,9 @@ remove_genfiles:
 
 $(DIRLIST) :
 	mkdir -p $@
+
+LINKS: $(DIRLIST)
+	cd $(DESTDIR)$(LIB); ln -s ../lib64 x86_64-linux-gnu; ln -s . i386-linux-gnu
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
