@@ -311,13 +311,13 @@ $(DESTDIR)$(LIB64)/my_hostname_parser.o: $(MY_HOSTNAME_PARSER_SRC)
 
 
 $(DESTDIR)$(LIB)/lex.__XALT_path_32.o: __build__/lex.__XALT_pathR.c xalt_obfuscate.h
-	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o: __build__/lex.__XALT_pathL.c xalt_obfuscate.h
-	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB)/lex.__XALT_host_32.o: __build__/lex.__XALT_hostR.c xalt_obfuscate.h
-	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
+	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: __build__/lex.__XALT_hostL.c xalt_obfuscate.h
-	$(COMPILE.c) -m32 $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB)/base64.o: base64.c base64.h 
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
