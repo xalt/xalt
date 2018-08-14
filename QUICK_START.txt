@@ -215,10 +215,9 @@ package.  The first one is a lua modulefile that can be used with Lmod.
   setenv("XALT_SCALAR_AND_SPSR_SAMPLING",  "yes")
   local base  = "/opt/apps/xalt/xalt"
   local bin   = pathJoin(base,"bin")
-  local lib64 = pathJoin(base,"lib64")
 
   prepend_path{"PATH",          bin, priority="100"}
-  prepend_path("LD_PRELOAD",    pathJoin(lib64,"ibxalt_init.so")
+  prepend_path("LD_PRELOAD",    pathJoin(base,"$LIB/libxalt_init.so")
   prepend_path("COMPILER_PATH", bin)
 
 
@@ -228,7 +227,7 @@ The following is a TCL modulefile:
   setenv XALT_SCALAR_AND_SPSR_SAMPLING  yes
 
   prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
-  prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/lib64/libxalt_init.so
+  prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
 
 XALT does not require that your site use Lmod has your module system.
