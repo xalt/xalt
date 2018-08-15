@@ -3,3 +3,5 @@ XALT 2.3+
    (2.3.2)  Fix bug in base64_decode string was off by one.
    (2.3.3)  Support XALT_TRANSMISSION_STYLE=file_separate_dirs
    (2.3.4)  Testing for 32 bit uuid library when BIT_32=yes   
+            Fix problem with tracking GPU and not running
+            nv-hostengine as root.

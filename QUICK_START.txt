@@ -154,7 +154,23 @@ want to track MPI programs you can do:
     --with-trackScalarPrgms=no
     --with-trackSPSR=no
 
-2.7) XALT requires a configuration file written in python.  There are
+2.7) Optionally, XALT can track GPU usage. You will need the DCGM
+library from NVIDIA for this to work.  DCGM is free to download from
+https://developer.nvidia.com/data-center-gpu-manager-dcgm.
+
+You can tell XALT to track GPU usage by configuring it with:
+
+   --with-trackGPU=yes
+
+**NOTE**:
+
+   You must start the program nv-hostengine as root on each node where
+   you are running XALT where installed and you might track GPU
+   usage. So if you have a cluster where some nodes have GPU's and
+   others do not you still must run "nv-hostengine" as root all all
+   nodes for that cluster.
+
+2.8) XALT requires a configuration file written in python.  There are
 examples in the Config directory.  In particular, the file
 Config/TACC_config.py is the configuration we use at TACC.  This file
 defines three types of filtering.  One is hostname filtering.  It is
@@ -193,7 +209,7 @@ by setting the env var. XALT_SPSR_SAMPLING_RATE to a number between
 and 1.0 would mean that 100% of SPSR programs are tracked.
 
 
-2.8) Typical configure and build instructions for stampede2.
+2.9) Typical configure and build instructions for stampede2.
 
     $ cd xalt
     $ ./configure --prefix=/opt/apps              \
@@ -208,7 +224,7 @@ stampede2, the transmission style is file for testing and with no
 MySQL support.  Finally we are not tracking scalar programs during the
 testing phase
 
-2.9) Below is the XALT modulefile you need to specify to use the
+2.10) Below is the XALT modulefile you need to specify to use the
 package.  The first one is a lua modulefile that can be used with Lmod.
 
   setenv("XALT_EXECUTABLE_TRACKING",       "yes")
@@ -243,7 +259,7 @@ So work on your part may be required to make XALT's ld always be first
 in the path.
 
 
-2.10) You should now test to make sure that you can generate the json
+2.11) You should now test to make sure that you can generate the json
 records.  If you any issues you should first read XALT_DEBUGGING.txt
 then contact the XALT mailing list.
 
