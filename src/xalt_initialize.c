@@ -471,51 +471,50 @@ void myinit(int argc, char **argv)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcmp(v,"yes") == 0);
 
-  if (xalt_gpu_tracking)
+  do
     {
-      DEBUG0(stderr, "  GPU tracing\n");
-      dcgmReturn_t result;
-
-      result = dcgmInit();
-      if (result != DCGM_ST_OK)
+      if (xalt_gpu_tracking)
         {
-          DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n}\n\n", errorString(result));
-          unsetenv("XALT_RUN_UUID");
-          return;
-        }
+          DEBUG0(stderr, "  GPU tracing\n");
+          dcgmReturn_t result;
 
-      DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
-      if (result != DCGM_ST_OK)
-        {
-          DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n}\n\n", errorString(result));
-          unsetenv("XALT_RUN_UUID");
-          return;
-        }
+          result = dcgmInit();
+          if (result != DCGM_ST_OK)
+            {
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n}\n\n", errorString(result));
+              break;
+            }
 
-      result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
-      if (result != DCGM_ST_OK)
-        {
-          DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n}\n\n", errorString(result));
-          unsetenv("XALT_RUN_UUID");
-          return;
-        }
+          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
+          if (result != DCGM_ST_OK)
+            {
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n}\n\n", errorString(result));
+              break;
+            }
 
-      result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
-      if (result != DCGM_ST_OK)
-        {
-          DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n}\n\n", errorString(result));
-          unsetenv("XALT_RUN_UUID");
-          return;
-        }
+          result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
+          if (result != DCGM_ST_OK)
+            {
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n}\n\n", errorString(result));
+              break;
+            }
 
-      result = dcgmUpdateAllFields(dcgm_handle, 1);
-      if (result != DCGM_ST_OK)
-        {
-          DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n}\n\n", errorString(result));
-          unsetenv("XALT_RUN_UUID");
-          return;
+          result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
+          if (result != DCGM_ST_OK)
+            {
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n}\n\n", errorString(result));
+              break;
+            }
+
+          result = dcgmUpdateAllFields(dcgm_handle, 1);
+          if (result != DCGM_ST_OK)
+            {
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n}\n\n", errorString(result));
+              break;
+            }
         }
     }
+  while(0);
 #endif
 
   start_time = epoch();
