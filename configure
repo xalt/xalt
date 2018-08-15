@@ -5086,6 +5086,10 @@ done
 ac_fn_c_check_header_mongrel "$LINENO" "uuid/uuid.h" "ac_cv_header_uuid_uuid_h" "$ac_includes_default"
 if test "x$ac_cv_header_uuid_uuid_h" = xyes; then :
 
+$as_echo "#define HAVE_UUID_UUID_H 1" >>confdefs.h
+
+else
+  as_fn_error $? "Unable to build XALT without uuid/uuid.h" "$LINENO" 5
 fi
 
 

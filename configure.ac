@@ -287,7 +287,10 @@ fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
-AC_CHECK_HEADER(uuid/uuid.h)
+AC_CHECK_HEADER(uuid/uuid.h,
+                [AC_DEFINE([HAVE_UUID_UUID_H], 1,
+                   [Define to 1 if you have <uuid/uuid.h>.])],
+                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
