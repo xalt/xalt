@@ -482,6 +482,7 @@ void myinit(int argc, char **argv)
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n}\n\n", errorString(result));
+              xalt_gpu_tracking = 0;
               break;
             }
 
@@ -489,6 +490,7 @@ void myinit(int argc, char **argv)
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n}\n\n", errorString(result));
+              xalt_gpu_tracking = 0;
               break;
             }
 
@@ -496,6 +498,7 @@ void myinit(int argc, char **argv)
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n}\n\n", errorString(result));
+              xalt_gpu_tracking = 0;
               break;
             }
 
@@ -503,6 +506,7 @@ void myinit(int argc, char **argv)
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n}\n\n", errorString(result));
+              xalt_gpu_tracking = 0;
               break;
             }
 
@@ -510,6 +514,7 @@ void myinit(int argc, char **argv)
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n}\n\n", errorString(result));
+              xalt_gpu_tracking = 0;
               break;
             }
         }
@@ -699,7 +704,7 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
-  /* This code will only every be active in 64 bit mode and not 32 bit mode*/
+  /* This code will only ever be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
     {
       /* Collect DCGM job stats */
