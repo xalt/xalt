@@ -549,9 +549,6 @@ void myinit(int argc, char **argv)
       memcpy(&pathArg[ilen], "\"", 2);
     }
 
-  DEBUG1(stderr, "    pathArg: \"%s\"\n", pathArg);
-
-
   char * env_ldlibpath = getenv("LD_LIBRARY_PATH");
   if (!env_ldlibpath)
     {
@@ -659,7 +656,6 @@ void myinit(int argc, char **argv)
       if (old.sa_handler == NULL)
 	sigaction(signum, &action, NULL);
     }
-  DEBUG1(stderr, "    pathArg: \"%s\"\n", pathArg);
 }
 void wrapper_for_myfini(int signum)
 {
@@ -702,8 +698,6 @@ void myfini()
   end_time = epoch();
   unsetenv("LD_PRELOAD");
 
-  DEBUG1(my_stderr, "    pathArg(1): \"%s\"\n", pathArg);
-
 #ifdef USE_DCGM
   /* This code will only every be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
@@ -738,7 +732,6 @@ void myfini()
     }
 #endif
 
-  DEBUG1(my_stderr, "    pathArg(2): \"%s\"\n", pathArg);
   if (run_mask & BIT_SCALAR)
     {
       const char * v;
