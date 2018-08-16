@@ -22,6 +22,7 @@
 #define reject                      PASTE2(__XALT_reject,                     MY_NAME)
 #define keep_path                   PASTE2(__XALT_keep_path,                  MY_NAME)
 #define path_parser_cleanup         PASTE2(__XALT_path_parser_cleanup,        MY_NAME)
+#define hostname                    PASTE2(__XALT_hostname,                   MY_NAME)
 #define hostname_parser             PASTE2(__XALT_hostname_parser,            MY_NAME)
 #define hostname_parser_cleanup     PASTE2(__XALT_hostname_parser_cleanup,    MY_NAME)
 #define __init                      PASTE2(__XALT__init,                      MY_NAME)

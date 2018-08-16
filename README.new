@@ -8,4 +8,5 @@ XALT 2.3+
    (2.3.5)  Test for 32 bit uuid library before testing dcgm.
    (2.3.6)  Remove old x86_64-linux-gnu and i386-linux-gnu links
             before creating them.
-	    
+   (2.3.7)  Fixed bugs in py_build_src/build_syshost_routine.py
+            w.r.t. strip_nodename_numbers()	    
