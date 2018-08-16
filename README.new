@@ -5,3 +5,4 @@ XALT 2.3+
    (2.3.4)  Testing for 32 bit uuid library when BIT_32=yes   
             Fix problem with tracking GPU and not running
             nv-hostengine as root.
+   (2.3.5)  Test for 32 bit uuid library before testing dcgm.
