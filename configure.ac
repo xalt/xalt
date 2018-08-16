@@ -325,6 +325,26 @@ if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    exit 1
 fi
 
+if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
+   CFLAGS_OLD=$CFLAGS
+   CFLAGS="-m32 $CFLAGS"
+   AC_SEARCH_LIBS([uuid_clear],[uuid], [HAVE_WORKING_LIBUUID_32=yes], [HAVE_WORKING_LIBUUID_32=no])
+   CFLAGS=$CFLAGS_OLD
+   if test $HAVE_WORKING_LIBUUID_32 = no; then
+      echo
+      echo "======================================================="
+      echo "Unable to install XALT without a 32 version of the"
+      echo "uuid library"
+      echo ""
+      echo "Your system has the 64 bit version of libuuid but not"
+      echo "the 32 bit version."
+      echo "======================================================="
+      echo
+      rm -f makefile
+      exit 1
+   fi
+fi  
+  
 AC_SUBST(HAVE_DCGM)
 HAVE_DCGM=no
 if test $XALT_GPU_TRACKING = yes; then
@@ -456,26 +476,6 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
-   CFLAGS_OLD=$CFLAGS
-   CFLAGS="-m32 $CFLAGS"
-   AC_SEARCH_LIBS([uuid_clear],[uuid], [HAVE_WORKING_LIBUUID_32=yes], [HAVE_WORKING_LIBUUID_32=no])
-   CFLAGS=$CFLAGS_OLD
-   if test $HAVE_WORKING_LIBUUID_32 = no; then
-      echo
-      echo "======================================================="
-      echo "Unable to install XALT without a 32 version of the"
-      echo "uuid library"
-      echo ""
-      echo "Your system has the 64 bit version of libuuid but not"
-      echo "the 32 bit version."
-      echo "======================================================="
-      echo
-      rm -f makefile
-      exit 1
-   fi
-fi  
-  
 AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
 
 $PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
