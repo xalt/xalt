@@ -164,7 +164,10 @@ $(DIRLIST) :
 	mkdir -p $@
 
 LINKS: $(DIRLIST)
-	cd $(DESTDIR)$(LIB); ln -s ../lib64 x86_64-linux-gnu; ln -s . i386-linux-gnu
+	cd $(DESTDIR)$(LIB);                        \
+        rm -f x86_64-linux-gnu i386-linux-gnu;      \
+        ln -s ../lib64 x86_64-linux-gnu;            \
+        ln -s . i386-linux-gnu
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
