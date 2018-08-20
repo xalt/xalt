@@ -668,14 +668,9 @@ void myinit(int argc, char **argv)
 }
 void wrapper_for_myfini(int signum)
 {
-  const char * v;
-  v = getenv("XALT_SIGNAL_HANDLER");
-  if (!v || strcmp(v,"no") != 0)
-    {
-      struct sigaction action;
-      memset(&action, 0, sizeof(struct sigaction));
-      sigaction(signum, &action, NULL);
-    }
+  struct sigaction action;
+  memset(&action, 0, sizeof(struct sigaction));
+  sigaction(signum, &action, NULL);
   myfini();
 }
 
