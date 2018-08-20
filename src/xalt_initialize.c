@@ -662,7 +662,7 @@ void myinit(int argc, char **argv)
           sigaction(signum, NULL, &old);
 
           if (old.sa_handler == NULL)
-	    sigaction(signum, &action, NULL);
+            sigaction(signum, &action, NULL);
         }
     }
 }
