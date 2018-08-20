@@ -646,27 +646,36 @@ void myinit(int argc, char **argv)
    * important signals. This way a program terminated by
    * ^C, SIGFPE, SIGSEGV, etc will produce an end record.
    *********************************************************/
-  int signalA[] = {1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 24, 30};
-  int signalSz  = N_ELEMENTS(signalA);
-  struct sigaction action;
-  struct sigaction old;
-  memset(&action, 0, sizeof(struct sigaction));
-  action.sa_handler = wrapper_for_myfini;
-  for (i = 0; i < signalSz; ++i)
+  v = getenv("XALT_SIGNAL_HANDLER");
+  if (!v || strcmp(v,"no") != 0)
     {
-      int signum = signalA[i];
+      int signalA[] = {1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 24, 30};
+      int signalSz  = N_ELEMENTS(signalA);
+      struct sigaction action;
+      struct sigaction old;
+      memset(&action, 0, sizeof(struct sigaction));
+      action.sa_handler = wrapper_for_myfini;
+      for (i = 0; i < signalSz; ++i)
+        {
+          int signum = signalA[i];
 
-      sigaction(signum, NULL, &old);
+          sigaction(signum, NULL, &old);
 
-      if (old.sa_handler == NULL)
-	sigaction(signum, &action, NULL);
+          if (old.sa_handler == NULL)
+	    sigaction(signum, &action, NULL);
+        }
     }
 }
 void wrapper_for_myfini(int signum)
 {
-  struct sigaction action;
-  memset(&action, 0, sizeof(struct sigaction));
-  sigaction(signum, &action, NULL);
+  const char * v;
+  v = getenv("XALT_SIGNAL_HANDLER");
+  if (!v || strcmp(v,"no") != 0)
+    {
+      struct sigaction action;
+      memset(&action, 0, sizeof(struct sigaction));
+      sigaction(signum, &action, NULL);
+    }
   myfini();
 }
 
