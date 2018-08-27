@@ -63,6 +63,7 @@ PATH_TO_HEAD         	:= @PATH_TO_HEAD@
 PATH_TO_LDD          	:= @PATH_TO_LDD@
 PATH_TO_LOGGER       	:= @PATH_TO_LOGGER@
 PATH_TO_MKDIR        	:= @PATH_TO_MKDIR@
+PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_OBJDUMP      	:= @PATH_TO_OBJDUMP@
 PATH_TO_OTOOL        	:= @PATH_TO_OTOOL@
 PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
@@ -222,6 +223,7 @@ __installMe:
 	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      	  \
 	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              	  \
 	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
+	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
 	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            	  \
 	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        	  \

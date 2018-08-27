@@ -255,6 +255,7 @@ AC_PATH_PROG(PATH_TO_HEAD, head, [])
 AC_PATH_PROG(PATH_TO_LDD, ldd, [])
 AC_PATH_PROG(PATH_TO_LOGGER, logger, [])
 AC_PATH_PROG(PATH_TO_MKDIR,mkdir, [])
+AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
 AC_PATH_PROG(PATH_TO_OBJDUMP, objdump, "")
 AC_PATH_PROG(PATH_TO_OTOOL, otool, "")
 AC_PATH_PROG(PATH_TO_PYTHON, python, "")
@@ -263,6 +264,13 @@ AC_PATH_PROG(PATH_TO_RM, rm, [])
 AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
+if test "x${PATH_TO_MKTEMP}" = "x" ; then
+  AC_MSG_ERROR([Unable to build XALT without mktemp])
+fi
+
+if test "x${PATH_TO_UUIDGEN}" = "x" ; then
+  AC_MSG_ERROR([Unable to build XALT without uuidgen])
+fi
 
 transmission=`echo $TRANSMISSION | tr A-Z a-z`
 
