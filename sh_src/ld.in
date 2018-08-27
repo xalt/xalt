@@ -210,7 +210,7 @@ PyPATH="/usr/bin:/bin"
 
 
 UUID=`$UUIDGEN`
-WRKDIR=$(mktemp -d "${USER}_${UUID}_XXXXXX")
+WRKDIR=$(mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
