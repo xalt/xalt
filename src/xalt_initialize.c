@@ -505,9 +505,9 @@ void myinit(int argc, char **argv)
           result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
+              DEBUG1(stderr,   "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
 	      if (result == DCGM_ST_REQUIRES_ROOT)
-		DEBUG0(stderr, “   -> May need to enable accounting mode: sudo nvidia-smi -am 1\n”);
+		DEBUG0(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
               xalt_gpu_tracking = 0;
               break;
             }
