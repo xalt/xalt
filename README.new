@@ -12,3 +12,4 @@ XALT 2.3+
             w.r.t. strip_nodename_numbers()	    
    (2.3.8)  Added note about needing to turn on accounting on GPU
             issue #38: use mktemp instead of mkdir
+   (2.3.9)  issue #39: convert smart quotes in to regular quotes.
