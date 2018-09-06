@@ -13,3 +13,4 @@ XALT 2.3+
    (2.3.8)  Added note about needing to turn on accounting on GPU
             issue #38: use mktemp instead of mkdir
    (2.3.9)  issue #39: convert smart quotes in to regular quotes.
+   (2.3.10) Look for OMPI vars before PMI vars.
