@@ -14,3 +14,6 @@ XALT 2.3+
             issue #38: use mktemp instead of mkdir
    (2.3.9)  issue #39: convert smart quotes in to regular quotes.
    (2.3.10) Look for OMPI vars before PMI vars.
+   (2.3.11) Improved documentation for the config.py file
+            Point sys-admins to the config.py when hostname and
+	    executable path reject.
