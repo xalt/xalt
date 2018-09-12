@@ -209,10 +209,83 @@ by setting the env var. XALT_SPSR_SAMPLING_RATE to a number between
 and 1.0 would mean that 100% of SPSR programs are tracked.
 
 
-2.9) Controlling 
+2.9) Controlling XALT's Filtering.
+
+XALT can capture every executable run by a user.  This is usually to
+much data so XALT allows sites to control via a python configuration
+file (called config.py from now on).  Sites should probably copy
+Config/TACC_config.py to another name (Say SITE_config.py).  This
+config.py file is only used when building and installing XALT.  It is
+used to build (f)lex file which are converted to C code which is
+compiled and linked into XALT for speed.
+
+In SITE_config.py you should change the hostname pattern to match your
+naming scheme for your compute nodes.  Typically XALT only tracks
+executables on the compute nodes and not the login nodes but if you
+want to capture on all node you can do:
+
+   hostname_patterns = [
+     ['KEEP', '.*']  # capture executables on all nodes!
+     ]
+
+To capture just compute nodes then you'll have to match your scheme.
+Suppose your compute nodes are named xyzNNN.site.org where N is a
+digit then you could use:
+
+   hostname_patterns = [
+     ['KEEP', '^xyz[0-9][0-9][0-9]\..*']
+     ]
+
+Sites will also want to control which executables are not tracked.
+For executables there are three kinds: KEEP, SKIP and SPSR.  For
+example lines like:
+
+     path_patterns = [
+          ...
+          ['KEEP',  r'^\/bin\/cp'],
+          ...
+          ['SKIP',  r'^\/bin\/.*'],
+          ...
+    ]
+
+would say that the executable /bin/cp would be recorded, but 
+other executables not already in /bin would be ignored.
+
+Non-mpi executables only produce an end record. But for executables
+that where there are intermediate records, one has to produce a start
+record.  Currently R, MATLAB and Python can generate records that tell
+which package each program uses.  Those programs can be marked as SPSR
+(Scalar Program Start Record).
+
+The strategy that TACC uses is to keep program like cp, perl, gawk and
+ignore all other system executables that are in /bin/, /usr/bin
+etc. Also we ignore all the compiler programs that live in the
+compiler directories.  Similarly for the mpi helper program such as
+mpiexec that live in the mpi directories.
+
+We do not wish to track the generated programs from autoconf
+(e.g. conftest) and Cmake (.*/CMakeTmp\/cmTryCompileExec[0-9][0-9]*)
+and it is very important that you do not track xalt executables like xalt_syshost.
+
+You also get to control the user's environment that gets stored.  This
+information can get quite large so it is important that you limit the
+size of the environment that you record.  It is recommended that you
+store no more that 10 enviroment variables per job on average.
+
+The config.py file also allows a site to control sampling of scalar
+jobs (non SPSR scalar programs like R, MATLAB and Python). The details
+on how to control the sampling.  TACC uses the follow scheme:
+
+    0   - 300 seconds (1 in 10000 chance of being recorded)
+    300 - 600 seconds (1 in 100   chance of being recorded)
+    600 - inf seconds (1 in 1     chance of being recorded)
+
+Finally since SPSR programs have a start record there is no way to
+know how long an execution will last, XALT allow sites to control the
+SPSR sampling rate.  TACC uses a 1% chance for SPSR programs.
 
 
-2.9) Typical configure and build instructions for stampede2.
+2.10) Typical configure and build instructions for stampede2.
 
     $ cd xalt
     $ ./configure --prefix=/opt/apps              \
@@ -227,7 +300,7 @@ stampede2, the transmission style is file for testing and with no
 MySQL support.  Finally we are not tracking scalar programs during the
 testing phase
 
-2.10) Below is the XALT modulefile you need to specify to use the
+2.11) Below is the XALT modulefile you need to specify to use the
 package.  The first one is a lua modulefile that can be used with Lmod.
 
   setenv("XALT_EXECUTABLE_TRACKING",       "yes")
@@ -262,7 +335,7 @@ So work on your part may be required to make XALT's ld always be first
 in the path.
 
 
-2.11) You should now test to make sure that you can generate the json
+2.12) You should now test to make sure that you can generate the json
 records.  If you any issues you should first read XALT_DEBUGGING.txt
 then contact the XALT mailing list.
 
