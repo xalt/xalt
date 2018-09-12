@@ -203,8 +203,8 @@ void myinit(int argc, char **argv)
 
   /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
-  const char * rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "SLURM_PROCID",         NULL };
-  const char * sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "SLURM_STEP_NUM_TASKS", NULL };
+  const char * rankA[] = {"OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "PMI_RANK", "SLURM_PROCID",         NULL };
+  const char * sizeA[] = {"OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "PMI_SIZE", "SLURM_STEP_NUM_TASKS", NULL };
 
   struct utsname u;
 
@@ -481,7 +481,7 @@ void myinit(int argc, char **argv)
           result = dcgmInit();
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n}\n\n", errorString(result));
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               break;
             }
@@ -489,7 +489,7 @@ void myinit(int argc, char **argv)
           DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n}\n\n", errorString(result));
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               break;
             }
@@ -497,7 +497,7 @@ void myinit(int argc, char **argv)
           result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n}\n\n", errorString(result));
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               break;
             }
@@ -505,7 +505,9 @@ void myinit(int argc, char **argv)
           result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n}\n\n", errorString(result));
+              DEBUG1(stderr,   "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
+	      if (result == DCGM_ST_REQUIRES_ROOT)
+		DEBUG0(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
               xalt_gpu_tracking = 0;
               break;
             }
@@ -513,7 +515,7 @@ void myinit(int argc, char **argv)
           result = dcgmUpdateAllFields(dcgm_handle, 1);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n}\n\n", errorString(result));
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               break;
             }
@@ -646,20 +648,24 @@ void myinit(int argc, char **argv)
    * important signals. This way a program terminated by
    * ^C, SIGFPE, SIGSEGV, etc will produce an end record.
    *********************************************************/
-  int signalA[] = {1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 24, 30};
-  int signalSz  = N_ELEMENTS(signalA);
-  struct sigaction action;
-  struct sigaction old;
-  memset(&action, 0, sizeof(struct sigaction));
-  action.sa_handler = wrapper_for_myfini;
-  for (i = 0; i < signalSz; ++i)
+  v = getenv("XALT_SIGNAL_HANDLER");
+  if (!v || strcmp(v,"no") != 0)
     {
-      int signum = signalA[i];
+      int signalA[] = {1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 24, 30};
+      int signalSz  = N_ELEMENTS(signalA);
+      struct sigaction action;
+      struct sigaction old;
+      memset(&action, 0, sizeof(struct sigaction));
+      action.sa_handler = wrapper_for_myfini;
+      for (i = 0; i < signalSz; ++i)
+        {
+          int signum = signalA[i];
 
-      sigaction(signum, NULL, &old);
+          sigaction(signum, NULL, &old);
 
-      if (old.sa_handler == NULL)
-	sigaction(signum, &action, NULL);
+          if (old.sa_handler == NULL)
+            sigaction(signum, &action, NULL);
+        }
     }
 }
 void wrapper_for_myfini(int signum)

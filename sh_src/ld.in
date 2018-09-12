@@ -204,13 +204,13 @@ UUIDGEN=@uuidgen@
 RM=@path_to_rm@
 AS=@path_to_as@
 CAT=@path_to_cat@
-MKDIR=@path_to_mkdir@
+MKTEMP=@path_to_mktemp@
 GREP=@grep@
 PyPATH="/usr/bin:/bin"
 
 
 UUID=`$UUIDGEN`
-WRKDIR=/tmp/${USER}_${DATESTR}_${UUID}
+WRKDIR=$(mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
@@ -231,11 +231,6 @@ else
   XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o"
 fi
   
-
-if [ ! -d $WRKDIR ]; then
-  $MKDIR -p $WRKDIR
-fi
-
 # Get the compiler information
 COMP_T=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 

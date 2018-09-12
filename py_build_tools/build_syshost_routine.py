@@ -186,6 +186,7 @@ def nth_name(nth,output):
 def strip_nodename_numbers(output):
   sA = []
 
+  add_hostname_routine(sA)
   sA.append("#include <string.h>")
   sA.append("#include <sys/utsname.h>")
   sA.append("#include \"xalt_obfuscate.h\"")
@@ -302,7 +303,7 @@ def main():
   idx = arg.find(":")
   if (idx == -1):
     kind = arg.lower()
-    opt  = kind != 'strip_nodename_numbers'
+    opt  = kind == 'strip_nodename_numbers'
   else:
     kind = arg[:idx].lower()
     opt  = arg[idx+1:]
@@ -332,7 +333,7 @@ def main():
     print("=================================================================")
     sys.exit(1)
 
-  if (kind != 'strip_nodename'):
+  if (kind != 'strip_nodename_numbers'):
     # Build the user requested xalt_syshost.c routine
     func(opt, args.output)
   else:

@@ -15,12 +15,18 @@ test_descript = {
 
      initialize
 
+     gcc -m32 -I$(projectDir)/src -o host_32.o -c $(testDir)/host.c
+     if [ -f host_32.o ]; then
+         gcc -m32 -fPIC -o keep_32.o -c $(testDir)/keep.c 
+         ar cr libhost_32.a host_32.o keep_32.o
+         LIBHOST_32=":$(outputDir)/libhost_32.a"
+     fi
      gcc -fPIC -I$(projectDir)/src -c $(testDir)/host.c
      gcc -fPIC -c $(testDir)/keep.c
    
      ar cr libhost.a host.o keep.o
 
-     installXALT --with-hostnameParser=library:$(outputDir)/libhost.a --with-xaltFilePrefix=$(outputDir)/LOG --with-syshostConfig=nth_name:2 
+     installXALT --with-hostnameParser=library:$(outputDir)/libhost.a$LIBHOST_32 --with-xaltFilePrefix=$(outputDir)/LOG --with-syshostConfig=nth_name:2 
    
      displayThis "buildRmapT"
      buildRmapT

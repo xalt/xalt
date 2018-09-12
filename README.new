@@ -5,3 +5,12 @@ XALT 2.3+
    (2.3.4)  Testing for 32 bit uuid library when BIT_32=yes   
             Fix problem with tracking GPU and not running
             nv-hostengine as root.
+   (2.3.5)  Test for 32 bit uuid library before testing dcgm.
+   (2.3.6)  Remove old x86_64-linux-gnu and i386-linux-gnu links
+            before creating them.
+   (2.3.7)  Fixed bugs in py_build_src/build_syshost_routine.py
+            w.r.t. strip_nodename_numbers()	    
+   (2.3.8)  Added note about needing to turn on accounting on GPU
+            issue #38: use mktemp instead of mkdir
+   (2.3.9)  issue #39: convert smart quotes in to regular quotes.
+   (2.3.10) Look for OMPI vars before PMI vars.
