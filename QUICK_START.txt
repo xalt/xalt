@@ -209,6 +209,9 @@ by setting the env var. XALT_SPSR_SAMPLING_RATE to a number between
 and 1.0 would mean that 100% of SPSR programs are tracked.
 
 
+2.9) Controlling 
+
+
 2.9) Typical configure and build instructions for stampede2.
 
     $ cd xalt
