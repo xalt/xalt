@@ -119,7 +119,6 @@ static const char * xalt_run_short_descriptA[] = {
   "MPI"                                           /* 4 */
 };
 
-
 const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
 static void            abspath(char * path, int sz);
