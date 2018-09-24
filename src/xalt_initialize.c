@@ -482,6 +482,7 @@ void myinit(int argc, char **argv)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
+              dcgm_handle       = NULL;
               break;
             }
 

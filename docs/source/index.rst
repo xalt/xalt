@@ -36,7 +36,8 @@ are divided into the following steps.
 
    010_Prereqs
    020_Site_Configuration
-   030_Install
+   030_Install_and_test
+              
 
               
    
