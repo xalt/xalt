@@ -221,8 +221,6 @@ void myinit(int argc, char **argv)
   if (trey_dbg)
     errfd = dup(STDERR_FILENO);
 
-
-
   v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
     {
