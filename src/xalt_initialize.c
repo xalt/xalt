@@ -541,6 +541,7 @@ void myinit(int argc, char **argv)
     }
   while(0);
   HERE;
+  fprintf(stderr,"xalt_gpu_tracking: %d, dcgm_handle: %s\nLeaving my_init()\n", xalt_gpu_tracking, (dcgm_handle == NULL) ? "is NULL" : "not NULL");
 #endif
 
   start_time = epoch();
@@ -729,7 +730,7 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
-  HERE2;
+  fprintf(stderr,"Starting my_fini()\nxalt_gpu_tracking: %d, dcgm_handle: %s\n", xalt_gpu_tracking, (dcgm_handle == NULL) ? "is NULL" : "not NULL");
   /* This code will only ever be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
     {
