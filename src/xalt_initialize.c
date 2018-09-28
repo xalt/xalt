@@ -139,6 +139,7 @@ static char *       usr_cmdline;
 static char *       b64_cmdline;
 static const char * my_syshost;
 
+static int          trey_dbg              = 1;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
@@ -216,6 +217,11 @@ void myinit(int argc, char **argv)
       if (xalt_tracing  || xalt_run_tracing)
 	errfd	       = dup(STDERR_FILENO);
     }
+
+  if (trey_dbg)
+    errfd = dup(STDERR_FILENO);
+
+
 
   v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
@@ -697,7 +703,6 @@ void myfini()
   char * cmdline;
   double run_time;
   int    xalt_err = xalt_tracing || xalt_run_tracing;
-  int    trey_dbg = 1;
 
   if (xalt_err || trey_dbg)
     {
