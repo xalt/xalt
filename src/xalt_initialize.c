@@ -697,9 +697,8 @@ void myfini()
   char * cmdline;
   double run_time;
   int    xalt_err = xalt_tracing || xalt_run_tracing;
-  int    trey_dbg = 1
 
-  if (xalt_err || trey_dbg)
+  if (xalt_err)
     {
       fflush(stderr);
       close(STDERR_FILENO);
