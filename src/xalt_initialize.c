@@ -83,8 +83,8 @@ static const char * xalt_reasonA[] = {
   "__XALT_INITIAL_STATE__ is different from STATE",
   "XALT is trying to be twice in the same STATE",
   "XALT only tracks rank 0, in mpi programs",
-  "XALT has found the host does not match hostname pattern",
-  "XALT has found the executable does not match path pattern",
+  "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
+  "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
   "XALT has problem with a JSON string",
   "XALT execute type does not match requested type",
   "XALT SPSR sampling -> not recorded",
@@ -118,7 +118,6 @@ static const char * xalt_run_short_descriptA[] = {
   "Not possible",                                 /* 3 */
   "MPI"                                           /* 4 */
 };
-
 
 const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
@@ -179,7 +178,8 @@ static dcgmHandle_t dcgm_handle           = NULL;
 }
 #endif
 
-#define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
+#define HERE  fprintf(stderr,    "%s:%d\n",__FILE__,__LINE__)
+#define HERE2 fprintf(my_stderr, "%s:%d\n",__FILE__,__LINE__)
 
 #define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
 #define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
@@ -203,8 +203,8 @@ void myinit(int argc, char **argv)
 
   /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
-  const char * rankA[] = {"PMI_RANK", "OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "SLURM_PROCID",         NULL };
-  const char * sizeA[] = {"PMI_SIZE", "OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "SLURM_STEP_NUM_TASKS", NULL };
+  const char * rankA[] = {"OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "PMI_RANK", "SLURM_PROCID",         NULL };
+  const char * sizeA[] = {"OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "PMI_SIZE", "SLURM_STEP_NUM_TASKS", NULL };
 
   struct utsname u;
 
@@ -471,6 +471,9 @@ void myinit(int argc, char **argv)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcmp(v,"yes") == 0);
 
+  
+
+  HERE;
   do
     {
       if (xalt_gpu_tracking)
@@ -478,30 +481,38 @@ void myinit(int argc, char **argv)
           DEBUG0(stderr, "  GPU tracing\n");
           dcgmReturn_t result;
 
+	  HERE;
           result = dcgmInit();
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
+              dcgm_handle       = NULL;
               break;
             }
 
-          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
+	  HERE;
+          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result); 
+
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
+              dcgm_handle       = NULL;
               break;
             }
 
+	  HERE;
           result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
+              dcgm_handle       = NULL;
               break;
             }
 
+	  HERE;
           result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
@@ -509,19 +520,23 @@ void myinit(int argc, char **argv)
 	      if (result == DCGM_ST_REQUIRES_ROOT)
 		DEBUG0(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
               xalt_gpu_tracking = 0;
+              dcgm_handle       = NULL;
               break;
             }
 
+	  HERE;
           result = dcgmUpdateAllFields(dcgm_handle, 1);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
+              dcgm_handle       = NULL;
               break;
             }
         }
     }
   while(0);
+  HERE;
 #endif
 
   start_time = epoch();
@@ -682,8 +697,9 @@ void myfini()
   char * cmdline;
   double run_time;
   int    xalt_err = xalt_tracing || xalt_run_tracing;
+  int    trey_dbg = 1
 
-  if (xalt_err)
+  if (xalt_err || trey_dbg)
     {
       fflush(stderr);
       close(STDERR_FILENO);
@@ -710,6 +726,7 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
+  HERE2;
   /* This code will only ever be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
     {
@@ -719,10 +736,14 @@ void myfini()
 
       DEBUG0(my_stderr, "  GPU tracing\n");
 
+      HERE2;
       dcgmUpdateAllFields(dcgm_handle, 1);
+      HERE2;
       dcgmJobStopStats(dcgm_handle, uuid_str);
 
+      HERE2;
       job_info.version = dcgmJobInfo_version2;
+      HERE2;
       result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
       if (result == DCGM_ST_OK)
 	{
@@ -737,10 +758,15 @@ void myfini()
 	  DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
 	}
 
+      HERE2;
       dcgmJobRemove(dcgm_handle, uuid_str);
+      HERE2;
       dcgmStopEmbedded(dcgm_handle);
+      HERE2;
       dcgmShutdown();
+      HERE2;
     }
+  HERE2;
 #endif
 
   if (run_mask & BIT_SCALAR)
