@@ -17,3 +17,5 @@ XALT 2.3+
    (2.3.11) Improved documentation for the config.py file
             Point sys-admins to the config.py when hostname and
 	    executable path reject.
+   (2.3.12) Removing some extra debugging code that leaked from
+            trey_dbg branch 
