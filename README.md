@@ -43,14 +43,14 @@ doc/XALTDesignandInstallationManual-0.5.pdf.
 
 ## Installation and Use of XALT
 
-For quick installation instructions, see [QUICK_INSTALL_GUIDE.TXT](QUICK_INSTALL_GUIDE.TXT).
+For quick installation instructions, see [QUICK_START.TXT](QUICK_START.TXT).
 
-[The XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf) discusses the
+[The XALT Design and Installation Manual-0.5](my_docs/XALTDesignandInstallationManual-0.5.pdf) discusses the
 prerequisites for installation, decisions and considerations regarding
 database setup, XALT testing, other transmission methods, examples,
 and knowns issues.
 
-[The XALT Users Manual-0.5](doc/XALTUsersManual-0.5.pdf) describes how
+[The XALT Users Manual-0.5](my_docs/XALTUsersManual-0.5.pdf) describes how
 XALT is used in practice with further discusssion of database options,
 data transmission, creation of reverse maps, and examples with
 accompanying results for database queries.
@@ -90,7 +90,7 @@ Features:
 environment variable ALT_LINKER in the XALT modulefile must be set to
 point to the XALT wrapper.
 
-Known issues are detailed in the [XALT Design and Installation Manual-0.5](doc/XALTDesignandInstallationManual-0.5.pdf).
+Known issues are detailed in the [XALT Design and Installation Manual-0.5](my_docs/XALTDesignandInstallationManual-0.5.pdf).
 
 
 ## Citation
