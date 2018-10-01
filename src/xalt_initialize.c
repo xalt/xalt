@@ -179,7 +179,6 @@ static dcgmHandle_t dcgm_handle           = NULL;
 #endif
 
 #define HERE  fprintf(stderr,    "%s:%d\n",__FILE__,__LINE__)
-#define HERE2 fprintf(my_stderr, "%s:%d\n",__FILE__,__LINE__)
 
 #define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
 #define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
@@ -473,7 +472,6 @@ void myinit(int argc, char **argv)
 
   
 
-  HERE;
   do
     {
       if (xalt_gpu_tracking)
@@ -481,7 +479,6 @@ void myinit(int argc, char **argv)
           DEBUG0(stderr, "  GPU tracing\n");
           dcgmReturn_t result;
 
-	  HERE;
           result = dcgmInit();
           if (result != DCGM_ST_OK)
             {
@@ -491,7 +488,6 @@ void myinit(int argc, char **argv)
               break;
             }
 
-	  HERE;
           DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result); 
 
           if (result != DCGM_ST_OK)
@@ -502,7 +498,6 @@ void myinit(int argc, char **argv)
               break;
             }
 
-	  HERE;
           result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
@@ -512,7 +507,6 @@ void myinit(int argc, char **argv)
               break;
             }
 
-	  HERE;
           result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
@@ -524,7 +518,6 @@ void myinit(int argc, char **argv)
               break;
             }
 
-	  HERE;
           result = dcgmUpdateAllFields(dcgm_handle, 1);
           if (result != DCGM_ST_OK)
             {
@@ -536,7 +529,6 @@ void myinit(int argc, char **argv)
         }
     }
   while(0);
-  HERE;
 #endif
 
   start_time = epoch();
@@ -725,7 +717,6 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
-  HERE2;
   /* This code will only ever be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
     {
@@ -735,14 +726,10 @@ void myfini()
 
       DEBUG0(my_stderr, "  GPU tracing\n");
 
-      HERE2;
       dcgmUpdateAllFields(dcgm_handle, 1);
-      HERE2;
       dcgmJobStopStats(dcgm_handle, uuid_str);
 
-      HERE2;
       job_info.version = dcgmJobInfo_version2;
-      HERE2;
       result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
       if (result == DCGM_ST_OK)
 	{
@@ -757,15 +744,10 @@ void myfini()
 	  DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
 	}
 
-      HERE2;
       dcgmJobRemove(dcgm_handle, uuid_str);
-      HERE2;
       dcgmStopEmbedded(dcgm_handle);
-      HERE2;
       dcgmShutdown();
-      HERE2;
     }
-  HERE2;
 #endif
 
   if (run_mask & BIT_SCALAR)
