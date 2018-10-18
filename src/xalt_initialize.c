@@ -180,7 +180,6 @@ static dcgmHandle_t dcgm_handle           = NULL;
 #endif
 
 #define HERE  fprintf(stderr,    "%s:%d\n",__FILE__,__LINE__)
-#define HERE2 fprintf(my_stderr, "%s:%d\n",__FILE__,__LINE__)
 
 #define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
 #define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
@@ -532,7 +531,6 @@ void myinit(int argc, char **argv)
         }
     }
   while(0);
-  //fprintf(stderr,"xalt_gpu_tracking: %d, dcgm_handle: %s\nLeaving my_init()\n", xalt_gpu_tracking, (dcgm_handle == NULL) ? "is NULL" : "not NULL");
 #endif
 
   start_time = epoch();
@@ -694,7 +692,7 @@ void myfini()
   double run_time;
   int    xalt_err = xalt_tracing || xalt_run_tracing;
 
-  if (xalt_err || trey_dbg)
+  if (xalt_err)
     {
       fflush(stderr);
       close(STDERR_FILENO);
@@ -721,7 +719,6 @@ void myfini()
   unsetenv("LD_PRELOAD");
 
 #ifdef USE_DCGM
-  //fprintf(stderr,"Starting my_fini()\nxalt_gpu_tracking: %d, dcgm_handle: %s\n", xalt_gpu_tracking, (dcgm_handle == NULL) ? "is NULL" : "not NULL");
   /* This code will only ever be active in 64 bit mode and not 32 bit mode*/
   if (xalt_gpu_tracking && dcgm_handle != NULL)
     {

@@ -83,13 +83,13 @@ void Json::add(const char* name, Vstring& v)
       m_s += "\":[";
     }
 
-  for ( auto it = v.begin(); it != v.end(); ++it)
+  for ( auto const & it : v)
     {
       m_s += "\"";
-      m_s += xalt_quotestring((*it).c_str());
+      m_s += xalt_quotestring(it.c_str());
       m_s += "\",";
     }
-      
+
   if (name)
     {
       if (m_s.back() == ',')
@@ -105,10 +105,10 @@ void Json::add(const char* name, Set& set)
   m_s += name;
   m_s += "\":[";
 
-  for ( auto it = set.begin(); it != set.end(); ++it)
+  for ( auto const & it : set)
     {
       m_s += "\"";
-      m_s += xalt_quotestring((*it).c_str());
+      m_s += xalt_quotestring(it.c_str());
       m_s += "\",";
     }
       
@@ -128,13 +128,13 @@ void Json::add(const char* name, Table& t)
       m_s += name;
       m_s += "\":{";
     }
-  for ( auto it = t.begin(); it != t.end(); ++it )
+  for ( auto & it : t)
     {
-      const std::string& k = it->first;
+      auto & k = it.first;
       if (k.find("BASH_FUNC_") == 0)
         continue;
 
-      std::string& v = it->second;
+      auto & v = it.second;
       if (v.find("() {") == 0)
         continue;
       
@@ -161,13 +161,13 @@ void Json::add(const char* name, CTable& t)
       m_s += name;
       m_s += "\":{";
     }
-  for ( auto it = t.begin(); it != t.end(); ++it )
+  for ( auto const & it : t)
     {
-      const char* k = it->first;
+      auto k = it.first;
       if (strcmp("BASH_FUNC_",k) == 0)
         continue;
 
-      const char* v = it->second;
+      auto v = it.second;
       if (strcmp("() {",v) == 0)
         continue;
       
@@ -250,8 +250,8 @@ void Json::add(const char* name, DTable& t)
   for ( auto const & it : t)
     {
       char * strbuff = NULL;
-      const std::string& k = it.first;
-      double             v = it.second;
+      auto & k = it.first;
+      auto   v = it.second;
       asprintf(&strbuff, "%f", v);
       m_s += "\"";
       m_s += k;
