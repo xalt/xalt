@@ -1,11 +1,21 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "capture.h"
 #define DATA_SIZE 1024
 
 void capture(std::string& cmd, Vstring& result)
 {
   FILE* fp;
+
+  /* swallow stderr */
+  int fd1, fd2;
+  fflush(stderr);
+  fd1 = dup(STDERR_FILENO);
+  fd2 = open("/dev/null", O_WRONLY);
+  dup2(fd2, STDERR_FILENO);
+  close(fd2);
 
   fp = popen(cmd.c_str(), "r");
   if(!fp)
@@ -21,4 +31,9 @@ void capture(std::string& cmd, Vstring& result)
     result.push_back(data);
 
   pclose(fp);
+
+  /* restore stderr */
+  fflush(stderr);
+  dup2(fd1, STDERR_FILENO);
+  close(fd1);
 }
