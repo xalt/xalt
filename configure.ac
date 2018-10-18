@@ -201,6 +201,18 @@ AC_ARG_WITH(hostnameParser,
     MY_HOSTNAME_PARSER="$withval"
     AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$withval"))dnl
 
+AC_SUBST(STATIC_LIBS)
+AC_ARG_WITH(staticLibs,
+    AC_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only libcrypto) [[no]]]),
+    STATIC_LIBS="$withval"
+    AC_MSG_RESULT([STATIC_LIBS=$with_staticLibs])
+    AC_DEFINE_UNQUOTED(STATIC_LIBS, "$with_staticLibs")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([STATIC_LIBS=$withval])
+    STATIC_LIBS="$withval"
+    AC_DEFINE_UNQUOTED(STATIC_LIBS, "$withval"))dnl
+
 AC_SUBST(BAD_INSTALL)
 AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     AC_HELP_STRING([--with-IrefuseToInstallXALTCorrectly=ans],[Install XALT incorrectly [[no]]]),
@@ -360,7 +372,11 @@ if test $XALT_GPU_TRACKING = yes; then
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
                   [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
-  AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+  if test "$STATIC_LIBS" = yes; then
+    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])], [-ldl])
+  else
+    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+  fi
 fi
 AC_SUBST(PKGV)
 AC_SUBST(VERSION)
@@ -484,7 +500,11 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
+if test "$STATIC_LIBS" = yes; then
+    AC_SEARCH_LIBS([SHA1], [:libcrypto.a], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto.a])], [-ldl -lz])
+else
+    AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
+fi
 
 $PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then

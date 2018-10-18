@@ -165,8 +165,9 @@ Options::Options(int argc, char** argv)
 
       cmd = PATH_TO_PRGM_FILE " " + m_exec;
       capture(cmd, result);
-      if (result[0].find("script") != std::string::npos ||
-          result[0].find("text")   != std::string::npos)
+      if (result.size() > 0 &&
+          (result[0].find("script") != std::string::npos ||
+           result[0].find("text")   != std::string::npos))
         m_exec_type = "script";
       else
         m_exec_type = "binary";
