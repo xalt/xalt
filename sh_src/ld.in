@@ -54,6 +54,12 @@ MY_DIR=$($DIRNAME $($READLINK -f $0))
 
 declare -l XALT_TRANSMISSION_STYLE
 
+if [ -z "$XALT_PRELOAD_ONLY" ]; then
+    XALT_PRELOAD_ONLY=@preload_only@
+elif [ "$XALT_PRELOAD_ONLY" != no ]; then
+   XALT_PRELOAD_ONLY=yes
+fi
+
 if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
    XALT_TRANSMISSION_STYLE=@transmission@
 fi
@@ -296,9 +302,9 @@ fi
 
 #############################################################
 #  do not include xalt_initialize.*, -luuid, etc when building
-#  a shared library.
+#  a shared library. Also do not add when in PRELOAD_ONLY mode
 
-if [ "$SHARED_LIB" = true ]; then
+if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
     XALT_INIT_ROUTINE_OBJ=
     LIBUUID=
     LIBDCGM=

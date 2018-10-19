@@ -36,6 +36,7 @@ test_descript = {
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=file_separate_dirs
+     export XALT_PRELOAD_ONLY=no
 
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 

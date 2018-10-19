@@ -660,6 +660,7 @@ CXXFLAGS
 CXX
 HAVE_32BIT
 BAD_INSTALL
+PRELOAD_ONLY
 STATIC_LIBS
 MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
@@ -705,6 +706,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -744,6 +746,7 @@ with_cxxLDLibraryPath
 with_syshostConfig
 with_hostnameParser
 with_staticLibs
+with_preloadOnly
 with_IrefuseToInstallXALTCorrectly
 '
       ac_precious_vars='build_alias
@@ -796,6 +799,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1048,6 +1052,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1185,7 +1198,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1338,6 +1351,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1393,6 +1407,7 @@ Optional Packages:
                           library:file_64.a:file_32.a [[no]]
   --with-staticLibs=ans   Link with static libraries (currently only
                           libcrypto) [[no]]
+  --with-preloadOnly=ans  Only use XALT in preload only mode[[yes]]
   --with-IrefuseToInstallXALTCorrectly=ans
                           Install XALT incorrectly [[no]]
 
@@ -3401,6 +3416,28 @@ $as_echo "STATIC_LIBS=$withval" >&6; }
     STATIC_LIBS="$withval"
     cat >>confdefs.h <<_ACEOF
 #define STATIC_LIBS "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-preloadOnly was given.
+if test "${with_preloadOnly+set}" = set; then :
+  withval=$with_preloadOnly; PRELOAD_ONLY="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: PRELOAD_ONLY=$with_preloadOnly" >&5
+$as_echo "PRELOAD_ONLY=$with_preloadOnly" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define PRELOAD_ONLY "$with_preloadOnly"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: PRELOAD_ONLY=$withval" >&5
+$as_echo "PRELOAD_ONLY=$withval" >&6; }
+    PRELOAD_ONLY="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define PRELOAD_ONLY "$withval"
 _ACEOF
 
 fi
@@ -7181,6 +7218,7 @@ echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
 echo "XALT installed incorrectly..........................." : $BAD_INSTALL
 echo
+echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
 echo "XALT_ETC_DIR........................................." : $ETC_DIR

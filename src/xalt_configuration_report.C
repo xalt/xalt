@@ -99,11 +99,15 @@ int main(int argc, char* argv[])
   if (xalt_spsr_sampling_rate_str)
     spsr_sampling_rate = strtod(xalt_spsr_sampling_rate_str, NULL);
 
+  const char* xalt_preload_only = XALT_PRELOAD_ONLY;
+
+
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
       Json json;
       json.add("DATE",                          dateStr);
       json.add("XALT_EXECUTABLE_TRACKING",      executable_tracking);
+      json.add("XALT_PRELOAD_ONLY",             xalt_preload_only);
       json.add("XALT_SYSHOST",                  syshost);
       json.add("XALT_VERSION",                  XALT_VERSION);
       json.add("XALT_INTERFACE_VERSION",        XALT_INTERFACE_VERSION);
@@ -175,6 +179,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSHOST_CONFIG:           " << SYSHOST_CONFIG                 << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:            " << SYSLOG_MSG_SZ                  << "\n";
   std::cout << "CXX_LD_LIBRARY_PATH:           " << CXX_LD_LIBRARY_PATH            << "\n";
+  std::cout << "XALT_PRELOAD_ONLY:             " << XALT_PRELOAD_ONLY              << "\n";
   std::cout << "HAVE_32BIT:                    " << HAVE_32BIT                     << "\n";
   std::cout << "MY_HOSTNAME_PARSER:            " << MY_HOSTNAME_PARSER             << "\n";
   std::cout << "Using libuuid:                 " << HAVE_WORKING_LIBUUID           << "\n";

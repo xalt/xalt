@@ -72,6 +72,7 @@ echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
 echo "XALT installed incorrectly..........................." : $BAD_INSTALL
 echo
+echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
 echo "XALT_ETC_DIR........................................." : $ETC_DIR

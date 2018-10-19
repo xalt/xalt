@@ -213,6 +213,18 @@ AC_ARG_WITH(staticLibs,
     STATIC_LIBS="$withval"
     AC_DEFINE_UNQUOTED(STATIC_LIBS, "$withval"))dnl
 
+AC_SUBST(PRELOAD_ONLY)
+AC_ARG_WITH(preloadOnly,
+    AC_HELP_STRING([--with-preloadOnly=ans],[Only use XALT in preload only mode[[yes]]]),
+    PRELOAD_ONLY="$withval"
+    AC_MSG_RESULT([PRELOAD_ONLY=$with_preloadOnly])
+    AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$with_preloadOnly")dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([PRELOAD_ONLY=$withval])
+    PRELOAD_ONLY="$withval"
+    AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$withval"))dnl
+
 AC_SUBST(BAD_INSTALL)
 AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     AC_HELP_STRING([--with-IrefuseToInstallXALTCorrectly=ans],[Install XALT incorrectly [[no]]]),

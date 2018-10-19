@@ -51,6 +51,7 @@ SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_LIBUUID         	:= @HAVE_WORKING_LIBUUID@
 HAVE_DCGM         	:= @HAVE_DCGM@
 STATIC_LIBS             := @STATIC_LIBS@
+PRELOAD_ONLY            := @PRELOAD_ONLY@	
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 PATH_TO_AS           	:= @PATH_TO_AS@
@@ -234,6 +235,7 @@ __installMe:
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
 	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
+	        -e 's|@preload_only@|$(PRELOAD_ONLY)|g'                       	  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
 	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      	  \
 	        -e 's|@version@|$(VERSION)|g'                              	  \
