@@ -58,6 +58,13 @@ accompanying results for database queries.
 
 ## ChangeLog
 
+### XALT 2.4:
+
+Bug Fix:
+
+   1. Support for tracking GPU usage with the DCGM library from NVIDIA.
+   2. XALT by default only uses LD_PRELOAD to track execution.
+   
 ### XALT 2.3:
 
 Bug Fix:
