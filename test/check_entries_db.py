@@ -62,6 +62,7 @@ class CmdLineOptions(object):
     parser.add_argument("--runs",      dest='runs',     action="store", default="2",          help="number of runs required to pass")
     parser.add_argument("--links",     dest='links',    action="store", default="1",          help="number of links required to pass")
     parser.add_argument("--functions", dest='nfuncs',   action="store", default="0",          help="number of functions required to pass")
+    parser.add_argument("--objects",   dest='objects',  action="store", default="10",         help="number of objects required to pass")
     parser.add_argument("--pkgs",      dest='pkgs',     action="store", default="0",          help="number of packages required to pass")
     
     args = parser.parse_args()
@@ -106,11 +107,12 @@ def main():
   nfuncs = int(args.nfuncs)
   nlinks = int(args.links)
   pkgs   = int(args.pkgs)
+  objs   = int(args.objects)
   if (tableT['xalt_link']       == nlinks and
       tableT['xalt_run']        == num    and
       tableT['xalt_pkg']        == pkgs   and
       tableT['xalt_function']   >= nfuncs and
-      tableT['xalt_object']     >   10    and
+      tableT['xalt_object']     >= objs   and
       tableT['xalt_env_name']   >   4 ):
 
     result = "passed"
@@ -120,7 +122,7 @@ def main():
     print(" runs:        ",num)
     print(" pkgs:        ",pkgs)
     print(" functions >= ",nfuncs)
-    print(" objects   >  10")
+    print(" objects   >= ",objs)
     print(" env names >  4")
 
   f = open(args.resultFn,"w")

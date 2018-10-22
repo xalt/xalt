@@ -45,20 +45,22 @@ test_descript = {
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
+     export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
+
 
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c 
 
      displayThis "mpirun -n 1 ./hello"
      mpirun -n 1 ./hello 
-     
 
+     unset LD_PRELOAD
      export XALT_USERS="$USER"
 
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --runs 1 --functions 4 --links 1
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 1 --functions 4 --links 1 --objects 9
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 
