@@ -179,7 +179,7 @@ AC_ARG_WITH(cxxLDLibraryPath,
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
-    AC_HELP_STRING([--with-syshostConfig=ans],[How to convert hostname in syshost[[no default]]]),
+    AC_HELP_STRING([--with-syshostConfig=ans],[How to determine syshost[[no default]]]),
     SYSHOST_CONFIG="$withval"
     AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig")dnl

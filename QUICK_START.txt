@@ -134,13 +134,6 @@ To write records to syslog do:
 
    --with-transmission=syslog
    
-2.5) Turn off MySQL support when on the cluster.  XALT needs MySQL
-support to write to the database.  But this is not necessary on the
-login and compute nodes, just the VM where you expect to install the
-database.  So on your login and compute nodes do:
-
-   --with-MySQL=no
-
 2.6) By default XALT tracks three types of programs: scalar, SPSR and
 MPI. The scalar programs are non-mpi programs, SPSR are special
 programs that you can track the libraries that they use (e.g. python,
@@ -163,12 +156,17 @@ You can tell XALT to track GPU usage by configuring it with:
    --with-trackGPU=yes
 
 **NOTE**:
+   You need to turn on persistence mode on your GPU's.  The following
+   commands will set two GPU's:
 
-   You must start the program nv-hostengine as root on each node where
-   you are running XALT where installed and you might track GPU
-   usage. So if you have a cluster where some nodes have GPU's and
-   others do not you still must run "nv-hostengine" as root all all
-   nodes for that cluster.
+      $ sudo nvidia-smi -pm 1 -i 0
+      $ sudo nvidia-smi -pm 1 -i 1
+
+   You also need to turn on accounting on the GPU's:
+
+      $ sudo nvidia-smi -am 1
+
+   These commands need to be run on every reboot.
 
 2.8) XALT requires a configuration file written in python.  There are
 examples in the Config directory.  In particular, the file

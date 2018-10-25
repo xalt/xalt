@@ -34,9 +34,10 @@ are divided into the following steps.
 .. toctree::
    :maxdepth: 1
 
-   010_Prereqs
-   020_Site_Configuration
-   030_Install_and_test
+   010_prereqs
+   020_site_configuration
+   030_site_filtering
+   040_install_and_test
               
 
               
