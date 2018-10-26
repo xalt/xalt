@@ -135,8 +135,91 @@ First you'll need to take a the g++.sh file in the distribution and
 make it work for your site. You will also have to use the following
 options when configuring XALT::
 
-  CXX=$PWD/g++.sh --with-cxxLDLibraryPath=...
+    CXX=$PWD/g++.sh --with-cxxLDLibraryPath=...
 
 where the LD_LIBRARY_PATH you set in g++.sh you'll need to specify on
-the command line used to configure XALT.
+the command line used to configure XALT.  For example, one system at
+TACC required g++.sh to be::
+
+     #!/bin/bash
+     export LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
+     /opt/apps/gcc/4.9.1/bin/g++ "$@"
+
+and the configure line looked like::
+
+
+     ./configure CXX=$PWD/g++.sh --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
+
+XALT data transmission
+^^^^^^^^^^^^^^^^^^^^^^
+
+You need to tell XALT how you want to transmit the generated
+data.  There are two choices: either file or syslog.  For testing it
+is best to the the "file" transmission style.  By default XALT will
+write json records in files in the ~/.xalt.d directory.  XALT will
+create that directory if needed.  It is also possible for XALT to
+write all json records into a globally writable location by using the
+--with-xaltFilePrefix=/path/to/json/files.  If this is set to
+/global/xalt then XALT will write json files in /global/xalt/$USER.
+
+So you should probably start with the following for testing to write
+the json record to files in ~/.xalt.d::
+
+   --with-transmission=file
+   
+To write to a global location (say /global/xalt), you can do::
+
+   --with-transmission=file --with-xaltFilePrefix=/global/xalt
+
+To write records to syslog do::
+
+   --with-transmission=syslog
+
+Track MPI and/or Non-MPI executables
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default XALT tracks three types of programs: scalar, SPSR and
+MPI. The scalar programs are non-mpi programs, SPSR are special
+scalar programs that you can track the libraries that they use
+(e.g. python, R and MATLAB).  This is not required so this can be
+delayed until you are ready.  Please see XXX in the manual for more
+details about SPSR. 
+
+Finally there are MPI programs.  Note that an MPI capable programs run
+with only one task is considered to be scalar by XALT.  So if you only
+want to track MPI programs you can do:
+
+    --with-trackScalarPrgms=no
+    --with-trackSPSR=no
+
+
+Track GPU usage
+^^^^^^^^^^^^^^^
+
+Optionally, XALT can track NVIDIA GPU usage. You will need the DCGM
+library from NVIDIA for this to work.  DCGM is free to download from
+https://developer.nvidia.com/data-center-gpu-manager-dcgm.
+
+You can tell XALT to track GPU usage by configuring it with::
+
+   --with-trackGPU=yes
+
+
+Note
+~~~~
+
+You need to turn on persistence mode on your GPU's.  The following
+commands will set two GPU's::
+
+   $ sudo nvidia-smi -pm 1 -i 0
+   $ sudo nvidia-smi -pm 1 -i 1
+
+You also need to turn on accounting on the GPU's::
+
+   $ sudo nvidia-smi -am 1
+
+These commands need to be run on every reboot.
+
+
+Next we cover how to control how XALT filters executables.
 
