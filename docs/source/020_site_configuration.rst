@@ -27,7 +27,7 @@ uses as the name of your cluster. A site may have one or more
 cluster.  Each cluster should have a unique name for each.  XALT is
 designed to have a separate database for each cluster.
 
-There are several ways to specify the cluster name::
+There are several ways to specify the cluster name:
 
 #. Hardcode the name of the cluster at configure time.
 #. Use the nth name from executing: hostname -f
@@ -187,7 +187,7 @@ details about SPSR.
 
 Finally there are MPI programs.  Note that an MPI capable programs run
 with only one task is considered to be scalar by XALT.  So if you only
-want to track MPI programs you can do:
+want to track MPI programs you can do::
 
     --with-trackScalarPrgms=no
     --with-trackSPSR=no
@@ -222,4 +222,3 @@ These commands need to be run on every reboot.
 
 
 Next we cover how to control how XALT filters executables.
-

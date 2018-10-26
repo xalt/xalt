@@ -118,74 +118,6 @@ path_patterns = [
   ]
 
 #------------------------------------------------------------
-# XALT filter environment variables.  Those variables
-# which pass through the filter are save in an SQL table that is
-# searchable via sql commands.  The environment variables are passed
-# to this filter routine as:
-#
-#      env_key=env_value
-#
-# So the regular expression patterns must match the whole string.
-
-
-# The value on the left is either KEEP or SKIP.  If the value
-# is KEEP then if the environment string matches the regular
-# expression then the variable is stored. If the value on the left
-# is SKIP then if the variable matches it is not stored.
-
-# Order of the list matters.  The first match is used even if a
-# later pattern would also match.  The upshot is that special pattern
-# matches should appear first and general ones later.
-
-# If the environment string does not match any pattern then it is
-# marked as SKIP.
-
-
-env_patterns = [
-    [ 'SKIP', r'^MKLROOT=.*' ],
-    [ 'SKIP', r'^MKL_DIR=.*' ],
-    [ 'SKIP', r'^MKL_INCLUDE=.*' ],
-    [ 'SKIP', r'^MKL_LIB=.*' ],
-    [ 'SKIP', r'^MPICH_HOME=.*' ],
-    [ 'SKIP', r'^MV2_COMM_WORLD=.*'],
-    [ 'SKIP', r'^MV2_CPU_BINDING_POLICY=.*' ],
-    [ 'SKIP', r'^MV2_DEFAULT_TIME_OUT=.*' ],
-    [ 'SKIP', r'^MV2_HOMOGENEOUS_CLUSTER=.*' ],
-    [ 'SKIP', r'^MV2_HYBRID_BINDING_POLICY=.*' ],
-    [ 'SKIP', r'^MV2_IBA_HCA=.*' ],
-    [ 'SKIP', r'^MV2_NODE_ID=.*' ],
-    [ 'SKIP', r'^MV2_NUM_NODES_IN_JOB=.*' ],
-    [ 'SKIP', r'^MV2_THREADS_PER_PROCESS=.*' ],
-    [ 'SKIP', r'^MV2_USE_HUGEPAGES=.*' ],
-    [ 'SKIP', r'^MV2_USE_OLD_BCAST=.*' ],
-    [ 'SKIP', r'^MV2_USE_RING_STARTUP=.*' ],
-    [ 'SKIP', r'^MV2_USE_UD_HYBRID=.*' ],
-    [ 'SKIP', r'^OMP_NUM_THREADS=.*' ],
-    [ 'SKIP', r'^__.*'],
-    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_MAP=.*' ],
-    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_NUM=.*'],
-    [ 'KEEP', r'^I_MPI_PIN_INFO=.*'],
-    [ 'KEEP', r'^I_MPI_PIN_MAPPING=.*'],
-    [ 'KEEP', r'^I_MPI_THREAD_LEVEL=.*'],
-    [ 'KEEP', r'^I_MPI_TMI_PROVIDER=.*'],
-    [ 'KEEP', r'^LAUNCHER_JID=.*'],
-    [ 'KEEP', r'^LD=.*'],
-    [ 'KEEP', r'^LD_LIBRARY_PATH=.*'],
-    [ 'KEEP', r'^LOADEDMODULES=.*'],
-    [ 'KEEP', r'^MKL.*'],
-    [ 'KEEP', r'^MV2_.*'],
-    [ 'KEEP', r'^OFFLOAD.*'],
-    [ 'KEEP', r'^OMP.*'],
-    [ 'KEEP', r'^PATH=.*'],
-    [ 'KEEP', r'^PYTHON.*'],
-    [ 'KEEP', r'^R_.*'],
-    [ 'KEEP', r'^TACC_AFFINITY_ENABLED=.*'],
-    [ 'KEEP', r'^LAUNCHER_TSK_ID=.*'],
-    [ 'KEEP', r'^PYLAUNCHER_ENABLED=.*'],
-    [ 'KEEP', r'^_LMFILES_=.*'],
-  ]
-
-#------------------------------------------------------------
 # XALT samples non-mpi executions, but not SPSR programs,
 # based on this table. All mpi executions are sampled at 100%
 # when there are two more tasks.
@@ -260,3 +192,72 @@ interval_array = [
 #
 
 SPSR_sampling = 0.01  # == 1%
+
+#------------------------------------------------------------
+# XALT filter environment variables.  Those variables
+# which pass through the filter are save in an SQL table that is
+# searchable via sql commands.  The environment variables are passed
+# to this filter routine as:
+#
+#      env_key=env_value
+#
+# So the regular expression patterns must match the whole string.
+
+
+# The value on the left is either KEEP or SKIP.  If the value
+# is KEEP then if the environment string matches the regular
+# expression then the variable is stored. If the value on the left
+# is SKIP then if the variable matches it is not stored.
+
+# Order of the list matters.  The first match is used even if a
+# later pattern would also match.  The upshot is that special pattern
+# matches should appear first and general ones later.
+
+# If the environment string does not match any pattern then it is
+# marked as SKIP.
+
+
+env_patterns = [
+    [ 'SKIP', r'^MKLROOT=.*' ],
+    [ 'SKIP', r'^MKL_DIR=.*' ],
+    [ 'SKIP', r'^MKL_INCLUDE=.*' ],
+    [ 'SKIP', r'^MKL_LIB=.*' ],
+    [ 'SKIP', r'^MPICH_HOME=.*' ],
+    [ 'SKIP', r'^MV2_COMM_WORLD=.*'],
+    [ 'SKIP', r'^MV2_CPU_BINDING_POLICY=.*' ],
+    [ 'SKIP', r'^MV2_DEFAULT_TIME_OUT=.*' ],
+    [ 'SKIP', r'^MV2_HOMOGENEOUS_CLUSTER=.*' ],
+    [ 'SKIP', r'^MV2_HYBRID_BINDING_POLICY=.*' ],
+    [ 'SKIP', r'^MV2_IBA_HCA=.*' ],
+    [ 'SKIP', r'^MV2_NODE_ID=.*' ],
+    [ 'SKIP', r'^MV2_NUM_NODES_IN_JOB=.*' ],
+    [ 'SKIP', r'^MV2_THREADS_PER_PROCESS=.*' ],
+    [ 'SKIP', r'^MV2_USE_HUGEPAGES=.*' ],
+    [ 'SKIP', r'^MV2_USE_OLD_BCAST=.*' ],
+    [ 'SKIP', r'^MV2_USE_RING_STARTUP=.*' ],
+    [ 'SKIP', r'^MV2_USE_UD_HYBRID=.*' ],
+    [ 'SKIP', r'^OMP_NUM_THREADS=.*' ],
+    [ 'SKIP', r'^__.*'],
+    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_MAP=.*' ],
+    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_NUM=.*'],
+    [ 'KEEP', r'^I_MPI_PIN_INFO=.*'],
+    [ 'KEEP', r'^I_MPI_PIN_MAPPING=.*'],
+    [ 'KEEP', r'^I_MPI_THREAD_LEVEL=.*'],
+    [ 'KEEP', r'^I_MPI_TMI_PROVIDER=.*'],
+    [ 'KEEP', r'^LAUNCHER_JID=.*'],
+    [ 'KEEP', r'^LD=.*'],
+    [ 'KEEP', r'^LD_LIBRARY_PATH=.*'],
+    [ 'KEEP', r'^LOADEDMODULES=.*'],
+    [ 'KEEP', r'^MKL.*'],
+    [ 'KEEP', r'^MV2_.*'],
+    [ 'KEEP', r'^OFFLOAD.*'],
+    [ 'KEEP', r'^OMP.*'],
+    [ 'KEEP', r'^PATH=.*'],
+    [ 'KEEP', r'^PYTHON.*'],
+    [ 'KEEP', r'^R_.*'],
+    [ 'KEEP', r'^TACC_AFFINITY_ENABLED=.*'],
+    [ 'KEEP', r'^LAUNCHER_TSK_ID=.*'],
+    [ 'KEEP', r'^PYLAUNCHER_ENABLED=.*'],
+    [ 'KEEP', r'^_LMFILES_=.*'],
+  ]
+

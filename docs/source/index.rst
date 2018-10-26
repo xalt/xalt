@@ -1,6 +1,6 @@
 
 XALT 2: Tracking user executables and library usage on your cluster
-==================================================================
+===================================================================
 
 PURPOSE
 ^^^^^^^
@@ -14,7 +14,7 @@ and non-MPI programs.
 OVERVIEW
 ^^^^^^^^
 
-XALT  does its tracking by ``hijacking'' the linker and by use
+XALT  does its tracking by ''hijacking'' the linker and by use
 of the environment variable **LD_PRELOAD** to have code run before and
 after main().  And yes it works with Fortran programs as well.  Since
 XALT 2 could track every single program on your cluster, XALT 2 allows
