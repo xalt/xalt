@@ -1400,7 +1400,7 @@ Optional Packages:
   --with-cxxLDLibraryPath=ans
                           LD_LIBRARY_PATH for c++ programs[[]]
   --with-syshostConfig=ans
-                          How to convert hostname in syshost[[no default]]
+                          How to determine syshost[[no default]]
   --with-hostnameParser=ans
                           Replace built-in lex based hostname parser
                           c_file:file.c or library:file_64.a or
