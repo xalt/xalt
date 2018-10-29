@@ -77,7 +77,7 @@ your system has is /bin/ld then having XALT's ld found first in the
 path is easy.  But modern GCC compilers have their own ld so some
 effort will be required to make XALT's ld appear first in $PATH.
 
-  **Note**: If you do use Lmod, then make sure that XALT's ld is
+  **Note**: If you do NOT use Lmod, then make sure that XALT's ld is
   always found before the regular ld
 
 
