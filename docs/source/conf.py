@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'XALT 2'
+project = u'XALT'
 copyright = u'2018, Robert McLay'
 author = u'Robert McLay'
 
