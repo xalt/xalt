@@ -7,7 +7,7 @@ place to install packages say /apps/xalt/<xalt_version> with
 configure.  However you do not want to have the prefix include the
 "xalt/xalt_version" as part of prefix.
 
-   **NOTE** DO NOT PUT THE VERSION OF XALT IN THE CONFIGURATION LINE!!
+   **NOTE**: DO NOT PUT THE VERSION OF XALT IN THE CONFIGURATION LINE!!
 
 Instead you should specify the directory above xalt for the prefix
 value.  So if you would like to install version 2.0 of xalt in
@@ -39,12 +39,12 @@ XALT modulefile
 ^^^^^^^^^^^^^^^
 
 Below is the XALT modulefile you need to specify to use the
-package.  The first one is a lua modulefile that can be used with Lmod::
+package.  The first one is a Lua modulefile that can be used with Lmod::
 
 
   setenv("XALT_EXECUTABLE_TRACKING",       "yes")
 
-  local base  = "/opt/apps/xalt/xalt"
+  local base  = "/opt/apps/xalt/xalt"  --> Change to match your site!!!
   local bin   = pathJoin(base,"bin")
 
   prepend_path{"PATH",          bin, priority="100"}
@@ -68,6 +68,12 @@ The following is a TCL modulefile::
   setenv XALT_SCALAR_AND_SPSR_SAMPLING  yes
 
 
+Obviously, these modulefiles will need to be modified to match your
+site's location of XALT.
+
+  **Note**: If your site do NOT use Lmod, then make sure that XALT's ld is
+  always found before the regular ld
+
 XALT does not require that your site use Lmod has your module system.
 However, it does require somehow that you make XALT's ld be found in
 the path before the real "ld".  Lmod has a special feature that builds
@@ -76,9 +82,6 @@ path appears before other when the other modules are loaded.  If all
 your system has is /bin/ld then having XALT's ld found first in the
 path is easy.  But modern GCC compilers have their own ld so some
 effort will be required to make XALT's ld appear first in $PATH.
-
-  **Note**: If you do NOT use Lmod, then make sure that XALT's ld is
-  always found before the regular ld
 
 
 
