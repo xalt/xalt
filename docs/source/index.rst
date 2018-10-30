@@ -38,9 +38,4 @@ are divided into the following steps.
    030_site_filtering
    040_install_and_test
    050_reverse_map
-
-
-              
-   
-
-
+   060_setup_db

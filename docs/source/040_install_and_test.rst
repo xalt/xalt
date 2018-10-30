@@ -19,8 +19,8 @@ latest version of the XALT software.
 If you do not follow this advice then you will have trouble with
 installing future versions of XALT.
 
-Typical configure and build instructions for stampede2
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Typical configure and build instructions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Here is how we configure XALT for stampede2::
 
@@ -33,7 +33,9 @@ Here is how we configure XALT for stampede2::
     $ make install
 
 If the current version of XALT is X.Y.Z then this will install XALT in
-/opt/apps/xalt/X.Y.Z and /opt/apps/xalt/xalt will point to it.
+/opt/apps/xalt/X.Y.Z and /opt/apps/xalt/xalt will point to it.  Please
+configure XALT to match your site's needs.
+
 
 XALT modulefile
 ^^^^^^^^^^^^^^^

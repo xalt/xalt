@@ -37,5 +37,3 @@ the name of your site is BLUE then each module should have a line
 similar to this::
 
     setenv("BLUE_XYZ_DIR", "/apps/xyz/3.2")
-
-
