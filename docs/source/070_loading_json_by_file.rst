@@ -1,3 +1,5 @@
+.. _json_by_file-label:
+
 Load Json records via file transmission style.
 ----------------------------------------------
 
