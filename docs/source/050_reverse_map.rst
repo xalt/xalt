@@ -1,3 +1,5 @@
+.. _reverseMap-label:
+
 Building a reverse map for your cluster
 ---------------------------------------
 

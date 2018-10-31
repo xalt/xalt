@@ -39,3 +39,4 @@ are divided into the following steps.
    040_install_and_test
    050_reverse_map
    060_setup_db
+   070_loading_json_by_file
