@@ -1,5 +1,5 @@
 AC_INIT(Makefile.in)
-AC_CONFIG_HEADER(uuid_config.h.in:uuid_config.h)
+AC_CONFIG_HEADERS(uuid_config.h:uuid_config.h.in)
 AC_PROG_CC
 AC_CHECK_HEADERS([linux/compiler.h linux/blkpg.h linux/major.h], [], [], [
 #ifdef HAVE_LINUX_COMPILER_H
@@ -79,3 +79,8 @@ AC_SEARCH_LIBS([socket], [socket],
 		[SOCKET_LIBS="$SOCKET_LIBS -lsocket"])
 ])
 AC_SUBST([SOCKET_LIBS])
+
+AX_CHECK_TLS
+
+AC_OUTPUT(makefile:Makefile.in)
+
