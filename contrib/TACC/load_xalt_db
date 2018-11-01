@@ -1,0 +1,24 @@
+#!/bin/bash
+export MODULEPATH=/opt/apps/xsede/modulefiles:/opt/modulefiles:/opt/apps/modulefiles
+. /opt/apps/lmod/lmod/init/bash
+module -q load   TACC
+module -q unload $TACC_FAMILY_COMPILER 
+module -q --latest load intel
+module -q load python
+module -q load lmod
+
+export PYTHONPATH=/root/.local/lib/python2.7/site-packages
+
+PATH=/home1/02875/swtools/l/pkg/x86_64/xalt/xalt/sbin:$PATH
+cd /home1/02875/swtools/use_xalt
+spider -o jsonReverseMapT $LMOD_DEFAULT_MODULEPATH > rmapD/jsonReverseMapT.json
+date                                >  ~swtools/use_xalt/json_to_db.log
+xalt_file_to_db.py --reverseMapD rmapD --delete --timer >> ~swtools/use_xalt/json_to_db.log 2>&1
+
+sz=`wc -l ~swtools/use_xalt/json_to_db.log`
+sz=${sz%% *.log}
+
+if [ $sz -gt 0 ]; then
+  cat ~swtools/use_xalt/json_to_db.log | mail -s 'json to db conversion' mclay@tacc.utexas.edu
+fi
+

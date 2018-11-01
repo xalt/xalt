@@ -1,0 +1,146 @@
+#!/usr/bin/env python
+# -*- python -*-
+
+from __future__ import print_function
+import os, sys, re, time, datetime, argparse, base64, MySQLdb
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
+
+class CmdLineOptions(object):
+  """ Command line Options class """
+
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    parser = argparse.ArgumentParser()
+    now    = time.strftime("%Y-%m-%d")
+    confFn = "xalt_db.conf"
+    parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
+    parser.add_argument("--confFn",       dest='confFn',       action="store" ,      default = confFn,        help="db name")
+    parser.add_argument("--syshost",      dest='syshost',      action="store",       default = None,          help="system host name")
+    parser.add_argument("--start",        dest='startDate',    action="store",       default = "1970-01-01",  help="start date")
+    parser.add_argument("--end",          dest='endDate',      action="store",       default = now,           help="end date")
+    args = parser.parse_args()
+    return args
+
+
+def fix_record(cursor, args, acctT):
+  """
+  This routine replaces the account name when it is unknown and it computes the run_time for the job.
+  There are two conditions to handle:
+     a) The job_id can be unknown.  This is probably due to the fact that the users script as wiped
+        all environment variables including the env var that has the job_id.
+     b) The accounting record is only written when the job completes.  However XALT writes a record
+        at the beginning of the job. So an XALT record can exist where there is no accounting record.
+     
+  When both the accounting record exists and the XALT record exists, this routine gets a charge account
+  (chargeAcct) from the accounting record and replaces the XALT account column when it differs.
+  Similarly if the end_time from XALT is 0.0 then the run_time is computed and replaced.
+
+  The XALT end_time and run_time are 0.0 on the initial record.  So if the job times out then the end
+  XALT record is not written.  This routine writes the run_time but doesn't set end_time.  This way jobs
+  that timed out can be found in the XALT db.
+  @param cursor:   database accessor object
+  @param acctT:    account record
+  """
+
+  query = "select run_id, job_id, account, start_time, end_time from xalt_run where date >= %s AND date < %s"
+  cursor.execute(query,(args.startDate, args.endDate))
+
+  n_update = 0
+  for run_id, job_id, account, start_time, end_time in cursor:
+    if (job_id == "unknown"):
+      continue
+    entryT = acctT.get(job_id)
+    if (not entryT):
+      continue
+    if (entryT['chargeAcct'] != account):
+      n_update += 1
+      cursor.execute("START TRANSACTION")
+      query = "update xalt_run set account = %s where run_id = %s"
+      cursor.execute(query, (chargeAcct, run_id))
+      cursor.execute("COMMIT")
+   
+    end_time = float(end_time)
+    acct_end = entryT['end_time']
+    if (end_time < 1.0):
+      start_time  = float(start_time)
+      acct_end    = float(acct_end)
+      n_update   += 1
+      run_time    = "%.2f" % max(acct_end - start_time, 0.0)
+      cursor.execute("START TRANSACTION")
+      query = "update xalt_run set run_time = %s where run_id = %s"
+      cursor.execute(query, (run_time, run_id))
+      cursor.execute("COMMIT")
+      
+
+  print("updated",n_update,"records")
+  cursor.execute("COMMIT")
+
+def read_tacc_acct_records():
+  """
+   0: Job ID ($JOBID)
+   1: User ID ($UID) 
+   2: Project ID ($ACCOUNT) 
+   3: Junk ($BATCH) 
+   4: Start time ($START) 
+   5: End time ($END) 
+   6: Time job entered in queue ($SUBMIT) 
+   7: SLURM partition ($PARTITION) 
+   8: Requested Time ($LIMIT) 
+   9: Job name ($JOBNAME)
+  10: Job completion status ($JOBSTATE) 
+  11: Nodes ($NODECNT) 
+  12: Cores ($PROCS)
+  """
+  acctT    = {}
+  endtimeT = {}
+
+  fn = "tacc_jobs_completed"
+  f = open(fn,"r")
+  for line in f:
+    fieldA          = line.split(":")
+    if (len(fieldA) < 13):
+      continue
+    jobId           = fieldA[0]
+    chargeAcct      = fieldA[2]
+    end_time        = fieldA[5]
+    num_nodes       = fieldA[11]
+    num_cores       = fieldA[12]
+    acctT[jobId]    = { 'chargeAcct' : chargeAcct,
+                        'end_time'   : end_time,
+                        'num_nodes'  : num_nodes,
+                        'num_cores'  : num_cores
+                      }
+  f.close()
+  return acctT
+
+
+
+def main():
+  args     = CmdLineOptions().execute()
+  config   = configparser.ConfigParser()     
+  config.read(args.confFn)
+
+  conn = MySQLdb.connect \
+         (config.get("MYSQL","HOST"), \
+          config.get("MYSQL","USER"), \
+          base64.b64decode(config.get("MYSQL","PASSWD")), \
+          config.get("MYSQL","DB"))
+  cursor = conn.cursor()
+
+  acctT = read_tacc_acct_records()
+
+  fix_record(cursor, args, acctT)
+  
+
+if ( __name__ == '__main__'): main()
+  
+
+
+

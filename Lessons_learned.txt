@@ -1,0 +1,29 @@
+Here are some notes about lessons learned when deploying XALT in the
+field.
+
+* How the compiler finds the linker: The GCC compilers find the linker
+  by using $COMPILER_PATH.  If this isn't set then it finds the one
+  with the built-in binutils.  However $COMPILER_PATH is set before
+  linking then it uses that instead.
+
+  Note that one can configure gcc to hardcode the path to ld.
+
+* The linker can be called ld, ld.gold or x86_64-linux-gnu-ld
+
+* When building Intel PIN library, it caused problems when building a
+  shared library.  So XALT now doesn't include xalt_initialize.o etc
+  when building a shared library.
+  
+* Installers of XALT really want to install XALT by setting the prefix
+  to /apps/xalt/$VERSION.  which means that the real location is
+  /apps/xalt/$VERSION/xalt/xalt/*
+
+  This is a problem because they will say set:
+  /apps/xalt/2.0.7/xalt/xalt.  Then when they install the next version
+  (say /apps/xalt/2.0.8/xalt/xalt) all the old apps built with 2.0.7
+  won't be able to find xalt_run_submission.
+
+* As of 2.0.9 XALT checks to see if it can find xalt_run_submission.
+  It also records in xalt_configuration_report whether it was a
+  "BAD_INSTALL" or not.
+  

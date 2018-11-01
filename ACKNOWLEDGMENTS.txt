@@ -1,0 +1,64 @@
+XALT Acknowledgments
+
+We would like to acknowledge various individuals and their organizations 
+for providing valuable feedback and ideas on the project.
+
+Doug James, TACC: 
+	Doug James has been instrumental in the formation of the XALT
+project itself.  Doug has provided guidance and project oversight.
+Without Doug, XALT might not have happened.
+
+Bill Barth, TACC
+	Bill Barth has also provided project guidance and also technical
+suggestions. 
+
+
+Bilel Hadri, KAUST
+	Bilel Hadri worked on ALTD while at NICS, and then while at
+KAUST did a valuable port of ALTD to an IBM BG computer.  He has
+provided valuable feedback over the years.
+
+Tim Robinson, CSCS
+	Tim Robinson has provided valuable comments over the years on
+issues with ALTD and more recently XALT.  Tim and CSCS also modified
+ALTD years ago to store more run time information - again a lesson we
+applied for XALT learning from CSCS and the Lariat project at TACC. 
+
+Zhengji Zhao, Helen He, and Richard Gerber, NERSC
+	Zhengji Zhao has provided feedback dating back to the prototype
+ALTD, as NERSC installed ALTD.  Zhengji Zhao made some changes to ALTD
+including using their own file method to stage information to the
+database as well as independently implementing their own use of uuid.
+NERSC also first used the data from ALTD to help users know how they
+previously built executables months earlier.  And NERSC also provided
+examples that we have shown in several BoFs to demonstrate the many uses
+of XALT (and ALTD.)
+
+Reuben Budiardja and Lonnie Crosby, NICS
+	Reuben Budiardja has contributed fixes and new code to XALT
+primarily with regard to Cray XC series computers.  Lonnie Crosby also
+provided the idea of using pstree to walk the process tree to get the
+compiler that invoked the linker. 
+
+Georg Rath, Vienna 
+	Georg Rath contributed code directly to the github repo.  He
+improved the pstree code to work in more generic cases.  Furthermore, to
+make XALT able to speak with other databases than MySQL and to make life
+easier when working with databases, Georg refactored XALT to use
+SqlAlchemy, which is an object-relational-mapper, to basically map
+classes to database tables.
+
+Julius Westerman, LANL
+	Julius Westerman was a alpha tester of XALT.  Provided a new
+platform unavailable to the developers.
+
+Prasad Maddumage, Florida State
+	Prasad Maddumage was an alpha tester of XALT and reported
+several bugs.  This was quite instrumental in helping make sure XALT was
+more production ready.
+
+
+There have been many others that have provided feedback during our BoFs
+and we wish to thank them for their suggestions.  We apologize that we
+don't know everyone's name.
+

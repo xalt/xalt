@@ -1,0 +1,33 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+PATH=.:$PATH
+
+tQ=$(echo $1 | tr q Q)
+
+dir="xalt-$tQ"
+
+rm -rf $dir
+mkdir -p $dir
+
+echo "Sha1 sum of files for $tQ" > $dir/Readme
+
+for i in $(quarter2months $tQ); do
+  startD=${i%%:*}
+  endD=${i##*:}
+
+  fileNm="$dir/xalt-${startD%%-01}.json"
+
+  echo 
+  echo  "monthly_report --start $startD --end $endD > $fileNm"
+  monthly_report --start $startD --end $endD > $fileNm
+  sha1sum $fileNm > $dir/Readme
+
+  gzip -9 $fileNm
+
+done
+
+zip -r $dir $dir
+
+rm -rf $dir
+

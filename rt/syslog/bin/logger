@@ -1,0 +1,9 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+shift
+TAG=$1
+shift
+
+echo $TAG "$@" >> syslog.log
+

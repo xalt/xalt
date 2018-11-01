@@ -1,0 +1,32 @@
+Here are some ideas to talk about at the BoF:
+
+* This is an XALT 2 talk 
+* I won't be covering XALT 1 at all.
+* What are the goals of XALT 2
+** Understand what your users are doing
+   What programs, libraries, Track command lines
+   Track MPI: How many tasks? How many nodes?
+   Track Threading via $OMP_NUMTHREADS
+
+** Answer question like:
+*** What are the top programs being used? By Node-hours, By Counts
+*** What libraries are being used?
+*** What compiled programs are in C, C++, or Fortran
+*** Scripting Languages: R, Python, ...
+
+* How does it work:
+** XALT "hijacks" the linker (i.e.  ld or ld.gold)
+** It watermarks the code and I'll show how this is useful later.
+** It injects code the init array and fini array. The program will run code before main() and after main()
+
+
+* Linker actions:
+** Linking creates a record of what the link was.  A json string is generated containing this information.
+
+
+* Execution actions
+** Either by the injected code or by using the LD_PRELOAD a start record in json is generated before main()
+** A end record is generated if the program gets that far.
+** The differents in epoch times between start and end give run-time.
+
+* 

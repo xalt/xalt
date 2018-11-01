@@ -1,0 +1,18 @@
+Ideas for BoF at ISC 17
+
+* XALT -> Track programs and libraries that get run on your cluster.
+* It is a census taker, not a performance tool.
+* It is battle tested:  Run at TACC, KAUST, NICS, ORNL, UK Archer
+* Stories:
+   Benchmarking next system
+   Large memory queue overuse
+* XALT 2 -> track all executables not just MPI programs
+* Site control of what programs gets tracked and which machines
+* Current SQL database work great for all but the biggest sites
+   Working on different DB's to handle the bigish big data
+* Future work:  Track more things: python, R, MATLAB, what else?
+* discussion: What would you like to know? Could XALT help you run your system better?
+
+
+
+

@@ -1,0 +1,21 @@
+# This is a ignore file:
+# `#' are comments to the end of line.
+# The format is one pattern per line
+# blank lines are ignored as well as leading and trailing blanks.
+# Remember to put a leading '^' to match the beginning of the path:
+
+^/sbin
+^/bin
+^/etc
+^/usr
+^/opt/apps/intel/
+^/opt/apps/gcc/
+^/opt/ofed/                               # ignore both /opt/ofed/bin and /opt/ofed/sbin
+^/opt/apps/git/
+^/opt/apps/xalt/
+^/opt/apps/intel[0-9-][0-9.-]*/mvapich2/  # /opt/apps/intel15/mvapich2/
+^/opt/apps/intel[0-9-][0-9.-]*/impi/      # /opt/apps/intel15/impi/
+^/opt/apps/autotools/
+^/opt/apps/lmod/
+^/opt/apps/lua/
+^/opt/apps/cuda/

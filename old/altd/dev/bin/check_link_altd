@@ -1,0 +1,35 @@
+#!/bin/bash
+#-------------------
+# 
+# Goal : get the last linkline in altd for a given user
+#        It is used to check that that the compiled codes  and the linkage to the libraries
+#        are stored in the altd database.
+#
+# Author : Bilel Hadri  02/22/2010
+#--------------------
+
+
+
+#database host name
+host=orange
+
+#username for altd altduser/altdinsert 
+echo -n "Enter username: " ; read db_user
+
+echo -n "Enter $db_user password: " ; stty -echo ; read db_passwd ; stty echo ; echo ""
+
+db_name=altd
+
+#username on the machine where the code have been linked and compiled
+name=`whoami` 
+
+#get the last link_id of the user
+link_id=`mysql --skip-column-names -u$db_user -p$db_passwd $db_name -h $host -e "select linkline_id from altd_kraken_link_tags where username like '%$name%' and exit_code = 0 order by tag_id desc limit 0,1 "`
+
+#get the last linkline of the user
+linkline=`mysql --skip-column-names -u$db_user -p$db_passwd $db_name -h $host -e "select linkline from altd_kraken_linkline where linking_inc like '$link_id'"`
+
+echo "Last linkline compiled by the user :   $name "
+echo "==================================="
+echo $linkline
+

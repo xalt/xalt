@@ -1,0 +1,16 @@
+#%Module
+
+proc ModulesHelp { } {
+    puts stderr "Sets up environment to use altd"
+  }
+
+setenv ALTD_SELECT_ON 0
+setenv ALTD_SELECT_USERS jones,faheymr
+setenv ALTD_SELECT_OFF_USERS "" 
+setenv ALTD_VERBOSE 1
+
+setenv ALTD_ON 1
+setenv ALTD_PATH /nics/b/home/jones/altd
+
+prepend-path PATH           /nics/b/home/jones/altd/bin
+

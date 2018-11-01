@@ -1,0 +1,28 @@
+Here are notes on what should go into the XALT User Guide:
+
+* Installing XALT:
+** Initial decisions:
+*** How are you going to analyze your data
+Use ELK: You are on your own.
+
+Use either the supplied data support by storing the results in a VM
+and use MySQL
+
+Have one db per cluster
+
+** Prerequisites
+** Test Install:
+   Docker or other containers can be use to test:  Must $HOME and
+   $USER in order for XALT to work.  
+
+   XALT can be installed in a personal account for testing.  Just make
+   sure that you define all the appropriate env. vars.
+
+** How to install XALT
+
+* Testing XALT
+
+* How to use the XALT data
+
+* FAQ
+

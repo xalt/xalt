@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+# -*- python -*-
+
+from __future__ import print_function, division
+import os, sys, re, time, datetime, argparse, base64, MySQLdb, operator
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
+from BeautifulTbl import BeautifulTbl
+
+      
+class CmdLineOptions(object):
+  """ Command line Options class """
+
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    now    = time.time()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
+    parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
+    parser.add_argument("--start",        dest='startNum',     action="store",       default =  50000000,     help="start number")
+    parser.add_argument("--end",          dest='endNum',       action="store",       default = 100000000,     help="end number")
+    parser.add_argument("--num",          dest='num',          action="store",       default = 50,            help="number of entries to report")
+    args = parser.parse_args()
+    return args
+
+
+def dbConfigFn(dbname):
+  """
+  Build config file name from dbname.
+  @param dbname: db name
+  """
+  return dbname + "_db.conf"
+
+
+def envReport(args, cursor):
+  """
+  @param args:     parsed command line arguments
+  @param cursor:   database accessor object
+  @param acctT:    account record
+  """
+
+  resultA = []
+  query = "select env_id, env_name from xalt_env_name"
+  cursor.execute(query)
+
+
+  rowA = cursor.fetchall()
+
+  idx2name  = {}
+  idx2count = {}
+  ja        = 0
+
+
+  for row in rowA:
+    ja               += 1
+    env_id            = row[0]
+    name              = row[1]
+    idx2name[env_id]  = name
+    idx2count[env_id] = 0
+
+  print("Finish building idx2name. num =",ja)
+
+
+  query = "select env_id from join_run_env where join_id >= %s and join_id <= %s"
+  cursor.execute(query,(args.startNum,args.endNum))
+
+
+  rowA = cursor.fetchall()
+
+  print("Finish extracting env_id from join_run_env")
+
+  for row in rowA:
+    env_id = row[0]
+    if (env_id in idx2count):
+      idx2count[env_id] += 1
+    
+  print("Finish building idx2count")
+
+  sortA = sorted(idx2count.items(), key=operator.itemgetter(1), reverse=True)
+
+  resultA.append(["Env. Name", "Count"])
+  resultA.append(["---------", "-----"])
+
+  num = int(args.num)
+
+  for i, item in enumerate(sortA):
+    if (i > num):
+      break
+    env_id = item[0]
+    count  = item[1]
+    name   = idx2name[env_id]
+    resultA.append([name, count])
+
+  return resultA
+
+
+def main():
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
+  args         = CmdLineOptions().execute()
+  config       = configparser.ConfigParser()     
+  configFn     = dbConfigFn(os.path.join(XALT_ETC_DIR,args.dbname))
+  config.read(configFn)
+
+  conn = MySQLdb.connect \
+         (config.get("MYSQL","HOST"), \
+          config.get("MYSQL","USER"), \
+          base64.b64decode(config.get("MYSQL","PASSWD")), \
+          config.get("MYSQL","DB"))
+  cursor = conn.cursor()
+
+  envT = {}
+
+  resultA = envReport(args, cursor)
+  bt = BeautifulTbl(tbl=resultA, gap = 4, justify = "lr")
+
+  print("\n")
+  print(bt.build_tbl())
+  
+
+
+if ( __name__ == '__main__'): main()
+  
+
+
+

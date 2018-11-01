@@ -1,0 +1,337 @@
+#!/usr/bin/env python
+# -*- python -*-
+
+from __future__ import print_function, division
+from __future__ import print_function
+import os, sys, re, time, datetime, argparse, base64, MySQLdb
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
+
+def getTerminalSize():
+  """
+  Finds the terminal size if possible otherwise it assumes 25, 80
+  @returns: lines  the number of rows
+  @returns: cols   the number of columns
+  """
+  import os, struct
+  def ioctl_GWINSZ(fd):
+      import fcntl, termios
+      return struct.unpack("hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234"))
+  # try stdin, stdout, stderr
+  if (not sys.stdout.isatty()):
+    return (25, 80)
+
+  fd = 1
+  try:
+    return ioctl_GWINSZ(fd)
+  except:
+    pass
+  # try os.ctermid()
+  try:
+    fd = os.open(os.ctermid(), os.O_RDONLY)
+    try:
+      return ioctl_GWINSZ(fd)
+    finally:
+      os.close(fd)
+  except:
+    pass
+  # try `stty size`
+  try:
+    return tuple(int(x) for x in os.popen("stty size", "r").read().split())
+  except:
+    pass
+  # try environment variables
+  try:
+    return tuple(int(os.getenv(var)) for var in ("LINES", "COLUMNS"))
+  except:
+    pass
+  # i give up. return default.
+  return (25, 80)
+
+class ProgressBar(object):
+  """ A progress bar display class """
+
+  def __init__(self, termWidth=None, barWidth=None, maxVal=None, ttyOnly=False, fd=sys.stderr):
+    """
+    Ctor that figures out the range of the progress bar.
+    @param termWidth: The terminal width
+    @param barWidth:  The number of character that make up the bar
+    @param maxVal:    The maximum value (required)
+    @param ttyOnly:   If true then only print progress bar element if connected to a terminal.
+    @param fd:        The output stream.
+    """
+    if (not maxVal):
+      ValueError('Must specify maxVal')
+
+    self.__maxVal = maxVal
+    if (not barWidth):
+      barWidth = termWidth
+      if (not barWidth):
+        r, barWidth = getTerminalSize()
+        if (barWidth < 40):
+          barWidth = 40
+
+    barWidth = min(barWidth, self.__maxVal)
+
+    self.__active   = True
+    if (ttyOnly and not sys.stdout.isatty()):
+      self.__active = False
+      
+
+
+    self.__fd       = fd
+    self.__barWidth = barWidth
+
+    self.__unit     = 100/self.__barWidth
+    self.__fence    = self.__unit
+    self.__mark     = 10
+    self.__count    = -1
+    self.__symbolT  = [ '+', '+', '+', '+', '|', '+', '+', '+', '+', '|' ]
+
+
+  def update(self, i):
+    """
+    Update progress bar.
+    @param i:  input value
+    """
+
+    if (not self.__active):
+      return
+
+    j = 100*i//self.__maxVal
+    k = 100*(i+1)//self.__maxVal
+
+    #print("i: ", i, "j: ",j,"k:",k, "fence: ", self.__fence,"mark:",self.__mark)
+
+    if (j >= self.__fence):
+      symbol = "-"
+      if (( j <= self.__mark and k >= self.__mark) or
+          ( j == k and j == self.__mark)         or
+          (self.__fence > self.__mark)):
+        
+        self.__count +=  1
+        self.__mark  += 10
+        symbol = self.__symbolT[self.__count]
+      self.__fd.write(symbol)
+      self.__fence += self.__unit
+  def fini(self):
+    """ Finish progress bar output. """
+    if (not self.__active):
+      return
+    self.__fd.write("\n")
+        
+      
+class CmdLineOptions(object):
+  """ Command line Options class """
+
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    now    = time.time()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dryrun",       dest='dryrun',       action="store_true",  default = None,          help="dryrun")
+    parser.add_argument("--dbname",       dest='dbname',       action="store",       default = "xalt",        help="db name")
+    parser.add_argument("--start",        dest='start',        action="store",       default = 0.0,           help="start date")
+    parser.add_argument("--end",          dest='enddate',      action="store",       default = now,           help="end date")
+    args = parser.parse_args()
+    return args
+
+
+def dbConfigFn(dbname):
+  """
+  Build config file name from dbname.
+  @param dbname: db name
+  """
+  return dbname + "_db.conf"
+
+
+def correct_num_cores(args, cursor, acctT):
+  """
+  This routine replaces the account name when it is unknown and it computes the run_time for the job.
+  There are two conditions to handle:
+     a) The job_id can be unknown.  This is probably due to the fact that the users script as wiped
+        all environment variables including the env var that has the job_id.
+     b) The accounting record is only written when the job completes.  However XALT writes a record
+        at the beginning of the job. So an XALT record can exist where there is no accounting record.
+     
+  When both the accounting record exists and the XALT record exists, this routine gets a charge account
+  (chargeAcct) from the accounting record and replaces the XALT account column when it differs.
+  Similarly if the end_time from XALT is 0.0 then the run_time is computed and replaced.
+
+  The XALT end_time and run_time are 0.0 on the initial record.  So if the job times out then the end
+  XALT record is not written.  This routine writes the run_time but doesn't set end_time.  This way jobs
+  that timed out can be found in the XALT db.
+  @param cursor:   database accessor object
+  @param acctT:    account record
+  """
+
+  if (type(args.start) == type("abc")):
+    start = args.start
+  else:
+    start   = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.start)))
+
+  if (type(args.enddate) == type("abc")):
+    enddate = args.enddate
+  else:
+    enddate = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(args.enddate)))
+
+  query = "select distinct(job_id) from xalt_run where date >= %s and date < %s"
+  cursor.execute(query,(start,enddate))
+
+  print("(2) Finished finding distinct job_ids")
+  
+
+  rowA = cursor.fetchall()
+
+  pbar = ProgressBar(maxVal = cursor.rowcount, ttyOnly=False)
+
+  n_update = 0
+  j = 0
+  for row in rowA:
+    j += 1
+    j_update = 0
+    pbar.update(j)
+    job_id = row[0]
+    entryT = acctT.get(job_id)
+    if (job_id == "unknown" or entryT == None):
+      continue
+
+    query = "select run_id, run_time, num_cores, account, start_time, end_time from xalt_run where job_id = %s"
+    cursor.execute(query, [job_id])
+    SUs    = 0.0
+    totalT = 0.0
+    for run_id, run_time, num_cores, account, start_time, end_time in cursor:
+
+      ##################################################################
+      # Step 1: fix account in db from TACC accounting records
+
+      chargeAcct = entryT['chargeAcct']
+      if (chargeAcct != account):
+        j_update = 1
+        if (args.dryrun):
+          print("job_id: %s, account: %s, chargeAcct: %s" % (job_id, account, chargeAcct))
+        else:
+          cursor.execute("START TRANSACTION")
+          query = "update xalt_run set account = %s where run_id = %s"
+          cursor.execute(query, (chargeAcct, run_id))
+          cursor.execute("COMMIT")
+
+      ##################################################################
+      # Step 2: Fix run_time from TACC accounting records using
+      #         accounting end_time
+
+      end_time = float(end_time)
+      acct_end = entryT['end_time']
+      if (end_time < 1.0):
+        start_time  = float(start_time)
+        acct_end    = float(acct_end)
+        j_update    = 1
+        run_time    = max(acct_end - start_time, 0.0)
+        rt_str      = "%.2f" % run_time
+        if (args.dryrun):
+          print("job_id: %s, run_time: %s" % (job_id, rt_str))
+        else:
+          cursor.execute("START TRANSACTION")
+          query = "update xalt_run set run_time = %s where run_id = %s"
+          cursor.execute(query, (rt_str, run_id))
+          cursor.execute("COMMIT")
+      
+      ##################################################################
+      # Step 3: Sum run_time from XALT
+
+      run_hrs   = float(run_time)/3600.0
+      SUs      += run_hrs*float(num_cores)
+      totalT   += run_hrs
+
+
+    acctSUs = (float(entryT['end_time']) - float(entryT['start_time']))*float(entryT['num_cores'])/3600.0
+
+    ratio = SUs/acctSUs
+    if ( (totalT > 0.0) and ((SUs > acctSUs) or (SUs < 0.9*acctSUs))):
+      j_update   = 1
+      num_cores  = max(1.0, int(acctSUs/totalT))
+
+      if (args.dryrun):
+        print("job_id: %s, acctSUs: %.2f, Old SUs: %.2f, new SUs: %.2f" % (job_id, acctSUs, SUs, num_cores*totalT))
+      else:
+        cursor.execute("START TRANSACTION")
+        query = "update xalt_run set num_cores = %s where job_id = %s"
+        cursor.execute(query, (num_cores, job_id))
+        cursor.execute("COMMIT")
+    n_update += j_update
+
+  pbar.fini()
+  print("updated",n_update,"job_ids")
+
+def read_tacc_acct_records():
+  """
+   0: Job ID ($JOBID)
+   1: User ID ($UID) 
+   2: Project ID ($ACCOUNT) 
+   3: Junk ($BATCH) 
+   4: Start time ($START) 
+   5: End time ($END) 
+   6: Time job entered in queue ($SUBMIT) 
+   7: SLURM partition ($PARTITION) 
+   8: Requested Time ($LIMIT) 
+   9: Job name ($JOBNAME)
+  10: Job completion status ($JOBSTATE) 
+  11: Nodes ($NODECNT) 
+  12: Cores ($PROCS)
+  """
+  acctT    = {}
+  endtimeT = {}
+
+  fn = "tacc_jobs_completed"
+  f = open(fn,"r")
+  for line in f:
+    fieldA          = line.split(":")
+    if (len(fieldA) < 13):
+      continue
+    jobId           = fieldA[0]
+    chargeAcct      = fieldA[2]
+    start_time      = fieldA[4]
+    end_time        = fieldA[5]
+    num_nodes       = fieldA[11]
+    num_cores       = fieldA[12]
+    acctT[jobId]    = { 'chargeAcct' : chargeAcct,
+                        'start_time' : start_time,
+                        'end_time'   : end_time,
+                        'num_nodes'  : num_nodes,
+                        'num_cores'  : num_cores
+                      }
+  f.close()
+  return acctT
+
+
+
+def main():
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
+  args         = CmdLineOptions().execute()
+  config       = configparser.ConfigParser()     
+  configFn     = dbConfigFn(os.path.join(XALT_ETC_DIR,args.dbname))
+  config.read(configFn)
+
+  conn = MySQLdb.connect \
+         (config.get("MYSQL","HOST"), \
+          config.get("MYSQL","USER"), \
+          base64.b64decode(config.get("MYSQL","PASSWD")), \
+          config.get("MYSQL","DB"))
+  cursor = conn.cursor()
+
+  acctT = read_tacc_acct_records()
+  print("(1) finished reading TACC account records")
+
+  correct_num_cores(args, cursor, acctT)
+
+
+if ( __name__ == '__main__'): main()
+  
+
+
+

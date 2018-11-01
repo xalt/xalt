@@ -1,0 +1,55 @@
+XALT 2.3+
+   (2.3.1)  Turn off DCGM library in 32 bit mode.
+   (2.3.2)  Fix bug in base64_decode string was off by one.
+   (2.3.3)  Support XALT_TRANSMISSION_STYLE=file_separate_dirs
+   (2.3.4)  Testing for 32 bit uuid library when BIT_32=yes   
+            Fix problem with tracking GPU and not running
+            nv-hostengine as root.
+   (2.3.5)  Test for 32 bit uuid library before testing dcgm.
+   (2.3.6)  Remove old x86_64-linux-gnu and i386-linux-gnu links
+            before creating them.
+   (2.3.7)  Fixed bugs in py_build_src/build_syshost_routine.py
+            w.r.t. strip_nodename_numbers()	    
+   (2.3.8)  Added note about needing to turn on accounting on GPU
+            issue #38: use mktemp instead of mkdir
+   (2.3.9)  issue #39: convert smart quotes in to regular quotes.
+   (2.3.10) Look for OMPI vars before PMI vars.
+   (2.3.11) Improved documentation for the config.py file
+            Point sys-admins to the config.py when hostname and
+	    executable path reject.
+   (2.3.12) Removing some extra debugging code that leaked from
+            trey_dbg branch 
+XALT 2.1+
+   (2.1)   Moved devel branch to master branch. xalt_usage_report.py now report usage in
+           core-hours and not node-hours.  Direct2db option support removed. Added cwd
+	   field to xalt_link in db.
+   (2.1.1) Truncate non-numeric characters for PBS job_id.
+   (2.1.2) Fix of issue #29: updated contrib scripts,
+           Fix of issue #30: protecting from divide by zero errors.
+   (2.1.3) XALT registers a signal handler so that programs that seg-faults, fpe
+           and other signals will generate an end record.
+           XALT nolonger frees any malloc'ed memory in myfini().
+
+XALT 2.0+
+   (2.0.1-devel) Now TACC systems will track /bin/cp, /usr/bin/perl, etc with sampling
+   (2.0.2-devel) Support for SPSR sampling added
+   (2.0.3-devel) Now using XALT_SPSR_SAMPLING_RATE env var to override config'ed SPSR
+                 sampling rate
+   (2.0.4-devel) close stderr file and only dup(stderr) when XALT_TRACING is "yes" or "run"
+   (2.0.5-devel) Change xalt_usage_report to use node hours instead of core hours,
+                 ld.in now does not try to add xalt_initialize.so etc when building *.so
+   (2.0.6-devel) Support x86_64-gnu-linux-ld as yet another linker.
+   (2.0.7-devel) Now check status of fopen when opening files in /proc/*
+   (2.0.8-devel) Fix issue #25: Fix bug with my_hostname_processor and 32bit
+                 Force users to install XALT correctly.
+   (2.0.9-devel) Check that XALT_DIR/libexec/xalt_run_submission exists before running it.
+                 Report XALT_DIR and BAD_INSTALL with xalt_configuration_report
+                 
+GPU Branch
+   (2.1.2-gpu) Support for using the DCGM library to record gpu info.
+               Correct support for defining the USE_DCGM macro.
+	       Updated DCGM messages.
+	       Wrap dcgmStartEmbedded() call to send stderr to /dev/null temporarily.
+	       Allow xalt_run_submission to write to stderr when it is called from my_fini().
+	       Add null termination for generated decoded c string in base64_decode().
+	       

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>xalt_transmission_factory</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >XALT</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Module&nbsp;xalt_transmission_factory
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="xalt_transmission_factory-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="xalt_transmission_factory-module.html">Module xalt_transmission_factory</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#-----------------------------------------------------------------------</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"># XALT: A tool that tracks users jobs and environments on a cluster.</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"># Copyright (C) 2013-2014 University of Texas at Austin</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment"># Copyright (C) 2013-2014 University of Tennessee</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"># </tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment"># This library is free software; you can redistribute it and/or modify</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU Lesser General Public License as</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"># published by the Free Software Foundation; either version 2.1 of </tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"># the License, or (at your option) any later version. </tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment"># This library is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment"># Lesser  General Public License for more details. </tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU Lesser General Public</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"># License along with this library; if not, write to the Free</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"># Software Foundation, Inc., 59 Temple Place, Suite 330,</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-comment"># Boston, MA 02111-1307 USA</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-comment">#-----------------------------------------------------------------------</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">__future__</tt>  <tt class="py-keyword">import</tt> <tt class="py-name">print_function</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">json</tt><tt class="py-op">,</tt> <tt class="py-name">base64</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">  <tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module XALTdb=XALTdb-module.html,Class XALTdb.XALTdb=XALTdb.XALTdb-class.html"><a title="XALTdb
+XALTdb.XALTdb" class="py-name" href="#" onclick="return doclink('link-0', 'XALTdb', 'link-0');">XALTdb</a></tt>      <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name"><a title="XALTdb
+XALTdb.XALTdb" class="py-name" href="#" onclick="return doclink('link-1', 'XALTdb', 'link-0');">XALTdb</a></tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">  <tt id="link-2" class="py-name" targets="Variable xalt_transmission_factory.XALTdb_available=xalt_transmission_factory-module.html#XALTdb_available"><a title="xalt_transmission_factory.XALTdb_available" class="py-name" href="#" onclick="return doclink('link-2', 'XALTdb_available', 'link-2');">XALTdb_available</a></tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-keyword">except</tt> <tt class="py-name">ImportError</tt><tt class="py-op">:</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">  <tt id="link-3" class="py-name"><a title="xalt_transmission_factory.XALTdb_available" class="py-name" href="#" onclick="return doclink('link-3', 'XALTdb_available', 'link-2');">XALTdb_available</a></tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">   </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">   </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name" targets="Module XALT_Rmap=XALT_Rmap-module.html"><a title="XALT_Rmap" class="py-name" href="#" onclick="return doclink('link-4', 'XALT_Rmap', 'link-4');">XALT_Rmap</a></tt>   <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Class XALT_Rmap.Rmap=XALT_Rmap.Rmap-class.html"><a title="XALT_Rmap.Rmap" class="py-name" href="#" onclick="return doclink('link-5', 'Rmap', 'link-5');">Rmap</a></tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name" targets="Module xalt_global=xalt_global-module.html"><a title="xalt_global" class="py-name" href="#" onclick="return doclink('link-6', 'xalt_global', 'link-6');">xalt_global</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="XALT_transmission_factory"></a><div id="XALT_transmission_factory-def"><a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt> <a class="py-toggle" href="#" id="XALT_transmission_factory-toggle" onclick="return toggle('XALT_transmission_factory');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="xalt_transmission_factory.XALT_transmission_factory-class.html">XALT_transmission_factory</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="XALT_transmission_factory-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="XALT_transmission_factory-expanded"><a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-docstring">  This class is a factory to determine which way to "write" the json data.</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
+<a name="XALT_transmission_factory.__init__"></a><div id="XALT_transmission_factory.__init__-def"><a name="L38"></a><tt class="py-lineno"> 38</tt> <a class="py-toggle" href="#" id="XALT_transmission_factory.__init__-toggle" onclick="return toggle('XALT_transmission_factory.__init__');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.XALT_transmission_factory-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">syshost</tt><tt class="py-op">,</tt> <tt class="py-param">kind</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="XALT_transmission_factory.__init__-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="XALT_transmission_factory.__init__-expanded"><a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"><tt class="py-docstring">    This ctor saves away the system name and kind of record (link, run)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"><tt class="py-docstring">    @param syshost: Name of the system.</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"><tt class="py-docstring">    @param kind:  Type of record: link or run</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__syshost</tt> <tt class="py-op">=</tt> <tt id="link-7" class="py-name" targets="Function script-xalt_run_submission_in_py.syshost()=script-xalt_run_submission_in_py-module.html#syshost"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-7', 'syshost', 'link-7');">syshost</a></tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__kind</tt>    <tt class="py-op">=</tt> <tt class="py-name">kind</tt> </tt>
+</div><a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"> </tt>
+<a name="XALT_transmission_factory._syshost"></a><div id="XALT_transmission_factory._syshost-def"><a name="L49"></a><tt class="py-lineno"> 49</tt> <a class="py-toggle" href="#" id="XALT_transmission_factory._syshost-toggle" onclick="return toggle('XALT_transmission_factory._syshost');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.XALT_transmission_factory-class.html#_syshost">_syshost</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="XALT_transmission_factory._syshost-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="XALT_transmission_factory._syshost-expanded"><a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-docstring">    returns the system name</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-docstring">    @return returns the system name</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__syshost</tt> </tt>
+</div><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"> </tt>
+<a name="XALT_transmission_factory._kind"></a><div id="XALT_transmission_factory._kind-def"><a name="L56"></a><tt class="py-lineno"> 56</tt> <a class="py-toggle" href="#" id="XALT_transmission_factory._kind-toggle" onclick="return toggle('XALT_transmission_factory._kind');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.XALT_transmission_factory-class.html#_kind">_kind</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="XALT_transmission_factory._kind-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="XALT_transmission_factory._kind-expanded"><a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"><tt class="py-docstring">    Returns the kind of record: link or run</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"><tt class="py-docstring">    @return the kind of record.</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__kind</tt> </tt>
+</div><a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line"> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">  <tt class="py-decorator">@</tt><tt class="py-decorator">staticmethod</tt> </tt>
+<a name="XALT_transmission_factory.build"></a><div id="XALT_transmission_factory.build-def"><a name="L64"></a><tt class="py-lineno"> 64</tt> <a class="py-toggle" href="#" id="XALT_transmission_factory.build-toggle" onclick="return toggle('XALT_transmission_factory.build');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.XALT_transmission_factory-class.html#build">build</a><tt class="py-op">(</tt><tt class="py-param">name</tt><tt class="py-op">,</tt> <tt class="py-param">syshost</tt><tt class="py-op">,</tt> <tt class="py-param">kind</tt><tt class="py-op">,</tt> <tt class="py-param">fn</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="XALT_transmission_factory.build-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="XALT_transmission_factory.build-expanded"><a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"><tt class="py-docstring">    The static factory build routine that returns the transmission object.</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line"><tt class="py-docstring">    @param name: Name of the factory: syslog, directdb, file</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"><tt class="py-docstring">    @param syshost: The system name.  Should be stampede or darter not login1.stampede....</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"><tt class="py-docstring">    @param kind: Type of record: link, run</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"><tt class="py-docstring">    @param fn:  file name (only used by file transport object</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">    <tt class="py-name">name</tt> <tt class="py-op">=</tt> <tt class="py-name">name</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">name</tt> <tt class="py-op">==</tt> <tt class="py-string">"syslog"</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">      <tt class="py-name">obj</tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name" targets="Class xalt_transmission_factory.Syslog=xalt_transmission_factory.Syslog-class.html"><a title="xalt_transmission_factory.Syslog" class="py-name" href="#" onclick="return doclink('link-8', 'Syslog', 'link-8');">Syslog</a></tt><tt class="py-op">(</tt><tt id="link-9" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-9', 'syshost', 'link-7');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">kind</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-op">(</tt><tt class="py-name">name</tt> <tt class="py-op">==</tt> <tt class="py-string">"directdb"</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">      <tt class="py-name">obj</tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name" targets="Class xalt_transmission_factory.DirectDB=xalt_transmission_factory.DirectDB-class.html"><a title="xalt_transmission_factory.DirectDB" class="py-name" href="#" onclick="return doclink('link-10', 'DirectDB', 'link-10');">DirectDB</a></tt><tt class="py-op">(</tt><tt id="link-11" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-11', 'syshost', 'link-7');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">kind</tt><tt class="py-op">)</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt>                  </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">      <tt class="py-comment"># file</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">      <tt class="py-name">obj</tt> <tt class="py-op">=</tt> <tt id="link-12" class="py-name" targets="Class xalt_transmission_factory.File=xalt_transmission_factory.File-class.html"><a title="xalt_transmission_factory.File" class="py-name" href="#" onclick="return doclink('link-12', 'File', 'link-12');">File</a></tt><tt class="py-op">(</tt><tt id="link-13" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-13', 'syshost', 'link-7');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">kind</tt><tt class="py-op">,</tt> <tt class="py-name">fn</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">       </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">obj</tt> </tt>
+</div></div><a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line"> </tt>
+<a name="Syslog"></a><div id="Syslog-def"><a name="L85"></a><tt class="py-lineno"> 85</tt> <a class="py-toggle" href="#" id="Syslog-toggle" onclick="return toggle('Syslog');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="xalt_transmission_factory.Syslog-class.html">Syslog</a><tt class="py-op">(</tt><tt class="py-base-class">XALT_transmission_factory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Syslog-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Syslog-expanded"><a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line"><tt class="py-docstring">  This class write the json record to syslog</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"> </tt>
+<a name="Syslog.__init__"></a><div id="Syslog.__init__-def"><a name="L90"></a><tt class="py-lineno"> 90</tt> <a class="py-toggle" href="#" id="Syslog.__init__-toggle" onclick="return toggle('Syslog.__init__');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.Syslog-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">syshost</tt><tt class="py-op">,</tt> <tt class="py-param">kind</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Syslog.__init__-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="Syslog.__init__-expanded"><a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"><tt class="py-docstring">    This is the ctor for Syslog transmission method</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"><tt class="py-docstring">    @param syshost: Name of the system.</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line"><tt class="py-docstring">    @param kind:  Type of record: link or run</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">    <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-14" class="py-name"><a title="xalt_transmission_factory.Syslog" class="py-name" href="#" onclick="return doclink('link-14', 'Syslog', 'link-8');">Syslog</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Method XALT_Rmap.Rmap.__init__()=XALT_Rmap.Rmap-class.html#__init__,Method XALTdb.XALTdb.__init__()=XALTdb.XALTdb-class.html#__init__,Method progressBar.ProgressBar.__init__()=progressBar.ProgressBar-class.html#__init__,Method removeDataBase.CmdLineOptions.__init__()=removeDataBase.CmdLineOptions-class.html#__init__,Method script-conf_create_in_py.CmdLineOptions.__init__()=script-conf_create_in_py.CmdLineOptions-class.html#__init__,Method script-conf_create_in_py.CreateConf.__init__()=script-conf_create_in_py.CreateConf-class.html#__init__,Method script-createDB_in_py.CmdLineOptions.__init__()=script-createDB_in_py.CmdLineOptions-class.html#__init__,Method script-xalt_file_to_db_in_py.CmdLineOptions.__init__()=script-xalt_file_to_db_in_py.CmdLineOptions-class.html#__init__,Method script-xalt_run_submission_in_py.CmdLineOptions.__init__()=script-xalt_run_submission_in_py.CmdLineOptions-class.html#__init__,Method script-xalt_run_submission_in_py.EnvT.__init__()=script-xalt_run_submission_in_py.EnvT-class.html#__init__,Method script-xalt_run_submission_in_py.ExtractXALT.__init__()=script-xalt_run_submission_in_py.ExtractXALT-class.html#__init__,Method script-xalt_run_submission_in_py.UserEnvT.__init__()=script-xalt_run_submission_in_py.UserEnvT-class.html#__init__,Method script-xalt_run_submission_in_py.UserExec.__init__()=script-xalt_run_submission_in_py.UserExec-class.html#__init__,Method script-xalt_syslog_to_db_in_py.CmdLineOptions.__init__()=script-xalt_syslog_to_db_in_py.CmdLineOptions-class.html#__init__,Method xalt_stack.Stack.__init__()=xalt_stack.Stack-class.html#__init__,Method xalt_transmission_factory.DirectDB.__init__()=xalt_transmission_factory.DirectDB-class.html#__init__,Method xalt_transmission_factory.File.__init__()=xalt_transmission_factory.File-class.html#__init__,Method xalt_transmission_factory.Syslog.__init__()=xalt_transmission_factory.Syslog-class.html#__init__,Method xalt_transmission_factory.XALT_transmission_factory.__init__()=xalt_transmission_factory.XALT_transmission_factory-class.html#__init__"><a title="XALT_Rmap.Rmap.__init__
+XALTdb.XALTdb.__init__
+progressBar.ProgressBar.__init__
+removeDataBase.CmdLineOptions.__init__
+script-conf_create_in_py.CmdLineOptions.__init__
+script-conf_create_in_py.CreateConf.__init__
+script-createDB_in_py.CmdLineOptions.__init__
+script-xalt_file_to_db_in_py.CmdLineOptions.__init__
+script-xalt_run_submission_in_py.CmdLineOptions.__init__
+script-xalt_run_submission_in_py.EnvT.__init__
+script-xalt_run_submission_in_py.ExtractXALT.__init__
+script-xalt_run_submission_in_py.UserEnvT.__init__
+script-xalt_run_submission_in_py.UserExec.__init__
+script-xalt_syslog_to_db_in_py.CmdLineOptions.__init__
+xalt_stack.Stack.__init__
+xalt_transmission_factory.DirectDB.__init__
+xalt_transmission_factory.File.__init__
+xalt_transmission_factory.Syslog.__init__
+xalt_transmission_factory.XALT_transmission_factory.__init__" class="py-name" href="#" onclick="return doclink('link-15', '__init__', 'link-15');">__init__</a></tt><tt class="py-op">(</tt><tt id="link-16" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-16', 'syshost', 'link-7');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">kind</tt><tt class="py-op">)</tt> </tt>
+</div><a name="Syslog.save"></a><div id="Syslog.save-def"><a name="L98"></a><tt class="py-lineno"> 98</tt> <a class="py-toggle" href="#" id="Syslog.save-toggle" onclick="return toggle('Syslog.save');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.Syslog-class.html#save">save</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">resultT</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Syslog.save-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="Syslog.save-expanded"><a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line"><tt class="py-docstring">    The json table is written to syslog with the text converted to base64.</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line"><tt class="py-docstring">    @param resultT: The json record table</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">    <tt class="py-name">sA</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"logger -t XALT_LOGGING"</tt><tt class="py-op">)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">" \""</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Method xalt_transmission_factory.XALT_transmission_factory._kind()=xalt_transmission_factory.XALT_transmission_factory-class.html#_kind"><a title="xalt_transmission_factory.XALT_transmission_factory._kind" class="py-name" href="#" onclick="return doclink('link-17', '_kind', 'link-17');">_kind</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">":"</tt><tt class="py-op">)</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Method xalt_transmission_factory.XALT_transmission_factory._syshost()=xalt_transmission_factory.XALT_transmission_factory-class.html#_syshost"><a title="xalt_transmission_factory.XALT_transmission_factory._syshost" class="py-name" href="#" onclick="return doclink('link-18', '_syshost', 'link-18');">_syshost</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">":"</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">base64</tt><tt class="py-op">.</tt><tt class="py-name">b64encode</tt><tt class="py-op">(</tt><tt class="py-name">json</tt><tt class="py-op">.</tt><tt class="py-name">dumps</tt><tt class="py-op">(</tt><tt class="py-name">resultT</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">    <tt class="py-name">sA</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">"\""</tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">    <tt class="py-name">s</tt> <tt class="py-op">=</tt> <tt class="py-string">""</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">sA</tt><tt class="py-op">)</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">    <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">system</tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">     </tt>
+<a name="File"></a><div id="File-def"><a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line"> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt> <a class="py-toggle" href="#" id="File-toggle" onclick="return toggle('File');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="xalt_transmission_factory.File-class.html">File</a><tt class="py-op">(</tt><tt class="py-base-class">XALT_transmission_factory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="File-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="File-expanded"><a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line"><tt class="py-docstring">  This is the file transport class</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line"> </tt>
+<a name="File.__init__"></a><div id="File.__init__-def"><a name="L121"></a><tt class="py-lineno">121</tt> <a class="py-toggle" href="#" id="File.__init__-toggle" onclick="return toggle('File.__init__');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.File-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">syshost</tt><tt class="py-op">,</tt> <tt class="py-param">kind</tt><tt class="py-op">,</tt> <tt class="py-param">fn</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="File.__init__-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="File.__init__-expanded"><a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line"><tt class="py-docstring">    This ctor is for the file transport method.</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"><tt class="py-docstring">    @param syshost: Name of the system.</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line"><tt class="py-docstring">    @param kind:  Type of record: link or run</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line"><tt class="py-docstring">    @param fn:  the file name to write the record to.</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">    <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-19" class="py-name"><a title="xalt_transmission_factory.File" class="py-name" href="#" onclick="return doclink('link-19', 'File', 'link-12');">File</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="XALT_Rmap.Rmap.__init__
+XALTdb.XALTdb.__init__
+progressBar.ProgressBar.__init__
+removeDataBase.CmdLineOptions.__init__
+script-conf_create_in_py.CmdLineOptions.__init__
+script-conf_create_in_py.CreateConf.__init__
+script-createDB_in_py.CmdLineOptions.__init__
+script-xalt_file_to_db_in_py.CmdLineOptions.__init__
+script-xalt_run_submission_in_py.CmdLineOptions.__init__
+script-xalt_run_submission_in_py.EnvT.__init__
+script-xalt_run_submission_in_py.ExtractXALT.__init__
+script-xalt_run_submission_in_py.UserEnvT.__init__
+script-xalt_run_submission_in_py.UserExec.__init__
+script-xalt_syslog_to_db_in_py.CmdLineOptions.__init__
+xalt_stack.Stack.__init__
+xalt_transmission_factory.DirectDB.__init__
+xalt_transmission_factory.File.__init__
+xalt_transmission_factory.Syslog.__init__
+xalt_transmission_factory.XALT_transmission_factory.__init__" class="py-name" href="#" onclick="return doclink('link-20', '__init__', 'link-15');">__init__</a></tt><tt class="py-op">(</tt><tt id="link-21" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-21', 'syshost', 'link-7');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">kind</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__fn</tt>      <tt class="py-op">=</tt> <tt class="py-name">fn</tt> </tt>
+</div><a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"> </tt>
+<a name="File.save"></a><div id="File.save-def"><a name="L131"></a><tt class="py-lineno">131</tt> <a class="py-toggle" href="#" id="File.save-toggle" onclick="return toggle('File.save');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.File-class.html#save">save</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">resultT</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="File.save-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="File.save-expanded"><a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"><tt class="py-docstring">    The json table is written to the file specified in the ctor.</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-docstring">    @param resultT: The json record table</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">    <tt class="py-name">s</tt>           <tt class="py-op">=</tt> <tt class="py-name">json</tt><tt class="py-op">.</tt><tt class="py-name">dumps</tt><tt class="py-op">(</tt><tt class="py-name">resultT</tt><tt class="py-op">,</tt> <tt class="py-name">sort_keys</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">,</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">                             <tt class="py-name">indent</tt><tt class="py-op">=</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">separators</tt><tt class="py-op">=</tt><tt class="py-op">(</tt><tt class="py-string">','</tt><tt class="py-op">,</tt><tt class="py-string">': '</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">    <tt class="py-name">dirname</tt><tt class="py-op">,</tt> <tt class="py-name">fn</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__fn</tt><tt class="py-op">)</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">    <tt class="py-name">tmpFn</tt>       <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">,</tt> <tt class="py-string">"."</tt> <tt class="py-op">+</tt> <tt class="py-name">fn</tt><tt class="py-op">)</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-keyword">not</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">isdir</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">      <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">mkdir</tt><tt class="py-op">(</tt><tt class="py-name">dirname</tt><tt class="py-op">)</tt><tt class="py-op">;</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">     </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">    <tt class="py-name">f</tt> <tt class="py-op">=</tt> <tt class="py-name">open</tt><tt class="py-op">(</tt><tt class="py-name">tmpFn</tt><tt class="py-op">,</tt><tt class="py-string">"w"</tt><tt class="py-op">)</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-name">s</tt><tt class="py-op">)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">    <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">rename</tt><tt class="py-op">(</tt><tt class="py-name">tmpFn</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__fn</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line"> </tt>
+<a name="DirectDB"></a><div id="DirectDB-def"><a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt> <a class="py-toggle" href="#" id="DirectDB-toggle" onclick="return toggle('DirectDB');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="xalt_transmission_factory.DirectDB-class.html">DirectDB</a><tt class="py-op">(</tt><tt class="py-base-class">XALT_transmission_factory</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DirectDB-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="DirectDB-expanded"><a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line"><tt class="py-docstring">  This class is the direct to db transmission method.</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line"> </tt>
+<a name="DirectDB.__init__"></a><div id="DirectDB.__init__-def"><a name="L154"></a><tt class="py-lineno">154</tt> <a class="py-toggle" href="#" id="DirectDB.__init__-toggle" onclick="return toggle('DirectDB.__init__');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.DirectDB-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">syshost</tt><tt class="py-op">,</tt> <tt class="py-param">kind</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DirectDB.__init__-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="DirectDB.__init__-expanded"><a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line"><tt class="py-docstring">    This is the ctor for Direct to DB transmission method</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"><tt class="py-docstring">    @param syshost: Name of the system.</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"><tt class="py-docstring">    @param kind:  Type of record: link or run</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">    <tt class="py-name">super</tt><tt class="py-op">(</tt><tt id="link-22" class="py-name"><a title="xalt_transmission_factory.DirectDB" class="py-name" href="#" onclick="return doclink('link-22', 'DirectDB', 'link-10');">DirectDB</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="XALT_Rmap.Rmap.__init__
+XALTdb.XALTdb.__init__
+progressBar.ProgressBar.__init__
+removeDataBase.CmdLineOptions.__init__
+script-conf_create_in_py.CmdLineOptions.__init__
+script-conf_create_in_py.CreateConf.__init__
+script-createDB_in_py.CmdLineOptions.__init__
+script-xalt_file_to_db_in_py.CmdLineOptions.__init__
+script-xalt_run_submission_in_py.CmdLineOptions.__init__
+script-xalt_run_submission_in_py.EnvT.__init__
+script-xalt_run_submission_in_py.ExtractXALT.__init__
+script-xalt_run_submission_in_py.UserEnvT.__init__
+script-xalt_run_submission_in_py.UserExec.__init__
+script-xalt_syslog_to_db_in_py.CmdLineOptions.__init__
+xalt_stack.Stack.__init__
+xalt_transmission_factory.DirectDB.__init__
+xalt_transmission_factory.File.__init__
+xalt_transmission_factory.Syslog.__init__
+xalt_transmission_factory.XALT_transmission_factory.__init__" class="py-name" href="#" onclick="return doclink('link-23', '__init__', 'link-15');">__init__</a></tt><tt class="py-op">(</tt><tt id="link-24" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-24', 'syshost', 'link-7');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">kind</tt><tt class="py-op">)</tt> </tt>
+</div><a name="DirectDB.save"></a><div id="DirectDB.save-def"><a name="L161"></a><tt class="py-lineno">161</tt> <a class="py-toggle" href="#" id="DirectDB.save-toggle" onclick="return toggle('DirectDB.save');">-</a><tt class="py-line">  <tt class="py-keyword">def</tt> <a class="py-def-name" href="xalt_transmission_factory.DirectDB-class.html#save">save</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">resultT</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DirectDB.save-collapsed" style="display:none;" pad="+++" indent="++++++"></div><div id="DirectDB.save-expanded"><a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line"><tt class="py-docstring">    The json table is written directly to the db.</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line"><tt class="py-docstring">    @param resultT: The json record table</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-keyword">not</tt> <tt id="link-25" class="py-name"><a title="xalt_transmission_factory.XALTdb_available" class="py-name" href="#" onclick="return doclink('link-25', 'XALTdb_available', 'link-2');">XALTdb_available</a></tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">      <tt class="py-keyword">raise</tt> <tt class="py-name">ImportError</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">     </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">    <tt id="link-26" class="py-name" targets="Variable script-xalt_syslog_to_db_in_py.ConfigFn=script-xalt_syslog_to_db_in_py-module.html#ConfigFn"><a title="script-xalt_syslog_to_db_in_py.ConfigFn" class="py-name" href="#" onclick="return doclink('link-26', 'ConfigFn', 'link-26');">ConfigFn</a></tt>     <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-27" class="py-name" targets="Variable xalt_global.XALT_ETC_DIR=xalt_global-module.html#XALT_ETC_DIR,Variable xalt_transmission_factory.XALT_ETC_DIR=xalt_transmission_factory-module.html#XALT_ETC_DIR"><a title="xalt_global.XALT_ETC_DIR
+xalt_transmission_factory.XALT_ETC_DIR" class="py-name" href="#" onclick="return doclink('link-27', 'XALT_ETC_DIR', 'link-27');">XALT_ETC_DIR</a></tt><tt class="py-op">,</tt><tt class="py-string">"xalt_db.conf"</tt><tt class="py-op">)</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">    <tt class="py-name">RMapFn</tt>       <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-28" class="py-name"><a title="xalt_global.XALT_ETC_DIR
+xalt_transmission_factory.XALT_ETC_DIR" class="py-name" href="#" onclick="return doclink('link-28', 'XALT_ETC_DIR', 'link-27');">XALT_ETC_DIR</a></tt><tt class="py-op">,</tt><tt class="py-string">"reverseMapD"</tt><tt class="py-op">)</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line"> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line">    <tt class="py-name">xalt</tt>        <tt class="py-op">=</tt> <tt id="link-29" class="py-name"><a title="XALTdb
+XALTdb.XALTdb" class="py-name" href="#" onclick="return doclink('link-29', 'XALTdb', 'link-0');">XALTdb</a></tt><tt class="py-op">(</tt><tt id="link-30" class="py-name"><a title="script-xalt_syslog_to_db_in_py.ConfigFn" class="py-name" href="#" onclick="return doclink('link-30', 'ConfigFn', 'link-26');">ConfigFn</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">    <tt id="link-31" class="py-name" targets="Method XALT_Rmap.Rmap.reverseMapT()=XALT_Rmap.Rmap-class.html#reverseMapT"><a title="XALT_Rmap.Rmap.reverseMapT" class="py-name" href="#" onclick="return doclink('link-31', 'reverseMapT', 'link-31');">reverseMapT</a></tt> <tt class="py-op">=</tt> <tt id="link-32" class="py-name"><a title="XALT_Rmap.Rmap" class="py-name" href="#" onclick="return doclink('link-32', 'Rmap', 'link-5');">Rmap</a></tt><tt class="py-op">(</tt><tt class="py-name">RMapFn</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="XALT_Rmap.Rmap.reverseMapT" class="py-name" href="#" onclick="return doclink('link-33', 'reverseMapT', 'link-31');">reverseMapT</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-34" class="py-name"><a title="xalt_transmission_factory.XALT_transmission_factory._kind" class="py-name" href="#" onclick="return doclink('link-34', '_kind', 'link-17');">_kind</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">"link"</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">      <tt class="py-name">xalt</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name" targets="Method XALTdb.XALTdb.link_to_db()=XALTdb.XALTdb-class.html#link_to_db"><a title="XALTdb.XALTdb.link_to_db" class="py-name" href="#" onclick="return doclink('link-35', 'link_to_db', 'link-35');">link_to_db</a></tt><tt class="py-op">(</tt><tt id="link-36" class="py-name"><a title="XALT_Rmap.Rmap.reverseMapT" class="py-name" href="#" onclick="return doclink('link-36', 'reverseMapT', 'link-31');">reverseMapT</a></tt><tt class="py-op">,</tt> <tt class="py-name">resultT</tt><tt class="py-op">)</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt>  </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">      <tt class="py-comment"># kind == "run"</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line">      <tt class="py-name">xalt</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name" targets="Method XALTdb.XALTdb.run_to_db()=XALTdb.XALTdb-class.html#run_to_db"><a title="XALTdb.XALTdb.run_to_db" class="py-name" href="#" onclick="return doclink('link-37', 'run_to_db', 'link-37');">run_to_db</a></tt><tt class="py-op">(</tt><tt id="link-38" class="py-name"><a title="XALT_Rmap.Rmap.reverseMapT" class="py-name" href="#" onclick="return doclink('link-38', 'reverseMapT', 'link-31');">reverseMapT</a></tt><tt class="py-op">,</tt> <tt class="py-name">resultT</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >XALT</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Sep 20 12:25:05 2014
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+# -*- python -*-
+from __future__ import print_function
+import os, sys, re
+
+def main():
+  if (len(sys.argv) < 2):
+    print("usage",file=sys.stderr)
+    return
+
+  sA = re.split('[qQ]',sys.argv[1])
+
+  year  = int(sA[0])
+  istrt = 3*(int(sA[1]) - 1) + 1
+  iend  = istrt + 3
+
+  for month in range(istrt,iend):
+    strtD = "%d-%02d-01" % (year, month)
+    if (month+1 > 12):
+      endD  = "%d-%02d-01" % (year+1, 1)
+    else:
+      endD  = "%d-%02d-01" % (year, month+1)
+    print("%s:%s" % (strtD,endD))
+    
+  
+
+
+
+if ( __name__ == '__main__'): main()

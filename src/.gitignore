@@ -1,0 +1,9 @@
+lex.__XALT_hostL.c
+lex.__XALT_hostR.c
+lex.__XALT_pathL.c
+lex.__XALT_pathR.c
+lex.xalt_env.c
+__build__
+stamp-h
+*.d
+xalt_syshost.c

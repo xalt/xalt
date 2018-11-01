@@ -1,0 +1,342 @@
+#!/bin/bash
+#-*- shell-script -*-
+#
+#  MAGIC_STRING__XALT__XALT__MAGIC_STRING
+#
+# Git Version: @git@
+
+#-----------------------------------------------------------------------
+# XALT: A tool that tracks users jobs and environments on a cluster.
+# Copyright (C) 2013-2014 University of Texas at Austin
+# Copyright (C) 2013-2014 University of Tennessee
+# 
+# This library is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation; either version 2.1 of 
+# the License, or (at your option) any later version. 
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Lesser  General Public License for more details. 
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330,
+# Boston, MA 02111-1307 USA
+#-----------------------------------------------------------------------
+
+##########################################################################
+#
+# ld wrapper: Add XALT "scribble" to executable or shared library.
+#             Then run real ld, with trace.  Save the link trace
+#             into an XALT link record.
+#
+##########################################################################
+
+
+
+
+
+unset LD_PRELOAD
+CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
+XALT_DIR=@xalt_dir@
+DIRNAME=@path_to_dirname@
+BASENAME=@path_to_basename@
+READLINK=@path_to_readlink@
+SHA1SUM=@sha1sum@
+HAVE_DCGM=@have_dcgm@
+SEP_DIR=
+XALT_FILE_PREFIX=@xalt_file_prefix@
+HAVE_WORKING_LIBUUID=@have_working_libuuid@
+MY_NAME=$($BASENAME $0)
+MY_DIR=$($DIRNAME $($READLINK -f $0))
+
+declare -l XALT_TRANSMISSION_STYLE
+
+if [ -z "$XALT_PRELOAD_ONLY" ]; then
+    XALT_PRELOAD_ONLY=@preload_only@
+elif [ "$XALT_PRELOAD_ONLY" != no ]; then
+   XALT_PRELOAD_ONLY=yes
+fi
+
+if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
+   XALT_TRANSMISSION_STYLE=@transmission@
+fi
+
+# XALT_TRANSMISSION_STYLE is already lower case!
+if [ $XALT_TRANSMISSION_STYLE = file_separate_dirs ]; then
+   SEP_DIR=link/
+fi
+
+if [ -z "$XALT_FUNCTION_TRACKING" ]; then
+   XALT_FUNCTION_TRACKING=@xalt_function_tracking@
+elif [ "$XALT_FUNCTION_TRACKING" != no ]; then
+   XALT_FUNCTION_TRACKING=yes
+fi
+
+
+
+
+source $MY_DIR/xalt_helper_functions.sh
+
+##########################################################################
+# Check for user requested tracing.
+request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=yes/no/link
+tracing_msg "Starting ld"
+
+########################################################################
+# Search for the command  and make sure that you don't find this one.
+
+EXEC_X=/usr/bin/${MY_NAME}.x
+find_real_command $0 $EXEC_X # this command sets $MY_CMD
+
+
+########################################################################
+# Loop over command line arguments to ld. This code is used instead of
+# getopt and others because this wrapper script should not try to know
+# all the options to ld. Instead we are just "cherry-picking" the options
+# we want to know about.
+
+PARTIAL_LINKING=
+printOptA=()
+PrintOptions=
+EXEC="a.out"
+append=false
+prev=
+done=false
+BIT32FLAG=
+for option
+do
+  if [ -n "$prev" ]; then
+    eval "$prev=\$option"
+    prev=
+    continue
+  fi
+
+  case "$option" in
+    -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
+    -*) optarg=;;
+    *) optarg=; done=true;;
+  esac
+  
+  case $option in
+    --version|-v|--help)
+      $MY_CMD "${argA[@]}"
+      exit $?
+      ;;
+    --trace|-t)
+      USER_TRACE="true"
+      ;;
+
+    elf_i386)
+      BIT32FLAG=--32
+      ;;
+
+    -M|--print-map|--print-output-format|--print-memory-usage)
+      PrintOptions="true"
+      printOptA+=("$option")
+      ;;
+
+    -o)
+      prev='EXEC'
+      ;;
+
+    -shared)
+      SHARED_LIB=true
+      ;;
+
+    -r)
+      PARTIAL_LINKING=true
+      ;;
+  esac
+
+  #####################################################################
+  # This code below is commented out.  Since this script is not parsing
+  # all options the done flag won't work.
+
+  #if [ "$done" = "true" ]; then
+  #  break;
+  #fi
+
+done
+
+############################################################
+# See if the print options need to be merged
+if [ -n "$USER_TRACE" -a -n "$PrintOptions" ]; then
+    printOptA+=("--trace")
+    unset USER_TRACE
+fi
+    
+############################################################
+# Test to see if the executable is an autoconf or cmake build
+# => skip those.
+
+SKIP=
+case "$EXEC" in
+  conftest)
+    SKIP=true;;
+  cmTryCompileExec[0-9]*)
+    SKIP=true;;
+  cmTC_[a-f0-9]*)
+    SKIP=true;;
+esac
+if [ -z "$HOME" -o -z "$USER" ]; then
+   SKIP=true
+fi
+
+if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true -o "$PARTIAL_LINKING" = true ]; then
+  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP, PARTIAL_LINKING: $PARTIAL_LINKING"
+
+  $MY_CMD "${argA[@]}"
+  status=$?
+  exit $status
+fi
+
+MY_HOSTNAME_PARSER_STRING=@my_hostname_parser@
+MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
+    
+
+XALT_LIBEXEC_DIR=$XALT_DIR/libexec
+XALT_SITE_DIR=$XALT_DIR/site
+GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly
+GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
+STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
+EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
+SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
+REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
+SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
+UUIDGEN=@uuidgen@
+RM=@path_to_rm@
+AS=@path_to_as@
+CAT=@path_to_cat@
+MKTEMP=@path_to_mktemp@
+GREP=@grep@
+PyPATH="/usr/bin:/bin"
+
+
+UUID=`$UUIDGEN`
+WRKDIR=$(mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
+LINKLINE_OUT=$WRKDIR/link.txt
+LINKLINE_ERR=$WRKDIR/link.err
+ARGSRC=$WRKDIR/xalt.s
+ARGOBJ=$WRKDIR/xalt.o
+FUNCRAW=$WRKDIR/funcraw.txt
+FUNCLIST=$WRKDIR/funclist.txt
+
+if [ -z "$BIT32FLAG" ]; then
+  XLD=$XALT_DIR/lib64
+  if [ "$MY_HOSTNAME_PARSER_KIND" = "c_file" ]; then
+      MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.o
+  elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
+      MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.a
+  fi
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_syshost.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/build_uuid.o $XLD/base64.o $MY_HOSTNAME_PARSER_OBJ"
+else
+  XLD=$XALT_DIR/lib
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o"
+fi
+  
+# Get the compiler information
+COMP_T=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
+tracing_msg "COMP_T:" $COMP_T 
+
+EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+DATESTR=`date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S"`
+INT_EPOCH=$(echo "( $EPOCH )/1" | bc)
+FRAC_EPOCH=$(echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
+DATESTR="${DATESTR}_${FRAC_EPOCH}"
+
+if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
+    RESULT=$XALT_FILE_PREFIX/${SEP_DIR}$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
+else
+    RESULT=$HOME/.xalt.d/${SEP_DIR}link.${SYSHOST}.${DATESTR}.$UUID.json
+fi
+
+# If the $ARGSRC exists then build it
+# otherwise don't try to link with it.
+OBJ=$ARGOBJ
+if [ -f "$ARGSRC" ]; then
+  $AS $ARGSRC $BIT32FLAG -o $OBJ
+else
+  OBJ=""
+fi
+
+###################################################################
+# start a subshell in the background for the intentional
+# failed link for function tracking
+function_tracking()
+{
+  if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
+     STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
+     $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  fi
+}
+
+function_tracking
+
+tracing_msg $MY_CMD "${argA[@]}"
+
+#############################################################
+# If the user requested print options such as --print-map
+# then run link again with those options
+
+if [ -n "$PrintOptions" ]; then
+    $MY_CMD "${printOptA[@]}" "${argA[@]}"
+fi
+
+LIBUUID=
+LIBDCGM=
+
+#############################################################
+#  Only use the uuid library for 64bit apps not for 32bit apps
+if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
+    LIBUUID="-luuid"
+fi
+
+#############################################################
+#  Only use the dcgm library for 64bit apps not for 32bit apps
+if [ "$HAVE_DCGM" = "yes" -a -z "$BIT32FLAG" ]; then
+    LIBDCGM="-ldcgm"
+fi
+
+#############################################################
+#  do not include xalt_initialize.*, -luuid, etc when building
+#  a shared library. Also do not add when in PRELOAD_ONLY mode
+
+if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
+    XALT_INIT_ROUTINE_OBJ=
+    LIBUUID=
+    LIBDCGM=
+    tracing_msg "Shared library build detected not adding XALT initialize routines to user code"
+fi
+
+
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID $LIBDCGM -t > $LINKLINE_OUT  2>&1
+status=$?
+
+if [ ! -f "$EXEC" -o $status -ne 0 ]; then
+   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID $LIBDCGM 
+   exit $status
+fi
+
+EXEC=$($REALPATH $EXEC)
+
+
+if [ -n "$USER_TRACE" ]; then
+  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
+fi
+
+# Get the sha1sum for the executable because it might move or disappear!
+SHA1SUM_EXEC=$($SHA1SUM $EXEC)
+
+wait #-- wait for subshell to finish
+
+tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
+
+###################################################################
+# Generate link data.  
+LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+$RM -rf $WRKDIR  
+
+exit $status

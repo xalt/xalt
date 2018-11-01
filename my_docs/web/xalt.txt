@@ -1,0 +1,39 @@
+XALT: Tracking Job-level Activity on Supercomputers
+
+
+Purpose:
+
+XALT is a tool that allows supercomputer support staff to collect and
+understand job-level information about the libraries and executables
+that end-users access during their jobs. The tool can also work with a
+system's module software to provide additional information about
+module usage. 
+
+XALT is a collaboration between PI Mark Fahey (University of Chicago,
+formerly National Institute for Computational Sciences) and co-PI
+Robert McLay (TACC). 
+
+
+Overview:
+
+XALT collects data by intercepting the linker (ld) and the parallel
+job launcher (aprun, ibrun, mpirun, etc.).  At link time, XALT learns
+the static and dynamic libraries that executable needs.  At run time
+XALT determines the details of each parallel job: the name of
+executable along with its dependencies, the nature of the computation
+(e.g. total nodes, MPI tasks, duration, etc.), and the environment in
+which the job ran. XALT writes a record of each link-time and run-time
+event to a database.
+
+
+Funding Source:
+
+National Science Foundation award 1339690 (Collaborative
+Research: SI2-SSE: XALT: Understanding the Software Needs of High End
+Computer Users) 
+
+
+Download:
+
+Download XALT from github (https://github.com/Fahey-McLay/xalt.git)
+or sourceforge (http://sourceforge.net/projects/xalt/files)

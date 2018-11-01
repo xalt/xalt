@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>script-xalt_generate_assembly_in_py</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >XALT</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Script&nbsp;xalt_generate_assembly_in_py
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="script-xalt_generate_assembly_in_py-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="script-xalt_generate_assembly_in_py-module.html">Script script-xalt_generate_assembly_in_py</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># -*- python -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-comment"># Git Version: @git@</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-comment">#-----------------------------------------------------------------------</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-comment"># XALT: A tool that tracks users jobs and environments on a cluster.</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-comment"># Copyright (C) 2013-2014 University of Texas at Austin</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-comment"># Copyright (C) 2013-2014 University of Tennessee</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-comment"># </tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-comment"># This library is free software; you can redistribute it and/or modify</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU Lesser General Public License as</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-comment"># published by the Free Software Foundation; either version 2.1 of </tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-comment"># the License, or (at your option) any later version. </tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-comment"># This library is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-comment"># Lesser  General Public License for more details. </tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU Lesser General Public</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-comment"># License along with this library; if not, write to the Free</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-comment"># Software Foundation, Inc., 59 Temple Place, Suite 330,</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-comment"># Boston, MA 02111-1307 USA</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-comment">#-----------------------------------------------------------------------</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">__future__</tt> <tt class="py-keyword">import</tt> <tt class="py-name">print_function</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">time</tt><tt class="py-op">,</tt> <tt class="py-name">platform</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable XALT_Rmap.dirNm=XALT_Rmap-module.html#dirNm,Variable script-conf_create_in_py.dirNm=script-conf_create_in_py-module.html#dirNm"><a title="XALT_Rmap.dirNm
+script-conf_create_in_py.dirNm" class="py-name" href="#" onclick="return doclink('link-0', 'dirNm', 'link-0');">dirNm</a></tt><tt class="py-op">,</tt> <tt id="link-1" class="py-name" targets="Variable XALT_Rmap.execName=XALT_Rmap-module.html#execName,Variable script-conf_create_in_py.execName=script-conf_create_in_py-module.html#execName,Method script-xalt_run_submission_in_py.UserExec.execName()=script-xalt_run_submission_in_py.UserExec-class.html#execName"><a title="XALT_Rmap.execName
+script-conf_create_in_py.execName
+script-xalt_run_submission_in_py.UserExec.execName" class="py-name" href="#" onclick="return doclink('link-1', 'execName', 'link-1');">execName</a></tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">realpath</tt><tt class="py-op">(</tt><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">realpath</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-2" class="py-name"><a title="XALT_Rmap.dirNm
+script-conf_create_in_py.dirNm" class="py-name" href="#" onclick="return doclink('link-2', 'dirNm', 'link-0');">dirNm</a></tt><tt class="py-op">,</tt> <tt class="py-string">"../libexec"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">,</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">realpath</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-3" class="py-name"><a title="XALT_Rmap.dirNm
+script-conf_create_in_py.dirNm" class="py-name" href="#" onclick="return doclink('link-3', 'dirNm', 'link-0');">dirNm</a></tt><tt class="py-op">,</tt> <tt class="py-string">"../site"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name" targets="Module xalt_util=xalt_util-module.html"><a title="xalt_util" class="py-name" href="#" onclick="return doclink('link-4', 'xalt_util', 'link-4');">xalt_util</a></tt>  <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Function xalt_util.config_logger()=xalt_util-module.html#config_logger"><a title="xalt_util.config_logger" class="py-name" href="#" onclick="return doclink('link-5', 'config_logger', 'link-5');">config_logger</a></tt><tt class="py-op">,</tt> <tt id="link-6" class="py-name" targets="Function xalt_util.extract_compiler()=xalt_util-module.html#extract_compiler"><a title="xalt_util.extract_compiler" class="py-name" href="#" onclick="return doclink('link-6', 'extract_compiler', 'link-6');">extract_compiler</a></tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt id="link-7" class="py-name" targets="Variable script-xalt_file_to_db_in_py.logger=script-xalt_file_to_db_in_py-module.html#logger,Variable script-xalt_generate_assembly_in_py.logger=script-xalt_generate_assembly_in_py-module.html#logger,Variable script-xalt_generate_linkdata_in_py.logger=script-xalt_generate_linkdata_in_py-module.html#logger,Variable script-xalt_run_submission_in_py.logger=script-xalt_run_submission_in_py-module.html#logger,Variable script-xalt_syslog_to_db_in_py.logger=script-xalt_syslog_to_db_in_py-module.html#logger"><a title="script-xalt_file_to_db_in_py.logger
+script-xalt_generate_assembly_in_py.logger
+script-xalt_generate_linkdata_in_py.logger
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-7', 'logger', 'link-7');">logger</a></tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name"><a title="xalt_util.config_logger" class="py-name" href="#" onclick="return doclink('link-8', 'config_logger', 'link-5');">config_logger</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"> </tt>
+<a name="print_assembly"></a><div id="print_assembly-def"><a name="L37"></a><tt class="py-lineno">37</tt> <a class="py-toggle" href="#" id="print_assembly-toggle" onclick="return toggle('print_assembly');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="script-xalt_generate_assembly_in_py-module.html#print_assembly">print_assembly</a><tt class="py-op">(</tt><tt class="py-param">uuid</tt><tt class="py-op">,</tt> <tt class="py-param">fn</tt><tt class="py-op">,</tt> <tt class="py-param">version</tt><tt class="py-op">,</tt> <tt class="py-param">syshost</tt><tt class="py-op">,</tt> <tt class="py-param">compiler</tt><tt class="py-op">,</tt> <tt class="py-param">epochStr</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="print_assembly-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="print_assembly-expanded"><a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">  <tt class="py-docstring">"""</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt class="py-docstring">  Build the XALT assembly code</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"><tt class="py-docstring">  @param uuid:     UUID string</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"><tt class="py-docstring">  @param fn:       The output file name</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line"><tt class="py-docstring">  @param version:  Current XALT version</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-docstring">  @param syshost:  System name (darter, stampede), not login1.stampede.tacc.utexas.edu</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-docstring">  @param compiler: the name of the linking compiler</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-docstring">  @param epochStr: Current Timestamp</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt class="py-docstring">  """</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">  <tt class="py-name">user</tt>    <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">environ</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">"USER"</tt><tt class="py-op">,</tt><tt class="py-string">"unknown"</tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">  <tt class="py-name">osName</tt>  <tt class="py-op">=</tt> <tt class="py-name">platform</tt><tt class="py-op">.</tt><tt class="py-name">system</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">"_%_%_"</tt> <tt class="py-op">+</tt> <tt class="py-name">platform</tt><tt class="py-op">.</tt><tt class="py-name">release</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">  <tt class="py-name">year</tt>  <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">strftime</tt><tt class="py-op">(</tt><tt class="py-string">"%Y"</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">  <tt class="py-name">date</tt>  <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">strftime</tt><tt class="py-op">(</tt><tt class="py-string">"%c"</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">" "</tt><tt class="py-op">,</tt><tt class="py-string">"_%_%_"</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">  <tt class="py-keyword">try</tt><tt class="py-op">:</tt>  </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">    <tt class="py-name">f</tt>    <tt class="py-op">=</tt> <tt class="py-name">open</tt><tt class="py-op">(</tt><tt class="py-name">fn</tt><tt class="py-op">,</tt><tt class="py-string">"w"</tt><tt class="py-op">)</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.section .xalt\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"XALT_Link_Info\"\n"</tt><tt class="py-op">)</tt> <tt class="py-comment">#this is how to find the section in the exec</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">    <tt class="py-comment"># Print cushion</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;XALT_Version&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">version</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.Syshost&gt;%%"</tt><tt class="py-op">+</tt><tt id="link-9" class="py-name" targets="Function script-xalt_run_submission_in_py.syshost()=script-xalt_run_submission_in_py-module.html#syshost"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-9', 'syshost', 'link-9');">syshost</a></tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.compiler&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">compiler</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.OS&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">osName</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.User&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">user</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.UUID&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">uuid</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.Year&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">year</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.date&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">date</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"&lt;Build.Epoch&gt;%%"</tt><tt class="py-op">+</tt><tt class="py-name">epochStr</tt><tt class="py-op">+</tt><tt class="py-string">"%%\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line">    <tt class="py-name">f</tt><tt class="py-op">.</tt><tt class="py-name">writelines</tt><tt class="py-op">(</tt><tt class="py-string">"\t.asciz \"XALT_Link_Info_End\"\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">  <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">    <tt id="link-10" class="py-name"><a title="script-xalt_file_to_db_in_py.logger
+script-xalt_generate_assembly_in_py.logger
+script-xalt_generate_linkdata_in_py.logger
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-10', 'logger', 'link-7');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">exception</tt><tt class="py-op">(</tt><tt class="py-string">"XALT_EXCEPTION:print_assembly"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line">     </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line"> </tt>
+<a name="main"></a><div id="main-def"><a name="L75"></a><tt class="py-lineno">75</tt> <a class="py-toggle" href="#" id="main-toggle" onclick="return toggle('main');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="script-xalt_generate_assembly_in_py-module.html#main">main</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="main-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="main-expanded"><a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">  <tt class="py-docstring">""" Generate XALT assembly code """</tt> </tt>
+<a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line">  <tt class="py-keyword">try</tt><tt class="py-op">:</tt>  </tt>
+<a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line">    <tt class="py-name">uuid</tt>     <tt class="py-op">=</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L79"></a><tt class="py-lineno">79</tt>  <tt class="py-line">    <tt id="link-11" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-11', 'syshost', 'link-9');">syshost</a></tt>  <tt class="py-op">=</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt> </tt>
+<a name="L80"></a><tt class="py-lineno">80</tt>  <tt class="py-line">    <tt class="py-name">pstree</tt>   <tt class="py-op">=</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">[</tt><tt class="py-number">3</tt><tt class="py-op">]</tt> </tt>
+<a name="L81"></a><tt class="py-lineno">81</tt>  <tt class="py-line">    <tt class="py-name">fn</tt>       <tt class="py-op">=</tt> <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">argv</tt><tt class="py-op">[</tt><tt class="py-number">4</tt><tt class="py-op">]</tt> </tt>
+<a name="L82"></a><tt class="py-lineno">82</tt>  <tt class="py-line">    <tt class="py-name">version</tt>  <tt class="py-op">=</tt> <tt class="py-string">"@version@"</tt> </tt>
+<a name="L83"></a><tt class="py-lineno">83</tt>  <tt class="py-line">    <tt class="py-name">epochStr</tt> <tt class="py-op">=</tt> <tt class="py-name">str</tt><tt class="py-op">(</tt><tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">time</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno">84</tt>  <tt class="py-line"> </tt>
+<a name="L85"></a><tt class="py-lineno">85</tt>  <tt class="py-line">    <tt class="py-name">compiler</tt> <tt class="py-op">=</tt> <tt id="link-12" class="py-name"><a title="xalt_util.extract_compiler" class="py-name" href="#" onclick="return doclink('link-12', 'extract_compiler', 'link-6');">extract_compiler</a></tt><tt class="py-op">(</tt><tt class="py-name">pstree</tt><tt class="py-op">)</tt> </tt>
+<a name="L86"></a><tt class="py-lineno">86</tt>  <tt class="py-line"> </tt>
+<a name="L87"></a><tt class="py-lineno">87</tt>  <tt class="py-line">    <tt id="link-13" class="py-name" targets="Function script-xalt_generate_assembly_in_py.print_assembly()=script-xalt_generate_assembly_in_py-module.html#print_assembly"><a title="script-xalt_generate_assembly_in_py.print_assembly" class="py-name" href="#" onclick="return doclink('link-13', 'print_assembly', 'link-13');">print_assembly</a></tt><tt class="py-op">(</tt><tt class="py-name">uuid</tt><tt class="py-op">,</tt> <tt class="py-name">fn</tt><tt class="py-op">,</tt> <tt class="py-name">version</tt><tt class="py-op">,</tt> <tt id="link-14" class="py-name"><a title="script-xalt_run_submission_in_py.syshost" class="py-name" href="#" onclick="return doclink('link-14', 'syshost', 'link-9');">syshost</a></tt><tt class="py-op">,</tt> <tt class="py-name">compiler</tt><tt class="py-op">,</tt> <tt class="py-name">epochStr</tt><tt class="py-op">)</tt> </tt>
+<a name="L88"></a><tt class="py-lineno">88</tt>  <tt class="py-line"> </tt>
+<a name="L89"></a><tt class="py-lineno">89</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt><tt class="py-op">(</tt><tt class="py-name">epochStr</tt><tt class="py-op">)</tt> </tt>
+<a name="L90"></a><tt class="py-lineno">90</tt>  <tt class="py-line">  <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L91"></a><tt class="py-lineno">91</tt>  <tt class="py-line">    <tt id="link-15" class="py-name"><a title="script-xalt_file_to_db_in_py.logger
+script-xalt_generate_assembly_in_py.logger
+script-xalt_generate_linkdata_in_py.logger
+script-xalt_run_submission_in_py.logger
+script-xalt_syslog_to_db_in_py.logger" class="py-name" href="#" onclick="return doclink('link-15', 'logger', 'link-7');">logger</a></tt><tt class="py-op">.</tt><tt class="py-name">exception</tt><tt class="py-op">(</tt><tt class="py-string">"XALT_EXCEPTION:xalt_generate_assembly"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L92"></a><tt class="py-lineno">92</tt>  <tt class="py-line"> </tt>
+<a name="L93"></a><tt class="py-lineno">93</tt>  <tt class="py-line"> </tt>
+<a name="L94"></a><tt class="py-lineno">94</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-op">(</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> <tt id="link-16" class="py-name" targets="Function progressBar.main()=progressBar-module.html#main,Function removeDataBase.main()=removeDataBase-module.html#main,Function script-conf_create_in_py.main()=script-conf_create_in_py-module.html#main,Function script-createDB_in_py.main()=script-createDB_in_py-module.html#main,Function script-new_job_id_in_py.main()=script-new_job_id_in_py-module.html#main,Function script-xalt_epoch_in_py.main()=script-xalt_epoch_in_py-module.html#main,Function script-xalt_file_to_db_in_py.main()=script-xalt_file_to_db_in_py-module.html#main,Function script-xalt_find_exec_aprun_in_py.main()=script-xalt_find_exec_aprun_in_py-module.html#main,Function script-xalt_find_exec_ibrun_in_py.main()=script-xalt_find_exec_ibrun_in_py-module.html#main,Function script-xalt_find_exec_mpich_in_py.main()=script-xalt_find_exec_mpich_in_py-module.html#main,Function script-xalt_find_exec_openmpi_in_py.main()=script-xalt_find_exec_openmpi_in_py-module.html#main,Function script-xalt_find_exec_sgimpt_in_py.main()=script-xalt_find_exec_sgimpt_in_py-module.html#main,Function script-xalt_find_exec_srun_in_py.main()=script-xalt_find_exec_srun_in_py-module.html#main,Function script-xalt_generate_assembly_in_py.main()=script-xalt_generate_assembly_in_py-module.html#main,Function script-xalt_generate_linkdata_in_py.main()=script-xalt_generate_linkdata_in_py-module.html#main,Function script-xalt_run_submission_in_py.main()=script-xalt_run_submission_in_py-module.html#main,Function script-xalt_syshost_in_py.main()=script-xalt_syshost_in_py-module.html#main,Function script-xalt_syslog_to_db_in_py.main()=script-xalt_syslog_to_db_in_py-module.html#main,Function script-xalt_working_python_in_py.main()=script-xalt_working_python_in_py-module.html#main,Function xalt_stack.main()=xalt_stack-module.html#main"><a title="progressBar.main
+removeDataBase.main
+script-conf_create_in_py.main
+script-createDB_in_py.main
+script-new_job_id_in_py.main
+script-xalt_epoch_in_py.main
+script-xalt_file_to_db_in_py.main
+script-xalt_find_exec_aprun_in_py.main
+script-xalt_find_exec_ibrun_in_py.main
+script-xalt_find_exec_mpich_in_py.main
+script-xalt_find_exec_openmpi_in_py.main
+script-xalt_find_exec_sgimpt_in_py.main
+script-xalt_find_exec_srun_in_py.main
+script-xalt_generate_assembly_in_py.main
+script-xalt_generate_linkdata_in_py.main
+script-xalt_run_submission_in_py.main
+script-xalt_syshost_in_py.main
+script-xalt_syslog_to_db_in_py.main
+script-xalt_working_python_in_py.main
+xalt_stack.main" class="py-name" href="#" onclick="return doclink('link-16', 'main', 'link-16');">main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L95"></a><tt class="py-lineno">95</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >XALT</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Sep 20 12:25:05 2014
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

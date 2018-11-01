@@ -1,0 +1,377 @@
+#-----------------------------------------------------------------------
+# XALT: A tool that tracks users jobs and environments on a cluster.
+# Copyright (C) 2013-2014 University of Texas at Austin
+# Copyright (C) 2013-2014 University of Tennessee
+# 
+# This library is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation; either version 2.1 of 
+# the License, or (at your option) any later version. 
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# Lesser  General Public License for more details. 
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330,
+# Boston, MA 02111-1307 USA
+#-----------------------------------------------------------------------
+
+srcdir            := @srcdir@
+VPATH             := @srcdir@
+ifeq ($(srcdir),.)
+  srcdir := $(CURDIR)
+endif
+CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
+
+OS_NAME           := $(shell uname -s)
+LIB_OPTIONS       := -fPIC -shared
+LDFLAGS           := @LDFLAGS@
+ifeq ($(OS_NAME),Darwin)
+  LIB_OPTIONS     := -bundle -undefined dynamic_lookup
+endif
+
+
+MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
+OPTLVL               	:= -g -O2
+package              	:= xalt
+VERSION              	:= $(shell cat $(srcdir)/.version | sed -e 's/-devel//g' )
+BROKER_SERVER           := @BROKER_SERVER@
+BROKER_URI              := @BROKER_URI@
+TRACKING_MPI_ONLY    	:= @XALT_TRACKING_MPI_ONLY@
+TRANSMISSION         	:= @TRANSMISSION@
+SITE_NAME            	:= @SITE@
+ETC_DIR              	:= @ETC_DIR@
+prefix               	:= @prefix@
+GIT_BRANCH           	:= master
+XALT_V               	:= src/xalt_version.h
+SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
+HAVE_LIBUUID         	:= @HAVE_WORKING_LIBUUID@
+HAVE_DCGM         	:= @HAVE_DCGM@
+STATIC_LIBS             := @STATIC_LIBS@
+PRELOAD_ONLY            := @PRELOAD_ONLY@	
+CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
+HAVE_32BIT           	:= @HAVE_32BIT@
+PATH_TO_AS           	:= @PATH_TO_AS@
+PATH_TO_BASENAME     	:= @PATH_TO_BASENAME@
+PATH_TO_CAT          	:= @PATH_TO_CAT@
+PATH_TO_CAT          	:= @PATH_TO_CAT@
+PATH_TO_DATE         	:= @PATH_TO_DATE@
+PATH_TO_DIRNAME      	:= @PATH_TO_DIRNAME@
+PATH_TO_FILE         	:= @PATH_TO_FILE@
+PATH_TO_GREP         	:= @PATH_TO_GREP@
+PATH_TO_HEAD         	:= @PATH_TO_HEAD@
+PATH_TO_LDD          	:= @PATH_TO_LDD@
+PATH_TO_LOGGER       	:= @PATH_TO_LOGGER@
+PATH_TO_MKDIR        	:= @PATH_TO_MKDIR@
+PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
+PATH_TO_OBJDUMP      	:= @PATH_TO_OBJDUMP@
+PATH_TO_OTOOL        	:= @PATH_TO_OTOOL@
+PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
+PATH_TO_PYTHON       	:= @PATH_TO_PYTHON@
+PATH_TO_READLINK     	:= @PATH_TO_READLINK@
+PATH_TO_RM           	:= @PATH_TO_RM@
+PATH_TO_SHA1SUM      	:= @PATH_TO_SHA1SUM@
+PATH_TO_UUIDGEN      	:= @PATH_TO_UUIDGEN@
+USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
+XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
+XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
+ENABLE_BACKGROUNDING 	:= @ENABLE_BACKGROUNDING@
+XALT_CONFIG_PY       	:= @XALT_CONFIG_PY@
+
+GIT_PROG             	:= @PATH_TO_GIT@
+GIT_VERSION          	:= $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
+VDATE		     	:= $(shell date +'%F %H:%M')
+
+XALT_DIR             	:= $(prefix)/$(package)/$(package)
+PKGV                 	:= $(prefix)/$(package)/$(VERSION)
+PKG                  	:= $(prefix)/$(package)/$(package)
+LIB                  	:= $(prefix)/$(package)/$(VERSION)/lib
+LIB64                	:= $(prefix)/$(package)/$(VERSION)/lib64
+LIBEXEC              	:= $(prefix)/$(package)/$(VERSION)/libexec
+BIN                  	:= $(prefix)/$(package)/$(VERSION)/bin
+SBIN                 	:= $(prefix)/$(package)/$(VERSION)/sbin
+DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
+                           $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
+
+#BIN_PKG             	 := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
+#                    	    src/ibrun.symm.in src/aprun.in src/srun.in                         \
+#                    	    src/mpirun.lsf.in src/xalt_helper_functions.sh
+
+BIN_PKG              	:= sh_src/ld.in                                                        \
+                           sh_src/ld.gold.in                                                   \
+	                   sh_src/x86_64-linux-gnu-ld.in                                       \
+                           sh_src/xalt_helper_functions.sh                                     \
+                           sh_src/xalt_extract_record.in                                       \
+                           sh_src/xalt_configuration_report.in 
+
+BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
+
+SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py            \
+                           py_src/xalt_syslog_to_db.in.py    py_src/xalt_usage_report.in.py   \
+                           py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py
+
+SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
+
+LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py            \
+                           py_src/xalt_stack.py              py_src/BeautifulTbl.py           \
+                           py_src/xalt_global.py             py_src/Rmap_XALT.py              \
+                           py_src/xalt_util.py               py_src/xalt_name_mapping.py      \
+                           py_src/xalt_transmission_factory.py
+
+
+LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
+
+
+TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
+                           contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
+                           contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
+                           contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
+                           contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.in
+TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
+INIT_SRC             	:= src/xalt_initialize.c
+INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
+
+.PHONY: LINKS
+
+all:
+	@echo done
+
+
+
+install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
+         Use_argparse_$(USE_ARGPARSE) build_compiled
+	$(RM) $(DESTDIR)$(PKG)
+	ln -s $(VERSION) $(DESTDIR)$(PKG)
+
+build_compiled:
+	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
+                        LDFLAGS="$(LDFLAGS)" \
+                        LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)     \
+                        OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                     \
+                        HAVE_DCGM=$(HAVE_DCGM) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX)                        \
+                        STATIC_LIBS=$(STATIC_LIBS) \
+                        MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
+
+echo:
+	@echo srcdir: $(srcdir)
+	@echo CURDIR: $(CURDIR)
+	@echo srcdir: $(srcdir)
+	@echo MAKE: $(MAKE)
+	@echo MAKEFLAGS: $(MAKEFLAGS)
+	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
+
+remove_genfiles:
+	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
+
+$(DIRLIST) :
+	mkdir -p $@
+
+LINKS: $(DIRLIST)
+	cd $(DESTDIR)$(LIB);                        \
+        rm -f x86_64-linux-gnu i386-linux-gnu;      \
+        ln -s ../lib64 x86_64-linux-gnu;            \
+        ln -s . i386-linux-gnu
+
+Inst_libexec: $(LIBEXEC_PKG)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+
+Inst_sbin: $(SBIN_PKG)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+
+Inst_bin: $(BIN_PKG)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+
+Inst_TACC: $(TACC_PKG)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+
+
+Use_getent_yes:
+	cd $(srcdir)/contrib;                                           \
+        mkdir -p  $(DESTDIR)$(PKGV)/libexec/getent;                     \
+        cp getent/*.py $(DESTDIR)$(PKGV)/libexec/getent
+
+
+Use_argparse_no:
+
+Use_argparse_yes: $(srcdir)/contrib/argparse/argparse.py
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+
+__installMe:
+	-for i in $(FILELIST); do                                     	   	  \
+           bareN=$${i##*/};                                           	   	  \
+           fn=$${bareN%%.in*};                                        	   	  \
+	   ext=$${bareN#$$fn.}                                             	  \
+           oext=;                                                          	  \
+	   : echo "bareN: $$bareN, ext: $$ext";                            	  \
+           [ "$$ext" = "in.py" ] && oext=".py";                            	  \
+           [ "$$ext" = "in.c" ]  && oext=".c";                             	  \
+           sed  -e 's|@PREFIX@|$(prefix)|g'                            	   	  \
+	        -e 's|@date@|$(PATH_TO_DATE)|g'                            	  \
+	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
+	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
+	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
+	        -e 's|@file@|$(PATH_TO_FILE)|g'                            	  \
+	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
+	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            	  \
+	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
+	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
+	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            	  \
+	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              	  \
+	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
+	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
+	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
+	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        	  \
+	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            	  \
+	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      	  \
+	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              	  \
+	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
+	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
+	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            	  \
+	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        	  \
+	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
+	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
+	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
+	        -e 's|@preload_only@|$(PRELOAD_ONLY)|g'                       	  \
+	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
+	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      	  \
+	        -e 's|@version@|$(VERSION)|g'                              	  \
+	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   	  \
+	        -e 's|@my_hostname_parser@|$(MY_HOSTNAME_PARSER)|g'               \
+	        -e 's|@xalt_function_tracking@|$(XALT_FUNCTION_TRACKING)|g'       \
+	        -e 's|@xalt_config_py@|$(XALT_CONFIG_PY)|g' 	   	   	  \
+	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     	  \
+	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     	  \
+	        -e 's|@xalt_site_dir@|$(SITE)|g'                           	  \
+	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            	  \
+	        -e 's|@xalt_enable_backgrounding@|$(ENABLE_BACKGROUNDING)|g'      \
+                           < $$i > $(DIRLOC)/$$fn$$oext;                   	  \
+            [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                            \
+               chmod +x $(DIRLOC)/$$fn$$oext;                              	  \
+	    true;                                                          	  \
+        done
+
+world_update:
+	@git status -s > /tmp/git_st_$$$$                                     ; \
+        if [ -s /tmp/git_st_$$$$ ]; then                                       	\
+            echo "All files not checked in => try again"                      ; \
+	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then           \
+            echo "configure is out of date => try again"                      ; \
+        else                                                                   	\
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` ; \
+            git push        github $$branchName                               ; \
+            git push --tags github $$branchName                               ; \
+        fi                                                                    ; \
+        rm -f /tmp/git_st_$$$$
+
+gittag:
+        ifneq ($(TAG),)
+	  @git status -s > /tmp/git_st_$$$$                                      ; \
+          if [ -s /tmp/git_st_$$$$ ]; then                                 	   \
+	    echo "All files not checked in => try again"                         ; \
+	  else                                                             	   \
+	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V); \
+	    echo "$(TAG)"                                            >  .version ; \
+            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version ; \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                 ; \
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`    ; \
+            git push        origin $$branchName                                  ; \
+	    git push --tags origin $$branchName                                  ; \
+          fi                                                                     ; \
+          rm -f /tmp/git_st_$$$$
+        else
+	  @echo "To git tag do: make gittag TAG=?"
+        endif
+
+
+tags:  build_tags
+	$(RM) file_list.*
+
+build_tags:
+	find . \( -regex '.*~$$\|.*/\.git\|.*/\.git/' -prune \)  \
+               -o -type f > file_list.1
+	sed -e 's|.*/.git.*||g'                                  \
+            -e 's|.*/rt/.*/t1/.*||g'                             \
+            -e 's|./TAGS||g'                                     \
+            -e 's|.*/epydoc/.*$$||g'                             \
+            -e 's|.*/old/.*$$||g'                                \
+            -e 's|.*/stamp-h1$$||g'                              \
+            -e 's|.*/__build__.*$$||g'                           \
+            -e 's|.*/stamp-h$$||g'                               \
+            -e 's|.*/makefile||g'                                \
+            -e 's|.*/configure$$||g'                             \
+            -e 's|.*/.DS_Store$$||g'                             \
+            -e 's|.DS_Store$$||g'                                \
+            -e 's|.*\.tgz$$||g'                                  \
+            -e 's|.*\.d$$||g'                                    \
+            -e 's|.*/install$$||g'                               \
+            -e 's|.*/xalt_syshost.c$$||g'                        \
+            -e 's|.*/xalt_env_parser.lex||g'                     \
+            -e 's|.*/xalt_regex.h$$||g'                          \
+            -e 's|.*/xalt_config.h$$||g'                         \
+            -e 's|.*\.tar\.gz$$||g'                              \
+            -e 's|.*\.tar\.bz2$$||g'                             \
+            -e 's|.*\.pyc$$||g'                                  \
+            -e 's|.*\.pyo$$||g'                                  \
+            -e 's|.*\.csv$$||g'                                  \
+	    -e 's|.*\.aux$$||g'                                  \
+	    -e 's|.*\.fdb_latexmk$$||g'                          \
+	    -e 's|.*\.fls$$||g'                                  \
+	    -e 's|.*\.key$$||g'                                  \
+	    -e 's|.*\.nav$$||g'                                  \
+	    -e 's|.*\.out$$||g'                                  \
+	    -e 's|.*\.pdf$$||g'                                  \
+	    -e 's|.*\.snm$$||g'                                  \
+	    -e 's|.*\.toc$$||g'                                  \
+	    -e 's|.*\.vrb$$||g'                                  \
+	    -e 's|.*syslogTest$$||g'                             \
+            -e 's|.*/build_uuid_32/.*$$||g'                      \
+            -e 's|.*/build_uuid_64/.*$$||g'                      \
+	    -e 's|.*\/\.libs/.*$$||g'                            \
+	    -e 's|.*\/\.deps/.*$$||g'                            \
+            -e 's|.*\.o$$||g'                                    \
+            -e 's|.*\.lo$$||g'                                   \
+            -e 's|.*\.Plo$$||g'                                  \
+            -e 's|^#.*||g'                                       \
+            -e 's|/#.*||g'                                       \
+            -e 's|\.#.*||g'                                      \
+            -e 's|.*\.pdf$$||g'                                  \
+            -e 's|.*\.used$$||g'                                 \
+            -e 's|./.*\.log$$||g'                                \
+            -e 's|./testreports/.*||g'                           \
+	    -e 's|.*/lex.*\.c||g'                                \
+            -e 's|.*/config\.status$$||g'                        \
+            -e 's|.*\~$$||g'                                     \
+            -e 's|./file_list\..*||g'                            \
+            -e '/^\s*$$/d'                                       \
+	       < file_list.1 > file_list.2
+	etags  `cat file_list.2`
+
+dist:
+	git archive --prefix=xalt-$(VERSION)/ $(GIT_BRANCH) > xalt-$(VERSION).tar
+	$(RM) -rf DIST;                                                 	   \
+	mkdir DIST;                                                     	   \
+        cd DIST;                                                        	   \
+        tar xf ../xalt-$(VERSION).tar;                                             \
+	sed -i 's/\@git\@/$(GIT_VERSION)/g' $$(find xalt-$(VERSION) -type f);      \
+        $(RM) ../xalt-$(VERSION).tar;                                    	   \
+	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION);           	   \
+	cd ..; $(RM) -rf DIST
+
+makefile: $(srcdir)/Makefile.in config.status
+	./config.status $@
+
+src/makefile: $(srcdir)/src/Makefile.in config.status
+	./config.status $@
+
+neat:
+	$(RM) *~ src/*~
+	cd src ; $(MAKE) PARENT_DIR=$(srcdir) $@
+clean:  neat
+	cd src ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
+clobber: clean
+
+

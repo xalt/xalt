@@ -1,0 +1,38 @@
+2009-07-31 15:56:07,133 - altd_aprun2 - INFO - ['/nics/a/home/ytlu/ALTD/bin/pyParser.py', '--insert_mysql', 'krakenpf2', '-n', '16', '-N', '2', 'a.out']
+2009-07-31 15:56:07,133 - altd_aprun2 - INFO - Insert record to jobs table
+2009-07-31 15:56:07,134 - altd_aprun2 - INFO - [('-N', '2')]
+2009-07-31 15:56:07,134 - altd_aprun2 - INFO - a.out
+2009-07-31 15:56:07,167 - altd_aprun2 - INFO - Version:0.5
+2009-07-31 15:56:07,167 - altd_aprun2 - INFO - BMachine:kraken
+2009-07-31 15:56:07,168 - altd_aprun2 - INFO - Tag_id:8
+2009-07-31 15:56:07,168 - altd_aprun2 - INFO - Year:2009
+2009-07-31 15:56:07,247 - altd_aprun2 - INFO - username=ytlu hos_tname=kraken pos=4 PARSER_SUC_INFO
+2009-07-31 15:56:08,559 - altd_aprun2 - ERROR - Cannot find aprun id
+2009-07-31 15:56:08,559 - altd_aprun2 - INFO - Aprun exit code:1
+2009-07-31 15:59:00,989 - altd_aprun2 - INFO - ['/nics/a/home/ytlu/ALTD/bin/pyParser.py', '--insert_mysql', 'krakenpf2', '-n', '16', '-N', '2', 'a.out']
+2009-07-31 15:59:00,991 - altd_aprun2 - INFO - Insert record to jobs table
+2009-07-31 15:59:00,999 - altd_aprun2 - INFO - Version:0.5
+2009-07-31 15:59:01,000 - altd_aprun2 - INFO - BMachine:kraken
+2009-07-31 15:59:01,000 - altd_aprun2 - INFO - Tag_id:8
+2009-07-31 15:59:01,000 - altd_aprun2 - INFO - Year:2009
+2009-07-31 15:59:01,072 - altd_aprun2 - INFO - username=ytlu hos_tname=kraken pos=5 PARSER_SUC_INFO
+2009-07-31 15:59:02,358 - altd_aprun2 - ERROR - Cannot find aprun id
+2009-07-31 15:59:02,358 - altd_aprun2 - INFO - Aprun exit code:1
+2009-07-31 16:01:01,661 - altd_aprun2 - INFO - ['/nics/a/home/ytlu/ALTD/bin/pyParser.py', '--insert_mysql', 'krakenpf2', '-n', '16', '-N', '2', 'a.out']
+2009-07-31 16:01:01,662 - altd_aprun2 - INFO - Insert record to jobs table
+2009-07-31 16:01:01,670 - altd_aprun2 - INFO - Version:0.5
+2009-07-31 16:01:01,670 - altd_aprun2 - INFO - BMachine:kraken
+2009-07-31 16:01:01,670 - altd_aprun2 - INFO - Tag_id:8
+2009-07-31 16:01:01,671 - altd_aprun2 - INFO - Year:2009
+2009-07-31 16:01:01,750 - altd_aprun2 - INFO - username=ytlu hos_tname=kraken pos=6 PARSER_SUC_INFO
+2009-07-31 16:01:03,057 - altd_aprun2 - ERROR - Cannot find aprun id
+2009-07-31 16:01:03,058 - altd_aprun2 - INFO - Aprun exit code:0
+2009-08-03 10:46:07,742 - altd_aprun2 - INFO - ['/nics/a/home/ytlu/ALTD/bin/pyParser.py', '--insert_mysql', 'krakenpf10', '-n', '16', '-N', '2', 'a.out']
+2009-08-03 10:46:07,743 - altd_aprun2 - INFO - Insert record to jobs table
+2009-08-03 10:46:07,771 - altd_aprun2 - INFO - Version:0.5
+2009-08-03 10:46:07,771 - altd_aprun2 - INFO - BMachine:kraken
+2009-08-03 10:46:07,771 - altd_aprun2 - INFO - Tag_id:8
+2009-08-03 10:46:07,772 - altd_aprun2 - INFO - Year:2009
+2009-08-03 10:46:07,845 - altd_aprun2 - INFO - username=ytlu hos_tname=kraken pos=7 PARSER_SUC_INFO
+2009-08-03 10:46:09,147 - altd_aprun2 - ERROR - Cannot find aprun id
+2009-08-03 10:46:09,147 - altd_aprun2 - INFO - Aprun exit code:0
