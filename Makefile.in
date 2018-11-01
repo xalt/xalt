@@ -264,8 +264,6 @@ world_update:
 	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` ; \
             git push        github     $$branchName                           ; \
             git push --tags github     $$branchName                           ; \
-            git push        old_github $$branchName                           ; \
-            git push --tags old_github $$branchName                           ; \
         fi                                                                    ; \
         rm -f /tmp/git_st_$$$$
 
