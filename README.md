@@ -3,19 +3,8 @@
 XALT is a lightweight software tool for any Linux cluster,
 workstation, or high-end supercomputer to track executable information
 and linkage of static shared and dynamically linked libraries. When
-the code is executed, wrappers intercept both the GNU linker (ld) and
-code launcher (like mpirun, aprun, or ibrun) to capture linkage
-information and environmental variables.
-
-By surveying usage, administrators can use XALT to flag jobs that
-require the attention of support staff and deliver alerts to users
-pinpointing the causes of problems.  The metrics produced as part of
-XALT's output data may be used to improve training, documentation, and
-research. Also, by tracking shared libraries required at link time,
-and then again at run time, an administrator can track the use of the
-shared libraries by their user community and detect when changes have
-occurred over time that might point to performance differences or a
-hacked SSL library.
+the code is executed, wrappers intercept both GNU linker (ld) to capture
+linkage information and environmental variables.
 
 ## Creators
 Dr. Mark Fahey  
@@ -37,24 +26,8 @@ Ellexus is providing commercial support.
 See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercomputers if interested.
 
 
-## Documentation
-Documentation is provided at http://xalt.readthedocs.org as well as
-doc/XALTDesignandInstallationManual-0.5.pdf.
-
 ## Installation and Use of XALT
-
-For quick installation instructions, see [QUICK_START.TXT](QUICK_START.TXT).
-
-[The XALT Design and Installation Manual-0.5](my_docs/XALTDesignandInstallationManual-0.5.pdf) discusses the
-prerequisites for installation, decisions and considerations regarding
-database setup, XALT testing, other transmission methods, examples,
-and knowns issues.
-
-[The XALT Users Manual-0.5](my_docs/XALTUsersManual-0.5.pdf) describes how
-XALT is used in practice with further discusssion of database options,
-data transmission, creation of reverse maps, and examples with
-accompanying results for database queries.
-
+Documentation is provided at xalt.readthedocs.io on how to install and use XALT.
 
 ## ChangeLog
 
@@ -88,16 +61,6 @@ Features:
 Features:
 
    1. XALT can now tracks both MPI and non-MPI programs subject to site controlled filtering
-
-
-## Known Issues and Current Solutions
-
-
-1. Because the Cray compile wrapper uses a binutils linker, the Cray
-environment variable ALT_LINKER in the XALT modulefile must be set to
-point to the XALT wrapper.
-
-Known issues are detailed in the [XALT Design and Installation Manual-0.5](my_docs/XALTDesignandInstallationManual-0.5.pdf).
 
 
 ## Citation
