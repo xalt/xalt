@@ -11,7 +11,7 @@ Install XALT on the VM
 You'll need to install the MySQL packages on the VM and the
 python MySQL package as well::
 
-    $ git clone https://github.com/Fahey-McLay/xalt.git
+    $ git clone https://github.com/xalt/xalt.git
     $ cd xalt
     $ ./configure --prefix=$XALT_DIR                               \
       --with-syshostConfig=hardcode:$SYSHOST                       \

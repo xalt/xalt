@@ -35,5 +35,5 @@ Computer Users)
 
 Download:
 
-Download XALT from github (https://github.com/Fahey-McLay/xalt.git)
+Download XALT from github (https://github.com/xalt/xalt.git)
 or sourceforge (http://sourceforge.net/projects/xalt/files)

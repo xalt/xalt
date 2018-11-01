@@ -17,7 +17,7 @@ Download XALT
 
 From its Github page you can download XALT:
 
-   $ git clone https://github.com/Fahey-McLay/xalt.git
+   $ git clone https://github.com/xalt/xalt.git
 
 Setting the Name of your Cluster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
