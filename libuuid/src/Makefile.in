@@ -1,12 +1,24 @@
 SRC  := clear.c compare.c copy.c gen_uuid.c isnull.c pack.c parse.c predefined.c test_uuid.c unpack.c \
-        unparse.c uuid_time.c
-OBJS := $(patsubst %.c %.o $(SRC))
+        unparse.c uuid_time.c randutils.c
+OBJS := $(patsubst %.c, %.o, $(SRC))
+CFLAGS := -include uuid_config.h
 
 LIBUUID := libuuid.a
 
 $(LIBUUID) : $(OBJS)
 	ar ru $@ $^
 	ranlib $@
+
+
+neat:
+	$(RM) *~
+clean: neat
+	$(RM) *.o
+clobber: clean
+	$(RM) libuuid.a
+distclean: clobber
+	$(RM) makefile config.log config.status uuid_config.h
+
 
 
 clear.o: clear.c uuidP.h
@@ -19,4 +31,4 @@ predefined.o: predefined.c uuidP.h
 unpack.o: unpack.c uuidP.h
 unparse.o: unparse.c uuidP.h
 uuid_time.o:  uuid_time.c uuidP.h
-
+gen_uuid.o: gen_uuid.c all-io.h uuidP.h uuidd.h randutils.h strutils.h c.h

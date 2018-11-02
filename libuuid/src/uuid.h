@@ -92,7 +92,7 @@ extern void uuid_generate_random(uuid_t out);
 extern void uuid_generate_time(uuid_t out);
 extern int uuid_generate_time_safe(uuid_t out);
 
-#ifdef 0
+#if 0
 extern void uuid_generate_md5(uuid_t out, const uuid_t ns, const char *name, size_t len);
 extern void uuid_generate_sha1(uuid_t out, const uuid_t ns, const char *name, size_t len);
 #endif

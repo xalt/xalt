@@ -557,7 +557,7 @@ void uuid_generate(uuid_t out)
 }
 
 
-#ifdef 0
+#if 0
 
 /*
  * Generate an MD5 hashed (predictable) UUID based on a well-known UUID

@@ -2,4 +2,9 @@ config.log
 config.status
 uuid_config.h
 makefile
+*.o
+libuuid.a
+config.log
+config.status
+uuid_config.h
 

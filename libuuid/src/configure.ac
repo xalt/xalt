@@ -68,6 +68,18 @@ AC_CHECK_HEADERS([ \
 	utmp.h \
 	utmpx.h \
 ])
+AC_CHECK_FUNCS([ \
+	err \
+	errx \
+        getrandom \
+	jrand48 \
+	nanosleep \
+        srandom \
+	usleep \
+	warn \
+	warnx \
+])
+
 AC_CHECK_MEMBER([struct sockaddr.sa_len],
 		AC_DEFINE_UNQUOTED([HAVE_SA_LEN], [1], [Define if struct sockaddr contains sa_len]), [],
 	[#include <sys/types.h>
