@@ -5,17 +5,21 @@ CFLAGS := -include uuid_config.h
 
 LIBUUID := libuuid.a
 
+all: $(LIBUUID)
+
+
 $(LIBUUID) : $(OBJS)
 	ar ru $@ $^
 	ranlib $@
 
-
+test_uuid: test_uuid.o $(LIBUUID)
+	$(LINK.c) -o $@ $< $(LIBUUID)
 neat:
 	$(RM) *~
 clean: neat
 	$(RM) *.o
 clobber: clean
-	$(RM) libuuid.a
+	$(RM) libuuid.a test_uuid
 distclean: clobber
 	$(RM) makefile config.log config.status uuid_config.h
 
