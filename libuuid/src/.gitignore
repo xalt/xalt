@@ -7,4 +7,4 @@ libuuid.a
 config.log
 config.status
 uuid_config.h
-
+test_uuid
