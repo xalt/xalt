@@ -134,7 +134,7 @@ TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 INIT_SRC             	:= src/xalt_initialize.c
 INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 
-.PHONY: LINKS
+.PHONY: LINKS build_compiled build_uuid
 
 all:
 	@echo done
@@ -142,18 +142,25 @@ all:
 
 
 install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
-         Use_argparse_$(USE_ARGPARSE) build_compiled
+         Use_argparse_$(USE_ARGPARSE) build_uuid build_compiled
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
 build_compiled:
-	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
-                        LDFLAGS="$(LDFLAGS)" \
-                        LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)     \
-                        OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                     \
-                        HAVE_DCGM=$(HAVE_DCGM) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX)                        \
-                        STATIC_LIBS=$(STATIC_LIBS) \
-                        MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
+	cd $(srcdir)/src;                                                                          \
+        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
+                LDFLAGS="$(LDFLAGS)"                                                               \
+                LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)     \
+                OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                     \
+                HAVE_DCGM=$(HAVE_DCGM) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX)                        \
+                STATIC_LIBS=$(STATIC_LIBS) \
+                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
+
+
+build_uuid:
+	cd $(srcdir)/libuuid;                                                                      \
+        $(MAKE) 
+
 
 echo:
 	@echo srcdir: $(srcdir)
