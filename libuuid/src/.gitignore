@@ -8,3 +8,4 @@ config.log
 config.status
 uuid_config.h
 test_uuid
+my_uuidgen

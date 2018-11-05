@@ -1,3 +1,4 @@
+CC   := gcc
 SRC  := clear.c compare.c copy.c gen_uuid.c isnull.c pack.c parse.c predefined.c test_uuid.c unpack.c \
         unparse.c uuid_time.c randutils.c
 OBJS := $(patsubst %.c, %.o, $(SRC))
@@ -5,7 +6,7 @@ CFLAGS := -include uuid_config.h
 
 LIBUUID := libuuid.a
 
-all: $(LIBUUID)
+all: $(LIBUUID) my_uuidgen
 
 
 $(LIBUUID) : $(OBJS)
@@ -23,8 +24,10 @@ clobber: clean
 distclean: clobber
 	$(RM) makefile config.log config.status uuid_config.h
 
+my_uuidgen: my_uuidgen.o $(LIBUUID)
+	$(LINK.c) -o $@ $< $(LIBUUID)
 
-
+my_uuidgen.o: my_uuidgen.c uuid.h
 clear.o: clear.c uuidP.h
 compare.o: compare.c uuidP.h
 copy.o: copy.c uuidP.h

@@ -2,7 +2,7 @@ AC_INIT(Makefile.in)
 AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/xalt_header.h.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
-AC_CONFIG_SUBDIRS(src)
+AC_CONFIG_SUBDIRS(libuuid/src)
 
 AC_SUBST(XALT_INTERFACE_VERSION)
 XALT_INTERFACE_VERSION=4

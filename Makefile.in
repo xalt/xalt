@@ -255,16 +255,18 @@ __installMe:
         done
 
 world_update:
-	@git status -s > /tmp/git_st_$$$$                                     ; \
-        if [ -s /tmp/git_st_$$$$ ]; then                                       	\
-            echo "All files not checked in => try again"                      ; \
-	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then           \
-            echo "configure is out of date => try again"                      ; \
-        else                                                                   	\
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` ; \
-            git push        github     $$branchName                           ; \
-            git push --tags github     $$branchName                           ; \
-        fi                                                                    ; \
+	@git status -s > /tmp/git_st_$$$$                                     		      ; \
+        if [ -s /tmp/git_st_$$$$ ]; then                                      		        \
+            echo "All files not checked in => try again"                      		      ; \
+	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then         		        \
+            echo "configure is out of date => try again"                      		      ; \
+	elif [ $(srcdir)/libuuid/src/configure -ot $(srcdir)/libuuid/src/configure.ac ]; then   \
+            echo "libuuid/src/configure is out of date => try again"                          ; \
+        else                                                                  		        \
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` 		      ; \
+            git push        github     $$branchName                           		      ; \
+            git push --tags github     $$branchName                           		      ; \
+        fi                                                                    		      ; \
         rm -f /tmp/git_st_$$$$
 
 
