@@ -19,11 +19,9 @@
 # Boston, MA 02111-1307 USA
 #-----------------------------------------------------------------------
 
+abs_srcdir        := @abs_srcdir@
 srcdir            := @srcdir@
 VPATH             := @srcdir@
-ifeq ($(srcdir),.)
-  srcdir := $(CURDIR)
-endif
 CURRENT_MK        := $(lastword $(MAKEFILE_LIST))
 
 OS_NAME           := $(shell uname -s)
@@ -36,7 +34,7 @@ endif
 
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
-override OPTLVL         += -I$(srcdir)/libuuid/src
+override OPTLVL         += -I$(abs_srcdir)/libuuid/src
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version | sed -e 's/-devel//g' )
 BROKER_SERVER           := @BROKER_SERVER@
@@ -147,7 +145,7 @@ install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
 
 build_compiled: build_uuid
 	cd src;                                                                                    \
-        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
+        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
@@ -158,27 +156,27 @@ build_uuid:
 	cd libuuid/src;                                                                            \
         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                         \
                          LIB=$(LIB64) clean;                                                       \
-        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
+        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB64)       \
                 OPTLVL="$(OPTLVL)" all build_uuidgen;                                              \
         if [ "$(HAVE_32BIT)" = yes ]; then                                                         \
            $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                      \
                          LIB=$(LIB) clean;                                                         \
-           $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)   \
-                   LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB)      \
-                   OPTLVL="$(OPTLVL) -m32" all;                                                    \
+           $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir)                  \
+                   LDFLAGS="$(LDFLAGS)" DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN)         \
+                   BIN=$(BIN) LIB=$(LIB) OPTLVL="$(OPTLVL) -m32" all;                              \
         fi
 
 echo:
 	@echo srcdir: $(srcdir)
 	@echo CURDIR: $(CURDIR)
-	@echo srcdir: $(srcdir)
+	@echo abs_srcdir: $(abs_srcdir)
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
 
 remove_genfiles:
-	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
+	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -385,7 +383,7 @@ src/makefile: $(srcdir)/src/Makefile.in config.status
 	./config.status $@
 
 libuuid/src/makefile: $(srcdir)/src/Makefile.in
-	./libuuid/src/config.statu $@
+	./libuuid/src/config.status $@
 
 neat:
 	$(RM) *~

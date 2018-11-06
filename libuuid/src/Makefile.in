@@ -1,6 +1,6 @@
 THIS_DIR   := $(PARENT_DIR)/libuuid/src
 VPATH       = .:$(THIS_DIR)
-CFLAGS     := $(OPTLVL) -fPIC
+CFLAGS     := -fPIC $(OPTLVL) 
 CC   	   := gcc
 SRC  	   := clear.c compare.c copy.c gen_uuid.c isnull.c pack.c parse.c predefined.c test_uuid.c unpack.c \
 	      unparse.c uuid_time.c randutils.c
