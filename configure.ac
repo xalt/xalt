@@ -286,15 +286,11 @@ AC_PATH_PROG(PATH_TO_PYTHON, python, "")
 AC_PATH_PROG(PATH_TO_READLINK, readlink, [])
 AC_PATH_PROG(PATH_TO_RM, rm, [])
 AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
-AC_PATH_PROG(PATH_TO_UUIDGEN,uuidgen, [])
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   AC_MSG_ERROR([Unable to build XALT without mktemp])
 fi
 
-if test "x${PATH_TO_UUIDGEN}" = "x" ; then
-  AC_MSG_ERROR([Unable to build XALT without uuidgen])
-fi
 
 transmission=`echo $TRANSMISSION | tr A-Z a-z`
 
@@ -319,10 +315,6 @@ fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AC_PYTHON_MODULE([MySQLdb])
-AC_CHECK_HEADER(uuid/uuid.h,
-                [AC_DEFINE([HAVE_UUID_UUID_H], 1,
-                   [Define to 1 if you have <uuid/uuid.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -339,26 +331,6 @@ if test -z "$PATH_TO_FLEX" ; then
 fi
 
 
-#if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
-#   CFLAGS_OLD=$CFLAGS
-#   CFLAGS="-m32 $CFLAGS"
-#   AC_SEARCH_LIBS([uuid_clear],[uuid], [HAVE_WORKING_LIBUUID_32=yes], [HAVE_WORKING_LIBUUID_32=no])
-#   CFLAGS=$CFLAGS_OLD
-#   if test $HAVE_WORKING_LIBUUID_32 = no; then
-#      echo
-#      echo "======================================================="
-#      echo "Unable to install XALT without a 32 version of the"
-#      echo "uuid library"
-#      echo ""
-#      echo "Your system has the 64 bit version of libuuid but not"
-#      echo "the 32 bit version."
-#      echo "======================================================="
-#      echo
-#      rm -f makefile
-#      exit 1
-#   fi
-#fi  
-  
 AC_SUBST(HAVE_DCGM)
 HAVE_DCGM=no
 if test $XALT_GPU_TRACKING = yes; then
