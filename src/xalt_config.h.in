@@ -19,7 +19,6 @@
 #define XALT_SPSR_TRACKING         "@XALT_SPSR_TRACKING@"
 #define XALT_SCALAR_TRACKING       "@XALT_SCALAR_TRACKING@"
 #define XALT_FILE_PREFIX           "@XALT_FILE_PREFIX@"
-#define HAVE_WORKING_LIBUUID       "@HAVE_WORKING_LIBUUID@"
 #define TRANSMISSION               "@TRANSMISSION@"
 #define XALT_ETC_DIR               "@ETC_DIR@"
 #define XALT_CONFIG_PY             "@XALT_CONFIG_PY@"

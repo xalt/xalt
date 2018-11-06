@@ -48,7 +48,6 @@ SHA1SUM=@sha1sum@
 HAVE_DCGM=@have_dcgm@
 SEP_DIR=
 XALT_FILE_PREFIX=@xalt_file_prefix@
-HAVE_WORKING_LIBUUID=@have_working_libuuid@
 MY_NAME=$($BASENAME $0)
 MY_DIR=$($DIRNAME $($READLINK -f $0))
 
@@ -198,6 +197,7 @@ MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
     
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
+XALT_BIN=$XALT_DIR/bin
 XALT_SITE_DIR=$XALT_DIR/site
 GEN_ASSEMBLY=$XALT_LIBEXEC_DIR/xalt_generate_assembly
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
@@ -206,7 +206,7 @@ EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
 SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
-UUIDGEN=@uuidgen@
+UUIDGEN=$XALT_BIN/my_uuidgen
 RM=@path_to_rm@
 AS=@path_to_as@
 CAT=@path_to_cat@
@@ -231,10 +231,10 @@ if [ -z "$BIT32FLAG" ]; then
   elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
       MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.a
   fi
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_syshost.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/build_uuid.o $XLD/base64.o $MY_HOSTNAME_PARSER_OBJ"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_syshost.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/build_uuid.o $XLD/base64.o $MY_HOSTNAME_PARSER_OBJ $XLD/libuuid.a"
 else
   XLD=$XALT_DIR/lib
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o $XLD/libuuid.a"
 fi
   
 # Get the compiler information
@@ -285,14 +285,7 @@ if [ -n "$PrintOptions" ]; then
     $MY_CMD "${printOptA[@]}" "${argA[@]}"
 fi
 
-LIBUUID=
 LIBDCGM=
-
-#############################################################
-#  Only use the uuid library for 64bit apps not for 32bit apps
-if [ "$HAVE_WORKING_LIBUUID" = "yes" -a -z "$BIT32FLAG" ]; then
-    LIBUUID="-luuid"
-fi
 
 #############################################################
 #  Only use the dcgm library for 64bit apps not for 32bit apps
@@ -306,17 +299,16 @@ fi
 
 if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
     XALT_INIT_ROUTINE_OBJ=
-    LIBUUID=
     LIBDCGM=
     tracing_msg "Shared library build detected not adding XALT initialize routines to user code"
 fi
 
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID $LIBDCGM -t > $LINKLINE_OUT  2>&1
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
-   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBUUID $LIBDCGM 
+   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
    exit $status
 fi
 

@@ -62,6 +62,11 @@ if test "$MYSQL_CONFIG" = UNKNOWN_mysql_config; then
   Using_MYSQL=no
 fi
 
+if test -z "$CXX_LD_LIBRARY_PATH" ; then
+  CXX_LD_LIBRARY_PATH="<empty>"
+fi
+
+
 echo
 echo '----------------------------------- SUMMARY ----------------------------------'
 echo
@@ -85,10 +90,8 @@ echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKI
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
-echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
 echo "XALT Using DCGM......................................" : $HAVE_DCGM
 echo "XALT build with MySQL support........................" : $Using_MYSQL
-echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER

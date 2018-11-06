@@ -134,7 +134,6 @@ int main(int argc, char* argv[])
       json.add("XALT_SYSLOG_MSG_SZ",            SYSLOG_MSG_SZ);
       json.add("CXX_LD_LIBRARY_PATH",           CXX_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                    HAVE_32BIT);
-      json.add("USING_LIBUUID",                 HAVE_WORKING_LIBUUID);
       json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
       json.add("HAVE_DCGM",                     HAVE_DCGM);
 
@@ -182,7 +181,6 @@ int main(int argc, char* argv[])
   std::cout << "XALT_PRELOAD_ONLY:             " << XALT_PRELOAD_ONLY              << "\n";
   std::cout << "HAVE_32BIT:                    " << HAVE_32BIT                     << "\n";
   std::cout << "MY_HOSTNAME_PARSER:            " << MY_HOSTNAME_PARSER             << "\n";
-  std::cout << "Using libuuid:                 " << HAVE_WORKING_LIBUUID           << "\n";
   std::cout << "Built with DCGM:               " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 

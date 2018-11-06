@@ -1,17 +1,23 @@
-CC   := gcc
-SRC  := clear.c compare.c copy.c gen_uuid.c isnull.c pack.c parse.c predefined.c test_uuid.c unpack.c \
-        unparse.c uuid_time.c randutils.c
-OBJS := $(patsubst %.c, %.o, $(SRC))
-CFLAGS := -include uuid_config.h
+THIS_DIR   := $(PARENT_DIR)/libuuid/src
+CFLAGS     := $(OPTLVL) -fPIC
+CC   	   := gcc
+SRC  	   := clear.c compare.c copy.c gen_uuid.c isnull.c pack.c parse.c predefined.c test_uuid.c unpack.c \
+	      unparse.c uuid_time.c randutils.c
+OBJS 	   := $(patsubst %.c, %.o, $(SRC))
 
-LIBUUID := libuuid.a
+LIBUUID    := $(DESTDIR)$(LIB)/libuuid.a
+MY_UUIDGEN := $(DESTDIR)$(BIN)/my_uuidgen
 
-all: $(LIBUUID) my_uuidgen
+all: $(LIBUUID) 
 
+build_uuidgen: $(MY_UUIDGEN)
 
 $(LIBUUID) : $(OBJS)
-	ar ru $@ $^
+	ar r $@ $^
 	ranlib $@
+
+$(MY_UUIDGEN): my_uuidgen.o $(LIBUUID)
+	$(LINK.c) -o $@ $< $(LIBUUID)
 
 test_uuid: test_uuid.o $(LIBUUID)
 	$(LINK.c) -o $@ $< $(LIBUUID)
@@ -20,12 +26,12 @@ neat:
 clean: neat
 	$(RM) *.o
 clobber: clean
-	$(RM) libuuid.a test_uuid
+	$(RM) test_uuid $(MY_UUIDGEN) $(LIBUUID)
 distclean: clobber
 	$(RM) makefile config.log config.status uuid_config.h
 
-my_uuidgen: my_uuidgen.o $(LIBUUID)
-	$(LINK.c) -o $@ $< $(LIBUUID)
+makefile: $(THIS_DIR)/Makefile.in
+	./config.status $@
 
 my_uuidgen.o: my_uuidgen.c uuid.h
 clear.o: clear.c uuidP.h

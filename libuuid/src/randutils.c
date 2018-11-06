@@ -6,6 +6,7 @@
  * This file may be redistributed under the terms of the
  * GNU Lesser General Public License.
  */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -15,6 +16,7 @@
 
 #include <sys/syscall.h>
 
+#include "uuid_config.h"
 #include "c.h"
 #include "randutils.h"
 #include "nls.h"

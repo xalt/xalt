@@ -35,7 +35,8 @@ endif
 
 
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
-OPTLVL               	:= -g -O2
+OPTLVL               	:= -g -O2 
+override OPTLVL         += -I$(srcdir)/libuuid/src
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version | sed -e 's/-devel//g' )
 BROKER_SERVER           := @BROKER_SERVER@
@@ -48,7 +49,6 @@ prefix               	:= @prefix@
 GIT_BRANCH           	:= master
 XALT_V               	:= src/xalt_version.h
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
-HAVE_LIBUUID         	:= @HAVE_WORKING_LIBUUID@
 HAVE_DCGM         	:= @HAVE_DCGM@
 STATIC_LIBS             := @STATIC_LIBS@
 PRELOAD_ONLY            := @PRELOAD_ONLY@	
@@ -74,7 +74,6 @@ PATH_TO_PYTHON       	:= @PATH_TO_PYTHON@
 PATH_TO_READLINK     	:= @PATH_TO_READLINK@
 PATH_TO_RM           	:= @PATH_TO_RM@
 PATH_TO_SHA1SUM      	:= @PATH_TO_SHA1SUM@
-PATH_TO_UUIDGEN      	:= @PATH_TO_UUIDGEN@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
@@ -146,21 +145,29 @@ install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
-build_compiled:
+build_compiled: build_uuid
 	cd $(srcdir)/src;                                                                          \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
-                LDFLAGS="$(LDFLAGS)"                                                               \
-                LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB)     \
-                OPTLVL="$(OPTLVL)" LIB64=$(LIB64) HAVE_LIBUUID=$(HAVE_LIBUUID)                     \
-                HAVE_DCGM=$(HAVE_DCGM) XALT_FILE_PREFIX=$(XALT_FILE_PREFIX)                        \
-                STATIC_LIBS=$(STATIC_LIBS) \
+                LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
+                LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
+                XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
 
 
 build_uuid:
-	cd $(srcdir)/libuuid;                                                                      \
-        $(MAKE) 
-
+	cd $(srcdir)/libuuid/src;                                                                  \
+        $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                         \
+                         LIB=$(LIB64) clean;                                                       \
+        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
+                LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB64)       \
+                OPTLVL="$(OPTLVL)" all build_uuidgen;                                              \
+        if [ "$(HAVE_32BIT)" = yes ]; then                                                         \
+           $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                      \
+                         LIB=$(LIB) clean;                                                         \
+           $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)   \
+                   LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB)      \
+                   OPTLVL="$(OPTLVL) -m32" all;                                                    \
+        fi
 
 echo:
 	@echo srcdir: $(srcdir)
@@ -346,7 +353,7 @@ build_tags:
             -e 's|.*\.lo$$||g'                                   \
             -e 's|.*\.Plo$$||g'                                  \
             -e 's|^#.*||g'                                       \
-            -e 's|/#.*||g'                                       \
+            -e 's|.*/#.*||g'                                     \
             -e 's|\.#.*||g'                                      \
             -e 's|.*\.pdf$$||g'                                  \
             -e 's|.*\.used$$||g'                                 \
@@ -377,11 +384,18 @@ makefile: $(srcdir)/Makefile.in config.status
 src/makefile: $(srcdir)/src/Makefile.in config.status
 	./config.status $@
 
+
 neat:
-	$(RM) *~ src/*~
-	cd src ; $(MAKE) PARENT_DIR=$(srcdir) $@
+	$(RM) *~
+	cd src ;         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         LIB=$(LIB) LIB64=$(LIB64) $@
+	cd libuuid/src ; $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         LIB=$(LIB) LIB64=$(LIB64) $@ 
+
 clean:  neat
-	cd src ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING= $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) $@
+	cd src ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                             \
+                 $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)\
+                         LIB=$(LIB) LIB64=$(LIB64) $@
+	cd libuuid/src ; $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         LIB=$(LIB) LIB64=$(LIB64) $@ 
 clobber: clean
-
-

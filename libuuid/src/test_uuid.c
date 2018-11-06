@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#include "uuid_config.h"
 #include "c.h"
 #include "uuid.h"
 

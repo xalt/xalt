@@ -627,7 +627,6 @@ XALT_GIT_VERSION
 VERSION
 PKGV
 HAVE_DCGM
-HAVE_WORKING_LIBUUID
 EGREP
 GREP
 CPP
@@ -5203,69 +5202,6 @@ fi
 
 
 
-
-HAVE_WORKING_LIBUUID=no
-
-if test $ac_cv_header_uuid_uuid_h = yes; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing uuid_generate" >&5
-$as_echo_n "checking for library containing uuid_generate... " >&6; }
-if ${ac_cv_search_uuid_generate+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char uuid_generate ();
-int
-main ()
-{
-return uuid_generate ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' uuid; do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_search_uuid_generate=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext
-  if ${ac_cv_search_uuid_generate+:} false; then :
-  break
-fi
-done
-if ${ac_cv_search_uuid_generate+:} false; then :
-
-else
-  ac_cv_search_uuid_generate=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_uuid_generate" >&5
-$as_echo "$ac_cv_search_uuid_generate" >&6; }
-ac_res=$ac_cv_search_uuid_generate
-if test "$ac_res" != no; then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  $as_echo "#define HAVE_LIBUUID 1" >>confdefs.h
- HAVE_WORKING_LIBUUID=yes
-fi
-
-fi
-
 if test -z "$PATH_TO_FLEX" ; then
    echo
    echo "======================================================="
@@ -5277,93 +5213,25 @@ if test -z "$PATH_TO_FLEX" ; then
 fi
 
 
-if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without uuid and"
-   echo "without /proc/sys/kernel/random/uuid"
-   echo "See the manual for details"
-   echo "======================================================="
-   rm -f makefile
-   exit 1
-fi
-
-if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
-   CFLAGS_OLD=$CFLAGS
-   CFLAGS="-m32 $CFLAGS"
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing uuid_clear" >&5
-$as_echo_n "checking for library containing uuid_clear... " >&6; }
-if ${ac_cv_search_uuid_clear+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char uuid_clear ();
-int
-main ()
-{
-return uuid_clear ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' uuid; do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_search_uuid_clear=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext
-  if ${ac_cv_search_uuid_clear+:} false; then :
-  break
-fi
-done
-if ${ac_cv_search_uuid_clear+:} false; then :
-
-else
-  ac_cv_search_uuid_clear=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_uuid_clear" >&5
-$as_echo "$ac_cv_search_uuid_clear" >&6; }
-ac_res=$ac_cv_search_uuid_clear
-if test "$ac_res" != no; then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  HAVE_WORKING_LIBUUID_32=yes
-else
-  HAVE_WORKING_LIBUUID_32=no
-fi
-
-   CFLAGS=$CFLAGS_OLD
-   if test $HAVE_WORKING_LIBUUID_32 = no; then
-      echo
-      echo "======================================================="
-      echo "Unable to install XALT without a 32 version of the"
-      echo "uuid library"
-      echo ""
-      echo "Your system has the 64 bit version of libuuid but not"
-      echo "the 32 bit version."
-      echo "======================================================="
-      echo
-      rm -f makefile
-      exit 1
-   fi
-fi
+#if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
+#   CFLAGS_OLD=$CFLAGS
+#   CFLAGS="-m32 $CFLAGS"
+#   AC_SEARCH_LIBS([uuid_clear],[uuid], [HAVE_WORKING_LIBUUID_32=yes], [HAVE_WORKING_LIBUUID_32=no])
+#   CFLAGS=$CFLAGS_OLD
+#   if test $HAVE_WORKING_LIBUUID_32 = no; then
+#      echo
+#      echo "======================================================="
+#      echo "Unable to install XALT without a 32 version of the"
+#      echo "uuid library"
+#      echo ""
+#      echo "Your system has the 64 bit version of libuuid but not"
+#      echo "the 32 bit version."
+#      echo "======================================================="
+#      echo
+#      rm -f makefile
+#      exit 1
+#   fi
+#fi
 
 
 HAVE_DCGM=no
@@ -7208,6 +7076,11 @@ if test "$MYSQL_CONFIG" = UNKNOWN_mysql_config; then
   Using_MYSQL=no
 fi
 
+if test -z "$CXX_LD_LIBRARY_PATH" ; then
+  CXX_LD_LIBRARY_PATH="<empty>"
+fi
+
+
 echo
 echo '----------------------------------- SUMMARY ----------------------------------'
 echo
@@ -7231,10 +7104,8 @@ echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKI
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
-echo "XALT Using libuuid..................................." : $HAVE_WORKING_LIBUUID
 echo "XALT Using DCGM......................................" : $HAVE_DCGM
 echo "XALT build with MySQL support........................" : $Using_MYSQL
-echo "XALT Backgrounding the start record of a program run." : $ENABLE_BACKGROUNDING
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER

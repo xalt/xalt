@@ -328,13 +328,6 @@ AC_CHECK_HEADER(openssl/sha.h,
                    [Define to 1 if you have <openssl/sha.h>.])],
                 [AC_MSG_ERROR([Unable to build XALT without openssl/sha.h])])
 
-AC_SUBST(HAVE_WORKING_LIBUUID)
-HAVE_WORKING_LIBUUID=no
-
-if test $ac_cv_header_uuid_uuid_h = yes; then
-  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID) HAVE_WORKING_LIBUUID=yes], [])
-fi
-
 if test -z "$PATH_TO_FLEX" ; then
    echo
    echo "======================================================="
@@ -346,36 +339,25 @@ if test -z "$PATH_TO_FLEX" ; then
 fi
 
 
-if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without uuid and"
-   echo "without /proc/sys/kernel/random/uuid"
-   echo "See the manual for details"
-   echo "======================================================="
-   rm -f makefile
-   exit 1
-fi
-
-if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
-   CFLAGS_OLD=$CFLAGS
-   CFLAGS="-m32 $CFLAGS"
-   AC_SEARCH_LIBS([uuid_clear],[uuid], [HAVE_WORKING_LIBUUID_32=yes], [HAVE_WORKING_LIBUUID_32=no])
-   CFLAGS=$CFLAGS_OLD
-   if test $HAVE_WORKING_LIBUUID_32 = no; then
-      echo
-      echo "======================================================="
-      echo "Unable to install XALT without a 32 version of the"
-      echo "uuid library"
-      echo ""
-      echo "Your system has the 64 bit version of libuuid but not"
-      echo "the 32 bit version."
-      echo "======================================================="
-      echo
-      rm -f makefile
-      exit 1
-   fi
-fi  
+#if test $HAVE_32BIT = yes -a $HAVE_WORKING_LIBUUID = yes; then
+#   CFLAGS_OLD=$CFLAGS
+#   CFLAGS="-m32 $CFLAGS"
+#   AC_SEARCH_LIBS([uuid_clear],[uuid], [HAVE_WORKING_LIBUUID_32=yes], [HAVE_WORKING_LIBUUID_32=no])
+#   CFLAGS=$CFLAGS_OLD
+#   if test $HAVE_WORKING_LIBUUID_32 = no; then
+#      echo
+#      echo "======================================================="
+#      echo "Unable to install XALT without a 32 version of the"
+#      echo "uuid library"
+#      echo ""
+#      echo "Your system has the 64 bit version of libuuid but not"
+#      echo "the 32 bit version."
+#      echo "======================================================="
+#      echo
+#      rm -f makefile
+#      exit 1
+#   fi
+#fi  
   
 AC_SUBST(HAVE_DCGM)
 HAVE_DCGM=no
