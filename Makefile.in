@@ -384,6 +384,8 @@ makefile: $(srcdir)/Makefile.in config.status
 src/makefile: $(srcdir)/src/Makefile.in config.status
 	./config.status $@
 
+libuuid/src/makefile: $(srcdir)/src/Makefile.in
+	./libuuid/src/config.statu $@
 
 neat:
 	$(RM) *~

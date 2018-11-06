@@ -1,4 +1,5 @@
 THIS_DIR   := $(PARENT_DIR)/libuuid/src
+VPATH       = .:$(THIS_DIR)
 CFLAGS     := $(OPTLVL) -fPIC
 CC   	   := gcc
 SRC  	   := clear.c compare.c copy.c gen_uuid.c isnull.c pack.c parse.c predefined.c test_uuid.c unpack.c \
@@ -29,9 +30,6 @@ clobber: clean
 	$(RM) test_uuid $(MY_UUIDGEN) $(LIBUUID)
 distclean: clobber
 	$(RM) makefile config.log config.status uuid_config.h
-
-makefile: $(THIS_DIR)/Makefile.in
-	./config.status $@
 
 my_uuidgen.o: my_uuidgen.c uuid.h
 clear.o: clear.c uuidP.h
