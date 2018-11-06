@@ -327,6 +327,7 @@ build_tags:
             -e 's|.*/xalt_env_parser.lex||g'                     \
             -e 's|.*/xalt_regex.h$$||g'                          \
             -e 's|.*/xalt_config.h$$||g'                         \
+            -e 's|.*/uuid_config.h$$||g'                         \
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
             -e 's|.*\.pyc$$||g'                                  \

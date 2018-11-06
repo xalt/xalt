@@ -45,9 +45,6 @@ extern int isxdigit_strend(const char *str, const char **end);
 
 extern int parse_switch(const char *arg, const char *errmesg, ...);
 
-#ifndef HAVE_MEMPCPY
-extern void *mempcpy(void *restrict dest, const void *restrict src, size_t n);
-#endif
 #ifndef HAVE_STRNLEN
 extern size_t strnlen(const char *s, size_t maxlen);
 #endif
