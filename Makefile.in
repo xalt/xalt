@@ -146,7 +146,7 @@ install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
 build_compiled: build_uuid
-	cd $(srcdir)/src;                                                                          \
+	cd src;                                                                                    \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
@@ -155,7 +155,7 @@ build_compiled: build_uuid
 
 
 build_uuid:
-	cd $(srcdir)/libuuid/src;                                                                  \
+	cd libuuid/src;                                                                            \
         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                         \
                          LIB=$(LIB64) clean;                                                       \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR)      \
@@ -395,8 +395,8 @@ neat:
                          LIB=$(LIB) LIB64=$(LIB64) $@ 
 
 clean:  neat
-	cd src ; LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                             \
-                 $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)\
+	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
+                         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          LIB=$(LIB) LIB64=$(LIB64) $@
 	cd libuuid/src ; $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          LIB=$(LIB) LIB64=$(LIB64) $@ 
