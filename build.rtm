@@ -111,7 +111,7 @@ case $SYSHOST in
   ls5 )
     echo "Building ls5"
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-ignoreList=./contrib/TACC/config/ignore.ls5.txt --with-hostnameList=./contrib/TACC/config/hostname.ls5.txt --with-etcDir=/home1/moduleData/all --with-site=TACC"
+    CONF_OPTS="--with-syshostConfig=hardcode:ls5 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no"
     ;;
 
   gligar.os)

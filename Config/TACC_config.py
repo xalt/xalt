@@ -11,6 +11,7 @@ import sys
 
 hostname_patterns = [
   ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
+  ['KEEP', '^nid[0-9][0-9][0-9][0-9][0-9]\..*']
   ]
 
 #------------------------------------------------------------
@@ -70,11 +71,16 @@ path_patterns = [
     ['SKIP',  r'^\/etc\/.*'],
     ['SKIP',  r'^\/root\/.*'],
     ['SKIP',  r'^\/opt\/intel\/.*'],
+    ['SKIP',  r'^\/opt\/tacc\/bin\/.*'],
+    ['SKIP',  r'^\/opt\/cray\/.*'],
+    ['SKIP',  r'^\/opt\/apps\/mpi_wrapper\/.*'],
+    ['SKIP',  r'^\/opt\/apps\/slurm_wrapper\/.*'],
     ['SKIP',  r'^\/opt\/apps\/intel\/.*'],
     ['SKIP',  r'^\/opt\/apps\/cuda\/.*'],
     ['SKIP',  r'^\/opt\/apps\/lua\/.*'],
     ['SKIP',  r'^\/opt\/apps\/lmod\/.*'],
     ['SKIP',  r'^\/opt\/apps\/shell_startup_debug\/.*'],
+    ['SKIP',  r'^\/opt\/apps\/tacc_tips\/.*'],
     ['SKIP',  r'.*\/l\/pkg\/xalt\/'],
     ['SKIP',  r'.*\/l\/pkg\/lua\/'],
     ['SKIP',  r'.*\/l\/pkg\/lmod\/'],
@@ -83,6 +89,7 @@ path_patterns = [
     ['SKIP',  r'^\/opt\/apps\/cmake\/.*'],
     ['SKIP',  r'^\/opt\/apps\/autotools\/.*'],
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/mvapich2\/.*'],
+    ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/cray_mpich\/.*'],
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/impi\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc[0-9][0-9_]*\/mvapich2\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc\/.*'],
