@@ -75,6 +75,9 @@ AC_CHECK_FUNCS([ \
 	jrand48 \
 	nanosleep \
         srandom \
+	strndup \
+	strnchr \
+	strnlen \
 	usleep \
 	warn \
 	warnx \

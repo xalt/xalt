@@ -3439,6 +3439,9 @@ for ac_func in  \
 	jrand48 \
 	nanosleep \
         srandom \
+	strndup \
+	strnchr \
+	strnlen \
 	usleep \
 	warn \
 	warnx \
