@@ -23,7 +23,7 @@
 \begin{document}
 \title[XALT]{XALT: Understanding HPC Usage via Job Level Collection}
 \author{Robert McLay} 
-\date{January 22, 2018} 
+\date{November 14, 2018} 
 
 % page 1
 \frame{\titlepage} 
@@ -108,10 +108,9 @@
 \end{frame}
 
 % page 9
-\begin{frame}{Protecting XALT: Python to C++}
+\begin{frame}{Protecting XALT from users}
     \begin{itemize}
-      \item XALT 1 used python scripts
-      \item It was difficult to protect Python from users in everytime
+      \item Must protect XALT from unexpected changes in the environment.
       \item Solution: LD\_LIBRARY\_PATH="@ld\_lib\_path@"
         PATH=/usr/bin:/bin C++-exec ...
       \item Everything that depends on PATH must be hard coded
@@ -162,7 +161,7 @@ void myfini()
   \begin{itemize}
     \item This C code is compiled and linked in through the hijacked linker
     \item It can also be used with \texttt{LD\_PRELOAD}
-    \item We are using both...
+    \item By default we only use \texttt{LD\_PRELOAD} but can do both.
   \end{itemize}
 \end{frame}
 
