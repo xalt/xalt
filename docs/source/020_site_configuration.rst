@@ -124,6 +124,8 @@ system ones.  Note that user executables can be built with any other
 compilers and will accept an XALT built with system gcc/g++
 
 
+.. _old_gcc-label:
+
 If your g++ is older than 4.8.5
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,0 +1,17 @@
+.. _faq-label:
+
+Frequently Asked Questions
+==========================
+
+Why do I get message that say "... GLIBCXX_3.4.20 not found ..." when
+I try to run any application when XALT is active?
+
+    This means that your site has installed an GCC version newer than
+    the default gcc installed on the system. Please re-install XALT
+    with just the system version of gcc.  If your system gcc is older
+    than 4.8.5 (say Centos 6) then please see :ref:`old_gcc-label`
+
+
+   
+
+    

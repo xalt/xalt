@@ -41,3 +41,15 @@ are divided into the following steps.
    060_setup_db
    070_loading_json_by_file
    080_loading_json_by_syslog
+
+
+FAQ
+^^^
+
+Here we show answers to Frequently Asked Questions.
+
+.. toctree::
+   :maxdepth: 1
+
+   999_faq
+   
