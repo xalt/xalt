@@ -91,6 +91,7 @@ echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKIN
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT Using DCGM......................................" : $HAVE_DCGM
+echo "XALT Using NVML......................................" : $HAVE_NVML
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH

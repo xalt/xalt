@@ -9,6 +9,9 @@ ifeq ($(HAVE_DCGM),yes)
     LIBDCGM:=-ldcgm
   endif
 endif
+ifeq ($(HAVE_NVML),yes)
+  LIBNVML:=-ldl
+endif
 ifeq ($(STATIC_LIBS),yes)
   LIBCRYPTO:=-l:libcrypto.a -ldl -lz
 else
@@ -350,7 +353,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/base64.o                  \
                                     $(MY_HOSTNAME_PARSER_OBJ)                    \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
-	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ -l:libuuid.a $(LIBDCGM)
+	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ -l:libuuid.a $(LIBDCGM) $(LIBNVML)
 
 neat:
 	$(RM) *~
