@@ -21,7 +21,7 @@
 
 const  char*           xalt_syshost();
 
-char* build_xalt_files_dir(const char* user_name, const char* home_dir, const char * transmission);
+char* build_xalt_files_dir(const char* run_uuid);
 
 int main(int argc, char* argv[])
 {
@@ -59,10 +59,6 @@ int main(int argc, char* argv[])
       DEBUG0(stderr,"The run_uuid value is not set => quitting!\n");
       exit(0);
     }
-
-  const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
-  if (transmission == NULL)
-    transmission = TRANSMISSION;
 
   // Count size of string. Adjust count for possible UTF8 chars and two quotes and either a colon or a comma:
 
@@ -111,30 +107,22 @@ int main(int argc, char* argv[])
   //          1         2   |      3
   //0123456789 123456789 123456789 123456789 
   //3de2c9d8-e857-4482-9aa4-4979620380fc	  
-  if ( (strcasecmp(transmission, "file") == 0) || (strcasecmp(transmission, "file_separate_dirs") == 0))
-    {
-      char* date_str = getenv("XALT_DATE_TIME");
-      char* c_home   = getenv("HOME");
-      char* c_user   = getenv("USER");
 
-      if (c_home != NULL && c_user != NULL)
-	{
-          char* xalt_files_dir = build_xalt_files_dir(c_user, c_home, transmission);
-	  
-	  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, my_host, date_str,
-		                                       run_uuid, &uuid_str[24]);
-	  DEBUG1(stderr,"resultFn: %s\n",resultFn);
-	  free(xalt_files_dir);
-	}
-    }
+  char* date_str = getenv("XALT_DATE_TIME");
   
+  char* xalt_files_dir = build_xalt_files_dir(run_uuid);
+	  
+  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, my_host, date_str,
+                                               run_uuid, &uuid_str[24]);
+  DEBUG1(stderr,"resultFn: %s\n",resultFn);
+  free(xalt_files_dir);
+
   char* key = NULL;
   asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
 
-  transmit(transmission, json_str, "pkg", key, my_host, resultFn);
+  transmit("file", json_str, "pkg", key, my_host, resultFn);
 
-  if (resultFn)
-    free(resultFn);
+  free(resultFn);
   free(key);
   free(run_uuid);
   free(json_str);
@@ -143,19 +131,10 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-char* build_xalt_files_dir(const char* user_name, const char* home_dir, const char* transmission)
+char* build_xalt_files_dir(const char* run_uuid)
 {
   char* xalt_files_dir = NULL;
-  const char* pkg = "";
-
-  if (strcasecmp(transmission,"file_separate_dirs") == 0)
-    pkg = "pkg/";
-
-#ifdef HAVE_FILE_PREFIX
-  asprintf(&xalt_files_dir,"%s/%s%s/",XALT_FILE_PREFIX, pkg, user_name);
-#else
-  asprintf(&xalt_files_dir,"%s/.xalt.d/%s",home_dir, pkg);
-#endif
+  asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,run_uuid);
   return xalt_files_dir;
 }
 

@@ -29,5 +29,6 @@
 #define XALT_VERSION               "@VERSION@"
 #define XALT_GIT_VERSION           "XALT @XALT_GIT_VERSION@"
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
+#define XALT_TMPDIR                "@XALT_TMPDIR@"
 
 #endif /* XALT_CONFIG_H */

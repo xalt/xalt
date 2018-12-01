@@ -237,6 +237,18 @@ AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     BAD_INSTALL="$withval"
     AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval"))dnl
 
+AC_SUBST(XALT_TMPDIR)
+AC_ARG_WITH(tmpdir,
+    AC_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/tmp]]]),
+    XALT_TMPDIR="$withval"
+    AC_MSG_RESULT([XALT_TMPDIR=$with-tmpdir])
+    AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$with-tmpdir")dnl
+    ,
+    withval="/tmp"
+    AC_MSG_RESULT([XALT_TMPDIR=$withval])
+    XALT_TMPDIR="$withval"
+    AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$withval"))dnl
+
 AC_SUBST(HAVE_32BIT)
 
 AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])

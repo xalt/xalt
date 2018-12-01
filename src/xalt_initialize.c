@@ -815,6 +815,42 @@ void myfini()
 
       system(cmdline);
     }
+
+  if (run_mask & BIT_SPSR)
+    {
+      char* xalt_files_dir = NULL;
+      asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,uuid_str);
+      DIR* dirp = open(dir,xalt_files_dir);
+      if (dirp)
+        {
+          struct dirent* dp;
+          while ( (dp = readdir(dirp)) != NULL)
+            {
+              char * buf = NULL;
+              size_t sz  = 0;
+              if (fnmatch("pkg.*.json", dp->d_name, 0) == 0)
+                {
+                  char * fname = NULL;
+                  asprintf(&fname,"%s/%s",xalt_files_dir, dp->d_name);
+                  FILE* fp = fopen(fname,"r");
+                  xalt_fgets_alloc(fp, &buf, &sz);
+                  
+             
+                }
+              else
+                unlink(dp->d_name);
+      
+        }
+
+
+
+    }
+  
+
+
+
+
+
   if (xalt_err) 
     {
       fclose(my_stderr);
