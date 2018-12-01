@@ -94,7 +94,11 @@ int main(int argc, char* argv[])
   if (system == "Darwin")
     fprintf(fp,"\t.section .XALT, .xalt\n");
   else
-    fprintf(fp,"\t.section .xalt\n");
+    {
+      fprintf(fp,"\t.file    \"xalt.s\"\n");
+      fprintf(fp,"\t.section .note.GNU-stack,"",@progbits\n");
+      fprintf(fp,"\t.section .xalt\n");
+    }
 
   fprintf(fp,"\t.asciz \"XALT_Link_Info\"\n"); //this is how to find the section in the exec
 
