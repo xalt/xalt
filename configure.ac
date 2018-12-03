@@ -237,6 +237,18 @@ AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     BAD_INSTALL="$withval"
     AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval"))dnl
 
+AC_SUBST(BIT32)
+AC_ARG_WITH(32bit,
+    AC_HELP_STRING([--with-32bit],[Allow for 32 bits executables[[yes]]]),
+    BIT32="$withval"
+    AC_MSG_RESULT([BIT32=$with_32bit])
+    AC_DEFINE_UNQUOTED(BIT32, "$with_32bit")dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([BIT32=$withval])
+    BIT32="$withval"
+    AC_DEFINE_UNQUOTED(BIT32, "$withval"))dnl
+
 AC_SUBST(XALT_TMPDIR)
 AC_ARG_WITH(tmpdir,
     AC_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/tmp]]]),
@@ -251,7 +263,12 @@ AC_ARG_WITH(tmpdir,
 
 AC_SUBST(HAVE_32BIT)
 
-AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
+if test "$BIT32" = yes ; then
+  AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
+else
+  HAVE_32BIT=no
+fi
+
 AC_LANG_PUSH(C++)
 AX_TEST_COMPILE_FLAG([-std=c++11],[HAVE_CXX11=yes],[HAVE_CXX11=no])
 AC_LANG_POP([C++])
