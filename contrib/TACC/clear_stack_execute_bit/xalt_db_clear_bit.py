@@ -34,8 +34,7 @@ class CmdLineOptions(object):
 
 
 def find_link_files(cursor, args, startdate, enddate):
-  query = "SELECT exec_path from xalt_link \
-                  where build_user = 'mclay' "
+  query = "SELECT exec_path from xalt_link "
   cursor.execute(query)
   a = cursor.fetchall()
   resultT = {}
