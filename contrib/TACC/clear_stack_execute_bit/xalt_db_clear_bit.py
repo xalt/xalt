@@ -24,10 +24,11 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
-    parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
-    parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
-    parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
+    parser.add_argument("--confFn",    dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
+    parser.add_argument("--start",     dest='startD',    action="store",       default = None,           help="start date")
+    parser.add_argument("--end",       dest='endD',      action="store",       default = None,           help="end date")
+    parser.add_argument("--syshost",   dest='syshost',   action="store",       default = "%",            help="syshost")
+    parser.add_argument("--clear_bit", dest='clear_bit', action="store_true",  default = False,          help="Clear bit")
     args = parser.parse_args()
     return args
 
@@ -37,13 +38,13 @@ def find_link_files(cursor, args, startdate, enddate):
                   where build_user = 'mclay' "
   cursor.execute(query)
   a = cursor.fetchall()
-  resultA = []
+  resultT = {}
   for entry in a:
     file = entry[0]
     if (os.path.isfile(file)):
-      resultA.append(file)
+      resultT[file] = True
       
-  return resultA  
+  return resultT
 
 def capture(cmd):
   """
@@ -89,9 +90,12 @@ def main():
   if (args.startD is not None):
     startdate = args.startD
 
-  resultA = find_link_files(cursor, args, startdate, enddate)
+  resultT = find_link_files(cursor, args, startdate, enddate)
 
-  for file in resultA:
-    clear_stack_bit(file)
+  for file in resultT:
+    if (args.clear_stack_bit):
+      clear_stack_bit(file)
+    else:
+      print(file)
 
 if ( __name__ == '__main__'): main()
