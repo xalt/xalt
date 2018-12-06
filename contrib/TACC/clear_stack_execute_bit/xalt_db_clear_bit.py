@@ -93,7 +93,7 @@ def main():
   resultT = find_link_files(cursor, args, startdate, enddate)
 
   for file in resultT:
-    if (args.clear_stack_bit):
+    if (args.clear_bit):
       clear_stack_bit(file)
     else:
       print(file)
