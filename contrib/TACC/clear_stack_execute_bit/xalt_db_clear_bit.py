@@ -68,7 +68,7 @@ def clear_stack_bit(file):
     print("clearing stack bit on: ",file)
 
 def main():
-  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")x1
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
   config       = configparser.ConfigParser()     
   configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
