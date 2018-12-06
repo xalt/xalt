@@ -42,7 +42,9 @@ def find_link_files(cursor, args, startdate, enddate):
   for entry in a:
     file = entry[0]
     if (os.path.isfile(file)):
-      resultT[file] = True
+      result = capture("execstack " + file)
+      if (result[0:1] == 'X'):
+        resultT[file] = True
       
   return resultT
 
