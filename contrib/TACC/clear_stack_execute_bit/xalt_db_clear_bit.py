@@ -38,15 +38,37 @@ def find_link_files(cursor, args, startdate, enddate):
   cursor.execute(query)
   a = cursor.fetchall()
   resultA = []
-  for file in a:
+  for entry in a:
+    file = entry[0]
     if (os.path.isfile(file)):
       resultA.append(file)
       
   return resultA  
 
+def capture(cmd):
+  """
+  Capture standard out for a command.
+  @param cmd: Command string or array.
+  """
+
+  if (type(cmd) == type(' ')):
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT, shell =True)
+  else:
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT)
+
+    
+  return p.communicate()[0]
+
+def clear_stack_bit(file):
+  result = capture("execstack " + file)
+  if (result[0:1] == 'X'):
+    os.system("execstack -c " + file)
+    print("clearing stack bit on: ",file)
 
 def main():
-  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")x1
   args         = CmdLineOptions().execute()
   config       = configparser.ConfigParser()     
   configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
@@ -70,6 +92,6 @@ def main():
   resultA = find_link_files(cursor, args, startdate, enddate)
 
   for file in resultA:
-    print(file)
+    clear_stack_bit(file)
 
 if ( __name__ == '__main__'): main()
