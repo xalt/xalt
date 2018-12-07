@@ -49,22 +49,25 @@ Options::Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
-        {"interfaceV", required_argument, NULL, 'V'},
-        {"start",      required_argument, NULL, 's'},
-        {"end",        required_argument, NULL, 'e'},
-        {"syshost",    required_argument, NULL, 'h'},
-        {"exec",       required_argument, NULL, 'x'},
-        {"ntasks",     required_argument, NULL, 'n'},
-        {"ngpus",      required_argument, NULL, 'g'},
-        {"uuid",       required_argument, NULL, 'u'},
         {"confFn",     required_argument, NULL, 'c'},
-        {"ppid",       required_argument, NULL, 'p'},
-        {"path",       required_argument, NULL, 'P'},
-        {"prob",       required_argument, NULL, 'b'},
+        {"end",        required_argument, NULL, 'e'},
+        {"exec",       required_argument, NULL, 'x'},
+        {"interfaceV", required_argument, NULL, 'V'},
+        {"kind",       required_argument, NULL, 'k'},
         {"ld_libpath", required_argument, NULL, 'L'},
+        {"ngpus",      required_argument, NULL, 'g'},
+        {"ntasks",     required_argument, NULL, 'n'},
+        {"path",       required_argument, NULL, 'P'},
+        {"ppid",       required_argument, NULL, 'p'},
+        {"prob",       required_argument, NULL, 'b'},
+        {"start",      required_argument, NULL, 's'},
+        {"syshost",    required_argument, NULL, 'h'},
+        {"uuid",       required_argument, NULL, 'u'},
         {0,         0,                 0,     0 }
       };
       
+      m_kind = "SPSR";
+
       c = getopt_long(argc, argv, "c:s:e:h:x:n:g:u:p:P:L:",
 		      long_options, &option_index);
       
@@ -73,57 +76,61 @@ Options::Options(int argc, char** argv)
 
       switch(c)
 	{
-        case 'V':
+        case 'L':
           if (optarg)
-            m_interfaceV = (pid_t) convert_long("ppid", optarg);
-          break;
-        case 'p':
-          if (optarg)
-            m_ppid = (pid_t) convert_long("ppid", optarg);
-          break;
-        case 'b':
-          if (optarg)
-            m_probability = convert_double("prob", optarg);
-          break;
-	case 's':
-          if (optarg)
-            m_start = convert_double("start", optarg);
-	  break;
-	case 'e':
-          if (optarg)
-            m_end = convert_double("end", optarg);
-	  break;
-	case 'c':
-          if (optarg)
-            m_confFn = optarg;
-	  break;
-	case 'h':
-          if (optarg)
-            m_syshost = optarg;
-	  break;
-        case 'x':
-          if (optarg)
-            m_exec = optarg;
-	  break;
-	case 'n':
-          if (optarg)
-            m_ntasks = convert_long("ntasks", optarg);
-	  break;
-	case 'g':
-          if (optarg)
-            m_ngpus = convert_long("ngpus", optarg);
-	  break;
-        case 'u':
-          if (optarg)
-            m_uuid = optarg;
+            m_ldLibPath = optarg;
 	  break;
         case 'P':
           if (optarg)
             m_path = optarg;
 	  break;
-        case 'L':
+        case 'V':
           if (optarg)
-            m_ldLibPath = optarg;
+            m_interfaceV = (pid_t) convert_long("ppid", optarg);
+          break;
+        case 'b':
+          if (optarg)
+            m_probability = convert_double("prob", optarg);
+          break;
+	case 'c':
+          if (optarg)
+            m_confFn = optarg;
+	  break;
+	case 'e':
+          if (optarg)
+            m_end = convert_double("end", optarg);
+	  break;
+	case 'g':
+          if (optarg)
+            m_ngpus = convert_long("ngpus", optarg);
+	  break;
+	case 'h':
+          if (optarg)
+            m_syshost = optarg;
+	  break;
+	case 'k':
+          if (optarg)
+            m_kind = optarg;
+	  break;
+	case 'n':
+          if (optarg)
+            m_ntasks = convert_long("ntasks", optarg);
+	  break;
+        case 'p':
+          if (optarg)
+            m_ppid = (pid_t) convert_long("ppid", optarg);
+          break;
+	case 's':
+          if (optarg)
+            m_start = convert_double("start", optarg);
+	  break;
+        case 'u':
+          if (optarg)
+            m_uuid = optarg;
+	  break;
+        case 'x':
+          if (optarg)
+            m_exec = optarg;
 	  break;
 	case '?':
 	  printf("Huh?\n");

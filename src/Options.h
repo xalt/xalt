@@ -17,6 +17,7 @@ public:
   double        endTime()     { return m_end;         }
   double        probability() { return m_probability; }
   std::string&  exec()        { return m_exec;        }
+  std::string&  kind()        { return m_kind;        }
   std::string&  syshost()     { return m_syshost;     }
   std::string&  uuid()        { return m_uuid;        }
   std::string&  userCmdLine() { return m_userCmdLine; }
@@ -41,6 +42,7 @@ private:
   std::string m_confFn;
   std::string m_path;
   std::string m_ldLibPath;
+  std::string m_kind;
 };
 
 

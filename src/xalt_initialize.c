@@ -70,7 +70,7 @@
 
 #define DATESZ    100
 
-typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4, BIT_START_RECORD = 6} xalt_tracking_flags;
+typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4} xalt_tracking_flags;
 typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
@@ -375,39 +375,6 @@ void myinit(int argc, char **argv)
   else
     run_mask |= (path_results == SPSR) ? BIT_SPSR : BIT_SCALAR;
                       
-  if (build_mask & run_mask & BIT_SPSR)
-    {
-      const char * v;
-      v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
-      if (v && strcmp(v,"yes") == 0)
-	{
-	  const char* xalt_spsr_sampling_rate_str = getenv("XALT_SPSR_SAMPLING_RATE");
-	  if (xalt_spsr_sampling_rate_str)
-	    spsr_sampling_rate = strtod(xalt_spsr_sampling_rate_str, NULL);
-	  
-	  unsigned int a	= (unsigned int) clock();
-	  unsigned int b	= (unsigned int) time(NULL);
-	  unsigned int c	= (unsigned int) getpid();
-	  unsigned int seed	= mix(a,b,c);
-	  srand(seed);
-	  double my_rand        = (double) rand()/(double) RAND_MAX;
-
-	  if (my_rand >= spsr_sampling_rate)
-	    {
-	      DEBUG3(stderr, "    -> exiting because spsr sampling. "
-		     "(my_rand: %g >= SPSR sampling: %g) for program: %s\n}\n\n",
-		     my_rand, spsr_sampling_rate, exec_path);
-	      reject_flag = XALT_SPSR_SAMPLING;
-	      unsetenv("XALT_RUN_UUID");
-	      return;
-	    }
-	  else
-	    DEBUG3(stderr, "    -> spsr sampling. "
-		     "(my_rand: %g < SPSR sampling: %g) for program: %s\n}\n\n",
-		     my_rand, spsr_sampling_rate, exec_path);
-	}
-    }
-
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)
     {
@@ -602,7 +569,7 @@ void myinit(int argc, char **argv)
    * matches one of the patterns in path_patterns returns SPSR.
    */
 
-  if ( run_mask & BIT_START_RECORD)  /* BIT_START_RECORD = BIT_SPSR | BIT_MPI */
+  if ( run_mask & BIT_MPI)  
     {
       const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
       int runable = access(run_submission, X_OK);
@@ -621,15 +588,15 @@ void myinit(int argc, char **argv)
         {
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+                   " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+                   start_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-	       start_time, exec_path, my_size, uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
+	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+	       start_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
       free(cmdline);
@@ -802,16 +769,16 @@ void myfini()
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
+                   " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+                   start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-               start_time, end_time, exec_path, my_size, uuid_str, probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
+               " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
+               start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
     }

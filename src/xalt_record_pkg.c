@@ -10,6 +10,7 @@
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "build_uuid.h"
+#include "build_xalt_tmpdir.h"
 
 #define DATESZ    100
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
@@ -21,7 +22,6 @@
 
 const  char*           xalt_syshost();
 
-char* build_xalt_files_dir(const char* run_uuid);
 
 int main(int argc, char* argv[])
 {
@@ -110,12 +110,12 @@ int main(int argc, char* argv[])
 
   char* date_str = getenv("XALT_DATE_TIME");
   
-  char* xalt_files_dir = build_xalt_files_dir(run_uuid);
+  char* xalt_tmpdir = build_xalt_tmpdir(run_uuid);
 	  
-  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_files_dir, my_host, date_str,
+  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_tmpdir, my_host, date_str,
                                                run_uuid, &uuid_str[24]);
   DEBUG1(stderr,"resultFn: %s\n",resultFn);
-  free(xalt_files_dir);
+  free(xalt_tmpdir);
 
   char* key = NULL;
   asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
@@ -130,11 +130,3 @@ int main(int argc, char* argv[])
 
   return 0;
 }
-
-char* build_xalt_files_dir(const char* run_uuid)
-{
-  char* xalt_files_dir = NULL;
-  asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,run_uuid);
-  return xalt_files_dir;
-}
-
