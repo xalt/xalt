@@ -151,6 +151,7 @@ static double       end_time	          = 0.0;
 static double       frac_time             = 0.0;
 static long         my_rank	          = 0L;
 static long         my_size	          = 1L;
+static int          xalt_kind             = 0;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
 static int          xalt_gpu_tracking     = 0;
@@ -339,12 +340,6 @@ void myinit(int argc, char **argv)
   if (strcasecmp(v,"yes") == 0)
     build_mask |= BIT_SCALAR;
 
-  v = getenv("XALT_SPSR_TRACKING");
-  if (!v)
-    v = XALT_SPSR_TRACKING;
-  if (strcasecmp(v,"yes") == 0)
-    build_mask |= BIT_SPSR;
-      
   v = getenv("XALT_MPI_TRACKING");
   if (!v)
     v = XALT_MPI_TRACKING;
@@ -371,9 +366,19 @@ void myinit(int argc, char **argv)
     }
 
   if (my_size > 1L)
-    run_mask |= BIT_MPI;
+    {
+      run_mask |= BIT_MPI;
+      xalt_kind = BIT_MPI;
+    }
   else
-    run_mask |= (path_results == SPSR) ? BIT_SPSR : BIT_SCALAR;
+    {
+      run_mask |= BIT_SCALAR;
+      xalt_kind = BIT_SCALAR;
+    }
+
+  if (path_results == SPSR)
+    xalt_kind   = BIT_SPSR;
+      
                       
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)
@@ -589,14 +594,14 @@ void myinit(int argc, char **argv)
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
                    " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+                   start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-	       start_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
+	       start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
       free(cmdline);
@@ -770,7 +775,7 @@ void myfini()
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
+                   start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
@@ -778,45 +783,40 @@ void myfini()
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-               start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[run_mask], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
+               start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
     }
 
-  if (run_mask & BIT_SPSR)
-    {
-      char* xalt_files_dir = NULL;
-      asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,uuid_str);
-      DIR* dirp = open(dir,xalt_files_dir);
-      if (dirp)
-        {
-          struct dirent* dp;
-          while ( (dp = readdir(dirp)) != NULL)
-            {
-              char * buf = NULL;
-              size_t sz  = 0;
-              if (fnmatch("pkg.*.json", dp->d_name, 0) == 0)
-                {
-                  char * fname = NULL;
-                  asprintf(&fname,"%s/%s",xalt_files_dir, dp->d_name);
-                  FILE* fp = fopen(fname,"r");
-                  xalt_fgets_alloc(fp, &buf, &sz);
-                  
-             
-                }
-              else
-                unlink(dp->d_name);
-      
-        }
-
-
-
-    }
-  
-
-
-
-
+  //if (run_mask & BIT_SPSR)
+  //  {
+  //    char* xalt_files_dir = NULL;
+  //    asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,uuid_str);
+  //    DIR* dirp = open(dir,xalt_files_dir);
+  //    if (dirp)
+  //      {
+  //        struct dirent* dp;
+  //        while ( (dp = readdir(dirp)) != NULL)
+  //          {
+  //            char * buf = NULL;
+  //            size_t sz  = 0;
+  //            if (fnmatch("pkg.*.json", dp->d_name, 0) == 0)
+  //              {
+  //                char * fname = NULL;
+  //                asprintf(&fname,"%s/%s",xalt_files_dir, dp->d_name);
+  //                FILE* fp = fopen(fname,"r");
+  //                xalt_fgets_alloc(fp, &buf, &sz);
+  //                
+  //           
+  //              }
+  //            else
+  //              unlink(dp->d_name);
+  //    
+  //      }
+  //
+  //
+  //
+  //  }
 
   if (xalt_err) 
     {

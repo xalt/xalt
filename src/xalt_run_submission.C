@@ -173,6 +173,9 @@ int main(int argc, char* argv[], char* env[])
   xalt_quotestring_free();
   if (resultFn)
     free(resultFn);
+
+  pkgRecordTransmit(options, transmission);
+
   DEBUG0(stderr,"}\n\n");
   if (xalt_tracing)
     fflush(stderr);
