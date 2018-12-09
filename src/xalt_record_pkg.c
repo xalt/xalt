@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
   
   char* xalt_tmpdir = create_xalt_tmpdir_str(run_uuid);
 	  
-  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_tmpdir, my_host, date_str,
+  asprintf(&resultFn,"%s/pkg.%s.%s.%s.%s.json", xalt_tmpdir, my_host, date_str,
                                                run_uuid, &uuid_str[24]);
   DEBUG1(stderr,"resultFn: %s\n",resultFn);
   free(xalt_tmpdir);

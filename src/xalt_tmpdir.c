@@ -1,7 +1,10 @@
 #define _GNU_SOURCE
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <dirent.h>
 #include "xalt_tmpdir.h"
+#include "xalt_config.h"
 
 char* create_xalt_tmpdir_str(const char* run_uuid)
 {
@@ -11,7 +14,7 @@ char* create_xalt_tmpdir_str(const char* run_uuid)
 }
 
 
-char* remove_xalt_tmpdir(const char* run_uuid)
+void remove_xalt_tmpdir(const char* run_uuid)
 {
   char* xalt_tmpdir = create_xalt_tmpdir_str(run_uuid);
   DIR*  dirp        = opendir(xalt_tmpdir);
@@ -21,7 +24,7 @@ char* remove_xalt_tmpdir(const char* run_uuid)
       return;
     }
 
-  struct direct dp;
+  struct dirent* dp;
   while ( (dp = readdir(dirp)) != NULL)
     {
       char *fullFn = NULL;
@@ -30,7 +33,7 @@ char* remove_xalt_tmpdir(const char* run_uuid)
       unlink(fullFn);
       free(fullFn);
     }
-  unlink(xalt_tmpdir);
+  rmdir(xalt_tmpdir);
   free(xalt_tmpdir);
 }
 

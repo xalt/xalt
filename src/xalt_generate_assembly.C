@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
   else
     {
       fprintf(fp,"\t.file    \"xalt.s\"\n");
-      fprintf(fp,"\t.section .note.GNU-stack,"",@progbits\n");
+      fprintf(fp,"\t.section .note.GNU-stack,\"\",@progbits\n");
       fprintf(fp,"\t.section .xalt\n");
     }
 

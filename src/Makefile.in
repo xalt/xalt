@@ -292,7 +292,7 @@ $(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/__build__/xalt_syshost.c
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/base64.o: base64.c base64.h 
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
-$(DESTDIR)$(LIB64)/xalt_tmpdir.o: xalt_tmpdir.c xalt_tmpdir.h
+$(DESTDIR)$(LIB64)/xalt_tmpdir.o: xalt_tmpdir.c xalt_tmpdir.h __build__/xalt_config.h 
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
@@ -316,7 +316,7 @@ $(DESTDIR)$(LIB)/lex.__XALT_host_32.o: __build__/lex.__XALT_hostR.c xalt_obfusca
 	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: __build__/lex.__XALT_hostL.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
-$(DESTDIR)$(LIB64)/xalt_tmpdir_32.o: xalt_tmpdir.c xalt_tmpdir.h
+$(DESTDIR)$(LIB)/xalt_tmpdir_32.o: xalt_tmpdir.c xalt_tmpdir.h  __build__/xalt_config.h 
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB)/base64.o: base64.c base64.h 
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 

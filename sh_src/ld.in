@@ -74,9 +74,6 @@ elif [ "$XALT_FUNCTION_TRACKING" != no ]; then
    XALT_FUNCTION_TRACKING=yes
 fi
 
-
-
-
 source $MY_DIR/xalt_helper_functions.sh
 
 ##########################################################################
@@ -309,6 +306,7 @@ status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
+   $RM -rf $WRKDIR  
    exit $status
 fi
 

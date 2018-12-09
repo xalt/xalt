@@ -677,7 +677,7 @@ void myfini()
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
     {
-      if (xalt_kind = BIT_SPSR)
+      if (xalt_kind == BIT_SPSR)
         remove_xalt_tmpdir(&uuid_str[0]);
 
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
