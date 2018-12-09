@@ -52,6 +52,7 @@
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
 #include "build_uuid.h"
+#include "xalt_tmpdir.h"
 
 #ifdef USE_DCGM
 /* This code will only every be active in 64 bit mode and not 32 bit mode*/
@@ -676,6 +677,9 @@ void myfini()
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
     {
+      if (xalt_kind = BIT_SPSR)
+        remove_xalt_tmpdir(&uuid_str[0]);
+
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
 	     xalt_reasonA[reject_flag], exec_path);
       if (xalt_err)
@@ -787,36 +791,6 @@ void myfini()
 
       system(cmdline);
     }
-
-  //if (run_mask & BIT_SPSR)
-  //  {
-  //    char* xalt_files_dir = NULL;
-  //    asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,uuid_str);
-  //    DIR* dirp = open(dir,xalt_files_dir);
-  //    if (dirp)
-  //      {
-  //        struct dirent* dp;
-  //        while ( (dp = readdir(dirp)) != NULL)
-  //          {
-  //            char * buf = NULL;
-  //            size_t sz  = 0;
-  //            if (fnmatch("pkg.*.json", dp->d_name, 0) == 0)
-  //              {
-  //                char * fname = NULL;
-  //                asprintf(&fname,"%s/%s",xalt_files_dir, dp->d_name);
-  //                FILE* fp = fopen(fname,"r");
-  //                xalt_fgets_alloc(fp, &buf, &sz);
-  //                
-  //           
-  //              }
-  //            else
-  //              unlink(dp->d_name);
-  //    
-  //      }
-  //
-  //
-  //
-  //  }
 
   if (xalt_err) 
     {

@@ -1,17 +1,21 @@
 #include "xalt_fgets_alloc.h"
 #include "run_submission.h"
-#include "build_xalt_tmpdir.h"
+#include "xalt_tmpdir.h"
 #include "xalt_utils.h"
 #include <dirent.h>
 #include <fnmatch.h>
 #include <stdio.h>
+#include <unistd.h>
 
 void pkgRecordTransmit(Options& options, const char* transmission)
 {
-  char * xalt_tmpdir = build_xalt_tmpdir(options.uuid().c_str());
+  char * xalt_tmpdir = create_xalt_tmpdir_str(options.uuid().c_str());
   DIR*   dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
-    return;
+    {
+      free(xalt_tmpdir);
+      return;
+    }
 
   char* c_home = getenv("HOME");
   char* c_user = getenv("USER");
@@ -60,9 +64,10 @@ void pkgRecordTransmit(Options& options, const char* transmission)
               
               transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), resultFn.c_str());
               free(key);
+              unlink(fullName.c_str());
             }
         }
     }
+  unlink(xalt_tmpdir);
   free(xalt_tmpdir);
-
 }

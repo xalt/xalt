@@ -60,7 +60,8 @@ C_SRC       :=                             \
                xalt_initialize.c  	   \
                xalt_record_pkg.c           \
                xalt_quotestring.c 	   \
-               xalt_realpath.c
+               xalt_realpath.c             \
+               xalt_tmpdir.c
 
 CXX_SRC     :=                             \
                ConfigParser.C         	   \
@@ -99,9 +100,10 @@ TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
 XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C      \
                 buildRmapT.C buildUserT.C capture.C extractXALTRecord.C parseJsonStr.C           \
-                parseLDD.C translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C
+                parseLDD.C translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C     \
+                pkgRecordTransmit.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c \
-                zstring.c base64.c
+                zstring.c base64.c xalt_tmpdir.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
 XGA_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly
@@ -152,7 +154,7 @@ XER_OBJS     := $(patsubst %.C, %.o, $(XER_CXX_SRC))
 
 XRP_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
 XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
-                zstring.c base64.c xalt_syshost.c
+                zstring.c base64.c xalt_syshost.c xalt_tmpdir.c
 XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
 
 
@@ -263,7 +265,7 @@ build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_sy
             $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
             $(DESTDIR)$(LIB64)/lex.__XALT_host.o      $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
             $(DESTDIR)$(LIB64)/build_uuid.o           $(DESTDIR)$(LIB64)/base64.o                  \
-            $(MY_HOSTNAME_PARSER_OBJ)
+            $(DESTDIR)$(LIB64)/xalt_tmpdir.o          $(MY_HOSTNAME_PARSER_OBJ)
 
 build_init_32bit_no:
 
@@ -271,7 +273,8 @@ build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xa
                       $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o \
                       $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
                       $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/build_uuid_32.o      \
-	              $(DESTDIR)$(LIB)/base64.o              $(MY_HOSTNAME_PARSER_OBJ_32)
+	              $(DESTDIR)$(LIB)/base64.o              $(DESTDIR)$(LIB)/xalt_tmpdir_32.o     \
+                      $(MY_HOSTNAME_PARSER_OBJ_32)
 
 
 
@@ -288,6 +291,8 @@ $(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 $(DESTDIR)$(LIB64)/xalt_syshost.o: $(CURDIR)/__build__/xalt_syshost.c
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/base64.o: base64.c base64.h 
+	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
+$(DESTDIR)$(LIB64)/xalt_tmpdir.o: xalt_tmpdir.c xalt_tmpdir.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
@@ -311,6 +316,8 @@ $(DESTDIR)$(LIB)/lex.__XALT_host_32.o: __build__/lex.__XALT_hostR.c xalt_obfusca
 	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=REGULAR -o $@ -c $<
 $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: __build__/lex.__XALT_hostL.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
+$(DESTDIR)$(LIB64)/xalt_tmpdir_32.o: xalt_tmpdir.c xalt_tmpdir.h
+	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB)/base64.o: base64.c base64.h 
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $< 
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
