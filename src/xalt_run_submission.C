@@ -166,7 +166,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Transmit Pkg records if any
 
-  if (options.kind() == "SPSR")
+  if (options.kind() == "PKGS")
     pkgRecordTransmit(options, transmission);
 
 

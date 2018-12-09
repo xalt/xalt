@@ -68,18 +68,6 @@ AC_ARG_WITH(trackMPI,
     XALT_MPI_TRACKING="$withval"
     AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$withval"))dnl
 
-AC_SUBST(XALT_SPSR_TRACKING)
-AC_ARG_WITH(trackSPSR,
-    AC_HELP_STRING([--with-trackSPSR=ans],[Track SPSR executables, [[yes]]]),
-    XALT_SPSR_TRACKING="$withval"
-    AC_MSG_RESULT([XALT_SPSR_TRACKING=$with_trackSPSR])
-    AC_DEFINE_UNQUOTED(XALT_SPSR_TRACKING, "$with_trackSPSR")dnl
-    ,
-    withval="yes"
-    AC_MSG_RESULT([XALT_SPSR_TRACKING=$withval])
-    XALT_SPSR_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_SPSR_TRACKING, "$withval"))dnl
-
 AC_SUBST(XALT_SCALAR_TRACKING)
 AC_ARG_WITH(trackScalarPrgms,
     AC_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi, non-spsr executables, [[yes]]]),

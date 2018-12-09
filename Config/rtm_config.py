@@ -41,9 +41,9 @@ hostname_patterns = [
 # These are marked as SPSR
 
 path_patterns = [
-    ['SPSR',  r'.*\/python[0-9][^/][^/]*'],
-    ['SPSR',  r'.*\/R'],
-    ['SPSR',  r'.*\/test_record_pkg'],
+    ['PKGS',  r'.*\/python[0-9][^/][^/]*'],
+    ['PKGS',  r'.*\/R'],
+    ['PKGS',  r'.*\/test_record_pkg'],
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],
@@ -83,13 +83,6 @@ path_patterns = [
     ['SKIP',  r'.*\/conftest'],
     ['SKIP',  r'.*\/CMakeTmp\/cmTryCompileExec[0-9][0-9]*'],
     ['SKIP',  r'.*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*'],
-    ['SKIP',  r'.*\/xalt_file_to_db'],
-    ['SKIP',  r'.*\/xalt_run_submission'],
-    ['SKIP',  r'.*\/xalt_syslog_to_db'],
-    ['SKIP',  r'.*\/xalt_configuration_report\.x'],
-    ['SKIP',  r'.*\/xalt_extract_record\.x'],
-    ['SKIP',  r'.*\/xalt_syshost'],
-    ['SKIP',  r'.*\/xalt_record_pkg']
   ]
     
 #------------------------------------------------------------

@@ -180,19 +180,14 @@ To write records to syslog do::
 Track MPI and/or Non-MPI executables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default XALT tracks three types of programs: scalar, SPSR and
-MPI. The scalar programs are non-mpi programs, SPSR are special
-scalar programs that you can track the libraries that they use
-(e.g. python, R and MATLAB).  This is not required so this can be
-delayed until you are ready.  Please see XXX in the manual for more
-details about SPSR. 
+By default XALT tracks two types of programs: scalar and
+MPI. The scalar programs are non-mpi programs, 
 
 Finally there are MPI programs.  Note that an MPI capable programs run
 with only one task is considered to be scalar by XALT.  So if you only
 want to track MPI programs you can do::
 
     --with-trackScalarPrgms=no
-    --with-trackSPSR=no
 
 
 Track GPU usage

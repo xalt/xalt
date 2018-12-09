@@ -196,8 +196,8 @@ hostname_patterns = [
   ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
   ]
 path_patterns = [
-    ['SPSR',  r'.*/python[0-9][^/][^/]*'],
-    ['SPSR',  r'.*/R'],
+    ['PKGS',  r'.*/python[0-9][^/][^/]*'],
+    ['PKGS',  r'.*/R'],
     ['KEEP',  r'^/usr/bin/ddt'],
     ['SKIP',  r'^/usr/.*'],
     ['SKIP',  r'^/bin/.*'],
@@ -308,7 +308,7 @@ XALT_Version             1.7.7-devel
 \begin{frame}{Sampling: Three kinds of executables}
   \begin{itemize}
     \item Scalar: Non-mpi executables (Ntasks $==$ 1)
-    \item SPSR: Scalar Program Start Record: Python, R, Matlab
+    \item PKGS: Track internal package usage: Python, R, Matlab
     \item MPI Programs (Ntasks $>$ 1)
   \end{itemize}
 \end{frame}
@@ -328,7 +328,7 @@ XALT_Version             1.7.7-devel
 
 % page 27
 \begin{frame}[fragile]
-    \frametitle{Sampling of Scalar \& SPSR Prgms}
+    \frametitle{Sampling of Scalar Prgms}
     \begin{itemize}
       \item TACC is using the following for Scalar programs:
  {\small
@@ -338,8 +338,6 @@ XALT_Version             1.7.7-devel
    600 - inf secs 100%    chance.
     \end{semiverbatim}
 }
-      \item Do not runtime at start of SPSR's
-      \item TACC is 1\% for SPSR programs
       \item Run time and probability are recorded.
       \item Can estimate total behavior from sampled data
       \item Can now sample usage of cp, mv, tar, perl, awk, ...
