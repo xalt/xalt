@@ -261,48 +261,17 @@ AC_LANG_PUSH(C++)
 AX_TEST_COMPILE_FLAG([-std=c++11],[HAVE_CXX11=yes],[HAVE_CXX11=no])
 AC_LANG_POP([C++])
 
-AC_SUBST(PATH_TO_AS)
-AC_SUBST(PATH_TO_BASENAME)
-AC_SUBST(PATH_TO_CAT)
-AC_SUBST(PATH_TO_DATE)
-AC_SUBST(PATH_TO_DIRNAME)
-AC_SUBST(PATH_TO_FILE)
 AC_SUBST(PATH_TO_GIT)
-AC_SUBST(PATH_TO_GREP)
-AC_SUBST(PATH_TO_HEAD)
-AC_SUBST(PATH_TO_LDD)
-AC_SUBST(PATH_TO_LOGGER)
-AC_SUBST(PATH_TO_MKDIR)
-AC_SUBST(PATH_TO_OBJDUMP)
-AC_SUBST(PATH_TO_PSTREE)
-AC_SUBST(PATH_TO_READLINK)
-AC_SUBST(PATH_TO_RM)
-AC_SUBST(PATH_TO_SHA1SUM)
-AC_SUBST(PATH_TO_UUIDGEN)
+AC_SUBST(PATH_TO_FLEX)
+AC_SUBST(PATH_TO_MKTEMP)
 
 AC_SUBST(USE_CONTRIB_ARGPARSE)
 
-AC_PATH_PROG(PATH_TO_GIT,git, [])
-AC_PATH_PROG(PATH_TO_AS,as, [])
-AC_PATH_PROG(PATH_TO_FLEX,flex, [])
-AC_PATH_PROG(PATH_TO_BASENAME, basename, [])
-AC_PATH_PROG(PATH_TO_CAT, cat, [])
-AC_PATH_PROG(PATH_TO_DATE, date, [])
-AC_PATH_PROG(PATH_TO_DIRNAME, dirname, [])
-AC_PATH_PROG(PATH_TO_FILE, file, "")
-AC_PATH_PROG(PATH_TO_GIT, git, "")
-AC_PATH_PROG(PATH_TO_GREP, grep, [])
-AC_PATH_PROG(PATH_TO_HEAD, head, [])
-AC_PATH_PROG(PATH_TO_LDD, ldd, [])
-AC_PATH_PROG(PATH_TO_LOGGER, logger, [])
-AC_PATH_PROG(PATH_TO_MKDIR,mkdir, [])
+AC_PATH_PROG(PATH_TO_GIT, git, [])
+AC_PATH_PROG(PATH_TO_FLEX, flex, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
-AC_PATH_PROG(PATH_TO_OBJDUMP, objdump, "")
 AC_PATH_PROG(PATH_TO_OTOOL, otool, "")
 AC_PATH_PROG(PATH_TO_PYTHON, python, "")
-AC_PATH_PROG(PATH_TO_READLINK, readlink, [])
-AC_PATH_PROG(PATH_TO_RM, rm, [])
-AC_PATH_PROG(PATH_TO_SHA1SUM, sha1sum, "")
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   AC_MSG_ERROR([Unable to build XALT without mktemp])
@@ -525,6 +494,33 @@ if test "$?" != 0; then
    exit 1
 fi	
 
+
+#########################################################################
+## check to see if the following programs can be found from SYSTEM_PATH:
+#
+ORIG_SEP=$IFS
+IFS=':'
+NOT_FOUND=""
+for cmd in as basename bc cat date dirname file grep head ldd logger mkdir objdump readlink rm sha1sum sed; do
+   found=""
+   for dir in $SYSTEM_PATH; do
+     if test -f $dir/$cmd && test -x $dir/$cmd; then
+       found=1
+       break
+     fi
+   done
+   if test -z "$found" ; then
+     NOT_FOUND="$cmd $NOT_FOUND"
+   fi
+done
+   
+IFS=$ORIG_SEP
+
+if test -n "$NOT_FOUND"; then
+  AC_MSG_ERROR([Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND])
+fi  
+
+  
 
 AC_OUTPUT(makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in)
 

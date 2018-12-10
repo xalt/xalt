@@ -8,9 +8,7 @@ void extractXALTRecord(std::string& exec, Table& recordT)
   Vstring     result;
 
   // Capture the XALT record (if it exists) into result.
-  cmd  = OBJDUMP " -s -j .xalt ";
-  cmd += exec;
-  cmd += " 2> /dev/null";
+  cmd  = "PATH=" XALT_SYSTEM_PATH " objdump -s -j .xalt " + exec + " 2> /dev/null";
     
   capture(cmd, result);
 

@@ -633,27 +633,10 @@ CPP
 HAVE_PYMOD_MYSQLDB
 PATH_TO_PYTHON
 PATH_TO_OTOOL
+USE_CONTRIB_ARGPARSE
 PATH_TO_MKTEMP
 PATH_TO_FLEX
-USE_CONTRIB_ARGPARSE
-PATH_TO_UUIDGEN
-PATH_TO_SHA1SUM
-PATH_TO_RM
-PATH_TO_READLINK
-PATH_TO_PSTREE
-PATH_TO_OBJDUMP
-PATH_TO_MKDIR
-PATH_TO_LOGGER
-PATH_TO_LDD
-PATH_TO_HEAD
-PATH_TO_GREP
 PATH_TO_GIT
-PATH_TO_FILE
-PATH_TO_DIRNAME
-PATH_TO_DATE
-PATH_TO_CAT
-PATH_TO_BASENAME
-PATH_TO_AS
 ac_ct_CXX
 CXXFLAGS
 CXX
@@ -673,7 +656,6 @@ XALT_CONFIG_PY
 ETC_DIR
 COMPUTE_SHA1SUM
 XALT_SCALAR_TRACKING
-XALT_SPSR_TRACKING
 XALT_MPI_TRACKING
 XALT_GPU_TRACKING
 XALT_FILE_PREFIX
@@ -735,7 +717,6 @@ with_functionTracking
 with_xaltFilePrefix
 with_trackGPU
 with_trackMPI
-with_trackSPSR
 with_trackScalarPrgms
 with_computeSHA1
 with_etcDir
@@ -1389,7 +1370,6 @@ Optional Packages:
                           Prefix where the json files are written [[$HOME]]
   --with-trackGPU=ans     Track GPU executables, [[no]]
   --with-trackMPI=ans     Track MPI executables, [[yes]]
-  --with-trackSPSR=ans    Track SPSR executables, [[yes]]
   --with-trackScalarPrgms=ans
                           Track non-mpi, non-spsr executables, [[yes]]
   --with-computeSHA1=ans  compute SHA1 sum on libraries, [[no]]
@@ -3163,28 +3143,6 @@ fi
 
 
 
-# Check whether --with-trackSPSR was given.
-if test "${with_trackSPSR+set}" = set; then :
-  withval=$with_trackSPSR; XALT_SPSR_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$with_trackSPSR" >&5
-$as_echo "XALT_SPSR_TRACKING=$with_trackSPSR" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SPSR_TRACKING "$with_trackSPSR"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$withval" >&5
-$as_echo "XALT_SPSR_TRACKING=$withval" >&6; }
-    XALT_SPSR_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SPSR_TRACKING "$withval"
-_ACEOF
-
-fi
-
-
-
 # Check whether --with-trackScalarPrgms was given.
 if test "${with_trackScalarPrgms+set}" = set; then :
   withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
@@ -3887,21 +3845,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Extract the first word of "git", so it can be a program name with args.
 set dummy git; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -3936,46 +3879,6 @@ PATH_TO_GIT=$ac_cv_path_PATH_TO_GIT
 if test -n "$PATH_TO_GIT"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GIT" >&5
 $as_echo "$PATH_TO_GIT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "as", so it can be a program name with args.
-set dummy as; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_AS+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_AS in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_AS="$PATH_TO_AS" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_AS="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_AS=$ac_cv_path_PATH_TO_AS
-if test -n "$PATH_TO_AS"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_AS" >&5
-$as_echo "$PATH_TO_AS" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -4022,448 +3925,6 @@ $as_echo "no" >&6; }
 fi
 
 
-# Extract the first word of "basename", so it can be a program name with args.
-set dummy basename; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_BASENAME+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_BASENAME in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_BASENAME="$PATH_TO_BASENAME" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_BASENAME="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_BASENAME=$ac_cv_path_PATH_TO_BASENAME
-if test -n "$PATH_TO_BASENAME"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_BASENAME" >&5
-$as_echo "$PATH_TO_BASENAME" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "cat", so it can be a program name with args.
-set dummy cat; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_CAT+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_CAT in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_CAT="$PATH_TO_CAT" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_CAT="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_CAT=$ac_cv_path_PATH_TO_CAT
-if test -n "$PATH_TO_CAT"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_CAT" >&5
-$as_echo "$PATH_TO_CAT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "date", so it can be a program name with args.
-set dummy date; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_DATE+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_DATE in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_DATE="$PATH_TO_DATE" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_DATE="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_DATE=$ac_cv_path_PATH_TO_DATE
-if test -n "$PATH_TO_DATE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_DATE" >&5
-$as_echo "$PATH_TO_DATE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "dirname", so it can be a program name with args.
-set dummy dirname; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_DIRNAME+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_DIRNAME in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_DIRNAME="$PATH_TO_DIRNAME" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_DIRNAME="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_DIRNAME=$ac_cv_path_PATH_TO_DIRNAME
-if test -n "$PATH_TO_DIRNAME"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_DIRNAME" >&5
-$as_echo "$PATH_TO_DIRNAME" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "file", so it can be a program name with args.
-set dummy file; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_FILE+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_FILE in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_FILE="$PATH_TO_FILE" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_FILE="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_FILE" && ac_cv_path_PATH_TO_FILE=""""
-  ;;
-esac
-fi
-PATH_TO_FILE=$ac_cv_path_PATH_TO_FILE
-if test -n "$PATH_TO_FILE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_FILE" >&5
-$as_echo "$PATH_TO_FILE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "git", so it can be a program name with args.
-set dummy git; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_GIT+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_GIT in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_GIT="$PATH_TO_GIT" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_GIT="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_GIT" && ac_cv_path_PATH_TO_GIT=""""
-  ;;
-esac
-fi
-PATH_TO_GIT=$ac_cv_path_PATH_TO_GIT
-if test -n "$PATH_TO_GIT"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GIT" >&5
-$as_echo "$PATH_TO_GIT" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "grep", so it can be a program name with args.
-set dummy grep; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_GREP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_GREP in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_GREP="$PATH_TO_GREP" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_GREP="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_GREP=$ac_cv_path_PATH_TO_GREP
-if test -n "$PATH_TO_GREP"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_GREP" >&5
-$as_echo "$PATH_TO_GREP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "head", so it can be a program name with args.
-set dummy head; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_HEAD+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_HEAD in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_HEAD="$PATH_TO_HEAD" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_HEAD="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_HEAD=$ac_cv_path_PATH_TO_HEAD
-if test -n "$PATH_TO_HEAD"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_HEAD" >&5
-$as_echo "$PATH_TO_HEAD" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "ldd", so it can be a program name with args.
-set dummy ldd; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_LDD+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_LDD in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_LDD="$PATH_TO_LDD" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_LDD="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_LDD=$ac_cv_path_PATH_TO_LDD
-if test -n "$PATH_TO_LDD"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_LDD" >&5
-$as_echo "$PATH_TO_LDD" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "logger", so it can be a program name with args.
-set dummy logger; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_LOGGER+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_LOGGER in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_LOGGER="$PATH_TO_LOGGER" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_LOGGER="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_LOGGER=$ac_cv_path_PATH_TO_LOGGER
-if test -n "$PATH_TO_LOGGER"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_LOGGER" >&5
-$as_echo "$PATH_TO_LOGGER" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "mkdir", so it can be a program name with args.
-set dummy mkdir; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_MKDIR+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_MKDIR in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_MKDIR="$PATH_TO_MKDIR" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_MKDIR="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_MKDIR=$ac_cv_path_PATH_TO_MKDIR
-if test -n "$PATH_TO_MKDIR"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_MKDIR" >&5
-$as_echo "$PATH_TO_MKDIR" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
 # Extract the first word of "mktemp", so it can be a program name with args.
 set dummy mktemp; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -4498,47 +3959,6 @@ PATH_TO_MKTEMP=$ac_cv_path_PATH_TO_MKTEMP
 if test -n "$PATH_TO_MKTEMP"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_MKTEMP" >&5
 $as_echo "$PATH_TO_MKTEMP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "objdump", so it can be a program name with args.
-set dummy objdump; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_OBJDUMP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_OBJDUMP in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_OBJDUMP="$PATH_TO_OBJDUMP" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_OBJDUMP="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_OBJDUMP" && ac_cv_path_PATH_TO_OBJDUMP=""""
-  ;;
-esac
-fi
-PATH_TO_OBJDUMP=$ac_cv_path_PATH_TO_OBJDUMP
-if test -n "$PATH_TO_OBJDUMP"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_OBJDUMP" >&5
-$as_echo "$PATH_TO_OBJDUMP" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -4621,127 +4041,6 @@ PATH_TO_PYTHON=$ac_cv_path_PATH_TO_PYTHON
 if test -n "$PATH_TO_PYTHON"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_PYTHON" >&5
 $as_echo "$PATH_TO_PYTHON" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "readlink", so it can be a program name with args.
-set dummy readlink; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_READLINK+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_READLINK in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_READLINK="$PATH_TO_READLINK" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_READLINK="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_READLINK=$ac_cv_path_PATH_TO_READLINK
-if test -n "$PATH_TO_READLINK"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_READLINK" >&5
-$as_echo "$PATH_TO_READLINK" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "rm", so it can be a program name with args.
-set dummy rm; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_RM+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_RM in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_RM="$PATH_TO_RM" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_RM="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PATH_TO_RM=$ac_cv_path_PATH_TO_RM
-if test -n "$PATH_TO_RM"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_RM" >&5
-$as_echo "$PATH_TO_RM" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "sha1sum", so it can be a program name with args.
-set dummy sha1sum; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_SHA1SUM+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_SHA1SUM in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_SHA1SUM="$PATH_TO_SHA1SUM" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_SHA1SUM="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_SHA1SUM" && ac_cv_path_PATH_TO_SHA1SUM=""""
-  ;;
-esac
-fi
-PATH_TO_SHA1SUM=$ac_cv_path_PATH_TO_SHA1SUM
-if test -n "$PATH_TO_SHA1SUM"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_SHA1SUM" >&5
-$as_echo "$PATH_TO_SHA1SUM" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -5628,6 +4927,33 @@ if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
+
+
+#########################################################################
+## check to see if the following programs can be found from SYSTEM_PATH:
+#
+ORIG_SEP=$IFS
+IFS=':'
+NOT_FOUND=""
+for cmd in as basename bc cat date dirname file grep head ldd logger mkdir objdump readlink rm sha1sum sed; do
+   found=""
+   for dir in $SYSTEM_PATH; do
+     if test -f $dir/$cmd && test -x $dir/$cmd; then
+       found=1
+       break
+     fi
+   done
+   if test -z "$found" ; then
+     NOT_FOUND="$cmd $NOT_FOUND"
+   fi
+done
+
+IFS=$ORIG_SEP
+
+if test -n "$NOT_FOUND"; then
+  as_fn_error $? "Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND" "$LINENO" 5
+fi
+
 
 
 ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in"
@@ -7083,7 +6409,6 @@ echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
 echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
-echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKING
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT

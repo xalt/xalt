@@ -35,21 +35,14 @@
 ##########################################################################
 
 
-
-
-
 unset LD_PRELOAD
 CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
-DIRNAME=@path_to_dirname@
-BASENAME=@path_to_basename@
-READLINK=@path_to_readlink@
-SHA1SUM=@sha1sum@
 HAVE_DCGM=@have_dcgm@
 SEP_DIR=
 XALT_FILE_PREFIX=@xalt_file_prefix@
-MY_NAME=$($BASENAME $0)
-MY_DIR=$($DIRNAME $($READLINK -f $0))
+MY_NAME=$(PATH=@xalt_system_path@ basename $0)
+MY_DIR=$(PATH=@xalt_system_path@ dirname $(PATH=@xalt_system_path@ readlink -f $0))
 
 declare -l XALT_TRANSMISSION_STYLE
 
@@ -204,16 +197,12 @@ SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=$XALT_BIN/my_uuidgen
-RM=@path_to_rm@
-AS=@path_to_as@
-CAT=@path_to_cat@
-MKTEMP=@path_to_mktemp@
 GREP=@grep@
 PyPATH="/usr/bin:/bin"
 
 
-UUID=`$UUIDGEN`
-WRKDIR=$(mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
+UUID=$($UUIDGEN)
+WRKDIR=$(PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
@@ -235,13 +224,13 @@ else
 fi
   
 # Get the compiler information
-COMP_T=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
+COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 
-EPOCH=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
-DATESTR=`date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S"`
-INT_EPOCH=$(echo "( $EPOCH )/1" | bc)
-FRAC_EPOCH=$(echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
+EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+DATESTR=$(PATH=@xalt_system_path@ date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S")
+INT_EPOCH=$(PATH=@xalt_system_path@ echo "( $EPOCH )/1" | bc)
+FRAC_EPOCH=$(PATH=@xalt_system_path@ echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
 DATESTR="${DATESTR}_${FRAC_EPOCH}"
 
 if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
@@ -254,7 +243,7 @@ fi
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
 if [ -f "$ARGSRC" ]; then
-  $AS $ARGSRC $BIT32FLAG -o $OBJ
+  as $ARGSRC $BIT32FLAG -o $OBJ
 else
   OBJ=""
 fi
@@ -301,24 +290,24 @@ if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
 fi
 
 
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1
+PATH=@xalt_system_path@ $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
-   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
-   $RM -rf $WRKDIR  
+   PATH=@xalt_system_path@ $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
+   PATH=@xalt_system_path@ rm -rf $WRKDIR  
    exit $status
 fi
 
-EXEC=$($REALPATH $EXEC)
+EXEC=$(PATH=@xalt_system_path@ $REALPATH $EXEC)
 
 
 if [ -n "$USER_TRACE" ]; then
-  $CAT $LINKLINE_OUT | $GREP -v $ARGOBJ 
+  PATH=@xalt_system_path@ cat $LINKLINE_OUT | PATH=@xalt_system_path@ grep -v $ARGOBJ 
 fi
 
 # Get the sha1sum for the executable because it might move or disappear!
-SHA1SUM_EXEC=$($SHA1SUM $EXEC)
+SHA1SUM_EXEC=$(PATH=@xalt_system_path@ sha1sum $EXEC)
 
 wait #-- wait for subshell to finish
 
@@ -326,7 +315,7 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # Generate link data.  
-LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
-$RM -rf $WRKDIR  
+PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+PATH=@xalt_system_path@ rm -rf $WRKDIR  
 
 exit $status

@@ -32,7 +32,6 @@
 #  Global variables:
 LD_LIB_PATH=@sys_ld_lib_path@
 XALT_DIR=@xalt_dir@
-BASENAME=@path_to_basename@
 
 ##########################################################################
 #  Check command line arguments to see if user has requested tracing
@@ -86,7 +85,7 @@ find_real_command()
   local my_path=$1
   local exec_x=$2
   
-  local my_name=$($BASENAME $my_path)
+  local my_name=$(PATH=@xalt_system_path@ basename $my_path)
   local head="@head@"
   local grep="@grep@"
   local my_cmd="unknown"

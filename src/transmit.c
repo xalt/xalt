@@ -65,7 +65,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       char* zs      = compress_string(jsonStr,&zslen);
       char* b64     = base64_encode(zs, zslen, &b64len);
       
-      asprintf(&cmdline, "%s -t XALT_LOGGING_%s \"%s:%s\"\n",LOGGER, syshost, kind, b64);
+      asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_%s \"%s:%s\"\n",XALT_SYSTEM_PATH, syshost, kind, b64);
       system(cmdline);
       free(zs);
       free(b64);
@@ -87,8 +87,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          asprintf(&cmdline, "%s -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
-                   LOGGER, syshost, kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
+                   XALT_SYSTEM_PATH, syshost, kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
           system(cmdline);
           free(cmdline);
           istrt = iend;

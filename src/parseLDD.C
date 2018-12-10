@@ -17,7 +17,7 @@ void parseLDD(std::string& exec, std::string& ldlibpath, std::vector<Libpair>& l
   Vstring      result;
 
   // Capture the result from running ldd on the executable
-  cmd  = "LD_LIBRARY_PATH=" + ldlibpath + " " + LDD " " + exec + " 2> /dev/null";
+  cmd  = "PATH=" XALT_SYSTEM_PATH  " LD_LIBRARY_PATH=" + ldlibpath + " ldd " + exec + " 2> /dev/null";
   double t1 = epoch();
   capture(cmd, result);
   t_ldd = epoch() - t1;

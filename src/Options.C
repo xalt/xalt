@@ -170,7 +170,7 @@ Options::Options(int argc, char** argv)
       std::vector<std::string> result;
       std::string              cmd;
 
-      cmd = PATH_TO_PRGM_FILE " " + m_exec;
+      cmd = "PATH=" XALT_SYSTEM_PATH " file " + m_exec;
       capture(cmd, result);
       if (result.size() > 0 &&
           (result[0].find("script") != std::string::npos ||

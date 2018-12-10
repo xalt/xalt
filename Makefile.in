@@ -46,32 +46,15 @@ ETC_DIR              	:= @ETC_DIR@
 prefix               	:= @prefix@
 GIT_BRANCH           	:= master
 XALT_V               	:= src/xalt_version.h
+XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_DCGM         	:= @HAVE_DCGM@
 STATIC_LIBS             := @STATIC_LIBS@
 PRELOAD_ONLY            := @PRELOAD_ONLY@	
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
-PATH_TO_AS           	:= @PATH_TO_AS@
-PATH_TO_BASENAME     	:= @PATH_TO_BASENAME@
-PATH_TO_CAT          	:= @PATH_TO_CAT@
-PATH_TO_CAT          	:= @PATH_TO_CAT@
-PATH_TO_DATE         	:= @PATH_TO_DATE@
-PATH_TO_DIRNAME      	:= @PATH_TO_DIRNAME@
-PATH_TO_FILE         	:= @PATH_TO_FILE@
-PATH_TO_GREP         	:= @PATH_TO_GREP@
-PATH_TO_HEAD         	:= @PATH_TO_HEAD@
-PATH_TO_LDD          	:= @PATH_TO_LDD@
-PATH_TO_LOGGER       	:= @PATH_TO_LOGGER@
-PATH_TO_MKDIR        	:= @PATH_TO_MKDIR@
-PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
-PATH_TO_OBJDUMP      	:= @PATH_TO_OBJDUMP@
 PATH_TO_OTOOL        	:= @PATH_TO_OTOOL@
-PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
 PATH_TO_PYTHON       	:= @PATH_TO_PYTHON@
-PATH_TO_READLINK     	:= @PATH_TO_READLINK@
-PATH_TO_RM           	:= @PATH_TO_RM@
-PATH_TO_SHA1SUM      	:= @PATH_TO_SHA1SUM@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
@@ -221,37 +204,20 @@ __installMe:
            [ "$$ext" = "in.py" ] && oext=".py";                            	  \
            [ "$$ext" = "in.c" ]  && oext=".c";                             	  \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   	  \
-	        -e 's|@date@|$(PATH_TO_DATE)|g'                            	  \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
 	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
 	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
-	        -e 's|@file@|$(PATH_TO_FILE)|g'                            	  \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
-	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
-	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            	  \
-	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              	  \
-	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
-	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
 	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
-	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        	  \
-	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            	  \
-	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      	  \
-	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              	  \
-	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
-	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
-	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
-	        -e 's|@path_to_readlink@|$(PATH_TO_READLINK)|g'            	  \
-	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        	  \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
-	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
 	        -e 's|@preload_only@|$(PRELOAD_ONLY)|g'                       	  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
-	        -e 's|@uuidgen@|$(PATH_TO_UUIDGEN)|g'                      	  \
 	        -e 's|@version@|$(VERSION)|g'                              	  \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   	  \
+	        -e 's|@xalt_system_path@|$(XALT_SYSTEM_PATH)|g'        	   	  \
 	        -e 's|@my_hostname_parser@|$(MY_HOSTNAME_PARSER)|g'               \
 	        -e 's|@xalt_function_tracking@|$(XALT_FUNCTION_TRACKING)|g'       \
 	        -e 's|@xalt_config_py@|$(XALT_CONFIG_PY)|g' 	   	   	  \
@@ -330,6 +296,11 @@ build_tags:
             -e 's|.*/uuid_config.h$$||g'                         \
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
+            -e 's|.*/libuuid.a$$||g'                             \
+            -e 's|.*/my_uuidgen$$||g'                            \
+            -e 's|.*\.pptx$$||g'                                 \
+            -e 's|.*\.png$$||g'                                  \
+            -e 's|.*\.jpg$$||g'                                  \
             -e 's|.*\.pyc$$||g'                                  \
             -e 's|.*\.pyo$$||g'                                  \
             -e 's|.*\.csv$$||g'                                  \
