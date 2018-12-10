@@ -61,6 +61,7 @@ void pkgRecordTransmit(Options& options, const char* transmission)
               transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), resultFn.c_str());
               free(key);
             }
+          fclose(fp);
         }
     }
   free(xalt_tmpdir);
