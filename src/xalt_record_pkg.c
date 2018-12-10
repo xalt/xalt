@@ -10,7 +10,7 @@
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "build_uuid.h"
-#include "build_xalt_tmpdir.h"
+#include "xalt_tmpdir.h"
 
 #define DATESZ    100
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
@@ -110,9 +110,9 @@ int main(int argc, char* argv[])
 
   char* date_str = getenv("XALT_DATE_TIME");
   
-  char* xalt_tmpdir = build_xalt_tmpdir(run_uuid);
+  char* xalt_tmpdir = create_xalt_tmpdir_str(run_uuid);
 	  
-  asprintf(&resultFn,"%spkg.%s.%s.%s.%s.json", xalt_tmpdir, my_host, date_str,
+  asprintf(&resultFn,"%s/pkg.%s.%s.%s.%s.json", xalt_tmpdir, my_host, date_str,
                                                run_uuid, &uuid_str[24]);
   DEBUG1(stderr,"resultFn: %s\n",resultFn);
   free(xalt_tmpdir);

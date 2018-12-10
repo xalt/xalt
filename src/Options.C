@@ -66,7 +66,7 @@ Options::Options(int argc, char** argv)
         {0,         0,                 0,     0 }
       };
       
-      m_kind = "SPSR";
+      m_kind = "PKGS";
 
       c = getopt_long(argc, argv, "c:s:e:h:x:n:g:u:p:P:L:",
 		      long_options, &option_index);

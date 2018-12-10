@@ -55,7 +55,7 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
 
   ------------------------------------------------------------
   -- Only set this in production not for testing!!!
-  setenv("XALT_SCALAR_AND_SPSR_SAMPLING",  "yes")  
+  setenv("XALT_SCALAR_SAMPLING",  "yes")  
 
 The following is a TCL modulefile::
 
@@ -67,7 +67,7 @@ The following is a TCL modulefile::
 
   ############################################################
   ## Only set this is production not for testing!!!
-  setenv XALT_SCALAR_AND_SPSR_SAMPLING  yes
+  setenv XALT_SCALAR_SAMPLING  yes
 
 
 Obviously, these modulefiles will need to be modified to match your

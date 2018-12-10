@@ -42,8 +42,9 @@ hostname_patterns = [
 # These are marked as SPSR
 
 path_patterns = [
-    ['SPSR',  r'.*\/R'],
-    ['SPSR',  r'.*\/MATLAB'],
+    ['PKGS',  r'.*\/R'],
+    ['PKGS',  r'.*\/MATLAB'],
+    ['PKGS',  r'.*\/python[0-9.]*'],
     ['KEEP',  r'^\/usr\/bin\/cp'],
     ['KEEP',  r'^\/usr\/bin\/mv'],
     ['KEEP',  r'^\/usr\/bin\/gawk'],
@@ -64,7 +65,6 @@ path_patterns = [
     ['KEEP',  r'^\/bin\/bzip2'],
     ['KEEP',  r'^\/bin\/gzip'],
     ['KEEP',  r'^\/bin\/tar'],
-    ['SPSR',  r'.*\/python[0-9.]*'],
     ['SKIP',  r'^\/usr\/.*'],
     ['SKIP',  r'^\/sbin\/.*'],
     ['SKIP',  r'^\/bin\/.*'],
@@ -116,18 +116,12 @@ path_patterns = [
     ['SKIP',  r'.*\/conftest'],
     ['SKIP',  r'.*\/CMakeTmp\/cmTryCompileExec[0-9][0-9]*'],
     ['SKIP',  r'.*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*'],
-    ['SKIP',  r'.*\/xalt_file_to_db'],
-    ['SKIP',  r'.*\/xalt_syslog_to_db'],
-    ['SKIP',  r'.*\/xalt_extract_record\.x'],
-    ['SKIP',  r'.*\/xalt_configuration_report\.x'],
-    ['SKIP',  r'.*\/xalt_syshost'],
-    ['SKIP',  r'.*\/xalt_record_pkg']
   ]
 
 #------------------------------------------------------------
-# XALT samples non-mpi executions, but not SPSR programs,
-# based on this table. All mpi executions are sampled at 100%
-# when there are two more tasks.
+# XALT samples non-mpi executions, based on this table.
+# All mpi executions are sampled at 100% when there are
+# two more tasks.
 #
 # The array of array used by interval_array has the following
 # structure:
@@ -178,27 +172,6 @@ interval_array = [
     [ 600.0,              1.0    ],
     [ sys.float_info.max, 1.0    ]
 ]
-
-#------------------------------------------------------------
-# XALT samples SPSR programs at one rate no matter the runtime.
-# SPSR programs are programs like R and python where the internal
-# package use is tracked as well.
-#
-# By default SPSR programs are sampled at a 100% rate but sites can
-# override this by this configuration file.
-
-# Note that SPSR execution only uses this table IFF
-# $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
-#
-# Also note that this value can be overridden. For example the
-# following setting:
-#
-#     export XALT_SPSR_SAMPING_RATE=0.02
-#
-# would change the SPSR sampling rate to 2%.
-#
-
-SPSR_sampling = 0.01  # == 1%
 
 #------------------------------------------------------------
 # XALT filter environment variables.  Those variables

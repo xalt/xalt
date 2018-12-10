@@ -8,6 +8,7 @@ static char * strbuf   = NULL;
 static unsigned int sz = 0;
 enum {
   SPSR = 1,
+  PKGS = 1,
   KEEP = 2,
   SKIP = 3
 };
@@ -15,7 +16,13 @@ enum {
 
 %%
 @path_patterns@
-.*   { return KEEP; }
+.*\/xalt_file_to_db    		  { return SKIP; }
+.*\/xalt_syslog_to_db  		  { return SKIP; }
+.*\/xalt_extract_record\.x        { return SKIP; } 
+.*\/xalt_configuration_report\.x  { return SKIP; }
+.*\/xalt_syshost    		  { return SKIP; }
+.*\/xalt_record_pkg 		  { return SKIP; }
+.*                                { return KEEP; }
 %%
 
 int yywrap()

@@ -74,9 +74,6 @@ elif [ "$XALT_FUNCTION_TRACKING" != no ]; then
    XALT_FUNCTION_TRACKING=yes
 fi
 
-
-
-
 source $MY_DIR/xalt_helper_functions.sh
 
 ##########################################################################
@@ -231,10 +228,10 @@ if [ -z "$BIT32FLAG" ]; then
   elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
       MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.a
   fi
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_syshost.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/build_uuid.o $XLD/base64.o $MY_HOSTNAME_PARSER_OBJ -L$XLD -l:libuuid.a"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_syshost.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/build_uuid.o  $XLD/xalt_tmpdir.o $XLD/base64.o $MY_HOSTNAME_PARSER_OBJ -L$XLD -l:libuuid.a"
 else
   XLD=$XALT_DIR/lib
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o -L$XLD -l:libuuid.a"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_syshost_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/build_uuid_32.o $XLD/xalt_tmpdir_32.o $XLD/base64.o $XLD/my_hostname_parser_32.o -L$XLD -l:libuuid.a"
 fi
   
 # Get the compiler information
@@ -309,6 +306,7 @@ status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
+   $RM -rf $WRKDIR  
    exit $status
 fi
 

@@ -30,7 +30,7 @@ int main(int argc, char* argv[], char* env[])
   char    dateStr[DATESZ];
   time_t  time;
   double  t0, t1;
-  double  t_ldd, t_sha1, t_pkg;
+  double  t_ldd, t_sha1;
   DTable  measureT;
   bool    end_record = (options.endTime() > 0.0);
   
@@ -103,19 +103,8 @@ int main(int argc, char* argv[], char* env[])
   DEBUG1(stderr,"  Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
   //*********************************************************************
-  // Transmit Pkg records if any
-  t_pkg = 0.0;
-  if (options.kind() == "SPSR")
-    {
-      t1 = epoch();
-      transmitPkgRecords(options);
-      t_pkg = epoch() - t1;
-    }
-  measureT["07_Transmit_Pkg_Records"] = t_pkg;
-
-  //*********************************************************************
   // If here then we need the json string.  So build it!
-  measureT["08____total_____"] = epoch() - t0;
+  measureT["07____total_____"] = epoch() - t0;
 
   Json json;
   json.add_json_string("cmdlineA",options.userCmdLine());
@@ -152,7 +141,7 @@ int main(int argc, char* argv[], char* env[])
           std::string user   = c_user;
           std::string xaltDir;
 
-          build_xaltDir(xaltDir, user, home, transmission);
+          build_xaltDir(xaltDir, "run", user, home, transmission);
 
           double start = options.startTime();
           double frac  = start - floor(start);
@@ -174,7 +163,12 @@ int main(int argc, char* argv[], char* env[])
   if (resultFn)
     free(resultFn);
 
-  pkgRecordTransmit(options, transmission);
+  //*********************************************************************
+  // Transmit Pkg records if any
+
+  if (options.kind() == "PKGS")
+    pkgRecordTransmit(options, transmission);
+
 
   DEBUG0(stderr,"}\n\n");
   if (xalt_tracing)

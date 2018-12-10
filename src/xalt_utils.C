@@ -134,14 +134,17 @@ FILE* xalt_json_file_open(std::string& rmapD, const char* name)
   return fp;
 }
 
-void build_xaltDir(std::string& xaltDir, std::string& userName, std::string& baseDir, const char* transmission)
+void build_xaltDir(std::string& xaltDir, const char *kind, std::string& userName, std::string& baseDir, const char* transmission)
 {
   
   #ifdef HAVE_FILE_PREFIX
     xaltDir.assign(XALT_FILE_PREFIX);
     xaltDir.append("/");
     if (strcasecmp(transmission,"file_separate_dirs") == 0)
-      xaltDir.append("run/");
+      {
+        xaltDir.append(kind);
+        xaltDir.append("/");
+      }
 
     xaltDir.append(userName);
     xaltDir.append("/");
@@ -149,6 +152,9 @@ void build_xaltDir(std::string& xaltDir, std::string& userName, std::string& bas
     xaltDir.assign(baseDir);
     xaltDir.append("/.xalt.d/");
     if (strcasecmp(transmission,"file_separate_dirs") == 0)
-      xaltDir.append("run/");
+      {
+        xaltDir.append(kind);
+        xaltDir.append("/");
+      }
   #endif
 }

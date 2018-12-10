@@ -658,6 +658,8 @@ ac_ct_CXX
 CXXFLAGS
 CXX
 HAVE_32BIT
+XALT_TMPDIR
+BIT32
 BAD_INSTALL
 PRELOAD_ONLY
 STATIC_LIBS
@@ -747,6 +749,8 @@ with_hostnameParser
 with_staticLibs
 with_preloadOnly
 with_IrefuseToInstallXALTCorrectly
+with_32bit
+with_tmpdir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1409,6 +1413,9 @@ Optional Packages:
   --with-preloadOnly=ans  Only use XALT in preload only mode[[yes]]
   --with-IrefuseToInstallXALTCorrectly=ans
                           Install XALT incorrectly [[no]]
+  --with-32bit            Allow for 32 bits executables[[yes]]
+  --with-tmpdir=ans       The tmp directory to use with package records
+                          [[/tmp]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -3465,6 +3472,51 @@ fi
 
 
 
+# Check whether --with-32bit was given.
+if test "${with_32bit+set}" = set; then :
+  withval=$with_32bit; BIT32="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BIT32=$with_32bit" >&5
+$as_echo "BIT32=$with_32bit" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define BIT32 "$with_32bit"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BIT32=$withval" >&5
+$as_echo "BIT32=$withval" >&6; }
+    BIT32="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define BIT32 "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-tmpdir was given.
+if test "${with_tmpdir+set}" = set; then :
+  withval=$with_tmpdir; XALT_TMPDIR="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TMPDIR=$with-tmpdir" >&5
+$as_echo "XALT_TMPDIR=$with-tmpdir" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_TMPDIR "$with-tmpdir"
+_ACEOF
+
+else
+  withval="/tmp"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TMPDIR=$withval" >&5
+$as_echo "XALT_TMPDIR=$withval" >&6; }
+    XALT_TMPDIR="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_TMPDIR "$withval"
+_ACEOF
+
+fi
+
+
+
+if test "$BIT32" = yes ; then
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler can build and run with -m32" >&5
 $as_echo_n "checking whether C compiler can build and run with -m32... " >&6; }
@@ -3506,6 +3558,10 @@ fi
 $as_echo "$ax_cv_check_cflags___m32" >&6; }
 if test "x$ax_cv_check_cflags___m32" = xyes; then :
   HAVE_32BIT=yes
+else
+  HAVE_32BIT=no
+fi
+
 else
   HAVE_32BIT=no
 fi
@@ -7031,6 +7087,7 @@ echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKI
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
+echo "XALT tmpdir.........................................." : $XALT_TMPDIR
 echo "XALT Using DCGM......................................" : $HAVE_DCGM
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM

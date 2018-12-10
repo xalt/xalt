@@ -52,6 +52,7 @@
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
 #include "build_uuid.h"
+#include "xalt_tmpdir.h"
 
 #ifdef USE_DCGM
 /* This code will only every be active in 64 bit mode and not 32 bit mode*/
@@ -70,12 +71,12 @@
 
 #define DATESZ    100
 
-typedef enum { BIT_SCALAR = 1, BIT_SPSR = 2, BIT_MPI = 4} xalt_tracking_flags;
-typedef enum { SPSR=1, KEEP=2, SKIP=3} xalt_parser;
+typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
+typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
-	       XALT_SPSR_SAMPLING, XALT_MISSING_RUN_SUBMISSION} xalt_status;
+	       XALT_MISSING_RUN_SUBMISSION} xalt_status;
 
 static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
@@ -87,7 +88,6 @@ static const char * xalt_reasonA[] = {
   "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
   "XALT has problem with a JSON string",
   "XALT execute type does not match requested type",
-  "XALT SPSR sampling -> not recorded",
   "XALT Cannot find XALT_DIR/libexec/xalt_run_submission",
 };
 
@@ -95,27 +95,27 @@ static const char * xalt_reasonA[] = {
 static const char * xalt_build_descriptA[] = {
   "track no programs at all",                     /* 0 */
   "track scalar programs only",                   /* 1 */
-  "track SPSR programs only",                     /* 2 */
-  "track SPSR and scalar programs only",          /* 3 */
+  "Not possible (2)",                             /* 2 */
+  "Not possible (3)",                             /* 3 */
   "track MPI programs only",                      /* 4 */
-  "track MPI and scalar programs only",           /* 5 */
-  "track MPI and SPSR programs only",             /* 6 */
-  "track all programs"                            /* 7 */
+  "Not possible (5)",                             /* 5 */
+  "track all programs"                            /* 6 */
+  "Not possible (7)",                             /* 7 */
 };
 
 static const char * xalt_run_descriptA[] = {
-  "Not possible",                                 /* 0 */
+  "Not possible (0)",                             /* 0 */
   "program is a scalar program",                  /* 1 */
-  "program is a SPSR program",                    /* 2 */
-  "Not possible",                                 /* 3 */
+  "Not possible (2)",                             /* 2 */
+  "Not possible (3)",                             /* 3 */
   "program is an MPI program"                     /* 4 */
 };
 
 static const char * xalt_run_short_descriptA[] = {
-  "Not possible",                                 /* 0 */
+  "Not possible (0)",                             /* 0 */
   "scalar",                                       /* 1 */
-  "SPSR",                                         /* 2 */
-  "Not possible",                                 /* 3 */
+  "PKGS",                                         /* 2 */
+  "Not possible (3)",                             /* 3 */
   "MPI"                                           /* 4 */
 };
 
@@ -376,8 +376,8 @@ void myinit(int argc, char **argv)
       xalt_kind = BIT_SCALAR;
     }
 
-  if (path_results == SPSR)
-    xalt_kind   = BIT_SPSR;
+  if (path_results == PKGS)
+    xalt_kind   = BIT_PKGS;
       
                       
   /* Test for an acceptable executable */
@@ -570,8 +570,7 @@ void myinit(int argc, char **argv)
 
   /* 
    * XALT is only recording the end record for scalar executables and
-   * not the start record.  The only exception to this is when the exec_path
-   * matches one of the patterns in path_patterns returns SPSR.
+   * not the start record.
    */
 
   if ( run_mask & BIT_MPI)  
@@ -676,6 +675,9 @@ void myfini()
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
     {
+      if (xalt_kind == BIT_PKGS)
+        remove_xalt_tmpdir(&uuid_str[0]);
+
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
 	     xalt_reasonA[reject_flag], exec_path);
       if (xalt_err)
@@ -727,7 +729,10 @@ void myfini()
   if (run_mask & BIT_SCALAR)
     {
       const char * v;
-      v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+      v = getenv("XALT_SCALAR_SAMPLING");
+      if (!v)
+	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+
       if (v && strcmp(v,"yes") == 0)
 	{
 	  double       run_time	= end_time - start_time;
@@ -787,36 +792,6 @@ void myfini()
 
       system(cmdline);
     }
-
-  //if (run_mask & BIT_SPSR)
-  //  {
-  //    char* xalt_files_dir = NULL;
-  //    asprintf(&xalt_files_dir,"%s/XALT_pkg_%s",XALT_TMPDIR,uuid_str);
-  //    DIR* dirp = open(dir,xalt_files_dir);
-  //    if (dirp)
-  //      {
-  //        struct dirent* dp;
-  //        while ( (dp = readdir(dirp)) != NULL)
-  //          {
-  //            char * buf = NULL;
-  //            size_t sz  = 0;
-  //            if (fnmatch("pkg.*.json", dp->d_name, 0) == 0)
-  //              {
-  //                char * fname = NULL;
-  //                asprintf(&fname,"%s/%s",xalt_files_dir, dp->d_name);
-  //                FILE* fp = fopen(fname,"r");
-  //                xalt_fgets_alloc(fp, &buf, &sz);
-  //                
-  //           
-  //              }
-  //            else
-  //              unlink(dp->d_name);
-  //    
-  //      }
-  //
-  //
-  //
-  //  }
 
   if (xalt_err) 
     {

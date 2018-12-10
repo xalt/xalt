@@ -22,11 +22,11 @@ Config/rtm_config.py as your model for your config.py file and then
 switch to converting the TACC_config.py file for production.
 
 XALT supports scalar (non-MPI) program sampling based on execution
-time.  If you have setup XALT to track scalar or SPSR programs then
+time.  If you have setup XALT to track scalar or PKGS programs then
 you can also control what percentage will be sampled.  Note that the
 environment variable:
 
-    XALT_SCALAR_AND_SPSR_SAMPLING=yes
+    XALT_SCALAR_SAMPLING=yes
 
 must be set to "yes" in order for sampling to occur.  If this variable
 is unset or is not set to "yes" then all scalar program execution are
@@ -39,11 +39,6 @@ programs a start record must be produced.  By default XALT will track
 100% of these programs, but this might be overwhelming so XALT allows
 a site to specify a percentage of these jobs to be tracked.  See
 Config/TACC_config.py for more details.
-
-Also note that sites can control the sampling rate for SPSR programs
-by setting the env var. XALT_SPSR_SAMPLING_RATE to a number between
-0.0 and 1.0 where 0.0 would mean no tracking at all of SPSR programs
-and 1.0 would mean that 100% of SPSR programs are tracked.
 
 XALT can capture every executable run by a user.  This is usually to
 much data so XALT allows sites to control via a python configuration
@@ -112,13 +107,13 @@ Tracking execution based on path
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sites will also want to control which executables are not tracked.
-For executables there are three kinds: KEEP, SKIP and SPSR.  For
+For executables there are three kinds: KEEP, SKIP and PKGS.  For
 example lines like::
 
      path_patterns = [
-          ['SPSR',  r'.*\/R'],
-          ['SPSR',  r'.*\/MATLAB'],
-          ['SPSR',  r'.*\/python[0-9.]*'],
+          ['PKGS',  r'.*\/R'],
+          ['PKGS',  r'.*\/MATLAB'],
+          ['PKGS',  r'.*\/python[0-9.]*'],
           ...
           ['KEEP',  r'^\/bin\/cp'],
           ['KEEP',  r'^\/bin\/mv'],
@@ -142,12 +137,6 @@ example lines like::
           ['SKIP',  r'.*\/conftest'],
           ['SKIP',  r'.*\/CMakeTmp\/cmTryCompileExec[0-9][0-9]*'],
           ['SKIP',  r'.*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*'],
-          ['SKIP',  r'.*\/xalt_file_to_db'],
-          ['SKIP',  r'.*\/xalt_syslog_to_db'],
-          ['SKIP',  r'.*\/xalt_extract_record\.x'],
-          ['SKIP',  r'.*\/xalt_configuration_report\.x'],
-          ['SKIP',  r'.*\/xalt_syshost'],
-          ['SKIP',  r'.*\/xalt_record_pkg']
      ]
 
 You should look over the list provided by Config/TACC_config.py to
@@ -163,15 +152,15 @@ be quoted with a backslash. Also the matches are first come first
 served.  That is when there is a match none of the pattern are checked
 below.
 
-For this reason, you will want to list the SPSR programs first (if
+For this reason, you will want to list the PKGS programs first (if
 you have any), followed by the **KEEP's** and conclude with the
 **SKIP's**
 
 Non-mpi executables only produce an end record. But for executables
 that where there are intermediate records, one has to produce a start
 record.  Currently R, MATLAB and Python can generate records that tell
-which package each program uses.  Those programs can be marked as SPSR
-(Scalar Program Start Record).
+which package each program uses.  Those programs can be marked as PKGS.
+
 
 The strategy that TACC uses is to keep program like cp, perl, gawk and
 ignore all other system executables that are in /bin/, /usr/bin
@@ -180,18 +169,15 @@ compiler directories.  Similarly for the mpi helper program such as
 mpiexec that live in the mpi directories.
 
 We do not wish to track the generated programs from autoconf
-(e.g. conftest) and Cmake (.*/CMakeTmp\/cmTryCompileExec[0-9][0-9]*)
-and it is very important that you do not track xalt executables like
-xalt_syshost.
-
-
+(e.g. conftest) and Cmake (.*/CMakeTmp\/cmTryCompileExec[0-9][0-9]*).
 
 Sampling Non-MPI executables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The SITE_config.py file also allows a site to control sampling of
-scalar jobs (non SPSR scalar programs like R, MATLAB and Python). The
-details on how to control the sampling.  TACC uses the follow scheme::
+scalar executables (including PKGS programs like R, MATLAB and
+Python).  The details on how to control the sampling.  TACC uses the
+follow scheme::
 
     0   - 300 seconds (1 in 10000 chance of being recorded)
     300 - 600 seconds (1 in 100   chance of being recorded)
@@ -206,15 +192,6 @@ This is expressed in your SITE_config.py file as::
         [ 600.0,              1.0    ],
         [ sys.float_info.max, 1.0    ]
     ]   
-
-
-
-Finally since SPSR programs have a start record there is no way to
-know how long an execution will last, XALT allow sites to control the
-SPSR sampling rate.  TACC uses a 1% chance for SPSR programs.::
-
-
-    SPSR_sampling = 0.01  # == 1%
 
 Controlling the Environment Variables collected
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
