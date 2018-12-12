@@ -673,7 +673,6 @@ XALT_CONFIG_PY
 ETC_DIR
 COMPUTE_SHA1SUM
 XALT_SCALAR_TRACKING
-XALT_SPSR_TRACKING
 XALT_MPI_TRACKING
 XALT_GPU_TRACKING
 XALT_FILE_PREFIX
@@ -735,7 +734,6 @@ with_functionTracking
 with_xaltFilePrefix
 with_trackGPU
 with_trackMPI
-with_trackSPSR
 with_trackScalarPrgms
 with_computeSHA1
 with_etcDir
@@ -1389,7 +1387,6 @@ Optional Packages:
                           Prefix where the json files are written [[$HOME]]
   --with-trackGPU=ans     Track GPU executables, [[no]]
   --with-trackMPI=ans     Track MPI executables, [[yes]]
-  --with-trackSPSR=ans    Track SPSR executables, [[yes]]
   --with-trackScalarPrgms=ans
                           Track non-mpi, non-spsr executables, [[yes]]
   --with-computeSHA1=ans  compute SHA1 sum on libraries, [[no]]
@@ -3157,28 +3154,6 @@ $as_echo "XALT_MPI_TRACKING=$withval" >&6; }
     XALT_MPI_TRACKING="$withval"
     cat >>confdefs.h <<_ACEOF
 #define XALT_MPI_TRACKING "$withval"
-_ACEOF
-
-fi
-
-
-
-# Check whether --with-trackSPSR was given.
-if test "${with_trackSPSR+set}" = set; then :
-  withval=$with_trackSPSR; XALT_SPSR_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$with_trackSPSR" >&5
-$as_echo "XALT_SPSR_TRACKING=$with_trackSPSR" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SPSR_TRACKING "$with_trackSPSR"
-_ACEOF
-
-else
-  withval="yes"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SPSR_TRACKING=$withval" >&5
-$as_echo "XALT_SPSR_TRACKING=$withval" >&6; }
-    XALT_SPSR_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
-#define XALT_SPSR_TRACKING "$withval"
 _ACEOF
 
 fi
@@ -7083,7 +7058,6 @@ echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
 echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
-echo "XALT_SPSR_TRACKING..................................." : $XALT_SPSR_TRACKING
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
