@@ -53,9 +53,6 @@ PRELOAD_ONLY            := @PRELOAD_ONLY@
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
-PATH_TO_HEAD         	:= @PATH_TO_HEAD@
-PATH_TO_LDD          	:= @PATH_TO_LDD@
-PATH_TO_LOGGER       	:= @PATH_TO_LOGGER@
 PATH_TO_MKDIR        	:= @PATH_TO_MKDIR@
 PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_OBJDUMP      	:= @PATH_TO_OBJDUMP@
@@ -219,8 +216,6 @@ __installMe:
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
-	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              	  \
-	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
 	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
 	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
 	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
