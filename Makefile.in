@@ -53,10 +53,6 @@ PRELOAD_ONLY            := @PRELOAD_ONLY@
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
-PATH_TO_AS           	:= @PATH_TO_AS@
-PATH_TO_BASENAME     	:= @PATH_TO_BASENAME@
-PATH_TO_CAT          	:= @PATH_TO_CAT@
-PATH_TO_CAT          	:= @PATH_TO_CAT@
 PATH_TO_DATE         	:= @PATH_TO_DATE@
 PATH_TO_DIRNAME      	:= @PATH_TO_DIRNAME@
 PATH_TO_FILE         	:= @PATH_TO_FILE@
@@ -233,9 +229,6 @@ __installMe:
 	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
 	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
 	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
-	        -e 's|@path_to_as@|$(PATH_TO_AS)|g'                        	  \
-	        -e 's|@path_to_basename@|$(PATH_TO_BASENAME)|g'            	  \
-	        -e 's|@path_to_cat@|$(PATH_TO_CAT)|g'                      	  \
 	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              	  \
 	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
 	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
