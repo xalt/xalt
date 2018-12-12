@@ -60,7 +60,6 @@ PATH_TO_CAT          	:= @PATH_TO_CAT@
 PATH_TO_DATE         	:= @PATH_TO_DATE@
 PATH_TO_DIRNAME      	:= @PATH_TO_DIRNAME@
 PATH_TO_FILE         	:= @PATH_TO_FILE@
-PATH_TO_GREP         	:= @PATH_TO_GREP@
 PATH_TO_HEAD         	:= @PATH_TO_HEAD@
 PATH_TO_LDD          	:= @PATH_TO_LDD@
 PATH_TO_LOGGER       	:= @PATH_TO_LOGGER@
@@ -228,10 +227,8 @@ __installMe:
 	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
 	        -e 's|@file@|$(PATH_TO_FILE)|g'                            	  \
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
-	        -e 's|@grep@|$(PATH_TO_GREP)|g'                            	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
-	        -e 's|@head@|$(PATH_TO_HEAD)|g'                            	  \
 	        -e 's|@ldd@|$(PATH_TO_LDD)|g'                              	  \
 	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
 	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
@@ -332,6 +329,9 @@ build_tags:
             -e 's|.*/uuid_config.h$$||g'                         \
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
+            -e 's|.*/libuuid.a$$||g'                             \
+            -e 's|.*/my_uuidgen$$||g'                            \
+            -e 's|.*\.pptx$$||g'                                 \
             -e 's|.*\.pyc$$||g'                                  \
             -e 's|.*\.pyo$$||g'                                  \
             -e 's|.*\.csv$$||g'                                  \
