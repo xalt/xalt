@@ -3,7 +3,6 @@
 
 #define XALT_PRELOAD_ONLY          "@PRELOAD_ONLY@"
 #define XALT_INTERFACE_VERSION     "@XALT_INTERFACE_VERSION@"
-#define OBJDUMP                    "@PATH_TO_OBJDUMP@"
 #define SHA1SUM                    "@PATH_TO_SHA1SUM@"
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define BAD_INSTALL                "@BAD_INSTALL@"
