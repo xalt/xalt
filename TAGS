@@ -1071,7 +1071,7 @@ Data Mining1,0
 docs/old_source/060_production.rtm,15
 Production1,0
 
-Makefile.in,3883
+Makefile.in,3745
 abs_srcdir 22,1051
 srcdir 23,1085
 VPATH 24,1115
@@ -1101,110 +1101,104 @@ PRELOAD_ONLY 52,2100
 CXX_LD_LIBRARY_PATH 53,2143
 HAVE_32BIT 54,2190
 XALT_SYSTEM_PATH 55,2228
-PATH_TO_AS 56,2269
-PATH_TO_BASENAME 57,2307
-PATH_TO_CAT 58,2351
-PATH_TO_CAT 59,2390
-PATH_TO_DATE 60,2429
-PATH_TO_DIRNAME 61,2469
-PATH_TO_FILE 62,2512
-PATH_TO_HEAD 63,2552
-PATH_TO_LDD 64,2592
-PATH_TO_LOGGER 65,2631
-PATH_TO_MKDIR 66,2673
-PATH_TO_MKTEMP 67,2714
-PATH_TO_OBJDUMP 68,2757
-PATH_TO_OTOOL 69,2800
-PATH_TO_PSTREE 70,2841
-PATH_TO_PYTHON 71,2883
-PATH_TO_READLINK 72,2925
-PATH_TO_RM 73,2969
-PATH_TO_SHA1SUM 74,3007
-USE_ARGPARSE 75,3050
-XALT_FILE_PREFIX 76,3098
-XALT_FUNCTION_TRACKING 77,3142
-ENABLE_BACKGROUNDING 78,3194
-XALT_CONFIG_PY 79,3242
-GIT_PROG 81,3285
-GIT_VERSION 82,3324
-VDATE	83,3504
-XALT_DIR 85,3547
-PKGV 86,3604
-PKG 87,3661
-LIB 88,3718
-LIB64 89,3779
-LIBEXEC 90,3842
-BIN 91,3907
-SBIN 92,3968
-DIRLIST 93,4030
-BIN_PKG 100,4473
-BIN_PKG 107,5014
-SBIN_PKG 109,5079
-SBIN_PKG 113,5365
-LIBEXEC_PKG 115,5431
-LIBEXEC_PKG 122,5878
-TACC_PKG 125,5948
-TACC_PKG 130,6425
-INIT_SRC 131,6490
-INIT_SRC 132,6537
-.PHONY:.PHONY134,6603
-all:all136,6644
-install:install141,6664
-build_compiled:build_compiled146,6865
-        $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD148,6986
-                LDFLAGS=149,7087
-                LIB64=150,7188
-                XALT_FILE_PREFIX=151,7289
-                MY_HOSTNAME_PARSER=152,7390
-build_uuid:build_uuid155,7453
-        $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR157,7559
-                         LIB=158,7660
-        $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD159,7761
-                LDFLAGS=160,7862
-                OPTLVL=161,7963
-        if [ "$(HAVE_32BIT)" if [ "$(HAVE_32BIT)"162,8064
-           $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR163,8165
-                         LIB=164,8266
-           $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD165,8367
-                   LDFLAGS=166,8468
-                   BIN=167,8569
-echo:echo170,8682
-remove_genfiles:remove_genfiles178,8863
-$(DIRLIST)$(DIRLIST181,9015
-LINKS:LINKS184,9042
-Inst_libexec:Inst_libexec190,9247
-Inst_sbin:Inst_sbin193,9370
-Inst_bin:Inst_bin196,9487
-Inst_TACC:Inst_TACC199,9602
-Use_getent_yes:Use_getent_yes203,9720
-Use_argparse_no:Use_argparse_no209,9935
-Use_argparse_yes:Use_argparse_yes211,9953
-__installMe:__installMe214,10104
-           bareN=216,10189
-           fn=217,10268
-           oext=219,10420
-           [ "$$ext" [ "$$ext"221,10573
-           [ "$$ext" [ "$$ext"222,10653
-            [ "$$ext" [ "$$ext"264,13743
-world_update:world_update269,13994
-            echo "All files not checked in echo "All files not checked in272,14181
-            echo "configure is out of date echo "configure is out of date274,14354
-            echo "libuuid/src/configure is out of date echo "libuuid/src/configure is out of date276,14535
-gittag:gittag285,15109
-tags:tags305,16210
-build_tags:build_tags308,16248
-dist:dist372,20204
-makefile:makefile383,20842
-src/makefile:src/makefile386,20909
-libuuid/src/makefile:libuuid/src/makefile389,20984
-neat:neat392,21065
-                         LIB=395,21168
-                         LIB=397,21309
-clean:clean399,21365
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR401,21465
-                         LIB=402,21559
-                         LIB=404,21700
-clobber:clobber405,21755
+PATH_TO_FILE 56,2269
+PATH_TO_HEAD 57,2309
+PATH_TO_LDD 58,2349
+PATH_TO_LOGGER 59,2388
+PATH_TO_MKDIR 60,2430
+PATH_TO_MKTEMP 61,2471
+PATH_TO_OBJDUMP 62,2514
+PATH_TO_OTOOL 63,2557
+PATH_TO_PSTREE 64,2598
+PATH_TO_PYTHON 65,2640
+PATH_TO_READLINK 66,2682
+PATH_TO_RM 67,2726
+PATH_TO_SHA1SUM 68,2764
+USE_ARGPARSE 69,2807
+XALT_FILE_PREFIX 70,2855
+XALT_FUNCTION_TRACKING 71,2899
+ENABLE_BACKGROUNDING 72,2951
+XALT_CONFIG_PY 73,2999
+GIT_PROG 75,3042
+GIT_VERSION 76,3081
+VDATE	77,3261
+XALT_DIR 79,3304
+PKGV 80,3361
+PKG 81,3418
+LIB 82,3475
+LIB64 83,3536
+LIBEXEC 84,3599
+BIN 85,3664
+SBIN 86,3725
+DIRLIST 87,3787
+BIN_PKG 94,4230
+BIN_PKG 101,4771
+SBIN_PKG 103,4836
+SBIN_PKG 107,5122
+LIBEXEC_PKG 109,5188
+LIBEXEC_PKG 116,5635
+TACC_PKG 119,5705
+TACC_PKG 124,6182
+INIT_SRC 125,6247
+INIT_SRC 126,6294
+.PHONY:.PHONY128,6360
+all:all130,6401
+install:install135,6421
+build_compiled:build_compiled140,6622
+        $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD142,6743
+                LDFLAGS=143,6844
+                LIB64=144,6945
+                XALT_FILE_PREFIX=145,7046
+                MY_HOSTNAME_PARSER=146,7147
+build_uuid:build_uuid149,7210
+        $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR151,7316
+                         LIB=152,7417
+        $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD153,7518
+                LDFLAGS=154,7619
+                OPTLVL=155,7720
+        if [ "$(HAVE_32BIT)" if [ "$(HAVE_32BIT)"156,7821
+           $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR157,7922
+                         LIB=158,8023
+           $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD159,8124
+                   LDFLAGS=160,8225
+                   BIN=161,8326
+echo:echo164,8439
+remove_genfiles:remove_genfiles172,8620
+$(DIRLIST)$(DIRLIST175,8772
+LINKS:LINKS178,8799
+Inst_libexec:Inst_libexec184,9004
+Inst_sbin:Inst_sbin187,9127
+Inst_bin:Inst_bin190,9244
+Inst_TACC:Inst_TACC193,9359
+Use_getent_yes:Use_getent_yes197,9477
+Use_argparse_no:Use_argparse_no203,9692
+Use_argparse_yes:Use_argparse_yes205,9710
+__installMe:__installMe208,9861
+           bareN=210,9946
+           fn=211,10025
+           oext=213,10177
+           [ "$$ext" [ "$$ext"215,10330
+           [ "$$ext" [ "$$ext"216,10410
+            [ "$$ext" [ "$$ext"252,13062
+world_update:world_update257,13313
+            echo "All files not checked in echo "All files not checked in260,13500
+            echo "configure is out of date echo "configure is out of date262,13673
+            echo "libuuid/src/configure is out of date echo "libuuid/src/configure is out of date264,13854
+gittag:gittag273,14428
+tags:tags293,15529
+build_tags:build_tags296,15567
+dist:dist361,19590
+makefile:makefile372,20228
+src/makefile:src/makefile375,20295
+libuuid/src/makefile:libuuid/src/makefile378,20370
+neat:neat381,20451
+                         LIB=384,20554
+                         LIB=386,20695
+clean:clean388,20751
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR390,20851
+                         LIB=391,20945
+                         LIB=393,21086
+clobber:clobber394,21141
 
 libuuid/COPYING,35
 This library is free software;1,0
@@ -4931,18 +4925,18 @@ my_docs/TACC_sysadmin_17/talk_old.tex,244
 configure.ac,364
 AC_INIT(1,0
   AX_TEST_COMPILE_FLAG(255,9148
-  AC_MSG_ERROR(306,10598
-      found=315,10800
-AC_SUBST(331,11160
-AC_SUBST(349,11734
-  AC_CHECK_HEADER(352,11806
-    AC_SEARCH_LIBS(357,12065
-  xaltV=399,13619
-  xaltV=401,13670
-USE_CONTRIB_ARGPARSE=461,15474
-   USE_CONTRIB_ARGPARSE=468,15806
-      export PYTHONPATH=478,16012
-    AC_SEARCH_LIBS(485,16183
+  AC_MSG_ERROR(296,10287
+      found=305,10489
+AC_SUBST(321,10849
+AC_SUBST(339,11423
+  AC_CHECK_HEADER(342,11495
+    AC_SEARCH_LIBS(347,11754
+  xaltV=389,13308
+  xaltV=391,13359
+USE_CONTRIB_ARGPARSE=451,15163
+   USE_CONTRIB_ARGPARSE=458,15495
+      export PYTHONPATH=468,15701
+    AC_SEARCH_LIBS(475,15872
 
 rt/big_syslog/bin/logger,10
 TAG=5,42
@@ -5084,11 +5078,11 @@ LIBDCGM=272,8331
    PATH=296,9139
   PATH=304,9283
 
-sh_src/xalt_configuration_report.in,14
-DIRNAME=4,29
+sh_src/xalt_configuration_report.in,13
+MY_DIR=4,29
 
-sh_src/xalt_extract_record.in,14
-DIRNAME=3,13
+sh_src/xalt_extract_record.in,13
+MY_DIR=3,13
 
 sh_src/xalt_helper_functions.sh,69
 LD_LIB_PATH=33,1393
@@ -5925,142 +5919,6 @@ the License, or 97,3221
 
 README.old,51
    (2.3.3)  Support XALT_TRANSMISSION_STYLE=4,120
-
-job_launcher/xalt_find_exec_openmpi.py,19
-def main(135,4727
-
-job_launcher/xalt_find_exec_srun.py,46
-def compute_ntasks(65,2222
-def main(80,2558
-
-job_launcher/xalt_which_mpi.in,69
-tracing_msg(26,1091
-findName(34,1210
-mpiN=133,3412
-elif 147,3634
-
-job_launcher/xalt_find_exec_mympirun.py,18
-def main(60,1995
-
-job_launcher/xalt_find_exec_hydra.py,19
-def main(102,3413
-
-job_launcher/xalt_find_exec_ncar.py,19
-def main(102,3374
-
-job_launcher/xalt_parse_mpirun_args.py,108
-def find_cmd(30,1289
-def default_compute_ntasks(50,1788
-def find_exec(55,1913
-def parse_ntasks(118,3625
-
-job_launcher/xalt_syshost_default.py,100
-def map_syshost(37,1440
-def level1_syshost(74,2372
-def level2_syshost(90,2763
-def main(116,3251
-
-job_launcher/jsrun.in,234
-XALT_DIR=36,1419
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
-    prev=72,2578
-    -*) optarg=78,2701
-    *) optarg=79,2719
-    *) optarg=; done=79,2719
-      testMe=88,2878
-FIND_EXEC_PRGM=104,3292
-
-job_launcher/aprun.in,264
-XALT_DIR=36,1419
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
-  export PBS_ACCOUNT=64,2362
-    prev=80,2869
-    -*) optarg=86,2992
-    *) optarg=87,3010
-    *) optarg=; done=87,3010
-      testMe=96,3147
-FIND_EXEC_PRGM=114,3679
-
-job_launcher/xalt_find_exec_ibrun.py,90
-def mpi_size(55,1810
-def mpi_rank(65,2094
-def compute_ntasks(76,2368
-def main(91,2786
-
-job_launcher/mpirun.lsf.in,234
-XALT_DIR=36,1422
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
-    prev=72,2580
-    -*) optarg=78,2703
-    *) optarg=79,2721
-    *) optarg=; done=79,2721
-      testMe=88,2868
-FIND_EXEC_PRGM=101,3147
-
-job_launcher/xalt_syshost_TACC.py,71
-def map_syshost(39,1501
-def level2_syshost(51,1683
-def main(77,2177
-
-job_launcher/ibrun.in,234
-XALT_DIR=36,1419
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1684
-    prev=71,2561
-    -*) optarg=77,2684
-    *) optarg=78,2702
-    *) optarg=; done=78,2702
-      testMe=87,2836
-FIND_EXEC_PRGM=100,3115
-
-job_launcher/xalt_find_exec_aprun.py,18
-def main(86,2927
-
-job_launcher/mympirun.in,234
-XALT_DIR=36,1428
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1693
-    prev=71,2573
-    -*) optarg=77,2696
-    *) optarg=78,2714
-    *) optarg=; done=78,2714
-      testMe=87,2863
-FIND_EXEC_PRGM=100,3142
-
-job_launcher/xalt_syshost_ncar.py,43
-def map_syshost(35,1287
-def main(54,1625
-
-job_launcher/xalt_find_exec_jsrun.py,18
-def main(99,3122
-
-job_launcher/mpirun.in,322
-XALT_DIR=36,1422
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1687
-  export PBS_ACCOUNT=65,2363
-    prev=80,2869
-    -*) optarg=86,2992
-    *) optarg=87,3010
-    *) optarg=; done=87,3010
-      testMe=96,3157
-FIND_EXEC_PRGM=109,3436
-    FIND_EXEC_PRGM=120,3706
-    FIND_EXEC_PRGM=123,3783
-
-job_launcher/xalt_find_exec_sgimpt.py,18
-def main(56,1878
-
-job_launcher/srun.in,235
-XALT_DIR=36,1416
-request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=45,1681
-    prev=78,2921
-    -*) optarg=84,3044
-    *) optarg=85,3062
-    *) optarg=; done=85,3062
-      testMe=110,3676
-FIND_EXEC_PRGM=143,4506
-
-job_launcher/xalt_site_pkg.py,50
-def translate(52,2350
-def keep_env_var(186,6853
 
 README.new,0
 

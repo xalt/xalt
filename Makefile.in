@@ -53,8 +53,6 @@ PRELOAD_ONLY            := @PRELOAD_ONLY@
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
-PATH_TO_DATE         	:= @PATH_TO_DATE@
-PATH_TO_DIRNAME      	:= @PATH_TO_DIRNAME@
 PATH_TO_FILE         	:= @PATH_TO_FILE@
 PATH_TO_HEAD         	:= @PATH_TO_HEAD@
 PATH_TO_LDD          	:= @PATH_TO_LDD@
@@ -217,7 +215,6 @@ __installMe:
            [ "$$ext" = "in.py" ] && oext=".py";                            	  \
            [ "$$ext" = "in.c" ]  && oext=".c";                             	  \
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   	  \
-	        -e 's|@date@|$(PATH_TO_DATE)|g'                            	  \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
 	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
 	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
@@ -229,7 +226,6 @@ __installMe:
 	        -e 's|@logger@|$(PATH_TO_LOGGER)|g'                        	  \
 	        -e 's|@objdump@|$(PATH_TO_OBJDUMP)|g'                      	  \
 	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
-	        -e 's|@path_to_dirname@|$(PATH_TO_DIRNAME)|g'              	  \
 	        -e 's|@path_to_mkdir@|$(PATH_TO_MKDIR)|g'                  	  \
 	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
@@ -305,6 +301,7 @@ build_tags:
             -e 's|./TAGS||g'                                     \
             -e 's|.*/epydoc/.*$$||g'                             \
             -e 's|.*/old/.*$$||g'                                \
+            -e 's|.*/job_launcher/.*$$||g'                       \
             -e 's|.*/stamp-h1$$||g'                              \
             -e 's|.*/__build__.*$$||g'                           \
             -e 's|.*/stamp-h$$||g'                               \
