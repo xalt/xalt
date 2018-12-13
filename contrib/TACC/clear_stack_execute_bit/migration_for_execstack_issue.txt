@@ -1,0 +1,104 @@
+We are in the process of clearing the execstack bit on all the executables that have
+been built with XALT.   There will be a very few executables that need this
+bit set.
+
+Before the upgrade:
+-------------------
+
+If we have cleared this execstack bit, you will see the generic
+segv-fault error for an executable that needs this bit set.
+
+   $ ibrun -n 2 -o 0  ./qsort
+
+   ===================================================================================
+   =   BAD TERMINATION OF ONE OF YOUR APPLICATION PROCESSES
+   =   PID 255479 RUNNING AT c455-021
+   =   EXIT CODE: 11
+   =   CLEANING UP REMAINING PROCESSES
+   =   YOU CAN IGNORE THE BELOW CLEANUP MESSAGES
+   ===================================================================================
+      Intel(R) MPI Library troubleshooting guide:
+   https://software.intel.com/node/561764
+
+Rebuilding or setting the execstack bit will allow the program to run:
+
+
+   $ execstack -s ./qsort   
+   $ ibrun -n 2 -o 0 ./qsort
+
+   TACC:  Starting up job 2617042 
+   TACC:  Starting parallel tasks... 
+   Hello World from proc: 0 out of 2 !
+   TACC:  Shutdown complete. Exiting. 
+
+After the upgrade:
+------------------
+
+An application that has the bit set will produce an error that looks
+like this:
+
+    $  mpirun -np 2 ./qsort
+
+    c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: mmap of status page (dabbad0008030000) failed: Operation not permitted
+    c591-801.stampede2.tacc.utexas.edu.334447hfp_gen1_context_open: hfi_userinit: failed, trying again (1/3)
+    c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: assign_context command failed: Invalid argument
+    c591-801.stampede2.tacc.utexas.edu.334447hfp_gen1_context_open: hfi_userinit: failed, trying again (2/3)
+    c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: assign_context command failed: Invalid argument
+    c591-801.stampede2.tacc.utexas.edu.334447hfp_gen1_context_open: hfi_userinit: failed, trying again (3/3)
+    c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: assign_context command failed: Invalid argument
+
+Users can either rebuild or clear the bit:
+
+    $ execstack -c ./qsort
+
+The program should run fine as long as it didn't need the bit set in
+the first place.  If it needed you will get the generic segv-fault
+message.
+
+
+For those users who's programs need the execstack bit set they will
+have to run under mvapich2.
+
+Here is an example C program that needs the execstack bit set to run:
+
+    #include <mpi.h>
+    #include <stdlib.h>
+    #include <stdio.h>
+    #include <string.h>
+    /* sort an array, starting at address `base`,
+     * containing `nmemb` members, separated by `size`,
+     * comparing on the first `nbytes` only. */
+    void sort_bytes(void *base,  size_t nmemb, size_t size, size_t nbytes) {
+        int compar(const void *a, const void *b) {
+            return memcmp(a, b, nbytes);
+        }
+        qsort(base, nmemb, size, compar);
+    }
+
+    int main(int argc, char* argv[])
+    {
+      int i;
+      int ierr, myProc, nProc;
+
+      ierr = MPI_Init(&argc, &argv);
+      
+      MPI_Comm_rank(MPI_COMM_WORLD, &myProc);
+      MPI_Comm_size(MPI_COMM_WORLD, &nProc);
+
+      if (myProc == 0)
+        printf("Hello World from proc: %d out of %d !\n",myProc, nProc);
+
+
+      const char* a[] = { "abc", "111","def", "zzz","222" };
+
+      sort_bytes(&a[0], 5, sizeof(char *), 3);
+
+      if (myProc == 0)
+        {
+          for (i=0; i < 5 ; ++i)
+            printf("%s\n", a[i]);
+        }
+      
+
+      MPI_Finalize();
+    }   

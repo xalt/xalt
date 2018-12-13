@@ -4,7 +4,7 @@
 syshost=$1
 
 prgm=$2
-if [ -z "$pgrm" -o ! -x "$prgm" -o ! -w "$prgm" ] ; then
+if [ -z "$pgrm" -o ! -r "$prgm" -o ! -x "$prgm" -o ! -w "$prgm" ] ; then
     return 0
 fi
 

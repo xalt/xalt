@@ -107,7 +107,7 @@ class SyslogV1(XALT_transmission_factory):
     @param resultT: The json record table
     """
     sA = []
-    sA.append("@logger@ -t XALT_LOGGING")
+    sA.append("@path_to_logger@ -t XALT_LOGGING")
     sA.append(" \"")
     sA.append(self._kind())
     sA.append(":")
@@ -150,7 +150,7 @@ class Syslog(XALT_transmission_factory):
     iend     = blkSz
     for i in range(nBlks):
       sA = []
-      sA.append("@logger@ -t XALT_LOGGING V:2 idx:")
+      sA.append("@path_to_logger@ -t XALT_LOGGING V:2 idx:")
       sA.append(str(i))
       sA.append(" nb:")
       sA.append(str(nBlks))

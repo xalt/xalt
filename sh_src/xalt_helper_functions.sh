@@ -86,8 +86,6 @@ find_real_command()
   local exec_x=$2
   
   local my_name=$(PATH=@xalt_system_path@ basename $my_path)
-  local head="@head@"
-  local grep="@grep@"
   local my_cmd="unknown"
 
   tracing_msg "find_real_command: Searching for the real: $my_name"
@@ -110,7 +108,7 @@ find_real_command()
       if [ $check == 1 ]; then
         # Now check to see if this choice has the magic string in the first 5 lines.
         # Only if it doesn't contain the magic string then $exe is MY_CMD.
-	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+	if ! PATH=@xalt_system_path@ head -n 5 $exe | PATH=@xalt_system_path@ grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
           my_cmd=$exe
 	  break
         fi
@@ -129,7 +127,7 @@ find_real_command()
         check=1
       fi
       if [ $check == 1 -a -x $exe ]; then
-	if ! $head -n 5 $exe | $grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+	if ! PATH=@xalt_system_path@ head -n 5 $exe | PATH=@xalt_system_path@ grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
           my_cmd=$exe
 	  break
         fi

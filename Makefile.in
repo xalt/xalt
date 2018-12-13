@@ -53,8 +53,9 @@ STATIC_LIBS             := @STATIC_LIBS@
 PRELOAD_ONLY            := @PRELOAD_ONLY@	
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
-PATH_TO_OTOOL        	:= @PATH_TO_OTOOL@
-PATH_TO_PYTHON       	:= @PATH_TO_PYTHON@
+XALT_SYSTEM_PATH        := @SYSTEM_PATH@
+PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
+PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
@@ -210,14 +211,15 @@ __installMe:
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
-	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
-	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
+	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
+	        -e 's|@path_to_logger@|$(PATH_TO_LOGGER)|g'                	  \
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
 	        -e 's|@preload_only@|$(PRELOAD_ONLY)|g'                       	  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
 	        -e 's|@version@|$(VERSION)|g'                              	  \
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   	  \
-	        -e 's|@xalt_system_path@|$(XALT_SYSTEM_PATH)|g'        	   	  \
+	        -e 's|@xalt_system_path@|$(XALT_SYSTEM_PATH)|g'       	   	  \
 	        -e 's|@my_hostname_parser@|$(MY_HOSTNAME_PARSER)|g'               \
 	        -e 's|@xalt_function_tracking@|$(XALT_FUNCTION_TRACKING)|g'       \
 	        -e 's|@xalt_config_py@|$(XALT_CONFIG_PY)|g' 	   	   	  \
@@ -279,6 +281,7 @@ build_tags:
             -e 's|./TAGS||g'                                     \
             -e 's|.*/epydoc/.*$$||g'                             \
             -e 's|.*/old/.*$$||g'                                \
+            -e 's|.*/job_launcher/.*$$||g'                       \
             -e 's|.*/stamp-h1$$||g'                              \
             -e 's|.*/__build__.*$$||g'                           \
             -e 's|.*/stamp-h$$||g'                               \
@@ -301,6 +304,7 @@ build_tags:
             -e 's|.*\.pptx$$||g'                                 \
             -e 's|.*\.png$$||g'                                  \
             -e 's|.*\.jpg$$||g'                                  \
+            -e 's|.*/docs/build/.*$$||g'                         \
             -e 's|.*\.pyc$$||g'                                  \
             -e 's|.*\.pyo$$||g'                                  \
             -e 's|.*\.csv$$||g'                                  \

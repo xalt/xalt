@@ -184,7 +184,6 @@ fi
 
 MY_HOSTNAME_PARSER_STRING=@my_hostname_parser@
 MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
-    
 
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_BIN=$XALT_DIR/bin
@@ -197,7 +196,6 @@ SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=$XALT_BIN/my_uuidgen
-GREP=@grep@
 PyPATH="/usr/bin:/bin"
 
 
@@ -243,7 +241,7 @@ fi
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
 if [ -f "$ARGSRC" ]; then
-  as $ARGSRC $BIT32FLAG -o $OBJ
+  PATH=@xalt_system_path@ as $ARGSRC $BIT32FLAG -o $OBJ
 else
   OBJ=""
 fi
@@ -294,7 +292,7 @@ PATH=@xalt_system_path@ $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDC
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
-   PATH=@xalt_system_path@ $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
+   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
    PATH=@xalt_system_path@ rm -rf $WRKDIR  
    exit $status
 fi
