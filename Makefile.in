@@ -55,9 +55,6 @@ HAVE_32BIT           	:= @HAVE_32BIT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
-PATH_TO_PYTHON       	:= @PATH_TO_PYTHON@
-PATH_TO_RM           	:= @PATH_TO_RM@
-PATH_TO_SHA1SUM      	:= @PATH_TO_SHA1SUM@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
@@ -216,9 +213,6 @@ __installMe:
 	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
 	        -e 's|@path_to_logger@|$(PATH_TO_LOGGER)|g'                	  \
-	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        	  \
-	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
-	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
 	        -e 's|@site_name@|$(SITE_NAME)|g'                          	  \
 	        -e 's|@preload_only@|$(PRELOAD_ONLY)|g'                       	  \
 	        -e 's|@transmission@|$(TRANSMISSION)|g'                    	  \
