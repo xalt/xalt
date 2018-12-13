@@ -632,12 +632,13 @@ GREP
 CPP
 HAVE_PYMOD_MYSQLDB
 PATH_TO_PYTHON
-PATH_TO_OTOOL
+PATH_TO_MKTEMP
 USE_CONTRIB_ARGPARSE
 PATH_TO_UUIDGEN
 PATH_TO_SHA1SUM
 PATH_TO_RM
-PATH_TO_MKTEMP
+PATH_TO_PSTREE
+PATH_TO_LOGGER
 PATH_TO_FLEX
 PATH_TO_GIT
 ac_ct_CXX
@@ -3932,6 +3933,46 @@ $as_echo "no" >&6; }
 fi
 
 
+# Extract the first word of "logger", so it can be a program name with args.
+set dummy logger; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_PATH_TO_LOGGER+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $PATH_TO_LOGGER in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PATH_TO_LOGGER="$PATH_TO_LOGGER" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_PATH_TO_LOGGER="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PATH_TO_LOGGER=$ac_cv_path_PATH_TO_LOGGER
+if test -n "$PATH_TO_LOGGER"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_LOGGER" >&5
+$as_echo "$PATH_TO_LOGGER" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
 # Extract the first word of "mktemp", so it can be a program name with args.
 set dummy mktemp; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -3966,47 +4007,6 @@ PATH_TO_MKTEMP=$ac_cv_path_PATH_TO_MKTEMP
 if test -n "$PATH_TO_MKTEMP"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_MKTEMP" >&5
 $as_echo "$PATH_TO_MKTEMP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "otool", so it can be a program name with args.
-set dummy otool; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_OTOOL+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PATH_TO_OTOOL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_OTOOL="$PATH_TO_OTOOL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_OTOOL="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PATH_TO_OTOOL" && ac_cv_path_PATH_TO_OTOOL=""""
-  ;;
-esac
-fi
-PATH_TO_OTOOL=$ac_cv_path_PATH_TO_OTOOL
-if test -n "$PATH_TO_OTOOL"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_OTOOL" >&5
-$as_echo "$PATH_TO_OTOOL" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }

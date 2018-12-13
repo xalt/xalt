@@ -53,7 +53,8 @@ PRELOAD_ONLY            := @PRELOAD_ONLY@
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
-PATH_TO_OTOOL        	:= @PATH_TO_OTOOL@
+PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
+PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
 PATH_TO_PYTHON       	:= @PATH_TO_PYTHON@
 PATH_TO_RM           	:= @PATH_TO_RM@
 PATH_TO_SHA1SUM      	:= @PATH_TO_SHA1SUM@
@@ -212,7 +213,9 @@ __installMe:
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
-	        -e 's|@otool@|$(PATH_TO_OTOOL)|g'                          	  \
+	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
+	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
+	        -e 's|@path_to_logger@|$(PATH_TO_LOGGER)|g'                	  \
 	        -e 's|@path_to_rm@|$(PATH_TO_RM)|g'                        	  \
 	        -e 's|@python@|$(PATH_TO_PYTHON)|g'                        	  \
 	        -e 's|@sha1sum@|$(PATH_TO_SHA1SUM)|g'                      	  \
@@ -304,6 +307,7 @@ build_tags:
             -e 's|.*\.tar\.bz2$$||g'                             \
             -e 's|.*/libuuid.a$$||g'                             \
             -e 's|.*/my_uuidgen$$||g'                            \
+            -e 's|.*/docs/build/.*$$||g'                         \
             -e 's|.*\.pptx$$||g'                                 \
             -e 's|.*\.pyc$$||g'                                  \
             -e 's|.*\.pyo$$||g'                                  \
