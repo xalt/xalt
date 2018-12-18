@@ -37,7 +37,7 @@ After the upgrade:
 An application that has the bit set will produce an error that looks
 like this:
 
-    $  mpirun -np 2 ./qsort
+    $  ibrun -n 2 -o 0 2 ./qsort
 
     c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: mmap of status page (dabbad0008030000) failed: Operation not permitted
     c591-801.stampede2.tacc.utexas.edu.334447hfp_gen1_context_open: hfi_userinit: failed, trying again (1/3)
