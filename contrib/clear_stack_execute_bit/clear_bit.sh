@@ -1,18 +1,21 @@
-#!/bin/bash -xv
+#!/bin/bash 
 # -*- shell-script -*-
 
 syshost=$1
 
-prgm=$2
-if [ -z "$pgrm" -o ! -r "$prgm" -o ! -x "$prgm" -o ! -w "$prgm" ] ; then
-    return 0
-fi
+shift
 
-result=$(execstack $prgm)
-if [[ $result =~ ^X ]]; then
-    host=$(xalt_extract_record $prgm | grep Build_Syshost | sed -e 's/Build_Syshost\s*//')
-    if [[ $host =~ $syshost ]]; then
-	execstack -c $prgm
-    fi
-fi
+EXECSTACK=/bin/execstack
+XER=/opt/apps/xalt/xalt/bin/xalt_extract_record
 
+for prgm in "$@"; do
+  if [ -n "$prgm" -a  -r "$prgm" -a  -x "$prgm" -a  -w "$prgm" ] ; then
+      result=$($EXECSTACK $prgm 2> /dev/null)
+      if [[ $result =~ ^X ]]; then
+	  host=$($XER $prgm | grep Build_Syshost | sed -e 's/Build_Syshost\s*//')
+	  if [[ $host =~ $syshost ]]; then
+  	      execstack -c "$prgm"
+	  fi
+      fi
+  fi
+done
