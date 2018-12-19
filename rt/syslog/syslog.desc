@@ -20,7 +20,7 @@ test_descript = {
 
      initialize
      export MY_HOST=`uname -n`
-     installXALT --with-syshostConfig=env_var:MY_HOST --with-systemPath=/bin:/usr/bin:$(testDir)/bin
+     installXALT --with-syshostConfig=env_var:MY_HOST --with-systemPath=$(testDir)/bin:/bin:/usr/bin
      displayThis "buildRmapT"
      buildRmapT
 
@@ -43,12 +43,12 @@ test_descript = {
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
      displayThis  "mpirun -n 1 ./hello"
-     mpirun -n 1 ./hello "a';'d"
+     mpirun -n 3 ./hello "a';'d"
 
      displayThis  "mpicc -o hello2 $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello.x $(projectDir)/rt/mpi_hello_world.c
      displayThis  "mpirun -n 1 ./hello"
-     mpirun -n 1 ./hello.x
+     mpirun -n 2 ./hello.x
 
      displayThis  "mpirun -n 1 ./hello"
      mpirun -n 1 ./hello.x
