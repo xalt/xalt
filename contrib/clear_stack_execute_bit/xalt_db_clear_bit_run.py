@@ -34,7 +34,7 @@ class CmdLineOptions(object):
 
 def find_run_files(cursor, args, startdate, enddate):
   query = """
-  SELECT exec_path FROM xalt_link 
+  SELECT exec_path FROM xalt_run 
   WHERE uuid is not null 
   AND  num_nodes > 1
   AND date >= %s AND date < %s
@@ -95,7 +95,7 @@ def main():
   if (args.startD is not None):
     startdate = args.startD
 
-  resultT = find_link_files(cursor, args, startdate, enddate)
+  resultT = find_run_files(cursor, args, startdate, enddate)
 
   for file in resultT:
     if (args.clear_bit):
