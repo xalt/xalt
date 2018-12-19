@@ -68,10 +68,8 @@ def capture(cmd):
   return p.communicate()[0]
 
 def clear_stack_bit(file):
-  result = capture("execstack " + file)
-  if (result[0:1] == 'X'):
-    os.system("execstack -c " + file)
-    print("clearing stack bit on: ",file)
+  os.system("execstack -c " + file)
+  print("clearing stack bit on: ",file)
 
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
