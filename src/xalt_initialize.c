@@ -654,6 +654,7 @@ void wrapper_for_myfini(int signum)
   memset(&action, 0, sizeof(struct sigaction));
   sigaction(signum, &action, NULL);
   myfini();
+  raise(signum);
 }
 
 void myfini()
