@@ -36,8 +36,7 @@ def find_run_files(cursor, args, startdate, enddate):
   query = """
   SELECT exec_path FROM xalt_run 
   WHERE uuid is not null 
-  AND  num_nodes > 1
-  AND date >= %s AND date < %s
+  AND date >= %s AND date <= %s
   """
   cursor.execute(query, (startdate, enddate))
   a = cursor.fetchall()
@@ -71,7 +70,7 @@ def clear_stack_bit(file):
   result = capture("execstack " + file)
   if (result[0:1] == 'X'):
     os.system("execstack -c " + file)
-    print("clearing stack bit on: ",file)
+    #print("clearing stack bit on: ",file)
 
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
