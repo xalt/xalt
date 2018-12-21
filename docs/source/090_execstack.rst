@@ -63,8 +63,9 @@ on all executables built with XALT's hijacked linker.  XALT version
 not to be set.
 
 Normally this is not a problem.  However, with Centos 7.5 on a machine
-that any MPI program run on the latest OPA driver used with Intel MPI
-will have a problem.  A typical error message would look like::
+that any MPI program run on the latest OPA drivers for Intel's
+Omni-Path used with Intel MPI will have a problem.  A typical error
+message would look like:: 
 
     c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: mmap of status page (dabbad0008030000) failed: Operation not permitted
     c591-801.stampede2.tacc.utexas.edu.334447hfp_gen1_context_open: hfi_userinit: failed, trying again (1/3)

@@ -12,8 +12,9 @@ I try to run any application when XALT is active?
     than 4.8.5 (say Centos 6) then please see :ref:`old_gcc-label`
 
 
-Why when my site upgraded to Centos 7.5 and the latest OPA drivers and
-using Intel MPI, all XALT built programs have an error that looks like this?
+Why when my site upgraded to Centos 7.5 and the latest OPA drivers for
+Intel's Omni-Path and using Intel MPI, all XALT built programs have an
+error that looks like this? 
 
     c591-801.stampede2.tacc.utexas.edu.334447hfi_userinit: mmap of status page (dabbad0008030000) failed: Operation not permitted
     c591-801.stampede2.tacc.utexas.edu.334447hfp_gen1_context_open: hfi_userinit: failed, trying again (1/3)
