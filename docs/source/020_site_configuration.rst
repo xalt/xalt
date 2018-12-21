@@ -196,9 +196,7 @@ want to track MPI programs you can do::
 Track GPU usage
 ^^^^^^^^^^^^^^^
 
-Optionally, XALT can track NVIDIA GPU usage. You will need the DCGM
-library from NVIDIA for this to work.  DCGM is free to download from
-https://developer.nvidia.com/data-center-gpu-manager-dcgm.
+Optionally, XALT can track NVIDIA GPU usage.
 
 You can tell XALT to track GPU usage by configuring it with::
 
