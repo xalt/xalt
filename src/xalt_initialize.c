@@ -54,8 +54,18 @@
 #include "build_uuid.h"
 #include "xalt_tmpdir.h"
 
+#if USE_DCGM && USE_NVML
+#error "Both DCGM and NVML enabled.  This is not allowed."
+#endif
+
+#ifdef USE_NVML
+/* This code will only ever be active in 64 bit mode and not 32 bit mode */
+#include <dlfcn.h>
+#include <nvml.h>
+#endif
+
 #ifdef USE_DCGM
-/* This code will only every be active in 64 bit mode and not 32 bit mode*/
+/* This code will only ever be active in 64 bit mode and not 32 bit mode */
 #  include <dcgm_agent.h>
 #  include <dcgm_structs.h>
 #endif
@@ -125,6 +135,9 @@ static void            abspath(char * path, int sz);
 static volatile double epoch();
 static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
 static double          scalar_program_sample_probability(double runtime);
+#ifdef USE_NVML
+static int             load_nvml();
+#endif
 
 void myinit(int argc, char **argv);
 void myfini();
@@ -159,6 +172,26 @@ static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
 static int          num_gpus              = 0;
 static int          b64_len               = 0;
+#ifdef USE_NVML
+static unsigned long long __time          = 0;
+static void * nvml_handle                 = NULL;
+static nvmlReturn_t (*_nvmlDeviceGetAccountingBufferSize)(nvmlDevice_t,
+                                                          unsigned int *);
+static nvmlReturn_t (*_nvmlDeviceGetAccountingMode)(nvmlDevice_t,
+                                                    nvmlEnableState_t *);
+static nvmlReturn_t (*_nvmlDeviceGetAccountingPids)(nvmlDevice_t,
+                                                    unsigned int *,
+                                                    unsigned int *);
+static nvmlReturn_t (*_nvmlDeviceGetAccountingStats)(nvmlDevice_t,
+                                                     unsigned int,
+                                                     nvmlAccountingStats_t *);
+static nvmlReturn_t (*_nvmlDeviceGetCount)(unsigned int *);
+static nvmlReturn_t (*_nvmlDeviceGetHandleByIndex)(unsigned int,
+                                                   nvmlDevice_t *);
+static char * (*_nvmlErrorString)(nvmlReturn_t);
+static nvmlReturn_t (*_nvmlInit)();
+static nvmlReturn_t (*_nvmlShutdown)();
+#endif
 #ifdef USE_DCGM
 static dcgmHandle_t dcgm_handle           = NULL;
 /* This code will only every be active in 64 bit mode and not 32 bit mode*/
@@ -439,8 +472,8 @@ void myinit(int argc, char **argv)
 
   build_uuid(uuid_str);
 
-#ifdef USE_DCGM
-  /* This code will only every be active in 64 bit mode and not 32 bit mode*/
+#if USE_DCGM || USE_NVML
+  /* This code will only ever be active in 64 bit mode and not 32 bit mode */
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
@@ -451,6 +484,34 @@ void myinit(int argc, char **argv)
       if (xalt_gpu_tracking)
         {
           DEBUG0(stderr, "  GPU tracing\n");
+
+#ifdef USE_NVML
+          /* Open the NVML library at runtime.  This avoids failing if
+             the library is not available on a particular system.  In
+             that case, the handle will not be created and GPU
+             tracking will be disabled. */
+          if (load_nvml() == 0) {
+            xalt_gpu_tracking = 0;
+            break;
+          }
+
+          nvmlReturn_t result;
+          struct timeval tv;
+
+          /* Mark time the program started.  Use this to compare to
+           * GPU process timestamps in fini to only count processes
+           * that started during the lifetime of the program. */
+          gettimeofday(&tv, NULL);
+          __time = (unsigned long long)(tv.tv_sec) * 1000000 + (unsigned long long)(tv.tv_usec);
+
+          result = _nvmlInit();
+          if (result != NVML_SUCCESS)
+            {
+              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize NVML: %s\n\n", _nvmlErrorString(result));
+              xalt_gpu_tracking = 0;
+              break;
+            }
+#elif USE_DCGM
           dcgmReturn_t result;
 
           result = dcgmInit();
@@ -500,6 +561,7 @@ void myinit(int argc, char **argv)
               dcgm_handle       = NULL;
               break;
             }
+#endif
         }
     }
   while(0);
@@ -591,16 +653,18 @@ void myinit(int argc, char **argv)
       if (xalt_tracing || xalt_run_tracing)
         {
 	  char * cmd2;
-          asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, pathArg, ldLibPathArg, usr_cmdline);
+          asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+                   " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+		   ppid, my_syshost, start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, pathArg, ldLibPathArg,
+		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
-      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-	       start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, pathArg, ldLibPathArg, b64_cmdline);
+      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+	       ppid, my_syshost, start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, pathArg, ldLibPathArg,
+	       b64_cmdline);
 
       system(cmdline);
       free(cmdline);
@@ -693,37 +757,160 @@ void myfini()
   end_time = epoch();
   unsetenv("LD_PRELOAD");
 
-#ifdef USE_DCGM
-  /* This code will only ever be active in 64 bit mode and not 32 bit mode*/
-  if (xalt_gpu_tracking && dcgm_handle != NULL)
+#if USE_DCGM || USE_NVML
+  /* This code will only ever be active in 64 bit mode and not 32 bit mode */
+  if (xalt_gpu_tracking)
     {
-      /* Collect DCGM job stats */
-      dcgmReturn_t result;
-      dcgmJobInfo_t job_info;
+#ifdef USE_NVML
+      nvmlReturn_t result;
+      unsigned int device_count = 0;
 
-      DEBUG0(my_stderr, "  GPU tracing\n");
+      /* Get the number of GPU devices in the system */
+      result = _nvmlDeviceGetCount(&device_count);
+      if (result == NVML_SUCCESS)
+        {
+          DEBUG1(my_stderr, "  %d GPUs detected\n", device_count);
 
-      dcgmUpdateAllFields(dcgm_handle, 1);
-      dcgmJobStopStats(dcgm_handle, uuid_str);
+          /* Loop over GPU devices */
+          unsigned int i = 0;
+          for (i = 0 ; i < device_count ; i++)
+            {
+              nvmlDevice_t device;
+              nvmlEnableState_t mode;
+              unsigned int pid_count = 0, max_pid_count = 0;
+              unsigned int *pids = 0;
+              unsigned int num_active_pids = 0;
 
-      job_info.version = dcgmJobInfo_version2;
-      result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
-      if (result == DCGM_ST_OK)
-	{
-	  int i = 0;
-	  DEBUG1(my_stderr, "  %d GPUs detected\n", job_info.numGpus);
-	  for (i = 0 ; i < job_info.numGpus ; i++)
-	    {
-	      DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, job_info.gpus[i].numComputePids);
-	      if (job_info.gpus[i].numComputePids > 0)
-		num_gpus++;
-	    }
-	  DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
-	}
+              /* Get a device handle */
+              result = _nvmlDeviceGetHandleByIndex(i, &device);
+              if (result != NVML_SUCCESS)
+                {
+                  DEBUG2(my_stderr, "  Unable to get device handle for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  continue;
+                }
 
-      dcgmJobRemove(dcgm_handle, uuid_str);
-      dcgmStopEmbedded(dcgm_handle);
-      dcgmShutdown();
+              /* Check whether accounting mode is enabled for this device */
+              result = _nvmlDeviceGetAccountingMode(device, &mode);
+              if (result != NVML_SUCCESS)
+                {
+                  DEBUG2(my_stderr, "  Unable to get accounting mode for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  continue;
+                }
+              if (mode != NVML_FEATURE_ENABLED)
+                {
+                  DEBUG2(my_stderr, "  Accounting mode is not enabled for GPU %d. Enable accounting mode: sudo nvidia-smi -i %d -am 1\n", i, i);
+                  continue;
+                }
+
+              /* Get the size of the accounting buffer */
+              result = _nvmlDeviceGetAccountingBufferSize(device, &max_pid_count);
+              if (result != NVML_SUCCESS)
+                {
+                  DEBUG2(my_stderr, "  Unable to get the accounting buffer size for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  continue;
+                }
+
+              /* Allocate space for the accounting data */
+              pids = (unsigned int *)malloc(sizeof(unsigned int)*max_pid_count);
+              memset(pids, 0, sizeof(unsigned int)*max_pid_count);
+
+              /* Get PID accounting data */
+              pid_count = max_pid_count;
+              result = _nvmlDeviceGetAccountingPids(device, &pid_count, pids);
+              if (result != NVML_SUCCESS)
+                {
+                  DEBUG2(my_stderr, "  Unable to get accounting data for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  free(pids);
+                  continue;
+                }
+
+              /* Loop over the PID accounting data looking for PIDs that
+               * started after the program. Count those as belonging to
+               * this program execution. */
+              unsigned int j = 0;
+              for (j = 0 ; j < pid_count ; j++)
+                {
+                  nvmlAccountingStats_t stats;
+
+                  result = _nvmlDeviceGetAccountingStats(device, pids[j], &stats);
+                  if (result == NVML_SUCCESS)
+                    {
+                      /* If the GPU PID start time is later than the
+                         program start time, consider the GPU PID to
+                         belong to the program.  This would not
+                         necessarily be true if the system is
+                         shared by unrelated programs. */
+                      if (stats.startTime >= __time)
+                        {
+                          /* There is a mystery PID that appears for all
+                             GPUs.  The PID is constant and is assumed
+                             to be a CUDA cleanup process.  That PID
+                             has a maxMemoryUsage of 0 while a real
+                             PID will always have a non-zero value, so
+                             use that to exclude it. */
+                          if (stats.maxMemoryUsage > 0)
+                            {
+                              num_active_pids++;
+                              DEBUG4(my_stderr, "  PID %d startTime=%llu time=%llu isRunning=%d\n", pids[j], stats.startTime, stats.time, stats.isRunning);
+                            }
+                        }
+                      /* Note that the GPU compute process has not
+                         terminated yet.  Therefore stats.isRunning ==
+                         1, and stats.time == 0, so it is not possible
+                         to get the amount of time the GPU device was
+                         actually in use. */
+                    }
+                }
+
+              free(pids);
+
+              DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, num_active_pids);
+
+              if (num_active_pids > 0) {
+                num_gpus++;
+              }
+            }
+
+          /* Cleanup */
+          result = _nvmlShutdown();
+          if (result != NVML_SUCCESS)
+            {
+              DEBUG1(my_stderr, "  Error shutting down NVML: %s\n", _nvmlErrorString(result));
+            }
+          dlclose(nvml_handle);
+        }
+#elif USE_DCGM
+      if (dcgm_handle != NULL)
+        {
+          /* Collect DCGM job stats */
+          dcgmReturn_t result;
+          dcgmJobInfo_t job_info;
+
+          DEBUG0(my_stderr, "  GPU tracing\n");
+
+          dcgmUpdateAllFields(dcgm_handle, 1);
+          dcgmJobStopStats(dcgm_handle, uuid_str);
+
+          job_info.version = dcgmJobInfo_version2;
+          result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
+          if (result == DCGM_ST_OK)
+            {
+              int i = 0;
+              DEBUG1(my_stderr, "  %d GPUs detected\n", job_info.numGpus);
+              for (i = 0 ; i < job_info.numGpus ; i++)
+                {
+                  DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, job_info.gpus[i].numComputePids);
+                  if (job_info.gpus[i].numComputePids > 0)
+                    num_gpus++;
+                }
+              DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
+            }
+
+          dcgmJobRemove(dcgm_handle, uuid_str);
+          dcgmStopEmbedded(dcgm_handle);
+          dcgmShutdown();
+        }
+#endif
     }
 #endif
 
@@ -779,17 +966,19 @@ void myfini()
           int    dLen;
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
-          asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-                   start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, decoded);
+          asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+                   " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+		   XALT_INTERFACE_VERSION, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
+		   probability, num_gpus, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
-      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=/usr/bin:/bin %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, run_submission, XALT_INTERFACE_VERSION, ppid, my_syshost,
-               start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
+      asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+               " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+	       XALT_INTERFACE_VERSION, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
+	       probability, num_gpus, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
     }
@@ -802,6 +991,38 @@ void myfini()
     }
 }
 
+#ifdef USE_NVML
+static int load_nvml()
+{
+  /* Open the NVML library.  Let the dynamic loader find it (do not
+     specify a path). */
+  nvml_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
+  if (! nvml_handle)
+    {
+      DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so: %s\n\n",
+             dlerror());
+      return 0;
+    }
+
+  /* Load symbols */
+  *(void**)(&_nvmlDeviceGetAccountingBufferSize) =
+    dlsym(nvml_handle, "nvmlDeviceGetAccountingBufferSize");
+  *(void**)(&_nvmlDeviceGetAccountingMode) =
+    dlsym(nvml_handle, "nvmlDeviceGetAccountingMode");
+  *(void**)(&_nvmlDeviceGetAccountingPids) =
+    dlsym(nvml_handle, "nvmlDeviceGetAccountingPids");
+  *(void**)(&_nvmlDeviceGetAccountingStats) =
+    dlsym(nvml_handle, "nvmlDeviceGetAccountingStats");
+  *(void**)(&_nvmlDeviceGetCount) = dlsym(nvml_handle, "nvmlDeviceGetCount");
+  *(void**)(&_nvmlDeviceGetHandleByIndex) =
+    dlsym(nvml_handle, "nvmlDeviceGetHandleByIndex");
+  *(void**)(&_nvmlErrorString) = dlsym(nvml_handle, "nvmlErrorString");
+  *(void**)(&_nvmlInit) = dlsym(nvml_handle, "nvmlInit");
+  *(void**)(&_nvmlShutdown) = dlsym(nvml_handle, "nvmlShutdown");
+
+  return 1;
+}
+#endif
 
 static long compute_value(const char **envA)
 {

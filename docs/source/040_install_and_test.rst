@@ -46,12 +46,19 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
 
   setenv("XALT_EXECUTABLE_TRACKING",       "yes")
 
+  # Uncomment this to track GPU usage
+  #setenv("XALT_GPU_TRACKING",              "yes")
+
   local base  = "/opt/apps/xalt/xalt"  --> Change to match your site!!!
   local bin   = pathJoin(base,"bin")
 
   prepend_path{"PATH",          bin, priority="100"}
   prepend_path("LD_PRELOAD",    pathJoin(base,"$LIB/libxalt_init.so"))
   prepend_path("COMPILER_PATH", bin)
+
+  # Uncomment this to use XALT inside Singularity containers
+  #setenv("SINGULARITYENV_LD_PRELOAD", pathJoin(base,"$LIB/libxalt_init.so"))
+  #prepend_path("SINGULARITY_BINDPATH", base)
 
   ------------------------------------------------------------
   -- Only set this in production not for testing!!!
@@ -61,9 +68,16 @@ The following is a TCL modulefile::
 
   setenv XALT_EXECUTABLE_TRACKING       yes
 
+  # Uncomment this to track GPU usage
+  #setenv XALT_GPU_TRACKING              yes
+
   prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
   prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
+
+  # Uncomment this to use XALT inside Singularity containers
+  #setenv SINGULARITYENV_LD_PRELOAD /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
+  #prepend-path  SINGULARITY_BINDPATH   /opt/apps/xalt/xalt
 
   ############################################################
   ## Only set this is production not for testing!!!
@@ -72,6 +86,9 @@ The following is a TCL modulefile::
 
 Obviously, these modulefiles will need to be modified to match your
 site's location of XALT.
+
+  **Note**: To track GPU usage, XALT must also be configured with
+  --with-trackGPU=yes.
 
   **Note**: If your site do NOT use Lmod, then make sure that XALT's ld is
   always found before the regular ld

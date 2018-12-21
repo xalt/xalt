@@ -627,6 +627,7 @@ XALT_GIT_VERSION
 VERSION
 PKGV
 HAVE_DCGM
+HAVE_NVML
 EGREP
 GREP
 CPP
@@ -691,7 +692,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -785,7 +785,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1038,15 +1037,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1184,7 +1174,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1337,7 +1327,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1370,7 +1359,8 @@ Optional Packages:
                           Track functions from modules [[yes]]
   --with-xaltFilePrefix=ans
                           Prefix where the json files are written [[$HOME]]
-  --with-trackGPU=ans     Track GPU executables, [[no]]
+  --with-trackGPU=ans     Track GPU executables {yes(nvml),no,dcgm,nvml},
+                          [[no]]
   --with-trackMPI=ans     Track MPI executables, [[yes]]
   --with-trackScalarPrgms=ans
                           Track non-mpi, non-spsr executables, [[yes]]
@@ -4520,8 +4510,10 @@ fi
 
 
 
+HAVE_NVML=no
+
 HAVE_DCGM=no
-if test $XALT_GPU_TRACKING = yes; then
+if test $XALT_GPU_TRACKING = "dcgm" ; then
   ac_fn_c_check_header_mongrel "$LINENO" "dcgm_agent.h" "ac_cv_header_dcgm_agent_h" "$ac_includes_default"
 if test "x$ac_cv_header_dcgm_agent_h" = xyes; then :
 
@@ -4653,7 +4645,91 @@ else
 fi
 
   fi
+elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
+  ac_fn_c_check_header_mongrel "$LINENO" "nvml.h" "ac_cv_header_nvml_h" "$ac_includes_default"
+if test "x$ac_cv_header_nvml_h" = xyes; then :
+
+$as_echo "#define HAVE_NVML_H 1" >>confdefs.h
+
+else
+  as_fn_error $? "Unable to include GPU tracking without NVML" "$LINENO" 5
 fi
+
+
+  ac_fn_c_check_header_mongrel "$LINENO" "dlfcn.h" "ac_cv_header_dlfcn_h" "$ac_includes_default"
+if test "x$ac_cv_header_dlfcn_h" = xyes; then :
+
+$as_echo "#define HAVE_DCFCN_H 1" >>confdefs.h
+
+else
+  as_fn_error $? "Unable to include GPU tracking without dlfcn.h" "$LINENO" 5
+fi
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
+$as_echo_n "checking for library containing dlopen... " >&6; }
+if ${ac_cv_search_dlopen+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char dlopen ();
+int
+main ()
+{
+return dlopen ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' dl dld; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_search_dlopen=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext
+  if ${ac_cv_search_dlopen+:} false; then :
+  break
+fi
+done
+if ${ac_cv_search_dlopen+:} false; then :
+
+else
+  ac_cv_search_dlopen=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_dlopen" >&5
+$as_echo "$ac_cv_search_dlopen" >&6; }
+ac_res=$ac_cv_search_dlopen
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+  $as_echo "#define HAVE_DLOPEN 1" >>confdefs.h
+
+                  $as_echo "#define USE_NVML 1" >>confdefs.h
+
+                  HAVE_NVML=yes
+else
+  as_fn_error $? "Unable to find dlopen" "$LINENO" 5
+fi
+
+fi
+
 
 
 
@@ -6418,6 +6494,7 @@ echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKIN
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
 echo "XALT Using DCGM......................................" : $HAVE_DCGM
+echo "XALT Using NVML......................................" : $HAVE_NVML
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH

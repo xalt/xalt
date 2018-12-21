@@ -4,7 +4,6 @@
 #include "link_submission.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
-#include "capture.h"
 
 ArgV            argV;
 

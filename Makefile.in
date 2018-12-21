@@ -49,6 +49,7 @@ XALT_V               	:= src/xalt_version.h
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_DCGM         	:= @HAVE_DCGM@
+HAVE_NVML               := @HAVE_NVML@
 STATIC_LIBS             := @STATIC_LIBS@
 PRELOAD_ONLY            := @PRELOAD_ONLY@	
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
@@ -131,7 +132,7 @@ build_compiled: build_uuid
 	cd src;                                                                                    \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
-                LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
+                LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM) HAVE_NVML=$(HAVE_NVML) \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
 
@@ -211,6 +212,7 @@ __installMe:
 	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
+	        -e 's|@have_nvml@|$(HAVE_NVML)|g'                       	  \
 	        -e 's|@path_to_mktemp@|$(PATH_TO_MKTEMP)|g'                  	  \
 	        -e 's|@path_to_pstree@|$(PATH_TO_PSTREE)|g'                	  \
 	        -e 's|@path_to_logger@|$(PATH_TO_LOGGER)|g'                	  \

@@ -4,6 +4,7 @@
 #ifndef IN_32_BIT_MODE
 /* Define if you have DCGM support */
 #undef USE_DCGM
+#undef USE_NVML
 
 #endif
 

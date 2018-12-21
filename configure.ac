@@ -46,7 +46,7 @@ AC_ARG_WITH(xaltFilePrefix,
 
 AC_SUBST(XALT_GPU_TRACKING)
 AC_ARG_WITH(trackGPU,
-    AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables, [[no]]]),
+    AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables {yes(nvml),no,dcgm,nvml}, [[no]]]),
     XALT_GPU_TRACKING="$withval"
     AC_MSG_RESULT([XALT_GPU_TRACKING=$with_trackGPU])
     AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$with_trackGPU")dnl
@@ -320,9 +320,11 @@ if test -z "$PATH_TO_FLEX" ; then
 fi
 
 
+AC_SUBST(HAVE_NVML)
+HAVE_NVML=no
 AC_SUBST(HAVE_DCGM)
 HAVE_DCGM=no
-if test $XALT_GPU_TRACKING = yes; then
+if test $XALT_GPU_TRACKING = "dcgm" ; then
   AC_CHECK_HEADER(dcgm_agent.h,
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
@@ -332,7 +334,22 @@ if test $XALT_GPU_TRACKING = yes; then
   else
     AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   fi
+elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
+  AC_CHECK_HEADER(nvml.h,
+                  [AC_DEFINE([HAVE_NVML_H], 1,
+                     [Define to 1 if you have NVML.])],
+                  [AC_MSG_ERROR([Unable to include GPU tracking without NVML])])
+  AC_CHECK_HEADER(dlfcn.h,
+                  [AC_DEFINE([HAVE_DCFCN_H], 1,
+                     [Define to 1 if you have dlfcn.h.])],
+                  [AC_MSG_ERROR([Unable to include GPU tracking without dlfcn.h])])
+  AC_SEARCH_LIBS([dlopen], [dl dld],
+                 [AC_DEFINE([HAVE_DLOPEN], [1])
+                  AC_DEFINE([USE_NVML], [1])
+                  HAVE_NVML=yes],
+                 [AC_MSG_ERROR([Unable to find dlopen])])
 fi
+
 AC_SUBST(PKGV)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
