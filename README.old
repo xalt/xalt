@@ -1,3 +1,7 @@
+XALT 2.4+
+   (2.4.2) Added a static version of libuuid.a to built as part of XALT.
+                     
+             
 XALT 2.3+
    (2.3.1)  Turn off DCGM library in 32 bit mode.
    (2.3.2)  Fix bug in base64_decode string was off by one.

@@ -31,11 +31,38 @@ Documentation is provided at xalt.readthedocs.io on how to install and use XALT.
 
 ## ChangeLog
 
+### XALT 2.5:
+
+Features:
+   
+   1. A static version of libuuid.a is now part of XALT.
+
+   2. XALT nolonger hardcodes paths at configure time. Instead
+      it used --with-systemPath=/usr/bin:/bin to control where XALT l
+      ooks for executables such as basename
+
+   3. XALT now uses the NVML base library from DCGM to optionally track
+      GPU usage.
+
+   4. XALT can be used to track executions in a Singularity container.
+
+   5. XALT now catches signals such as SIGSEGV, etc and re-raises them to
+      record an end record.
+
+   6. XALT now treats programs like Python, R and MATLAB just like any other
+      program which simplifies scalar sampling rules.
+
+Bug Fix:
+
+   1. Modified the generated assembly code to not set GNU Stack bit.
+
+
 ### XALT 2.4:
 
 Bug Fix:
 
    1. Support for tracking GPU usage with the DCGM library from NVIDIA.
+
    2. XALT by default only uses LD_PRELOAD to track execution.
    
 ### XALT 2.3:
