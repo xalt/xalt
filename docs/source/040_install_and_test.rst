@@ -46,8 +46,8 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
 
   setenv("XALT_EXECUTABLE_TRACKING",       "yes")
 
-  # Uncomment this to track GPU usage
-  #setenv("XALT_GPU_TRACKING",              "yes")
+  -- Uncomment this to track GPU usage
+  -- setenv("XALT_GPU_TRACKING",              "yes")
 
   local base  = "/opt/apps/xalt/xalt"  --> Change to match your site!!!
   local bin   = pathJoin(base,"bin")
@@ -56,9 +56,9 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
   prepend_path("LD_PRELOAD",    pathJoin(base,"$LIB/libxalt_init.so"))
   prepend_path("COMPILER_PATH", bin)
 
-  # Uncomment this to use XALT inside Singularity containers
-  #setenv("SINGULARITYENV_LD_PRELOAD", pathJoin(base,"$LIB/libxalt_init.so"))
-  #prepend_path("SINGULARITY_BINDPATH", base)
+  -- Uncomment these two lines to use XALT inside Singularity containers
+  -- setenv("SINGULARITYENV_LD_PRELOAD", pathJoin(base,"$LIB/libxalt_init.so"))
+  -- prepend_path("SINGULARITY_BINDPATH", base)
 
   ------------------------------------------------------------
   -- Only set this in production not for testing!!!

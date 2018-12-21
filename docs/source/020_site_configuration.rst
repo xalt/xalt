@@ -152,6 +152,19 @@ and the configure line looked like::
 
      ./configure CXX=$PWD/g++.sh --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
 
+
+Defining $PATH used by XALT programs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+XALT must protect itself from changes to $PATH set by the user.  So
+instead of hard-coding the PATH to each executable used by XALT, It
+uses **--with-systemPath** to set $PATH used by all executables. By
+default, XALT uses */usr/bin:/bin* for $PATH to find the executables
+it needs.  Your site can override this default with::
+
+   --with-systemPath=/usr/bin:/bin:/usr/local/bin
+
+  
 XALT data transmission
 ^^^^^^^^^^^^^^^^^^^^^^
 

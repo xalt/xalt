@@ -10,7 +10,6 @@
 #include "Json.h"
 #include "xalt_config.h"
 #include "transmit.h"
-#include "capture.h"
 #include "buildRmapT.h"
 #include "xalt_utils.h"
 //#include "link_direct2db.h"
