@@ -68,12 +68,17 @@ Here is an example C program that needs the execstack bit set to run:
     /* sort an array, starting at address `base`,
      * containing `nmemb` members, separated by `size`,
      * comparing on the first `nbytes` only. */
-    void sort_bytes(void *base,  size_t nmemb, size_t size, size_t nbytes) {
-        int compar(const void *a, const void *b) {
-            return memcmp(a, b, nbytes);
-        }
-        qsort(base, nmemb, size, compar);
-    }
+    void sort_bytes(void *base,  size_t nmemb, size_t size, size_t nbytes)
+    {
+      int myCompare (const void * a, const void * b ) {
+        const char *pa = *(const char**)a;
+        const char *pb = *(const char**)b;
+
+        return strcmp(pa,pb);
+      }
+
+        qsort(base, nmemb, size, myCompare);
+    }   
 
     int main(int argc, char* argv[])
     {
