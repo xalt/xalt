@@ -7,14 +7,15 @@
  * comparing on the first `nbytes` only. */
 void sort_bytes(void *base,  size_t nmemb, size_t size, size_t nbytes)
 {
-  int myCompare (const void * a, const void * b ) {
+  int myCompare (const void * a, const void * b ) 
+  {
     const char *pa = *(const char**)a;
     const char *pb = *(const char**)b;
-
-    return strcmp(pa,pb);
+    
+    return strncmp(pa,pb, nbytes);
   }
 
-    qsort(base, nmemb, size, myCompare);
+  qsort(base, nmemb, size, myCompare);
 }
 
 int main(int argc, char* argv[])
