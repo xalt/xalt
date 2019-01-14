@@ -30,10 +30,7 @@ import MySQLdb, argparse
 import time
 from operator import itemgetter
 from datetime import datetime, timedelta
-try:
-  import configparser
-except:
-  import ConfigParser as configparser
+import configparser
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -540,7 +537,7 @@ def main():
   conn = MySQLdb.connect              \
          (config.get("MYSQL","HOST"), \
           config.get("MYSQL","USER"), \
-          base64.b64decode(config.get("MYSQL","PASSWD")), \
+          base64.b64decode(config.get("MYSQL","PASSWD")).decode(), \
           config.get("MYSQL","DB"))
   cursor = conn.cursor()
 

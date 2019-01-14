@@ -119,7 +119,7 @@ AC_ARG_WITH(config,
 
 AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
-    AC_HELP_STRING([--with-MySQL=ans],[Require the MySQL-python module [[yes]]]),
+    AC_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient python module [[yes]]]),
     MYSQLDB="$withval"
     AC_MSG_RESULT([MYSQLDB=$with_MySQL])
     AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL")dnl
@@ -274,7 +274,7 @@ AC_PATH_PROG(PATH_TO_GIT,git, [])
 AC_PATH_PROG(PATH_TO_FLEX,flex, [])
 AC_PATH_PROG(PATH_TO_LOGGER,logger, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
-AC_PATH_PROG(PATH_TO_PYTHON, python, "")
+AC_PATH_PROG(PATH_TO_PYTHON3, python3, "")
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   AC_MSG_ERROR([Unable to build XALT without mktemp])
@@ -303,7 +303,7 @@ if test found = no; then
 fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
-AC_PYTHON_MODULE([MySQLdb])
+AX_PYTHON3_MODULE([MySQLdb])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -428,7 +428,7 @@ if test "$MYSQLDB" = yes; then
       echo
       echo "======================================================="
       echo "Unable to install XALT without the python module: MySQLdb"
-      echo "To install it do: pip install MySQL-python"
+      echo "To install it do: pip3 install mysqlclient"
       echo "======================================================="
       rm -f makefile
       exit 1
@@ -478,37 +478,37 @@ else
     AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
 fi
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
+$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
+$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
+$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
+$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
+$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
+$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
