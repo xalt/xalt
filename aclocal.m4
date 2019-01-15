@@ -1,8 +1,8 @@
 dnl AC_PYTHON_MODULE(modname [, fatal ])
 
-AC_DEFUN([AC_PYTHON_MODULE],[
-	AC_MSG_CHECKING(python module: $1)
-	python -c "import $1" > /dev/null 2>&1
+AC_DEFUN([AX_PYTHON3_MODULE],[
+	AC_MSG_CHECKING(python3 module: $1)
+	python3 -c "import $1" > /dev/null 2>&1
 	if test $? -eq 0;
 	then
 		AC_MSG_RESULT(yes)

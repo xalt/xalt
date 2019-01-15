@@ -98,7 +98,7 @@ class XALTdb(object):
       config.read(confFn)
       self.__host    = config.get("MYSQL","HOST")
       self.__user    = config.get("MYSQL","USER")
-      self.__passwd  = base64.b64decode(config.get("MYSQL","PASSWD"))
+      self.__passwd  = base64.b64decode(config.get("MYSQL","PASSWD")).decode()
       self.__db      = config.get("MYSQL","DB")
     except configparser.NoOptionError as err:
       sys.stderr.write("\nCannot parse the config file\n")

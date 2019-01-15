@@ -14,7 +14,7 @@ initialize()
 
   rm -f  _stderr.* _stdout.* out.* err.* 
   rm -rf .xalt.d syslog.* reverseMapD
-  XALT_EPOCH_T0=$(python $projectDir/rt/xalt_epoch.py)
+  XALT_EPOCH_T0=$(python3 $projectDir/rt/xalt_epoch.py)
 
 }
 

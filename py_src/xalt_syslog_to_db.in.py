@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- python -*-
 #
 # Git Version: @git@
@@ -202,7 +202,7 @@ class ParseSyslog(object):
 
     array        = s[idx:].split(":")
     t['kind']    = array[0].strip()
-    t['value']   = base64.b64decode(array[1])
+    t['value']   = base64.b64decode(array[1]).decode()
 
     if (clusterName != ".*" and clusterName != t['syshost']):
       return t, False

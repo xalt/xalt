@@ -113,7 +113,7 @@ class SyslogV1(XALT_transmission_factory):
     sA.append(":")
     sA.append(self._syshost())
     sA.append(":")
-    sA.append(base64.b64encode(json.dumps(resultT)))
+    sA.append(base64.b64encode(json.dumps(resultT).encode()).decode()
     sA.append("\"")
     os.system("".join(sA))
     
@@ -138,11 +138,10 @@ class Syslog(XALT_transmission_factory):
     @param resultT: The json record table
     @param uuid: The unique id
     """
-    #b      = base64.b64encode(zlib.compress(json.dumps(resultT)))
-    #b      = json.dumps(resultT)
+
     jsonStr  = json.dumps(resultT)
     cmprsStr = zlib.compress(jsonStr) 
-    b64      = base64.b64encode(cmprsStr)
+    b64      = base64.b64encode(cmprsStr).decode()
 
     blkSz    = 512
     nBlks    = (len(b64) - 1)//blkSz + 1
@@ -191,7 +190,7 @@ class Broker(XALT_transmission_factory):
     sA.append(":")
     sA.append(self._syshost())
     sA.append(":")
-    sA.append(base64.b64encode(json.dumps(resultT)))
+    sA.append(base64.b64encode(json.dumps(resultT).encode()).decode())
     s = "".join(sA)
     h1 = httplib.HTTPConnection(XALT_BROKER_SERVER)
     headers = {"Content-Type":"text/plain"}
