@@ -69,7 +69,7 @@ class CreateConf(object):
     config.add_section("MYSQL")
     config.set("MYSQL","HOST",self.__host)
     config.set("MYSQL","USER",self.__user)
-    config.set("MYSQL","PASSWD",base64.b64encode(self.__passwd).encode())
+    config.set("MYSQL","PASSWD",base64.b64encode(self.__passwd.encode()).decode())
     config.set("MYSQL","DB",self.__db)
 
     fn = self.__db + "_db.conf"
