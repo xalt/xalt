@@ -61,5 +61,10 @@ Create database in MySQL
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 XALT provides a python script to create the database scheme for
-MySQL.  
+MySQL.::
 
+    $ python3 $XALT_DIR/xalt/xalt/sbin/createDB.py --confFn  $XALT_ETC_DIR/<database>_db.conf
+
+where you have changed **<database>** to whatever your database name
+is. Note that you can use either python2 or python3 with the XALT
+python scripts.
