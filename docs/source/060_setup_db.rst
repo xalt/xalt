@@ -43,7 +43,7 @@ stampede2 is called xalt_stampede2. Then create an account to write to
 that database::
 
     mysql> GRANT ALL PRIVILEGES ON xalt_stampede2.* To 'xaltUser'@'hostname' IDENTIFIED BY 'password';
-    mysql> GRANT ALL PRIVILEGES ON xalt_stampede2.* To 'xaltUser'@'*' IDENTIFIED BY 'password';
+    mysql> GRANT ALL PRIVILEGES ON xalt_stampede2.* To 'xaltUser'@'%' IDENTIFIED BY 'password';
     
 Where you have correctly set the **db name**, **userName** and **hostname** and
 **password** to match your setup.
@@ -55,4 +55,11 @@ conf_create.py for each cluster::
 
     $ cd $XALT_ETC_DIR; python $XALT_DIR/xalt/xalt/sbin/conf_create.py
 
-And answer the questions asked to match what you did in step above.
+And answer the questions asked to match what you did in step above.  
+
+Create database in MySQL
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+XALT provides a python script to create the database scheme for
+MySQL.  
+

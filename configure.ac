@@ -119,7 +119,7 @@ AC_ARG_WITH(config,
 
 AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
-    AC_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient python module [[yes]]]),
+    AC_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient/MySQL-python module [[yes]]]),
     MYSQLDB="$withval"
     AC_MSG_RESULT([MYSQLDB=$with_MySQL])
     AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL")dnl
@@ -440,7 +440,8 @@ if test "$MYSQLDB" = yes; then
       echo
       echo "======================================================="
       echo "Unable to install XALT without the python module: MySQLdb"
-      echo "To install it do: pip3 install mysqlclient"
+      echo "To install for python3 do: pip3 install mysqlclient"
+      echo "To install for python2 do: pip  install MySQL-python
       echo "======================================================="
       rm -f makefile
       exit 1
@@ -462,7 +463,7 @@ fi
 
 printf "Use contrib argparse"
 USE_CONTRIB_ARGPARSE=no
-versionStr=$(python --version 2>&1 | head -1)
+versionStr=$($PATH_TO_PYTHON --version 2>&1 | head -1)
 major_version=`expr "$versionStr" : 'Python \+\([[0-9]]\+\)\.'`
 minor_version=`expr "$versionStr" : 'Python \+[[0-9]]\+\.\([[0-9]]\+\)'`
 version=`expr $major_version \* 100000 + $minor_version`

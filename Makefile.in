@@ -201,6 +201,8 @@ __installMe:
            bareN=$${i##*/};                                           	   	  \
            fn=$${bareN%%.in*};                                        	   	  \
 	   ext=$${bareN#$$fn.}                                             	  \
+	   at="@"
+           gitS="${at}git${at}"
            oext=;                                                          	  \
 	   : echo "bareN: $$bareN, ext: $$ext";                            	  \
            [ "$$ext" = "in.py" ] && oext=".py";                            	  \
@@ -209,7 +211,7 @@ __installMe:
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
 	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
 	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
-	        -e 's|@git@|$(GIT_VERSION)|g'                              	  \
+	        -e 's|$$gitS|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \
 	        -e 's|@have_nvml@|$(HAVE_NVML)|g'                       	  \
