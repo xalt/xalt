@@ -2,7 +2,6 @@ XALT 2.5+
    Because of @git@ bug in Makefile.in that only shows up in the dist target.  The fix required
    that XALT move directly to 2.6
    
-
 XALT 2.4+
    (2.4.2) Added a static version of libuuid.a to built as part of XALT.
                      
