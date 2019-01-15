@@ -274,12 +274,12 @@ AC_PATH_PROG(PATH_TO_GIT,git, [])
 AC_PATH_PROG(PATH_TO_FLEX,flex, [])
 AC_PATH_PROG(PATH_TO_LOGGER,logger, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
-AC_PATH_PROG(PATH_TO_PYTHON3, python3, "")
+AC_PATH_PROGS(PATH_TO_PYTHON, [python3] [python2] [python], [])
 
-if test "x$PATH_TO_PYTHON3" = "x"; then
+if test "x$PATH_TO_PYTHON" = "x"; then
    echo
    echo "======================================================="
-   echo "XALT 2 requires python3 to run.
+   echo "XALT 2 requires python3, python2 or python to run."
    echo "======================================================="
    echo
    rm -f makefile
@@ -490,37 +490,37 @@ else
     AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1

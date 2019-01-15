@@ -632,7 +632,7 @@ EGREP
 GREP
 CPP
 HAVE_PYMOD_MYSQLDB
-PATH_TO_PYTHON3
+PATH_TO_PYTHON
 PATH_TO_MKTEMP
 USE_CONTRIB_ARGPARSE
 PATH_TO_UUIDGEN
@@ -4012,16 +4012,18 @@ $as_echo "no" >&6; }
 fi
 
 
-# Extract the first word of "python3", so it can be a program name with args.
-set dummy python3; ac_word=$2
+for ac_prog in python3 python2 python
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PATH_TO_PYTHON3+:} false; then :
+if ${ac_cv_path_PATH_TO_PYTHON+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  case $PATH_TO_PYTHON3 in
+  case $PATH_TO_PYTHON in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_PATH_TO_PYTHON3="$PATH_TO_PYTHON3" # Let the user override the test with a path.
+  ac_cv_path_PATH_TO_PYTHON="$PATH_TO_PYTHON" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -4031,7 +4033,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PATH_TO_PYTHON3="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_PATH_TO_PYTHON="$as_dir/$ac_word$ac_exec_ext"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -4039,25 +4041,27 @@ done
   done
 IFS=$as_save_IFS
 
-  test -z "$ac_cv_path_PATH_TO_PYTHON3" && ac_cv_path_PATH_TO_PYTHON3=""""
   ;;
 esac
 fi
-PATH_TO_PYTHON3=$ac_cv_path_PATH_TO_PYTHON3
-if test -n "$PATH_TO_PYTHON3"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_PYTHON3" >&5
-$as_echo "$PATH_TO_PYTHON3" >&6; }
+PATH_TO_PYTHON=$ac_cv_path_PATH_TO_PYTHON
+if test -n "$PATH_TO_PYTHON"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_PYTHON" >&5
+$as_echo "$PATH_TO_PYTHON" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
 
+  test -n "$PATH_TO_PYTHON" && break
+done
 
-if test "x$PATH_TO_PYTHON3" = "x"; then
+
+if test "x$PATH_TO_PYTHON" = "x"; then
    echo
    echo "======================================================="
-   echo "XALT 2 requires python3 to run.
+   echo "XALT 2 requires python3, python2 or python to run."
    echo "======================================================="
    echo
    rm -f makefile
@@ -4996,37 +5000,37 @@ fi
 
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_regex.template --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern env_patterns --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern path_patterns --input $ac_confdir/src/tmpl/xalt_path_parser.template --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi
 
-$PATH_TO_PYTHON3 $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
+$PATH_TO_PYTHON $ac_confdir/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --pattern hostname_patterns --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
