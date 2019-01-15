@@ -4054,6 +4054,18 @@ fi
 
 
 
+if test "x$PATH_TO_PYTHON3" = "x"; then
+   echo
+   echo "======================================================="
+   echo "XALT 2 requires python3 to run.
+   echo "======================================================="
+   echo
+   rm -f makefile
+   exit 1
+fi
+
+
+
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   as_fn_error $? "Unable to build XALT without mktemp" "$LINENO" 5
 fi

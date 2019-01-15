@@ -276,6 +276,18 @@ AC_PATH_PROG(PATH_TO_LOGGER,logger, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
 AC_PATH_PROG(PATH_TO_PYTHON3, python3, "")
 
+if test "x$PATH_TO_PYTHON3" = "x"; then
+   echo
+   echo "======================================================="
+   echo "XALT 2 requires python3 to run.
+   echo "======================================================="
+   echo
+   rm -f makefile
+   exit 1
+fi
+
+
+
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   AC_MSG_ERROR([Unable to build XALT without mktemp])
 fi
