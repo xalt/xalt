@@ -31,6 +31,17 @@ Documentation is provided at xalt.readthedocs.io on how to install and use XALT.
 
 ## ChangeLog
 
+### XALT 2.6:
+
+Features/Bug:
+
+   1. All python scripts used to build XALT and load the database are now
+      python2/python3 compatible.
+
+   2. Update documentation on how to create the database.
+
+   3. Fix bug where the @git@ string was replaced in the wrong place in Makefile.in
+
 ### XALT 2.5:
 
 Features:
@@ -38,8 +49,8 @@ Features:
    1. A static version of libuuid.a is now part of XALT.
 
    2. XALT nolonger hardcodes paths at configure time. Instead
-      it used --with-systemPath=/usr/bin:/bin to control where XALT l
-      ooks for executables such as basename
+      it used --with-systemPath=/usr/bin:/bin to control where XALT 
+      looks for executables such as basename
 
    3. XALT now uses the NVML base library from DCGM to optionally track
       GPU usage.
