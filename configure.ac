@@ -307,7 +307,7 @@ if test found = no; then
    echo
    echo "======================================================="
    echo "XALT 2 does not support transmission style: $TRANSMISSION"
-   echo "See the manual for supported methods"
+   echo "See the xalt.readthedocs.io for supported methods"
    echo "======================================================="
    echo
    rm -f makefile
@@ -325,7 +325,7 @@ if test -z "$PATH_TO_FLEX" ; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without flex"
-   echo "See the manual for details"
+   echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
    exit 1
@@ -409,7 +409,7 @@ if test "$HAVE_CXX11" = no; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without g++ supporting -std=c++11"
-   echo "See the manual for details"
+   echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
    exit 1
@@ -419,7 +419,7 @@ if test "$XALT_CONFIG_PY" = no; then
    echo
    echo "======================================================="
    echo "Unable to install XALT without setting --with-config=..."
-   echo "See the manual for details"
+   echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
    exit 1
@@ -441,7 +441,7 @@ if test "$MYSQLDB" = yes; then
       echo "======================================================="
       echo "Unable to install XALT without the python module: MySQLdb"
       echo "To install for python3 do: pip3 install mysqlclient"
-      echo "To install for python2 do: pip  install MySQL-python
+      echo "To install for python2 do: pip  install MySQL-python"
       echo "======================================================="
       rm -f makefile
       exit 1
@@ -454,7 +454,7 @@ if test "$SYSHOST_CONFIG" = no; then
    echo "Unable to install XALT without setting --with-syshostConfig=..."
    echo "Your choices are hardcode, nth_name, read_file, mapping,"
    echo "strip_nodename_numbers and env_var."
-   echo "See the manual for details."
+   echo "See the xalt.readthedocs.io for details."
    echo "======================================================="
    rm -f makefile
    exit 1
