@@ -201,8 +201,6 @@ __installMe:
            bareN=$${i##*/};                                           	   	  \
            fn=$${bareN%%.in*};                                        	   	  \
 	   ext=$${bareN#$$fn.} 	                                            	  \
-	   at="@";                                                         	  \
-           gitS="$${at}git$${at}";                                            	  \
            oext=;                                                          	  \
 	   : echo "bareN: $$bareN, ext: $$ext";                            	  \
            [ "$$ext" = "in.py" ] && oext=".py";                            	  \
