@@ -315,7 +315,7 @@ if test found = no; then
 fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
-AX_PYTHON3_MODULE([MySQLdb])
+AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],

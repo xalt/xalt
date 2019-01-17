@@ -1,19 +1,19 @@
-dnl AC_PYTHON_MODULE(modname [, fatal ])
+dnl AX_PYTHON_MODULE(path_to_python, modname [, fatal ])
 
-AC_DEFUN([AX_PYTHON3_MODULE],[
-	AC_MSG_CHECKING(python3 module: $1)
-	python3 -c "import $1" > /dev/null 2>&1
+AC_DEFUN([AX_PYTHON_MODULE],[
+	AC_MSG_CHECKING(python module: $2)
+	$1 -c "import $2" > /dev/null 2>&1
 	if test $? -eq 0;
 	then
 		AC_MSG_RESULT(yes)
-		eval AS_TR_CPP(HAVE_PYMOD_$1)=yes
+		eval AS_TR_CPP(HAVE_PYMOD_$2)=yes
 	else
 		AC_MSG_RESULT(no)
-		eval AS_TR_CPP(HAVE_PYMOD_$1)=no
+		eval AS_TR_CPP(HAVE_PYMOD_$2)=no
 		#
-		if test -n "$2"
+		if test -n "$3"
 		then
-			AC_MSG_ERROR(failed to find required module $1)
+			AC_MSG_ERROR(failed to find required module $2)
 			exit 1
 		fi
 	fi
