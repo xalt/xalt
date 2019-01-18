@@ -177,7 +177,7 @@ class XALTdb(object):
       exec_path   = resultT['exec_path'][:1024]
       link_prg    = resultT['link_program'][:64]
       link_path   = resultT['link_path']
-      cwd         = linkT.get('wd',"UNKNOWN")[:1024]
+      cwd         = resultT.get('wd',"UNKNOWN")[:1024]
       link_mname  = obj2module(link_path,reverseMapT)
       link_line   = json.dumps(link_lineA)
       build_user  = resultT['build_user']
