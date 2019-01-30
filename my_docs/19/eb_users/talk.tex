@@ -23,7 +23,7 @@
 \begin{document}
 \title[XALT]{XALT: Understanding HPC Usage via Job Level Collection}
 \author{Robert McLay} 
-\date{November 14, 2018} 
+\date{January 31, 2019} 
 
 % page 1
 \frame{\titlepage} 
@@ -89,8 +89,6 @@
   \begin{itemize}
     \item File: collect nightly
     \item Syslog: Use Syslog filtering (or ELK)
-    \item Direct to DB. (Not in XALT 2)
-    \item Future: RabbitMQ
   \end{itemize}
 \end{frame}
 
@@ -113,7 +111,7 @@
       \item Must protect XALT from unexpected changes in the environment.
       \item Solution: LD\_LIBRARY\_PATH="@ld\_lib\_path@"
         PATH=/usr/bin:/bin C++-exec ...
-      \item Everything that depends on PATH must be hard coded
+      \item set \texttt{PATH} at configure time.
     \end{itemize}
 \end{frame}
 
@@ -192,7 +190,7 @@ void myfini()
     \item Uses FLEX to compile in patterns
     \item Use regex expression to control what to keep and ignore.
     \item Three files containing regex patterns, converted to code.
-    \item Accept List Tests: Track /usr/bin/ddt, /bin/tar
+    \item Accept List Tests: Track /usr/bin/ddt, /bin/tar, /usr/bin/perl
     \item Ignore List Tests: /usr/bin, /bin, /sbin, ...
   \end{itemize}
 \end{frame}
@@ -202,20 +200,20 @@ void myfini()
     \frametitle{TACC\_config.py}
  {\small
     \begin{semiverbatim}
-hostname_patterns = [
+hostname\_patterns = [
   ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
   ]
-path_patterns = [
+path\_patterns = [
     ['PKGS',  r'.*/python[0-9][^/][^/]*'],
     ['PKGS',  r'.*/R'],
     ['KEEP',  r'^/usr/bin/ddt'],
     ['SKIP',  r'^/usr/.*'],
     ['SKIP',  r'^/bin/.*'],
   ]
-env_patterns = [
+env\_patterns = [
     [ 'SKIP', r'^MKLROOT=.*' ],
-    [ 'SKIP', r'^MKL_DIR=.*' ],
-    [ 'KEEP', r'^I_MPI_INFO_NUMA_NODE_NUM=.*'],
+    [ 'SKIP', r'^MKL\_DIR=.*' ],
+    [ 'KEEP', r'^I\_MPI\_INFO\_NUMA\_NODE\_NUM=.*'],
   ]
     \end{semiverbatim}
 }
@@ -225,12 +223,25 @@ env_patterns = [
 \begin{frame}{Speeding up XALT 2}
   \begin{itemize}
     \item Minimal impact on jobs ($>$ 0.09 secs)
-    \item Non-mpi jobs only produce end record
-    \item Filter by job\_id after transport.
-    \item No more than 100 executions per job\_id.  (Changable)
-    \item A launcher job 5 million executions in two hours.
+    \item All Non-MPI programs only produce end record
+    \item This supports sampling!
   \end{itemize}
 \end{frame}
+
+% page 18
+\begin{frame}{Sampling Non-MPI programs}
+  \begin{itemize}
+    \item XALT has sampling rules (site configurable!)
+    \item 0 mins $<$ 5 mins $\Rightarrow$ 0.01\% recorded  
+    \item 5 mins $<$ 10 mins $\Rightarrow$ 1\% recorded  
+    \item 10 mins $<  \infty \Rightarrow$ 100\% recorded
+    \item Can now track perl, awk, sed, gzip etc
+  \end{itemize}
+\end{frame}
+
+
+
+
 
 % page 19
 \begin{frame}{Tracking R packages}
@@ -238,8 +249,7 @@ env_patterns = [
     \item XALT 2 can now track R package usage
     \item James McComb \& Michael Scott from IU developed the R part
     \item They do this by intercepting the ``imports''
-    \item Still in preliminary stages
-    \item Plan to support Python later.
+    \item Plan to support Python and MATLAB later.
   \end{itemize}
 \end{frame}
 
@@ -260,17 +270,17 @@ env_patterns = [
 ****************************************
 XALT Watermark: hello
 ****************************************
-Build_Epoch              1510257139.4624
-Build_LMFILES            /opt/apps/modulefiles/intel/17.0.4.lua:...
-Build_LOADEDMODULES      intel/17.0.4:impi/17.0.3:python/2.7.13:TACC:...
-Build_OS                 Linux 3.10.0-514.26.2.el7.x86_64
-Build_Syshost            stampede2
-Build_UUID               586d5943-67eb-480b-a2fe-35e87a1f22c7
-Build_User               mclay
-Build_compiler           icc
-Build_date               Thu Nov 09 13:52:19 2017
-Build_host               c455-011.stampede2.tacc.utexas.edu
-XALT_Version             1.7.7-devel
+Build\_Epoch              1510257139.4624
+Build\_LMFILES            /opt/apps/modulefiles/intel/17.0.4.lua:...
+Build\_LOADEDMODULES      intel/17.0.4:impi/17.0.3:python/2.7.13:TACC:...
+Build\_OS                 Linux 3.10.0-514.26.2.el7.x86_64
+Build\_Syshost            stampede2
+Build\_UUID               586d5943-67eb-480b-a2fe-35e87a1f22c7
+Build\_User               mclay
+Build\_compiler           icc
+Build\_date               Thu Nov 09 13:52:19 2017
+Build\_host               c455-011.stampede2.tacc.utexas.edu
+XALT\_Version             1.7.7-devel
     \end{semiverbatim}
 }
 \end{frame}
@@ -306,7 +316,6 @@ XALT_Version             1.7.7-devel
       \begin{itemize}
         \item Source: github.com/xalt/xalt.git, xalt.sf.net
         \item Documentation: XALT 2 $\Rightarrow$ xalt.readthedocs.org
-        \item This Talk: https://sourceforge.net/projects/xalt/files/Presentations/SC18\_TACC\_Booth\_XALT\_talk.pdf/download
       \end{itemize}
   \end{itemize}
 \end{frame}

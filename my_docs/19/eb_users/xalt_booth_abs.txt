@@ -1,9 +1,0 @@
-Title:     XALT: How to track and understand what your users are running on your system.
-Presentor: Robert McLay
-Length:    30 mins
-Abstract:
-
-XALT is a extremely lightweight solution to track what your users do.
-XALT tracks both MPI and non-MPI programs.  Come see how easy
-it is to better understand what your users are doing.  Let's learn how
-to drink from the firehose of job data that your site is generating.
