@@ -6,16 +6,16 @@
 # XALT: A tool that tracks users jobs and environments on a cluster.
 # Copyright (C) 2013-2014 University of Texas at Austin
 # Copyright (C) 2013-2014 University of Tennessee
-# 
+#
 # This library is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 2.1 of 
-# the License, or (at your option) any later version. 
+# published by the Free Software Foundation; either version 2.1 of
+# the License, or (at your option) any later version.
 #
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-# Lesser  General Public License for more details. 
+# Lesser  General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free
@@ -129,7 +129,10 @@ def read_file(fname,output):
   sA.append("  char * my_syshost = NULL;")
   sA.append("  xalt_fgets_alloc(fp, &my_syshost, &sz);")
   sA.append("  int len = strlen(my_syshost);")
-  sA.append("  my_syshost[len-1] = '\\0'; // overwrite trailing newline")
+  sA.append("  if (len > 0) {")
+  sA.append("    if (my_syshost[len-1] == '\\n')")
+  sA.append("      my_syshost[len-1] = '\\0'; // overwrite trailing newline")
+  sA.append("    }")
   sA.append("  return my_syshost;")
   sA.append("}")
   xalt_syshost_main(sA)
@@ -218,10 +221,10 @@ def mapping(file,output):
   with open(file) as json_file:
     pairs = json.load(json_file)
 
-  
+
   sA.append("#include <regex.h>")
   add_hostname_routine(sA)
-  
+
   sA.append("struct Pair")
   sA.append("{")
   sA.append("  const char * key;")
@@ -272,7 +275,7 @@ def mapping(file,output):
   f   = open(output,"w")
   f.write(s)
   f.close()
-  
+
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -280,18 +283,18 @@ class CmdLineOptions(object):
   def __init__(self):
     """ Empty Ctor """
     pass
-  
+
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--input",    dest='input',    action="store", default="unknown",        help="input string")
     parser.add_argument("--output",   dest='output',   action="store", default="xalt_syshost.c", help="output c routine")
     args = parser.parse_args()
-    
+
     return args
 
 kindA = [ ['hardcode', hardcode ], ['nth_name', nth_name],
-          ['read_file', read_file], ['mapping', mapping], 
+          ['read_file', read_file], ['mapping', mapping],
           ['strip_nodename_numbers', strip_nodename_numbers],
           ['env_var', env_var] ]
 
