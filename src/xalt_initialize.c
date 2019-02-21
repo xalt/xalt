@@ -108,8 +108,8 @@ static const char * xalt_build_descriptA[] = {
   "Not possible (2)",                             /* 2 */
   "Not possible (3)",                             /* 3 */
   "track MPI programs only",                      /* 4 */
-  "Not possible (5)",                             /* 5 */
-  "track all programs"                            /* 6 */
+  "track all programs",                           /* 5 */
+  "Not possible (6)",                             /* 6 */
   "Not possible (7)",                             /* 7 */
 };
 

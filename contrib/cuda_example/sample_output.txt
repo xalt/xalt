@@ -1,0 +1,37 @@
+ 
+Summary
+-------
+Number of elements in a row/column       ::          16386
+Number of inner elements in a row/column ::          16384
+Total number of elements                 ::      268500996
+Total number of inner elements           ::      268435456
+Memory (GB) used per array               ::        1.00024
+Threshold                                ::           0.10
+Smoothing constants (a, b, c)            :: 0.05 0.10 0.40
+Number   of elements below threshold (X) ::       26845942
+Fraction of elements below threshold     ::    1.00009E-01
+Number   of elements below threshold (Y) ::           2954
+Fraction of elements below threshold     ::    1.10045E-05
+Number   of elements below threshold (Y) ::           2954
+Fraction of elements below threshold     ::    1.10045E-05
+Maximum abs. difference between y and yd ::    1.19209E-07
+Blocksize                                ::             16        16         1
+Gridsize                                 ::           1024      1024         1
+Number of threads in a block             ::            256
+Number of blocks in the grid             ::        1048576
+Total number of threads                  ::      268435456
+ 
+Action           ::   time/s     Time resolution = 1.0E-07
+------
+CPU: Alloc-X     ::   0.000
+CPU: Alloc-Y&YD  ::   0.000
+GPU: Alloc-D_X   ::   0.113
+GPU: Alloc-D_Y   ::   0.006
+CPU: Init-X      ::   2.775
+CPU: Smooth      ::   1.419
+GPU: Copy-in     ::   0.377
+GPU: Smooth      ::   0.223
+GPU: Copy-out    ::   0.569
+CPU: Count-X     ::   0.768
+CPU: Count-Y     ::   0.249
+CPU: Count-YD    ::   0.271

@@ -113,7 +113,7 @@ class SyslogV1(XALT_transmission_factory):
     sA.append(":")
     sA.append(self._syshost())
     sA.append(":")
-    sA.append(base64.b64encode(json.dumps(resultT).encode()).decode()
+    sA.append(base64.b64encode(json.dumps(resultT).encode()).decode())
     sA.append("\"")
     os.system("".join(sA))
     
