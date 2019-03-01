@@ -5,4 +5,3 @@ XALT 2.6+
             Fix bug with the storing of cwd in xalt_link.
     (2.6.4) Fix bug with SYSHOST and errors in xalt_build_descriptA table.
     (2.6.5) fix bug in xalt_transmission_factory.py
-    
