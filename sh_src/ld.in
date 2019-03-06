@@ -196,7 +196,6 @@ SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=$XALT_BIN/my_uuidgen
-PyPATH="/usr/bin:/bin"
 
 
 UUID=$($UUIDGEN)
@@ -241,7 +240,7 @@ fi
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
 if [ -f "$ARGSRC" ]; then
-  PATH=@xalt_system_path@ as $ARGSRC $BIT32FLAG -o $OBJ
+  as $ARGSRC $BIT32FLAG -o $OBJ
 else
   OBJ=""
 fi
@@ -253,19 +252,22 @@ function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
      STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
+     tracing_msg "Using ld to find functions: " $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null
      $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  else
+     touch $FUNCRAW
+     tracing_msg "Not function tracking"
   fi
 }
 
 function_tracking
-
-tracing_msg $MY_CMD "${argA[@]}"
 
 #############################################################
 # If the user requested print options such as --print-map
 # then run link again with those options
 
 if [ -n "$PrintOptions" ]; then
+    tracing_msg "Having Printing Options:" $MY_CMD "${printOptA[@]}" "${argA[@]}"
     $MY_CMD "${printOptA[@]}" "${argA[@]}"
 fi
 
@@ -284,14 +286,17 @@ fi
 if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
     XALT_INIT_ROUTINE_OBJ=
     LIBDCGM=
-    tracing_msg "Shared library build detected not adding XALT initialize routines to user code"
+    tracing_msg "Not adding XALT initialize routines to user code"
 fi
 
 
-PATH=@xalt_system_path@ $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1
+tracing_msg "$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1"
+$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
+   tracing_msg "Bad status when capturing tracing link output"
+   tracing_msg $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
    $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
    PATH=@xalt_system_path@ rm -rf $WRKDIR  
    exit $status
