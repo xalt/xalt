@@ -4,4 +4,7 @@ XALT 2.6+
     (2.6.3) Fix bug when requiring python scripts like xalt_syslog_to_db.py to be required to run python3.
             Fix bug with the storing of cwd in xalt_link.
     (2.6.4) Fix bug with SYSHOST and errors in xalt_build_descriptA table.
-    (2.6.5) fix bug in xalt_transmission_factory.py
+    (2.6.5) Fix bug in xalt_transmission_factory.py
+    (2.6.6) Fix bug in ld.in where the path was restricted for commands like as and ld that must have
+            the user's Path.
+            
