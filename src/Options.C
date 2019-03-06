@@ -38,10 +38,11 @@ long convert_long(const char* name, const char* s)
 
 Options::Options(int argc, char** argv)
   : m_start(0.0), m_end(0.0), m_ntasks(1L), m_ngpus(0L),
-    m_interfaceV(0L),         m_ppid(0L),
-    m_syshost("unknown"),     m_uuid("unknown"),
-    m_exec("unknown"),        m_userCmdLine("[]"),
-    m_exec_type("unknown"),   m_confFn("xalt_db.conf")
+    m_interfaceV(0L),         m_pid(0L),
+    m_ppid(0L),               m_syshost("unknown"),
+    m_uuid("unknown"),        m_exec("unknown"),
+    m_userCmdLine("[]"),      m_exec_type("unknown"),
+    m_confFn("xalt_db.conf")
 {
   int   c;
 
@@ -58,7 +59,8 @@ Options::Options(int argc, char** argv)
         {"ngpus",      required_argument, NULL, 'g'},
         {"ntasks",     required_argument, NULL, 'n'},
         {"path",       required_argument, NULL, 'P'},
-        {"ppid",       required_argument, NULL, 'p'},
+        {"pid",        required_argument, NULL, 'p'},
+        {"ppid",       required_argument, NULL, 'q'},
         {"prob",       required_argument, NULL, 'b'},
         {"start",      required_argument, NULL, 's'},
         {"syshost",    required_argument, NULL, 'h'},
@@ -116,9 +118,13 @@ Options::Options(int argc, char** argv)
           if (optarg)
             m_ntasks = convert_long("ntasks", optarg);
 	  break;
-        case 'p':
+        case 'q':
           if (optarg)
             m_ppid = (pid_t) convert_long("ppid", optarg);
+          break;
+        case 'p':
+          if (optarg)
+            m_pid = (pid_t) convert_long("pid", optarg);
           break;
 	case 's':
           if (optarg)

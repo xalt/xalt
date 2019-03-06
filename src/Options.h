@@ -12,6 +12,7 @@ public:
   long          ntasks()      { return m_ntasks;      }
   long          ngpus()       { return m_ngpus;       }
   long          interfaceV()  { return m_interfaceV;  }
+  pid_t         pid()         { return m_pid;         }
   pid_t         ppid()        { return m_ppid;        }
   double        startTime()   { return m_start;       }
   double        endTime()     { return m_end;         }
@@ -33,6 +34,7 @@ private:
   long        m_ntasks;
   long        m_ngpus;
   long        m_interfaceV;
+  pid_t       m_pid;
   pid_t       m_ppid;
   std::string m_syshost;
   std::string m_uuid;
