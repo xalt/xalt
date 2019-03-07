@@ -1,6 +1,8 @@
 #ifndef XALT_TMPDIR_H
 #define XALT_TMPDIR_H
 
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {
