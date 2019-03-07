@@ -245,7 +245,7 @@ else
   OBJ=""
 fi
 
-trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT
+trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 
 ###################################################################
 # start a subshell in the background for the intentional
