@@ -30,7 +30,7 @@ int main(int argc, char* argv[], char* env[])
   char    dateStr[DATESZ];
   time_t  time;
   double  t0, t1;
-  double  t_ldd, t_sha1;
+  double  t_maps, t_sha1;
   DTable  measureT;
   bool    end_record = (options.endTime() > 0.0);
   
@@ -90,11 +90,11 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Parse the output of ldd for this executable (start record only)
   std::vector<Libpair> libA;
-  parseLDD(options.exec(), options.ldLibPath(), libA, t_ldd, t_sha1);
-  DEBUG0(stderr,"  Parsed LDD\n");
+  parseProcMaps(options.pid(), libA, t_maps, t_sha1);
+  DEBUG0(stderr,"  Parsed ProcMaps\n");
 
-  measureT["06_ParseLDD_ldd_"] = t_ldd;
-  measureT["06_ParseLDD_sha1"] = t_sha1;
+  measureT["06_ParseProcMaps"] = t_maps;
+  measureT["06_SO_sha1_comp_"] = t_sha1;
   
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)

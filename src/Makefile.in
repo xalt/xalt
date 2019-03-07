@@ -79,7 +79,7 @@ CXX_SRC     :=                             \
                extractMain.C    	   \
                extractXALTRecord.C    	   \
                parseJsonStr.C         	   \
-               parseLDD.C             	   \
+               parseProcMaps.C             \
                parseLDTrace.C         	   \
                test_record_pkg.C           \
                translate.C            	   \
@@ -103,8 +103,8 @@ TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
 XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C      \
                 buildRmapT.C buildUserT.C capture.C extractXALTRecord.C parseJsonStr.C           \
-                parseLDD.C translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C     \
-                pkgRecordTransmit.C
+                translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C                \
+                parseProcMaps.C pkgRecordTransmit.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c \
                 zstring.c base64.c xalt_tmpdir.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))

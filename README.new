@@ -7,4 +7,4 @@ XALT 2.6+
     (2.6.5) Fix bug in xalt_transmission_factory.py
     (2.6.6) Fix bug in ld.in where the path was restricted for commands like as and ld that must have
             the user's Path.
-            
+    (2.6.7) Now support reading /proc/$PID/maps instead of parsing the output of ldd
