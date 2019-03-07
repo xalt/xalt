@@ -245,6 +245,8 @@ else
   OBJ=""
 fi
 
+trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT
+
 ###################################################################
 # start a subshell in the background for the intentional
 # failed link for function tracking
