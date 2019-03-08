@@ -346,7 +346,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/lex.__XALT_path_preload_32.o \
                                   $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o \
                                   $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o        \
-                                  $(DESTDIR)$(LIB)/xalt_tmpdir.o                \
+                                  $(DESTDIR)$(LIB)/xalt_tmpdir_32.o             \
                                   $(DESTDIR)$(LIB)/base64.o                     \
                                   $(MY_HOSTNAME_PARSER_OBJ_32)
 	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^  -l:libuuid.a
