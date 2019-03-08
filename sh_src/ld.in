@@ -203,6 +203,7 @@ WRKDIR=$(PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
+ARG_C_SRC=$WRKDIR/xalt_c.c
 ARGOBJ=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
@@ -224,7 +225,7 @@ fi
 COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 
-EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_ASSEMBLY "$UUID" "$SYSHOST" "$ARGSRC" "$ARG_C_SRC" "$COMP_T")
 DATESTR=$(PATH=@xalt_system_path@ date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S")
 INT_EPOCH=$(PATH=@xalt_system_path@ echo "( $EPOCH )/1" | bc)
 FRAC_EPOCH=$(PATH=@xalt_system_path@ echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
@@ -245,7 +246,7 @@ else
   OBJ=""
 fi
 
-trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
+#trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 
 ###################################################################
 # start a subshell in the background for the intentional
@@ -300,7 +301,7 @@ if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    tracing_msg "Bad status when capturing tracing link output"
    tracing_msg $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
    $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
-   PATH=@xalt_system_path@ rm -rf $WRKDIR  
+   #PATH=@xalt_system_path@ rm -rf $WRKDIR  
    exit $status
 fi
 
@@ -321,6 +322,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 ###################################################################
 # Generate link data.  
 PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
-PATH=@xalt_system_path@ rm -rf $WRKDIR  
+#PATH=@xalt_system_path@ rm -rf $WRKDIR  
 
 exit $status
