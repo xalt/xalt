@@ -57,7 +57,7 @@ test_descript = {
      
      displayThis "Setting LD_PRELOAD, ./hello.mpi"
      export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
-     ./hello.mpi --ntasks p "a';'d"
+     LD_BIND_NOW=1 ./hello.mpi --ntasks p "a';'d"
      
      g++ -o try.rd $(testDir)/try.C -rdynamic
 
