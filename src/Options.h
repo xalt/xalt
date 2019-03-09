@@ -26,6 +26,7 @@ public:
   std::string&  confFn()      { return m_confFn;      }
   std::string&  path()        { return m_path;        }
   std::string&  ldLibPath()   { return m_ldLibPath;   }
+  std::string&  watermark()   { return m_watermark;   }
 
 private:
   double      m_start;
@@ -45,6 +46,7 @@ private:
   std::string m_path;
   std::string m_ldLibPath;
   std::string m_kind;
+  std::string m_watermark;
 };
 
 

@@ -42,7 +42,7 @@ Options::Options(int argc, char** argv)
     m_ppid(0L),               m_syshost("unknown"),
     m_uuid("unknown"),        m_exec("unknown"),
     m_userCmdLine("[]"),      m_exec_type("unknown"),
-    m_confFn("xalt_db.conf")
+    m_confFn("xalt_db.conf"), m_watermark("FALSE")
 {
   int   c;
 
@@ -65,6 +65,7 @@ Options::Options(int argc, char** argv)
         {"start",      required_argument, NULL, 's'},
         {"syshost",    required_argument, NULL, 'h'},
         {"uuid",       required_argument, NULL, 'u'},
+        {"watermark",  optional_argument, NULL, 'w'},
         {0,         0,                 0,     0 }
       };
       
@@ -134,6 +135,10 @@ Options::Options(int argc, char** argv)
           if (optarg)
             m_uuid = optarg;
 	  break;
+        case 'w':
+          if (optarg)
+            m_watermark = optarg;
+	  break;
         case 'x':
           if (optarg)
             m_exec = optarg;
@@ -184,5 +189,12 @@ Options::Options(int argc, char** argv)
         m_exec_type = "script";
       else
         m_exec_type = "binary";
+    }
+
+  if (m_watermark != "FALSE")
+    {
+      int wlen;
+      char* decoded = reinterpret_cast<char*>(base64_decode(m_watermark.c_str(), m_watermark.size(), &jLen));
+      m_watermark = decoded;
     }
 }

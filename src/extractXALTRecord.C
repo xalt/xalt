@@ -2,11 +2,11 @@
 #include "capture.h"
 #include "xalt_config.h"
 
-void extractXALTRecord(std::string& exec, Table& recordT)
+bool extractXALTRecordString(std::string& exec, std::string& watermark)
 {
-  std::string n, v, cmd;
+  std::string cmd;
   Vstring     result;
-
+  
   // Capture the XALT record (if it exists) into result.
   cmd  = "PATH=" XALT_SYSTEM_PATH " objdump -s -j .xalt " + exec + " 2> /dev/null";
     
@@ -27,7 +27,10 @@ void extractXALTRecord(std::string& exec, Table& recordT)
 
   // If "Contents of section" was not found then exec doesn't have an XALT section => return 
   if (! found)
-    return;
+    {
+      watermark = "FALSE";
+      return false;
+    }
 
   /*
    * The results of the objdump command looks like this (after the "Contents ..." line)
@@ -72,23 +75,31 @@ void extractXALTRecord(std::string& exec, Table& recordT)
       xaltRecord       += line.substr(idx, len-idx-1);
     }
 
-  // Extract key value pairs from xaltRecord.
+  watermark = xaltRecord;
+  return true;
+}
+
+void buildXALTRecordT(std::string& watermark, Table& recordT)
+{
+
+  std::string n, v;
   std::string::size_type s1, s2, s3, s4;
 
+  // Extract key value pairs from watermark.
   s1 = 0;
   while(1)
     {
-      s1 = xaltRecord.find("<", s1);
+      s1 = watermark.find("<", s1);
       if (s1 == std::string::npos)
         break;
 
       s1++;
-      s2 = xaltRecord.find(">%%",s1);
-      n  = xaltRecord.substr(s1,s2-s1);
+      s2 = watermark.find(">%%",s1);
+      n  = watermark.substr(s1,s2-s1);
 
-      s3 = xaltRecord.find("%%.",s2);
+      s3 = watermark.find("%%.",s2);
       
-      v = xaltRecord.substr(s2+3,s3 - (s2+3));
+      v = watermark.substr(s2+3,s3 - (s2+3));
 
       s4 = 0;
       while(1)

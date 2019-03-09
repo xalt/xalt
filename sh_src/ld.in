@@ -185,6 +185,7 @@ fi
 MY_HOSTNAME_PARSER_STRING=@my_hostname_parser@
 MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
 
+XALT_INC=$XALT_DIR/include
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_BIN=$XALT_DIR/bin
 XALT_SITE_DIR=$XALT_DIR/site
@@ -203,9 +204,9 @@ WRKDIR=$(PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
-ARG_C_SRC=$WRKDIR/xalt_c.c
+ARG_WM_SRC=$WRKDIR/xalt_watermark.c
 ARGOBJ=$WRKDIR/xalt.o
-ARG_C_OBJ=$WRKDIR/xalt_c.o
+ARG_WM_OBJ=$WRKDIR/xalt_watermark.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 
@@ -226,7 +227,7 @@ fi
 COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 
-EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_WATERMARKS "$UUID" "$SYSHOST" "$ARGSRC" "$ARG_C_SRC" "$COMP_T")
+EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_WATERMARKS "$UUID" "$SYSHOST" "$ARGSRC" "$ARG_WM_SRC" "$COMP_T")
 DATESTR=$(PATH=@xalt_system_path@ date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S")
 INT_EPOCH=$(PATH=@xalt_system_path@ echo "( $EPOCH )/1" | bc)
 FRAC_EPOCH=$(PATH=@xalt_system_path@ echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
@@ -248,9 +249,9 @@ else
 fi
 
 type gcc > /dev/null 2>&1
-if [ "$?" != 0 -a -f $ARG_C_SRC ]; then
-  gcc -c -o $ARG_C_OBJ $ARG_C_SRC
-  OBJ="$OBJ $ARG_C_OBJ"
+if [ "$?" != 0 -a -f $ARG_WM_SRC -a $XALT_C_WATERMARK != no ]; then
+  gcc -I$XALT_INC -c -o $ARG_WM_OBJ $ARG_WM_SRC
+  OBJ="$OBJ $ARG_WM_OBJ"
 fi
 
 

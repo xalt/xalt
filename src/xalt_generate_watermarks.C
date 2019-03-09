@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
   fprintf(fp,"\n\n");
   fprintf(fp,"#include <stdio.h>\n");
   fprintf(fp,"#include \"xalt_obfuscate.h\"\n");
-  fprintf(fp,"char * xalt_db()\n");
+  fprintf(fp,"const char * xalt_watermark()\n");
   fprintf(fp,"{\n");
   fprintf(fp,"  char * xalt_str = NULL;\n");
   fprintf(fp,"  asprintf(&xalt_str,\n");

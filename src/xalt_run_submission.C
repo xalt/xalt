@@ -55,7 +55,11 @@ int main(int argc, char* argv[], char* env[])
   // Extract the xalt record stored in the executable (possibly)
   t1 = epoch();
   Table recordT;
-  extractXALTRecord(options.exec(), recordT);
+  std::string watermark = options.watermark();
+  if (watermark == "FALSE")
+    extractXALTRecordString(options.exec(), watermark);
+  buildXALTRecordT(watermark, recordT);
+
   DEBUG0(stderr,"  Extracted recordT from executable\n");
   measureT["05_ExtractXALTR_"] = epoch() - t1;
 

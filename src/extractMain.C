@@ -18,7 +18,10 @@ int main(int argc, char* argv[])
   std::string exec = argv[1];
 
   Table recordT;
-  extractXALTRecord(exec, recordT);
+  std::string watermark;
+
+  extractXALTRecordString(exec, watermark);
+  buildXALTRecordT(watermark, recordT);
   
   if (recordT.size() < 1)
     {

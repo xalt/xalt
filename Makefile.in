@@ -70,13 +70,15 @@ VDATE		     	:= $(shell date +'%F %H:%M')
 XALT_DIR             	:= $(prefix)/$(package)/$(package)
 PKGV                 	:= $(prefix)/$(package)/$(VERSION)
 PKG                  	:= $(prefix)/$(package)/$(package)
+INC                  	:= $(prefix)/$(package)/$(VERSION)/include
 LIB                  	:= $(prefix)/$(package)/$(VERSION)/lib
 LIB64                	:= $(prefix)/$(package)/$(VERSION)/lib64
 LIBEXEC              	:= $(prefix)/$(package)/$(VERSION)/libexec
 BIN                  	:= $(prefix)/$(package)/$(VERSION)/bin
 SBIN                 	:= $(prefix)/$(package)/$(VERSION)/sbin
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
-                           $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)
+                           $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
+                           $(DESTDIR)$(INC)
 
 #BIN_PKG             	 := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
 #                    	    src/ibrun.symm.in src/aprun.in src/srun.in                         \
@@ -123,8 +125,8 @@ all:
 
 
 
-install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes   \
-         Use_argparse_$(USE_ARGPARSE) build_uuid build_compiled
+install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes                          \
+         Use_argparse_$(USE_ARGPARSE) build_uuid build_compiled inst_obfuscate
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
@@ -151,6 +153,10 @@ build_uuid:
                    LDFLAGS="$(LDFLAGS)" DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN)         \
                    BIN=$(BIN) LIB=$(LIB) OPTLVL="$(OPTLVL) -m32" all;                              \
         fi
+
+inst_obfuscate:
+	cp src/xalt_obfuscate.h   $(DESTDIR)$(INC)
+
 
 echo:
 	@echo srcdir: $(srcdir)
