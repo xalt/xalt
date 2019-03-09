@@ -87,7 +87,7 @@ CXX_SRC     :=                             \
 	       xalt_configuration_report.C \
                xalt_epoch.C           	   \
                xalt_extract_linker.C  	   \
-               xalt_generate_assembly.C    \
+               xalt_generate_watermarks.C  \
                xalt_generate_linkdata.C    \
                xalt_run_submission.C       \
                xalt_strip_linklib.C        \
@@ -109,10 +109,10 @@ XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt
                 zstring.c base64.c xalt_tmpdir.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
-XGA_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_assembly
-XGA_CXX_SRC  := xalt_generate_assembly.C parseJsonStr.C
-XGA_C_SRC    := epoch.c jsmn.c xalt_quotestring.c
-XGA_OBJS     := $(patsubst %.C, %.o, $(XGA_CXX_SRC)) $(patsubst %.c, %.o, $(XGA_C_SRC))
+XGM_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_watermarks
+XGM_CXX_SRC  := xalt_generate_watermarks.C parseJsonStr.C
+XGM_C_SRC    := epoch.c jsmn.c xalt_quotestring.c
+XGM_OBJS     := $(patsubst %.C, %.o, $(XGM_CXX_SRC)) $(patsubst %.c, %.o, $(XGM_C_SRC))
 
 XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
 XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
@@ -175,7 +175,7 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         rm -f $@.$$$$
 
 all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
-          $(XRS_EXEC) $(XGA_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
+          $(XRS_EXEC) $(XGM_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(XRP_EXEC)                               \
           $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
 	  $(DESTDIR)$(LIBEXEC)/xalt_syshost                     \
@@ -203,7 +203,7 @@ $(XRP_EXEC) : $(XRP_OBJS)
 $(XRS_EXEC) : $(XRS_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread $(LIBCRYPTO)
 
-$(XGA_EXEC): $(XGA_OBJS)
+$(XGM_EXEC): $(XGM_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XGL_EXEC): $(XGL_OBJS)

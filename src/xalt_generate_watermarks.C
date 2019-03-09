@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
   //------------------------------------------------------
   // Write c version
 
-  fprintf(fp,"/* This generated assembly code (%s) is free and unencumbered software released into the public domain */\n",fn_c);
+  fprintf(fp,"/* This generated C code (%s) is free and unencumbered software released into the public domain */\n",fn_c);
   fprintf(fp,"/* Anyone is free to copy, modify, publish, use, compile, sell, or */\n");
   fprintf(fp,"/* distribute this software, either in source code form or as a compiled */\n");
   fprintf(fp,"/* binary, for any purpose, commercial or non-commercial, and by any */\n");
