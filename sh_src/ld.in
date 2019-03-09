@@ -254,7 +254,7 @@ if [ "$?" != 0 -a -f $ARG_C_SRC ]; then
 fi
 
 
-#trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
+trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 
 ###################################################################
 # start a subshell in the background for the intentional
@@ -309,7 +309,6 @@ if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    tracing_msg "Bad status when capturing tracing link output"
    tracing_msg $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
    $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
-   #PATH=@xalt_system_path@ rm -rf $WRKDIR  
    exit $status
 fi
 
@@ -330,6 +329,5 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 ###################################################################
 # Generate link data.  
 PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
-#PATH=@xalt_system_path@ rm -rf $WRKDIR  
 
 exit $status
