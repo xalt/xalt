@@ -152,7 +152,7 @@ static char *       usr_cmdline;
 static char *       b64_cmdline;
 static const char * my_syshost;
 
-static char *       watermark             = NULL;
+static const char * watermark             = NULL;
 static char *       b64_watermark         = NULL;
 static int          trey_dbg              = 0;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
@@ -224,11 +224,6 @@ static dcgmHandle_t dcgm_handle           = NULL;
 #define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) fprintf((fp),s,(x1),(x2))
 #define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
 #define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
-
-const char * xalt_watermark() __attribute__((weak))
-{
-  return "FALSE";
-}
 
 void myinit(int argc, char **argv)
 {
@@ -640,7 +635,7 @@ void myinit(int argc, char **argv)
   pid  = getpid();
   ppid = getppid();
 
-  watermark     = xalt_watermark();
+  watermark     = "FALSE";
   b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
 
   /* 
@@ -667,7 +662,7 @@ void myinit(int argc, char **argv)
         {
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --wm \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+                   " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
 		   pid, ppid, my_syshost, start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
@@ -675,7 +670,7 @@ void myinit(int argc, char **argv)
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --wm %s %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
 	       pid, ppid, my_syshost, start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, b64_watermark, pathArg, ldLibPathArg,
 	       b64_cmdline);
 
@@ -980,16 +975,17 @@ void myfini()
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --wm \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+                   " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
 		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
-		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
+		   probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
+          //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --wm %s %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+               " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
 	       XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 

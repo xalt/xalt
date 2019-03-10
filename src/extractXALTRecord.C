@@ -4,6 +4,7 @@
 
 bool extractXALTRecordString(std::string& exec, std::string& watermark)
 {
+
   std::string cmd;
   Vstring     result;
   
@@ -81,7 +82,6 @@ bool extractXALTRecordString(std::string& exec, std::string& watermark)
 
 void buildXALTRecordT(std::string& watermark, Table& recordT)
 {
-
   std::string n, v;
   std::string::size_type s1, s2, s3, s4;
 
@@ -109,7 +109,6 @@ void buildXALTRecordT(std::string& watermark, Table& recordT)
             break;
           v.replace(s4,5," ");
         }
-
       recordT[n] = v;
     }
 }

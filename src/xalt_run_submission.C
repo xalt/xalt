@@ -59,7 +59,6 @@ int main(int argc, char* argv[], char* env[])
   if (watermark == "FALSE")
     extractXALTRecordString(options.exec(), watermark);
   buildXALTRecordT(watermark, recordT);
-
   DEBUG0(stderr,"  Extracted recordT from executable\n");
   measureT["05_ExtractXALTR_"] = epoch() - t1;
 
@@ -111,6 +110,7 @@ int main(int argc, char* argv[], char* env[])
   measureT["07____total_____"] = epoch() - t0;
 
   Json json;
+  DEBUG1(stderr,"  cmdlineA: %s\n",options.userCmdLine().c_str());
   json.add_json_string("cmdlineA",options.userCmdLine());
   json.add("ptA", ptA);
   json.add("envT",envT);

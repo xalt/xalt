@@ -118,6 +118,10 @@ TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 INIT_SRC             	:= src/xalt_initialize.c
 INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
 
+OBFUSCATE_HDR           := src/xalt_obfuscate.h
+OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
+
+
 .PHONY: LINKS build_compiled build_uuid
 
 all:
@@ -155,7 +159,7 @@ build_uuid:
         fi
 
 inst_obfuscate:
-	cp src/xalt_obfuscate.h   $(DESTDIR)$(INC)
+	cp $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)
 
 
 echo:

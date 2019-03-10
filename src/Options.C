@@ -65,13 +65,13 @@ Options::Options(int argc, char** argv)
         {"start",      required_argument, NULL, 's'},
         {"syshost",    required_argument, NULL, 'h'},
         {"uuid",       required_argument, NULL, 'u'},
-        {"watermark",  optional_argument, NULL, 'w'},
-        {0,         0,                 0,     0 }
+        {"watermark",  required_argument, NULL, 'w'},
+        {0,            0,                 0,     0 }
       };
       
       m_kind = "PKGS";
 
-      c = getopt_long(argc, argv, "c:s:e:h:x:n:g:u:p:P:L:",
+      c = getopt_long(argc, argv, "c:e:x:V:k:L:g:n:P:p:q:b:s:h:u:w:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -172,6 +172,7 @@ Options::Options(int argc, char** argv)
           int   jLen;
           char* decoded = reinterpret_cast<char*>(base64_decode(argv[optind], strlen(argv[optind]), &jLen));
           m_userCmdLine = decoded;
+          
           free(decoded);
         }
     }
@@ -193,8 +194,9 @@ Options::Options(int argc, char** argv)
 
   if (m_watermark != "FALSE")
     {
-      int wlen;
-      char* decoded = reinterpret_cast<char*>(base64_decode(m_watermark.c_str(), m_watermark.size(), &jLen));
+      int wLen;
+      char* decoded = reinterpret_cast<char*>(base64_decode(m_watermark.c_str(), m_watermark.size(), &wLen));
       m_watermark = decoded;
+      free(decoded);
     }
 }

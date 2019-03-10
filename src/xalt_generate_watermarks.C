@@ -155,10 +155,11 @@ int main(int argc, char* argv[])
   fprintf(fp,"/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF */\n");
   fprintf(fp,"/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */\n");
   fprintf(fp,"/* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR */\n");
-  fprintf(fp,"/* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE */,\n");
+  fprintf(fp,"/* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE */\n");
   fprintf(fp,"/* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR */\n");
   fprintf(fp,"/* OTHER DEALINGS IN THE SOFTWARE.*/\n");
   fprintf(fp,"\n\n");
+  fprintf(fp,"#define _GNU_SOURCE\n");
   fprintf(fp,"#include <stdio.h>\n");
   fprintf(fp,"#include \"xalt_obfuscate.h\"\n");
   fprintf(fp,"const char * xalt_watermark()\n");
@@ -167,7 +168,7 @@ int main(int argc, char* argv[])
   fprintf(fp,"  asprintf(&xalt_str,\n");
 
   for (int j = 0; j < n; ++j)
-    fprintf(fp,"                   \"%%s%%%%%%%%%%s%%%%%%%% \"\n");
+    fprintf(fp,"                   \"%%s%%%%%%%%%%s%%%%%%%%. \"\n");
   fprintf(fp,"                     ,\n");
 
   for (int j = 0; j < n-1; ++j)

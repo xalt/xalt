@@ -95,6 +95,7 @@ append=false
 prev=
 done=false
 BIT32FLAG=
+GCC32FLAG=
 for option
 do
   if [ -n "$prev" ]; then
@@ -119,7 +120,8 @@ do
       ;;
 
     elf_i386)
-      BIT32FLAG=--32
+      BIT32FLAG=-32
+      GCC32FLAG=-m32
       ;;
 
     -M|--print-map|--print-output-format|--print-memory-usage)
@@ -248,11 +250,15 @@ else
   OBJ=""
 fi
 
-type gcc > /dev/null 2>&1
-if [ "$?" != 0 -a -f $ARG_WM_SRC -a $XALT_C_WATERMARK != no ]; then
-  gcc -I$XALT_INC -c -o $ARG_WM_OBJ $ARG_WM_SRC
-  OBJ="$OBJ $ARG_WM_OBJ"
-fi
+#type gcc > /dev/null 2>&1
+#status=$?
+#if [ "$status" = 0 -a -f $ARG_WM_SRC -a "${XALT_C_WATERMARK+x}" != no ]; then
+#  tracing_msg "building $ARG_WM_SRC"
+#  gcc -fPIC $GCC32FLAG -I$XALT_INC -c -o $ARG_WM_OBJ $ARG_WM_SRC
+#  OBJ="$OBJ $ARG_WM_OBJ"
+#else
+#  tracing_msg "Not building $ARG_WM_SRC"
+#fi
 
 
 trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
