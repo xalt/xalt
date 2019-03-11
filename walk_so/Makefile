@@ -3,7 +3,7 @@ EXEC := walk_so
 
 
 
-$(EXEC): walk_so.o xalt.o ogrt.o
+$(EXEC): walk_so.o xalt.o new.o ogrt.o
 	$(LINK.c) -o $@ $^
 
 walk_so.o: walk_so.c
@@ -11,12 +11,12 @@ walk_so.o: walk_so.c
 
 xalt.o: xalt.s
 	as -o $@ $<
-ogrt.o: ogrt.s
+new.o: new.s
 	as -o $@ $<
 
 neat:
 	$(RM) *~
 clean: neat
-	$(RM) *.o
+	$(RM) walk_so.o xalt.o new.o
 clobber: clean
 	$(RM) $(EXEC)
