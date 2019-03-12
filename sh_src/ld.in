@@ -191,7 +191,7 @@ XALT_INC=$XALT_DIR/include
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
 XALT_BIN=$XALT_DIR/bin
 XALT_SITE_DIR=$XALT_DIR/site
-GEN_WATERMARKS=$XALT_LIBEXEC_DIR/xalt_generate_watermarks
+GEN_WATERMARK=$XALT_LIBEXEC_DIR/xalt_generate_watermark
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
 STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
@@ -206,9 +206,7 @@ WRKDIR=$(PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 ARGSRC=$WRKDIR/xalt.s
-ARG_WM_SRC=$WRKDIR/xalt_watermark.c
 ARGOBJ=$WRKDIR/xalt.o
-ARG_WM_OBJ=$WRKDIR/xalt_watermark.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 
@@ -229,7 +227,7 @@ fi
 COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 
-EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_WATERMARKS "$UUID" "$SYSHOST" "$ARGSRC" "$ARG_WM_SRC" "$COMP_T")
+EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
 DATESTR=$(PATH=@xalt_system_path@ date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S")
 INT_EPOCH=$(PATH=@xalt_system_path@ echo "( $EPOCH )/1" | bc)
 FRAC_EPOCH=$(PATH=@xalt_system_path@ echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
@@ -249,17 +247,6 @@ if [ -f "$ARGSRC" ]; then
 else
   OBJ=""
 fi
-
-#type gcc > /dev/null 2>&1
-#status=$?
-#if [ "$status" = 0 -a -f $ARG_WM_SRC -a "${XALT_C_WATERMARK+x}" != no ]; then
-#  tracing_msg "building $ARG_WM_SRC"
-#  gcc -fPIC $GCC32FLAG -I$XALT_INC -c -o $ARG_WM_OBJ $ARG_WM_SRC
-#  OBJ="$OBJ $ARG_WM_OBJ"
-#else
-#  tracing_msg "Not building $ARG_WM_SRC"
-#fi
-
 
 trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 

@@ -53,6 +53,7 @@
 #include "xalt_hostname_parser.h"
 #include "build_uuid.h"
 #include "xalt_tmpdir.h"
+#include "xalt_vendor_note.h"
 
 #if USE_DCGM && USE_NVML
 #error "Both DCGM and NVML enabled.  This is not allowed."
@@ -635,7 +636,10 @@ void myinit(int argc, char **argv)
   pid  = getpid();
   ppid = getppid();
 
-  watermark     = "FALSE";
+  // This routine returns either "FALSE" for nothing found or the watermark.
+  xalt_vendor_note(&watermark);
+
+  // Now base64 encode the watermark so it can be safely passed thru a system call.
   b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
 
   /* 
@@ -977,7 +981,7 @@ void myfini()
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
 		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
-		   probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
+		   probability, num_gpus, watermark, pathArg, ldLibPathArg, cmdline);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",

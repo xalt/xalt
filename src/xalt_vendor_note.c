@@ -6,9 +6,8 @@
 #include <sys/types.h>
 #include <link.h>
 #include <gelf.h>
+#include "xalt_vendor_note.h"
 
-#define XALT_ELF_NOTE_TYPE    (0x746c6158)
-#define XALT_STAMP_SUPPORTED_VERSION (0x02)
 /* data structures */
 struct elf_note {
   int32_t name_size;
@@ -24,6 +23,7 @@ struct vendor_note {
   char    note[1];
 } __attribute__((packed));
 typedef struct vendor_note vendor_note;
+
 
 /**
  * Read a "vendor specific ELF note".
@@ -106,12 +106,10 @@ int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size
   *pp = watermark;
 }
 
-__attribute__((constructor)) void walk_so()
+void xalt_vendor_note(char ** watermark)
 {
-  char * watermark;
-  dl_iterate_phdr(handle_program_header, (void *)&watermark);
-
-  printf("watermark: %s\n", watermark);
-
+  dl_iterate_phdr(handle_program_header, (void *)waterrmark);
+  if (*watermark == NULL)
+    *watermark = strdup("FALSE");
 }
-                  
+

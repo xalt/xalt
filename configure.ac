@@ -321,6 +321,10 @@ AC_CHECK_HEADER(openssl/sha.h,
                    [Define to 1 if you have <openssl/sha.h>.])],
                 [AC_MSG_ERROR([Unable to build XALT without openssl/sha.h])])
 
+AC_CHECK_HEADER(gelf.h, [],
+                [AC_MSG_ERROR([Unable to build XALT without gelf.h. Please install the libelf development package])])
+
+
 if test -z "$PATH_TO_FLEX" ; then
    echo
    echo "======================================================="

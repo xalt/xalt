@@ -87,7 +87,7 @@ CXX_SRC     :=                             \
 	       xalt_configuration_report.C \
                xalt_epoch.C           	   \
                xalt_extract_linker.C  	   \
-               xalt_generate_watermarks.C  \
+               xalt_generate_watermark.C   \
                xalt_generate_linkdata.C    \
                xalt_run_submission.C       \
                xalt_strip_linklib.C        \
@@ -109,8 +109,8 @@ XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt
                 zstring.c base64.c xalt_tmpdir.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
-XGM_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_watermarks
-XGM_CXX_SRC  := xalt_generate_watermarks.C parseJsonStr.C
+XGM_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_watermark
+XGM_CXX_SRC  := xalt_generate_watermark.C parseJsonStr.C
 XGM_C_SRC    := epoch.c jsmn.c xalt_quotestring.c
 XGM_OBJS     := $(patsubst %.C, %.o, $(XGM_CXX_SRC)) $(patsubst %.c, %.o, $(XGM_C_SRC))
 
