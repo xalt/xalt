@@ -112,11 +112,3 @@ void buildXALTRecordT(std::string& watermark, Table& recordT)
       recordT[n] = v;
     }
 }
-      
-      
-  
-  
-  
-  
-
-

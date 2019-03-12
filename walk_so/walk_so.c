@@ -1,12 +1,14 @@
 #define _GNU_SOURCE         /* See feature_test_macros(7) */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <link.h>
 #include <gelf.h>
 
-#define OGRT_STAMP_SUPPORTED_VERSION (0x01)
+#define XALT_ELF_NOTE_TYPE    (0x746c6158)
+#define XALT_STAMP_SUPPORTED_VERSION (0x02)
 /* data structures */
 struct elf_note {
   int32_t name_size;
@@ -16,44 +18,39 @@ struct elf_note {
 } __attribute__((packed));
 typedef struct elf_note elf_note;
 
-struct ogrt_note {
-  char    name[8]; /* "OGRT" plus null terminator, plus padding to 4 byte boundary */
+struct vendor_note {
+  char    name[8]; /* "XALT" plus null terminator, plus padding to 4 byte boundary */
   uint8_t version;
-  char    uuid[37];
+  char    note[1];
 } __attribute__((packed));
-typedef struct ogrt_note ogrt_note;
+typedef struct vendor_note vendor_note;
 
-struct so_infos {
-  int32_t size;
-  int32_t index;
-  OGRT__SharedObject shared_objects[1];
-};
-typedef struct so_infos so_infos;
-
-
-int count_program_header(__attribute__((unused)) struct dl_phdr_info *info,
-                         __attribute__((unused)) size_t size, void *data) 
-{
-  uint32_t *count = data;
-  (*count)++;
-  return 0;
-}
-
-int read_signature(const void *note, uint8_t *ret_version, char **ret_signature)
+int read_watermark(const void *note, char **ret_watermark)
 {
   const elf_note *elf_note = note;
 
-  if (elf_note->type == OGRT_ELF_NOTE_TYPE)
+  if (elf_note->type == XALT_ELF_NOTE_TYPE)
     {
-      const ogrt_note *ogrt_note = (const struct ogrt_note *)&(elf_note->data);
-      printf( "\tfound ogrt note with size %d!\n", elf_note->desc_size);
-      printf( "[D] -> name %s (%10p)!\n", ogrt_note->name, ogrt_note->name);
-      printf( "[D] -> version %u (%10p)!\n", ogrt_note->version, &ogrt_note->version);
-      printf( "[D] -> signature %s (%10p)!", ogrt_note->uuid, ogrt_note->uuid);
-      if (ogrt_note->version == OGRT_STAMP_SUPPORTED_VERSION)
+      const vendor_note *xalt_note = (const struct vendor_note *)&(elf_note->data);
+      if (xalt_note->version == XALT_STAMP_SUPPORTED_VERSION)
         {
-          *ret_version = ogrt_note->version;
-          *ret_signature = (char *)ogrt_note->uuid;
+          int size = 0;
+          int len;
+          int icount = 0;
+
+          char * watermark = (char *) malloc(sizeof(char)*elf_note->desc_size);
+          const char * p   = &xalt_note->note[0];
+          char * q         = watermark;
+      
+          for (; *p != '\0'; p += len + 1)
+            {
+              len   = strlen(p);
+              size += len + 1;
+              memcpy(q,p,len);
+              q[len] = '.';
+              q += len+1;
+            }
+          *ret_watermark = watermark;
         }
     }
 
@@ -62,10 +59,9 @@ int read_signature(const void *note, uint8_t *ret_version, char **ret_signature)
 
 int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size_t size, void *data)
 {
-  printf("name: %s, (%d segments)\n", info->dlpi_name, info-> dlpi_phnum);
-
   int j;
-  for (j = 0; < info->dlpi_phnum; j++)
+  char *   watermark = NULL;
+  for (j = 0; j < info->dlpi_phnum; j++)
     {
       GElf_Phdr *program_header= (GElf_Phdr *)&(info->dlpi_phdr[j]);
       if (program_header->p_type != PT_NULL && program_header->p_type == PT_NOTE)
@@ -74,33 +70,27 @@ int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size
           if (notes != NULL)
             {
               uint32_t offset    = 0;
-              uint8_t  version   = 0;
-              char *   signature = NULL;
               while (offset < program_header->p_memsz)
                 {
-                  offset += read_signature(notes + offset, &version, &signature);
-                  printf("signature: %s\n",signature);
+                  offset += read_watermark(notes + offset, &watermark);
+                  if (watermark)
+                    break;
                 }
+              if (watermark)
+                break;
             }
         }
     }
+  char **pp = (char **) data;
+  *pp = watermark;
 }
 
-
-
-
-void walk_so()
+__attribute__((constructor)) void walk_so()
 {
-  uint32_t count = 0;
-  dl_iterate_phdr(count_program_header, (void *)&count);
-  printf("number of headers: %d\n", count);
-  dl_iterate_phdr(handle_program_header, (void *)&count);
+  char * watermark;
+  dl_iterate_phdr(handle_program_header, (void *)&watermark);
+
+  printf("watermark: %s\n", watermark);
+
 }
                   
-int main(int argc, char* argv[])
-{
-  printf("Hello from walk_so!\n");
-  walk_so();
-
-  return 0;
-}
