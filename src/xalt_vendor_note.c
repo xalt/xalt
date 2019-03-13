@@ -7,6 +7,10 @@
 #include <link.h>
 #include <gelf.h>
 #include "xalt_vendor_note.h"
+#include "xalt_base_types.h"
+static int xalt_tracing = 0;
+
+
 
 /* data structures */
 struct elf_note {
@@ -67,6 +71,7 @@ int read_watermark(const void *note, char **ret_watermark)
               q[len] = '.';
               q += len+1;
             }
+          *q = '\0';
           *ret_watermark = watermark;
         }
     }
@@ -77,6 +82,9 @@ int read_watermark(const void *note, char **ret_watermark)
 int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size_t size, void *data)
 {
   int j;
+  char **pp = (char **) data;
+  if (*pp)
+    return 0;
   char *   watermark = NULL;
   for (j = 0; j < info->dlpi_phnum; j++)
     {
@@ -98,13 +106,14 @@ int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size
             }
         }
     }
-  char **pp = (char **) data;
   *pp = watermark;
   return 0;
 }
 
-void xalt_vendor_note(char ** watermark)
+void xalt_vendor_note(char ** watermark, int xalt_tracingIn)
 {
+  *watermark = NULL;
+  xalt_tracing = xalt_tracingIn;
   dl_iterate_phdr(handle_program_header, (void *)watermark);
   if (*watermark == NULL)
     *watermark = strdup("FALSE");

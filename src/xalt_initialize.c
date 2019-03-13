@@ -155,7 +155,6 @@ static const char * my_syshost;
 
 static char *       watermark             = NULL;
 static char *       b64_watermark         = NULL;
-static int          trey_dbg              = 0;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
@@ -255,9 +254,6 @@ void myinit(int argc, char **argv)
       if (xalt_tracing  || xalt_run_tracing)
 	errfd	       = dup(STDERR_FILENO);
     }
-
-  if (trey_dbg)
-    errfd = dup(STDERR_FILENO);
 
   v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
@@ -637,7 +633,7 @@ void myinit(int argc, char **argv)
   ppid = getppid();
 
   // This routine returns either "FALSE" for nothing found or the watermark.
-  xalt_vendor_note(&watermark);
+  xalt_vendor_note(&watermark, xalt_tracing);
 
   // Now base64 encode the watermark so it can be safely passed thru a system call.
   b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
@@ -981,7 +977,7 @@ void myfini()
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
 		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
-		   probability, num_gpus, watermark, pathArg, ldLibPathArg, cmdline);
+		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
           fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
