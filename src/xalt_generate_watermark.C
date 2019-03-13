@@ -135,18 +135,19 @@ int main(int argc, char* argv[])
   fprintf(fp,"\n");
   fprintf(fp,"\t.section .note.GNU-stack,\"\",@progbits\n");
   fprintf(fp,"\t.section .note.xalt.info,\"a\"\n");
-  fprintf(fp,"\tp2align 2\n");
+  fprintf(fp,"\t.p2align 2\n");
   fprintf(fp,"\t.long 1f - 0f # name size (not including padding\n");
   fprintf(fp,"\t.long 3f - 2f # desc size (not including padding\n");
   fprintf(fp,"\t.long 0x%x\n",XALT_ELF_NOTE_TYPE);
-  fprintf(fp,"0:\tasciz \"XALT\"\n");
-  fprintf(fp,"1:\tp2align 2 \"XALT\"\n");
+  fprintf(fp,"0:\t.asciz \"XALT\"\n");
+  fprintf(fp,"1:\t.p2align 2\n");
   fprintf(fp,"2:\t.byte 0x%02x\n",XALT_STAMP_SUPPORTED_VERSION);
   fprintf(fp,"\t.asciz \"XALT_Link_Info\"\n"); //this is how to find the section in the exec
   for (int j = 0; j < n; ++j)
     fprintf(fp,"\t.asciz \"%s%%%%%s%%%%\"\n",array[j][0].c_str(), array[j][1].c_str());
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
+  fprintf(fp,"3:\t.p2align 2\n");
   
   fclose(fp);
 

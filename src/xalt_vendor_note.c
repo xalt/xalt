@@ -55,10 +55,7 @@ int read_watermark(const void *note, char **ret_watermark)
       const vendor_note *xalt_note = (const struct vendor_note *)&(elf_note->data);
       if (xalt_note->version == XALT_STAMP_SUPPORTED_VERSION)
         {
-          int size = 0;
-          int len;
-          int icount = 0;
-
+          int    len;
           char * watermark = (char *) malloc(sizeof(char)*elf_note->desc_size);
           const char * p   = &xalt_note->note[0];
           char * q         = watermark;
@@ -66,7 +63,6 @@ int read_watermark(const void *note, char **ret_watermark)
           for (; *p != '\0'; p += len + 1)
             {
               len   = strlen(p);
-              size += len + 1;
               memcpy(q,p,len);
               q[len] = '.';
               q += len+1;
@@ -104,11 +100,12 @@ int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size
     }
   char **pp = (char **) data;
   *pp = watermark;
+  return 0;
 }
 
 void xalt_vendor_note(char ** watermark)
 {
-  dl_iterate_phdr(handle_program_header, (void *)waterrmark);
+  dl_iterate_phdr(handle_program_header, (void *)watermark);
   if (*watermark == NULL)
     *watermark = strdup("FALSE");
 }

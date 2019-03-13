@@ -153,7 +153,7 @@ static char *       usr_cmdline;
 static char *       b64_cmdline;
 static const char * my_syshost;
 
-static const char * watermark             = NULL;
+static char *       watermark             = NULL;
 static char *       b64_watermark         = NULL;
 static int          trey_dbg              = 0;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
