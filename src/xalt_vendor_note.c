@@ -82,10 +82,19 @@ int read_watermark(const void *note, char **ret_watermark)
 int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size_t size, void *data)
 {
   int j;
+  char *   watermark = NULL;
+
   char **pp = (char **) data;
   if (*pp)
+    // I already have a watermark so quit looking!
     return 0;
-  char *   watermark = NULL;
+
+  const char* so_name = info->dlpi_name;
+  if (*so_name != '\0')
+    // Do not need look because if *so_name is non-NULL then it is a shared library
+    // and I don't want to know about any watermark there.
+    return 0;
+	
   for (j = 0; j < info->dlpi_phnum; j++)
     {
       GElf_Phdr *program_header= (GElf_Phdr *)&(info->dlpi_phdr[j]);

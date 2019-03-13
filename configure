@@ -4526,6 +4526,16 @@ fi
 
 
 
+ac_fn_c_check_header_mongrel "$LINENO" "gelf.h" "ac_cv_header_gelf_h" "$ac_includes_default"
+if test "x$ac_cv_header_gelf_h" = xyes; then :
+
+else
+  as_fn_error $? "Unable to build XALT without gelf.h. Please install the libelf development package" "$LINENO" 5
+fi
+
+
+
+
 if test -z "$PATH_TO_FLEX" ; then
    echo
    echo "======================================================="
