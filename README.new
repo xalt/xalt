@@ -9,3 +9,4 @@ XALT 2.6+
             the user's Path.
     (2.6.7) Now support reading /proc/$PID/maps instead of parsing the output of ldd
     (2.6.8) Now supporting using the vendor note to hold the XALT watermark.
+    (2.6.9) issue #4: Add default signal handler when re-raising the signal after my_fini() is fixed
