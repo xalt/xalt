@@ -703,7 +703,8 @@ void myinit(int argc, char **argv)
   v = getenv("XALT_SIGNAL_HANDLER");
   if (!v || strcmp(v,"no") != 0)
     {
-      int signalA[] = {1, 2, 3, 4, 5, 6, 7, 8, 11, 15, 24, 30};
+      int signalA[] = {SIGHUP, SIGINT, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT,
+		       SIGBUS, SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1};
       int signalSz  = N_ELEMENTS(signalA);
       struct sigaction action;
       struct sigaction old;
@@ -724,6 +725,8 @@ void wrapper_for_myfini(int signum)
 {
   struct sigaction action;
   memset(&action, 0, sizeof(struct sigaction));
+  sigemptyset( &action.sa_mask);
+  action.sa_handler = SIG_DFL;
   sigaction(signum, &action, NULL);
   myfini();
   raise(signum);

@@ -142,8 +142,10 @@ fi
 
 unset LD_PRELOAD
 
-cmdA=("-$MAKE distclean"
+cmdA=("module unload xalt"
+      "-$MAKE distclean"
       "-rm -rf $PKG/xalt/$PKG_VERSION"
+      "-rm -f src/*.o src/*.d libuuid/src/*.o"
       "$SETUP_CMD"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE $MAKE_OPTS install"
