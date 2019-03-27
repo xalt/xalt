@@ -162,6 +162,7 @@ static double       probability           = 1.0;
 static pid_t        ppid	          = 0;
 static pid_t        pid  	          = 0;
 static int          errfd	          = -1;
+static double       my_rand               = 0.0;
 static double       start_time	          = 0.0;
 static double       end_time	          = 0.0;
 static double       frac_time             = 0.0;
@@ -233,6 +234,7 @@ void myinit(int argc, char **argv)
   char * p_dbg;
   char * cmdline         = NULL;
   char * ld_preload_strp = NULL;
+  char   rand_str[20];
   char   dateStr[DATESZ];
   char   fullDateStr[DATESZ];
   const char * v;
@@ -621,9 +623,9 @@ void myinit(int argc, char **argv)
    */
 
   setenv("XALT_RUN_UUID",uuid_str,1);
-  time_t time = start_time;
+  time_t my_time = start_time;
   
-  strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
+  strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&my_time));
   sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
 
   setenv("XALT_DATE_TIME",fullDateStr,1);
@@ -642,6 +644,27 @@ void myinit(int argc, char **argv)
    * XALT is only recording the end record for scalar executables and
    * not the start record.
    */
+
+  if (run_mask & BIT_SCALAR)
+    {
+      v = getenv("XALT_SCALAR_SAMPLING");
+      if (!v)
+	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+
+      if (v && strcmp(v,"yes") == 0)
+	{
+	  unsigned int a    = (unsigned int) clock();
+	  unsigned int b    = (unsigned int) time(NULL);
+	  unsigned int c    = (unsigned int) getpid();
+	  unsigned int seed = mix(a,b,c);
+
+	  srand(seed);
+	  my_rand	    = (double) rand()/(double) RAND_MAX;
+	}
+    }
+
+  sprintf(&rand_str[0],"%10.6f",my_rand);
+  setenv("XALT_RANDOM_NUMBER",rand_str,1);
 
   if ( run_mask & BIT_MPI)  
     {
@@ -934,15 +957,8 @@ void myfini()
 
       if (v && strcmp(v,"yes") == 0)
 	{
-	  double       run_time	= end_time - start_time;
-	  probability           = scalar_program_sample_probability(run_time);
-	  unsigned int a	= (unsigned int) clock();
-	  unsigned int b	= (unsigned int) time(NULL);
-	  unsigned int c	= (unsigned int) getpid();
-	  unsigned int seed	= mix(a,b,c);
-
-	  srand(seed);
-	  double my_rand    = (double) rand()/(double) RAND_MAX;
+	  double run_time = end_time - start_time;
+	  probability     = scalar_program_sample_probability(run_time);
 
 	  if (my_rand >= probability)
 	    {
