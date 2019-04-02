@@ -286,6 +286,9 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
+AC_SUBST(XALT_INSTALL_OS)
+XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
+
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then

@@ -54,6 +54,7 @@ STATIC_LIBS             := @STATIC_LIBS@
 PRELOAD_ONLY            := @PRELOAD_ONLY@	
 CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
+XALT_INSTALL_OS         := @XALT_INSTALL_OS@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
@@ -80,16 +81,13 @@ DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
                            $(DESTDIR)$(INC)
 
-#BIN_PKG             	 := src/ld.in src/mpirun.in src/mpiexec.in src/ibrun.in                \
-#                    	    src/ibrun.symm.in src/aprun.in src/srun.in                         \
-#                    	    src/mpirun.lsf.in src/xalt_helper_functions.sh
-
 BIN_PKG              	:= sh_src/ld.in                                                        \
                            sh_src/ld.gold.in                                                   \
 	                   sh_src/x86_64-linux-gnu-ld.in                                       \
                            sh_src/xalt_helper_functions.sh                                     \
                            sh_src/xalt_extract_record.in                                       \
-                           sh_src/xalt_configuration_report.in 
+                           sh_src/xalt_configuration_report.in                                 \
+                           sh_src/xalt_print_os.in 
 
 BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
@@ -233,6 +231,7 @@ __installMe:
 	        -e 's|@xalt_dir@|$(XALT_DIR)|g'                 	   	  \
 	        -e 's|@xalt_system_path@|$(XALT_SYSTEM_PATH)|g'       	   	  \
 	        -e 's|@my_hostname_parser@|$(MY_HOSTNAME_PARSER)|g'               \
+	        -e 's|@xalt_install_os@|$(XALT_INSTALL_OS)|g'                     \
 	        -e 's|@xalt_function_tracking@|$(XALT_FUNCTION_TRACKING)|g'       \
 	        -e 's|@xalt_config_py@|$(XALT_CONFIG_PY)|g' 	   	   	  \
 	        -e 's|@xalt_libexec_dir@|$(LIBEXEC)|g'                     	  \

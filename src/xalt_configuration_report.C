@@ -1,4 +1,7 @@
 #include "xalt_obfuscate.h"
+#include "xalt_config.h"
+#include "xalt_types.h"
+#include "capture.h"
 #include "xalt_syshost.h"
 #include "xalt_config.h"
 #include "xalt_regex.h"
@@ -44,6 +47,11 @@ int main(int argc, char* argv[])
   std::string syslog_tag("XALT_LOGGING_");
   syslog_tag.append(syshost);
 
+
+  Vstring     resultA;
+  std::string cmd     = XALT_DIR "/bin/xalt_print_os";
+  capture(cmd, resultA);
+  std::string current_os_descript = resultA[0];
 
   char    dateStr[dateSZ];
   time_t  now = (time_t) epoch();
@@ -123,6 +131,8 @@ int main(int argc, char* argv[])
       json.add("XALT_SCALAR_TRACKING",          xalt_scalar_tracking);
       json.add("XALT_SCALAR_SAMPLING",          xalt_scalar_sampling);
       json.add("XALT_SYSLOG_MSG_SZ",            SYSLOG_MSG_SZ);
+      json.add("XALT_INSTALL_OS",               XALT_INSTALL_OS);
+      json.add("XALT_CURRENT_OS",               current_os_descript);
       json.add("CXX_LD_LIBRARY_PATH",           CXX_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                    HAVE_32BIT);
       json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
@@ -167,6 +177,8 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSHOST_CONFIG:           " << SYSHOST_CONFIG                 << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:            " << SYSLOG_MSG_SZ                  << "\n";
   std::cout << "CXX_LD_LIBRARY_PATH:           " << CXX_LD_LIBRARY_PATH            << "\n";
+  std::cout << "XALT_INSTALL_OS:               " << XALT_INSTALL_OS                << "\n";
+  std::cout << "CURRENT_OS:                    " << current_os_descript            << "\n";
   std::cout << "XALT_PRELOAD_ONLY:             " << XALT_PRELOAD_ONLY              << "\n";
   std::cout << "HAVE_32BIT:                    " << HAVE_32BIT                     << "\n";
   std::cout << "MY_HOSTNAME_PARSER:            " << MY_HOSTNAME_PARSER             << "\n";
