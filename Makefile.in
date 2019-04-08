@@ -63,6 +63,10 @@ XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
 ENABLE_BACKGROUNDING 	:= @ENABLE_BACKGROUNDING@
 XALT_CONFIG_PY       	:= @XALT_CONFIG_PY@
+CONF_PY                 := $(srcdir)/docs/source/conf.py
+CONF_PY_PATTERN         := $(srcdir)/proj_mgmt/conf_py_update_patternA.lua
+UPDATE_VERSION          := $(srcdir)/proj_mgmt/updateVersion
+
 
 GIT_PROG             	:= @PATH_TO_GIT@
 GIT_VERSION          	:= $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
@@ -263,18 +267,19 @@ world_update:
 
 gittag:
         ifneq ($(TAG),)
-	  @git status -s > /tmp/git_st_$$$$                                      ; \
-          if [ -s /tmp/git_st_$$$$ ]; then                                 	   \
-	    echo "All files not checked in => try again"                         ; \
-	  else                                                             	   \
-	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V); \
-	    echo "$(TAG)"                                            >  .version ; \
-            git commit -m "moving to TAG_VERSION $(TAG)"      $(XALT_V) .version ; \
-            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                 ; \
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`    ; \
-            git push        origin $$branchName                                  ; \
-	    git push --tags origin $$branchName                                  ; \
-          fi                                                                     ; \
+	  @git status -s > /tmp/git_st_$$$$                                            ; \
+          if [ -s /tmp/git_st_$$$$ ]; then                                 	         \
+	    echo "All files not checked in => try again"                               ; \
+	  else                                                             	         \
+	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V)      ; \
+	    echo "$(TAG)"                                            >  .version       ; \
+            $(UPDATE_VERSION) -p $(CONF_PY_PATTERN) --version $(TAG)   $(CONF_PY)      ; \
+            git commit -m "moving to TAG_VERSION $(TAG)" $(CONF_PY) $(XALT_V) .version ; \
+            git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                       ; \
+	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`          ; \
+            git push        origin $$branchName                                        ; \
+	    git push --tags origin $$branchName                                        ; \
+          fi                                                                           ; \
           rm -f /tmp/git_st_$$$$
         else
 	  @echo "To git tag do: make gittag TAG=?"
