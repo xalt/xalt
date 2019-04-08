@@ -288,7 +288,7 @@ fi
 
 AC_SUBST(XALT_INSTALL_OS)
 XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
-
+AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS")
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then

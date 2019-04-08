@@ -632,6 +632,7 @@ EGREP
 GREP
 CPP
 HAVE_PYMOD_MYSQLDB
+XALT_INSTALL_OS
 PATH_TO_PYTHON
 PATH_TO_MKTEMP
 USE_CONTRIB_ARGPARSE
@@ -4067,6 +4068,12 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    rm -f makefile
    exit 1
 fi
+
+
+XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
+cat >>confdefs.h <<_ACEOF
+#define XALT_INSTALL_OS "$XALT_INSTALL_OS"
+_ACEOF
 
 
 
