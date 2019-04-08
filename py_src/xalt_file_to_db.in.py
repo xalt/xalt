@@ -294,7 +294,7 @@ def main():
     transmission = "@XALT_TRANSMISSION_STYLE@"
 
   if (not transmission):
-    tranmission = "file"
+    transmission = "file"
     
   transmission = transmission.lower()
 
@@ -329,21 +329,21 @@ def main():
     xaltDir = build_xaltDir(user, hdir, transmission, "link")
     if (os.path.isdir(xaltDir)):
       iuser   += 1
-      linkFnA  = files_in_tree(xaltDir, "*/link.*.json")
+      linkFnA  = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
       XALT_Stack.push("link_json_to_db()")
       lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
       XALT_Stack.pop()
 
     xaltDir = build_xaltDir(user, hdir, transmission, "run")
     if (os.path.isdir(xaltDir)):
-      runFnA   = files_in_tree(xaltDir, "*/run.*.json")
+      runFnA   = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
       XALT_Stack.push("run_json_to_db()")
       runCnt  += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
       XALT_Stack.pop()
 
     xaltDir = build_xaltDir(user, hdir, transmission, "pkg")
     if (os.path.isdir(xaltDir)):
-      pkgFnA   = files_in_tree(xaltDir, "*/pkg.*.json")
+      pkgFnA   = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
       XALT_Stack.push("pkg_json_to_db()")
       pkgCnt  += pkg_json_to_db(xalt, args.listFn, args.syshost, args.delete, pkgFnA)
       XALT_Stack.pop()
