@@ -48,7 +48,7 @@ installXALT()
 
   (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; \
   echo "<make>"; make OPTLVL="-g -O0" install ;  )
-  cp $projectDir/test/check_entries_db.py XALT/xalt/xalt/sbin
+  cp $projectDir/proj_mgmt/check_entries_db.py XALT/xalt/xalt/sbin
   PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
   echo "<end make>"
 }
