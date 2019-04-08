@@ -108,10 +108,8 @@ programs.
 
 # Generate Lua modulefile that can be used with Lmod
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_moduledir}/lua
-cat <<EOF >$RPM_BUILD_ROOT/%{_moduledir}/lua/xalt-%{version}
-#%Module
-
-# NOTE: This is an automatically-generated file!
+cat <<EOF >$RPM_BUILD_ROOT/%{_moduledir}/lua/xalt-%{version}.lua
+--NOTE: This is an automatically-generated file!
 
 setenv("XALT_EXECUTABLE_TRACKING", "yes")
 
