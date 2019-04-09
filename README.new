@@ -12,4 +12,6 @@ XALT 2.6+
     (2.6.9)  issue #4: Add default signal handler when re-raising the signal after my_fini() is fixed
     (2.6.10) issue #4: Remove SIGINT from the list of signals that XALT tries to capture.
     (2.6.11) Add XALT_RANDOM_NUMBER to the environment of the programs running under XALT.
-    
+    (2.6.12) issue #6: added xalt.spec
+             issue #7: xalt_file_to_db.py must filter on syshost
+             using the update_version program xalt.spec and docs/source/conf.py are updated with the new version.
