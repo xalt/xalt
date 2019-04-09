@@ -1,7 +1,7 @@
 # XALT RPM Spec file
 #
 # Download the XALT release tarball and build a RPM like:
-#   $ rpmbuild -tb xalt-<version>.tar.gz <options>
+#   $ rpmbuild -tb xalt-<version>.tar.gz --define 'config /path/to/myconfig.py' <options>
 #
 #   $ rpmbuild -tb xalt-<version>.tar.gz --define 'config /path/to/myconfig.py' --define 'syshost hardcode:mycluster' --with gpu
 #
@@ -9,8 +9,8 @@
 #
 #   --define 'config <value>':
 #     Absolute path to the config file.  If the config file exists
-#     in the tarball, then a relative path may be used.  The default
-#     value is "Config/rtm_config.py".
+#     in the tarball, then a relative path may be used.  This option
+#     is required.
 #
 #   --define 'prefix <value>':
 #     Absolute path prefix to install XALT.  The default value is "/opt".
@@ -38,7 +38,7 @@
 %define debug_package %{nil}
 
 # XALT configuration options
-%define _config %{?config}%{?!config:Config/rtm_config.py}
+%define _config %{?config}
 %define _syshost %{?syshost}%{?!syshost:hardcode:cluster}
 %define _transmission %{?transmission}%{?!transmission:syslog}
 
@@ -91,6 +91,12 @@ programs.
 
 %prep
 %setup -q
+
+# The config file must be defined
+if ! test -f "%{_config}"; then
+  echo "valid config file is required: --define 'config <file>'"
+  exit 1
+fi
 
 %build
 ./configure \
@@ -152,7 +158,7 @@ prepend-path  COMPILER_PATH   %{_prefix}/%{name}/%{version}/bin
 #prepend-path SINGULARITY_BINDPATH %{_prefix}/%{name}/%{version} 
 
 ############################################################
-## Only set this is production not for testing!!!
+## Only set this in production not for testing!!!
 setenv XALT_SCALAR_SAMPLING yes
 EOF
 
@@ -166,6 +172,9 @@ EOF
 %exclude %{_prefix}/%{name}/%{version}/%{_lib}/*.o
 
 %changelog
+* Tue Apr 9 2019 Scott McMillan <smcmillan@nvidia.com>
+- Remove default config file, config option is now required
+
 * Mon Apr 1 2019 Scott McMillan <smcmillan@nvidia.com>
 - Initial spec file
 
