@@ -76,7 +76,7 @@ class CmdLineOptions(object):
     parser.add_argument("--timer",       dest='timer',   action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
-    parser.add_argument("--syshost",     dest='syshost', action="store",      default="unknown",      help="name of the cluster")
+    parser.add_argument("--syshost",     dest='syshost', action="store",      default="*",            help="name of the cluster")
     parser.add_argument("--confFn",      dest='confFn',  action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
     return args

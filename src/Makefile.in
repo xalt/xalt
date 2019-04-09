@@ -179,7 +179,7 @@ all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
           $(XRS_EXEC) $(XGM_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(XRP_EXEC)                               \
           $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
-	  $(DESTDIR)$(LIBEXEC)/xalt_syshost                     \
+	  $(DESTDIR)$(SBIN)/xalt_syshost                        \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
@@ -234,7 +234,7 @@ $(DESTDIR)$(LIBEXEC)/xalt_realpath: xalt_realpath.o
 $(DESTDIR)$(LIBEXEC)/xalt_epoch: xalt_epoch.o epoch.o
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
-$(DESTDIR)$(LIBEXEC)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
+$(DESTDIR)$(SBIN)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
 	$(LINK.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 __build__/lex.xalt_env.c: $(CURDIR)/__build__/xalt_env_parser.lex
