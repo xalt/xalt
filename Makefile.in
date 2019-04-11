@@ -44,7 +44,6 @@ TRANSMISSION         	:= @TRANSMISSION@
 SITE_NAME            	:= @SITE@
 ETC_DIR              	:= @ETC_DIR@
 prefix               	:= @prefix@
-GIT_BRANCH              := $(shell git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g')
 XALT_V               	:= src/xalt_version.h
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
@@ -362,7 +361,8 @@ build_tags:
 	etags  `cat file_list.2`
 
 dist:
-	git archive --prefix=xalt-$(VERSION)/ $(GIT_BRANCH) > xalt-$(VERSION).tar
+        GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`;
+	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > xalt-$(VERSION).tar   \
 	$(RM) -rf DIST;                                                 	   \
 	mkdir DIST;                                                     	   \
         cd DIST;                                                        	   \
