@@ -361,15 +361,15 @@ build_tags:
 	etags  `cat file_list.2`
 
 dist:
-        GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`;
-	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > xalt-$(VERSION).tar   \
-	$(RM) -rf DIST;                                                 	   \
-	mkdir DIST;                                                     	   \
-        cd DIST;                                                        	   \
-        tar xf ../xalt-$(VERSION).tar;                                             \
-	sed -i 's/\@git\@/$(GIT_VERSION)/g' $$(find xalt-$(VERSION) -type f);      \
-        $(RM) ../xalt-$(VERSION).tar;                                    	   \
-	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION);           	   \
+	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \
+	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > xalt-$(VERSION).tar            ; \
+	$(RM) -rf DIST                                                                      ; \
+	mkdir DIST                                                                          ; \
+        cd DIST                                                                             ; \
+        tar xf ../xalt-$(VERSION).tar                                                       ; \
+	find xalt-$(VERSION) -type f -print0 | xargs -0 sed -i 's/\@git\@/$(GIT_VERSION)/g' ; \
+        $(RM) ../xalt-$(VERSION).tar                                                        ; \
+	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION)                                ; \
 	cd ..; $(RM) -rf DIST
 
 makefile: $(srcdir)/Makefile.in config.status
