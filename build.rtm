@@ -111,7 +111,7 @@ case $SYSHOST in
   ls5 )
     echo "Building ls5"
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-syshostConfig=hardcode:ls5 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=yes"
+    CONF_OPTS="--with-syshostConfig=hardcode:ls5 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no " #--with-trackGPU=yes
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
