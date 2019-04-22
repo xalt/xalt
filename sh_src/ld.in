@@ -309,7 +309,7 @@ if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    exit $status
 fi
 
-EXEC=$(PATH=@xalt_system_path@ $REALPATH $EXEC)
+EXEC=$(PATH=@xalt_system_path@ $REALPATH "$EXEC")
 
 
 if [ -n "$USER_TRACE" ]; then
@@ -317,7 +317,7 @@ if [ -n "$USER_TRACE" ]; then
 fi
 
 # Get the sha1sum for the executable because it might move or disappear!
-SHA1SUM_EXEC=$(PATH=@xalt_system_path@ sha1sum $EXEC)
+SHA1SUM_EXEC=$(PATH=@xalt_system_path@ sha1sum "$EXEC")
 
 wait #-- wait for subshell to finish
 

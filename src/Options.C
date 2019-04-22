@@ -5,8 +5,19 @@
 #include <vector>
 #include "Options.h"
 #include "capture.h"
+#include "xalt_quotestring.h"
 #include "xalt_config.h"
 #include "base64.h"
+
+void replace_all(std::string& s1, const std::string from, const std::string to)
+{
+  for (std::string::size_type pos = 0;
+       ( pos = s1.find(from, pos) ) != std::string::npos;
+       pos += to.size() )
+    s1.replace(pos, from.size(), to);
+}
+
+
 
 double convert_double(const char* name, const char* s)
 {
@@ -151,6 +162,12 @@ Options::Options(int argc, char** argv)
         }
     }
   
+  if (m_interfaceV > 4)
+    {
+      m_exec = xalt_unquotestring(m_exec.c_str(), m_exec.size());
+      xalt_quotestring_free();
+    }
+
   if (optind + 1 == argc && argv[optind][0] == '[')
     m_userCmdLine = argv[optind];
   else if (optind < argc)
@@ -182,7 +199,12 @@ Options::Options(int argc, char** argv)
       std::vector<std::string> result;
       std::string              cmd;
 
-      cmd = "PATH=" XALT_SYSTEM_PATH " file " + m_exec;
+      std::string execQ = m_exec;
+      std::string Q     = "\"";
+      std::string QQ    = "\\\"";
+      replace_all(execQ, Q, QQ);
+
+      cmd = "PATH=" XALT_SYSTEM_PATH " file \"" + execQ + "\"";
       capture(cmd, result);
       if (result.size() > 0 &&
           (result[0].find("script") != std::string::npos ||

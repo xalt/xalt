@@ -3033,7 +3033,7 @@ subdirs="$subdirs libuuid/src"
 
 
 
-XALT_INTERFACE_VERSION=4
+XALT_INTERFACE_VERSION=5
 
 
 

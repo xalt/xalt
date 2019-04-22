@@ -132,7 +132,7 @@ static const char * xalt_run_short_descriptA[] = {
 
 const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
-static void            abspath(char * path, int sz);
+static void            get_abspath(char * path, int sz);
 static volatile double epoch();
 static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
 static double          scalar_program_sample_probability(double runtime);
@@ -149,6 +149,7 @@ void wrapper_for_myfini(int signum);
 static int          countA[2];
 static char         uuid_str[37];
 static char         exec_path[PATH_MAX];
+static char *       exec_pathQ;
 static char *       usr_cmdline;
 static char *       b64_cmdline;
 static const char * my_syshost;
@@ -283,7 +284,7 @@ void myinit(int argc, char **argv)
                   dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
                   u.version, u.machine, xalt_syshost());
         }
-      abspath(exec_path,sizeof(exec_path));
+      get_abspath(exec_path,sizeof(exec_path));
       fprintf(stderr,"myinit(%s,%s){\n", STR(STATE),exec_path);
     }
 
@@ -389,7 +390,7 @@ void myinit(int argc, char **argv)
     my_size = 1L;
 
   /* Get full absolute path to executable */
-  abspath(exec_path,sizeof(exec_path));
+  get_abspath(exec_path,sizeof(exec_path));
   path_results = keep_path(exec_path);
   path_parser_cleanup();
   
@@ -666,8 +667,12 @@ void myinit(int argc, char **argv)
   sprintf(&rand_str[0],"%10.6f",my_rand);
   setenv("XALT_RANDOM_NUMBER",rand_str,1);
 
+  exec_pathQ = strdup(xalt_quotestring(exec_path));
+  xalt_quotestring_free();
+
   if ( run_mask & BIT_MPI)  
     {
+
       const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
       int runable = access(run_submission, X_OK);
 
@@ -686,7 +691,7 @@ void myinit(int argc, char **argv)
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
                    " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
-		   pid, ppid, my_syshost, start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, watermark, pathArg, ldLibPathArg,
+		   pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
@@ -694,7 +699,7 @@ void myinit(int argc, char **argv)
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
-	       pid, ppid, my_syshost, start_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, b64_watermark, pathArg, ldLibPathArg,
+	       pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, b64_watermark, pathArg, ldLibPathArg,
 	       b64_cmdline);
 
       system(cmdline);
@@ -995,7 +1000,7 @@ void myfini()
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
           asprintf(&cmd2, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
-		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
+		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
 		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
@@ -1005,7 +1010,7 @@ void myfini()
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=%s PATH=%s %s --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
-	       XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_path, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
+	       XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
@@ -1070,7 +1075,7 @@ static long compute_value(const char **envA)
 
 /* Get full absolute path to executable */
 /* works for Linux and Mac OS X */
-static void abspath(char * path, int sz)
+static void get_abspath(char * path, int sz)
 {
   path[0] = '\0';
   #ifdef __MACH__

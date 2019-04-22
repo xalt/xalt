@@ -38,13 +38,13 @@ test_descript = {
      export XALT_TRANSMISSION_STYLE=file_separate_dirs
      export XALT_PRELOAD_ONLY=no
 
-     displayThis  "mpicc -o hello.mpi $(projectDir)/rt/mpi_hello_world.c"
-     mpicc -o hello.mpi $(projectDir)/rt/mpi_hello_world.c 
+     displayThis  "mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c 
 
      export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
-     displayThis "mpirun -n 1 ./hello.mpi"
-     mpirun -n 1 ./hello.mpi 
+     displayThis "mpirun -n 1 ./hello\ .mpi"
+     mpirun -n 1 ./hello\ .mpi 
      
      displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
      rm -rf Ðì®
@@ -55,9 +55,9 @@ test_descript = {
      displayThis "mpirun -n 1 Ðì®/helloñ.mpi"
      mpirun -n 1 Ðì®/helloñ.mpi
      
-     displayThis "Setting LD_PRELOAD, ./hello.mpi"
+     displayThis "Setting LD_PRELOAD, ./hello\ .mpi"
      export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
-     LD_BIND_NOW=1 ./hello.mpi --ntasks p "a';'d"
+     LD_BIND_NOW=1 ./hello\ .mpi --ntasks p "a';'d"
      
      g++ -o try.rd $(testDir)/try.C -rdynamic
 
@@ -156,10 +156,10 @@ test_descript = {
      gcc -o ill $(testDir)/ill.c
      ./ill
 
-     displayThis "rm xalt_run_submission; ./hello.mpi"
+     displayThis "rm xalt_run_submission; ./hello\ .mpi"
      rm XALT/xalt/xalt/libexec/xalt_run_submission
 
-     XALT_TRACING=yes ./hello.mpi
+     XALT_TRACING=yes ./hello\ .mpi
 
      unset LD_PRELOAD
      displayThis "Extract Watermark"
