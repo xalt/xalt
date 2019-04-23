@@ -9,7 +9,12 @@ bool extractXALTRecordString(std::string& exec, std::string& watermark)
   Vstring     result;
   
   // Capture the XALT record (if it exists) into result.
-  cmd  = "PATH=" XALT_SYSTEM_PATH " objdump -s -j .xalt " + exec + " 2> /dev/null";
+  std::string execQ = exec;
+  std::string Q     = "\"";
+  std::string QQ    = "\\\"";
+  replace_all(execQ, Q, QQ);
+
+  cmd  = "PATH=" XALT_SYSTEM_PATH " objdump -s -j .xalt \"" + execQ + "\" 2> /dev/null";
     
   capture(cmd, result);
 

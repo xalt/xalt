@@ -9,16 +9,6 @@
 #include "xalt_config.h"
 #include "base64.h"
 
-void replace_all(std::string& s1, const std::string from, const std::string to)
-{
-  for (std::string::size_type pos = 0;
-       ( pos = s1.find(from, pos) ) != std::string::npos;
-       pos += to.size() )
-    s1.replace(pos, from.size(), to);
-}
-
-
-
 double convert_double(const char* name, const char* s)
 {
   char  *p;

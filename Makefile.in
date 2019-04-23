@@ -319,6 +319,7 @@ build_tags:
             -e 's|.*\.tar\.gz$$||g'                              \
             -e 's|.*\.tar\.bz2$$||g'                             \
             -e 's|.*/libuuid.a$$||g'                             \
+            -e 's|.*\.so$$||g'                                   \
             -e 's|.*/my_uuidgen$$||g'                            \
             -e 's|.*\.pptx$$||g'                                 \
             -e 's|.*\.png$$||g'                                  \
@@ -370,7 +371,6 @@ dist:
 	find xalt-$(VERSION) -type f -print0 | xargs -0 sed -i 's/\@git\@/$(GIT_VERSION)/g' ; \
         $(RM) ../xalt-$(VERSION).tar                                                        ; \
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION)                                ; \
-	cd ..; $(RM) -rf DIST
 
 makefile: $(srcdir)/Makefile.in config.status
 	./config.status $@

@@ -5,6 +5,14 @@
 #include "capture.h"
 #define DATA_SIZE 1024
 
+void replace_all(std::string& s1, const std::string from, const std::string to)
+{
+  for (std::string::size_type pos = 0;
+       ( pos = s1.find(from, pos) ) != std::string::npos;
+       pos += to.size() )
+    s1.replace(pos, from.size(), to);
+}
+
 void capture(std::string& cmd, Vstring& result)
 {
   FILE* fp;
