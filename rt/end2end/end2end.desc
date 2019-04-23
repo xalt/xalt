@@ -23,13 +23,14 @@ test_descript = {
      displayThis "installDB"
      installDB 
 
-     rm -f get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv
+     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools"
+     mkdir "xalt tools"
 
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
      XALT_BIN=$outputDir/XALT/xalt/xalt/bin
-     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+     PATH="$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$outputDir/xalt tools:$PATH";
 
      export COMPILER_PATH=$XALT_BIN
      export SBATCH_ACCOUNT=rtm
