@@ -16,4 +16,5 @@ XALT 2.6+
              * issue #7: xalt_file_to_db.py must filter on syshost
              * using the update_version program xalt.spec and docs/source/conf.py are updated with the new version.
     (2.6.13) * issue #9: Handle spaces and double quotes in executable filenames.
-    
+    (2.6.14) * Make sure that all capture calls and system calls in xalt_initialize.c are protected against
+               spaces in paths.  Changed end2end test to include a directory in $PATH that has a space in it.
