@@ -82,7 +82,8 @@ system.
 
 Even though the above example was with a C program, this trick works with C++
 and Fortran programs as well.  It works with any ELF binary that is
-dynamically linked. It does not work with a static binary.
+dynamically linked. It does not work with a static binary. XALT can
+track static binaries as long as they are linked with XALT's **ld**.
 
 
 Installing XALT2
