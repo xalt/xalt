@@ -80,7 +80,7 @@ that only run on the compute nodes or have certain paths or other
 criteria to avoid tracking every single program that is run on a
 system. 
 
-Even those the above example was with a C program, this trick works with C++
+Even though the above example was with a C program, this trick works with C++
 and Fortran programs as well.  It works with any ELF binary that is
 dynamically linked. It does not work with a static binary.
 
