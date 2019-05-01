@@ -1,3 +1,5 @@
+import re
+
 equiv_patternA = [
     [ r'^2d_needle'                     , '2D_needle*'                     ],
     [ r'^3d_needle'                     , '3D_needle*'                     ],
@@ -238,3 +240,15 @@ equiv_patternA = [
 
 def name_mapping():
   return equiv_patternA
+
+def get_comm_name(input_name):
+
+  # Get the XALT name mapping table of regular expressions and community code
+  # name pairs
+  nm=name_mapping()
+  for (pattern,replacement) in nm:
+    if re.match(pattern,input_name):
+      return(replacement)
+
+  # If no match is found, return the original input
+  return input_name
