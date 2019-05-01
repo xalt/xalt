@@ -1,3 +1,4 @@
+[![Documentation Status](https://readthedocs.org/projects/xalt/badge/?version=latest)](https://xalt.readthedocs.io/en/latest/?badge=latest)
 ## Synopsis
 
 XALT is a lightweight software tool for any Linux cluster,
