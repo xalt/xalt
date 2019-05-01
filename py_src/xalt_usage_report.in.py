@@ -1,4 +1,3 @@
-
 #------------------------------------------------------------------------    #
 # This python script gets executable usage on SYSHOST grouped by exec name.  #
 # Total CPU time used, number of jobs, and number of users of the exec are   #
@@ -77,7 +76,7 @@ class ExecRun:
     self.__execA  = []
     self.__cursor = cursor
 
-  def build(self, args, startdate, enddate):
+  def build(self, args, style, start_date, end_date):
     equiv_patternA = name_mapping()
     sA = []
     sA.append("SELECT CASE ")
@@ -93,9 +92,13 @@ class ExecRun:
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
     sA.append("    AND date >= '%s' AND date < '%s' ")
+    if (style == 'Scalar'):
+       sA.append("    AND num_cores <= '1' ")
+    elif (style == 'MPI'):
+       sA.append("    AND num_cores > '1' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-    query  = "".join(sA) % (args.syshost, startdate, enddate)
+    query  = "".join(sA) % (args.syshost, min_tasks, start_date, end_date)
     cursor = self.__cursor
 
     cursor.execute(query)
@@ -132,7 +135,7 @@ class ExecRunLink:
     self.__execA  = []
     self.__cursor = cursor
 
-  def build(self, args, startdate, enddate, compiler):
+  def build(self, args, start_date, end_date, compiler):
     equiv_patternA = name_mapping()
     sA = []
     sA.append("SELECT CASE ")
@@ -152,7 +155,7 @@ class ExecRunLink:
     sA.append("    AND t2.link_program = '%s' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-    query  = "".join(sA) % (args.syshost, startdate, enddate, compiler)
+    query  = "".join(sA) % (args.syshost, start_date, end_date, compiler)
     cursor = self.__cursor
 
     cursor.execute(query)
@@ -187,7 +190,7 @@ class CompilerUsageByCount:
   def __init__(self, cursor):
     self.__linkA  = []
     self.__cursor = cursor
-  def build(self, args, startdate, enddate):
+  def build(self, args, start_date, end_date):
     query = """
     SELECT link_program, count(date) as count FROM xalt_link
     WHERE build_syshost like %s
@@ -195,7 +198,7 @@ class CompilerUsageByCount:
     GROUP by link_program
     """
     cursor  = self.__cursor
-    cursor.execute(query, (args.syshost, startdate, enddate))
+    cursor.execute(query, (args.syshost, start_date, end_date))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
     for link_program, count in resultA:
@@ -222,7 +225,7 @@ class CompilerUsageByCoreHours:
     self.__linkA  = []
     self.__cursor = cursor
 
-  def build(self, args, startdate, enddate):
+  def build(self, args, start_date, end_date):
     query = """
     SELECT
     ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as corehours,
@@ -237,7 +240,7 @@ class CompilerUsageByCoreHours:
     GROUP by link_program
     """
     cursor  = self.__cursor
-    cursor.execute(query, (args.syshost, startdate, enddate))
+    cursor.execute(query, (args.syshost, start_date, end_date))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
     for corehours, n_runs, n_users, link_program in resultA:
@@ -269,7 +272,7 @@ class Libraries:
     self.__libA  = []
     self.__cursor = cursor
 
-  def build(self, args, startdate, enddate, queue="%"):
+  def build(self, args, start_date, end_date, queue="%"):
     
     query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,        \
                     COUNT(DISTINCT(t3.user)) as n_users,                             \
@@ -283,7 +286,7 @@ class Libraries:
                     group by t1.object_path order by corehours desc"
 
     cursor  = self.__cursor
-    cursor.execute(query,(args.syshost, queue, startdate, enddate))
+    cursor.execute(query,(args.syshost, queue, start_date, end_date))
     resultA = cursor.fetchall()
 
     libA = self.__libA
@@ -362,7 +365,7 @@ class ModuleExec:
     self.__modA  = []
     self.__cursor = cursor
 
-  def build(self, args, startdate, enddate):
+  def build(self, args, start_date, end_date):
     query = """
     SELECT 
     ROUND(SUM(run_time*num_cores/3600)) as corehours,
@@ -374,7 +377,7 @@ class ModuleExec:
     group by modules
     """
     cursor  = self.__cursor
-    cursor.execute(query, (args.syshost, startdate, enddate))
+    cursor.execute(query, (args.syshost, start_date, end_date))
     resultA = cursor.fetchall()
     modA   = self.__modA
     for corehours, n_jobs, n_users, modules in resultA:
@@ -398,7 +401,7 @@ class ModuleExec:
     
     return resultA
         
-def kinds_of_jobs(cursor, args, startdate, enddate):
+def kinds_of_jobs(cursor, args, start_date, end_date):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
                   COUNT(*) as n_runs, COUNT(DISTINCT(job_id)) as n_jobs,           \
@@ -425,7 +428,7 @@ def kinds_of_jobs(cursor, args, startdate, enddate):
     name   = entryA[0]
     kind   = entryA[1]
     q2     = query + entryA[2]
-    cursor.execute(q2,(args.syshost, startdate, enddate, kind))
+    cursor.execute(q2,(args.syshost, start_date, end_date, kind))
 
     if (cursor.rowcount == 0):
       print("Unable to get the number of", kind," jobs: Quitting!")
@@ -475,7 +478,7 @@ def percent_str(entry, total):
   return result
 
 
-def running_other_exec(cursor, args, startdate, enddate):
+def running_other_exec(cursor, args, start_date, end_date):
 
   query = "SELECT ROUND(SUM(t1.num_cores*t1.run_time/3600.0)) as corehours, \
            COUNT(t1.date)                                     as n_runs,    \
@@ -487,7 +490,7 @@ def running_other_exec(cursor, args, startdate, enddate):
            and t1.date >= %s and t1.date < %s"
 
   resultT = {}
-  cursor.execute(query, (args.syshost, startdate, enddate));
+  cursor.execute(query, (args.syshost, start_date, end_date));
   if (cursor.rowcount == 0):
     print("Unable to get the number of user != build_user: Quitting!")
     sys.exit(1)
@@ -510,7 +513,7 @@ def running_other_exec(cursor, args, startdate, enddate):
            and t1.user = t2.build_user                                      \
            and t1.date >= %s and t1.date < %s"
   
-  cursor.execute(query, (args.syshost, startdate, enddate));
+  cursor.execute(query, (args.syshost, start_date, end_date));
   if (cursor.rowcount == 0):
     print("Unable to get the number of user != build_user: Quitting!")
     sys.exit(1)
@@ -544,26 +547,26 @@ def main():
           config.get("MYSQL","DB"))
   cursor = conn.cursor()
 
-  enddate = time.strftime('%Y-%m-%d')
+  end_date = time.strftime('%Y-%m-%d')
   if (args.endD is not None):
-    enddate = args.endD
+    end_date = args.endD
   
-  startdate = (datetime.strptime(enddate, "%Y-%m-%d") - timedelta(90)).strftime('%Y-%m-%d');
+  start_date = (datetime.strptime(end_date, "%Y-%m-%d") - timedelta(90)).strftime('%Y-%m-%d');
   if (args.startD is not None):
-    startdate = args.startD
+    start_date = args.startD
 
   print("--------------------------------------------")
-  print("XALT REPORT from",startdate,"to",enddate)
+  print("XALT REPORT from",start_date,"to",end_date)
   print("--------------------------------------------")
   print("")
   print("")
   
   ############################################################
   #  Over all job counts
-  resultA = kinds_of_jobs(cursor, args, startdate, enddate)
+  resultA = kinds_of_jobs(cursor, args, start_date, end_date)
   bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
   print("----------------------")
-  print("Overall MPI Job Counts")
+  print("Overall Job Counts")
   print("----------------------")
   print("")
   print(bt.build_tbl())
@@ -575,12 +578,12 @@ def main():
   
   ############################################################
   #  Self-build vs. BuildU != RunU
-  resultA = running_other_exec(cursor, args, startdate, enddate)
+  resultA = running_other_exec(cursor, args, start_date, end_date)
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
   print("")
-  print("---------------------------------------------------")
-  print("Comparing MPI Self-build vs. Build User != Run User")
-  print("---------------------------------------------------")
+  print("-----------------------------------------------")
+  print("Comparing Self-build vs. Build User != Run User")
+  print("-----------------------------------------------")
   print("")
   print(bt.build_tbl())
   
@@ -590,37 +593,44 @@ def main():
   print("-------------------")
   print("")
   
-  ############################################################
-  #  Build top executable list
-  execA = ExecRun(cursor)
-  execA.build(args, startdate, enddate)
+
+  for style in ('All','MPI','Scalar'):
   
-  ############################################################
-  #  Report of Top EXEC by Core Hours
-  resultA, sumCH = execA.report_by(args,"corehours")
-  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by Core-hours (Total Core Hours(M):",sumCH*1.0e-6,")\n")
-  print(bt.build_tbl())
+    ############################################################
+    #  Build top executable list for style type
+    execA = ExecRun(cursor)
+    execA.build(args, style, start_date, end_date)
+    
+    ############################################################
+    #  Report of Top EXEC of All types by Core Hours
+    resultA, sumCH = execA.report_by(args,"corehours")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, style, style+" Executables sorted by Core-hours (Total Core Hours(M):",
+            sumCH*1.0e-6,")\n")
+    print(bt.build_tbl())
   
-  ############################################################
-  #  Report of Top EXEC by Num Jobs
-  resultA, sumCH  = execA.report_by(args,"n_jobs")
-  bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by # Jobs\n")
-  print(bt.build_tbl())
+    ############################################################
+    #  Report of Top EXEC of All types by Num Jobs
+    resultA, sumCH  = execA.report_by(args,"n_jobs")
+    bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, style+" Executables sorted by # Jobs\n")
+    print(bt.build_tbl())
   
-  ############################################################
-  #  Report of Top EXEC by Users
-  resultA, sumCH = execA.report_by(args,"n_users")
-  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Executables sorted by # Users\n")
-  print(bt.build_tbl())
+    ############################################################
+    #  Report of Top EXEC by All types by Users
+    resultA, sumCH = execA.report_by(args,"n_users")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    print("\nTop",args.num, style+" Executables sorted by # Users\n")
+    print(bt.build_tbl())
   
+  return
+
+
   if (args.full):
     ############################################################
     #  Report of Top EXEC by Corehours for gcc
     execA          = ExecRunLink(cursor)
-    execA.build(args, startdate, enddate,"gcc")
+    execA.build(args, start_date, end_date,"gcc")
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for gcc\n")
@@ -629,7 +639,7 @@ def main():
     ############################################################
     #  Report of Top EXEC by Corehours for g++
     execA          = ExecRunLink(cursor)
-    execA.build(args, startdate, enddate,"g++")
+    execA.build(args, start_date, end_date,"g++")
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for g++\n")
@@ -638,7 +648,7 @@ def main():
     ############################################################
     #  Report of Top EXEC by Corehours for gfortran
     execA          = ExecRunLink(cursor)
-    execA.build(args, startdate, enddate,"gfortran")
+    execA.build(args, start_date, end_date,"gfortran")
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for gfortran\n")
@@ -647,7 +657,7 @@ def main():
     ############################################################
     #  Report of Top EXEC by Corehours for ifort
     execA          = ExecRunLink(cursor)
-    execA.build(args, startdate, enddate,"ifort")
+    execA.build(args, start_date, end_date,"ifort")
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for ifort\n")
@@ -656,7 +666,7 @@ def main():
     ############################################################
     #  Report of Top EXEC by Corehours for icc
     execA          = ExecRunLink(cursor)
-    execA.build(args, startdate, enddate,"icc")
+    execA.build(args, start_date, end_date,"icc")
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for icc\n")
@@ -665,7 +675,7 @@ def main():
     ############################################################
     #  Report of Top EXEC by Corehours for icpc
     execA          = ExecRunLink(cursor)
-    execA.build(args, startdate, enddate,"icpc")
+    execA.build(args, start_date, end_date,"icpc")
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for icpc\n")
@@ -674,7 +684,7 @@ def main():
   ############################################################
   #  Report of Top Modules by Core Hours
   modA = ModuleExec(cursor)
-  modA.build(args, startdate, enddate)
+  modA.build(args, start_date, end_date)
   resultA = modA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
@@ -683,7 +693,7 @@ def main():
   ############################################################
   # Report on Compiler (linker) usage by Count
   linkA = CompilerUsageByCount(cursor)
-  linkA.build(args, startdate, enddate)
+  linkA.build(args, start_date, end_date)
   resultA = linkA.report_by(args, "count")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
   print("\nCompiler usage by Count\n")
@@ -692,7 +702,7 @@ def main():
   ############################################################
   # Report on Compiler (linker) usage by Core Hours
   linkA = CompilerUsageByCoreHours(cursor)
-  linkA.build(args, startdate, enddate)
+  linkA.build(args, start_date, end_date)
   resultA = linkA.report_by(args, "corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
   print("\nCompiler usage by Corehours\n")
@@ -701,7 +711,7 @@ def main():
   ############################################################
   #  Report of Library by short module name usage by Core Hours.
   libA = Libraries(cursor)
-  libA.build(args, startdate, enddate)
+  libA.build(args, start_date, end_date)
   resultA = libA.group_report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("")
@@ -725,7 +735,7 @@ def main():
   ############################################################
   #  Report of Library usage by Core Hours for largemem.
   libA = Libraries(cursor)
-  libA.build(args, startdate, enddate, "largemem")
+  libA.build(args, start_date, end_date, "largemem")
   resultA = libA.report_by(args,"corehours")
   if (resultA):
     bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
