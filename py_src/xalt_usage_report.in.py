@@ -98,7 +98,7 @@ class ExecRun:
        sA.append("    AND num_cores > '1' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-    query  = "".join(sA) % (args.syshost, min_tasks, start_date, end_date)
+    query  = "".join(sA) % (args.syshost, start_date, end_date)
     cursor = self.__cursor
 
     cursor.execute(query)
