@@ -1,7 +1,9 @@
 #include "sys/time.h"
 #include <string>
 #include <stdio.h>
+#include <limits.h>
 #include <sys/utsname.h>
+#include <unistd.h>
 
 #include "epoch.h"
 #include "xalt_config.h"
@@ -43,7 +45,10 @@ int main(int argc, char* argv[])
   parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, linklineA);
   
   //--------------------------------------------------
-  // Build user, osName and system;
+  // Build user, osName, cwd and system;
+  char cwd[PATH_MAX+1];
+  getcwd(cwd, sizeof(cwd));
+
   struct utsname u;
   uname(&u);
 
@@ -66,7 +71,7 @@ int main(int argc, char* argv[])
   std::string system = u.sysname;
   std::string host   = u.nodename;
 
-  std::string array[13][2];
+  std::string array[14][2];
 
   int k = -1;
   ++k; array[k][0] = "<XALT_Version>";        array[k][1] = version;          /*  0 */
@@ -81,7 +86,8 @@ int main(int argc, char* argv[])
   ++k; array[k][0] = "<Build_date>";          array[k][1] = date;             /*  9 */
   ++k; array[k][0] = "<Build_LOADEDMODULES>"; array[k][1] = loadedmodules;    /* 10 */
   ++k; array[k][0] = "<Build_LMFILES>";       array[k][1] = lmfiles;          /* 11 */
-  ++k; array[k][0] = "<Build_Epoch>";         array[k][1] = epochStr;         /* 12 */
+  ++k; array[k][0] = "<Build_CWD>";           array[k][1] = cwd;              /* 12 */
+  ++k; array[k][0] = "<Build_Epoch>";         array[k][1] = epochStr;         /* 13 */
 
   int n = k+1;
 

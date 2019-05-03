@@ -148,7 +148,7 @@ void wrapper_for_myfini(int signum);
 
 static int          countA[2];
 static char         uuid_str[37];
-static char         exec_path[PATH_MAX];
+static char         exec_path[PATH_MAX+1];
 static char *       exec_pathQ;
 static char *       usr_cmdline;
 static char *       b64_cmdline;
