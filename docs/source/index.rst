@@ -29,14 +29,14 @@ as create a \*.json record of the link for further analysis.
 
 The second part is to measure the run-time and other information about
 each executation that is tracked. It relies on a feature of the ELF
-binary format that Linux uses. ELF supports an init array of function
-pointers that if they have a value are run before main(). There is a
-second array, called the fini array that is run after main()
-completes if the program runs to completion, i.e. if it doesn't
-segfault or otherwise terminate early.  Also ELF supports reading the
-environment variable LD_PRELOAD.  If this variable points to a shared
-libary (\*.so), then that share libary is also linked in to every
-non-static executable.  A simple example C program, *try.c*::
+binary format used by Linux binaries. ELF supports an init array of
+function pointers that if they have a value are run before
+main(). There is a second array, called the fini array that is run
+after main() completes if the program runs to completion, i.e. if it
+doesn't segfault or otherwise terminate early.  Also ELF supports
+reading the environment variable LD_PRELOAD.  If this variable points
+to a shared libary (\*.so), then that share libary is also linked in
+to every non-static executable.  A simple example C program, *try.c*::
 
      #include <stdio.h>
      int main()
