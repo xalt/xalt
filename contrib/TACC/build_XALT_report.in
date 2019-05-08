@@ -13,7 +13,7 @@ export PATH=/opt/apps/gcc4_9/python/2.7.12/bin:$PATH
 export LD_LIBRARY_PATH=/opt/apps/gcc4_9/python/2.7.12/lib:/opt/apps/intel/15/composer_xe_2015.2.164/mkl/lib/intel64:/opt/apps/intel/15/composer_xe_2015.2.164/compiler/lib/intel64:$LD_LIBRARY_PATH
 
 
-XALT_START_DATE='2018-03-01'
+XALT_START_DATE='2019-01-21'
 
 today=$(date +%F)
 ystrday=$(date -d "-1day" +%F)

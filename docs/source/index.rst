@@ -40,7 +40,7 @@ non-static executable.  A simple example C program, *try.c*::
 
      #include <stdio.h>
      int main()
-     { printf("Hello World!\n"; return 0;}
+     { printf("Hello World!\n"); return 0;}
   
 can have its execution modified by a shared library that is built from
 the following C code, *xalt.c*, that is compiled by a GCC compiler::
@@ -106,6 +106,7 @@ are divided into the following steps.
    060_setup_db
    070_loading_json_by_file
    080_loading_json_by_syslog
+   090_testing_xalt
 
 Advanced Topics
 ^^^^^^^^^^^^^^^
@@ -113,7 +114,7 @@ Advanced Topics
 .. toctree::
    :maxdepth: 1
 
-   090_execstack
+   100_execstack
 
 FAQ
 ^^^
