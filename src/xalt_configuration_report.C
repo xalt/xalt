@@ -43,6 +43,29 @@ int main(int argc, char* argv[])
       return 1;
     }
     
+  const char* home = getenv("HOME");
+  if (home == NULL)
+    {
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      std::cout << "   Warning: HOME is not set\n"
+      std::cout << "\n";
+      std::cout << "            XALT will not do anything without this variable having a value\n";
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      return 1;
+    }
+    
+  const char* user = getenv("USER");
+  if (user == NULL)
+    {
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      std::cout << "   Warning: USER is not set\n"
+      std::cout << "\n";
+      std::cout << "            XALT will not do anything without this variable having a value\n";
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      return 1;
+    }
+    
+
   std::string syshost(xalt_syshost());
   std::string syslog_tag("XALT_LOGGING_");
   syslog_tag.append(syshost);
