@@ -102,7 +102,7 @@ You should see something that looks like::
 
     myfini(LD_PRELOAD){
       Recording State at end of scalar user program:
-        LD_LIBRARY_PATH= PATH=/usr/bin:/bin /home/user/l/pkg/xalt/xalt//libexec/xalt_run_submission --interfaceV 4 --pid 10 --ppid 1--syshost "..." --start "..." --end "..." --exec "/home/user/t/xalt/try" --ntasks 1 --kind "scalar" --uuid "cbaec70f-d9e8-41e1-a76b-4db0729ddb06" --prob 1 --ngpus 0 --watermark "..." --path "..." --ld_libpath "..." -- ["./try"]
+        LD_LIBRARY_PATH= PATH=/usr/bin:/bin /home/user/l/pkg/xalt/xalt//libexec/xalt_run_submission --interfaceV 4 --pid 10 --ppid 1--syshost "..." --start "..." --end "..." --exec "..." --ntasks 1 --kind "scalar" --uuid "..." --prob 1 --ngpus 0 --watermark "..." --path "..." --ld_libpath "..." -- ["./try"]
     }
 
 
