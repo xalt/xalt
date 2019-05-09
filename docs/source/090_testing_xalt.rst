@@ -24,7 +24,7 @@ install it under the **~/pkg/**.  Then you can do the following::
 Step 2: Set XALT_EXECUTABLE_TRACKING to yes.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-XALT will not track anything unset this environment variable is set to
+XALT will not track anything unless this environment variable is set to
 **yes**::
 
    $ export XALT_EXECUTABLE_TRACKING=yes
