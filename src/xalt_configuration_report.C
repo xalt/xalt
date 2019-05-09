@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
   if (executable_tracking == NULL || (strcmp(executable_tracking,"yes") != 0))
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
-      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to \"yes\"!!\n";
-      std::cout << "\n";
-      std::cout << "            XALT will not do anything without this variable\n";
-      std::cout << "            set to \"yes\"\n";
+      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to \"yes\"!!                    \n";
+      std::cout << "                                                                                \n";
+      std::cout << "            XALT will not do anything without this variable                     \n";
+      std::cout << "            set to \"yes\"                                                      \n";
       std::cout << "*------------------------------------------------------------------------------*\n";
       return 1;
     }
@@ -47,9 +47,9 @@ int main(int argc, char* argv[])
   if (home == NULL)
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
-      std::cout << "   Warning: HOME is not set\n"
-      std::cout << "\n";
-      std::cout << "            XALT will not do anything without this variable having a value\n";
+      std::cout << "   Warning: HOME is not set                                                     \n";
+      std::cout << "                                                                                \n";
+      std::cout << "            XALT will not do anything without this variable having a value      \n";
       std::cout << "*------------------------------------------------------------------------------*\n";
       return 1;
     }
@@ -58,9 +58,9 @@ int main(int argc, char* argv[])
   if (user == NULL)
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
-      std::cout << "   Warning: USER is not set\n"
-      std::cout << "\n";
-      std::cout << "            XALT will not do anything without this variable having a value\n";
+      std::cout << "   Warning: USER is not set                                                     \n";
+      std::cout << "                                                                                \n";
+      std::cout << "            XALT will not do anything without this variable having a value      \n";
       std::cout << "*------------------------------------------------------------------------------*\n";
       return 1;
     }

@@ -1,5 +1,5 @@
-Testing XALT to produce *.json output
--------------------------------------
+Testing XALT to produce \*.json output
+--------------------------------------
 
 The generation of \*.json files part of XALT can be tested in a user
 account without any making any changes to the system level.
@@ -30,8 +30,8 @@ XALT will not track anything unless this environment variable is set to
 
    $ export XALT_EXECUTABLE_TRACKING=yes
    
-Step 3: $HOME and $USER must have a value
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 3: $HOME and $USER must have values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 XALT will not produce anything \*.json without $HOME and $USER having
 a value. This might be true when run under a container.
