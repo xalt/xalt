@@ -28,14 +28,14 @@ which adds a *watermark* to every executable built with XALT2 as well
 as create a \*.json record of the link for further analysis.
 
 The second part is to measure the run-time and other information about
-each executation that is tracked. It relies on a feature of the ELF
+each execution that is tracked. It relies on a feature of the ELF
 binary format used by Linux binaries. ELF supports an init array of
 function pointers that if they have a value are run before
 main(). There is a second array, called the fini array that is run
 after main() completes if the program runs to completion, i.e. if it
 doesn't segfault or otherwise terminate early.  Also ELF supports
 reading the environment variable LD_PRELOAD.  If this variable points
-to a shared libary (\*.so), then that share libary is also linked in
+to a shared library (\*.so), then that share library is also linked in
 to every non-static executable.  A simple example C program, *try.c*::
 
      #include <stdio.h>
@@ -92,7 +92,7 @@ Installing XALT2
 Installing XALT 2 is both straightforward and complicated.  It is
 straightforward in that it only requires a configure step and **make
 install**.  But it is complicated because a site will be required to
-taylor the filtering to meet their site's needs.  The install steps
+tailor the filtering to meet their site's needs.  The install steps
 are divided into the following steps.
 
 .. toctree::
