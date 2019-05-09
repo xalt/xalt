@@ -22,13 +22,15 @@ researchers do and do not need.  Drilling down to data driven usage
 statistics helps stakeholders conduct business in a more efficient,
 effective, and systematic way.
 
+
+## Documentation
+
+Installation and Use of XALT is provided at https://xalt.readthedocs.io website.
+
 ## Commercial Support
+
 Ellexus is providing commercial support.
 See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercomputers if interested.
-
-
-## Installation and Use of XALT
-Documentation is provided at xalt.readthedocs.io on how to install and use XALT.
 
 ## ChangeLog
 
