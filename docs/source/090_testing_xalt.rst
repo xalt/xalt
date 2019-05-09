@@ -20,6 +20,7 @@ install it under the **~/pkg/**.  Then you can do the following::
    $ make install
    $ export PATH=$HOME/pkg/xalt/xalt/bin:$PATH
    $ export COMPILER_PATH=$HOME/pkg/xalt/xalt/bin
+   
 
 Step 2: Set XALT_EXECUTABLE_TRACKING to yes.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -28,9 +29,14 @@ XALT will not track anything unset this environment variable is set to
 **yes**::
 
    $ export XALT_EXECUTABLE_TRACKING=yes
+   
+Step 3: $HOME and $USER must have a value
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+XALT will not produce anything \*.json without $HOME and $USER having
+a value. This might be true when run under a container.
 
-Step 3: Test xalt_configuration_report
+Step 4: Test xalt_configuration_report
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You should run **xalt_configuration_report** to see how xalt is
@@ -39,7 +45,7 @@ currently configured.  Make sure that the transmission style is
 
    $ xalt_configuration_report
 
-Step 4: Test linking a program
+Step 5: Test linking a program
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create a **try.c** that has::
@@ -81,7 +87,7 @@ You should also try running the link without XALT tracing::
 And check that there is a new \*.json file in ~/.xalt.d
 
 
-Step 5: run a program
+Step 6: run a program
 ^^^^^^^^^^^^^^^^^^^^^
 
 You can run a program under XALT by doing the following::

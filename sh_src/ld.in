@@ -177,8 +177,7 @@ if [ -z "$HOME" -o -z "$USER" ]; then
 fi
 
 if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true -o "$PARTIAL_LINKING" = true ]; then
-  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP, PARTIAL_LINKING: $PARTIAL_LINKING"
-
+  tracing_msg "No JSON Record: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: \"$SKIP\", HOME: \"$HOME\", USER: \"$USER\", PARTIAL_LINKING: \"$PARTIAL_LINKING\""
   $MY_CMD "${argA[@]}"
   status=$?
   exit $status

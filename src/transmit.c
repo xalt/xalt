@@ -33,7 +33,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     {
       if (resultFn == NULL)
 	{
-	  DEBUG0(stderr,"  resultFn is NULL, $HOME might be undefined -> No XALT output\n");
+	  DEBUG0(stderr,"  resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
 	  return;
 	}
 
