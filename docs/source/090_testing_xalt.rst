@@ -1,5 +1,5 @@
-Testing XALT
-------------
+Testing XALT to produce *.json output
+-------------------------------------
 
 The generation of \*.json files part of XALT can be tested in a user
 account without any making any changes to the system level.
