@@ -190,6 +190,16 @@ To write records to syslog do::
 
    --with-transmission=syslog
 
+XALT 1 supported the *directdb* transmission style.  This is **NOT**
+supported in XALT 2.  XALT 1 only tracked MPI programs.  Since they
+are fewer in number the demand on a MySQL database server was not a
+problem but with XALT 2 tracking both scalar and MPI programs, the
+demands on a database server is too high.  Also this would mean that
+every tracked scalar program would have to make a database insert
+every time it ran.  This would affect the performance of short
+programs. 
+
+
 Track MPI and/or Non-MPI executables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

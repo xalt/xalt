@@ -20,4 +20,4 @@ XALT 2.6+
                spaces in paths.  Changed end2end test to include a directory in $PATH that has a space in it.
              * Adding CWD to watermark.
 	     * Make explicit in xalt_configuration_report and in the docs that $HOME and $USER must be defined.
-	     
+    (2.6.15) * Added a debug message that reports that the "directdb" method is NOT supported.
