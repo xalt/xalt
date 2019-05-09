@@ -23,7 +23,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes")  == 0 ||
 				   strcmp(p_dbg,"run")  == 0 ));
 
-  if ((strcasecmp(transmission,"directdb") == 0)
+  if (strcasecmp(transmission,"directdb") == 0)
     {
       DEBUG0(stderr,"  Direct to DB transmission is NOT supported!\n");
       return;
