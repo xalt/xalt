@@ -19,3 +19,5 @@ XALT 2.6+
     (2.6.14) * Make sure that all capture calls and system calls in xalt_initialize.c are protected against
                spaces in paths.  Changed end2end test to include a directory in $PATH that has a space in it.
              * Adding CWD to watermark.
+	     * Make explicit in xalt_configuration_report and in the docs that $HOME and $USER must be defined.
+	     
