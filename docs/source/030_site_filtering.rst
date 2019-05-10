@@ -7,7 +7,7 @@ Config/TACC_config.py is the configuration we use at TACC.  This file
 defines three types of filtering.  One is hostname filtering.  It is
 typical to only track program execution on compute nodes.::
 
-   **Note** that linking of executable is tracked on both login and compute nodes.
+   **Note** XALT tracks linking of executables on both login and compute nodes.
 
 The second type of filtering is by executables path. Finally there is
 filtering of the environment variables.  It turns out that storing the
@@ -164,9 +164,12 @@ which package each program uses.  Those programs can be marked as PKGS.
 
 The strategy that TACC uses is to keep program like cp, perl, gawk and
 ignore all other system executables that are in /bin/, /usr/bin
-etc. Also we ignore all the compiler programs that live in the
-compiler directories.  Similarly for the mpi helper program such as
-mpiexec that live in the mpi directories.
+etc. That is why, for example, **/bin/sed** and **/usr/bin/sed** are
+marked as KEEP's where as **/bin** and **/usr/bin** are marked as
+SKIP's.  That way /bin/ls is ignored but /bin/sed is tracked.  Also we
+ignore all the compiler programs that live in the compiler
+directories.  Similarly for the mpi helper program such as mpiexec
+that live in the mpi directories.
 
 We do not wish to track the generated programs from autoconf
 (e.g. conftest) and Cmake (.*/CMakeTmp\/cmTryCompileExec[0-9][0-9]*).
