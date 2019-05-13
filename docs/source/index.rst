@@ -70,7 +70,7 @@ then::
     This is run after main()
 
 This is all **without** making a single change to the ./try
-executable.
+executable file.
 
 The actual shared library that XALT builds generates a \*.json file
 that contains the run-time, the number of task and other information
