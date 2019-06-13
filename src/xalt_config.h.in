@@ -25,5 +25,7 @@
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
 #define XALT_TMPDIR                "@XALT_TMPDIR@"
 #define XALT_INSTALL_OS            "@XALT_INSTALL_OS@"
+#define XALT_PRIME_NUMBER          @XALT_PRIME_NUMBER@
+#define XALT_PRIME_FMT             "@XALT_PRIME_FMT@"
 
 #endif /* XALT_CONFIG_H */

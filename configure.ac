@@ -249,6 +249,19 @@ AC_ARG_WITH(tmpdir,
     XALT_TMPDIR="$withval"
     AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$withval"))dnl
 
+AC_SUBST(XALT_PRIME_NUMBER)
+AC_ARG_WITH(primeNumber,
+    AC_HELP_STRING([--with-primeNumber=ans],[The prime number of directories when using XALT_FILE_PREFIX, [[997]]]),
+    XALT_PRIME_NUMBER="$withval"
+    AC_MSG_RESULT([XALT_PRIME_NUMBER=$with-primeNumber])
+    AC_DEFINE_UNQUOTED(XALT_PRIME_NUMBER, "$with-primeNumber")dnl
+    ,
+    withval="997"
+    AC_MSG_RESULT([XALT_PRIME_NUMBER=$withval])
+    XALT_PRIME_NUMBER="$withval"
+    AC_DEFINE_UNQUOTED(XALT_PRIME_NUMBER, "$withval"))dnl
+
+AC_SUBST(XALT_PRIME_FMT)
 AC_SUBST(HAVE_32BIT)
 
 if test "$BIT32" = yes ; then
@@ -496,6 +509,24 @@ if test "$STATIC_LIBS" = yes; then
     AC_SEARCH_LIBS([SHA1], [:libcrypto.a], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto.a])], [-ldl -lz])
 else
     AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
+fi
+
+$PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
+if test "$?" != 0; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT when --with-primeNumber=<ans>"
+   echo "is not a prime number.  It also has to be bigger than 3."
+   echo "See the xalt.readthedocs.io for details."
+   echo "======================================================="
+   rm -f makefile
+   exit 1
+fi
+   
+XALT_PRIME_FMT=$($PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_fmt.py $XALT_PRIME_NUMBER)
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h

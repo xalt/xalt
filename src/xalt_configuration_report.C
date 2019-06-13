@@ -146,6 +146,7 @@ int main(int argc, char* argv[])
       json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
       if (strcmp(transmission,"syslog") == 0)
         json.add("XALT_LOGGING_TAG",            syslog_tag);
+      json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
       json.add("XALT_COMPUTE_SHA1",             computeSHA1);
       json.add("XALT_ETC_DIR",                  xalt_etc_dir);
       json.add("XALT_DIR",                      XALT_DIR);
@@ -187,6 +188,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_FUNCTION_TRACKING:        " << xalt_func_tracking             << "\n";
   std::cout << "XALT_SYSHOST:                  " << syshost                        << "\n";
   std::cout << "XALT_FILE_PREFIX:              " << XALT_FILE_PREFIX               << "\n";
+  std::cout << "XALT_PRIME_NUMBER:             " << XALT_PRIME_NUMBER              << "\n";
   std::cout << "XALT_INTERFACE_VERSION:        " << XALT_INTERFACE_VERSION         << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:       " << transmission                   << "\n";
   if (strcmp(transmission,"syslog") == 0)

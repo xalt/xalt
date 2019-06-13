@@ -8,6 +8,7 @@
 #include "xalt_utils.h"
 #include "xalt_config.h"
 #include "xalt_regex.h"
+#include "Options.h"
 
 
 bool path2module(const char* path, Table& rmapT, char* module_name, int module_name_sz)
@@ -132,29 +133,4 @@ FILE* xalt_json_file_open(std::string& rmapD, const char* name)
       start = ++p;
     } 
   return fp;
-}
-
-void build_xaltDir(std::string& xaltDir, const char *kind, std::string& userName, std::string& baseDir, const char* transmission)
-{
-  
-  #ifdef HAVE_FILE_PREFIX
-    xaltDir.assign(XALT_FILE_PREFIX);
-    xaltDir.append("/");
-    if (strcasecmp(transmission,"file_separate_dirs") == 0)
-      {
-        xaltDir.append(kind);
-        xaltDir.append("/");
-      }
-
-    xaltDir.append(userName);
-    xaltDir.append("/");
-  #else
-    xaltDir.assign(baseDir);
-    xaltDir.append("/.xalt.d/");
-    if (strcasecmp(transmission,"file_separate_dirs") == 0)
-      {
-        xaltDir.append(kind);
-        xaltDir.append("/");
-      }
-  #endif
 }

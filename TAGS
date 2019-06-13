@@ -542,8 +542,8 @@ SETUP_CMD=68,1842
 BASE_DIR=130,4044
   MAKE=140,4192
 
-docs/source/index.rst,72
-XALT 2: Tracking user executables and library usage on your cluster1,0
+docs/source/index.rst,27
+function pointers 33,1354
 
 docs/source/010_prereqs.rst,67
 library,5,121
@@ -565,10 +565,10 @@ docs/source/020_site_configuration.rst,48
     --with-syshostConfig=syshostConfig82,2314
 
 docs/source/030_site_filtering.rst,101
-    void my_hostname_parser_cleanup(85,3523
-The routines must be called my_hostname_parser(91,3653
+    void my_hostname_parser_cleanup(85,3520
+The routines must be called my_hostname_parser(91,3650
 
-docs/source/090_execstack.rst,99
+docs/source/100_execstack.rst,99
     int main(29,1006
 the assembly code,59,1719
 Normally this is not a problem.  However,65,2009
@@ -1430,8 +1430,9 @@ class CreateConf(54,1988
   def create(81,2906
 def main(88,2985
 
-py_src/xalt_name_mapping.py,28
-def name_mapping(239,18376
+py_src/xalt_name_mapping.py,57
+def name_mapping(242,18465
+def get_comm_name(245,18510
 
 py_src/progressBar.py,171
 def getTerminalSize(26,1136
@@ -1504,39 +1505,39 @@ def build_xaltDir(274,7828
 def main(285,8101
 
 py_src/xalt_usage_report.in.py,956
-def shortName(45,2433
-class CmdLineOptions(55,2597
-  def __init__(58,2665
-  def execute(62,2722
-class ExecRun:ExecRun74,3663
-  def __init__(76,3733
-  def build(80,3814
-  def report_by(112,4995
-class ExecRunLink:ExecRunLink129,5568
-  def __init__(131,5642
-  def build(135,5723
-  def report_by(169,7047
-class CompilerUsageByCount:CompilerUsageByCount186,7620
-  def __init__(187,7648
-  def build(190,7728
-  def report_by(206,8262
-class CompilerUsageByCoreHours:CompilerUsageByCoreHours220,8690
-  def __init__(221,8722
-  def build(225,8803
-  def report_by(252,9756
-class Libraries:Libraries266,10306
-  def __init__(268,10324
-  def build(272,10404
-  def report_by(303,12292
-  def group_report_by(325,13066
-class ModuleExec:ModuleExec360,14196
-  def __init__(361,14214
-  def build(365,14294
-  def report_by(387,15098
-def kinds_of_jobs(401,15622
-def percent_str(471,18254
-def running_other_exec(478,18383
-def main(533,20856
+def shortName(44,2432
+class CmdLineOptions(54,2596
+  def __init__(57,2664
+  def execute(61,2721
+class ExecRun:ExecRun73,3662
+  def __init__(75,3732
+  def build(79,3813
+  def report_by(115,5151
+class ExecRunLink:ExecRunLink132,5724
+  def __init__(134,5798
+  def build(138,5879
+  def report_by(172,7207
+class CompilerUsageByCount:CompilerUsageByCount189,7780
+  def __init__(190,7808
+  def build(193,7888
+  def report_by(209,8426
+class CompilerUsageByCoreHours:CompilerUsageByCoreHours223,8854
+  def __init__(224,8886
+  def build(228,8967
+  def report_by(255,9924
+class Libraries:Libraries269,10474
+  def __init__(271,10492
+  def build(275,10572
+  def report_by(306,12464
+  def group_report_by(328,13238
+class ModuleExec:ModuleExec363,14368
+  def __init__(364,14386
+  def build(368,14466
+  def report_by(390,15274
+def kinds_of_jobs(404,15798
+def percent_str(474,18434
+def running_other_exec(481,18563
+def main(536,21042
 
 py_src/xalt_util.py,390
 def config_logger(28,1270
@@ -5252,21 +5253,21 @@ PARTIAL_LINKING=90,3135
     SKIP=171,4634
     SKIP=173,4668
    SKIP=176,4727
-  status=183,4987
-XALT_INC=190,5123
-  XLD=215,5933
-      MY_HOSTNAME_PARSER_OBJ=217,6008
-      MY_HOSTNAME_PARSER_OBJ=219,6119
-    RESULT=240,7437
-    RESULT=242,7525
-OBJ=247,7679
-  OBJ=251,7754
-LIBDCGM=282,8757
-    LIBDCGM=287,8945
-    XALT_INIT_ROUTINE_OBJ=295,9223
-status=303,9517
-EXEC=312,9790
-  PATH=316,9872
+  status=182,5036
+XALT_INC=189,5172
+  XLD=214,5982
+      MY_HOSTNAME_PARSER_OBJ=216,6057
+      MY_HOSTNAME_PARSER_OBJ=218,6168
+    RESULT=239,7486
+    RESULT=241,7574
+OBJ=246,7728
+  OBJ=250,7803
+LIBDCGM=281,8806
+    LIBDCGM=286,8994
+    XALT_INIT_ROUTINE_OBJ=294,9272
+status=302,9566
+EXEC=311,9839
+  PATH=315,9921
 
 sh_src/xalt_print_os.in,55
     result=6,95
@@ -5292,10 +5293,6 @@ void build_uuid(9,184
 
 src/pkgRecordTransmit.C,31
 void pkgRecordTransmit(13,248
-
-src/xalt_watermark.c,67
-const char * xalt_watermark(1,0
-const char * xalt_watermark(2,53
 
 src/buildRmapT.C,24
 void buildRmapT(13,237
@@ -5443,57 +5440,57 @@ static const char * xalt_run_short_descriptA[xalt_run_short_descriptA125,4467
 static int          countA[countA149,5343
 static char         uuid_str[uuid_str150,5374
 static char         exec_path[exec_path151,5408
-static char *       exec_pathQ;152,5449
-static char *       usr_cmdline;153,5481
-static char *       b64_cmdline;154,5514
-static const char * my_syshost;155,5547
-static char *       watermark 157,5580
-static char *       b64_watermark 158,5630
-static int          run_submission_exists 159,5680
-static xalt_status  reject_flag	160,5801
-static int          run_mask 161,5859
-static double       probability 162,5906
-static pid_t        ppid	163,5955
-static pid_t        pid 164,5995
-static int          errfd	165,6036
-static double       my_rand 166,6078
-static double       start_time	167,6127
-static double       end_time	168,6175
-static double       frac_time 169,6221
-static long         my_rank	170,6270
-static long         my_size	171,6314
-static int          xalt_kind 172,6358
-static int          xalt_tracing 173,6405
-static int          xalt_run_tracing 174,6452
-static int          xalt_gpu_tracking 175,6499
-static char *       pathArg	176,6546
-static char *       ldLibPathArg 177,6592
-static int          num_gpus 178,6642
-static int          b64_len 179,6689
-static int          b64_wm_len 180,6736
-static unsigned long long __time 182,6799
-static void * nvml_handle 183,6846
-static dcgmHandle_t dcgm_handle 202,7940
-#define DCGMFUNC2(205,8122
-#define HERE 222,8678
-#define DEBUG0(224,8741
-#define DEBUG1(225,8808
-#define DEBUG2(226,8880
-#define DEBUG3(227,8957
-#define DEBUG4(228,9039
-void myinit(230,9127
-void wrapper_for_myfini(752,26290
-void myfini(763,26535
-static int load_nvml(1028,36747
-static long compute_value(1060,37894
-static void get_abspath(1078,38227
-static volatile double epoch(1093,38557
-static unsigned int mix(1100,38678
-static  double scalar_program_sample_probability(1114,39061
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1131,39329
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1132,39449
-  __attribute__((section(".init_array"))) __typeof__(1134,39575
-  __attribute__((section(".fini_array"))) __typeof__(1135,39654
+static char *       exec_pathQ;152,5451
+static char *       usr_cmdline;153,5483
+static char *       b64_cmdline;154,5516
+static const char * my_syshost;155,5549
+static char *       watermark 157,5582
+static char *       b64_watermark 158,5632
+static int          run_submission_exists 159,5682
+static xalt_status  reject_flag	160,5803
+static int          run_mask 161,5861
+static double       probability 162,5908
+static pid_t        ppid	163,5957
+static pid_t        pid 164,5997
+static int          errfd	165,6038
+static double       my_rand 166,6080
+static double       start_time	167,6129
+static double       end_time	168,6177
+static double       frac_time 169,6223
+static long         my_rank	170,6272
+static long         my_size	171,6316
+static int          xalt_kind 172,6360
+static int          xalt_tracing 173,6407
+static int          xalt_run_tracing 174,6454
+static int          xalt_gpu_tracking 175,6501
+static char *       pathArg	176,6548
+static char *       ldLibPathArg 177,6594
+static int          num_gpus 178,6644
+static int          b64_len 179,6691
+static int          b64_wm_len 180,6738
+static unsigned long long __time 182,6801
+static void * nvml_handle 183,6848
+static dcgmHandle_t dcgm_handle 202,7942
+#define DCGMFUNC2(205,8124
+#define HERE 222,8680
+#define DEBUG0(224,8743
+#define DEBUG1(225,8810
+#define DEBUG2(226,8882
+#define DEBUG3(227,8959
+#define DEBUG4(228,9041
+void myinit(230,9129
+void wrapper_for_myfini(752,26292
+void myfini(763,26537
+static int load_nvml(1028,36749
+static long compute_value(1060,37896
+static void get_abspath(1078,38229
+static volatile double epoch(1093,38559
+static unsigned int mix(1100,38680
+static  double scalar_program_sample_probability(1114,39063
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1131,39331
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1132,39451
+  __attribute__((section(".init_array"))) __typeof__(1134,39577
+  __attribute__((section(".fini_array"))) __typeof__(1135,39656
 
 src/ConfigParser.h,304
 #define CONFIGPARSER_H2,23
@@ -5527,11 +5524,10 @@ src/run_submission.h,30
 src/xalt_fgets_alloc.h,32
 #define XALT_FGETS_ALLOC_H2,27
 
-src/xalt_utils.C,118
-bool path2module(13,202
-FILE* xalt_file_open(40,877
-FILE* xalt_json_file_open(80,1598
-void build_xaltDir(137,2891
+src/xalt_utils.C,89
+bool path2module(14,223
+FILE* xalt_file_open(41,898
+FILE* xalt_json_file_open(81,1619
 
 src/walkProcessTree.C,28
 void walkProcessTree(7,114
@@ -6102,7 +6098,7 @@ src/epoch.h,21
 #define EPOCH_H2,16
 
 src/xalt_generate_watermark.C,17
-int main(11,186
+int main(13,226
 
 src/xalt_quotestring.h,27
 #define QUOTESTRING_H2,22
@@ -6115,13 +6111,10 @@ int xalt_fgets_alloc(9,158
 g++.sh,29
 export LD_LIBRARY_PATH=3,13
 
-README.md,100
-published by the Free Software Foundation;134,4183
-the License,135,4248
-the License, or 135,4248
-
 README.old,52
    (2.3.3)  Support XALT_TRANSMISSION_STYLE=12,383
+
+README.md,0
 
 README.new,0
 
@@ -6324,6 +6317,8 @@ docs/source/xalt.org,0
 docs/source/conf.py,0
 
 docs/source/070_loading_json_by_file.rst,0
+
+docs/source/090_testing_xalt.rst,0
 
 Config/TACC_config.py,0
 
