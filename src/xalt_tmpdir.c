@@ -9,7 +9,7 @@
 char* create_xalt_tmpdir_str(const char* run_uuid)
 {
   char* xalt_tmpdir = NULL;
-  asprintf(&xalt_tmpdir,"%s/XALT_pkg_%s",XALT_TMPDIR,run_uuid);
+  asprintf(&xalt_tmpdir,"%s/XALT_pkg_%s/", XALT_TMPDIR, run_uuid);
   return xalt_tmpdir;
 }
 

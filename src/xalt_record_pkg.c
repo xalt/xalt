@@ -27,10 +27,14 @@ int main(int argc, char* argv[])
 {
   char*       run_uuid	   = NULL;
   const char* my_host      = xalt_syshost();
+  const char* user         = getenv("USER");
   int         xalt_tracing = 0;
   int         len;
   char*       p_dbg;
   char        c;
+
+  if (!user)
+    user = "UNKNOWN";
 
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg)
@@ -112,15 +116,16 @@ int main(int argc, char* argv[])
   
   char* xalt_tmpdir = create_xalt_tmpdir_str(run_uuid);
 	  
-  asprintf(&resultFn,"%s/pkg.%s.%s.%s.%s.json", xalt_tmpdir, my_host, date_str,
+  asprintf(&resultFn,"pkg.%s.%s.%s.%s.%s.json", my_host, date_str, user,
                                                run_uuid, &uuid_str[24]);
-  DEBUG1(stderr,"resultFn: %s\n",resultFn);
+  DEBUG1(stderr,"resultFn: %s\n",   resultFn);
+  DEBUG1(stderr,"xalt_tmpdir: %s\n",xalt_tmpDir);
   free(xalt_tmpdir);
 
   char* key = NULL;
   asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
 
-  transmit("file", json_str, "pkg", key, my_host, resultFn);
+  transmit("file", json_str, "pkg", key, my_host, xalt_tmpdir, resultFn);
 
   free(resultFn);
   free(key);

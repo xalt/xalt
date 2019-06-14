@@ -235,12 +235,6 @@ INT_EPOCH=$(PATH=@xalt_system_path@ echo "( $EPOCH )/1" | bc)
 FRAC_EPOCH=$(PATH=@xalt_system_path@ echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
 DATESTR="${DATESTR}_${FRAC_EPOCH}"
 
-if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
-    RESULT=$XALT_FILE_PREFIX/${SEP_DIR}$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
-else
-    RESULT=$HOME/.xalt.d/${SEP_DIR}link.${SYSHOST}.${DATESTR}.$UUID.json
-fi
-
 # If the $ARGSRC exists then build it
 # otherwise don't try to link with it.
 OBJ=$ARGOBJ
@@ -324,6 +318,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # Generate link data.  
-PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$DATESTR" "$COMP_T"
 
 exit $status

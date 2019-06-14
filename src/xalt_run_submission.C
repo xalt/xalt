@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "xalt_quotestring.h"
+#include "build_resultFn.h"
 #include "epoch.h"
 #include "walkProcessTree.h"
 #include "Options.h"
@@ -124,8 +125,9 @@ int main(int argc, char* argv[], char* env[])
 
   DEBUG0(stderr,"  Built json string\n");
 
-  char*       resultFn = NULL;
-  std::string jsonStr  = json.result();
+  char*       c_resultFn  = NULL;
+  char*       c_resultDir = NULL;  
+  std::string jsonStr     = json.result();
   std::string fn;
 
 
@@ -134,38 +136,20 @@ int main(int argc, char* argv[], char* env[])
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
-      //*********************************************************************
-      // Build file name for xalt json record.  It is only used when the
-      // file transmission style is used;
-      char* c_home = getenv("HOME");
-      char* c_user = getenv("USER");
-      if (c_home != NULL && c_user != NULL )
-        {
-          std::string home   = c_home;
-          std::string user   = c_user;
-          std::string xaltDir;
-
-          build_xaltDir(xaltDir, "run", user, home, transmission);
-
-          double start = options.startTime();
-          double frac  = start - floor(start);
-          time = options.startTime();
-          strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
-
-          std::ostringstream sstream;
-          sstream << xaltDir << "run." << options.syshost() << ".";
-          sstream << dateStr << "_"    << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
-                  << suffix  << "."    << options.uuid()    << ".json";
-
-          fn = sstream.str();
-          resultFn = strdup(fn.c_str());
-        }
+      std::string resultDir, resultFn;
+      build_resultFn(resultDir, resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
+                     "run", transmission);
+      c_resultFn  = strdup(resultFn.c_str());
+      c_resultDir = strdup(resultDir.c_str());
     }
 
-  transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), resultFn);
+  transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), c_resultDir, c_resultFn);
   xalt_quotestring_free();
-  if (resultFn)
-    free(resultFn);
+  if (c_resultFn)
+    {
+      free(c_resultFn);
+      free(c_resultDir);
+    }
 
   //*********************************************************************
   // Transmit Pkg records if any

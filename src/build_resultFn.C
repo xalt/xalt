@@ -24,7 +24,7 @@ unsigned int hashStr(const char * string)
   return hash_value;
 }
 
-void build_resultFn(std::string& resultDir, std::string& resultFn, Options& options, const char *kind, const char* transmission)
+void build_resultFn(std::string& resultDir, std::string& resultFn, double start, const char* syshost, const char* uuid, const char *kind, const char* transmission)
 {
   char* c_home = getenv("HOME");
   char* c_user = getenv("USER");
@@ -40,7 +40,7 @@ void build_resultFn(std::string& resultDir, std::string& resultFn, Options& opti
             resultDir.append("/");
           }
         char * hashDir = NULL;
-        asprintf(&hashDir, XALT_PRIME_FMT,hashStr(c_user) % XALT_PRIME_NUMBER);
+        asprintf(&hashDir, XALT_PRIME_FMT "/",hashStr(c_user) % XALT_PRIME_NUMBER);
         resultDir.append(hashDir);
         free(hashDir);
       #else
@@ -53,14 +53,12 @@ void build_resultFn(std::string& resultDir, std::string& resultFn, Options& opti
           }
       #endif
         
-      double start = options.startTime();
       double frac  = start - floor(start);
-      time = options.startTime();
-      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
+      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&start));
 
       std::ostringstream sstream;
-      sstream << kind << "." << options.syshost() << ".";
-      sstream << dateStr << "_"    << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
+      sstream << kind << "." << options.syshost() << "." << dateStr << "."
+              << c_user << "_"    << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
               << suffix  << "."    << options.uuid()    << ".json";
 
       resultFn = sstream.str();
