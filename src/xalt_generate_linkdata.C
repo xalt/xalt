@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir, resultFn;
-      build_resultDir(resultDir, transmission);
+      build_resultDir(resultDir, "link", transmission);
       build_resultFn(resultFn, start, syshost, uuid, "link", "");
       c_resultFn  = strdup(resultFn.c_str());
       c_resultDir = strdup(resultDir.c_str());

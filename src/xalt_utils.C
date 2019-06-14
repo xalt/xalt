@@ -1,11 +1,14 @@
-#define  _GNU_SOURCE
+#include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <limits.h>
 #include <unistd.h>
 #include <regex.h>
 #include <time.h>
@@ -14,6 +17,8 @@
 #include "xalt_config.h"
 #include "xalt_regex.h"
 #include "Options.h"
+
+#define DATESZ 100
 
 bool path2module(const char* path, Table& rmapT, char* module_name, int module_name_sz)
 {
@@ -158,7 +163,7 @@ unsigned int hashStr(const char * string)
 }
 
 
-void build_resultDir(std::string& resultDir, const char* transmission)
+void build_resultDir(std::string& resultDir, const char *kind, const char* transmission)
 {
   char* c_home = getenv("HOME");
   char* c_user = getenv("USER");
@@ -192,13 +197,15 @@ void build_resultDir(std::string& resultDir, const char* transmission)
 void build_resultFn(std::string& resultFn, double start, const char* syshost, const char* uuid, const char *kind,
                     const char* suffix)
 {
+  char dateStr[DATESZ];
   char* c_home = getenv("HOME");
   char* c_user = getenv("USER");
   
   if (c_home != NULL && c_user != NULL )
     {
       double frac  = start - floor(start);
-      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&start));
+      time_t  time = start;
+      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
 
       std::ostringstream sstream;
       sstream << kind   << "." << syshost << "." << dateStr << "."

@@ -2,7 +2,6 @@
 #include <iomanip>
 #include <sstream>
 #include <fstream>
-#include <math.h>
 #include <time.h>
 #include <strings.h>
 #include <string.h>
@@ -20,16 +19,12 @@
 //#include "run_direct2db.h"
 #include "xalt_utils.h"
 
-#define DATESZ 100
-
 int main(int argc, char* argv[], char* env[])
 {
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
   Options options(argc, argv);
-  char    dateStr[DATESZ];
-  time_t  time;
   double  t0, t1;
   double  t_maps, t_sha1;
   DTable  measureT;
@@ -137,7 +132,7 @@ int main(int argc, char* argv[], char* env[])
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir, resultFn;
-      build_resultDir(resultDir,transmission);
+      build_resultDir(resultDir, "run", transmission);
 
 
       build_resultFn(resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),

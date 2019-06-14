@@ -2,7 +2,6 @@
 #include "run_submission.h"
 #include "xalt_tmpdir.h"
 #include "xalt_utils.h"
-#include "build_resultFn.h"
 #include "transmit.h"
 #include <dirent.h>
 #include <fnmatch.h>
@@ -32,7 +31,7 @@ void pkgRecordTransmit(Options& options, const char* transmission)
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir;
-      build_resultDir(resultDir, transmission);
+      build_resultDir(resultDir, "pkg", transmission);
       c_resultDir = strdup(resultDir.c_str());
     }
 

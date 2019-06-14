@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
   asprintf(&resultFn,"pkg.%s.%s.%s.%s.%s.json", my_host, date_str, user,
                                                run_uuid, &uuid_str[24]);
   DEBUG1(stderr,"resultFn: %s\n",   resultFn);
-  DEBUG1(stderr,"xalt_tmpdir: %s\n",xalt_tmpDir);
+  DEBUG1(stderr,"xalt_tmpdir: %s\n",xalt_tmpdir);
   free(xalt_tmpdir);
 
   char* key = NULL;
