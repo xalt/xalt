@@ -37,6 +37,19 @@ If the current version of XALT is X.Y.Z then this will install XALT in
 configure XALT to match your site's needs.
 
 
+.. _createXALTdirs:
+
+Creating XALT directories when using --with-xaltFilePrefix=...
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If your site is using the **file** transmission style and the
+xaltFilePrefix then, you must create the XALT directories as part of
+the installation process.  Assuming that you have installed XALT with
+a prefix of **/opt/apps**.  Then you can run as root::
+
+    $ /opt/apps/xalt/xalt/sbin/create_xalt_directories.sh
+
+
 XALT modulefile
 ^^^^^^^^^^^^^^^
 

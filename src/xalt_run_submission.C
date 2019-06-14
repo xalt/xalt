@@ -8,11 +8,11 @@
 #include <string.h>
 
 #include "xalt_quotestring.h"
-#include "build_resultFn.h"
 #include "epoch.h"
 #include "walkProcessTree.h"
 #include "Options.h"
 #include "Json.h"
+#include "xalt_utils.h"
 #include "xalt_config.h"
 #include "transmit.h"
 #include "buildRmapT.h"
@@ -35,8 +35,8 @@ int main(int argc, char* argv[], char* env[])
   DTable  measureT;
   bool    end_record = (options.endTime() > 0.0);
   
-  std::string suffix = end_record ? "zzz" : "aaa";
-  DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix.c_str());
+  const char* suffix = end_record ? ".zzz" : ".aaa";
+  DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix);
   
   t0 = epoch();
   t1 = t0;
@@ -137,8 +137,11 @@ int main(int argc, char* argv[], char* env[])
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir, resultFn;
-      build_resultFn(resultDir, resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
-                     "run", transmission);
+      build_resultDir(resultDir,transmission);
+
+
+      build_resultFn(resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
+                     "run", suffix);
       c_resultFn  = strdup(resultFn.c_str());
       c_resultDir = strdup(resultDir.c_str());
     }

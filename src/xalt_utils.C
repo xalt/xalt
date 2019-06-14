@@ -1,15 +1,19 @@
+#define  _GNU_SOURCE
+#include <sstream>
+#include <string>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <regex.h>
+#include <time.h>
 
 #include "xalt_utils.h"
 #include "xalt_config.h"
 #include "xalt_regex.h"
 #include "Options.h"
-
 
 bool path2module(const char* path, Table& rmapT, char* module_name, int module_name_sz)
 {
@@ -133,4 +137,74 @@ FILE* xalt_json_file_open(std::string& rmapD, const char* name)
       start = ++p;
     } 
   return fp;
+}
+
+
+#define BITS_IN_int    (sizeof (int)*CHAR_BIT)
+#define THREE_QUARTERS ((int) ((BITS_IN_int * 3) / 4))
+#define ONE_EIGHTH     ((int) (BITS_IN_int / 8))
+#define HIGH_BITS      ( ~ ((unsigned int) (~0) >> ONE_EIGHTH ))
+
+unsigned int hashStr(const char * string)
+{
+  unsigned int hash_value, i;
+  for ( hash_value = 0; *string; ++string)
+    {
+      hash_value = (hash_value << ONE_EIGHTH) + *string;
+      if ( (i = hash_value & HIGH_BITS ) != 0)
+        hash_value = (hash_value ^ (i >> THREE_QUARTERS )) & ~HIGH_BITS;
+    }
+  return hash_value;
+}
+
+
+void build_resultDir(std::string& resultDir, const char* transmission)
+{
+  char* c_home = getenv("HOME");
+  char* c_user = getenv("USER");
+  
+  if (c_home != NULL && c_user != NULL )
+    {
+      #ifdef HAVE_FILE_PREFIX
+        resultDir.assign(XALT_FILE_PREFIX);
+        resultDir.append("/");
+        if (strcasecmp(transmission,"file_separate_dirs") == 0)
+          {
+            resultDir.append(kind);
+            resultDir.append("/");
+          }
+        char * hashDir = NULL;
+        asprintf(&hashDir, XALT_PRIME_FMT "/",hashStr(c_user) % XALT_PRIME_NUMBER);
+        resultDir.append(hashDir);
+        free(hashDir);
+      #else
+        resultDir.assign(c_home);
+        resultDir.append("/.xalt.d/");
+        if (strcasecmp(transmission,"file_separate_dirs") == 0)
+          {
+            resultDir.append(kind);
+            resultDir.append("/");
+          }
+      #endif
+    }
+}
+
+void build_resultFn(std::string& resultFn, double start, const char* syshost, const char* uuid, const char *kind,
+                    const char* suffix)
+{
+  char* c_home = getenv("HOME");
+  char* c_user = getenv("USER");
+  
+  if (c_home != NULL && c_user != NULL )
+    {
+      double frac  = start - floor(start);
+      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&start));
+
+      std::ostringstream sstream;
+      sstream << kind   << "." << syshost << "." << dateStr << "."
+              << c_user << "_" << std::setfill('0') << std::setw(4) << (int) (frac*10000.0)
+              << suffix << "."    << uuid  << ".json";
+
+      resultFn = sstream.str();
+    }
 }

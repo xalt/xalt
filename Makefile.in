@@ -86,7 +86,8 @@ DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
                            $(DESTDIR)$(INC)
 
-BIN_PKG              	:= sh_src/ld.in                                                        \
+BIN_PKG              	:=                                                                     \
+                           sh_src/ld.in                                                        \
                            sh_src/ld.gold.in                                                   \
 	                   sh_src/x86_64-linux-gnu-ld.in                                       \
                            sh_src/xalt_helper_functions.sh                                     \
@@ -96,9 +97,10 @@ BIN_PKG              	:= sh_src/ld.in                                           
 
 BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
-SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py            \
-                           py_src/xalt_syslog_to_db.in.py    py_src/xalt_usage_report.in.py   \
-                           py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py
+SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py             \
+                           py_src/xalt_syslog_to_db.in.py    py_src/xalt_usage_report.in.py    \
+                           py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py \
+                           sh_src/create_xalt_directories.sh.in
 
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 

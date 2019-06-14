@@ -27,15 +27,12 @@ void pkgRecordTransmit(Options& options, const char* transmission)
     return;
 
   int         ulen        = 12;
-  std::string resultDir;
   char*       c_resultDir = NULL;
   
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
-      std::string resultFn;
-      build_resultFn(resultDir, resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
-                     "pkg", transmission);
-      // Note that the resultFn is thrown away as it is not needed here.
+      std::string resultDir;
+      build_resultDir(resultDir, transmission);
       c_resultDir = strdup(resultDir.c_str());
     }
 
@@ -61,7 +58,7 @@ void pkgRecordTransmit(Options& options, const char* transmission)
               sz = 0; buf = NULL;
 
               // build resultFn from dp->d_name
-              my_resultFn.assign(resultDir);
+              my_resultFn.assign(c_resultDir);
               my_resultFn.append(dp->d_name);
                 
               // build key from dp->d_name;

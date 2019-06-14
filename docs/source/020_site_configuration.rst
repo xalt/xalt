@@ -186,6 +186,14 @@ To write to a global location (say /global/xalt), you can do::
 
    --with-transmission=file --with-xaltFilePrefix=/global/xalt
 
+To place each kind of result file in a separate directory do::
+
+   --with-transmission=file_separate_directory --with-xaltFilePrefix=/global/xalt
+
+Note that if your site uses **--with-xaltFilePrefix=...** then you
+must create the directories during the installation process.  See 
+:ref:`createXALTdirs` for more information.
+
 To write records to syslog do::
 
    --with-transmission=syslog
