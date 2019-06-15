@@ -271,7 +271,7 @@ def passwd_generator():
 
 
 
-def build_xaltDir(user, hdir, transmission, kind):
+def build_xaltDir(hdir, transmission, kind):
   tail = ""
   if (transmission == "file_separate_dirs"):
     tail = kind
@@ -280,7 +280,7 @@ def build_xaltDir(user, hdir, transmission, kind):
   if (prefix == "USE_HOME"):
     return os.path.join(hdir,".xalt.d",tail)
 
-  return os.path.join(prefix,user,tail)
+  return os.path.join(prefix,tail)
 
 def main():
   """
@@ -326,7 +326,7 @@ def main():
     XALT_Stack.push("User: " + user)
 
 
-    xaltDir = build_xaltDir(user, hdir, transmission, "link")
+    xaltDir = build_xaltDir(hdir, transmission, "link")
     if (os.path.isdir(xaltDir)):
       iuser   += 1
       linkFnA  = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
@@ -334,14 +334,14 @@ def main():
       lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
       XALT_Stack.pop()
 
-    xaltDir = build_xaltDir(user, hdir, transmission, "run")
+    xaltDir = build_xaltDir(hdir, transmission, "run")
     if (os.path.isdir(xaltDir)):
       runFnA   = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
       XALT_Stack.push("run_json_to_db()")
       runCnt  += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
       XALT_Stack.pop()
 
-    xaltDir = build_xaltDir(user, hdir, transmission, "pkg")
+    xaltDir = build_xaltDir(hdir, transmission, "pkg")
     if (os.path.isdir(xaltDir)):
       pkgFnA   = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
       XALT_Stack.push("pkg_json_to_db()")

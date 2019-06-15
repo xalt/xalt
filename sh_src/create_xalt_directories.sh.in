@@ -27,8 +27,8 @@ transmission=$(echo $transmission | tr '[:upper:]'  '[:lower:]')
 # Create directories
 
 if [ "${transmission:-}" = "file_separate_dirs" ]; then
-  for i in $(seq -f $SEQ_FMT 0 $LAST ); do
-    for j in run link pkg; do
+  for j in run link pkg; do
+    for i in $(seq -f $SEQ_FMT 0 $LAST ); do
       mkdir -p "$filePrefix$i/$j"
       chmod 1777 "$filePrefix$i/$j"
     done
