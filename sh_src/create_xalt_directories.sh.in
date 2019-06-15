@@ -28,9 +28,10 @@ transmission=$(echo $transmission | tr '[:upper:]'  '[:lower:]')
 
 if [ "${transmission:-}" = "file_separate_dirs" ]; then
   for j in run link pkg; do
+    mkdir -p "$filePrefix$j"
     for i in $(seq -f $SEQ_FMT 0 $LAST ); do
-      mkdir -p "$filePrefix$i/$j"
-      chmod 1777 "$filePrefix$i/$j"
+      mkdir -p "$filePrefix$j/$i"
+      chmod 1777 "$filePrefix$j/$i"
     done
   done
 else

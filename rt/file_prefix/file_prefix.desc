@@ -1,0 +1,71 @@
+# -*- python -*-
+
+test_name = "file_prefix"
+test_descript = {
+   'description' : "file_prefix test",
+   'keywords'    : [test_name,],
+
+   'active'      : True,
+   'test_name'   : test_name,
+
+   'run_script'  : """
+     . $(projectDir)/rt/common_funcs.sh
+
+     initialize
+
+     installXALT --with-syshostConfig=nth_name:2 --with-transmission=file_separate_dirs --with-xaltFilePrefix=$outputDir/DATA --with-primeNumber=11
+     displayThis "buildRmapT"
+     buildRmapT
+
+     export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
+
+
+     displayThis "installDB"
+     installDB 
+
+     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools"
+     mkdir "xalt tools"
+
+     create_xalt_directories.sh
+
+     displayThis "module commands"
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH="$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$outputDir/xalt tools:$PATH";
+
+     export COMPILER_PATH=$XALT_BIN
+     export SBATCH_ACCOUNT=rtm
+     export SLURM_JOB_ID=12345
+     export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_PRELOAD_ONLY=no
+
+     displayThis  "mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c 
+
+     displayThis "mpirun -n 1 ./hello\ .mpi"
+     mpirun -n 1 ./hello\ .mpi 
+     
+     displayThis "test_record_pkg"
+     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
+
+     SYSHOST=`xalt_syshost`
+     displayThis "SYSHOST: $SYSHOST"
+
+     displayThis "xalt_file_to_db.py"
+     xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
+
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 2 --pkgs 3
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
+   """,
+
+   'tests' : [
+      { 'id' : 't1', 'tol' : 1.01e-6},
+   ],
+}
