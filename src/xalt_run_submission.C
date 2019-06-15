@@ -16,7 +16,6 @@
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
-//#include "run_direct2db.h"
 #include "xalt_utils.h"
 
 int main(int argc, char* argv[], char* env[])

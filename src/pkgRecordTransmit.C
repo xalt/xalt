@@ -56,10 +56,6 @@ void pkgRecordTransmit(Options& options, const char* transmission)
               free(buf);
               sz = 0; buf = NULL;
 
-              // build resultFn from dp->d_name
-              my_resultFn.assign(c_resultDir);
-              my_resultFn.append(dp->d_name);
-                
               // build key from dp->d_name;
               //                                                                           0123456789 1234567
               //pkg.rios.2018_11_06_16_14_13_7992.user.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
@@ -69,7 +65,7 @@ void pkgRecordTransmit(Options& options, const char* transmission)
 
               // transmit jsonStr
               
-              transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), c_resultDir, my_resultFn.c_str());
+              transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), c_resultDir, dp->d_name);
               free(key);
               unlink(fullName.c_str());
             }

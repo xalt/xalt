@@ -115,18 +115,14 @@ int main(int argc, char* argv[])
   char* date_str = getenv("XALT_DATE_TIME");
   
   char* xalt_tmpdir = create_xalt_tmpdir_str(run_uuid);
-	  
   asprintf(&resultFn,"pkg.%s.%s.%s.%s.%s.json", my_host, date_str, user,
                                                run_uuid, &uuid_str[24]);
-  DEBUG1(stderr,"resultFn: %s\n",   resultFn);
-  DEBUG1(stderr,"xalt_tmpdir: %s\n",xalt_tmpdir);
-  free(xalt_tmpdir);
-
   char* key = NULL;
   asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
 
   transmit("file", json_str, "pkg", key, my_host, xalt_tmpdir, resultFn);
 
+  free(xalt_tmpdir);
   free(resultFn);
   free(key);
   free(run_uuid);

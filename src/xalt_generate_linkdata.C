@@ -42,14 +42,13 @@ int main(int argc, char* argv[])
   const char* build_epoch = argv[i++];
   const char* funcRawFn   = argv[i++];
   const char* linklineFn  = argv[i++];
-  char*       startStr    = argv[i++];
   std::string compT       = argv[i++];
 
   if (compT.size() == 0)
     compT = "{}";
 
 
-  double start = convert_double("startTime",startStr);
+  double start = convert_double("startTime",build_epoch);
 
   if (strstr(execname,"conftest") != NULL)
     return 1;

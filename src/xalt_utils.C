@@ -208,9 +208,9 @@ void build_resultFn(std::string& resultFn, double start, const char* syshost, co
       strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
 
       std::ostringstream sstream;
-      sstream << kind   << "." << syshost << "." << dateStr << "."
-              << c_user << "_" << std::setfill('0') << std::setw(4) << (int) (frac*10000.0)
-              << suffix << "."    << uuid  << ".json";
+      sstream << kind   << "." << syshost << "." << dateStr 
+              << "_" << std::setfill('0') << std::setw(4) << (int) (frac*10000.0)
+              << "." << c_user << suffix << "."    << uuid  << ".json";
 
       resultFn = sstream.str();
     }
