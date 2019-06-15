@@ -59,6 +59,8 @@ PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
+XALT_PRIME_NUMBER     	:= @XALT_PRIME_NUMBER@
+XALT_PRIME_FMT     	:= @XALT_PRIME_FMT@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
 ENABLE_BACKGROUNDING 	:= @ENABLE_BACKGROUNDING@
 XALT_CONFIG_PY       	:= @XALT_CONFIG_PY@
@@ -245,6 +247,8 @@ __installMe:
 	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     	  \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           	  \
 	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            	  \
+	        -e 's|@xalt_prime_number@|$(XALT_PRIME_NUMBER)|g'            	  \
+	        -e 's|@xalt_prime_fmt@|$(XALT_PRIME_FMT)|g'             	  \
 	        -e 's|@xalt_enable_backgrounding@|$(ENABLE_BACKGROUNDING)|g'      \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   	  \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                            \

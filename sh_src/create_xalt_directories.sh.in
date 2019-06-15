@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- shell-script -*-
 
-filePrefix="@XALT_FILE_PREFIX@"
+filePrefix="@xalt_file_prefix@"
 
 if [ "${filePrefix+x}" = "USE_HOME" ]; then
   echo "This script is not necessary for your site"
@@ -15,19 +15,18 @@ filePrefix=$(echo $filePrefix | sed -e 's|//*$|/|')
 
 
 # Compute the range of directories based on the prime number of directories.
-PRIME="@XALT_PRIME_NUMBER@"
-PRIME_FMT="@XALT_PRIME_FMT@"
+PRIME="@xalt_prime_number@"
+PRIME_FMT="@xalt_prime_fmt@"
 SEQ_FMT=${PRIME_FMT/d/g}
 LAST=$((PRIME - 1))
 
 # Decide the type of directories needed (Also convert string to lower case)
-transmission_style="@XALT_TRANSMISSION_STYLE@"
-transmission_style="FILE_SEPARATE_DIRS"
-transmission_style=$(echo $transmission_style | tr '[:upper:]'  '[:lower:]')
+transmission="@transmission@"
+transmission=$(echo $transmission | tr '[:upper:]'  '[:lower:]')
 
 # Create directories
 
-if [ "${transmission_style}" = "file_separate_dirs" ]; then
+if [ "${transmission:-}" = "file_separate_dirs" ]; then
   for i in $(seq -f $SEQ_FMT 0 $LAST ); do
     for j in run link pkg; do
       mkdir -p "$filePrefix$i/$j"
