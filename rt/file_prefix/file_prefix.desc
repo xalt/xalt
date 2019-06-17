@@ -23,8 +23,7 @@ test_descript = {
      displayThis "installDB"
      installDB 
 
-     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools"
-     mkdir "xalt tools"
+     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv DATA
 
      create_xalt_directories.sh
 
@@ -38,7 +37,9 @@ test_descript = {
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
      export XALT_EXECUTABLE_TRACKING=yes
-     export XALT_PRELOAD_ONLY=no
+     export XALT_PRELOAD_ONLY=yes
+     export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
+   
 
      displayThis  "mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c 
@@ -48,6 +49,8 @@ test_descript = {
      
      displayThis "test_record_pkg"
      $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
+
+     unset LD_PRELOAD
 
      SYSHOST=`xalt_syshost`
      displayThis "SYSHOST: $SYSHOST"
