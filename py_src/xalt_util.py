@@ -134,7 +134,7 @@ def files_in_tree(path, pattern):
   for root, dirs, files in os.walk(path):
     for name in files:
       fn = os.path.join(root, name)
-      if (fnmatch(fn,pattern)):
+      if (fnmatch(fn,pattern) and os.path.isfile(fn)):
         fileA.append(fn)
   return fileA  
 
