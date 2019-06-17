@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
       reflibSet.insert(libname);
     }
 
+  bool o_flag = false;
   for (int i = 1; i < argc; ++i)
     {
       char *p = argv[i];
@@ -50,6 +51,16 @@ int main(int argc, char* argv[])
           p += 2;
           libname.assign("lib");
           libname.append(p);
+        }
+      else if (*p == '-' && *(p+1) == 'o')
+        {
+          o_flag = true;
+          continue;
+        }
+      else if (o_flag)
+        {
+          o_flag = false;
+          continue;
         }
       else if (*p != '/')
         {

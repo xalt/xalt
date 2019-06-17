@@ -248,9 +248,9 @@ trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
-     STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
-     tracing_msg "Using ld to find functions: " $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null
-     $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+     StripA=( $(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
+     $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
   else
      touch $FUNCRAW
      tracing_msg "Not function tracking"
