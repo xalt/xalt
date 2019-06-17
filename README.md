@@ -35,6 +35,27 @@ See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercompu
 
 ## ChangeLog
 
+### XALT 2.7:
+
+Features/Bug:
+
+   1. Many bug fixes in the configure process.
+
+   2. Now reads /proc/$PID/maps instead of running ldd and avoids a system call.
+
+   3. Now uses the vendor note to hold the XALT watermark thus avoiding a system call
+      to extract this information.
+
+   4. A rpm spec file is provided.
+
+   5. Programs with spaces and quotes in the name of the file and/or directories are now
+      safely handled.
+
+   6. The build directory (i.e. the directory where ld was run) is included in the XALT watermark.
+
+   7. There is a new output directory structure when using XALT_FILE_PREFIX that avoids using
+      $USER in the directory structure. A new script is provided to create the structure.
+
 ### XALT 2.6:
 
 Features/Bug:
