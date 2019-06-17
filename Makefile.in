@@ -377,7 +377,9 @@ dist:
 	find xalt-$(VERSION) -type f -print0 | xargs -0 sed -i 's/\@git\@/$(GIT_VERSION)/g' ; \
         $(RM) ../xalt-$(VERSION).tar                                                        ; \
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION)                                ; \
-	$(RM) -rf DIST                                                                      ;
+	cd ..                                                                               ; \
+	$(RM) -rf DIST                                                                      ; 
+
 
 makefile: $(srcdir)/Makefile.in config.status
 	./config.status $@
