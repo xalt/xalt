@@ -1,0 +1,8 @@
+Ideas to cover in my XALT BoF at ISC 19:
+
+* What is XALT
+* What XALT is not?
+* How it works
+* What is new
+* What do you do with it
+* What questions or problem can I help you with?

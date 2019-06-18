@@ -1,0 +1,355 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data. 
+
+
+\begin{document}
+\title[XALT]{XALT: Understanding HPC Usage via Job Level Collection}
+\author{Robert McLay} 
+\date{June 19, 2019} 
+
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \begin{itemize}
+    \item What is XALT and what it is not?
+    \item How it works
+    \item What is new with XALT?
+    \item What can you do with it?
+    \item How can I help you?
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{XALT: What runs on the system}
+  \begin{itemize}
+    \item Was a NSF Funded project.
+    \item A Census of what programs and libraries are run
+    \item Running at TACC, NICS, U. Florida, KAUST, LLNL, ...
+    \item Integrates with TACC-Stats.
+    \item Has commercial support from Ellexus 
+    \item Not tracking performance only existance 
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{Understanding what your users are doing}
+  \begin{itemize}
+    \item What programs, libraries are your users using?
+    \item What are the top programs by core-hours? by counts ? by users?
+    \item Are they building their own programs or using someone elses?
+    \item Are Executables implemented in C/C++/Fortran?
+    \item Track MPI: tasks? nodes?
+    \item Track Threading via \$OMP\_NUMTHREADS
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{History of XALT}
+  \begin{itemize}
+    \item Mark Fahey (was NICS, now ANL): ALT-D (MPI only)
+    \item Robert McLay (TACC) Lariat (MPI only)
+    \item Reuben Budiardja (was NICS now ORL)
+    \item ALT-D $+$ Lariat $\Rightarrow$ XALT 1: (MPI only)
+    \item XALT 2: All programs
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{Design Goals}
+  \begin{itemize}
+    \item Be extremely light-weight
+    \item How many use a library or application?
+    \item Collect Data into a Database for analysis.
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{Design: Linker}
+  \begin{itemize}
+    \item XALT wraps the linker to enable tracking of exec's
+    \item The linker (ld) wrapper intercepts the user link line.
+    \item Generate assembly code: key-value pairs
+    \item Capture tracemap output from ld
+    \item Transmit collected data in *.json format
+    \item Optionally add codes that executes before main() and after main() completes
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{Design: Transmission to DB}
+  \begin{itemize}
+    \item File: collect nightly
+    \item Syslog: Use Syslog filtering (or ELK)
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{Lmod to XALT connection}
+  \begin{itemize}
+    \item Lmod spider walks entire module tree.
+    \item Can build a reverse map from paths to modules
+    \item Can map program \& libraries to modules.
+    \item /opt/apps/i15/mv2\_2\_1/phdf5/1.8.14/lib/libhdf5.so.9
+      $\Rightarrow$ phdf5/1.8.14(intel/15.02:mvapich2/2.1)
+    \item Also helps with function tracking.
+    \item Tmod Sites can still use Lmod to build the reverse map.
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Using XALT Data}
+  \begin{itemize}
+    \item Targetted Outreach: Who will be affected
+    \item Largemem Queue Overuse
+    \item XALT and TACC-Stats
+    \item Who is running NWChem or ...? 
+  \End{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Tracking Non-mpi jobs (I)}
+  \begin{itemize}
+    \item Originally we tracked only MPI Jobs
+    \item By hijacking mpirun etc.
+    \item Now we can use ELF binary format to track jobs
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}[fragile]
+    \frametitle{ELF Binary Format Trick}
+ {\small
+    \begin{semiverbatim}
+void myinit(int argc, char **argv)
+\{
+  /* ... */
+\}
+void myfini()
+\{
+  /* ... */
+\}
+  static __attribute__((section(".init_array")))
+       typeof(myinit) *__init = myinit;
+  static __attribute__((section(".fini_array")))
+       typeof(myfini) *__fini = myfini;
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 13
+\begin{frame}{Using the ELF Binary Format Trick}
+  \begin{itemize}
+    \item This C code can be compiled and linked in through the hijacked linker
+    \item It can also be used with \texttt{LD\_PRELOAD}
+    \item By default we only use \texttt{LD\_PRELOAD} but can do both.
+  \end{itemize}
+\end{frame}
+
+% page 14
+\begin{frame}{Challenges (I)}
+  \begin{itemize}
+    \item Do not want to track every mv, cp, etc
+    \item Only want to track some executables on compute nodes
+    \item Do not want to get overwhelmed by the data. 
+  \end{itemize}
+\end{frame}
+
+% page 15
+\begin{frame}{Answers}
+  \begin{itemize}
+    \item XALT Tracking only when told to
+    \item Compute node only by host name filtering
+    \item Executable Filter based on Path
+    \item Protection against closing stderr before fini.
+    \item Sampling of serial programs.
+    \item Site configurable!
+  \end{itemize}
+\end{frame}
+
+% page 16
+\begin{frame}{Path Filtering}
+  \begin{itemize}
+    \item Uses FLEX to compile in patterns
+    \item Use regex expression to control what to keep and ignore.
+    \item Three files containing regex patterns, converted to code.
+    \item Accept List Tests: Track /usr/bin/ddt, /bin/tar, /usr/bin/perl
+    \item Ignore List Tests: /usr/bin, /bin, /sbin, ...
+  \end{itemize}
+\end{frame}
+
+% page 17
+\begin{frame}[fragile]
+    \frametitle{TACC\_config.py}
+ {\small
+    \begin{semiverbatim}
+hostname\_patterns = [
+  ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
+  ]
+path\_patterns = [
+    ['PKGS',  r'.*/python[0-9][^/][^/]*'],
+    ['PKGS',  r'.*/R'],
+    ['KEEP',  r'^/usr/bin/ddt'],
+    ['SKIP',  r'^/usr/.*'],
+    ['SKIP',  r'^/bin/.*'],
+  ]
+env\_patterns = [
+    [ 'SKIP', r'^MKLROOT=.*' ],
+    [ 'SKIP', r'^MKL\_DIR=.*' ],
+    [ 'KEEP', r'^I\_MPI\_INFO\_NUMA\_NODE\_NUM=.*'],
+  ]
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 18
+\begin{frame}{Speeding up XALT 2}
+  \begin{itemize}
+    \item Minimal impact on jobs ($>$ 0.09 secs)
+    \item All Non-MPI programs only produce end record
+    \item This supports sampling!
+  \end{itemize}
+\end{frame}
+
+% page 19
+\begin{frame}{Sampling Non-MPI programs}
+  \begin{itemize}
+    \item XALT has sampling rules (site configurable!)
+    \item 0 mins $<$ 5 mins $\Rightarrow$ 0.01\% recorded  
+    \item 5 mins $<$ 10 mins $\Rightarrow$ 1\% recorded  
+    \item 10 mins $<  \infty \Rightarrow$ 100\% recorded
+    \item Can now track perl, awk, sed, gzip etc
+  \end{itemize}
+\end{frame}
+
+% page 20
+\begin{frame}{What is new with XALT?}
+  \begin{itemize}
+    \item Tracking R, Python, MATLAB
+    \item Signal handler
+    \item Optionally Track GPU Usage
+    \item Track Singularity Container Usage
+    \item Removed two system calls
+  \end{itemize}
+\end{frame}
+
+% page 21
+\begin{frame}{Tracking R packages}
+  \begin{itemize}
+    \item XALT 2 can now track R package usage
+    \item James McComb \& Michael Scott from IU developed the R part
+    \item They do this by intercepting the ``imports''
+    \item Plan to support Python and MATLAB later.
+  \end{itemize}
+\end{frame}
+
+% page 22
+\begin{frame}{New program: xalt\_extract\_record}
+  \begin{itemize}
+    \item This program reads the watermark.
+    \item Find out who built this program on what machine
+    \item Find out what modules where used.
+  \end{itemize}
+\end{frame}
+
+% page 23
+\begin{frame}[fragile]
+    \frametitle{Example of xalt\_extract\_record output}
+ {\small
+    \begin{semiverbatim}
+****************************************
+XALT Watermark: hello
+****************************************
+Build\_CWD                /home/user/t/hello
+Build\_Epoch              1510257139.4624
+Build\_LMFILES            /opt/apps/modulefiles/intel/17.0.4.lua:...
+Build\_LOADEDMODULES      intel/18.0.4:impi/18.0.3:python/2.7.13:TACC:...
+Build\_OS                 Linux 3.10.0-514.26.2.el7.x86_64
+Build\_Syshost            stampede2
+Build\_UUID               586d5943-67eb-480b-a2fe-35e87a1f22c7
+Build\_User               mclay
+Build\_compiler           icc
+Build\_date               Fri Jun 09 13:52:19 2019
+Build\_host               c455-011.stampede2.tacc.utexas.edu
+XALT\_Version             2.7
+    \end{semiverbatim}
+}
+\end{frame}
+
+
+% page 24
+\begin{frame}{XALT Signal Handler}
+  \begin{itemize}
+    \item Program that fail with SEGV, ILL, FPE ... produce an XALT record.
+    \item But not SIGINT.
+    \item The signal handlers are assigned before main() $\Rightarrow$
+      Doesn't interfere with user handlers
+  \end{itemize}
+\end{frame}
+
+% page 25
+\begin{frame}{New Feature: Track GPU usage}
+  \begin{itemize}
+    \item Optionally, XALT can know if a GPU was used.
+    \item XALT will only know if one or more GPU's were accessed
+    \item No performance data
+    \item Thanks to Scott McMillan from NVIDIA for the contribution.
+  \end{itemize}
+\end{frame}
+
+% page 26
+\begin{frame}{New Feature: Track Singularity Container Usage}
+  \begin{itemize}
+    \item Sites can configure their Singularity script to include XALT
+    \item It works well with syslog or file transfer of data
+    \item Thanks to Scott McMillan from NVIDIA for the contribution.
+  \end{itemize}
+\end{frame}
+
+% page 27
+\begin{frame}{Removed two system calls during Tracking}
+  \begin{itemize}
+    \item Reads /proc/$PID/maps instead of running ldd.
+    \item Uses the vendor note to hold the XALT watermark.
+    \item Improves XALT penalty from 0.01 to 0.001 seconds.
+  \end{itemize}
+\end{frame}
+
+% page 28
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Lmod:
+      \begin{itemize}
+        \item Source: github.com/TACC/lmod.git, lmod.sf.net
+        \item Documentation: lmod.readthedocs.org
+      \end{itemize}
+    \item XALT:
+      \begin{itemize}
+        \item Source: github.com/xalt/xalt.git, xalt.sf.net
+        \item Documentation: XALT 2 $\Rightarrow$ xalt.readthedocs.org
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}
