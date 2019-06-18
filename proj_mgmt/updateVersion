@@ -1,6 +1,9 @@
 #!/usr/bin/env lua
 -- -*- lua -*-
 
+_G._DEBUG    = false
+local posix  = require("posix")
+
 Version = "1.0"
 
 require("declare")
