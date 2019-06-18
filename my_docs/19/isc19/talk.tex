@@ -123,7 +123,7 @@
     \item Largemem Queue Overuse
     \item XALT and TACC-Stats
     \item Who is running NWChem or ...? 
-  \End{itemize}
+  \end{itemize}
 \end{frame}
 
 % page 11
@@ -222,15 +222,6 @@ env\_patterns = [
 \end{frame}
 
 % page 18
-\begin{frame}{Speeding up XALT 2}
-  \begin{itemize}
-    \item Minimal impact on jobs ($>$ 0.09 secs)
-    \item All Non-MPI programs only produce end record
-    \item This supports sampling!
-  \end{itemize}
-\end{frame}
-
-% page 19
 \begin{frame}{Sampling Non-MPI programs}
   \begin{itemize}
     \item XALT has sampling rules (site configurable!)
@@ -241,7 +232,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 20
+% page 19
 \begin{frame}{What is new with XALT?}
   \begin{itemize}
     \item Tracking R, Python, MATLAB
@@ -252,7 +243,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 21
+% page 20
 \begin{frame}{Tracking R packages}
   \begin{itemize}
     \item XALT 2 can now track R package usage
@@ -262,7 +253,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 22
+% page 21
 \begin{frame}{New program: xalt\_extract\_record}
   \begin{itemize}
     \item This program reads the watermark.
@@ -271,7 +262,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 23
+% page 22
 \begin{frame}[fragile]
     \frametitle{Example of xalt\_extract\_record output}
  {\small
@@ -296,7 +287,7 @@ XALT\_Version             2.7
 \end{frame}
 
 
-% page 24
+% page 23
 \begin{frame}{XALT Signal Handler}
   \begin{itemize}
     \item Program that fail with SEGV, ILL, FPE ... produce an XALT record.
@@ -306,7 +297,7 @@ XALT\_Version             2.7
   \end{itemize}
 \end{frame}
 
-% page 25
+% page 24
 \begin{frame}{New Feature: Track GPU usage}
   \begin{itemize}
     \item Optionally, XALT can know if a GPU was used.
@@ -316,7 +307,7 @@ XALT\_Version             2.7
   \end{itemize}
 \end{frame}
 
-% page 26
+% page 25
 \begin{frame}{New Feature: Track Singularity Container Usage}
   \begin{itemize}
     \item Sites can configure their Singularity script to include XALT
@@ -325,16 +316,16 @@ XALT\_Version             2.7
   \end{itemize}
 \end{frame}
 
-% page 27
+% page 26
 \begin{frame}{Removed two system calls during Tracking}
   \begin{itemize}
-    \item Reads /proc/$PID/maps instead of running ldd.
+    \item Reads /proc/\$PID/maps instead of running ldd.
     \item Uses the vendor note to hold the XALT watermark.
     \item Improves XALT penalty from 0.01 to 0.001 seconds.
   \end{itemize}
 \end{frame}
 
-% page 28
+% page 27
 \begin{frame}{Conclusion}
   \begin{itemize}
     \item Lmod:
