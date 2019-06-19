@@ -101,7 +101,7 @@
 % page 8
 \begin{frame}{Design: Transmission to DB}
   \begin{itemize}
-    \item File: collect nightly
+    \item File: collect nightly/hourly/...
     \item Syslog: Use Syslog filtering (or ELK)
   \end{itemize}
 \end{frame}
@@ -109,6 +109,7 @@
 % page 9
 \begin{frame}{Lmod to XALT connection}
   \begin{itemize}
+    \item Optional support to connect paths to modules
     \item Lmod spider walks entire module tree.
     \item Can build a reverse map from paths to modules
     \item Can map program \& libraries to modules.
@@ -165,6 +166,8 @@ void myfini()
     \item This C code can be compiled and linked in through the hijacked linker
     \item It can also be used with \texttt{LD\_PRELOAD}
     \item By default we only use \texttt{LD\_PRELOAD} but can do both.
+    \item Note that this tracking works will ALL dynamic binaries!
+    \item This includes commercial programs.
   \end{itemize}
 \end{frame}
 
@@ -228,10 +231,11 @@ env\_patterns = [
 \begin{frame}{Sampling Non-MPI programs}
   \begin{itemize}
     \item XALT has sampling rules (site configurable!)
+    \item TACC rules are:
     \item 0 mins $<$ 5 mins $\Rightarrow$ 0.01\% recorded  
     \item 5 mins $<$ 10 mins $\Rightarrow$ 1\% recorded  
     \item 10 mins $<  \infty \Rightarrow$ 100\% recorded
-    \item Can now track perl, awk, sed, gzip etc
+    \item Can now track/sample perl, awk, sed, gzip etc
   \end{itemize}
 \end{frame}
 
@@ -242,7 +246,7 @@ env\_patterns = [
     \item Signal handler
     \item Optionally Track GPU Usage
     \item Track Singularity Container Usage
-    \item Removed two system calls
+    \item Removed two system calls for improved speed
   \end{itemize}
 \end{frame}
 
@@ -262,6 +266,7 @@ env\_patterns = [
     \item This program reads the watermark.
     \item Find out who built this program on what machine
     \item Find out what modules where used.
+    \item Where was it build. 
   \end{itemize}
 \end{frame}
 
