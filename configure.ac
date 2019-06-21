@@ -239,12 +239,12 @@ AC_ARG_WITH(32bit,
 
 AC_SUBST(XALT_TMPDIR)
 AC_ARG_WITH(tmpdir,
-    AC_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/tmp]]]),
+    AC_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/dev/shm]]]),
     XALT_TMPDIR="$withval"
     AC_MSG_RESULT([XALT_TMPDIR=$with-tmpdir])
     AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$with-tmpdir")dnl
     ,
-    withval="/tmp"
+    withval="/dev/shm"
     AC_MSG_RESULT([XALT_TMPDIR=$withval])
     XALT_TMPDIR="$withval"
     AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$withval"))dnl

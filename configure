@@ -1403,7 +1403,7 @@ Optional Packages:
                           Install XALT incorrectly [[no]]
   --with-32bit            Allow for 32 bits executables[[yes]]
   --with-tmpdir=ans       The tmp directory to use with package records
-                          [[/tmp]]
+                          [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
                           XALT_FILE_PREFIX, [[997]]
 
@@ -3472,7 +3472,7 @@ $as_echo "XALT_TMPDIR=$with-tmpdir" >&6; }
 _ACEOF
 
 else
-  withval="/tmp"
+  withval="/dev/shm"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TMPDIR=$withval" >&5
 $as_echo "XALT_TMPDIR=$withval" >&6; }
     XALT_TMPDIR="$withval"
