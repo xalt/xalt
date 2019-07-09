@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+# -*- python -*-
+
+########################################################################
+# This a TACC specify tool to get the default accounting string for
+# each user.
+
+# At TACC, users do not need provide an accounting string for their
+# job script if they only have one account to charge from.
+# This script uses two files to find the default accounting string for
+# each user that just has one.
+
+# The file /usr/local/etc/project.map looks like:
+# Charge_String1 ChargeNum1
+# Charge_String2 ChargeNum2
+# ...            ...
+
+# The file /usr/local/etc/projectuser.map looks like:
+# user1 ChargeNumA ChargeNumB ...
+# user2 ChargeNumX
+# user3 ChargeNumY
+# user4 ChargeNumK ChargeNumL ...
+
+# This program reads in both files and produces two dictionaries.
+# The user2numT dictionary only contains users which only have one charge
+# number associated with that account.
+########################################################################
+
+
+
+from __future__ import print_function
+import os, sys, re, json
+
+def read_project_map_file(fn):
+
+  if (not os.path.isfile(fn)):
+    print("file: {} does not exist.  Exiting...".format(fn))
+    sys.exit()
+
+  projectNumT = {} 
+  with open(fn) as fp:
+    for line in fp:
+      fieldA = line.split()
+      projectNumT[fieldA[1]] = fieldA[0]
+
+  return projectNumT
+
+def read_projectuser_map_file(fn):
+
+  if (not os.path.isfile(fn)):
+    print("file: {} does not exist.  Exiting...".format(fn))
+    sys.exit()
+
+  user2numT = {} 
+  with open(fn) as fp:
+    for line in fp:
+      fieldA = line.split()
+      if ( len(fieldA) == 2):
+        user2numT[fieldA[0]] = fieldA[1]
+
+  return user2numT
+
+
+def main():
+  project_map_fn = "/usr/local/etc/project.map"
+  projectNumT    = read_project_map_file(project_map_fn)
+
+  project_user_map_fn = "/usr/local/etc/projectuser.map"
+  user2numT           = read_projectuser_map_file(project_user_map_fn)
+
+
+  user2strT = {}
+  for user in user2numT:
+    num             = user2numT[user]
+    acct_str        = projectNumT.get(num,False)
+    user2strT[user] = acct_str
+
+  print(json.dumps(user2strT, indent=2, sort_keys=True))
+
+
+if ( __name__ == '__main__'): main()
