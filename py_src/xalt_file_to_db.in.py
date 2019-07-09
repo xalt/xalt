@@ -76,6 +76,7 @@ class CmdLineOptions(object):
     parser.add_argument("--timer",       dest='timer',   action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--u2acct",      dest='u2acct',  action="store",      help="Path to the json file containing default charge account strings for users")
     parser.add_argument("--syshost",     dest='syshost', action="store",      default="*",            help="name of the cluster")
     parser.add_argument("--confFn",      dest='confFn',  action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
@@ -192,13 +193,14 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA):
   return num
 
 
-def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
+def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
   @param xalt:        An XALTdb object.
   @param listFn:      A flag that causes the name of the file to be written to stderr.
   @param reverseMapT: The Reverse Map Table.
+  @param u2acctT:     The map for user to default account string
   @param deleteFlg:   A flag that says to delete files after processing.
   @param runFnA:      An array of run file names
 
@@ -224,7 +226,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
         continue
       f.close()
 
-      stored = xalt.run_to_db(reverseMapT, runT)
+      stored = xalt.run_to_db(reverseMapT, u2acctT, runT)
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -282,7 +284,7 @@ def build_xaltDir(hdir, transmission, kind):
 
   return os.path.join(prefix,tail)
 
-def store_json_files(homeDir, transmission, xalt, rmapT, args, countT):
+def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
 
   xaltDir = build_xaltDir(homeDir, transmission, "link")
   XALT_Stack.push("Directory: " + xaltDir)
@@ -299,7 +301,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, args, countT):
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("run_json_to_db()")
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
-    countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
+    countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, u2acctT, args.delete, runFnA)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -349,6 +351,12 @@ def main():
 
   rmapT  = Rmap(args.rmapD).reverseMapT()
 
+  u2acctT = {}
+  if (args.u2acct):
+    fp     = open(args.u2acct,"r")
+    u2acctT = json.loads(fp.read())
+    fp.close()
+
   countT = {}
   countT['lnk'] = 0
   countT['run'] = 0
@@ -357,10 +365,10 @@ def main():
   xalt_file_prefix = "@xalt_file_prefix@"
 
   if (xalt_file_prefix != "USE_HOME"):
-    store_json_files("", transmission, xalt, rmapT, args, countT)
+    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT)
   else:
     for user, homeDir in passwd_generator():
-      store_json_files(homeDir, transmission, xalt, rmapT, args, countT)
+      store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT)
 
   xalt.connect().close()
   #pbar.fini()

@@ -1,3 +1,4 @@
 XALT 2.7+
-    (2.7.1)
+    (2.7.1) * Added contrib/TACC/build_default_2_account_str.in to build a json table that
+              maps users to default charge string.
     

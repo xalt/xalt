@@ -81,6 +81,7 @@ class CmdLineOptions(object):
                                                                                help="Name of the leftover file")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--u2acct",      dest='u2acct',   action="store",      help="Path to the json file containing default charge account strings for users")
     parser.add_argument("--confFn",      dest='confFn',   action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
     return args
@@ -352,6 +353,13 @@ def main():
     print("Failed to read reverseMap file -> exiting")
     sys.exit(1)
 
+    
+  u2acctT = {}
+  if (args.u2acct):
+    fp      = open(args.u2acct,"r")
+    u2acctT = json.loads(fp.read())
+    fp.close()
+
   lnkCnt = 0
   pkgCnt = 0
   runCnt = 0
@@ -428,6 +436,9 @@ def main():
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=max(fnSz,1),fd=sys.stdout)
+  
+
+
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
@@ -468,7 +479,7 @@ def main():
         elif ( t['kind'] == "run" ):
           if (filter.apply(value)):
             XALT_Stack.push("run_to_db()")
-            xalt.run_to_db(rmapT, value)
+            xalt.run_to_db(rmapT, u2acctT, value)
             XALT_Stack.pop()
             runCnt += 1
         elif ( t['kind'] == "pkg" ):

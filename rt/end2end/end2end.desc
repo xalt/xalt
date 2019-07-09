@@ -23,8 +23,10 @@ test_descript = {
      displayThis "installDB"
      installDB 
 
-     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools"
+     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools" u2acct.json
      mkdir "xalt tools"
+
+     echo "{ \"mclay\": \"A-xyzzy\" }" > u2acct.json
 
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
@@ -172,7 +174,7 @@ test_descript = {
      displayThis "SYSHOST: $SYSHOST"
 
      displayThis "xalt_file_to_db.py"
-     xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
+     xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
      check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 16 --runs 18 --pkgs 3
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
