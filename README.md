@@ -69,6 +69,8 @@ Features/Bug:
 
    3. Fix bug where the @git@ string was replaced in the wrong place in Makefile.in
 
+   4. PKGS programs (like R, Python) now use sample rules like all other scalar programs.
+
 ### XALT 2.5:
 
 Features:
