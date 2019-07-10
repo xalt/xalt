@@ -142,7 +142,16 @@ fi
 
 unset LD_PRELOAD
 
-cmdA=("module unload xalt"
+unload_xalt ()
+{
+   type module > /dev/null 2>&1
+   if [ "$?" = 0 ]; then
+      echo "module unload xalt"
+      module unload xalt
+   fi
+}
+
+cmdA=("unload_xalt"
       "-$MAKE distclean"
       "-rm -rf $PKG/xalt/$PKG_VERSION"
       "-rm -f src/*.o src/*.d libuuid/src/*.o"
