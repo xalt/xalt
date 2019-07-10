@@ -233,33 +233,3 @@ class File(XALT_transmission_factory):
       pass
 
 
-class DirectDB(XALT_transmission_factory):
-  """
-  This class is the direct to db transmission method.
-  """
-
-  def __init__(self, syshost, kind):
-    """
-    This is the ctor for Direct to DB transmission method
-    @param syshost: Name of the system.
-    @param kind:  Type of record: link or run
-    """
-    super(DirectDB, self).__init__(syshost, kind)
-  def save(self, resultT, uuid):
-    """
-    The json table is written directly to the db.
-    @param resultT: The json record table
-    """
-    if (not XALTdb_available):
-      raise ImportError
-    
-    ConfigFn     = os.path.join(XALT_ETC_DIR,"xalt_db.conf")
-    RMapFn       = os.path.join(XALT_ETC_DIR,"reverseMapD")
-
-    xalt        = XALTdb(ConfigFn)
-    reverseMapT = Rmap(RMapFn).reverseMapT()
-    if (self._kind() == "link"):
-      xalt.link_to_db(reverseMapT, resultT)
-    else: 
-      # kind == "run"
-      xalt.run_to_db(reverseMapT, resultT)

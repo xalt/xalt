@@ -274,7 +274,7 @@ class XALTdb(object):
       print ("load_xalt_objects(): Error %d: %s" % (e.args[0], e.args[1]),file=sys.stderr)
       sys.exit (1)
 
-  def run_to_db(self, reverseMapT, runT):
+  def run_to_db(self, reverseMapT, u2acctT, runT):
     """
     Store the "run" data into the database.
     @param: reverseMapT: The map between directories and modules
@@ -327,16 +327,21 @@ class XALTdb(object):
         sum_runs      = runT['userDT'].get('sum_runs' ,   0)
         sum_times     = runT['userDT'].get('sum_times',   0.0)
         probability   = runT['userDT'].get('probability', 1.0)
+        account       = runT['userT']['account']
+        user          = runT['userT']['user']
+        if ( account == "unknown"):
+          account = u2acctT.get(user,"unknown")
+
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
-                               runT['userT']['account'],     runT['userT']['exec_type'],   startTime,
+                               account,                      runT['userT']['exec_type'],   startTime,
                                endTime,                      runTime,                      probability,
                                runT['userDT']['num_cores'],  runT['userDT']['num_nodes'],  num_threads,
                                num_gpus,                     runT['userT']['queue'],       sum_runs,
-                               sum_times,                    runT['userT']['user'],        runT['userT']['exec_path'],
+                               sum_times,                    user,                         runT['userT']['exec_path'],
                                moduleName,                   runT['userT']['cwd'],         usr_cmdline))
         run_id   = cursor.lastrowid
         stored   = True

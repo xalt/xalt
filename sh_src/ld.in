@@ -177,8 +177,7 @@ if [ -z "$HOME" -o -z "$USER" ]; then
 fi
 
 if [ "$XALT_EXECUTABLE_TRACKING" != yes -o "$SKIP" = true -o "$PARTIAL_LINKING" = true ]; then
-  tracing_msg "BYPASS: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: $SKIP, PARTIAL_LINKING: $PARTIAL_LINKING"
-
+  tracing_msg "No JSON Record: XALT_EXECUTABLE_TRACKING: $XALT_EXECUTABLE_TRACKING, SKIP: \"$SKIP\", HOME: \"$HOME\", USER: \"$USER\", PARTIAL_LINKING: \"$PARTIAL_LINKING\""
   $MY_CMD "${argA[@]}"
   status=$?
   exit $status
@@ -231,16 +230,6 @@ COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_L
 tracing_msg "COMP_T:" $COMP_T 
 
 EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
-DATESTR=$(PATH=@xalt_system_path@ date --date="@$EPOCH" "+%Y_%m_%d_%H_%M_%S")
-INT_EPOCH=$(PATH=@xalt_system_path@ echo "( $EPOCH )/1" | bc)
-FRAC_EPOCH=$(PATH=@xalt_system_path@ echo $EPOCH - $INT_EPOCH | bc | sed -e 's|\.||')
-DATESTR="${DATESTR}_${FRAC_EPOCH}"
-
-if [ "$XALT_FILE_PREFIX" != 'USE_HOME' ]; then
-    RESULT=$XALT_FILE_PREFIX/${SEP_DIR}$USER/link.${SYSHOST}.${DATESTR}.$UUID.json
-else
-    RESULT=$HOME/.xalt.d/${SEP_DIR}link.${SYSHOST}.${DATESTR}.$UUID.json
-fi
 
 # If the $ARGSRC exists then build it
 # otherwise don't try to link with it.
@@ -259,9 +248,9 @@ trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
-     STRIP=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}")
-     tracing_msg "Using ld to find functions: " $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null
-     $MY_CMD $STRIP --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+     StripA=( $(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
+     $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
   else
      touch $FUNCRAW
      tracing_msg "Not function tracking"
@@ -325,6 +314,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # Generate link data.  
-PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$RESULT" "$COMP_T"
+PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
 
 exit $status

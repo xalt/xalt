@@ -16,6 +16,20 @@
 #include "link_submission.h"
 #include "parseJsonStr.h"
 
+double convert_double(const char* name, const char* s)
+{
+  char  *p;
+  double v;
+
+  v = strtod(s, &p);
+  if (p == s || *p)
+    {
+      fprintf(stderr,"For option: \"%s\", unable to parse: \"%s\"\n", name, s);
+      exit(1);
+    }
+  return v;
+}
+
 int main(int argc, char* argv[])
 {
   int         i           = 1;
@@ -28,12 +42,13 @@ int main(int argc, char* argv[])
   const char* build_epoch = argv[i++];
   const char* funcRawFn   = argv[i++];
   const char* linklineFn  = argv[i++];
-  char*       resultFn    = argv[i++];
   std::string compT       = argv[i++];
 
   if (compT.size() == 0)
     compT = "{}";
 
+
+  double start = convert_double("startTime",build_epoch);
 
   if (strstr(execname,"conftest") != NULL)
     return 1;
@@ -91,15 +106,18 @@ int main(int argc, char* argv[])
   std::string key("link_");
   key.append(uuid);
 
-  #ifndef HAVE_FILE_PREFIX
-    // if user has wiped out $HOME then set resultFn to NULL so that file transmission will do nothing!
-    const char* home = getenv("HOME");
-    if (home == NULL)
-      resultFn = NULL;
-  #endif
+  char* c_resultDir = NULL;
+  char* c_resultFn = NULL;
 
-  // transmit results to anything that is not "direct2db"
-  transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, resultFn);
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
+    {
+      std::string resultDir, resultFn;
+      build_resultDir(resultDir, "link", transmission);
+      build_resultFn(resultFn, start, syshost, uuid, "link", "");
+      c_resultFn  = strdup(resultFn.c_str());
+      c_resultDir = strdup(resultDir.c_str());
+    }
 
+  transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, c_resultDir, c_resultFn);
   return 0;
 }

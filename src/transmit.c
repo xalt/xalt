@@ -16,12 +16,19 @@
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
-              const char* syshost, char* resultFn)
+              const char* syshost, char* resultDir, const char* resultFn)
 {
-  char * cmdline;
+  char * cmdline = NULL;
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes")  == 0 ||
 				   strcmp(p_dbg,"run")  == 0 ));
+
+  if (strcasecmp(transmission,"directdb") == 0)
+    {
+      DEBUG0(stderr,"  Direct to DB transmission is NOT supported!\n");
+      return;
+    }
+
 
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"syslog")    != 0 ) && 
@@ -33,30 +40,38 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     {
       if (resultFn == NULL)
 	{
-	  DEBUG0(stderr,"  resultFn is NULL, $HOME might be undefined -> No XALT output\n");
+	  DEBUG0(stderr,"  resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
 	  return;
 	}
 
-      int err = mkpath(resultFn, 0700);
+      int err = mkpath(resultDir, 0700);
       if (err)
 	{
 	  if (xalt_tracing)
 	    {
 	      perror("Error: ");
-	      fprintf(stderr,"  unable to mkpath(%s) -> No XALT output\n", resultFn);
+	      fprintf(stderr,"  unable to mkpath(%s) -> No XALT output\n", resultDir);
 	    }
 	  return;
 	}
 
-      FILE* fp = fopen(resultFn,"w");
+      char* tmpFn = NULL;
+      asprintf(&tmpFn, "%s.%s.new",resultDir, resultFn);
+      char* fn = NULL;
+      asprintf(&fn, "%s%s",resultDir, resultFn);
+
+      FILE* fp = fopen(tmpFn,"w");
       if (fp == NULL && xalt_tracing)
-	fprintf(stderr,"  Unable to open: %s -> No XALT output\n", resultFn);
+	fprintf(stderr,"  Unable to open: %s -> No XALT output\n", fn);
       else
         {
           fprintf(fp, "%s\n", jsonStr);
           fclose(fp);
-          DEBUG2(stderr,"  Wrote json %s file : %s\n",kind, resultFn);
+          rename(tmpFn, fn);
+          DEBUG2(stderr,"  Wrote json %s file : %s\n",kind, fn);
         }
+      free(tmpFn);
+      free(fn);
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
     {

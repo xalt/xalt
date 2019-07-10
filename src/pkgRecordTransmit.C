@@ -25,13 +25,17 @@ void pkgRecordTransmit(Options& options, const char* transmission)
   if (c_home == NULL || c_user == NULL )
     return;
 
-  int         ulen = 12;
-  std::string home = c_home;
-  std::string user = c_user;
-  std::string xaltDir;
+  int         ulen        = 12;
+  char*       c_resultDir = NULL;
+  
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
+    {
+      std::string resultDir;
+      build_resultDir(resultDir, "pkg", transmission);
+      c_resultDir = strdup(resultDir.c_str());
+    }
 
-  build_xaltDir(xaltDir, "pkg", user, home, transmission);
-
+  std::string my_resultFn;
   struct dirent* dp;
   while ( (dp = readdir(dirp)) != NULL)
     {
@@ -52,23 +56,17 @@ void pkgRecordTransmit(Options& options, const char* transmission)
               free(buf);
               sz = 0; buf = NULL;
 
-              // build resultFn from dp->d_name
-              std::string resultFn(xaltDir);
-              resultFn.append(dp->d_name);
-              char * my_resultFn = strdup(resultFn.c_str());
-                
               // build key from dp->d_name;
-              //                                                                       0123456789 1234567
-              //pkg.rios.2018_11_06_16_14_13_7992.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
+              //                                                                           0123456789 1234567
+              //pkg.rios.2018_11_06_16_14_13_7992.user.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
               char * key = NULL;
               int my_len = strlen(dp->d_name);
               asprintf(&key, "pkg_%s_%.*s",options.uuid().c_str(), ulen, &dp->d_name[my_len - 17]);
 
               // transmit jsonStr
               
-              transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), my_resultFn);
+              transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), c_resultDir, dp->d_name);
               free(key);
-              free(my_resultFn);
               unlink(fullName.c_str());
             }
           fclose(fp);

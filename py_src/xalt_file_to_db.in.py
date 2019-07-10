@@ -76,6 +76,7 @@ class CmdLineOptions(object):
     parser.add_argument("--timer",       dest='timer',   action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
+    parser.add_argument("--u2acct",      dest='u2acct',  action="store",      help="Path to the json file containing default charge account strings for users")
     parser.add_argument("--syshost",     dest='syshost', action="store",      default="*",            help="name of the cluster")
     parser.add_argument("--confFn",      dest='confFn',  action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
@@ -192,13 +193,14 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA):
   return num
 
 
-def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
+def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
   @param xalt:        An XALTdb object.
   @param listFn:      A flag that causes the name of the file to be written to stderr.
   @param reverseMapT: The Reverse Map Table.
+  @param u2acctT:     The map for user to default account string
   @param deleteFlg:   A flag that says to delete files after processing.
   @param runFnA:      An array of run file names
 
@@ -224,7 +226,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, deleteFlg, runFnA):
         continue
       f.close()
 
-      stored = xalt.run_to_db(reverseMapT, runT)
+      stored = xalt.run_to_db(reverseMapT, u2acctT, runT)
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -271,7 +273,7 @@ def passwd_generator():
 
 
 
-def build_xaltDir(user, hdir, transmission, kind):
+def build_xaltDir(hdir, transmission, kind):
   tail = ""
   if (transmission == "file_separate_dirs"):
     tail = kind
@@ -280,7 +282,39 @@ def build_xaltDir(user, hdir, transmission, kind):
   if (prefix == "USE_HOME"):
     return os.path.join(hdir,".xalt.d",tail)
 
-  return os.path.join(prefix,user,tail)
+  return os.path.join(prefix,tail)
+
+def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
+
+  xaltDir = build_xaltDir(homeDir, transmission, "link")
+  XALT_Stack.push("Directory: " + xaltDir)
+
+  if (os.path.isdir(xaltDir)):
+    XALT_Stack.push("link_json_to_db()")
+    linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
+    countT['lnk']  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
+    XALT_Stack.pop()
+  XALT_Stack.pop()
+
+  xaltDir = build_xaltDir(homeDir, transmission, "run")
+  XALT_Stack.push("Directory: " + xaltDir)
+  if (os.path.isdir(xaltDir)):
+    XALT_Stack.push("run_json_to_db()")
+    runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
+    countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, u2acctT, args.delete, runFnA)
+    XALT_Stack.pop()
+  XALT_Stack.pop()
+
+  xaltDir = build_xaltDir(homeDir, transmission, "pkg")
+  XALT_Stack.push("Directory: " + xaltDir)
+  if (os.path.isdir(xaltDir)):
+    XALT_Stack.push("pkg_json_to_db()")
+    pkgFnA         = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
+    countT['pkg'] += pkg_json_to_db(xalt, args.listFn, args.syshost, args.delete, pkgFnA)
+    XALT_Stack.pop()
+  XALT_Stack.pop()
+  
+
 
 def main():
   """
@@ -291,7 +325,7 @@ def main():
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
   if (not transmission):
-    transmission = "@XALT_TRANSMISSION_STYLE@"
+    transmission = "@transmission@"
 
   if (not transmission):
     transmission = "file"
@@ -317,50 +351,32 @@ def main():
 
   rmapT  = Rmap(args.rmapD).reverseMapT()
 
-  iuser  = 0
-  lnkCnt = 0
-  runCnt = 0
-  pkgCnt = 0
+  u2acctT = {}
+  if (args.u2acct):
+    fp     = open(args.u2acct,"r")
+    u2acctT = json.loads(fp.read())
+    fp.close()
 
-  for user, hdir in passwd_generator():
-    XALT_Stack.push("User: " + user)
+  countT = {}
+  countT['lnk'] = 0
+  countT['run'] = 0
+  countT['pkg'] = 0
 
+  xalt_file_prefix = "@xalt_file_prefix@"
 
-    xaltDir = build_xaltDir(user, hdir, transmission, "link")
-    if (os.path.isdir(xaltDir)):
-      iuser   += 1
-      linkFnA  = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
-      XALT_Stack.push("link_json_to_db()")
-      lnkCnt  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
-      XALT_Stack.pop()
-
-    xaltDir = build_xaltDir(user, hdir, transmission, "run")
-    if (os.path.isdir(xaltDir)):
-      runFnA   = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
-      XALT_Stack.push("run_json_to_db()")
-      runCnt  += run_json_to_db(xalt, args.listFn, rmapT, args.delete, runFnA)
-      XALT_Stack.pop()
-
-    xaltDir = build_xaltDir(user, hdir, transmission, "pkg")
-    if (os.path.isdir(xaltDir)):
-      pkgFnA   = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
-      XALT_Stack.push("pkg_json_to_db()")
-      pkgCnt  += pkg_json_to_db(xalt, args.listFn, args.syshost, args.delete, pkgFnA)
-      XALT_Stack.pop()
-
-
-    icnt += 1
-    v = XALT_Stack.pop()
-    carp("User",v)
-    pbar.update(icnt)
+  if (xalt_file_prefix != "USE_HOME"):
+    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT)
+  else:
+    for user, homeDir in passwd_generator():
+      store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT)
 
   xalt.connect().close()
-  pbar.fini()
+  #pbar.fini()
   t2 = time.time()
   rt = t2 - t1
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("num users: ", iuser, ", num links: ", lnkCnt, ", num pkgs: ", pkgCnt, ", num runs: ", runCnt)
+  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'])
 
 if ( __name__ == '__main__'): main()

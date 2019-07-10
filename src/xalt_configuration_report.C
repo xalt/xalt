@@ -35,14 +35,37 @@ int main(int argc, char* argv[])
   if (executable_tracking == NULL || (strcmp(executable_tracking,"yes") != 0))
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
-      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to \"yes\"!!\n";
-      std::cout << "\n";
-      std::cout << "            XALT will not do anything without this variable\n";
-      std::cout << "            set to \"yes\"\n";
+      std::cout << "   Warning: XALT_EXECUTABLE_TRACKING is not set to \"yes\"!!                    \n";
+      std::cout << "                                                                                \n";
+      std::cout << "            XALT will not do anything without this variable                     \n";
+      std::cout << "            set to \"yes\"                                                      \n";
       std::cout << "*------------------------------------------------------------------------------*\n";
       return 1;
     }
     
+  const char* home = getenv("HOME");
+  if (home == NULL)
+    {
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      std::cout << "   Warning: HOME is not set                                                     \n";
+      std::cout << "                                                                                \n";
+      std::cout << "            XALT will not do anything without this variable having a value      \n";
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      return 1;
+    }
+    
+  const char* user = getenv("USER");
+  if (user == NULL)
+    {
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      std::cout << "   Warning: USER is not set                                                     \n";
+      std::cout << "                                                                                \n";
+      std::cout << "            XALT will not do anything without this variable having a value      \n";
+      std::cout << "*------------------------------------------------------------------------------*\n";
+      return 1;
+    }
+    
+
   std::string syshost(xalt_syshost());
   std::string syslog_tag("XALT_LOGGING_");
   syslog_tag.append(syshost);
@@ -123,6 +146,7 @@ int main(int argc, char* argv[])
       json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
       if (strcmp(transmission,"syslog") == 0)
         json.add("XALT_LOGGING_TAG",            syslog_tag);
+      json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
       json.add("XALT_COMPUTE_SHA1",             computeSHA1);
       json.add("XALT_ETC_DIR",                  xalt_etc_dir);
       json.add("XALT_DIR",                      XALT_DIR);
@@ -164,6 +188,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_FUNCTION_TRACKING:        " << xalt_func_tracking             << "\n";
   std::cout << "XALT_SYSHOST:                  " << syshost                        << "\n";
   std::cout << "XALT_FILE_PREFIX:              " << XALT_FILE_PREFIX               << "\n";
+  std::cout << "XALT_PRIME_NUMBER:             " << XALT_PRIME_NUMBER              << "\n";
   std::cout << "XALT_INTERFACE_VERSION:        " << XALT_INTERFACE_VERSION         << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:       " << transmission                   << "\n";
   if (strcmp(transmission,"syslog") == 0)

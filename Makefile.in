@@ -59,6 +59,8 @@ PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
+XALT_PRIME_NUMBER     	:= @XALT_PRIME_NUMBER@
+XALT_PRIME_FMT     	:= @XALT_PRIME_FMT@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
 ENABLE_BACKGROUNDING 	:= @ENABLE_BACKGROUNDING@
 XALT_CONFIG_PY       	:= @XALT_CONFIG_PY@
@@ -86,7 +88,8 @@ DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
                            $(DESTDIR)$(INC)
 
-BIN_PKG              	:= sh_src/ld.in                                                        \
+BIN_PKG              	:=                                                                     \
+                           sh_src/ld.in                                                        \
                            sh_src/ld.gold.in                                                   \
 	                   sh_src/x86_64-linux-gnu-ld.in                                       \
                            sh_src/xalt_helper_functions.sh                                     \
@@ -96,9 +99,10 @@ BIN_PKG              	:= sh_src/ld.in                                           
 
 BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
-SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py            \
-                           py_src/xalt_syslog_to_db.in.py    py_src/xalt_usage_report.in.py   \
-                           py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py
+SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py             \
+                           py_src/xalt_syslog_to_db.in.py    py_src/xalt_usage_report.in.py    \
+                           py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py \
+                           sh_src/create_xalt_directories.sh.in
 
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
@@ -116,7 +120,9 @@ TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py
                            contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
                            contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
                            contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
-                           contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.in
+                           contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.in\
+                           contrib/TACC/build_default_user_2_account_str.in
+
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 INIT_SRC             	:= src/xalt_initialize.c
 INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
@@ -243,6 +249,8 @@ __installMe:
 	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     	  \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           	  \
 	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            	  \
+	        -e 's|@xalt_prime_number@|$(XALT_PRIME_NUMBER)|g'            	  \
+	        -e 's|@xalt_prime_fmt@|$(XALT_PRIME_FMT)|g'             	  \
 	        -e 's|@xalt_enable_backgrounding@|$(ENABLE_BACKGROUNDING)|g'      \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   	  \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                            \
@@ -371,6 +379,9 @@ dist:
 	find xalt-$(VERSION) -type f -print0 | xargs -0 sed -i 's/\@git\@/$(GIT_VERSION)/g' ; \
         $(RM) ../xalt-$(VERSION).tar                                                        ; \
 	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION)                                ; \
+	cd ..                                                                               ; \
+	$(RM) -rf DIST                                                                      ; 
+
 
 makefile: $(srcdir)/Makefile.in config.status
 	./config.status $@

@@ -64,6 +64,7 @@ equiv_patternA = [
     [ r'^gsreturn'                      , 'GSreturn*'                      ],
     [ r'^.*gadget.*'                    , 'Gadget*'                        ],
     [ r'^g09'                           , 'Gaussian*'                      ],
+    [ r'^g16'                           , 'Gaussian*'                      ],
     [ r'^gigapowers'                    , 'GigaPOWERS*'                    ],
     [ r'^graph500'                      , 'Graph500*'                      ],
     [ r'^mdrun'                         , 'Gromacs*'                       ],

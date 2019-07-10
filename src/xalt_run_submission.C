@@ -2,7 +2,6 @@
 #include <iomanip>
 #include <sstream>
 #include <fstream>
-#include <math.h>
 #include <time.h>
 #include <strings.h>
 #include <string.h>
@@ -12,14 +11,12 @@
 #include "walkProcessTree.h"
 #include "Options.h"
 #include "Json.h"
+#include "xalt_utils.h"
 #include "xalt_config.h"
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
-//#include "run_direct2db.h"
 #include "xalt_utils.h"
-
-#define DATESZ 100
 
 int main(int argc, char* argv[], char* env[])
 {
@@ -27,15 +24,13 @@ int main(int argc, char* argv[], char* env[])
   int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
   Options options(argc, argv);
-  char    dateStr[DATESZ];
-  time_t  time;
   double  t0, t1;
   double  t_maps, t_sha1;
   DTable  measureT;
   bool    end_record = (options.endTime() > 0.0);
   
-  std::string suffix = end_record ? "zzz" : "aaa";
-  DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix.c_str());
+  const char* suffix = end_record ? ".zzz" : ".aaa";
+  DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix);
   
   t0 = epoch();
   t1 = t0;
@@ -124,8 +119,9 @@ int main(int argc, char* argv[], char* env[])
 
   DEBUG0(stderr,"  Built json string\n");
 
-  char*       resultFn = NULL;
-  std::string jsonStr  = json.result();
+  char*       c_resultFn  = NULL;
+  char*       c_resultDir = NULL;  
+  std::string jsonStr     = json.result();
   std::string fn;
 
 
@@ -134,38 +130,23 @@ int main(int argc, char* argv[], char* env[])
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
-      //*********************************************************************
-      // Build file name for xalt json record.  It is only used when the
-      // file transmission style is used;
-      char* c_home = getenv("HOME");
-      char* c_user = getenv("USER");
-      if (c_home != NULL && c_user != NULL )
-        {
-          std::string home   = c_home;
-          std::string user   = c_user;
-          std::string xaltDir;
+      std::string resultDir, resultFn;
+      build_resultDir(resultDir, "run", transmission);
 
-          build_xaltDir(xaltDir, "run", user, home, transmission);
 
-          double start = options.startTime();
-          double frac  = start - floor(start);
-          time = options.startTime();
-          strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
-
-          std::ostringstream sstream;
-          sstream << xaltDir << "run." << options.syshost() << ".";
-          sstream << dateStr << "_"    << std::setfill('0') << std::setw(4) << (int) (frac*10000.0) << "."
-                  << suffix  << "."    << options.uuid()    << ".json";
-
-          fn = sstream.str();
-          resultFn = strdup(fn.c_str());
-        }
+      build_resultFn(resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
+                     "run", suffix);
+      c_resultFn  = strdup(resultFn.c_str());
+      c_resultDir = strdup(resultDir.c_str());
     }
 
-  transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), resultFn);
+  transmit(transmission, jsonStr.c_str(), "run", key.c_str(), options.syshost().c_str(), c_resultDir, c_resultFn);
   xalt_quotestring_free();
-  if (resultFn)
-    free(resultFn);
+  if (c_resultFn)
+    {
+      free(c_resultFn);
+      free(c_resultDir);
+    }
 
   //*********************************************************************
   // Transmit Pkg records if any

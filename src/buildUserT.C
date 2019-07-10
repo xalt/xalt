@@ -16,10 +16,10 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   
   time_t mtime;
   char   dateStr[DATESZ];
-  char   path[PATH_MAX];
+  char   path[PATH_MAX+1];
 
   // CWD
-  getcwd(path,PATH_MAX);
+  getcwd(path,sizeof(path));
   userT["cwd"] = path;
 
   // Epoch

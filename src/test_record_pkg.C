@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
   cmd.append(" package_version 1.0");
   cmd.append(" package_path /A/B/acme/1.0");
   
-  printf("%s\n",cmd.c_str());
+  fprintf(stderr,"%s\n",cmd.c_str());
     
   system(cmd.c_str());
 
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   cmd.append(" package_version 2.0");
   cmd.append(" package_path /A/B/foo/2.0");
   
-  printf("%s\n",cmd.c_str());
+  fprintf(stderr,"%s\n",cmd.c_str());
     
   system(cmd.c_str());
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
   cmd.append(" package_version 3.0");
   cmd.append(" package_path /A/B/bar/3.0");
   
-  printf("%s\n",cmd.c_str());
+  fprintf(stderr,"%s\n",cmd.c_str());
     
   system(cmd.c_str());
 

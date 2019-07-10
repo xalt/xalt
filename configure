@@ -645,6 +645,8 @@ ac_ct_CXX
 CXXFLAGS
 CXX
 HAVE_32BIT
+XALT_PRIME_FMT
+XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
 BAD_INSTALL
@@ -736,6 +738,7 @@ with_preloadOnly
 with_IrefuseToInstallXALTCorrectly
 with_32bit
 with_tmpdir
+with_primeNumber
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1400,7 +1403,9 @@ Optional Packages:
                           Install XALT incorrectly [[no]]
   --with-32bit            Allow for 32 bits executables[[yes]]
   --with-tmpdir=ans       The tmp directory to use with package records
-                          [[/tmp]]
+                          [[/dev/shm]]
+  --with-primeNumber=ans  The prime number of directories when using
+                          XALT_FILE_PREFIX, [[997]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -3467,7 +3472,7 @@ $as_echo "XALT_TMPDIR=$with-tmpdir" >&6; }
 _ACEOF
 
 else
-  withval="/tmp"
+  withval="/dev/shm"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_TMPDIR=$withval" >&5
 $as_echo "XALT_TMPDIR=$withval" >&6; }
     XALT_TMPDIR="$withval"
@@ -3476,6 +3481,29 @@ $as_echo "XALT_TMPDIR=$withval" >&6; }
 _ACEOF
 
 fi
+
+
+
+# Check whether --with-primeNumber was given.
+if test "${with_primeNumber+set}" = set; then :
+  withval=$with_primeNumber; XALT_PRIME_NUMBER="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_PRIME_NUMBER=$with-primeNumber" >&5
+$as_echo "XALT_PRIME_NUMBER=$with-primeNumber" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_PRIME_NUMBER "$with-primeNumber"
+_ACEOF
+
+else
+  withval="997"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_PRIME_NUMBER=$withval" >&5
+$as_echo "XALT_PRIME_NUMBER=$withval" >&6; }
+    XALT_PRIME_NUMBER="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_PRIME_NUMBER "$withval"
+_ACEOF
+
+fi
+
 
 
 
@@ -5018,6 +5046,24 @@ fi
 
 fi
 
+$PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
+if test "$?" != 0; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT when --with-primeNumber=<ans>"
+   echo "is not a prime number.  It also has to be bigger than 3."
+   echo "See the xalt.readthedocs.io for details."
+   echo "======================================================="
+   rm -f makefile
+   exit 1
+fi
+
+XALT_PRIME_FMT=$($PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_fmt.py $XALT_PRIME_NUMBER)
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi
+
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
@@ -6544,7 +6590,10 @@ echo "XALT Using NVML......................................" : $HAVE_NVML
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
+echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
+echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
+
 echo '------------------------------------------------------------------------------'
 echo
 

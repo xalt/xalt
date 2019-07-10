@@ -1,20 +1,4 @@
-XALT 2.6+
-    (2.6.1)  * Fix quote bug in configure.ac/configure.
-    (2.6.2)  * Fix bug in configure.ac/configure/aclocal.m4 that tests for a valid MySQLdb python module.
-    (2.6.3)  * Fix bug when requiring python scripts like xalt_syslog_to_db.py to be required to run python3.
-             * Fix bug with the storing of cwd in xalt_link.
-    (2.6.4)  * Fix bug with SYSHOST and errors in xalt_build_descriptA table.
-    (2.6.5)  * Fix bug in xalt_transmission_factory.py
-    (2.6.6)  * Fix bug in ld.in where the path was restricted for commands like as and ld that must have
-               the user's Path.
-    (2.6.7)  * Now support reading /proc/$PID/maps instead of parsing the output of ldd
-    (2.6.8)  * Now supporting using the vendor note to hold the XALT watermark.
-    (2.6.9)  * issue #4: Add default signal handler when re-raising the signal after my_fini() is fixed
-    (2.6.10) * issue #4: Remove SIGINT from the list of signals that XALT tries to capture.
-    (2.6.11) * Add XALT_RANDOM_NUMBER to the environment of the programs running under XALT.
-    (2.6.12) * issue #6: added xalt.spec
-             * issue #7: xalt_file_to_db.py must filter on syshost
-             * using the update_version program xalt.spec and docs/source/conf.py are updated with the new version.
-    (2.6.13) * issue #9: Handle spaces and double quotes in executable filenames.
-    (2.6.14) * Make sure that all capture calls and system calls in xalt_initialize.c are protected against
-               spaces in paths.  Changed end2end test to include a directory in $PATH that has a space in it.
+XALT 2.7+
+    (2.7.1) * Added contrib/TACC/build_default_2_account_str.in to build a json table that
+              maps users to default charge string.
+    

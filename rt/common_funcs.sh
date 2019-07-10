@@ -43,11 +43,20 @@ buildRmapT()
 
 installXALT()
 {
-  rm -rf XALT build
+  rm -rf XALT build .make_failed
   mkdir build
 
   (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; \
-  echo "<make>"; make OPTLVL="-g -O0" install ;  )
+   echo "<make>"; make OPTLVL="-g -O0" install ;
+   if  [ "$?" != 0 ]; then
+       echo "make failed"
+       touch $outputDir/.make_failed
+   fi
+  )
+  if [ -f $outputDir/.make_failed ]; then
+      exit 1;
+  fi
+  
   cp $projectDir/proj_mgmt/check_entries_db.py XALT/xalt/xalt/sbin
   PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
   echo "<end make>"

@@ -12,7 +12,7 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
-     rm -f results.csv
+     rm -f results.csv u2acct.json
 
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
@@ -23,6 +23,8 @@ test_descript = {
      installXALT --with-syshostConfig=env_var:MY_HOST --with-systemPath=$(testDir)/bin:/bin:/usr/bin
      displayThis "buildRmapT"
      buildRmapT
+
+     echo "{ \"mclay\": \"A-xyzzy\" }" > u2acct.json
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 
@@ -61,7 +63,7 @@ test_descript = {
      unset LD_PRELOAD
 
      displayThis  "xalt_syslog_to_db.py"
-     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
 
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 4 --functions 4 --links 2 --pkgs 3 --objects 10

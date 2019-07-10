@@ -7,7 +7,7 @@ Config/TACC_config.py is the configuration we use at TACC.  This file
 defines three types of filtering.  One is hostname filtering.  It is
 typical to only track program execution on compute nodes.::
 
-   **Note** that linking of executable is tracked on both login and compute nodes.
+   **Note** XALT tracks linking of executables on both login and compute nodes.
 
 The second type of filtering is by executables path. Finally there is
 filtering of the environment variables.  It turns out that storing the
@@ -156,17 +156,21 @@ For this reason, you will want to list the PKGS programs first (if
 you have any), followed by the **KEEP's** and conclude with the
 **SKIP's**
 
-Non-mpi executables only produce an end record. But for executables
-that where there are intermediate records, one has to produce a start
-record.  Currently R, MATLAB and Python can generate records that tell
-which package each program uses.  Those programs can be marked as PKGS.
-
+XALT allows for special treatment of programs such as R, Python and
+MATLAB. With special hooks for each language/program, it is possible
+to record the "packages" that each program uses. Those hooks record
+package use during program execution which is written to a directory
+in /tmp.  When the end record is produced, XALT checks to see if any
+packages are recorded for the PKGS type executable.
 
 The strategy that TACC uses is to keep program like cp, perl, gawk and
 ignore all other system executables that are in /bin/, /usr/bin
-etc. Also we ignore all the compiler programs that live in the
-compiler directories.  Similarly for the mpi helper program such as
-mpiexec that live in the mpi directories.
+etc. That is why, for example, **/bin/sed** and **/usr/bin/sed** are
+marked as KEEP's where as **/bin** and **/usr/bin** are marked as
+SKIP's.  That way /bin/ls is ignored but /bin/sed is tracked.  Also we
+ignore all the compiler programs that live in the compiler
+directories.  Similarly for the mpi helper program such as mpiexec
+that live in the mpi directories.
 
 We do not wish to track the generated programs from autoconf
 (e.g. conftest) and Cmake (.*/CMakeTmp\/cmTryCompileExec[0-9][0-9]*).

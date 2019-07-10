@@ -1,0 +1,43 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+filePrefix="@xalt_file_prefix@"
+
+if [ "${filePrefix+x}" = "USE_HOME" ]; then
+  echo "This script is not necessary for your site"
+  echo "It is only used when configuring your site --with-xaltFilePrefix=..."
+  exit 0
+fi
+
+# make sure that there just one '/' at the end of $filePrefix
+filePrefix="${filePrefix}/"
+filePrefix=$(echo $filePrefix | sed -e 's|//*$|/|')
+
+
+# Compute the range of directories based on the prime number of directories.
+PRIME="@xalt_prime_number@"
+PRIME_FMT="@xalt_prime_fmt@"
+SEQ_FMT=${PRIME_FMT/d/g}
+LAST=$((PRIME - 1))
+
+# Decide the type of directories needed (Also convert string to lower case)
+transmission="@transmission@"
+transmission=$(echo $transmission | tr '[:upper:]'  '[:lower:]')
+
+# Create directories
+
+if [ "${transmission:-}" = "file_separate_dirs" ]; then
+  for j in run link pkg; do
+    mkdir -p "$filePrefix$j"
+    for i in $(seq -f $SEQ_FMT 0 $LAST ); do
+      mkdir -p "$filePrefix$j/$i"
+      chmod 1777 "$filePrefix$j/$i"
+    done
+  done
+else
+  for i in $(seq -f $SEQ_FMT 0 $LAST ); do
+    mkdir -p "$filePrefix$i"
+    chmod 1777 "$filePrefix$i"
+  done
+fi
+
