@@ -280,10 +280,12 @@ gittag:
           if [ -s /tmp/git_st_$$$$ ]; then                                 	      \
 	    echo "All files not checked in => try again"                            ; \
 	  else                                                             	      \
-	    echo "#define XALT_VERSION_STR \"XALT $(TAG) $(VDATE)\"" >  $(XALT_V)   ; \
-	    echo "$(TAG)"                                            >  .version    ; \
-            $(UPDATE_VERSION) -p $(CONF_PY_PATTERN)   --version $(TAG) $(CONF_PY)   ; \
-            $(UPDATE_VERSION) -p $(XALT_SPEC_PATTERN) --version $(TAG) $(XALT_SPEC) ; \
+            vtag=$(TAG)                                                             ; \
+            vtag="$${vtag#xalt-}"                                                   ; \
+	    echo "#define XALT_VERSION_STR \"XALT $$vtag $(VDATE)\"" >  $(XALT_V)   ; \
+	    echo "$$vtag"                                            >  .version    ; \
+            $(UPDATE_VERSION) -p $(CONF_PY_PATTERN)   --version $$vtag $(CONF_PY)   ; \
+            $(UPDATE_VERSION) -p $(XALT_SPEC_PATTERN) --version $$vtag $(XALT_SPEC) ; \
             git commit -m "moving to TAG_VERSION $(TAG)" $(XALT_SPEC)  $(CONF_PY)     \
                                                          $(XALT_V)     .version     ; \
             git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                    ; \
