@@ -4,4 +4,5 @@ XALT 2.7+
 	    * xalt_syslog_to_db.in.py and xalt_file_to_db.in.py support --u2acct that allows sites
 	      to specify a default charge account string when it is not specify in the job script.
 	    * xalt_usage_report.in.py support --queue to only report from a particular queue.
-    
+	    * PKG intermediate results are now written to /dev/shm/XALT_... instead of /tmp/XALT_...
+	      by default.
