@@ -24,7 +24,7 @@ test_descript = {
      displayThis "buildRmapT"
      buildRmapT
 
-     echo "{ \"mclay\": \"A-xyzzy\" }" > u2acct.json
+     echo '{ "mclay": "A-xyzzy" }' > u2acct.json
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 

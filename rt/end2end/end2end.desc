@@ -26,7 +26,7 @@ test_descript = {
      rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools" u2acct.json
      mkdir "xalt tools"
 
-     echo "{ \"mclay\": \"A-xyzzy\" }" > u2acct.json
+     echo '{ "mclay": "A-xyzzy" }' > u2acct.json
 
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
