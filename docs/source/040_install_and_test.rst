@@ -43,7 +43,7 @@ Creating XALT directories when using --with-xaltFilePrefix=...
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If your site is using the **file** transmission style and the
-xaltFilePrefix then, you must create the XALT directories as part of
+xaltFilePrefix option then, you must create the XALT directories as part of
 the installation process.  Assuming that you have installed XALT with
 a prefix of **/opt/apps**.  Then you can run as root::
 

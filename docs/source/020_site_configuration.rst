@@ -175,7 +175,14 @@ write json records in files in the ~/.xalt.d directory.  XALT will
 create that directory if needed.  It is also possible for XALT to
 write all json records into a globally writable location by using the
 --with-xaltFilePrefix=/path/to/json/files.  If this is set to
-/global/xalt then XALT will write json files in /global/xalt/$USER.
+/global/xalt then XALT will write json files in a series of
+directories under */global/xalt/*. In particular, the program::
+
+  /opt/apps/xalt/xalt/sbin/create_xalt_directories.sh
+
+is used to create a prime number of directories named 000 to 996
+(typically) where the json result files are written.
+
 
 So you should probably start with the following for testing to write
 the json record to files in ~/.xalt.d::
