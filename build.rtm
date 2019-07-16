@@ -112,7 +112,11 @@ case $SYSHOST in
   ls5 )
     echo "Building ls5"
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-syshostConfig=hardcode:lonestar5 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no " #--with-trackGPU=yes
+    EXTRA=""
+    if [ "$USER" = swtools ]; then
+      EXTRA="--with-xaltFilePrefix=/scratch/projects/XALT"
+    fi
+    CONF_OPTS="--with-syshostConfig=hardcode:ls5 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no $EXTRA" #--with-trackGPU=yes
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
