@@ -273,30 +273,33 @@ def passwd_generator():
 
 
 
-def build_xaltDir(hdir, transmission, kind):
+def build_resultDir(hdir, transmission, kind):
   tail = ""
   if (transmission == "file_separate_dirs"):
     tail = kind
 
-  prefix = "@xalt_file_prefix@"
-  if (prefix == "USE_HOME"):
+  
+  prefix = os.environ.get("XALT_FILE_PREFIX","@xalt_file_prefix@")
+  if (not prefix or prefix == "USE_HOME"):
     return os.path.join(hdir,".xalt.d",tail)
 
   return os.path.join(prefix,tail)
 
 def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
 
-  xaltDir = build_xaltDir(homeDir, transmission, "link")
+  xaltDir = build_resultDir(homeDir, transmission, "link")
   XALT_Stack.push("Directory: " + xaltDir)
 
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("link_json_to_db()")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
+    for fn in linkFnA:
+      print(fn)
     countT['lnk']  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
-  xaltDir = build_xaltDir(homeDir, transmission, "run")
+  xaltDir = build_resultDir(homeDir, transmission, "run")
   XALT_Stack.push("Directory: " + xaltDir)
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("run_json_to_db()")
@@ -305,7 +308,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
     XALT_Stack.pop()
   XALT_Stack.pop()
 
-  xaltDir = build_xaltDir(homeDir, transmission, "pkg")
+  xaltDir = build_resultDir(homeDir, transmission, "pkg")
   XALT_Stack.push("Directory: " + xaltDir)
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("pkg_json_to_db()")
@@ -362,13 +365,14 @@ def main():
   countT['run'] = 0
   countT['pkg'] = 0
 
-  xalt_file_prefix = "@xalt_file_prefix@"
+  
+  xalt_file_prefix = os.environ.get("XALT_FILE_PREFIX","@xalt_file_prefix@")
 
-  if (xalt_file_prefix != "USE_HOME"):
-    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT)
-  else:
+  if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
       store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT)
+  else:
+    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT)
 
   xalt.connect().close()
   #pbar.fini()

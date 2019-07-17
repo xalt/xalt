@@ -167,30 +167,36 @@ void build_resultDir(std::string& resultDir, const char *kind, const char* trans
 {
   char* c_home = getenv("HOME");
   char* c_user = getenv("USER");
-  
+
   if (c_home != NULL && c_user != NULL )
     {
-      #ifdef HAVE_FILE_PREFIX
-        resultDir.assign(XALT_FILE_PREFIX);
-        resultDir.append("/");
-        if (strcasecmp(transmission,"file_separate_dirs") == 0)
-          {
-            resultDir.append(kind);
-            resultDir.append("/");
-          }
-        char * hashDir = NULL;
-        asprintf(&hashDir, XALT_PRIME_FMT "/",hashStr(c_user) % XALT_PRIME_NUMBER);
-        resultDir.append(hashDir);
-        free(hashDir);
-      #else
-        resultDir.assign(c_home);
-        resultDir.append("/.xalt.d/");
-        if (strcasecmp(transmission,"file_separate_dirs") == 0)
-          {
-            resultDir.append(kind);
-            resultDir.append("/");
-          }
-      #endif
+      const char * xalt_file_prefix = getenv("XALT_FILE_PREFIX");
+      if (xalt_file_prefix == NULL)
+        xalt_file_prefix = XALT_FILE_PREFIX;
+      if (strcasecmp(xalt_file_prefix,"USE_HOME") == 0)
+        { 
+          resultDir.assign(c_home);
+          resultDir.append("/.xalt.d/");
+          if (strcasecmp(transmission,"file_separate_dirs") == 0)
+            {
+              resultDir.append(kind);
+              resultDir.append("/");
+            }
+        }
+      else
+        {
+          resultDir.assign(xalt_file_prefix);
+          resultDir.append("/");
+          if (strcasecmp(transmission,"file_separate_dirs") == 0)
+            {
+              resultDir.append(kind);
+              resultDir.append("/");
+            }
+          char * hashDir = NULL;
+          asprintf(&hashDir, XALT_PRIME_FMT "/",hashStr(c_user) % XALT_PRIME_NUMBER);
+          resultDir.append(hashDir);
+          free(hashDir);
+        }
     }
 }
 
