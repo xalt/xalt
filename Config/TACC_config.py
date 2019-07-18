@@ -38,8 +38,8 @@ hostname_patterns = [
 
 # If a path does not match any patterns it is marked as KEEP.
 
-# There are special scalar programs that must generate a start record.
-# These are marked as SPSR
+# Programs like R, MATLAB and python* are marked as PKGS.  These programs
+# can optionally track the internal "import" that are used.
 
 path_patterns = [
     ['PKGS',  r'.*\/R'],
