@@ -39,7 +39,6 @@ unset LD_PRELOAD
 CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
 HAVE_DCGM=@have_dcgm@
-SEP_DIR=
 XALT_FILE_PREFIX=@xalt_file_prefix@
 MY_NAME=$(PATH=@xalt_system_path@ basename $0)
 MY_DIR=$(PATH=@xalt_system_path@ dirname $(PATH=@xalt_system_path@ readlink -f $0))
@@ -54,11 +53,6 @@ fi
 
 if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
    XALT_TRANSMISSION_STYLE=@transmission@
-fi
-
-# XALT_TRANSMISSION_STYLE is already lower case!
-if [ $XALT_TRANSMISSION_STYLE = file_separate_dirs ]; then
-   SEP_DIR=link/
 fi
 
 if [ -z "$XALT_FUNCTION_TRACKING" ]; then
