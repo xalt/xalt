@@ -24,6 +24,18 @@
 # This program reads in both files and produces two dictionaries.
 # The user2numT dictionary only contains users which only have one charge
 # number associated with that account.
+
+# The results of this program is a json file that is written to stdout.
+# It looks like:
+
+# {
+#    "user1": "Charge_StringX",
+#    "user2": "Charge_StringX",
+#    "user3": "Charge_StringA"
+# }
+
+# It is a key - value pairing where the key is the userName and the value is
+# the charge accounting string.
 ########################################################################
 
 

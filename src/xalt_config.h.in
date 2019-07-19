@@ -21,11 +21,11 @@
 #define SYSHOST_CONFIG             "@SYSHOST_CONFIG@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
 #define XALT_VERSION               "@VERSION@"
-#define XALT_GIT_VERSION           "XALT @XALT_GIT_VERSION@"
+#define XALT_GIT_VERSION           "@XALT_GIT_VERSION@"
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
 #define XALT_TMPDIR                "@XALT_TMPDIR@"
 #define XALT_INSTALL_OS            "@XALT_INSTALL_OS@"
-#define XALT_PRIME_NUMBER          @XALT_PRIME_NUMBER@
+#define XALT_PRIME_NUMBER           @XALT_PRIME_NUMBER@
 #define XALT_PRIME_FMT             "@XALT_PRIME_FMT@"
 
 #endif /* XALT_CONFIG_H */

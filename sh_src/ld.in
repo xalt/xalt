@@ -39,25 +39,28 @@ unset LD_PRELOAD
 CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
 HAVE_DCGM=@have_dcgm@
-XALT_FILE_PREFIX=@xalt_file_prefix@
 MY_NAME=$(PATH=@xalt_system_path@ basename $0)
 MY_DIR=$(PATH=@xalt_system_path@ dirname $(PATH=@xalt_system_path@ readlink -f $0))
 
 declare -l XALT_TRANSMISSION_STYLE
 
-if [ -z "$XALT_PRELOAD_ONLY" ]; then
+if [ -z "${XALT_FILE_PREFIX+x}" ]; then
+    XALT_FILE_PREFIX=@xalt_file_prefix@
+fi
+
+if [ -z "${XALT_PRELOAD_ONLY+x}" ]; then
     XALT_PRELOAD_ONLY=@preload_only@
-elif [ "$XALT_PRELOAD_ONLY" != no ]; then
+elif [ "${XALT_PRELOAD_ONLY:-}" != no ]; then
    XALT_PRELOAD_ONLY=yes
 fi
 
-if [ -z "$XALT_TRANSMISSION_STYLE" ]; then
+if [ -z "${XALT_TRANSMISSION_STYLE+x}" ]; then
    XALT_TRANSMISSION_STYLE=@transmission@
 fi
 
-if [ -z "$XALT_FUNCTION_TRACKING" ]; then
+if [ -z "${XALT_FUNCTION_TRACKING+x}" ]; then
    XALT_FUNCTION_TRACKING=@xalt_function_tracking@
-elif [ "$XALT_FUNCTION_TRACKING" != no ]; then
+elif [ "${XALT_FUNCTION_TRACKING:-}" != no ]; then
    XALT_FUNCTION_TRACKING=yes
 fi
 

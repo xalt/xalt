@@ -1,4 +1,10 @@
 XALT 2.7+
-    (2.7.1) * Added contrib/TACC/build_default_2_account_str.in to build a json table that
-              maps users to default charge string.
+    (2.7.1)  * Added contrib/TACC/build_default_2_account_str.in to build a json table that
+               maps users to default charge string.
+	     * xalt_syslog_to_db.in.py and xalt_file_to_db.in.py support --u2acct that allows sites
+	       to specify a default charge account string when it is not specify in the job script.
+	     * xalt_usage_report.in.py support --queue to only report from a particular queue.
+	     * PKG intermediate results are now written to /dev/shm/XALT_... instead of /tmp/XALT_...
+	       by default.
+    (2.7.2)  * Support for env var XALT_FILE_PREFIX.
     

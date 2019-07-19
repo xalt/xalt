@@ -13,9 +13,12 @@ test_descript = {
 
      initialize
 
-     installXALT --with-syshostConfig=nth_name:2 --with-transmission=file_separate_dirs --with-xaltFilePrefix=$outputDir/DATA --with-primeNumber=11
+     installXALT --with-syshostConfig=nth_name:2 --with-primeNumber=11
      displayThis "buildRmapT"
      buildRmapT
+
+     export XALT_TRANSMISSION_STYLE="file_separate_dirs"
+     export XALT_FILE_PREFIX=$outputDir/DATA 
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
 

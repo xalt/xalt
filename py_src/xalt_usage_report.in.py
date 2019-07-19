@@ -65,8 +65,10 @@ class CmdLineOptions(object):
     parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
     parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
+    parser.add_argument("--queue",   dest='queue',     action="store",       default = "%",            help="queue")
     parser.add_argument("--num",     dest='num',       action="store",       default = 20,             help="top number of entries to report")
     parser.add_argument("--full",    dest='full',      action="store_true",                            help="report core hours by compiler")
+    parser.add_argument("--short",   dest='short',     action="store_true",                            help="Only report on executable, not libraries")
     args = parser.parse_args()
     return args
 
@@ -91,6 +93,7 @@ class ExecRun:
     sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
+    sA.append("    AND queue like '%s' ")
     sA.append("    AND date >= '%s' AND date < '%s' ")
     if (style == 'Scalar'):
        sA.append("    AND num_cores <= '1' ")
@@ -98,7 +101,7 @@ class ExecRun:
        sA.append("    AND num_cores > '1' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
 
-    query  = "".join(sA) % (args.syshost, start_date, end_date)
+    query  = "".join(sA) % (args.syshost, args.queue, start_date, end_date)
     cursor = self.__cursor
 
     cursor.execute(query)
@@ -194,11 +197,12 @@ class CompilerUsageByCount:
     query = """
     SELECT link_program, count(date) as count FROM xalt_link
     WHERE build_syshost like %s
+    AND   queue like %s  
     AND   date >= %s AND date < %s
     GROUP by link_program
     """
     cursor  = self.__cursor
-    cursor.execute(query, (args.syshost, start_date, end_date))
+    cursor.execute(query, (args.syshost, args.queue, start_date, end_date))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
     for link_program, count in resultA:
@@ -235,12 +239,13 @@ class CompilerUsageByCoreHours:
     FROM xalt_run as t1, xalt_link as t2
     WHERE t1.uuid is not NULL
     AND   t1.uuid = t2.uuid
-    and   t1.syshost like %s
+    AND   t1.syshost like %s
+    AND   t1.queue   like %s
     AND   t1.date >= %s and t1.date < %s
     GROUP by link_program
     """
     cursor  = self.__cursor
-    cursor.execute(query, (args.syshost, start_date, end_date))
+    cursor.execute(query, (args.syshost, args.queue, start_date, end_date))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
     for corehours, n_runs, n_users, link_program in resultA:
@@ -274,6 +279,9 @@ class Libraries:
 
   def build(self, args, start_date, end_date, queue="%"):
     
+    if (queue == "%"):
+      queue = args.queue
+
     query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,        \
                     COUNT(DISTINCT(t3.user)) as n_users,                             \
                     COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs,  \

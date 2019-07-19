@@ -18,12 +18,6 @@ else
   LIBCRYPTO:=-lcrypto
 endif
 
-ifneq ($(XALT_FILE_PREFIX),USE_HOME)
-  USE_PREFIX:=-DHAVE_FILE_PREFIX
-endif
-
-
-
 ifneq ($(MY_HOSTNAME_PARSER),no)
    HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
    PARSER_TYPE                   := $(firstword $(subst :, ,$(MY_HOSTNAME_PARSER)))
@@ -49,7 +43,7 @@ LIB_OPTIONS := -fPIC -shared
 WARN_FLAGS  := -Wall -Wno-unused-result
 CF_INIT     := -I. -fPIC
 COMMON_FLGS := $(OPTLVL) $(WARN_FLAGS)  -I__build__ -I$(THIS_DIR)
-CXXFLAGS    := $(COMMON_FLGS) -std=c++11 $(USE_PREFIX)
+CXXFLAGS    := $(COMMON_FLGS) -std=c++11
 CFLAGS      := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 C_SRC       :=                             \
