@@ -360,7 +360,7 @@ class XALTdb(object):
       # loop over env. vars.
       for key in envT:
 
-        value = envT[key]
+        value = envT[key][:65535]
         query = "SELECT env_id FROM xalt_env_name WHERE env_name=%s"
         cursor.execute(query,[key[:64]])
         if (cursor.rowcount > 0):
