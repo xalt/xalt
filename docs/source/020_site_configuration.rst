@@ -148,7 +148,6 @@ TACC required g++.sh to be::
 
 and the configure line looked like::
 
-
      ./configure CXX=$PWD/g++.sh --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
 
 
