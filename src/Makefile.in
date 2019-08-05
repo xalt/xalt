@@ -294,7 +294,7 @@ $(DESTDIR)$(LIB64)/base64.o: base64.c base64.h
 $(DESTDIR)$(LIB64)/xalt_tmpdir.o: xalt_tmpdir.c xalt_tmpdir.h __build__/xalt_config.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_vendor_note.o: xalt_vendor_note.c xalt_vendor_note.h
-	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
+	$(COMPILE.c) $(CF_INIT) -Wno-int-to-pointer-cast -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o: xalt_fgets_alloc.c xalt_fgets_alloc.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/build_uuid.o: build_uuid.c __build__/xalt_config.h xalt_obfuscate.h xalt_utils.h build_uuid.h
@@ -318,7 +318,7 @@ $(DESTDIR)$(LIB)/lex.__XALT_host_32.o: __build__/lex.__XALT_hostR.c xalt_obfusca
 $(DESTDIR)$(LIB)/lex.__XALT_host_preload_32.o: __build__/lex.__XALT_hostL.c xalt_obfuscate.h
 	$(COMPILE.c) -m32 -Wno-unused-function $(CF_INIT) -DSTATE=LD_PRELOAD -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_vendor_note_32.o: xalt_vendor_note.c xalt_vendor_note.h
-	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
+	$(COMPILE.c) -m32 $(CF_INIT) -Wno-int-to-pointer-cast -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_tmpdir_32.o: xalt_tmpdir.c xalt_tmpdir.h  __build__/xalt_config.h
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/base64.o: base64.c base64.h
