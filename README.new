@@ -7,4 +7,6 @@ XALT 2.7+
 	     * PKG intermediate results are now written to /dev/shm/XALT_... instead of /tmp/XALT_...
 	       by default.
     (2.7.2)  * Support for env var XALT_FILE_PREFIX.
+             * Make job_id filtering optional.
+	     
     
