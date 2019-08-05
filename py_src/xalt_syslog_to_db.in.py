@@ -261,7 +261,7 @@ class ParseSyslog(object):
 
       t['value'] = vv
       try:
-        delete recordT[key]
+        del recordT[key]
       except KeyError:
         print("Unable to remove recordT["+key+"]")
 
@@ -391,6 +391,7 @@ def main():
   #----------------------------------------------------------
   # Count the number and sum the run_time for all scalar jobs
 
+  filter = False
   if (args.filter): 
     filter = Filter(100)
     pbar   = ProgressBar(maxVal=fnSz,fd=sys.stdout)
@@ -481,7 +482,7 @@ def main():
           XALT_Stack.pop()
           lnkCnt += 1
         elif ( t['kind'] == "run" ):
-          if (filter.apply(value)):
+          if ( (not filter) or filter.apply(value)):
             XALT_Stack.push("run_to_db()")
             xalt.run_to_db(rmapT, u2acctT, value)
             XALT_Stack.pop()
