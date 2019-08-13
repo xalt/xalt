@@ -163,7 +163,7 @@ unsigned int hashStr(const char * string)
 }
 
 
-void build_resultDir(std::string& resultDir, const char *kind, const char* transmission)
+void build_resultDir(std::string& resultDir, const char *kind, const char* transmission, const char* uuid)
 {
   char* c_home = getenv("HOME");
   char* c_user = getenv("USER");
@@ -193,7 +193,9 @@ void build_resultDir(std::string& resultDir, const char *kind, const char* trans
               resultDir.append("/");
             }
           char * hashDir = NULL;
-          asprintf(&hashDir, XALT_PRIME_FMT "/",hashStr(c_user) % XALT_PRIME_NUMBER);
+          long   hashV   = std::stol(&uuid[29]) % XALT_PRIME_NUMBER
+
+          asprintf(&hashDir, XALT_PRIME_FMT "/", hashV);
           resultDir.append(hashDir);
           free(hashDir);
         }

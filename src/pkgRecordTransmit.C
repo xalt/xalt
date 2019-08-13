@@ -31,7 +31,7 @@ void pkgRecordTransmit(Options& options, const char* transmission)
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir;
-      build_resultDir(resultDir, "pkg", transmission);
+      build_resultDir(resultDir, "pkg", transmission, options.uuid().c_str());
       c_resultDir = strdup(resultDir.c_str());
     }
 

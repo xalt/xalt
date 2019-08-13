@@ -8,5 +8,9 @@ XALT 2.7+
 	       by default.
     (2.7.2)  * Support for env var XALT_FILE_PREFIX.
              * Make job_id filtering optional.
-	     
+
+WIP:
+    (2.7.3)  * Use uuid hash to chose the 000 to 996 directory when using XALT_FILE_PREFIX
+    
+     
     

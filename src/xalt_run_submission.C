@@ -131,7 +131,7 @@ int main(int argc, char* argv[], char* env[])
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir, resultFn;
-      build_resultDir(resultDir, "run", transmission);
+      build_resultDir(resultDir, "run", transmission, options.uuid().c_str());
 
 
       build_resultFn(resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
