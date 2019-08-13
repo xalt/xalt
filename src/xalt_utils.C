@@ -193,7 +193,7 @@ void build_resultDir(std::string& resultDir, const char *kind, const char* trans
               resultDir.append("/");
             }
           char * hashDir = NULL;
-          long   hashV   = std::stol(&uuid[29]) % XALT_PRIME_NUMBER
+          int    hashV   = static_cast<int>(std::stol(&uuid[29],0, 16) % XALT_PRIME_NUMBER);
 
           asprintf(&hashDir, XALT_PRIME_FMT "/", hashV);
           resultDir.append(hashDir);
