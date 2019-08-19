@@ -149,6 +149,7 @@ class XALTdb(object):
     """
     query = ""
 
+    msg = "no message"
     try:
       link_lineA = linkT.get('link_line',[])
       linkA      = linkT.get('linkA',[])
@@ -157,6 +158,7 @@ class XALTdb(object):
       if (resultT == None):
         resultT    = linkT
 
+      
       conn   = self.connect()
       cursor = conn.cursor()
       query  = "USE "+self.db()
@@ -165,6 +167,7 @@ class XALTdb(object):
       conn.query(query)
       
       uuid   = resultT['uuid']
+      msg    = "my uuid is: " + uuid
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
       cursor.execute(query, [uuid])
       if (cursor.rowcount > 0):
@@ -222,6 +225,7 @@ class XALTdb(object):
     except Exception as e:
       print(XALT_Stack.contents(), file=sys.stderr)
       print(query, file=sys.stderr)
+      print(msg,   file=sys.stderr)
       print ("link_to_db(): Error ",e, file=sys.stderr)
       sys.exit (1)
 
