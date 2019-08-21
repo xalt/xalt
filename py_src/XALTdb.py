@@ -166,8 +166,8 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
       
-      uuid   = resultT['uuid']
-      msg    = "my uuid is: " + uuid
+      uuid   = resultT['uuid'][:36]
+      msg    = "my uuid is: \"" + uuid + "\""
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
       cursor.execute(query, [uuid])
       if (cursor.rowcount > 0):
