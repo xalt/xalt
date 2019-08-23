@@ -224,7 +224,7 @@ class XALTdb(object):
 
     except Exception as e:
       print(XALT_Stack.contents(), file=sys.stderr)
-      print(query, file=sys.stderr)
+      print(query.encode("ascii","ignore"),file=sys.stderr)
       print(msg,   file=sys.stderr)
       print ("link_to_db(): Error ",e, file=sys.stderr)
       sys.exit (1)
@@ -285,6 +285,7 @@ class XALTdb(object):
     @param: runT:        The run data stored in a table
     """
     
+    msg   = ""
     query = ""
     try:
       conn   = self.connect()
@@ -305,7 +306,10 @@ class XALTdb(object):
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
-      cursor.execute(query,[runT['userT']['run_uuid']])
+      run_uuid      = runT['userT']['run_uuid'][:36]
+      msg           = "my run_uuid is: \"" + run_uuid + "\""
+
+      cursor.execute(query,[run_uuid])
       num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
       num_gpus      = convertToTinyInt(runT['userDT'].get('num_gpus',0))
       stored        = False 
@@ -389,6 +393,7 @@ class XALTdb(object):
     except Exception as e:
       print(XALT_Stack.contents(),file=sys.stderr)
       print(query.encode("ascii","ignore"),file=sys.stderr)
+      print(msg,   file=sys.stderr)
       print ("run_to_db(): ",e,file=sys.stderr)
       sys.exit (1)
 
