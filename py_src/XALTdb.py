@@ -166,7 +166,7 @@ class XALTdb(object):
       query  = "START TRANSACTION"
       conn.query(query)
       
-      uuid   = resultT['uuid'][:36]
+      uuid   = resultT['uuid'][:36].encode("ascii","ignore")
       msg    = "my uuid is: \"" + uuid + "\""
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
       cursor.execute(query, [uuid])
@@ -306,7 +306,7 @@ class XALTdb(object):
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
-      run_uuid      = runT['userT']['run_uuid'][:36]
+      run_uuid      = runT['userT']['run_uuid'][:36].encode("ascii","ignore")
       msg           = "my run_uuid is: \"" + run_uuid + "\""
 
       cursor.execute(query,[run_uuid])
@@ -343,7 +343,7 @@ class XALTdb(object):
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
-        cursor.execute(query, (runT['userT']['job_id'],      runT['userT']['run_uuid'],    dateTimeStr,
+        cursor.execute(query, (runT['userT']['job_id'],      run_uuid,                     dateTimeStr,
                                runT['userT']['syshost'],     uuid,                         runT['hash_id'],
                                account,                      runT['userT']['exec_type'],   startTime,
                                endTime,                      runTime,                      probability,
@@ -412,7 +412,8 @@ class XALTdb(object):
       XALT_Stack.push("SYSHOST: "+syshost)
 
       query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
-      cursor.execute(query,[pkgT['xalt_run_uuid']])
+      run_uuid = pkgT['xalt_run_uuid'][:36].encode("ascii","ignore")
+      cursor.execute(query,[run_uuid])
       #print ("run_uuid: '%s', rowcount: %d" % (pkgT['xalt_run_uuid'], cursor.rowcount), file=sys.stderr)
 
       if (cursor.rowcount > 0):
