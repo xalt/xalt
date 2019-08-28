@@ -33,6 +33,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
   // Now fill in num_cores, num_nodes, account, job_id, queue, submit_host in userT from the environment
   if (queueType == SGE)
     {
+      userT["scheduler"]   = "SGE";
       userT["account"]     = safe_get(envT,        "SGE_ACCOUNT", "unknown");
       userT["job_id"]      = safe_get(envT,        "JOB_ID",      "unknown");
       userT["queue"]       = safe_get(envT,        "QUEUE",       "unknown");
@@ -41,6 +42,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     }
   else if (queueType == SLURM )
     {
+      userT["scheduler"]   = "SLURM";
       userT["job_id"]      = safe_get(envT,        "SLURM_JOB_ID",        "unknown");
       userT["queue"]       = safe_get(envT,        "SLURM_JOB_PARTITION", "unknown");
       userT["submit_host"] = safe_get(envT,        "SLURM_SUBMIT_HOST",   "unknown");
@@ -49,6 +51,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     }
   else if (queueType == PBS)
     {
+      userT["scheduler"]   = "PBS";
       std::string job_id   = safe_get(envT,        "PBS_JOBID",     "unknown");
       std::size_t idx      = job_id.find_first_not_of("0123456789[]");
       userT["job_id"]      = job_id.substr(0,idx);
@@ -76,6 +79,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
         }
       count /= 2;
 
+      userT["scheduler"]   = "LSF";
       userT["job_id"]      = safe_get(envT,  "LSB_JOBID",        "unknown");
       userT["queue"]       = safe_get(envT,  "LSB_QUEUE",        "unknown");
       userT["submit_host"] = safe_get(envT,  "LSB_EXEC_CLUSTER", "unknown");
@@ -84,6 +88,7 @@ void translate(Table& envT, Table& userT, DTable& userDT)
     }
   else
     {
+      userT["scheduler"]   = "unknown";
       userT["job_id"]      = "unknown";
       userT["queue"]       = "unknown";
       userT["submit_host"] = "unknown";

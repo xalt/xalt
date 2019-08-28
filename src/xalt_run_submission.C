@@ -66,7 +66,7 @@ int main(int argc, char* argv[], char* env[])
   buildUserT(options, envT, userT, userDT);
   if ( ! recordT.empty())
     userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"].c_str(),(char **) NULL);
-  DEBUG0(stderr,"  Built userT, userDT\n");
+  DEBUG1(stderr,"  Built userT, userDT, scheduler: %s\n", userT["scheduler"].c_str());
   measureT["01_BuildUserT___"] = epoch() - t1;
 
   //*********************************************************************
