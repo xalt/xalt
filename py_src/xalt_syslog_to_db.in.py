@@ -259,7 +259,7 @@ class ParseSyslog(object):
       b64v = base64.b64decode(rv)
       vv   = zlib.decompress(b64v)
 
-      t['value'] = vv
+      t['value'] = vv.decode("utf-8")
       try:
         del recordT[key]
       except KeyError:
