@@ -167,7 +167,11 @@ class XALTdb(object):
       conn.query(query)
       query  = ""
       
+<<<<<<< HEAD
       uuid   = resultT['uuid'][:36]
+=======
+      uuid   = resultT['uuid'][:36].encode("ascii","ignore")
+>>>>>>> 61701646fd70bc61bc451e6cda355e5e6052e634
       msg    = "my uuid is: \"" + uuid + "\""
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
       cursor.execute(query, [uuid])
@@ -231,7 +235,7 @@ class XALTdb(object):
 
     except Exception as e:
       print(XALT_Stack.contents(), file=sys.stderr)
-      print(query, file=sys.stderr)
+      print(query.encode("ascii","ignore"),file=sys.stderr)
       print(msg,   file=sys.stderr)
       print("link_to_db(): Error ",e, file=sys.stderr)
       print(traceback.format_exc())
@@ -319,6 +323,7 @@ class XALTdb(object):
       uuid        = xaltLinkT.get('Build.UUID') or xaltLinkT.get('Build_UUID') 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
+<<<<<<< HEAD
       run_uuid      = runT['userT']['run_uuid'][:36]
       msg           = "my run_uuid is: \"" + run_uuid + "\""
       query         = "SELECT run_id FROM xalt_run WHERE run_uuid='"+run_uuid+"'"
@@ -326,6 +331,13 @@ class XALTdb(object):
       query         = ""
 
 
+=======
+      query = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
+      run_uuid      = runT['userT']['run_uuid'][:36].encode("ascii","ignore")
+      msg           = "my run_uuid is: \"" + run_uuid + "\""
+
+      cursor.execute(query,[run_uuid])
+>>>>>>> 61701646fd70bc61bc451e6cda355e5e6052e634
       num_threads   = convertToTinyInt(runT['userDT'].get('num_threads',0))
       num_gpus      = convertToTinyInt(runT['userDT'].get('num_gpus',0))
       stored        = False 
