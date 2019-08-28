@@ -115,7 +115,7 @@ You should see something that looks like::
     xalt_run_submission(zzz) {
       Built envT
       Extracted recordT from executable
-      Built userT, userDT
+      Built userT, userDT, scheduler: SLURM
       Filter envT
       Parsed ProcMaps
       Using XALT_TRANSMISSION_STYLE: file
