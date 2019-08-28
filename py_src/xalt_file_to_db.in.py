@@ -293,8 +293,6 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("link_json_to_db()")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
-    for fn in linkFnA:
-      print(fn)
     countT['lnk']  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA)
     XALT_Stack.pop()
   XALT_Stack.pop()
