@@ -30,6 +30,7 @@ import MySQLdb, getpass, time
 import warnings
 from   xalt_util        import *
 from   xalt_global      import *
+from   BeautifulTbl     import BeautifulTbl
 
 try:
   import configparser
@@ -67,6 +68,49 @@ def convertToTinyInt(s):
   except ValueError as e:
     value = 0
   return value
+
+class TimeRecord(object):
+  def __init__(self):
+    self.__mpi_time_acc    = 0.0
+    self.__mpi_count       = 0.0
+    self.__slr_05_time_acc = 0.0
+    self.__slr_05_count    = 0.0
+    self.__slr_10_time_acc = 0.0
+    self.__slr_10_count    = 0.0
+    self.__slr_20_time_acc = 0.0
+    self.__slr_20_count    = 0.0
+    self.__slr_lg_time_acc = 0.0
+    self.__slr_lg_count    = 0.0
+    
+  def add(self, num_cores, runTime):
+    if (num_cores > 1):
+      self.__mpi_time_acc    += runTime
+      self.__mpi_count       += 1.0
+    elif (runTime < 300.0):
+      self.__slr_05_time_acc += runTime
+      self.__slr_05_count    += 1.0
+    elif (runTime < 600.0):
+      self.__slr_10_time_acc += runTime
+      self.__slr_10_count    += 1.0
+    elif (runTime < 1200.0):
+      self.__slr_10_time_acc += runTime
+      self.__slr_10_count    += 1.0
+    else:
+      self.__slr_lg_time_acc += runTime
+      self.__slr_lg_count    += 1.0
+
+  def print(self):
+    resultA = []
+    resultA.append(["Kind", "Count", "Average Time"])
+    resultA.append(["----", "-----", "------------"])
+    resultA.append(["Scalar <  5 mins",self.__slr_05_count, self.__slr_05_time_acc/max(1.0,self.__slr_05_count)])
+    resultA.append(["Scalar < 10 mins",self.__slr_10_count, self.__slr_10_time_acc/max(1.0,self.__slr_10_count)])
+    resultA.append(["Scalar < 20 mins",self.__slr_20_count, self.__slr_20_time_acc/max(1.0,self.__slr_20_count)])
+    resultA.append(["Scalar > 20 mins",self.__slr_lg_count, self.__slr_lg_time_acc/max(1.0,self.__slr_lg_count)])
+    resultA.append(["MPI",             self.__mpi_count,    self.__mpi_time_acc/   max(1.0,self.__mpi_count   )])
+
+    bt = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrr")
+    print("\n",bt.build_tbl(),"\n")
 
 class XALTdb(object):
   """
@@ -291,7 +335,7 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-  def run_to_db(self, reverseMapT, u2acctT, runT, recordT):
+  def run_to_db(self, reverseMapT, u2acctT, runT, timeRecord):
     """
     Store the "run" data into the database.
     @param: reverseMapT: The map between directories and modules
@@ -377,13 +421,7 @@ class XALTdb(object):
 
 
       if (recordMe and runTime > 0.0):
-        if (num_cores > 1):
-          recordT['mpi_count']       += 1
-          recordT['mpi_time_acc']    += float(runTime)
-        else:
-          recordT['scalar_count']    += 1
-          recordT['scalar_time_acc'] += float(runTime)
-          
+        timeRecord.add(num_cores,float(runTime))
 
 
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,

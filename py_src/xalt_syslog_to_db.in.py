@@ -42,6 +42,7 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
 from XALTdb        import XALTdb
+from XALTdb        import TimeRecord
 from xalt_util     import *
 from xalt_global   import *
 from progressBar   import ProgressBar
@@ -373,13 +374,7 @@ def main():
 
   recordT = {}
 
-  time_recordT = {
-    'scalar_time_acc' : 0.0,
-    'scalar_count'    : 0.0,
-    'mpi_time_acc'    : 0.0,
-    'mpi_count'       : 0.0,
-    }
-
+  timeRecord = TimeRecord()
 
 
   fnA    = [ args.leftover, syslogFile ]
@@ -493,9 +488,10 @@ def main():
         elif ( t['kind'] == "run" ):
           if ( (not filter) or filter.apply(value)):
             XALT_Stack.push("run_to_db()")
-            xalt.run_to_db(rmapT, u2acctT, value, time_recordT)
+            stored = xalt.run_to_db(rmapT, u2acctT, value, timeRecord)
             XALT_Stack.pop()
-            runCnt += 1
+            if (stored):
+              runCnt += 1
         elif ( t['kind'] == "pkg" ):
           XALT_Stack.push("pkg_to_db()")
           xalt.pkg_to_db(t['syshost'], value)
@@ -519,10 +515,7 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
           ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog)
-  print("record of kinds of runs: ",time_recordT)
-  print("Average Scalar run: ",time_recordT['scalar_time_acc']/max(time_recordT['scalar_count'],1.0))
-  print("Average MPI run:    ",time_recordT['mpi_time_acc']   /max(time_recordT['mpi_count'],1.0))
-  print()
+  timeRecord.print()
         
   
   # if there is anything left in recordT file write it out to the leftover file.
