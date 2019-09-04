@@ -373,6 +373,15 @@ def main():
 
   recordT = {}
 
+  time_recordT = {
+    'scalar_time_acc' : 0.0,
+    'scalar_count'    : 0.0,
+    'mpi_time_acc'    : 0.0,
+    'mpi_count'       : 0.0,
+    }
+
+
+
   fnA    = [ args.leftover, syslogFile ]
 
   parseSyslog = ParseSyslog(args.leftover)
@@ -484,7 +493,7 @@ def main():
         elif ( t['kind'] == "run" ):
           if ( (not filter) or filter.apply(value)):
             XALT_Stack.push("run_to_db()")
-            xalt.run_to_db(rmapT, u2acctT, value)
+            xalt.run_to_db(rmapT, u2acctT, value, time_recordT)
             XALT_Stack.pop()
             runCnt += 1
         elif ( t['kind'] == "pkg" ):
@@ -510,6 +519,10 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
           ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog)
+  print("record of kinds of runs: ",time_recordT)
+  print("Average Scalar run: ",time_recordT['scalar_time_acc']/max(time_recordT['scalar_count'],1.0))
+  print("Average MPI run:    ",time_recordT['mpi_time_acc']   /max(time_recordT['mpi_count'],1.0))
+  print()
         
   
   # if there is anything left in recordT file write it out to the leftover file.

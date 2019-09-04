@@ -291,7 +291,7 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-  def run_to_db(self, reverseMapT, u2acctT, runT):
+  def run_to_db(self, reverseMapT, u2acctT, runT, recordT):
     """
     Store the "run" data into the database.
     @param: reverseMapT: The map between directories and modules
@@ -325,10 +325,11 @@ class XALTdb(object):
       cursor.execute(query,[run_uuid])
       query       = ""
       msg         = ""
-
+      num_cores   = runT['userDT']['num_cores']
       num_threads = convertToTinyInt(runT['userDT'].get('num_threads',0))
       num_gpus    = convertToTinyInt(runT['userDT'].get('num_gpus',0))
       stored      = False 
+      recordMe    = False 
 
       if (cursor.rowcount > 0):
         #print("found")
@@ -340,6 +341,7 @@ class XALTdb(object):
           query = "COMMIT"
           conn.query(query)
           query = ""
+          recordMe = True 
         v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
 
@@ -360,17 +362,28 @@ class XALTdb(object):
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
-        cursor.execute(query, (runT['userT']['job_id'],      run_uuid,                     dateTimeStr,
-                               runT['userT']['syshost'],     uuid,                         runT['hash_id'],
-                               account,                      runT['userT']['exec_type'],   startTime,
-                               endTime,                      runTime,                      probability,
-                               runT['userDT']['num_cores'],  runT['userDT']['num_nodes'],  num_threads,
-                               num_gpus,                     runT['userT']['queue'],       sum_runs,
-                               sum_times,                    user,                         runT['userT']['exec_path'],
-                               moduleName,                   runT['userT']['cwd'],         usr_cmdline))
+        cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
+                               runT['userT']['syshost'], uuid,                         runT['hash_id'],
+                               account,                  runT['userT']['exec_type'],   startTime,
+                               endTime,                  runTime,                      probability,
+                               num_cores,                runT['userDT']['num_nodes'],  num_threads,
+                               num_gpus,                 runT['userT']['queue'],       sum_runs,
+                               sum_times,                user,                         runT['userT']['exec_path'],
+                               moduleName,               runT['userT']['cwd'],         usr_cmdline))
         query    = ""
         run_id   = cursor.lastrowid
         stored   = True
+        recordMe = True 
+
+
+      if (recordMe and runTime > 0.0):
+        if (num_cores > 1):
+          recordT['mpi_count']       += 1
+          recordT['mpi_time_acc']    += float(runTime)
+        else:
+          recordT['scalar_count']    += 1
+          recordT['scalar_time_acc'] += float(runTime)
+          
 
 
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,

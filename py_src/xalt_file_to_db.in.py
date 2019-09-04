@@ -193,7 +193,7 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA):
   return num
 
 
-def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA):
+def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, recordT):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
@@ -226,7 +226,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA):
         continue
       f.close()
 
-      stored = xalt.run_to_db(reverseMapT, u2acctT, runT)
+      stored = xalt.run_to_db(reverseMapT, u2acctT, runT, recordT)
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -285,7 +285,7 @@ def build_resultDir(hdir, transmission, kind):
 
   return os.path.join(prefix,tail)
 
-def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
+def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, recordT):
 
   xaltDir = build_resultDir(homeDir, transmission, "link")
   XALT_Stack.push("Directory: " + xaltDir)
@@ -302,7 +302,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT):
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("run_json_to_db()")
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
-    countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, u2acctT, args.delete, runFnA)
+    countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, u2acctT, args.delete, runFnA, recordT)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -332,6 +332,12 @@ def main():
     transmission = "file"
     
   transmission = transmission.lower()
+  recordT      = {
+    'scalar_time_acc' : 0.0,
+    'scalar_count'    : 0.0,
+    'mpi_time_acc'    : 0.0,
+    'mpi_count'       : 0.0,
+  }
 
 
   # Push command line on to XALT_Stack
@@ -368,9 +374,9 @@ def main():
 
   if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
-      store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT)
+      store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, recordT)
   else:
-    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT)
+    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT, recordT)
 
   xalt.connect().close()
   #pbar.fini()
@@ -380,5 +386,10 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
   print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'])
+  print("record of types of runs:",recordT)
+  print("Average Scalar run: ",recordT['scalar_time_acc']/max(recordT['scalar_count'],1.0))
+  print("Average MPI run:    ",recordT['mpi_time_acc']   /max(recordT['mpi_count'],1.0))
+  print()
+  
 
 if ( __name__ == '__main__'): main()
