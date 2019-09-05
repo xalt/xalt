@@ -93,8 +93,8 @@ class TimeRecord(object):
       self.__slr_10_time_acc += runTime
       self.__slr_10_count    += 1.0
     elif (runTime < 1200.0):
-      self.__slr_10_time_acc += runTime
-      self.__slr_10_count    += 1.0
+      self.__slr_20_time_acc += runTime
+      self.__slr_20_count    += 1.0
     else:
       self.__slr_lg_time_acc += runTime
       self.__slr_lg_count    += 1.0
