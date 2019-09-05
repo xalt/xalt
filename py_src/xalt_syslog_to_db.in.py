@@ -265,6 +265,7 @@ class ParseSyslog(object):
         del recordT[key]
       except KeyError:
         print("Unable to remove recordT["+key+"]")
+        print(traceback.format_exc())
 
       return t, True
 
@@ -357,6 +358,7 @@ def main():
   except Exception as e:
     print(e, file=sys.stderr)
     print("Failed to read reverseMap file -> exiting")
+    print(traceback.format_exc())
     sys.exit(1)
 
     
@@ -502,6 +504,7 @@ def main():
         XALT_Stack.pop()
       except Exception as e:
         print(e, file=sys.stderr)
+        print(traceback.format_exc())
         badCnt += 1
 
 

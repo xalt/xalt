@@ -147,6 +147,7 @@ class XALTdb(object):
     except configparser.NoOptionError as err:
       sys.stderr.write("\nCannot parse the config file\n")
       sys.stderr.write("Switch to user input mode...\n\n")
+      print(traceback.format_exc())
       self.__readFromUser()
 
   def connect(self, databaseName = None):
@@ -178,6 +179,7 @@ class XALTdb(object):
 
     except MySQLdb.Error as e:
       print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
+      print(traceback.format_exc())
       raise
     return self.__conn
 
