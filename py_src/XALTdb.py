@@ -110,7 +110,8 @@ class TimeRecord(object):
     resultA.append(["MPI",             self.__mpi_count,    self.__mpi_time_acc/   max(1.0,self.__mpi_count   )])
 
     bt = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrr")
-    print("\n",bt.build_tbl(),"\n")
+    print()
+    print(bt.build_tbl(),"\n")
 
 class XALTdb(object):
   """
