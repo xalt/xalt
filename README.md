@@ -156,7 +156,7 @@ XALT: A tool that tracks users jobs and environments on a cluster.
 Copyright (C) 2013-2015 University of Texas at Austin  
 Copyright (C) 2013-2015 University of Tennessee
 
-##License
+## License
 
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as
