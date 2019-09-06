@@ -358,8 +358,10 @@ class XALTdb(object):
 
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
-      runTime     = "%.2f" % (runT['userDT']['run_time'])
-      endTime     = "%.2f" % (runT['userDT']['end_time'])
+      runTime     = runT['userDT']['run_time']
+      endTime     = runT['userDT']['end_time']
+      runTimeStr  = "%.2f" % (runTime)
+      endTimeStr  = "%.2f" % (endTime)
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(runT['userDT']['start_time'])))
       dateStr     = time.strftime("%Y-%m-%d", time.localtime(float(runT['userDT']['start_time'])))
       xaltLinkT   = runT['xaltLinkT']
@@ -384,7 +386,7 @@ class XALTdb(object):
         run_id = int(row[0])
         if (runT['userDT']['end_time'] > 0):
           query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s, num_gpus=%s WHERE run_id=%s" 
-          cursor.execute(query,(runTime, endTime, num_threads, num_gpus, run_id))
+          cursor.execute(query,(runTimeStr, endTimeStr, num_threads, num_gpus, run_id))
           query = "COMMIT"
           conn.query(query)
           query = ""
@@ -412,7 +414,7 @@ class XALTdb(object):
         cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
                                runT['userT']['syshost'], uuid,                         runT['hash_id'],
                                account,                  runT['userT']['exec_type'],   startTime,
-                               endTime,                  runTime,                      probability,
+                               endTimeStr,               runTimeStr,                   probability,
                                num_cores,                runT['userDT']['num_nodes'],  num_threads,
                                num_gpus,                 runT['userT']['queue'],       sum_runs,
                                sum_times,                user,                         runT['userT']['exec_path'],
@@ -423,8 +425,8 @@ class XALTdb(object):
         recordMe = True 
 
 
-      if (recordMe and float(runTime) > 0.0):
-        timeRecord.add(num_cores,float(runTime))
+      if (recordMe and endTime > 0.0):
+        timeRecord.add(num_cores, runTime)
 
 
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
