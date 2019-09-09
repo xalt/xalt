@@ -340,7 +340,7 @@ class Libraries:
         libT[module] = entryT
     
         
-    for k, entryT in sorted(libT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+    for k, entryT in sorted(libT.iteritems(), key=lambda v: v[sort_key], reverse=True):
       resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
@@ -374,7 +374,7 @@ class Libraries:
           if (key != "module"):
             g_entry[key] += entry[key]
         
-    for k, entryT in sorted(groupT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+    for k, entryT in sorted(groupT.iteritems(), key=lambda v: v[sort_key], reverse=True):
       resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
@@ -475,7 +475,7 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
   
 
      
-  for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['corehours'], reverse=True):
+  for k, entryT in sorted(resultT.iteritems(), key=lambda v: v['corehours'], reverse=True):
     pSU = percent_str(entryT['corehours'], totalT['corehours'])
     pR  = percent_str(entryT['n_runs'],    float(totalT['n_runs']))
     pJ  = percent_str(entryT['n_jobs'],    float(totalT['n_jobs']))
