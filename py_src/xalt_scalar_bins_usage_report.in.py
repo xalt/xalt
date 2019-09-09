@@ -109,6 +109,9 @@ class ExecRun:
     elif (style == 'Scalar_30'):
        sA.append("    AND num_cores <= '1' ")
        sA.append("    AND run_time < '1800.0' ")
+    elif (style == 'Scalar_LG'):
+       sA.append("    AND num_cores <= '1' ")
+       sA.append("    AND run_time >= '1800.0' ")
     elif (style == 'MPI'):
        sA.append("    AND num_cores > '1' ")
     sA.append("  GROUP BY execname ORDER BY totalcput DESC")
@@ -575,72 +578,20 @@ def main():
   if (args.startD is not None):
     start_date = args.startD
 
-  print("--------------------------------------------")
-  print("XALT REPORT from",start_date,"to",end_date)
-  print("--------------------------------------------")
+  print("--------------------------------------------------------")
+  print("XALT REPORT of Scalar bins from",start_date,"to",end_date)
+  print("--------------------------------------------------------")
   print("")
-  print("")
-  
-  ############################################################
-  #  Over all job counts
-  resultA = kinds_of_jobs(cursor, args, start_date, end_date)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
-  print("----------------------")
-  print("Overall Job Counts")
-  print("----------------------")
-  print("")
-  print(bt.build_tbl())
-  print("\n")
-  print("Where        usr: executables built by user")
-  print("             sys: executables managed by system-level modulefiles")
-  print("      usr-script: shell scripts in a user's account")
-  print("      sys-script: shell scripts managed by system-level modulefiles")
-  
-  ############################################################
-  #  Self-build vs. BuildU != RunU
-  resultA = running_other_exec(cursor, args, start_date, end_date)
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
-  print("")
-  print("-----------------------------------------------")
-  print("Comparing Self-build vs. Build User != Run User")
-  print("-----------------------------------------------")
-  print("")
-  print(bt.build_tbl())
-  
-  print("")
-  print("-------------------")
-  print("Top MPI Executables")
-  print("-------------------")
   print("")
   
 
-  for style in ('All','MPI','Scalar'):
-  
-    ############################################################
-    #  Build top executable list for style type
-    execA = ExecRun(cursor)
-    execA.build(args, style, start_date, end_date)
-    
-    ############################################################
-    #  Report of Top EXEC of All types by Core Hours
-    resultA, sumCH = execA.report_by(args,"corehours")
-    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, style, style+" Executables sorted by Core-hours (Total Core Hours(M):",
-            sumCH*1.0e-6,")\n")
-    print(bt.build_tbl())
+  for style in ('Scalar_05','Scalar_10','Scalar_20','Scalar_30','Scalar_LG'):
   
     ############################################################
     #  Report of Top EXEC of All types by Num Jobs
     resultA, sumCH  = execA.report_by(args,"n_jobs")
     bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, style+" Executables sorted by # Jobs\n")
-    print(bt.build_tbl())
-  
-    ############################################################
-    #  Report of Top EXEC by All types by Users
-    resultA, sumCH = execA.report_by(args,"n_users")
-    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, style+" Executables sorted by # Users\n")
     print(bt.build_tbl())
   
   return

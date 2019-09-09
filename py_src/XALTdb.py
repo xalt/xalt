@@ -384,7 +384,7 @@ class XALTdb(object):
         #print("found")
         row    = cursor.fetchone()
         run_id = int(row[0])
-        if (runT['userDT']['end_time'] > 0):
+        if (endTime > 0):
           query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s, num_gpus=%s WHERE run_id=%s" 
           cursor.execute(query,(runTimeStr, endTimeStr, num_threads, num_gpus, run_id))
           query = "COMMIT"
