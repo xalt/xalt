@@ -153,9 +153,21 @@ env_patterns = [
   ]
 
 #------------------------------------------------------------
-# XALT samples non-mpi executions based on this table.
-# All mpi executions are sampled at 100% when there are two
-# more tasks.
+# XALT samples almost all  executions (both MPI and scalar) 
+# based on this table below.  Note that an MPI execution is where
+# the number of tasks is greater than 1.  There is no check to
+# see if there are MPI libraries in the executable.  Note that
+# the number of tasks are MPI tasks not threads.
+
+# Any time there are a number of short rapid executions these
+# have to be sampled. However, there are MPI executions with large
+# number of tasks that are always recorded.  This is to allow the
+# tracking of long running MPI tasks that never produce an end
+# record. By default MPI_ALWAYS_RECORD = 1.  Namely that all MPI tasks are
+# recorded.
+
+MPI_ALWAYS_RECORD = 1
+
 #
 # The array of array used by interval_array has the following
 # structure:
@@ -204,18 +216,4 @@ env_patterns = [
 #    [ 0.0,                1.0 ],
 #    [ sys.float_info.max, 1.0 ]
 #]
-
-#------------------------------------------------------------
-# XALT samples SPSR programs at one rate no matter the runtime.
-# SPSR programs are programs like R and python where the internal
-# package use is tracked as well.
-#
-# By default SPSR programs are sampled at a 100% rate but sites can
-# override this by this configuration file. 
-
-# Note that for this sampling to be turned on you must
-# set XALT_SCALAR_AND_SPSR_SAMPLING to "yes".  Otherwise there is 100% sampling.
-# This is to simplify initial testing.
-
-SPSR_sampling = 0.02  # == 2%
 

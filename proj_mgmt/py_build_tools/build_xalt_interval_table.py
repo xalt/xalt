@@ -88,7 +88,8 @@ def main():
   namespace = {}
   exec(open(args.confFn).read(), namespace)
 
-  intervalA     = namespace.get('interval_array',       {})
+  intervalA         = namespace.get('interval_array',       {})
+  mpi_always_record = namespace.get('MPI_ALWAYS_RECORD',     1)
 
   if (len(intervalA) < 2):
     intervalA = [
@@ -120,9 +121,11 @@ def main():
 
   intervalStr = convert_to_string(intervalA)
   pattA = [
-    ['@rangeA@',    intervalStr],
+    ['@rangeA@',              intervalStr],
+    ['@MPI_ALWAYS_RECORD@',   str(mpi_always_record)],
   ]
   convert_template(pattA, args.input, args.output)
+  
 
 
 if ( __name__ == '__main__'): main()

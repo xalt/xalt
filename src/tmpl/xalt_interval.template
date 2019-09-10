@@ -11,6 +11,8 @@ typedef struct
   double prob;
 } interval;
 
+const int    mpi_always_record  = @MPI_ALWAYS_RECORD@;
+
 interval     rangeA[]	        = { @rangeA@ };
 const int    rangeSz	        = N_ELEMENTS(rangeA);
 

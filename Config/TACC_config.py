@@ -117,10 +117,22 @@ path_patterns = [
   ]
 
 #------------------------------------------------------------
-# XALT samples non-mpi executions, based on this table.
-# All mpi executions are sampled at 100% when there are
-# two more tasks.
-#
+# XALT samples almost all  executions (both MPI and scalar) 
+# based on this table below.  Note that an MPI execution is where
+# the number of tasks is greater than 1.  There is no check to
+# see if there are MPI libraries in the executable.  Note that
+# the number of tasks are MPI tasks not threads.
+
+# Any time there are a number of short rapid executions these
+# have to be sampled. However, there are MPI executions with large
+# number of tasks that are always recorded.  This is to allow the
+# tracking of long running MPI tasks that never produce an end
+# record. By default MPI_ALWAYS_RECORD = 1.  Namely that all MPI 
+# tasks are recorded.
+
+MPI_ALWAYS_RECORD = 256
+
+#------------------------------------------------------------
 # The array of array used by interval_array has the following
 # structure:
 #
