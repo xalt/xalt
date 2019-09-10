@@ -163,10 +163,10 @@ env_patterns = [
 # have to be sampled. However, there are MPI executions with large
 # number of tasks that are always recorded.  This is to allow the
 # tracking of long running MPI tasks that never produce an end
-# record. By default MPI_ALWAYS_RECORD = 1.  Namely that all MPI tasks are
+# record. By default MPI_ALWAYS_RECORD = 2.  Namely that all MPI tasks are
 # recorded.
 
-MPI_ALWAYS_RECORD = 1
+MPI_ALWAYS_RECORD = 2
 
 #
 # The array of array used by interval_array has the following

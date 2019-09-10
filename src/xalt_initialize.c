@@ -135,7 +135,7 @@ static long            compute_value(const char **envA);
 static void            get_abspath(char * path, int sz);
 static volatile double epoch();
 static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
-static double          scalar_program_sample_probability(double runtime);
+static double          prgm_sample_probability(double runtime);
 #ifdef USE_NVML
 static int             load_nvml();
 #endif
@@ -670,7 +670,7 @@ void myinit(int argc, char **argv)
   exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
-  if ( run_mask & BIT_MPI)  
+  if ((run_mask & BIT_MPI) && (my_size >= mpi_always_record))
     {
 
       const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
@@ -953,21 +953,24 @@ void myfini()
     }
 #endif
 
-  if (run_mask & BIT_SCALAR)
+  // Sample all scalar executions and all MPI executions less than **mpi_always_record**
+  if (my_size < mpi_always_record)
     {
       const char * v;
-      v = getenv("XALT_SCALAR_SAMPLING");
+      v = getenv("XALT_SAMPLING");
+      if (!v)
+	v = getenv("XALT_SCALAR_SAMPLING");
       if (!v)
 	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
 
       if (v && strcmp(v,"yes") == 0)
 	{
 	  double run_time = end_time - start_time;
-	  probability     = scalar_program_sample_probability(run_time);
+	  probability     = prgm_sample_probability(run_time);
 
 	  if (my_rand >= probability)
 	    {
-	      DEBUG4(my_stderr, "    -> exiting because scalar sampling. "
+	      DEBUG4(my_stderr, "    -> exiting because sampling. "
 		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
 		     run_time, my_rand, probability, exec_path);
 	      if (xalt_err) 
@@ -979,7 +982,7 @@ void myfini()
 	      return;
 	    }
 	  else
-	    DEBUG4(my_stderr, "    -> Scalar Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n", 
+	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n", 
 		   run_time, my_rand, probability, exec_path);
 	}
     }
@@ -1111,7 +1114,7 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
   return c;
 }
 
-static  double scalar_program_sample_probability(double runtime)
+static  double prgm_sample_probability(double runtime)
 {
   double prob = 1.0;
   int i;

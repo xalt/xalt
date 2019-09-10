@@ -89,7 +89,7 @@ def main():
   exec(open(args.confFn).read(), namespace)
 
   intervalA         = namespace.get('interval_array',       {})
-  mpi_always_record = namespace.get('MPI_ALWAYS_RECORD',     1)
+  mpi_always_record = namespace.get('MPI_ALWAYS_RECORD',     2)
 
   if (len(intervalA) < 2):
     intervalA = [
