@@ -425,7 +425,7 @@ class XALTdb(object):
         recordMe = True 
 
 
-      if (recordMe and endTime > 0.0):
+      if (recordMe and endTime > 0):
         timeRecord.add(num_cores, runTime)
 
 
