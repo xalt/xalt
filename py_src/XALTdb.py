@@ -73,6 +73,14 @@ class TimeRecord(object):
   def __init__(self):
     self.__mpi_time_acc    = 0.0
     self.__mpi_count       = 0.0
+    self.__mpi_05_time_acc = 0.0
+    self.__mpi_05_count    = 0.0
+    self.__mpi_10_time_acc = 0.0
+    self.__mpi_10_count    = 0.0
+    self.__mpi_20_time_acc = 0.0
+    self.__mpi_20_count    = 0.0
+    self.__mpi_lg_time_acc = 0.0
+    self.__mpi_lg_count    = 0.0
     self.__slr_05_time_acc = 0.0
     self.__slr_05_count    = 0.0
     self.__slr_10_time_acc = 0.0
@@ -86,6 +94,18 @@ class TimeRecord(object):
     if (num_cores > 1):
       self.__mpi_time_acc    += runTime
       self.__mpi_count       += 1.0
+      if (runTime < 300.0):
+        self.__mpi_05_time_acc += runTime
+        self.__mpi_05_count    += 1.0
+      elif (runTime < 600.0):
+        self.__mpi_10_time_acc += runTime
+        self.__mpi_10_count    += 1.0
+      elif (runTime < 1200.0):
+        self.__mpi_20_time_acc += runTime
+        self.__mpi_20_count    += 1.0
+      else:
+        self.__mpi_lg_time_acc += runTime
+        self.__mpi_lg_count    += 1.0
     elif (runTime < 300.0):
       self.__slr_05_time_acc += runTime
       self.__slr_05_count    += 1.0
@@ -108,6 +128,10 @@ class TimeRecord(object):
     resultA.append(["Scalar < 20 mins",self.__slr_20_count, self.__slr_20_time_acc/max(1.0,self.__slr_20_count)])
     resultA.append(["Scalar > 20 mins",self.__slr_lg_count, self.__slr_lg_time_acc/max(1.0,self.__slr_lg_count)])
     resultA.append(["MPI",             self.__mpi_count,    self.__mpi_time_acc/   max(1.0,self.__mpi_count   )])
+    resultA.append(["MPI    <  5 mins",self.__mpi_05_count, self.__mpi_05_time_acc/max(1.0,self.__mpi_05_count)])
+    resultA.append(["MPI    < 10 mins",self.__mpi_10_count, self.__mpi_10_time_acc/max(1.0,self.__mpi_10_count)])
+    resultA.append(["MPI    < 20 mins",self.__mpi_20_count, self.__mpi_20_time_acc/max(1.0,self.__mpi_20_count)])
+    resultA.append(["MPI    > 20 mins",self.__mpi_lg_count, self.__mpi_lg_time_acc/max(1.0,self.__mpi_lg_count)])
 
     bt = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrr")
     print()
@@ -391,6 +415,7 @@ class XALTdb(object):
           conn.query(query)
           query = ""
           recordMe = True 
+          timeRecord.add(num_cores, runTime)
         v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
 
@@ -427,7 +452,6 @@ class XALTdb(object):
 
       if (recordMe and endTime > 0):
         timeRecord.add(num_cores, runTime)
-
 
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
                         "join_run_object", run_id)
