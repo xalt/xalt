@@ -670,7 +670,8 @@ void myinit(int argc, char **argv)
   exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
-  if ((run_mask & BIT_MPI) && (my_size >= mpi_always_record))
+  // Create a start record for any MPI executions with an acceptable number of tasks.
+  if (my_size >= mpi_always_record)
     {
 
       const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
