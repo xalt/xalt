@@ -103,7 +103,7 @@ class TimeRecord(object):
       elif (runTime < 1200.0):
         self.__mpi_20_time_acc += runTime
         self.__mpi_20_count    += 1.0
-      elif (runTime >= 1200.0):
+      else:
         self.__mpi_lg_time_acc += runTime
         self.__mpi_lg_count    += 1.0
     elif (runTime < 300.0):
