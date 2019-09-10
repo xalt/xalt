@@ -9,3 +9,4 @@ XALT 2.7+
     (2.7.2)  * Support for env var XALT_FILE_PREFIX.
              * Make job_id filtering optional.
     (2.7.3)  * Use uuid hash value to chose the 000 to 996 directory when using XALT_FILE_PREFIX.
+    (2.7.4)  * Sample all executables (MPI included) with MPI tasks counts < MPI_ALWAYS_RECORD
