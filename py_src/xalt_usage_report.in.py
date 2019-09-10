@@ -26,7 +26,7 @@
 from __future__ import print_function
 import os, sys, base64
 import MySQLdb, argparse
-import time
+import time, collections
 from operator import itemgetter
 from datetime import datetime, timedelta
 try:
@@ -90,7 +90,7 @@ class ExecRun:
 
     sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
     sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
-    sA.append(" COUNT(date) as n_jobs, COUNT(DISTINCT(user)) as n_users ")
+    sA.append(" COUNT(date) as n_runs, COUNT(DISTINCT(user)) as n_users ")
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
     sA.append("    AND queue like '%s' ")
@@ -120,16 +120,16 @@ class ExecRun:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, corehours, n_jobs, n_users in resultA:
+    for execname, corehours, n_runs, n_users in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
-                'n_jobs'    : n_jobs,
+                'n_runs'    : n_runs,
                 'n_users'   : n_users}
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["CoreHrs", "# Jobs","# Users", "Exec"])
+    resultA.append(["CoreHrs", "# Runs","# Users", "Exec"])
     resultA.append(["-------", "------","-------", "----"])
 
     execA = self.__execA
@@ -138,7 +138,7 @@ class ExecRun:
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -162,7 +162,7 @@ class ExecRunLink:
 
     sA.append(" ELSE SUBSTRING_INDEX(t1.exec_path,'/',-1) END ")
     sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
-    sA.append(" COUNT(t1.date) as n_jobs, COUNT(DISTINCT(t1.user)) as n_users")
+    sA.append(" COUNT(t1.date) as n_runs, COUNT(DISTINCT(t1.user)) as n_users")
     sA.append("   FROM xalt_run as t1, xalt_link as t2 ")
     sA.append("  WHERE t1.syshost like '%s' ")
     sA.append("    AND t1.date >= '%s' AND t1.date < '%s' ")
@@ -177,16 +177,16 @@ class ExecRunLink:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, corehours, n_jobs, n_users in resultA:
+    for execname, corehours, n_runs, n_users in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
-                'n_jobs'    : n_jobs,
+                'n_runs'    : n_runs,
                 'n_users'   : n_users}
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["CoreHrs", "# Jobs","# Users", "Exec"])
+    resultA.append(["CoreHrs", "# Runs","# Users", "Exec"])
     resultA.append(["-------", "------","-------", "----"])
 
     execA = self.__execA
@@ -195,7 +195,7 @@ class ExecRunLink:
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -340,7 +340,7 @@ class Libraries:
         libT[module] = entryT
     
         
-    for k, entryT in sorted(libT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+    for k, entryT in sorted(libT.items(), key=lambda v: v[1][sort_key], reverse=True):
       resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
@@ -374,7 +374,7 @@ class Libraries:
           if (key != "module"):
             g_entry[key] += entry[key]
         
-    for k, entryT in sorted(groupT.iteritems(), key=lambda(k,v): v[sort_key], reverse=True):
+    for k, entryT in sorted(groupT.items(), key=lambda v: v[1][sort_key], reverse=True):
       resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
                       "%d" % (entryT['n_jobs']), entryT['module']])
 
@@ -389,7 +389,7 @@ class ModuleExec:
     query = """
     SELECT 
     ROUND(SUM(run_time*num_cores/3600)) as corehours,
-    count(date)                         as n_jobs,
+    count(date)                         as n_runs,
     COUNT(DISTINCT(user))               as n_users,
     module_name                         as modules
     from xalt_run where syshost like %s
@@ -400,16 +400,16 @@ class ModuleExec:
     cursor.execute(query, (args.syshost, start_date, end_date))
     resultA = cursor.fetchall()
     modA   = self.__modA
-    for corehours, n_jobs, n_users, modules in resultA:
+    for corehours, n_runs, n_users, modules in resultA:
       entryT = { 'corehours' : corehours,
-                 'n_jobs'    : n_jobs,
+                 'n_runs'    : n_runs,
                  'n_users'   : n_users,
                  'modules'   : modules }
       modA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["CoreHrs", "# Jobs","# Users", "Modules"])
+    resultA.append(["CoreHrs", "# Runs","# Users", "Modules"])
     resultA.append(["-------", "------","-------", "-------"])
 
     modA = self.__modA
@@ -417,7 +417,7 @@ class ModuleExec:
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_jobs']) , "%d" %(entryT['n_users']), entryT['modules']])
+      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['modules']])
     
     return resultA
         
@@ -473,9 +473,7 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
   resultA.append(["    ", "  N    ", " % ", " N  ", " % ", " N  ", " % ", "  N  "])
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", "-----"])
   
-
-     
-  for k, entryT in sorted(resultT.iteritems(), key=lambda(k,v): v['corehours'], reverse=True):
+  for k, entryT in sorted(resultT.items(), key=lambda v: v[1]['corehours'],reverse=True):
     pSU = percent_str(entryT['corehours'], totalT['corehours'])
     pR  = percent_str(entryT['n_runs'],    float(totalT['n_runs']))
     pJ  = percent_str(entryT['n_jobs'],    float(totalT['n_jobs']))
@@ -630,8 +628,8 @@ def main():
     print(bt.build_tbl())
   
     ############################################################
-    #  Report of Top EXEC of All types by Num Jobs
-    resultA, sumCH  = execA.report_by(args,"n_jobs")
+    #  Report of Top EXEC of All types by Num Runs
+    resultA, sumCH  = execA.report_by(args,"n_runs")
     bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
     print("\nTop",args.num, style+" Executables sorted by # Jobs\n")
     print(bt.build_tbl())
