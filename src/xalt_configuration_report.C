@@ -71,9 +71,13 @@ int main(int argc, char* argv[])
       std::cout << "XALT VERSION: " << XALT_VERSION << "\n";
       return 0;
     }
+
+  if (strcmp(argv[1],"--git_version") == 0)
+    {
+      std::cout << "XALT GIT VERSION: " << XALT_GIT_VERSION << "\n";
+      return 0;
+    }
         
-
-
   std::string syshost(xalt_syshost());
   std::string syslog_tag("XALT_LOGGING_");
   syslog_tag.append(syshost);
