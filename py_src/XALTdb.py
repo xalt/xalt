@@ -39,6 +39,7 @@ except:
 
 warnings.filterwarnings("ignore", "Unknown table.*")
 
+########################################################################
 import inspect
 
 def __LINE__():
@@ -52,6 +53,7 @@ def __FILE__():
     return fnA[1]
 
 #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+########################################################################
 
 def convertToTinyInt(s):
   """

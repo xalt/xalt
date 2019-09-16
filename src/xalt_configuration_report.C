@@ -66,6 +66,14 @@ int main(int argc, char* argv[])
     }
     
 
+  if (strcmp(argv[1],"--version") == 0)
+    {
+      std::cout << "XALT VERSION: " << XALT_VERSION << "\n";
+      return 0;
+    }
+        
+
+
   std::string syshost(xalt_syshost());
   std::string syslog_tag("XALT_LOGGING_");
   syslog_tag.append(syshost);
@@ -86,8 +94,7 @@ int main(int argc, char* argv[])
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"none")      != 0 ) && 
       (strcasecmp(transmission,"syslog")    != 0 ) && 
-      (strcasecmp(transmission,"syslogv1")  != 0 ) && 
-      (strcasecmp(transmission,"direct2db") != 0 ))
+      (strcasecmp(transmission,"syslogv1")  != 0 ))
     transmission = "file";
 
   const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
