@@ -177,10 +177,10 @@ MPI_ALWAYS_RECORD = 256
 # $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
 
 interval_array = [
-    [ 0.0,                0.0001 ],
-    [ 300.0,              0.01   ],
-    [ 600.0,              1.0    ],
-    [ sys.float_info.max, 1.0    ]
+    [    0.0,              0.0001 ],
+    [  900.0,              0.01   ],
+    [ 1800.0,              1.0    ],
+    [ sys.float_info.max,  1.0    ]
 ]
 
 #------------------------------------------------------------
