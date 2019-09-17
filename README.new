@@ -11,3 +11,5 @@ XALT 2.7+
     (2.7.3)  * Use uuid hash value to chose the 000 to 996 directory when using XALT_FILE_PREFIX.
     (2.7.4)  * Sample all executables (MPI included) with MPI tasks counts < MPI_ALWAYS_RECORD
     (2.7.5)  * Update xalt_configuration_report about XALT_SAMPLING and MPI_ALWAYS_RECORD
+    (2.7.6)  * Fix bugs introduced in version 2.7.5 about XALT_SAMPLING.
+             * Better reporting of when myinit() and myfini() have completed their work.

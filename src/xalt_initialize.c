@@ -173,6 +173,7 @@ static int          xalt_kind             = 0;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
 static int          xalt_gpu_tracking     = 0;
+static int          xalt_sampling         = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
 static int          num_gpus              = 0;
@@ -646,24 +647,22 @@ void myinit(int argc, char **argv)
    * not the start record.
    */
 
-  if (run_mask & BIT_SCALAR)
+  v = getenv("XALT_SAMPLING");
+  if (!v)
+    v = getenv("XALT_SCALAR_SAMPLING");
+  if (!v)
+    v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+
+  if (v && strcmp(v,"yes") == 0)
     {
-      v = getenv("XALT_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+      xalt_sampling     = 1;
+      unsigned int a    = (unsigned int) clock();
+      unsigned int b    = (unsigned int) time(NULL);
+      unsigned int c    = (unsigned int) getpid();
+      unsigned int seed = mix(a,b,c);
 
-      if (v && strcmp(v,"yes") == 0)
-	{
-	  unsigned int a    = (unsigned int) clock();
-	  unsigned int b    = (unsigned int) time(NULL);
-	  unsigned int c    = (unsigned int) getpid();
-	  unsigned int seed = mix(a,b,c);
-
-	  srand(seed);
-	  my_rand	    = (double) rand()/(double) RAND_MAX;
-	}
+      srand(seed);
+      my_rand	    = (double) rand()/(double) RAND_MAX;
     }
 
   sprintf(&rand_str[0],"%10.6f",my_rand);
@@ -960,14 +959,7 @@ void myfini()
   // Sample all scalar executions and all MPI executions less than **mpi_always_record**
   if (my_size < mpi_always_record)
     {
-      const char * v;
-      v = getenv("XALT_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
-
-      if (v && strcmp(v,"yes") == 0)
+      if (xalt_sampling)
 	{
 	  double run_time = end_time - start_time;
 	  probability     = prgm_sample_probability(run_time);
