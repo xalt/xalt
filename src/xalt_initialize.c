@@ -475,7 +475,9 @@ void myinit(int argc, char **argv)
   xalt_quotestring_free();
   b64_cmdline = base64_encode(usr_cmdline, qsLen, &b64_len);
 
+  HERE;
   build_uuid(uuid_str);
+  HERE;
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
