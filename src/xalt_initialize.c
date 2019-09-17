@@ -680,7 +680,7 @@ void myinit(int argc, char **argv)
       if (runable == -1)
         {
           run_submission_exists = 0;
-          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n}\n\n", run_submission);
+          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n", run_submission);
           reject_flag = XALT_MISSING_RUN_SUBMISSION;
           unsetenv("XALT_RUN_UUID");
           return;
@@ -694,7 +694,7 @@ void myinit(int argc, char **argv)
                    " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
 		   pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
-          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
+          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
@@ -708,7 +708,7 @@ void myinit(int argc, char **argv)
     }
   else
     {
-      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n}\n\n",
+      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n",
              xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
@@ -749,6 +749,7 @@ void myinit(int argc, char **argv)
             sigaction(signum, &action, NULL);
         }
     }
+  DEBUG0(stderr, "    -> Leaving myinit\n}\n\n")
 }
 void wrapper_for_myfini(int signum)
 {
@@ -992,7 +993,7 @@ void myfini()
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
   if (runable == -1)
     {
-      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n}\n\n", run_submission);
+      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n", run_submission);
       reject_flag = XALT_MISSING_RUN_SUBMISSION;
     }
   else
@@ -1008,7 +1009,7 @@ void myfini()
 		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
-          fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
+          fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
@@ -1026,6 +1027,7 @@ void myfini()
       close(errfd);
       close(STDERR_FILENO);
     }
+  DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
 }
 
 #ifdef USE_NVML
