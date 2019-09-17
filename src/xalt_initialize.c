@@ -360,7 +360,7 @@ void myinit(int argc, char **argv)
   HOSTNAME_PARSER_CLEANUP();
   if (results == SKIP)
     {
-      DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",u.nodename);
+      DEBUG1(stderr,"    hostname: \"%s\" is rejected -> exiting\n}\n\n",u.nodename);
       reject_flag = XALT_HOSTNAME;
       unsetenv("XALT_RUN_UUID");
       return; 
@@ -396,7 +396,7 @@ void myinit(int argc, char **argv)
   
   if (path_results == SKIP)
     {
-      DEBUG1(stderr,"    executable: \"%s\" is rejected\n", exec_path);
+      DEBUG1(stderr,"    executable: \"%s\" is rejected  -> exiting\n}\n\n", exec_path);
       reject_flag = XALT_PATH;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -466,7 +466,7 @@ void myinit(int argc, char **argv)
 
   if (p > &usr_cmdline[sz])
     {
-      fprintf(stderr,"XALT: Failure in building user command line json string!\n");
+      fprintf(stderr,"XALT: Failure in building user command line json string! -> exiting\n}\n\n");
       reject_flag = XALT_BAD_JSON_STR;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -648,7 +648,9 @@ void myinit(int argc, char **argv)
 
   if (run_mask & BIT_SCALAR)
     {
-      v = getenv("XALT_SCALAR_SAMPLING");
+      v = getenv("XALT_SAMPLING");
+      if (!v)
+	v = getenv("XALT_SCALAR_SAMPLING");
       if (!v)
 	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
 
@@ -680,7 +682,7 @@ void myinit(int argc, char **argv)
       if (runable == -1)
         {
           run_submission_exists = 0;
-          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n", run_submission);
+          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s -> exiting\n}\n\n", run_submission);
           reject_flag = XALT_MISSING_RUN_SUBMISSION;
           unsetenv("XALT_RUN_UUID");
           return;
@@ -749,7 +751,7 @@ void myinit(int argc, char **argv)
             sigaction(signum, &action, NULL);
         }
     }
-  DEBUG0(stderr, "    -> Leaving myinit\n}\n\n")
+  DEBUG0(stderr, "    -> Leaving myinit\n}\n\n");
 }
 void wrapper_for_myfini(int signum)
 {
@@ -993,7 +995,7 @@ void myfini()
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
   if (runable == -1)
     {
-      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n", run_submission);
+      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s-> exiting\n}\n\n", run_submission);
       reject_flag = XALT_MISSING_RUN_SUBMISSION;
     }
   else
@@ -1019,6 +1021,7 @@ void myfini()
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
+      DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
     }
 
   if (xalt_err) 
@@ -1027,7 +1030,6 @@ void myfini()
       close(errfd);
       close(STDERR_FILENO);
     }
-  DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
 }
 
 #ifdef USE_NVML
