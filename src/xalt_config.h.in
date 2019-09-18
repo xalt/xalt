@@ -1,31 +1,32 @@
 #ifndef XALT_CONFIG_H
 #define XALT_CONFIG_H
 
-#define XALT_PRELOAD_ONLY          "@PRELOAD_ONLY@"
-#define XALT_INTERFACE_VERSION     "@XALT_INTERFACE_VERSION@"
-#define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define BAD_INSTALL                "@BAD_INSTALL@"
-#define XALT_DIR                   "@prefix@/xalt/xalt/"
-#define HAVE_DCGM                  "@HAVE_DCGM@"
-#define XALT_FUNCTION_TRACKING     "@XALT_FUNCTION_TRACKING@"
-#define MY_HOSTNAME_PARSER         "@MY_HOSTNAME_PARSER@"
-#define XALT_GPU_TRACKING          "@XALT_GPU_TRACKING@"
-#define XALT_MPI_TRACKING          "@XALT_MPI_TRACKING@"
-#define XALT_SCALAR_TRACKING       "@XALT_SCALAR_TRACKING@"
-#define XALT_FILE_PREFIX           "@XALT_FILE_PREFIX@"
-#define TRANSMISSION               "@TRANSMISSION@"
-#define XALT_ETC_DIR               "@ETC_DIR@"
-#define XALT_CONFIG_PY             "@XALT_CONFIG_PY@"
-#define XALT_SYSTEM_PATH           "@SYSTEM_PATH@"
-#define SYSLOG_MSG_SZ               @SYSLOG_MSG_SZ@
-#define SYSHOST_CONFIG             "@SYSHOST_CONFIG@"
+#define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
-#define XALT_VERSION               "@VERSION@"
-#define XALT_GIT_VERSION           "@XALT_GIT_VERSION@"
+#define HAVE_DCGM                  "@HAVE_DCGM@"
+#define HAVE_WORKING_LIBUUID       "@HAVE_WORKING_LIBUUID@"
+#define MY_HOSTNAME_PARSER         "@MY_HOSTNAME_PARSER@"
+#define SYSHOST_CONFIG             "@SYSHOST_CONFIG@"
+#define SYSLOG_MSG_SZ               @SYSLOG_MSG_SZ@
+#define TRANSMISSION               "@TRANSMISSION@"
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
-#define XALT_TMPDIR                "@XALT_TMPDIR@"
+#define XALT_CONFIG_PY             "@XALT_CONFIG_PY@"
+#define XALT_DIR                   "@prefix@/xalt/xalt/"
+#define XALT_ETC_DIR               "@ETC_DIR@"
+#define XALT_FILE_PREFIX           "@XALT_FILE_PREFIX@"
+#define XALT_FUNCTION_TRACKING     "@XALT_FUNCTION_TRACKING@"
+#define XALT_GIT_VERSION           "@XALT_GIT_VERSION@"
+#define XALT_GPU_TRACKING          "@XALT_GPU_TRACKING@"
 #define XALT_INSTALL_OS            "@XALT_INSTALL_OS@"
-#define XALT_PRIME_NUMBER           @XALT_PRIME_NUMBER@
+#define XALT_INTERFACE_VERSION     "@XALT_INTERFACE_VERSION@"
+#define XALT_MPI_TRACKING          "@XALT_MPI_TRACKING@"
+#define XALT_PRELOAD_ONLY          "@PRELOAD_ONLY@"
 #define XALT_PRIME_FMT             "@XALT_PRIME_FMT@"
+#define XALT_PRIME_NUMBER           @XALT_PRIME_NUMBER@
+#define XALT_SCALAR_TRACKING       "@XALT_SCALAR_TRACKING@"
+#define XALT_SYSTEM_PATH           "@SYSTEM_PATH@"
+#define XALT_TMPDIR                "@XALT_TMPDIR@"
+#define XALT_VERSION               "@VERSION@"
 
 #endif /* XALT_CONFIG_H */

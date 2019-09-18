@@ -2,6 +2,9 @@ THIS_DIR := $(PARENT_DIR)/src
 VPATH = .:$(THIS_DIR)
 CXX := g++
 CC  := gcc
+ifeq ($(HAVE_LIBUUID),yes)
+  LIBUUID:=-luuid
+endif
 ifeq ($(HAVE_DCGM),yes)
   ifeq ($(STATIC_LIBS),yes)
     LIBDCGM:=-ldcgm_stub -ldl
@@ -194,16 +197,16 @@ my_hostname_parser_target_32:
 	cp $(MY_HOSTNAME_PARSER_LIB32)     $(DESTDIR)$(LIB)/my_hostname_parser_32.a
 
 $(UUIDGEN_EXEC): $(UUIDGEN_OBJS)
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS)  -o $@ $^ -luuid
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS)  -o $@ $^ $(LIBUUID)
 
 $(TRP_EXEC) : $(TRP_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XRP_EXEC) : $(XRP_OBJS)
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz  -luuid
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz  $(LIBUUID)
 
 $(XRS_EXEC) : $(XRS_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread $(LIBCRYPTO) -luuid
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread $(LIBCRYPTO) $(LIBUUID)
 
 $(XGM_EXEC): $(XGM_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^

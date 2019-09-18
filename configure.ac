@@ -332,6 +332,10 @@ fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
+AC_CHECK_HEADER(uuid/uuid.h,
+                [AC_DEFINE([HAVE_UUID_UUID_H], 1,
+                   [Define to 1 if you have <uuid/uuid.h>.])],
+                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -339,6 +343,24 @@ AC_CHECK_HEADER(openssl/sha.h,
 
 AC_CHECK_HEADER(gelf.h, [],
                 [AC_MSG_ERROR([Unable to build XALT without gelf.h. Please install the libelf development package])])
+
+
+AC_SUBST(HAVE_WORKING_LIBUUID)
+HAVE_WORKING_LIBUUID=no
+if test $ac_cv_header_uuid_uuid_h = yes; then
+  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID) HAVE_WORKING_LIBUUID=yes], [])
+fi
+
+if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without uuid and"
+   echo "without /proc/sys/kernel/random/uuid"
+   echo "See the manual for details"
+   echo "======================================================="
+   rm -f makefile
+   exit 1
+fi
 
 
 if test -z "$PATH_TO_FLEX" ; then
