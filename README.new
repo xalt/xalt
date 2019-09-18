@@ -15,3 +15,5 @@ XALT 2.7+
 WIP:
     (2.7.6)  * Fix bugs introduced in version 2.7.5 about XALT_SAMPLING.
              * Better reporting of when myinit() and myfini() have completed their work.
+             * Move uuid generation from libxalt_init.so to xalt_run_submission
+	     
