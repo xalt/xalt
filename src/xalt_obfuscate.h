@@ -15,7 +15,6 @@
 
 // Functions
 #define abspath                     PASTE2(__XALT_abspath,                    MY_NAME)
-#define build_uuid                  PASTE2(__XALT_build_uuid,                 MY_NAME)
 #define compute_value               PASTE2(__XALT_compute_value,              MY_NAME)
 #define myfini                      PASTE2(__XALT_myfini,                     MY_NAME)
 #define myinit                      PASTE2(__XALT_myinit,                     MY_NAME)
@@ -68,7 +67,6 @@
 #define reject_flag                 PASTE2(__XALT_reject_flag,                MY_NAME)
 #define start_time                  PASTE2(__XALT_start_time,                 MY_NAME)
 #define usr_cmdline                 PASTE2(__XALT_usr_cmdline,                MY_NAME)
-#define uuid_str                    PASTE2(__XALT_uuid_str,                   MY_NAME)
 #define xalt_reasonA                PASTE2(__XALT_reasonA,                    MY_NAME)
 #define xalt_tracing                PASTE2(__XALT_tracing,                    MY_NAME)
 

@@ -40,7 +40,8 @@ long convert_long(const char* name, const char* s)
 Options::Options(int argc, char** argv)
   : m_start(0.0), m_end(0.0), m_ntasks(1L), m_ngpus(0L),
     m_interfaceV(0L),         m_pid(0L),
-    m_ppid(0L),               m_syshost("unknown"),
+    m_ppid(0L),               m_buildUUID(false),
+    m_returnUUID(false),      m_syshost("unknown"),
     m_uuid("unknown"),        m_exec("unknown"),
     m_userCmdLine("[]"),      m_exec_type("unknown"),
     m_confFn("xalt_db.conf"), m_watermark("FALSE")
@@ -51,6 +52,7 @@ Options::Options(int argc, char** argv)
     {
       int option_index       = 0;
       static struct option long_options[] = {
+        {"build_UUID", no_argument,       NULL, 'B'},   
         {"confFn",     required_argument, NULL, 'c'},
         {"end",        required_argument, NULL, 'e'},
         {"exec",       required_argument, NULL, 'x'},
@@ -63,6 +65,7 @@ Options::Options(int argc, char** argv)
         {"pid",        required_argument, NULL, 'p'},
         {"ppid",       required_argument, NULL, 'q'},
         {"prob",       required_argument, NULL, 'b'},
+        {"return_UUID",no_argument,       NULL, 'R'},   
         {"start",      required_argument, NULL, 's'},
         {"syshost",    required_argument, NULL, 'h'},
         {"uuid",       required_argument, NULL, 'u'},
@@ -72,7 +75,7 @@ Options::Options(int argc, char** argv)
       
       m_kind = "PKGS";
 
-      c = getopt_long(argc, argv, "c:e:x:V:k:L:g:n:P:p:q:b:s:h:u:w:",
+      c = getopt_long(argc, argv, "BRc:e:x:V:k:L:g:n:P:p:q:b:s:h:u:w:",
 		      long_options, &option_index);
       
       if (c == -1)
@@ -80,6 +83,12 @@ Options::Options(int argc, char** argv)
 
       switch(c)
 	{
+        case 'B':
+          m_buildUUID = true;
+          break;
+        case 'R':
+          m_returnUUID = true;
+          break;
         case 'L':
           if (optarg)
             m_ldLibPath = optarg;

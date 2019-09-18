@@ -40,7 +40,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     {
       if (resultFn == NULL)
 	{
-	  DEBUG0(stderr,"  resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
+	  DEBUG0(stderr,"    resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
 	  return;
 	}
 
@@ -50,7 +50,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 	  if (xalt_tracing)
 	    {
 	      perror("Error: ");
-	      fprintf(stderr,"  unable to mkpath(%s) -> No XALT output\n", resultDir);
+	      fprintf(stderr,"    unable to mkpath(%s) -> No XALT output\n", resultDir);
 	    }
 	  return;
 	}
@@ -62,13 +62,13 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       FILE* fp = fopen(tmpFn,"w");
       if (fp == NULL && xalt_tracing)
-	fprintf(stderr,"  Unable to open: %s -> No XALT output\n", fn);
+	fprintf(stderr,"    Unable to open: %s -> No XALT output\n", fn);
       else
         {
           fprintf(fp, "%s\n", jsonStr);
           fclose(fp);
           rename(tmpFn, fn);
-          DEBUG2(stderr,"  Wrote json %s file : %s\n",kind, fn);
+          DEBUG2(stderr,"    Wrote json %s file : %s\n",kind, fn);
         }
       free(tmpFn);
       free(fn);

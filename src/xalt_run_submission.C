@@ -17,21 +17,36 @@
 #include "buildRmapT.h"
 #include "run_submission.h"
 #include "xalt_utils.h"
+#include "build_uuid.h"
 
 int main(int argc, char* argv[], char* env[])
 {
-  char * p_dbg        = getenv("XALT_TRACING");
-  int    xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
+  char *      p_dbg        = getenv("XALT_TRACING");
+  int         xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
 
-  Options options(argc, argv);
-  double  t0, t1;
-  double  t_maps, t_sha1;
-  DTable  measureT;
-  bool    end_record = (options.endTime() > 0.0);
+  Options     options(argc, argv);
+  double      t0, t1;
+  double      t_maps, t_sha1;
+  DTable      measureT;
+  bool        end_record = (options.endTime() > 0.0);
+  char        uuid_str[37];
+  
+  
   
   const char* suffix = end_record ? ".zzz" : ".aaa";
-  DEBUG1(stderr,"\nxalt_run_submission(%s) {\n",suffix);
+  DEBUG1(stderr,"\n  xalt_run_submission(%s) {\n",suffix);
   
+  if (options.buildUUID())
+    {
+      build_uuid(&uuid_str[0]);
+      DEBUG1(stderr,"    building UUID: %s\n",uuid_str);
+    }
+  else
+    {
+      strcpy(&uuid_str[0], options.uuid().c_str());
+      DEBUG1(stderr,"    using UUID: %s\n",uuid_str);
+    }
+
   t0 = epoch();
   t1 = t0;
   std::vector<ProcessTree> ptA;
@@ -43,7 +58,7 @@ int main(int argc, char* argv[], char* env[])
   t1 = epoch();
   Table envT;
   buildEnvT(options, env, envT);
-  DEBUG0(stderr,"  Built envT\n");
+  DEBUG0(stderr,"    Built envT\n");
   measureT["03_BuildEnvT____"] = epoch() - t1;
 
   //*********************************************************************
@@ -54,7 +69,7 @@ int main(int argc, char* argv[], char* env[])
   if (watermark == "FALSE")
     extractXALTRecordString(options.exec(), watermark);
   buildXALTRecordT(watermark, recordT);
-  DEBUG0(stderr,"  Extracted recordT from executable\n");
+  DEBUG0(stderr,"    Extracted recordT from executable\n");
   measureT["05_ExtractXALTR_"] = epoch() - t1;
 
   //*********************************************************************
@@ -63,17 +78,17 @@ int main(int argc, char* argv[], char* env[])
   Table  userT;
   DTable userDT;
 
-  buildUserT(options, envT, userT, userDT);
+  buildUserT(options, uuid_str, envT, userT, userDT);
   if ( ! recordT.empty())
     userDT["Build_Epoch"] = strtod(recordT["Build_Epoch"].c_str(),(char **) NULL);
-  DEBUG1(stderr,"  Built userT, userDT, scheduler: %s\n", userT["scheduler"].c_str());
+  DEBUG1(stderr,"    Built userT, userDT, scheduler: %s\n", userT["scheduler"].c_str());
   measureT["01_BuildUserT___"] = epoch() - t1;
 
   //*********************************************************************
   // Filter envT 
   t1 = epoch();
   filterEnvT(env, envT);
-  DEBUG0(stderr,"  Filter envT\n");
+  DEBUG0(stderr,"    Filter envT\n");
   measureT["03_BuildEnvT____"] += epoch() - t1;
   
 
@@ -89,7 +104,7 @@ int main(int argc, char* argv[], char* env[])
   // Parse the output of ldd for this executable (start record only)
   std::vector<Libpair> libA;
   parseProcMaps(options.pid(), libA, t_maps, t_sha1);
-  DEBUG0(stderr,"  Parsed ProcMaps\n");
+  DEBUG0(stderr,"    Parsed ProcMaps\n");
 
   measureT["06_ParseProcMaps"] = t_maps;
   measureT["06_SO_sha1_comp_"] = t_sha1;
@@ -98,14 +113,14 @@ int main(int argc, char* argv[], char* env[])
   if (transmission == NULL)
     transmission = TRANSMISSION;
   
-  DEBUG1(stderr,"  Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
+  DEBUG1(stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
   //*********************************************************************
   // If here then we need the json string.  So build it!
   measureT["07____total_____"] = epoch() - t0;
 
   Json json;
-  DEBUG1(stderr,"  cmdlineA: %s\n",options.userCmdLine().c_str());
+  DEBUG1(stderr,"    cmdlineA: %s\n",options.userCmdLine().c_str());
   json.add_json_string("cmdlineA",options.userCmdLine());
   json.add("ptA", ptA);
   json.add("envT",envT);
@@ -117,7 +132,7 @@ int main(int argc, char* argv[], char* env[])
   json.add("XALT_measureT",measureT);
   json.fini();
 
-  DEBUG0(stderr,"  Built json string\n");
+  DEBUG0(stderr,"    Built json string\n");
 
   char*       c_resultFn  = NULL;
   char*       c_resultDir = NULL;  
@@ -126,15 +141,15 @@ int main(int argc, char* argv[], char* env[])
 
 
   std::string key   = (end_record) ? "run_fini_" : "run_strt_";
-  key.append(options.uuid());
+  key.append(uuid_str);
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir, resultFn;
-      build_resultDir(resultDir, "run", transmission, options.uuid().c_str());
+      build_resultDir(resultDir, "run", transmission, uuid_str);
 
 
-      build_resultFn(resultFn, options.startTime(), options.syshost().c_str(), options.uuid().c_str(),
+      build_resultFn(resultFn, options.startTime(), options.syshost().c_str(), uuid_str,
                      "run", suffix);
       c_resultFn  = strdup(resultFn.c_str());
       c_resultDir = strdup(resultDir.c_str());
@@ -150,12 +165,16 @@ int main(int argc, char* argv[], char* env[])
 
   //*********************************************************************
   // Transmit Pkg records if any
-
   if (options.kind() == "PKGS")
-    pkgRecordTransmit(options, transmission);
+    pkgRecordTransmit(uuid_str, options.syshost().c_str(), transmission);
 
 
-  DEBUG0(stderr,"}\n\n");
+  //*********************************************************************
+  // Send uuid back to xalt_initialize if asked for.
+  if (options.returnUUID())
+    fprintf(stdout,"%s\n", uuid_str);
+
+  DEBUG0(stderr,"  }\n\n");
   if (xalt_tracing)
     fflush(stderr);
   return 0;

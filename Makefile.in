@@ -34,7 +34,7 @@ endif
 
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
-override OPTLVL         += -I$(abs_srcdir)/libuuid/src
+#override OPTLVL         += -I$(abs_srcdir)/libuuid/src
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
 BROKER_SERVER           := @BROKER_SERVER@
@@ -137,14 +137,12 @@ OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
 all:
 	@echo done
 
-
-
-install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes                          \
-         Use_argparse_$(USE_ARGPARSE) build_uuid build_compiled inst_obfuscate
+install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes                           \
+         Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
-build_compiled: build_uuid
+build_compiled: 
 	cd src;                                                                                    \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
