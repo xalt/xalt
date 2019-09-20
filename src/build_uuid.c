@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <dlfcn.h>
+#include <uuid/uuid.h>
 #include "xalt_obfuscate.h"
 #include "build_uuid.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
-#include "uuid.h"
 void build_uuid(char * my_uuid_str)
 {
   void *handle;
