@@ -183,17 +183,17 @@ scalar executables (including PKGS programs like R, MATLAB and
 Python).  The details on how to control the sampling.  TACC uses the
 follow scheme::
 
-    0   - 300 seconds (1 in 10000 chance of being recorded)
-    300 - 600 seconds (1 in 100   chance of being recorded)
-    600 - inf seconds (1 in 1     chance of being recorded)
+    0    -  900 seconds (1 in 10000 chance of being recorded)
+    900  - 1800 seconds (1 in 100   chance of being recorded)
+    1800 -  inf seconds (1 in 1     chance of being recorded)
 
 
 This is expressed in your SITE_config.py file as::
 
     interval_array = [
-        [ 0.0,                0.0001 ],
-        [ 300.0,              0.01   ],
-        [ 600.0,              1.0    ],
+        [    0.0,             0.0001 ],
+        [  900.0,             0.01   ],
+        [ 1800.0,             1.0    ],
         [ sys.float_info.max, 1.0    ]
     ]   
 

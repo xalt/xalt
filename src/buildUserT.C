@@ -11,7 +11,7 @@
 #include "run_submission.h"
 #define  DATESZ 100
 
-void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
+void buildUserT(Options& options, const char * uuid_str, Table& envT, Table& userT, DTable& userDT)
 {
   
   time_t mtime;
@@ -35,7 +35,7 @@ void buildUserT(Options& options, Table& envT, Table& userT, DTable& userDT)
   userT["syshost"]      = options.syshost();
 
   // run_uuid
-  userT["run_uuid"]     = options.uuid();
+  userT["run_uuid"]     = uuid_str;
 
   double runTime        = options.endTime() - options.startTime();
   if (runTime < 0.0)

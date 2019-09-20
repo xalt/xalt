@@ -14,6 +14,8 @@ public:
   long          interfaceV()  { return m_interfaceV;  }
   pid_t         pid()         { return m_pid;         }
   pid_t         ppid()        { return m_ppid;        }
+  bool          buildUUID()   { return m_buildUUID;   }
+  bool          returnUUID()  { return m_returnUUID;  }
   double        startTime()   { return m_start;       }
   double        endTime()     { return m_end;         }
   double        probability() { return m_probability; }
@@ -37,6 +39,8 @@ private:
   long        m_interfaceV;
   pid_t       m_pid;
   pid_t       m_ppid;
+  bool        m_buildUUID;
+  bool        m_returnUUID;
   std::string m_syshost;
   std::string m_uuid;
   std::string m_exec;

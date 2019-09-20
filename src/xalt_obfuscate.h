@@ -67,7 +67,6 @@
 #define reject_flag                 PASTE2(__XALT_reject_flag,                MY_NAME)
 #define start_time                  PASTE2(__XALT_start_time,                 MY_NAME)
 #define usr_cmdline                 PASTE2(__XALT_usr_cmdline,                MY_NAME)
-#define uuid_str                    PASTE2(__XALT_uuid_str,                   MY_NAME)
 #define xalt_reasonA                PASTE2(__XALT_reasonA,                    MY_NAME)
 #define xalt_tracing                PASTE2(__XALT_tracing,                    MY_NAME)
 

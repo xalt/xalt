@@ -14,10 +14,10 @@ void build_uuid(char * my_uuid_str)
   void (*uuid_generate_random)(uuid_t);
   void (*uuid_unparse_lower)(uuid_t, char*);
 
-  handle = dlopen ("libuuid.so", RTLD_LAZY);
+  handle = dlopen ("libuuid.so.1", RTLD_LAZY);
   if (!handle) 
     {
-      handle = dlopen (XALT_DIR "lib64/libuuid.so.1", RTLD_LAZY);
+      handle = dlopen (XALT_DIR "lib64/libuuid.so", RTLD_LAZY);
       if (!handle) 
         {
           fputs (dlerror(), stderr);

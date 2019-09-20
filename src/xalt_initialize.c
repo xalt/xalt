@@ -51,7 +51,6 @@
 #include "xalt_fgets_alloc.h"
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
-#include "build_uuid.h"
 #include "xalt_tmpdir.h"
 #include "xalt_vendor_note.h"
 
@@ -143,10 +142,13 @@ static int             load_nvml();
 void myinit(int argc, char **argv);
 void myfini();
 void wrapper_for_myfini(int signum);
+static void capture(const char * cmd, char* buffer, int bufSz);
 #define STR(x)   StR1_(x)
 #define StR1_(x) #x
 
+#define BUFSZ       100
 static int          countA[2];
+static char         buffer[BUFSZ];
 static char         uuid_str[37];
 static char         exec_path[PATH_MAX+1];
 static char *       exec_pathQ;
@@ -159,6 +161,7 @@ static char *       b64_watermark         = NULL;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
+static int          have_uuid             = 0;
 static double       probability           = 1.0;
 static pid_t        ppid	          = 0;
 static pid_t        pid  	          = 0;
@@ -173,6 +176,7 @@ static int          xalt_kind             = 0;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
 static int          xalt_gpu_tracking     = 0;
+static int          xalt_sampling         = 0;
 static char *       pathArg	          = NULL;
 static char *       ldLibPathArg          = NULL;
 static int          num_gpus              = 0;
@@ -360,7 +364,7 @@ void myinit(int argc, char **argv)
   HOSTNAME_PARSER_CLEANUP();
   if (results == SKIP)
     {
-      DEBUG1(stderr,"    hostname: \"%s\" is rejected\n",u.nodename);
+      DEBUG1(stderr,"    hostname: \"%s\" is rejected -> exiting\n}\n\n",u.nodename);
       reject_flag = XALT_HOSTNAME;
       unsetenv("XALT_RUN_UUID");
       return; 
@@ -396,7 +400,7 @@ void myinit(int argc, char **argv)
   
   if (path_results == SKIP)
     {
-      DEBUG1(stderr,"    executable: \"%s\" is rejected\n", exec_path);
+      DEBUG1(stderr,"    executable: \"%s\" is rejected  -> exiting\n}\n\n", exec_path);
       reject_flag = XALT_PATH;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -466,15 +470,13 @@ void myinit(int argc, char **argv)
 
   if (p > &usr_cmdline[sz])
     {
-      fprintf(stderr,"XALT: Failure in building user command line json string!\n");
+      fprintf(stderr,"XALT: Failure in building user command line json string! -> exiting\n}\n\n");
       reject_flag = XALT_BAD_JSON_STR;
       unsetenv("XALT_RUN_UUID");
       return;
     }
   xalt_quotestring_free();
   b64_cmdline = base64_encode(usr_cmdline, qsLen, &b64_len);
-
-  build_uuid(uuid_str);
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
@@ -516,6 +518,7 @@ void myinit(int argc, char **argv)
               break;
             }
 #elif USE_DCGM
+
           dcgmReturn_t result;
 
           result = dcgmInit();
@@ -537,6 +540,14 @@ void myinit(int argc, char **argv)
               break;
             }
 
+	  if ( ! have_uuid )
+	    {
+	      capture( XALT_DIR "/bin/my_uuidgen", buffer, BUFSZ);
+	      strncpy(&uuid_str[0], buffer, 36);
+	      uuid_str[36] = '\0';
+	      have_uuid = 1;
+	    }
+	      
           result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
@@ -623,7 +634,18 @@ void myinit(int argc, char **argv)
    * R and python can know what job and what start time of the this run is.
    */
 
-  setenv("XALT_RUN_UUID",uuid_str,1);
+  if ( xalt_kind == BIT_PKGS )
+    {
+      if ( ! have_uuid )
+	{
+	  capture( XALT_DIR "/bin/my_uuidgen", buffer, BUFSZ);
+	  strncpy(&uuid_str[0], buffer, 36);
+	  uuid_str[36] = '\0';
+	  have_uuid = 1;
+	}
+      setenv("XALT_RUN_UUID",uuid_str,1);
+    }
+      
   time_t my_time = start_time;
   
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&my_time));
@@ -646,22 +668,22 @@ void myinit(int argc, char **argv)
    * not the start record.
    */
 
-  if (run_mask & BIT_SCALAR)
+  v = getenv("XALT_SAMPLING");
+  if (!v)
+    v = getenv("XALT_SCALAR_SAMPLING");
+  if (!v)
+    v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+
+  if (v && strcmp(v,"yes") == 0)
     {
-      v = getenv("XALT_SCALAR_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+      xalt_sampling     = 1;
+      unsigned int a    = (unsigned int) clock();
+      unsigned int b    = (unsigned int) time(NULL);
+      unsigned int c    = (unsigned int) getpid();
+      unsigned int seed = mix(a,b,c);
 
-      if (v && strcmp(v,"yes") == 0)
-	{
-	  unsigned int a    = (unsigned int) clock();
-	  unsigned int b    = (unsigned int) time(NULL);
-	  unsigned int c    = (unsigned int) getpid();
-	  unsigned int seed = mix(a,b,c);
-
-	  srand(seed);
-	  my_rand	    = (double) rand()/(double) RAND_MAX;
-	}
+      srand(seed);
+      my_rand	    = (double) rand()/(double) RAND_MAX;
     }
 
   sprintf(&rand_str[0],"%10.6f",my_rand);
@@ -670,8 +692,11 @@ void myinit(int argc, char **argv)
   exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
-  if ((run_mask & BIT_MPI) && (my_size >= mpi_always_record))
+  // Create a start record for any MPI executions with an acceptable number of tasks.
+  // or a PKG type 
+  if (my_size >= mpi_always_record )
     {
+      char uuid_option_str[100];
 
       const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
       int runable = access(run_submission, X_OK);
@@ -679,35 +704,50 @@ void myinit(int argc, char **argv)
       if (runable == -1)
         {
           run_submission_exists = 0;
-          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n}\n\n", run_submission);
+          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s -> exiting\n}\n\n", run_submission);
           reject_flag = XALT_MISSING_RUN_SUBMISSION;
           unsetenv("XALT_RUN_UUID");
           return;
         }
       run_submission_exists = 1;
 
+      if (have_uuid)
+	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
+      else
+	strcpy(uuid_option_str, "--build_UUID --return_UUID");
+	  
       if (xalt_tracing || xalt_run_tracing)
         {
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
-		   pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, watermark, pathArg, ldLibPathArg,
+                   " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+		   pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
-          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n\n}\n\n",
+          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --kind \"%s\" --uuid \"%s\" --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
-	       pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str, probability, b64_watermark, pathArg, ldLibPathArg,
+	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+	       pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
 	       b64_cmdline);
 
-      system(cmdline);
+      /*************************************************************
+       * Since we told xalt_run_submission to build the uuid, we must
+       * capture it and copy it to uuid_str.
+       ************************************************************/
+      
+      capture(cmdline, buffer, BUFSZ);
+
+      strncpy(&uuid_str[0], buffer, 36);
+      uuid_str[36] = '\0';
+      DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
+      have_uuid = 1;
       free(cmdline);
     }
   else
     {
-      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n}\n\n",
+      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n",
              xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
@@ -748,6 +788,7 @@ void myinit(int argc, char **argv)
             sigaction(signum, &action, NULL);
         }
     }
+  DEBUG0(stderr, "    -> Leaving myinit\n}\n\n");
 }
 void wrapper_for_myfini(int signum)
 {
@@ -956,14 +997,7 @@ void myfini()
   // Sample all scalar executions and all MPI executions less than **mpi_always_record**
   if (my_size < mpi_always_record)
     {
-      const char * v;
-      v = getenv("XALT_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_SAMPLING");
-      if (!v)
-	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
-
-      if (v && strcmp(v,"yes") == 0)
+      if (xalt_sampling)
 	{
 	  double run_time = end_time - start_time;
 	  probability     = prgm_sample_probability(run_time);
@@ -991,32 +1025,40 @@ void myfini()
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
   if (runable == -1)
     {
-      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s\n}\n\n", run_submission);
+      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s-> exiting\n}\n\n", run_submission);
       reject_flag = XALT_MISSING_RUN_SUBMISSION;
     }
   else
     {
+      char uuid_option_str[100];
+
+      if (have_uuid)
+	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
+      else
+	strcpy(uuid_option_str, "--build_UUID");
+
       if (xalt_tracing || xalt_run_tracing )
         {
           int    dLen;
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
           asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
-		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
+                   " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
-          fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n}\n\n",
+          fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --kind \"%s\" --uuid \"%s\" --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
-	       XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_str,
+               " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+	       XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
+      DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
     }
 
   if (xalt_err) 
@@ -1113,6 +1155,30 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
   c=c-a;  c=c-b;  c=c^(b >> 15);
   return c;
 }
+
+static void capture(const char* cmdline, char* buffer, int bufSz)
+{
+  FILE* fp;
+
+  /* swallow stderr */
+  int fd1, fd2;
+  fflush(stderr);
+  fd1 = dup(STDERR_FILENO);
+  fd2 = open("/dev/null", O_WRONLY);
+  dup2(fd2, STDERR_FILENO);
+  close(fd2);
+  
+  fp = popen(cmdline,"r");
+  fgets(buffer, bufSz, fp);
+
+  pclose(fp);
+ 
+  /* restore stderr */
+  fflush(stderr);
+  dup2(fd1, STDERR_FILENO);
+  close(fd1);
+}  
+  
 
 static  double prgm_sample_probability(double runtime)
 {

@@ -34,7 +34,7 @@ endif
 
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
-override OPTLVL         += -I$(abs_srcdir)/libuuid/src
+#override OPTLVL         += -I$(abs_srcdir)/libuuid/src
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
 BROKER_SERVER           := @BROKER_SERVER@
@@ -47,6 +47,7 @@ prefix               	:= @prefix@
 XALT_V               	:= src/xalt_version.h
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
+HAVE_LIBUUID            := @HAVE_WORKING_LIBUUID@
 HAVE_DCGM         	:= @HAVE_DCGM@
 HAVE_NVML               := @HAVE_NVML@
 STATIC_LIBS             := @STATIC_LIBS@
@@ -137,10 +138,8 @@ OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
 all:
 	@echo done
 
-
-
-install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes                          \
-         Use_argparse_$(USE_ARGPARSE) build_uuid build_compiled inst_obfuscate
+install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes                           \
+         Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
@@ -148,7 +147,8 @@ build_compiled: build_uuid
 	cd src;                                                                                    \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
-                LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM) HAVE_NVML=$(HAVE_NVML) \
+                LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
+                HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
 
@@ -159,14 +159,7 @@ build_uuid:
                          LIB=$(LIB64) clean;                                                       \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB64)       \
-                OPTLVL="$(OPTLVL)" all                                                             \
-        if [ "$(HAVE_32BIT)" = yes ]; then                                                         \
-           $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                      \
-                         LIB=$(LIB) clean;                                                         \
-           $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir)                  \
-                   LDFLAGS="$(LDFLAGS)" DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) SBIN=$(SBIN)         \
-                   BIN=$(BIN) LIB=$(LIB) OPTLVL="$(OPTLVL) -m32" all;                              \
-        fi
+                OPTLVL="$(OPTLVL)" all
 
 inst_obfuscate:
 	cp $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)

@@ -39,6 +39,7 @@ except:
 
 warnings.filterwarnings("ignore", "Unknown table.*")
 
+########################################################################
 import inspect
 
 def __LINE__():
@@ -52,6 +53,7 @@ def __FILE__():
     return fnA[1]
 
 #print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+########################################################################
 
 def convertToTinyInt(s):
   """
@@ -121,8 +123,8 @@ class TimeRecord(object):
 
   def print(self):
     resultA = []
-    resultA.append(["Kind", "Count", "Average Time"])
-    resultA.append(["----", "-----", "------------"])
+    resultA.append(["Kind", "Count", "Average Time (secs)"])
+    resultA.append(["----", "-----", "-------------------"])
     resultA.append(["Scalar <  5 mins",self.__slr_05_count, self.__slr_05_time_acc/max(1.0,self.__slr_05_count)])
     resultA.append(["Scalar < 10 mins",self.__slr_10_count, self.__slr_10_time_acc/max(1.0,self.__slr_10_count)])
     resultA.append(["Scalar < 20 mins",self.__slr_20_count, self.__slr_20_time_acc/max(1.0,self.__slr_20_count)])

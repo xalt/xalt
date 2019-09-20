@@ -10,9 +10,9 @@
 #include <string>
 #include <unistd.h>
 
-void pkgRecordTransmit(Options& options, const char* transmission)
+void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* transmission)
 {
-  char * xalt_tmpdir = create_xalt_tmpdir_str(options.uuid().c_str());
+  char * xalt_tmpdir = create_xalt_tmpdir_str(uuid_str);
   DIR*   dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
     {
@@ -31,7 +31,7 @@ void pkgRecordTransmit(Options& options, const char* transmission)
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       std::string resultDir;
-      build_resultDir(resultDir, "pkg", transmission, options.uuid().c_str());
+      build_resultDir(resultDir, "pkg", transmission, uuid_str);
       c_resultDir = strdup(resultDir.c_str());
     }
 
@@ -61,11 +61,11 @@ void pkgRecordTransmit(Options& options, const char* transmission)
               //pkg.rios.2018_11_06_16_14_13_7992.user.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
               char * key = NULL;
               int my_len = strlen(dp->d_name);
-              asprintf(&key, "pkg_%s_%.*s",options.uuid().c_str(), ulen, &dp->d_name[my_len - 17]);
+              asprintf(&key, "pkg_%s_%.*s",uuid_str, ulen, &dp->d_name[my_len - 17]);
 
               // transmit jsonStr
               
-              transmit(transmission, jsonStr.c_str(), "pkg", key, options.syshost().c_str(), c_resultDir, dp->d_name);
+              transmit(transmission, jsonStr.c_str(), "pkg", key, syshost, c_resultDir, dp->d_name);
               free(key);
               unlink(fullName.c_str());
             }
