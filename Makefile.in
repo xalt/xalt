@@ -159,7 +159,7 @@ build_uuid:
                          LIB=$(LIB64) clean;                                                       \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB64)       \
-                OPTLVL="$(OPTLVL)" all build_uuidgen;                                              \
+                OPTLVL="$(OPTLVL)" all                                                             \
         if [ "$(HAVE_32BIT)" = yes ]; then                                                         \
            $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                      \
                          LIB=$(LIB) clean;                                                         \

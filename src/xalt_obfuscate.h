@@ -15,7 +15,6 @@
 
 // Functions
 #define abspath                     PASTE2(__XALT_abspath,                    MY_NAME)
-#define build_uuid                  PASTE2(__XALT_build_uuid,                 MY_NAME)
 #define compute_value               PASTE2(__XALT_compute_value,              MY_NAME)
 #define myfini                      PASTE2(__XALT_myfini,                     MY_NAME)
 #define myinit                      PASTE2(__XALT_myinit,                     MY_NAME)
