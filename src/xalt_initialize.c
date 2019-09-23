@@ -670,9 +670,11 @@ void myinit(int argc, char **argv)
 
   v = getenv("XALT_SAMPLING");
   if (!v)
-    v = getenv("XALT_SCALAR_SAMPLING");
-  if (!v)
-    v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+    {
+      v = getenv("XALT_SCALAR_SAMPLING");
+      if (!v)
+	v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+    }
 
   if (v && strcmp(v,"yes") == 0)
     {

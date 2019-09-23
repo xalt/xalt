@@ -90,6 +90,7 @@ path_patterns = [
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/cray_mpich\/.*'],
     ['SKIP',  r'^\/opt\/apps\/intel[0-9][0-9_]*\/impi\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc[0-9][0-9_]*\/mvapich2\/.*'],
+    ['SKIP',  r'^\/home1\/apps\/intel\/.*'],
     ['SKIP',  r'^\/opt\/apps\/gcc\/.*'],
     ['SKIP',  r'.*\/git'],
     ['SKIP',  r'.*\/lua'],
@@ -174,7 +175,7 @@ MPI_ALWAYS_RECORD = 256
 # the execution time.
 #
 # Note that scalar execution only uses this table IFF
-# $XALT_SCALAR_AND_SPSR_SAMPLING equals yes
+# $XALT_SAMPLING equals yes
 
 interval_array = [
     [    0.0,              0.0001 ],
