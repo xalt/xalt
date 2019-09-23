@@ -7,6 +7,7 @@
 #include "build_uuid.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
+#define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 void build_uuid(char * my_uuid_str)
 {
   void *handle;
@@ -22,7 +23,7 @@ void build_uuid(char * my_uuid_str)
       if (!handle) 
         {
           fputs (dlerror(), stderr);
-          strcpy(my_uuid_str,"deadbeaf-dead-beef-1111-deadbeef1111");
+          strcpy(my_uuid_str, BAD_UUID);
           return;
         }
     }
@@ -30,7 +31,7 @@ void build_uuid(char * my_uuid_str)
   if ((error = dlerror()) != NULL) 
     {
       fputs(error, stderr);
-      strcpy(my_uuid_str,"deadbeaf-dead-beef-1111-deadbeef1111");
+      strcpy(my_uuid_str,BAD_UUID);
       return;
     }
   
@@ -38,7 +39,7 @@ void build_uuid(char * my_uuid_str)
   if ((error = dlerror()) != NULL) 
     {
       fputs(error, stderr);
-      strcpy(my_uuid_str,"deadbeaf-dead-beef-1111-deadbeef1111");
+      strcpy(my_uuid_str,BAD_UUID);
       return;
     }
     

@@ -12,11 +12,6 @@ endif
 ifeq ($(HAVE_NVML),yes)
   LIBNVML:=-ldl
 endif
-ifeq ($(STATIC_LIBS),yes)
-  LIBCRYPTO:=-l:libcrypto.a -ldl -lz
-else
-  LIBCRYPTO:=-lcrypto
-endif
 
 ifneq ($(MY_HOSTNAME_PARSER),no)
    HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
@@ -160,6 +155,7 @@ XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c b
 XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
 
 
+.PHONY:    COPY_LIBCRYPTO
 
 %.d: %.c
 	@set -e; rm -f $@;                                  \
@@ -173,7 +169,8 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
-all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
+all: ECHO COPY_LIBCRYPTO                                        \
+          $(MY_HOSTNAME_PARSER_TARGET)                          \
           $(XRS_EXEC) $(XGM_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(XRP_EXEC) $(UUIDGEN_EXEC)               \
           $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
@@ -182,6 +179,16 @@ all: ECHO $(MY_HOSTNAME_PARSER_TARGET)                          \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
           $(DESTDIR)$(LIBEXEC)/xalt_epoch
+
+
+COPY_LIBCRYPTO:
+	str=$(CRYPTO_STR);                                      \
+	baseNM="$${str%%:*}";                                   \
+        realNM="$${str##*:}";                                   \
+	echo baseNM: $$baseNM;                                  \
+	echo realNM: $$realNM;                                  \
+	cp  $$realNM $(DESTDIR)$(LIB64);                        \
+        ln -s $${realNM##*/} $(DESTDIR)$(LIB64)/$${baseNM##*/};
 
 ECHO:
 	@echo "XALT_EXECUTABLE_TRACKING: '$(XALT_EXECUTABLE_TRACKING)'"
@@ -203,13 +210,13 @@ $(XRP_EXEC) : $(XRP_OBJS)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz -ldl
 
 $(XRS_EXEC) : $(XRS_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread $(LIBCRYPTO) -ldl
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl
 
 $(XGM_EXEC): $(XGM_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XGL_EXEC): $(XGL_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread $(LIBCRYPTO)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl
 
 $(XEL_EXEC) : $(XEL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^

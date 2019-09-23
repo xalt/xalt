@@ -191,7 +191,7 @@ AC_ARG_WITH(hostnameParser,
 
 AC_SUBST(STATIC_LIBS)
 AC_ARG_WITH(staticLibs,
-    AC_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only libcrypto) [[no]]]),
+    AC_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only dcgm) [[no]]]),
     STATIC_LIBS="$withval"
     AC_MSG_RESULT([STATIC_LIBS=$with_staticLibs])
     AC_DEFINE_UNQUOTED(STATIC_LIBS, "$with_staticLibs")dnl
@@ -527,11 +527,16 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-if test "$STATIC_LIBS" = yes; then
-    AC_SEARCH_LIBS([SHA1], [:libcrypto.a], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto.a])], [-ldl -lz])
-else
-    AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
-fi
+AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
+
+MY_TMPDIR=`mktemp -d`
+
+LOCATE_SO=$MY_TMPDIR/locate_shared_library
+
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+
+AC_SUBST(CRYPTO_STR)
+CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then

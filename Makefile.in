@@ -37,6 +37,7 @@ OPTLVL               	:= -g -O2
 #override OPTLVL         += -I$(abs_srcdir)/libuuid/src
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
+CRYPTO_STR              := @CRYPTO_STR@
 BROKER_SERVER           := @BROKER_SERVER@
 BROKER_URI              := @BROKER_URI@
 TRACKING_MPI_ONLY    	:= @XALT_TRACKING_MPI_ONLY@
@@ -150,7 +151,7 @@ build_compiled: build_uuid
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
                 HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
-                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) all
+                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR) all
 
 
 build_uuid:
