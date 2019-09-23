@@ -17,4 +17,5 @@ XALT 2.7+
     (2.7.7)  * Use dlopen/dlsym to dynamically link-in the uuid and crypto libraries.
                This allows XALT to be used with containers where libuuid.so and libcrypto.so
                might not be in the container.
-               
+    (2.7.8)  * Remember to use xalt-2.7.8 as tag not 2.7.8
+    
