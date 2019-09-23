@@ -66,16 +66,19 @@ int main(int argc, char* argv[])
     }
     
 
-  if (strcmp(argv[1],"--version") == 0)
+  if (argc > 1)
     {
-      std::cout << "XALT VERSION: " << XALT_VERSION << "\n";
-      return 0;
-    }
+      if (strcmp(argv[1],"--version") == 0)
+        {
+          std::cout << "XALT VERSION: " << XALT_VERSION << "\n";
+          return 0;
+        }
 
-  if (strcmp(argv[1],"--git_version") == 0)
-    {
-      std::cout << "XALT GIT VERSION: " << XALT_GIT_VERSION << "\n";
-      return 0;
+      if (strcmp(argv[1],"--git_version") == 0)
+        {
+          std::cout << "XALT GIT VERSION: " << XALT_GIT_VERSION << "\n";
+          return 0;
+        }
     }
         
   std::string syshost(xalt_syshost());
@@ -131,9 +134,11 @@ int main(int argc, char* argv[])
 
   const char* xalt_sampling = getenv("XALT_SAMPLING");
   if (!xalt_sampling)
-     xalt_sampling = getenv("XALT_SCALAR_SAMPLING");
-  if (!xalt_sampling)
-     xalt_sampling = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+    {
+      xalt_sampling = getenv("XALT_SCALAR_SAMPLING");
+      if (!xalt_sampling)
+        xalt_sampling = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+    }
   if (xalt_sampling == NULL || strcmp(xalt_sampling,"yes") != 0)
     xalt_sampling = "no";
 
