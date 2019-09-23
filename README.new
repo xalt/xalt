@@ -14,7 +14,7 @@ XALT 2.7+
     (2.7.6)  * Fix bugs introduced in version 2.7.5 about XALT_SAMPLING.
              * Better reporting of when myinit() and myfini() have completed their work.
              * Move uuid generation from libxalt_init.so to xalt_run_submission
-	     * Use dlopen/dlsym to dynamically link-in the uuid and crypto libraries.
+    (2.7.7)  * Use dlopen/dlsym to dynamically link-in the uuid and crypto libraries.
                This allows XALT to be used with containers where libuuid.so and libcrypto.so
                might not be in the container.
                

@@ -1398,8 +1398,8 @@ Optional Packages:
                           Replace built-in lex based hostname parser
                           c_file:file.c or library:file_64.a or
                           library:file_64.a:file_32.a [[no]]
-  --with-staticLibs=ans   Link with static libraries (currently only
-                          libcrypto) [[no]]
+  --with-staticLibs=ans   Link with static libraries (currently only dcgm)
+                          [[no]]
   --with-preloadOnly=ans  Only use XALT in preload only mode[[yes]]
   --with-IrefuseToInstallXALTCorrectly=ans
                           Install XALT incorrectly [[no]]
