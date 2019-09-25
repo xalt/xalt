@@ -252,14 +252,14 @@ class XALTdb(object):
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(resultT['build_epoch'])))
       dateStr     = time.strftime("%Y-%m-%d",          time.localtime(float(resultT['build_epoch'])))
 
-      exec_path   = resultT['exec_path'][:1024]
-      link_prg    = resultT['link_program'][:64]
+      exec_path   = resultT['exec_path'][:1024].encode("ascii","ignore")
+      link_prg    = resultT['link_program'][:64].encode("ascii","ignore")
       link_path   = resultT['link_path']
-      cwd         = resultT.get('wd',"UNKNOWN")[:1024]
+      cwd         = resultT.get('wd',"UNKNOWN")[:1024].encode("ascii","ignore")
       link_mname  = obj2module(link_path,reverseMapT)
       link_line   = json.dumps(link_lineA)
-      build_user  = resultT['build_user']
-      build_shost = resultT['build_syshost']
+      build_user  = resultT['build_user'].encode("ascii","ignore")
+      build_shost = resultT['build_syshost'].encode("ascii","ignore")
       hash_id     = resultT['hash_id']
 
       # It is unique: lets store this link record
@@ -384,6 +384,7 @@ class XALTdb(object):
 
       XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
 
+      cwd         = runT['userT']['cwd'].encode("utf-8","ignore")
       runTime     = runT['userDT']['run_time']
       endTime     = runT['userDT']['end_time']
       runTimeStr  = "%.2f" % (runTime)
@@ -445,7 +446,7 @@ class XALTdb(object):
                                num_cores,                runT['userDT']['num_nodes'],  num_threads,
                                num_gpus,                 runT['userT']['queue'],       sum_runs,
                                sum_times,                user,                         runT['userT']['exec_path'],
-                               moduleName,               runT['userT']['cwd'],         usr_cmdline))
+                               moduleName,               cwd,                          usr_cmdline))
         query    = ""
         run_id   = cursor.lastrowid
         stored   = True
@@ -499,8 +500,9 @@ class XALTdb(object):
       print("query: ",query,file=sys.stderr)
       print("msg: ",msg,   file=sys.stderr)
       print("run_to_db(): ",e,file=sys.stderr)
-      print("userDT: ", runT['userDT'])
-      print("userT: ",  runT['userT'])
+      print("userDT: ",    runT['userDT'])
+      print("userT: ",     runT['userT'])
+      print("xaltLinkT: ", runT['xaltLinkT'])
       print(traceback.format_exc())
       sys.exit (1)
 

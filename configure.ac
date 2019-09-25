@@ -2,7 +2,7 @@ AC_INIT(Makefile.in)
 AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/xalt_header.h.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
-AC_CONFIG_SUBDIRS(libuuid/src)
+dnl AC_CONFIG_SUBDIRS(libuuid/src)
 
 AC_SUBST(XALT_INTERFACE_VERSION)
 XALT_INTERFACE_VERSION=5
@@ -537,6 +537,16 @@ gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
 
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
+AC_SUBST(UUID_STR)
+
+
+for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+  UUID_STR=`$LOCATE_SO libuuid.so$i`
+  if test "$?" = 0; then
+    break;
+  fi
+done
+
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then

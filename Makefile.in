@@ -38,6 +38,7 @@ OPTLVL               	:= -g -O2
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
 CRYPTO_STR              := @CRYPTO_STR@
+UUID_STR                := @UUID_STR@
 BROKER_SERVER           := @BROKER_SERVER@
 BROKER_URI              := @BROKER_URI@
 TRACKING_MPI_ONLY    	:= @XALT_TRACKING_MPI_ONLY@
@@ -144,14 +145,15 @@ install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes        
 	$(RM) $(DESTDIR)$(PKG)
 	ln -s $(VERSION) $(DESTDIR)$(PKG)
 
-build_compiled: build_uuid
+build_compiled: 
 	cd src;                                                                                    \
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
                 HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
-                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR) all
+                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
+                UUID_STR=$(UUID_STR) all
 
 
 build_uuid:

@@ -185,6 +185,7 @@ int main(int argc, char* argv[])
       json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
       json.add("HAVE_DCGM",                     HAVE_DCGM);
       json.add("CRYPTO_STR",                    CRYPTO_STR);
+      json.add("UUID_STR",                      UUID_STR);
 
       json.add("hostnameA",    hostnameSz,      hostnameA);
       json.add("pathPatternA", pathPatternSz,   pathPatternA);
@@ -233,6 +234,7 @@ int main(int argc, char* argv[])
   std::cout << "HAVE_32BIT:                    " << HAVE_32BIT                     << "\n";
   std::cout << "MY_HOSTNAME_PARSER:            " << MY_HOSTNAME_PARSER             << "\n";
   std::cout << "CRYPTO_STR:                    " << CRYPTO_STR                     << "\n";
+  std::cout << "UUID_STR:                      " << UUID_STR                       << "\n";
   std::cout << "Built with DCGM:               " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 

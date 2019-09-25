@@ -2,6 +2,7 @@
 #define XALT_CONFIG_H
 
 #define BAD_INSTALL                "@BAD_INSTALL@"
+#define CRYPTO_STR                 "@CRYPTO_STR@"
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"
@@ -10,7 +11,7 @@
 #define SYSHOST_CONFIG             "@SYSHOST_CONFIG@"
 #define SYSLOG_MSG_SZ               @SYSLOG_MSG_SZ@
 #define TRANSMISSION               "@TRANSMISSION@"
-#define CRYPTO_STR                 "@CRYPTO_STR@"
+#define UUID_STR                   "@UUID_STR@"
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
 #define XALT_CONFIG_PY             "@XALT_CONFIG_PY@"
 #define XALT_DIR                   "@prefix@/xalt/xalt/"

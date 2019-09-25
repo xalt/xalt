@@ -98,6 +98,8 @@ echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_P
 echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
+echo "CRYPTO_STR..........................................." : $CRYPTO_STR
+echo "UUID_STR............................................." : $UUID_STR
 
 echo '------------------------------------------------------------------------------'
 echo

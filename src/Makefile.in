@@ -155,7 +155,7 @@ XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c b
 XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
 
 
-.PHONY:    COPY_LIBCRYPTO
+.PHONY:    COPY_ALL_LIBS
 
 %.d: %.c
 	@set -e; rm -f $@;                                  \
@@ -169,7 +169,7 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
-all: ECHO COPY_LIBCRYPTO                                        \
+all: ECHO COPY_ALL_LIBS                                         \
           $(MY_HOSTNAME_PARSER_TARGET)                          \
           $(XRS_EXEC) $(XGM_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(XRP_EXEC) $(UUIDGEN_EXEC)               \
@@ -181,14 +181,13 @@ all: ECHO COPY_LIBCRYPTO                                        \
           $(DESTDIR)$(LIBEXEC)/xalt_epoch
 
 
-COPY_LIBCRYPTO:
-	str=$(CRYPTO_STR);                                      \
-	baseNM="$${str%%:*}";                                   \
-        realNM="$${str##*:}";                                   \
-	echo baseNM: $$baseNM;                                  \
-	echo realNM: $$realNM;                                  \
-	cp  $$realNM $(DESTDIR)$(LIB64);                        \
-        ln -s $${realNM##*/} $(DESTDIR)$(LIB64)/$${baseNM##*/};
+COPY_ALL_LIBS:
+	for i in $(CRYPTO_STR) $(UUID_STR); do                    \
+	  baseNM="$${i%%:*}";                                     \
+          realNM="$${i##*:}";                                     \
+	  cp  $$realNM $(DESTDIR)$(LIB64);                        \
+          ln -s $${realNM##*/} $(DESTDIR)$(LIB64)/$${baseNM##*/}; \
+        done
 
 ECHO:
 	@echo "XALT_EXECUTABLE_TRACKING: '$(XALT_EXECUTABLE_TRACKING)'"
