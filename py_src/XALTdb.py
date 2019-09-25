@@ -499,6 +499,8 @@ class XALTdb(object):
       print("query: ",query,file=sys.stderr)
       print("msg: ",msg,   file=sys.stderr)
       print("run_to_db(): ",e,file=sys.stderr)
+      print("userDT: ", runT['userDT'])
+      print("userT: ",  runT['userT'])
       print(traceback.format_exc())
       sys.exit (1)
 
