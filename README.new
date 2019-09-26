@@ -20,3 +20,6 @@ XALT 2.7+
     (2.7.8)  * Remember to use xalt-2.7.8 as tag not 2.7.8
     (2.7.9)  * Fix bug introduced when adding --version to xalt_configuration_report.C
     (2.7.10) * Stopping building libuuid. Instead copy libuuid.so from system to XALT's lib64 directory.
+
+W.I.P:
+    (2.7.11) * Allow yes0 and run0 as values for XALT_TRACING to only track proc=0.

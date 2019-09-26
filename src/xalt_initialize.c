@@ -253,11 +253,19 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
+  my_rank = compute_value(rankA);
+
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg)
     {
       xalt_tracing     = (strcmp(p_dbg,"yes") == 0);
       xalt_run_tracing = (strcmp(p_dbg,"run") == 0);
+      if (my_rank == 0)
+	{
+	  xalt_tracing     = (strcmp(p_dbg,"yes0") == 0);
+	  xalt_run_tracing = (strcmp(p_dbg,"run0") == 0);
+	}
+
       if (xalt_tracing  || xalt_run_tracing)
 	errfd	       = dup(STDERR_FILENO);
     }
@@ -336,11 +344,10 @@ void myinit(int argc, char **argv)
 
 
   /***********************************************************
-   * Test 2: MPI Rank > 0?:
+   * Test 0: MPI Rank > 0?:
    * Stop tracking if my mpi rank is not zero
    ***********************************************************/
 
-  my_rank = compute_value(rankA);
   DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     {
@@ -816,7 +823,7 @@ void myfini()
       close(STDERR_FILENO);
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
-      DEBUG1(my_stderr,"\nmyfini(%s){\n", STR(STATE));
+      DEBUG1(my_stderr,"\nmyfini(%s,%s){\n", STR(STATE), exec_path);
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
