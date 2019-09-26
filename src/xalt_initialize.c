@@ -297,7 +297,7 @@ void myinit(int argc, char **argv)
                   u.version, u.machine, xalt_syshost());
         }
       get_abspath(exec_path,sizeof(exec_path));
-      fprintf(stderr,"myinit(%d,%s,%s){\n", my_rank, STR(STATE),exec_path);
+      fprintf(stderr,"myinit(%ld,%s,%s){\n", my_rank, STR(STATE),exec_path);
     }
 
   /***********************************************************
@@ -823,7 +823,7 @@ void myfini()
       close(STDERR_FILENO);
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
-      DEBUG3(my_stderr,"\nmyfini(%d,%s,%s){\n", my_rank, STR(STATE), exec_path);
+      DEBUG3(my_stderr,"\nmyfini(%ld,%s,%s){\n", my_rank, STR(STATE), exec_path);
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
