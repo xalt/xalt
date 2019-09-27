@@ -75,20 +75,20 @@ class TimeRecord(object):
   def __init__(self):
     self.__mpi_time_acc    = 0.0
     self.__mpi_count       = 0.0
-    self.__mpi_05_time_acc = 0.0
-    self.__mpi_05_count    = 0.0
-    self.__mpi_10_time_acc = 0.0
-    self.__mpi_10_count    = 0.0
-    self.__mpi_20_time_acc = 0.0
-    self.__mpi_20_count    = 0.0
+    self.__mpi_15_time_acc = 0.0
+    self.__mpi_15_count    = 0.0
+    self.__mpi_30_time_acc = 0.0
+    self.__mpi_30_count    = 0.0
+    self.__mpi_60_time_acc = 0.0
+    self.__mpi_60_count    = 0.0
     self.__mpi_lg_time_acc = 0.0
     self.__mpi_lg_count    = 0.0
-    self.__slr_05_time_acc = 0.0
-    self.__slr_05_count    = 0.0
-    self.__slr_10_time_acc = 0.0
-    self.__slr_10_count    = 0.0
-    self.__slr_20_time_acc = 0.0
-    self.__slr_20_count    = 0.0
+    self.__slr_15_time_acc = 0.0
+    self.__slr_15_count    = 0.0
+    self.__slr_30_time_acc = 0.0
+    self.__slr_30_count    = 0.0
+    self.__slr_60_time_acc = 0.0
+    self.__slr_60_count    = 0.0
     self.__slr_lg_time_acc = 0.0
     self.__slr_lg_count    = 0.0
     
@@ -96,27 +96,27 @@ class TimeRecord(object):
     if (num_cores > 1):
       self.__mpi_time_acc    += runTime
       self.__mpi_count       += 1.0
-      if (runTime < 300.0):
-        self.__mpi_05_time_acc += runTime
-        self.__mpi_05_count    += 1.0
-      elif (runTime < 600.0):
-        self.__mpi_10_time_acc += runTime
-        self.__mpi_10_count    += 1.0
-      elif (runTime < 1200.0):
-        self.__mpi_20_time_acc += runTime
-        self.__mpi_20_count    += 1.0
+      if (runTime < 900.0):
+        self.__mpi_15_time_acc += runTime
+        self.__mpi_15_count    += 1.0
+      elif (runTime < 1800.0):
+        self.__mpi_30_time_acc += runTime
+        self.__mpi_30_count    += 1.0
+      elif (runTime < 3600.0):
+        self.__mpi_60_time_acc += runTime
+        self.__mpi_60_count    += 1.0
       else:
         self.__mpi_lg_time_acc += runTime
         self.__mpi_lg_count    += 1.0
-    elif (runTime < 300.0):
-      self.__slr_05_time_acc += runTime
-      self.__slr_05_count    += 1.0
-    elif (runTime < 600.0):
-      self.__slr_10_time_acc += runTime
-      self.__slr_10_count    += 1.0
-    elif (runTime < 1200.0):
-      self.__slr_20_time_acc += runTime
-      self.__slr_20_count    += 1.0
+    elif (runTime < 900.0):
+      self.__slr_15_time_acc += runTime
+      self.__slr_15_count    += 1.0
+    elif (runTime < 1800.0):
+      self.__slr_30_time_acc += runTime
+      self.__slr_30_count    += 1.0
+    elif (runTime < 3600.0):
+      self.__slr_60_time_acc += runTime
+      self.__slr_60_count    += 1.0
     else:
       self.__slr_lg_time_acc += runTime
       self.__slr_lg_count    += 1.0
@@ -125,15 +125,15 @@ class TimeRecord(object):
     resultA = []
     resultA.append(["Kind", "Count", "Average Time (secs)"])
     resultA.append(["----", "-----", "-------------------"])
-    resultA.append(["Scalar <  5 mins",self.__slr_05_count, self.__slr_05_time_acc/max(1.0,self.__slr_05_count)])
-    resultA.append(["Scalar < 10 mins",self.__slr_10_count, self.__slr_10_time_acc/max(1.0,self.__slr_10_count)])
-    resultA.append(["Scalar < 20 mins",self.__slr_20_count, self.__slr_20_time_acc/max(1.0,self.__slr_20_count)])
-    resultA.append(["Scalar > 20 mins",self.__slr_lg_count, self.__slr_lg_time_acc/max(1.0,self.__slr_lg_count)])
-    resultA.append(["MPI",             self.__mpi_count,    self.__mpi_time_acc/   max(1.0,self.__mpi_count   )])
-    resultA.append(["MPI    <  5 mins",self.__mpi_05_count, self.__mpi_05_time_acc/max(1.0,self.__mpi_05_count)])
-    resultA.append(["MPI    < 10 mins",self.__mpi_10_count, self.__mpi_10_time_acc/max(1.0,self.__mpi_10_count)])
-    resultA.append(["MPI    < 20 mins",self.__mpi_20_count, self.__mpi_20_time_acc/max(1.0,self.__mpi_20_count)])
-    resultA.append(["MPI    > 20 mins",self.__mpi_lg_count, self.__mpi_lg_time_acc/max(1.0,self.__mpi_lg_count)])
+    resultA.append(["Scalar < 15 mins",self.__slr_15_count, self.__slr_15_time_acc/max(1.0,self.__slr_15_count)])
+    resultA.append(["Scalar < 30 mins",self.__slr_30_count, self.__slr_30_time_acc/max(1.0,self.__slr_30_count)])
+    resultA.append(["Scalar < 60 mins",self.__slr_60_count, self.__slr_60_time_acc/max(1.0,self.__slr_60_count)])
+    resultA.append(["Scalar > 60 mins",self.__slr_lg_count, self.__slr_lg_time_acc/max(1.0,self.__slr_lg_count)])
+    resultA.append(["ALL MPI",         self.__mpi_count,    self.__mpi_time_acc/   max(1.0,self.__mpi_count   )])
+    resultA.append(["MPI    < 15 mins",self.__mpi_15_count, self.__mpi_15_time_acc/max(1.0,self.__mpi_15_count)])
+    resultA.append(["MPI    < 30 mins",self.__mpi_30_count, self.__mpi_30_time_acc/max(1.0,self.__mpi_30_count)])
+    resultA.append(["MPI    < 60 mins",self.__mpi_60_count, self.__mpi_60_time_acc/max(1.0,self.__mpi_60_count)])
+    resultA.append(["MPI    > 60 mins",self.__mpi_lg_count, self.__mpi_lg_time_acc/max(1.0,self.__mpi_lg_count)])
 
     bt = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrr")
     print()

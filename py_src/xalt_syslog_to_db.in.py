@@ -81,7 +81,7 @@ class CmdLineOptions(object):
     parser.add_argument("--leftover_fn", dest='leftover', action="store",      default='leftover.log',
                                                                                help="Name of the leftover file")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
-    parser.add_argument("--filter",      dest='filter',   action="store_true", help="Filter Scalar jobs")
+    parser.add_argument("--filter",      dest='filter',   action="store_true", help="Filter Scalar jobs 30 mins to 60mins")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
     parser.add_argument("--u2acct",      dest='u2acct',   action="store",      help="Path to the json file containing default charge account strings for users")
     parser.add_argument("--confFn",      dest='confFn',   action="store",      default="xalt_db.conf", help="Name of the database")
@@ -393,63 +393,12 @@ def main():
       continue
     fnSz  += os.path.getsize(fn)
     
-
-  #----------------------------------------------------------
-  # Count the number and sum the run_time for all scalar jobs
-
-  filter = False
-  if (args.filter): 
-    filter = Filter(100)
-    pbar   = ProgressBar(maxVal=fnSz,fd=sys.stdout)
-    for fn in fnA:
-      if (not os.path.isfile(fn)):
-        continue
-
-      old = (fn == args.leftover)
-      
-      lineNo = 0    
-      f=open(fn, 'r')
-      for line in f:
-        lineNo += 1    
-        count  += len(line)
-        pbar.update(count)
-        if (not ("XALT_LOGGING" in line)):
-          continue
-        try:
-          t, done = parseSyslog.parse(line, args.syshost, old)
-        except Exception as e:
-          #print(e, file=sys.stderr)
-          #print("lineNo:",lineNo,"file:",fn,"line:",line, file=sys.stderr)
-          #print("Now continuing processing!", file=sys.stderr)
-          continue
-
-        
-        if (not done or t['kind'] != "run"):
-          continue
-
-
-        ##################################
-        # If the json conversion fails,
-        # then ignore record and keep going
-        value = False
-
-        try:
-          value = json.loads(t['value'])
-          filter.register(value)
-        except Exception as e:
-          #print("fn:",fn,"line:",lineNo,"value:",t['value'],file=sys.stderr)
-          continue
-
-      f.close()
-    pbar.fini()
-
-    filter.report_stats()
-  
   badsyslog   = 0
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
   pbar        = ProgressBar(maxVal=max(fnSz,1),fd=sys.stdout)
-  
+  random.seed()
+
   for fn in fnA:
     if (not os.path.isfile(fn)):
       continue
@@ -488,12 +437,19 @@ def main():
           XALT_Stack.pop()
           lnkCnt += 1
         elif ( t['kind'] == "run" ):
-          if ( (not filter) or filter.apply(value)):
-            XALT_Stack.push("run_to_db()")
-            stored = xalt.run_to_db(rmapT, u2acctT, value, timeRecord)
-            XALT_Stack.pop()
-            if (stored):
-              runCnt += 1
+          XALT_Stack.push("run_to_db()")
+          runTime = value['userDT']['run_time']
+
+          if (args.filter and runTime >= 1800.0 and runTime <= 3600.0 ):
+             if (random.random() > 0.01):
+               continue
+             else:
+               value['userDT']['probability'] = 0.01
+
+          stored = xalt.run_to_db(rmapT, u2acctT, value, timeRecord)
+          XALT_Stack.pop()
+          if (stored):
+            runCnt += 1
         elif ( t['kind'] == "pkg" ):
           XALT_Stack.push("pkg_to_db()")
           xalt.pkg_to_db(t['syshost'], value)

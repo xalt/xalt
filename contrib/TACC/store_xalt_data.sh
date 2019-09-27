@@ -14,8 +14,12 @@ store_xalt_data ()
     WD=$MCLAY/process_xalt/$clusterName
     for log in /data/log/xalt_${clusterName}.log-*; do
         if [ -f $log ]; then
-           echo python3 $SYSLOG_TO_DB --syslog $log --syshost $clusterName --reverseMapD $WD/reverseMapD --u2acct $WD/u2acct.json --leftover $WD/leftover.log --confFn $WD/xalt_${clusterName}_db.conf
-                python3 $SYSLOG_TO_DB --syslog $log --syshost $clusterName --reverseMapD $WD/reverseMapD --u2acct $WD/u2acct.json --leftover $WD/leftover.log --confFn $WD/xalt_${clusterName}_db.conf
+           filter=""
+           if [ $clusterName = stampede2 ]; then
+              filter="--filter"
+           fi
+           echo python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $WD/reverseMapD --u2acct $WD/u2acct.json --leftover $WD/leftover.log --confFn $WD/xalt_${clusterName}_db.conf
+                python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $WD/reverseMapD --u2acct $WD/u2acct.json --leftover $WD/leftover.log --confFn $WD/xalt_${clusterName}_db.conf
            status=$?
            echo ""
            echo "date: $(date)"
