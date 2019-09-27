@@ -110,21 +110,22 @@ SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py
 
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
-LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py            \
-                           py_src/xalt_stack.py              py_src/BeautifulTbl.py           \
-                           py_src/xalt_global.py             py_src/Rmap_XALT.py              \
-                           py_src/xalt_util.py               py_src/xalt_name_mapping.py      \
+LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py             \
+                           py_src/xalt_stack.py              py_src/BeautifulTbl.py            \
+                           py_src/xalt_global.py             py_src/Rmap_XALT.py               \
+                           py_src/xalt_util.py               py_src/xalt_name_mapping.py       \
                            py_src/xalt_transmission_factory.py
 
 
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
 
-TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py            \
-                           contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in      \
-                           contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in        \
-                           contrib/TACC/envReport.in         contrib/TACC/reportQ.in          \
-                           contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.in\
+TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py             \
+                           contrib/TACC/check_pytas.in       contrib/TACC/fix_records.in       \
+                           contrib/TACC/correct_num_cores.in contrib/TACC/kill_dups.in         \
+                           contrib/TACC/envReport.in         contrib/TACC/reportQ.in           \
+                           contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.in \
+                           contrib/TACC/store_xalt_data.in                                     \
                            contrib/TACC/build_default_user_2_account_str.in
 
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
