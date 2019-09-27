@@ -11,6 +11,14 @@
 #include "run_submission.h"
 #define  DATESZ 100
 
+int is_directory(const char *path)
+{
+  struct stat statbuf;
+  if (stat(path, &statbuf) != 0)
+    return 0;
+  return S_ISDIR(statbuf.st_mode);
+}
+
 void buildUserT(Options& options, const char * uuid_str, Table& envT, Table& userT, DTable& userDT)
 {
   
@@ -53,6 +61,10 @@ void buildUserT(Options& options, const char * uuid_str, Table& envT, Table& use
   //user
   buff = getenv("USER");
   userT["user"] = (buff) ? buff : "unknown";
+
+  //Is this a singularity container?
+  if (is_directory("/.singularity.d"))
+    userT["container"] = "singularity";
 
   //exec_path
   userT["exec_path"] = options.exec();
