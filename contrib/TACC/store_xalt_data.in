@@ -54,7 +54,7 @@ store_log="Store.log-$(date +%Y-%m-%d)"
 touch $store_log
 chmod 644 $store_log
 
-manager > $store_log 2>&1
+manager 2>&1 | tee $store_log 
 
 find -name 'Store.log-*' -ctime +30 -exec rm -f {} \;
 
