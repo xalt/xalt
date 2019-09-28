@@ -4,22 +4,22 @@ MCLAY=~mclay
 export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:/opt/rh/rh-python35/root/usr/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rh/rh-python35/root/usr/lib64
 SYSHOSTS=( maverick2 stampede2 )
-
+WD=$MCLAY/process_xalt
 SYSLOG_TO_DB=$MCLAY/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
 
 errMsg=""
 store_xalt_data ()
 {
     clusterName=$1
-    WD=$MCLAY/process_xalt/$clusterName
+    CN=$WD/$clusterName
     for log in /data/log/xalt_${clusterName}.log-*; do
         if [ -f $log ]; then
            filter=""
            if [ $clusterName = stampede2 ]; then
               filter="--filter"
            fi
-           echo python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $WD/reverseMapD --u2acct $WD/u2acct.json --leftover $WD/leftover.log --confFn $WD/xalt_${clusterName}_db.conf
-                python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $WD/reverseMapD --u2acct $WD/u2acct.json --leftover $WD/leftover.log --confFn $WD/xalt_${clusterName}_db.conf
+           echo python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $CN/reverseMapD --u2acct $CN/u2acct.json --leftover $CN/leftover.log --confFn $CN/xalt_${clusterName}_db.conf
+                python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $CN/reverseMapD --u2acct $CN/u2acct.json --leftover $CN/leftover.log --confFn $CN/xalt_${clusterName}_db.conf
            status=$?
            echo ""
            echo "date: $(date)"
@@ -49,14 +49,14 @@ manager ()
 
 
 
-store_log="Store.log-$(date +%Y-%m-%d)"
+store_log="$WD/Store.log-$(date +%Y-%m-%d)"
 
 touch $store_log
 chmod 644 $store_log
 
 manager 2>&1 | tee $store_log 
 
-find -name 'Store.log-*' -ctime +30 -exec rm -f {} \;
+find $WD -name 'Store.log-*' -ctime +30 -exec rm -f {} \;
 
 if [ -n "$errMsg" ]; then
   echo -e "$errMsg\n" | mail -s "XALT VM: Problem with XALT ingestion" mclay@tacc.utexas.edu > /dev/null
