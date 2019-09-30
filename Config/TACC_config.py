@@ -180,7 +180,7 @@ MPI_ALWAYS_RECORD = 256
 interval_array = [
     [    0.0,              0.0001 ],
     [ 1800.0,              0.01   ],
-    [ 4800.0,              1.0    ],
+    [ 7200.0,              1.0    ],
     [ sys.float_info.max,  1.0    ]
 ]
 
