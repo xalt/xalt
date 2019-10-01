@@ -71,6 +71,7 @@ path that has the same sha1sum.  The join table JOIN_LINK_OBJECT
 connects the XALT_LINK entry to the object files that belong to the
 program.
 
-When a program is tracked by XALT, we create a single entry in the
-XALT_RUN table. 
+Each time a program is run and it is tracked by XALT, we create a
+single entry in the XALT_RUN table.
+
 
