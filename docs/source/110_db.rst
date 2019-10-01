@@ -1,0 +1,76 @@
+XALT Database Design
+--------------------
+
+XALT provides a MySQL database schema and tools to load the database
+from the \*.json files that the XALT library (**libxalt_init.so**) and the
+program **xalt_run_submision** generate.
+
+The basic flow is the following:
+
+#. libxalt_init.so and xalt_run_submission generate \*.json files for
+   tracking what happens for each tracked execution.
+#. The **ld** wrapper that XALT provides generates a \*.json file for
+   information about the linking of the executable.
+#. These \*.json files generated are transported by either the "file"
+   method or "syslog" method.
+#. When using the file transmission style, the program
+   xalt_file_to_db.py can be used to ingest the \*.json files 
+   into the database.
+#. When using the syslog transmission style, the program
+   xalt_syslog_to_db.py can be used to  ingest the \*.json records into
+   the database.
+
+Syslog Transmission style
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When XALT uses the syslog method to transmit data to the database, it
+has to be careful to not overflow the syslog records, so XALT breaks
+up the json data into blocks.  First, the json data is libz compressed
+then base64 encoded.  Finally it is broken up into blocks.
+
+The each syslog record is looks like this::
+
+  <date> XALT_LOGGING_<cluster> V:2 kind:<type> key:<key> idx:<idx> nb:<nb> syshost:<cluster> value:<value>
+
+Where::
+
+  <date>:     is the typical syslog timestamp
+  <cluster>:  is your cluster name like stampede2 or frontera
+  <key>:      is made up of two parts.  The first is related to the
+              kind and the uuid for the link, pkg or run.  The run has
+              two types either run_strt or run_fini to indicate the
+              start or end record.
+  <kind>:     is the kind of record.  This can be three types: link, run or pkg
+  <nb>:       is the number of blocks.
+  <idx>:      the index into the number of blocks.  It runs from 0 to nb-1.
+  <value>:    The idx's part of the syslog record.
+
+The file py_src/xalt_syslog_to_db.in.py file contains the logic to
+combine the split apart values that make up the \*.json record.
+
+If a site is interested in processing the \*.json record they may be
+better off using the file method and write the data to a shared global
+location.
+
+XALT MySQL database
+^^^^^^^^^^^^^^^^^^^
+
+The XALT database has several tables.  Since there are several
+many-to-many relationships, we have designed the database with "join"
+tables that reduce storing redundant information.  We have four core
+tables: XALT_LINK, XALT_RUN, XALT_OBJECT and XALT_ENV_NAME.  When a
+linker builds a program or shared library, a single entry is added to
+the XALT_LINK table. This is true every time there is a link even if
+user is building the same program over and over.  This table contains
+information about the program such as the builder, the modules that
+where in the environment and what program was used to link it.
+Typically, there will be multiple libraries that constitute the built
+program either static or shared libraries.  Each of these is stored in
+XALT_OBJECT.  There is only one entry in XALT_OBJECT for each object
+path that has the same sha1sum.  The join table JOIN_LINK_OBJECT
+connects the XALT_LINK entry to the object files that belong to the
+program.
+
+When a program is tracked by XALT, we create a single entry in the
+XALT_RUN table. 
+
