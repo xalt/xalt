@@ -3,7 +3,7 @@
 MCLAY=~mclay
 export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:/opt/rh/rh-python35/root/usr/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rh/rh-python35/root/usr/lib64
-SYSHOSTS=( maverick2 stampede2 )
+SYSHOSTS=( maverick2 frontera stampede2 )
 WD=$MCLAY/process_xalt
 SYSLOG_TO_DB=$MCLAY/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
 
