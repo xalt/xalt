@@ -72,6 +72,19 @@ connects the XALT_LINK entry to the object files that belong to the
 program.
 
 Each time a program is run and it is tracked by XALT, we create a
-single entry in the XALT_RUN table.
+single entry in the XALT_RUN table. We take the shared libraries that
+belong to that executable and place them into the XALT_OBJECT table
+and connect to the XALT_RUN entry via the JOIN_RUN_OBJECT join
+table. We also record a filtered set of the environment variables in
+the XALT_ENV_NAME table and use the JOIN_RUN_ENV table to connect the
+values of the variable to the name and the program execution.
 
+It is fair to ask why we store the shared libraries twice, once at
+link time and another at run time. The reason is we can track changes in
+versions of shared libraries automatically used by a program over
+time. When a program is built, it links with the libraries that exist
+at the current time. In the future, there may be a newer shared
+library that is used instead. We wish to track that. Also if an
+executable is not built under XALT, we will still capture the shared
+libraries.
 
