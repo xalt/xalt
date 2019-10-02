@@ -88,3 +88,6 @@ library that is used instead. We wish to track that. Also if an
 executable is not built under XALT, we will still capture the shared
 libraries.
 
+Sites will notice since XALT is tracking both scalar and MPI
+executables that there can be more than one execution associated with
+single job number. This is quite common.
