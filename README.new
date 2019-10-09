@@ -22,8 +22,5 @@ XALT 2.7+
     (2.7.10) * Stopping building libuuid. Instead copy libuuid.so from system to XALT's lib64 directory.
     (2.7.11) * Allow yes0 and run0 as values for XALT_TRACING to only track proc=0.
              * for TACC_config.py make 0 < t < 30 mins be 0.01% and 30mins < t < 120mins be 1%
-
-W.I.P:
     (2.7.12) * Remove trailing newline from the shared libraries captured from /proc/$PID/maps.
-             * Ignore any trailing newlines in shared libraries when ingesting into DB.
-	     
+             * Ignore any trailing newlines and spaces in shared libraries when ingesting into DB.
