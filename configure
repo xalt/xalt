@@ -4155,10 +4155,6 @@ $as_echo "no" >&6; }
 	fi
 
 
-
-
-
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -4562,16 +4558,7 @@ if test "x$ac_cv_header_uuid_uuid_h" = xyes; then :
 $as_echo "#define HAVE_UUID_UUID_H 1" >>confdefs.h
 
 else
-  ac_fn_c_check_header_mongrel "$LINENO" "uuid.h" "ac_cv_header_uuid_h" "$ac_includes_default"
-if test "x$ac_cv_header_uuid_h" = xyes; then :
-
-$as_echo "#define HAVE_UUID_H 1" >>confdefs.h
-
-else
   as_fn_error $? "Unable to build XALT without uuid/uuid.h or uuid.h" "$LINENO" 5
-fi
-
-
 fi
 
 
@@ -5093,7 +5080,7 @@ MY_TMPDIR=`mktemp -d`
 
 LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
-gcc -I/usr/include/uuid -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
 
 
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`

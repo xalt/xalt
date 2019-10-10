@@ -332,17 +332,10 @@ fi
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 
-AH_TEMPLATE(HAVE_UUID_UUID_H,[Define to 1 if you have <uuid/uuid.h>.])
-AH_TEMPLATE(HAVE_UUID_H,     [Define to 1 if you have <uuid.h>.])
-
-
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
-                [AC_CHECK_HEADER(uuid.h,
-		                [AC_DEFINE([HAVE_UUID_H], 1,
-                		   [Define to 1 if you have <uuid.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h or uuid.h])])])
+                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h or uuid.h])])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -540,7 +533,7 @@ MY_TMPDIR=`mktemp -d`
 
 LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
-gcc -I/usr/include/uuid -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
 
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`

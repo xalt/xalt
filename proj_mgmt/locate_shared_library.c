@@ -4,7 +4,6 @@
 #include <link.h>
 #include <limits.h>
 #include <dlfcn.h>
-#include <uuid.h>
 
 int main(int argc, char** argv)
 {

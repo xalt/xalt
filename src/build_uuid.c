@@ -6,13 +6,7 @@
 #include "build_uuid.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
-#include "xalt_header.h"
-#ifdef HAVE_UUID_UUID_H
-#  include <uuid/uuid.h>
-#endif
-#ifdef HAVE_UUID_H
-#  include <uuid.h>
-#endif
+#include <uuid/uuid.h>
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 void build_uuid(char * my_uuid_str)
 {
