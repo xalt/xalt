@@ -540,7 +540,7 @@ MY_TMPDIR=`mktemp -d`
 
 LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
-gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+gcc -I/usr/include/uuid -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
 
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`

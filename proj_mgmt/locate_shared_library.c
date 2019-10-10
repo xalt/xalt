@@ -4,13 +4,8 @@
 #include <link.h>
 #include <limits.h>
 #include <dlfcn.h>
-#include "xalt_header.h"
-#ifdef HAVE_UUID_UUID_H
-#  include <uuid/uuid.h>
-#endif
-#ifdef HAVE_UUID_H
-#  include <uuid.h>
-#endif
+#include <uuid.h>
+
 int main(int argc, char** argv)
 {
   void *handle;
