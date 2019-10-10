@@ -1,11 +1,136 @@
-#ifndef XALT_HEADER_H
-#define XALT_HEADER_H
+/* src/xalt_header.h.in.  Generated from configure.ac by autoheader.  */
 
-#ifndef IN_32_BIT_MODE
-/* Define if you have DCGM support */
+/* A site that insist to install XALT incorrectly */
+#undef BAD_INSTALL
+
+/* Build 32bit libraries as well */
+#undef BIT32
+
+/* Compute SHAs sums on libraries */
+#undef COMPUTE_SHA1SUM
+
+/* LD_LIBRARY_PATH for c++ programs */
+#undef CXX_LD_LIBRARY_PATH
+
+/* Directory where xalt_db.conf and reverseMapD can be found */
+#undef ETC_DIR
+
+/* Define to 1 if you have dlfcn.h. */
+#undef HAVE_DCFCN_H
+
+/* Define to 1 if you have DCGM. */
+#undef HAVE_DCGM_AGENT_H
+
+/* Using dlopen library */
+#undef HAVE_DLOPEN
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* libuuid exist */
+#undef HAVE_LIBUUID
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have NVML. */
+#undef HAVE_NVML_H
+
+/* Define to 1 if you have <openssl/sha.h>. */
+#undef HAVE_OPENSSL_SHA_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have <uuid.h>. */
+#undef HAVE_UUID_H
+
+/* Define to 1 if you have <uuid/uuid.h>. */
+#undef HAVE_UUID_UUID_H
+
+/* Require the mysqlclient/MySQL-python module */
+#undef MYSQLDB
+
+/* Replace built-in lex based hostname parser */
+#undef MY_HOSTNAME_PARSER
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Only use XALT in preload only mode */
+#undef PRELOAD_ONLY
+
+/* Link with static libraries (currently only dcgm) */
+#undef STATIC_LIBS
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* How to determine syshost */
+#undef SYSHOST_CONFIG
+
+/* The system path that XALT will use (typically /usr/bin:/bin) */
+#undef SYSTEM_PATH
+
+/* transmission style (file,syslog,file_separate_dirs) */
+#undef TRANSMISSION
+
+/* Using DCGM */
 #undef USE_DCGM
+
+/* Using NVML library */
 #undef USE_NVML
 
-#endif
+/* A python file defining the site configuration */
+#undef XALT_CONFIG_PY
 
-#endif /* XALT_HEADER_H */
+/* Prefix where the json files are written */
+#undef XALT_FILE_PREFIX
+
+/* Track functions from modules */
+#undef XALT_FUNCTION_TRACKING
+
+/* Track GPU executables */
+#undef XALT_GPU_TRACKING
+
+/* Name of the OS that installed XALT */
+#undef XALT_INSTALL_OS
+
+/* Track MPI executables */
+#undef XALT_MPI_TRACKING
+
+/* Track non-mpi executables */
+#undef XALT_SCALAR_TRACKING

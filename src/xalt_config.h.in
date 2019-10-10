@@ -1,6 +1,13 @@
 #ifndef XALT_CONFIG_H
 #define XALT_CONFIG_H
 
+/* Define to 1 if you have <uuid/uuid.h>. */
+#undef HAVE_UUID_UUID_H
+
+/* Define to 1 if you have <uuid.h>. */
+#undef HAVE_UUID_H
+
+
 #define BAD_INSTALL                "@BAD_INSTALL@"
 #define CRYPTO_STR                 "@CRYPTO_STR@"
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
