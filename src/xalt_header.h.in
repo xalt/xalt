@@ -1,5 +1,9 @@
 /* src/xalt_header.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Remember that AC_DEFINE() end up in xalt_header.h.in
+ * AC_SUBST() end up in xalt_config.h.in
+ */
+
 /* A site that insist to install XALT incorrectly */
 #undef BAD_INSTALL
 

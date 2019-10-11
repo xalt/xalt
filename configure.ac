@@ -6,7 +6,12 @@ dnl AC_CONFIG_SUBDIRS(libuuid/src)
 
 AC_SUBST(XALT_INTERFACE_VERSION)
 XALT_INTERFACE_VERSION=5
-
+AH_TOP(
+[
+/* Remember that AC_DEFINE() end up in xalt_header.h.in
+ * AC_SUBST() end up in xalt_config.h.in
+ */
+])
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
