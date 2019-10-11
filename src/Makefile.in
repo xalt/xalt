@@ -100,7 +100,7 @@ XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C 
                 translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C                \
                 parseProcMaps.C pkgRecordTransmit.C
 XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c \
-                zstring.c base64.c xalt_tmpdir.c  build_uuid.c
+                zstring.c base64.c xalt_tmpdir.c  build_uuid.c xalt_syshost.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
 XGM_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_watermark

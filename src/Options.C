@@ -7,6 +7,7 @@
 #include "capture.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
+#include "xalt_syshost.h"
 #include "base64.h"
 
 double convert_double(const char* name, const char* s)
