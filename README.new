@@ -29,6 +29,6 @@ XALT 2.7+
 	       xalt_initialize.c to the xalt_run_submission executable.
 
 W.I.P:
-    (2.7.14) * Fix bug that was created with 2.7.11. Now XALT_TRACING=yes works with All mpi tasks and
+    (2.7.14) * Fix bug that was created with 2.7.11. Now XALT_TRACING=yes works with all mpi tasks and
                XALT_TRACING=yes0 just traces from mpi task 0.
 	       
