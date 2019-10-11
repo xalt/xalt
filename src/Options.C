@@ -220,4 +220,6 @@ Options::Options(int argc, char** argv)
       m_watermark = decoded;
       free(decoded);
     }
+  if (m_syshost == "unknown")
+    m_syshost = xalt_syshost();
 }

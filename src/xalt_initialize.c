@@ -129,7 +129,6 @@ static const char * xalt_run_short_descriptA[] = {
   "MPI"                                           /* 4 */
 };
 
-const  char*           xalt_syshost();
 static long            compute_value(const char **envA);
 static void            get_abspath(char * path, int sz);
 static volatile double epoch();
@@ -154,7 +153,6 @@ static char         exec_path[PATH_MAX+1];
 static char *       exec_pathQ;
 static char *       usr_cmdline;
 static char *       b64_cmdline;
-static const char * my_syshost;
 
 static char *       watermark             = NULL;
 static char *       b64_watermark         = NULL;
@@ -291,10 +289,9 @@ void myinit(int argc, char **argv)
                           " Release:       %s\n"
                           " O.S. Version:  %s\n"
                           " Machine:       %s\n"
-		          " Syshost:       %s\n"
                           "---------------------------------------------\n\n",
                   dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
-                  u.version, u.machine, xalt_syshost());
+                  u.version, u.machine);
         }
       get_abspath(exec_path,sizeof(exec_path));
       fprintf(stderr,"myinit(%ld,%s,%s){\n", my_rank, STR(STATE),exec_path);
@@ -439,8 +436,6 @@ void myinit(int argc, char **argv)
     }
 
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
-
-  my_syshost = xalt_syshost();
 
   /* Build a json version of the user's command line. */
 
@@ -728,17 +723,17 @@ void myinit(int argc, char **argv)
       if (xalt_tracing || xalt_run_tracing)
         {
 	  char * cmd2;
-          asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+          asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
                    " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
-		   pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, watermark, pathArg, ldLibPathArg,
+		   pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  free(cmd2);
         }
-      asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+      asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
-	       pid, ppid, my_syshost, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
+	       pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
 	       b64_cmdline);
 
       /*************************************************************
@@ -1051,9 +1046,9 @@ void myfini()
           int    dLen;
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
-          asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+          asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
-		   XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
+		   XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
 	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
@@ -1061,9 +1056,9 @@ void myfini()
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
-      asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --syshost \"%s\" --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+      asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d  --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
-	       XALT_INTERFACE_VERSION, pid, ppid, my_syshost, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
+	       XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       system(cmdline);
