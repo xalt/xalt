@@ -24,3 +24,7 @@ XALT 2.7+
              * for TACC_config.py make 0 < t < 30 mins be 0.01% and 30mins < t < 120mins be 1%
     (2.7.12) * Remove trailing newline from the shared libraries captured from /proc/$PID/maps.
              * Ignore any trailing newlines and spaces in shared libraries when ingesting into DB.
+    (2.7.13) * To avoid a name collision between ambertools having their own function named connect and
+               libc's connect, XALT is moving the call to xalt_syshost() from xalt_initialize.c to
+	       the xalt_run_submission executable.
+	       
