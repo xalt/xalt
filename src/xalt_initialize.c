@@ -341,7 +341,7 @@ void myinit(int argc, char **argv)
 
 
   /***********************************************************
-   * Test 0: MPI Rank > 0?:
+   * Test 2: MPI Rank > 0?:
    * Stop tracking if my mpi rank is not zero
    ***********************************************************/
 
@@ -770,7 +770,7 @@ void myinit(int argc, char **argv)
   /************************************************************
    * Register a signal handler wrapper_for_myfini for all the
    * important signals. This way a program terminated by
-   * ^C, SIGFPE, SIGSEGV, etc will produce an end record.
+   * SIGFPE, SIGSEGV, etc will produce an end record.
    *********************************************************/
   v = getenv("XALT_SIGNAL_HANDLER");
   if (!v || strcmp(v,"no") != 0)
