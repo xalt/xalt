@@ -25,6 +25,10 @@ XALT 2.7+
     (2.7.12) * Remove trailing newline from the shared libraries captured from /proc/$PID/maps.
              * Ignore any trailing newlines and spaces in shared libraries when ingesting into DB.
     (2.7.13) * Issue #19: To avoid a name collision between ambertools having their own function
-               named connect and libc's connect, XALT is moving the call to xalt_syshost() from
+               named connect and libc's connect, XALT moved the call to xalt_syshost() from
 	       xalt_initialize.c to the xalt_run_submission executable.
+
+W.I.P:
+    (2.7.14) * Fix bug that was created with 2.7.11. Now XALT_TRACING=yes works with All mpi tasks and
+               XALT_TRACING=yes0 just traces from mpi task 0.
 	       
