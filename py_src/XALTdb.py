@@ -325,7 +325,7 @@ class XALTdb(object):
     cursor = conn.cursor()
     try:
       for entryA in objA:
-        object_path  = entryA[0]
+        object_path  = entryA[0].rstrip(" \r\n")
         hash_id      = entryA[1]
         if (hash_id == "unknown"):
           continue

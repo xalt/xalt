@@ -4,7 +4,7 @@
 #include <link.h>
 #include <limits.h>
 #include <dlfcn.h>
-#include "uuid/uuid.h"
+
 int main(int argc, char** argv)
 {
   void *handle;

@@ -1380,8 +1380,8 @@ Optional Packages:
                           [[no]]
   --with-trackMPI=ans     Track MPI executables, [[yes]]
   --with-trackScalarPrgms=ans
-                          Track non-mpi, non-spsr executables, [[yes]]
-  --with-computeSHA1=ans  compute SHA1 sum on libraries, [[no]]
+                          Track non-mpi executables[[yes]]
+  --with-computeSHA1=ans  compute SHA1 sums on libraries, [[no]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
   --with-config=ans       A python file defining the accept, ignore, hostname
@@ -3016,7 +3016,8 @@ if test "${with_transmission+set}" = set; then :
   withval=$with_transmission; TRANSMISSION="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$with_transmission" >&5
 $as_echo "TRANSMISSION=$with_transmission" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define TRANSMISSION "$with_transmission"
 _ACEOF
 
@@ -3025,7 +3026,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: TRANSMISSION=$withval" >&5
 $as_echo "TRANSMISSION=$withval" >&6; }
     TRANSMISSION="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define TRANSMISSION "$withval"
 _ACEOF
 
@@ -3038,7 +3040,8 @@ if test "${with_functionTracking+set}" = set; then :
   withval=$with_functionTracking; XALT_FUNCTION_TRACKING="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$with_functionTracking" >&5
 $as_echo "XALT_FUNCTION_TRACKING=$with_functionTracking" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_FUNCTION_TRACKING "$with_functionTracking"
 _ACEOF
 
@@ -3047,7 +3050,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$withval" >&5
 $as_echo "XALT_FUNCTION_TRACKING=$withval" >&6; }
     XALT_FUNCTION_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_FUNCTION_TRACKING "$withval"
 _ACEOF
 
@@ -3060,7 +3064,8 @@ if test "${with_xaltFilePrefix+set}" = set; then :
   withval=$with_xaltFilePrefix; XALT_FILE_PREFIX="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FILE_PREFIX=$with_xaltFilePrefix" >&5
 $as_echo "XALT_FILE_PREFIX=$with_xaltFilePrefix" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_FILE_PREFIX "$with_xaltFilePrefix"
 _ACEOF
 
@@ -3069,7 +3074,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FILE_PREFIX=$withval" >&5
 $as_echo "XALT_FILE_PREFIX=$withval" >&6; }
     XALT_FILE_PREFIX="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_FILE_PREFIX "$withval"
 _ACEOF
 
@@ -3082,7 +3088,8 @@ if test "${with_trackGPU+set}" = set; then :
   withval=$with_trackGPU; XALT_GPU_TRACKING="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING=$with_trackGPU" >&5
 $as_echo "XALT_GPU_TRACKING=$with_trackGPU" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_GPU_TRACKING "$with_trackGPU"
 _ACEOF
 
@@ -3091,7 +3098,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING=$withval" >&5
 $as_echo "XALT_GPU_TRACKING=$withval" >&6; }
     XALT_GPU_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_GPU_TRACKING "$withval"
 _ACEOF
 
@@ -3104,7 +3112,8 @@ if test "${with_trackMPI+set}" = set; then :
   withval=$with_trackMPI; XALT_MPI_TRACKING="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$with_trackMPI" >&5
 $as_echo "XALT_MPI_TRACKING=$with_trackMPI" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_MPI_TRACKING "$with_trackMPI"
 _ACEOF
 
@@ -3113,7 +3122,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$withval" >&5
 $as_echo "XALT_MPI_TRACKING=$withval" >&6; }
     XALT_MPI_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_MPI_TRACKING "$withval"
 _ACEOF
 
@@ -3126,7 +3136,8 @@ if test "${with_trackScalarPrgms+set}" = set; then :
   withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&5
 $as_echo "XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_SCALAR_TRACKING "$with_trackScalarPrgms"
 _ACEOF
 
@@ -3135,7 +3146,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$withval" >&5
 $as_echo "XALT_SCALAR_TRACKING=$withval" >&6; }
     XALT_SCALAR_TRACKING="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_SCALAR_TRACKING "$withval"
 _ACEOF
 
@@ -3157,12 +3169,12 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$withval" >&5
 $as_echo "COMPUTE_SHA1SUM=$withval" >&6; }
     COMPUTE_SHA1SUM="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define COMPUTE_SHA1SUM "$withval"
 _ACEOF
 
 fi
-
 
 
 
@@ -3171,7 +3183,8 @@ if test "${with_etcDir+set}" = set; then :
   withval=$with_etcDir; ETC_DIR="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$with_etcDir" >&5
 $as_echo "ETC_DIR=$with_etcDir" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define ETC_DIR "$with_etcDir"
 _ACEOF
 
@@ -3180,7 +3193,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ETC_DIR=$withval" >&5
 $as_echo "ETC_DIR=$withval" >&6; }
     ETC_DIR="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define ETC_DIR "$withval"
 _ACEOF
 
@@ -3193,7 +3207,8 @@ if test "${with_config+set}" = set; then :
   withval=$with_config; XALT_CONFIG_PY="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$with_config" >&5
 $as_echo "XALT_CONFIG_PY=$with_config" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_CONFIG_PY "$with_config"
 _ACEOF
 
@@ -3202,7 +3217,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CONFIG_PY=$withval" >&5
 $as_echo "XALT_CONFIG_PY=$withval" >&6; }
     XALT_CONFIG_PY="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define XALT_CONFIG_PY "$withval"
 _ACEOF
 
@@ -3215,7 +3231,8 @@ if test "${with_MySQL+set}" = set; then :
   withval=$with_MySQL; MYSQLDB="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$with_MySQL" >&5
 $as_echo "MYSQLDB=$with_MySQL" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define MYSQLDB "$with_MySQL"
 _ACEOF
 
@@ -3224,7 +3241,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$withval" >&5
 $as_echo "MYSQLDB=$withval" >&6; }
     MYSQLDB="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define MYSQLDB "$withval"
 _ACEOF
 
@@ -3237,7 +3255,8 @@ if test "${with_systemPath+set}" = set; then :
   withval=$with_systemPath; SYSTEM_PATH="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSTEM_PATH=$with_systemPath" >&5
 $as_echo "SYSTEM_PATH=$with_systemPath" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define SYSTEM_PATH "$with_systemPath"
 _ACEOF
 
@@ -3247,7 +3266,7 @@ else
 $as_echo "SYSTEM_PATH=$withval" >&6; }
     SYSTEM_PATH="$withval"
     cat >>confdefs.h <<_ACEOF
-#define SYSTEM_PATH "$withval"
+#define SYSTEM_PATH "$withval"The system path that XALT will use (typically /usr/bin:/bin)
 _ACEOF
 
 fi
@@ -3290,7 +3309,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$withval" >&5
 $as_echo "CXX_LD_LIBRARY_PATH=$withval" >&6; }
     CXX_LD_LIBRARY_PATH="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define CXX_LD_LIBRARY_PATH "$withval"
 _ACEOF
 
@@ -3303,7 +3323,8 @@ if test "${with_syshostConfig+set}" = set; then :
   withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$with_syshostConfig" >&5
 $as_echo "SYSHOST_CONFIG=$with_syshostConfig" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define SYSHOST_CONFIG "$with_syshostConfig"
 _ACEOF
 
@@ -3312,7 +3333,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: SYSHOST_CONFIG=$withval" >&5
 $as_echo "SYSHOST_CONFIG=$withval" >&6; }
     SYSHOST_CONFIG="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define SYSHOST_CONFIG "$withval"
 _ACEOF
 
@@ -3325,7 +3347,8 @@ if test "${with_hostnameParser+set}" = set; then :
   withval=$with_hostnameParser; MY_HOSTNAME_PARSER="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$with_hostnameParser" >&5
 $as_echo "MY_HOSTNAME_PARSER=$with_hostnameParser" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define MY_HOSTNAME_PARSER "$with_hostnameParser"
 _ACEOF
 
@@ -3334,7 +3357,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MY_HOSTNAME_PARSER=$withval" >&5
 $as_echo "MY_HOSTNAME_PARSER=$withval" >&6; }
     MY_HOSTNAME_PARSER="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define MY_HOSTNAME_PARSER "$withval"
 _ACEOF
 
@@ -3347,7 +3371,8 @@ if test "${with_staticLibs+set}" = set; then :
   withval=$with_staticLibs; STATIC_LIBS="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: STATIC_LIBS=$with_staticLibs" >&5
 $as_echo "STATIC_LIBS=$with_staticLibs" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define STATIC_LIBS "$with_staticLibs"
 _ACEOF
 
@@ -3356,7 +3381,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: STATIC_LIBS=$withval" >&5
 $as_echo "STATIC_LIBS=$withval" >&6; }
     STATIC_LIBS="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define STATIC_LIBS "$withval"
 _ACEOF
 
@@ -3369,7 +3395,8 @@ if test "${with_preloadOnly+set}" = set; then :
   withval=$with_preloadOnly; PRELOAD_ONLY="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: PRELOAD_ONLY=$with_preloadOnly" >&5
 $as_echo "PRELOAD_ONLY=$with_preloadOnly" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define PRELOAD_ONLY "$with_preloadOnly"
 _ACEOF
 
@@ -3378,7 +3405,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: PRELOAD_ONLY=$withval" >&5
 $as_echo "PRELOAD_ONLY=$withval" >&6; }
     PRELOAD_ONLY="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define PRELOAD_ONLY "$withval"
 _ACEOF
 
@@ -3391,7 +3419,8 @@ if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
   withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
 $as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
 _ACEOF
 
@@ -3400,7 +3429,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
 $as_echo "BAD_INSTALL=$withval" >&6; }
     BAD_INSTALL="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define BAD_INSTALL "$withval"
 _ACEOF
 
@@ -3413,7 +3443,8 @@ if test "${with_32bit+set}" = set; then :
   withval=$with_32bit; BIT32="$withval"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BIT32=$with_32bit" >&5
 $as_echo "BIT32=$with_32bit" >&6; }
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define BIT32 "$with_32bit"
 _ACEOF
 
@@ -3422,7 +3453,8 @@ else
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BIT32=$withval" >&5
 $as_echo "BIT32=$withval" >&6; }
     BIT32="$withval"
-    cat >>confdefs.h <<_ACEOF
+
+cat >>confdefs.h <<_ACEOF
 #define BIT32 "$withval"
 _ACEOF
 
@@ -4067,6 +4099,7 @@ fi
 
 
 XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
+
 cat >>confdefs.h <<_ACEOF
 #define XALT_INSTALL_OS "$XALT_INSTALL_OS"
 _ACEOF
@@ -4120,6 +4153,7 @@ $as_echo "no" >&6; }
 			exit 1
 		fi
 	fi
+
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -4524,7 +4558,7 @@ if test "x$ac_cv_header_uuid_uuid_h" = xyes; then :
 $as_echo "#define HAVE_UUID_UUID_H 1" >>confdefs.h
 
 else
-  as_fn_error $? "Unable to build XALT without uuid/uuid.h" "$LINENO" 5
+  as_fn_error $? "Unable to build XALT without uuid/uuid.h or uuid.h" "$LINENO" 5
 fi
 
 
@@ -4605,7 +4639,8 @@ $as_echo "$ac_cv_search_uuid_generate" >&6; }
 ac_res=$ac_cv_search_uuid_generate
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  $as_echo "#define HAVE_LIBUUID 1" >>confdefs.h
+
+$as_echo "#define HAVE_LIBUUID 1" >>confdefs.h
  HAVE_WORKING_LIBUUID=yes
 fi
 
@@ -4703,7 +4738,8 @@ $as_echo "$ac_cv_search_dcgmInit" >&6; }
 ac_res=$ac_cv_search_dcgmInit
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  $as_echo "#define USE_DCGM 1" >>confdefs.h
+
+$as_echo "#define USE_DCGM 1" >>confdefs.h
  HAVE_DCGM=yes
 else
   as_fn_error $? "Unable to include GPU tracking without DCGM" "$LINENO" 5
@@ -4763,7 +4799,8 @@ $as_echo "$ac_cv_search_dcgmInit" >&6; }
 ac_res=$ac_cv_search_dcgmInit
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  $as_echo "#define USE_DCGM 1" >>confdefs.h
+
+$as_echo "#define USE_DCGM 1" >>confdefs.h
  HAVE_DCGM=yes
 else
   as_fn_error $? "Unable to include GPU tracking without DCGM" "$LINENO" 5
@@ -4844,9 +4881,11 @@ $as_echo "$ac_cv_search_dlopen" >&6; }
 ac_res=$ac_cv_search_dlopen
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-  $as_echo "#define HAVE_DLOPEN 1" >>confdefs.h
 
-                  $as_echo "#define USE_NVML 1" >>confdefs.h
+$as_echo "#define HAVE_DLOPEN 1" >>confdefs.h
+
+
+$as_echo "#define USE_NVML 1" >>confdefs.h
 
                   HAVE_NVML=yes
 else

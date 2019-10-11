@@ -13,133 +13,132 @@ AC_ARG_WITH(transmission,
     AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission")dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs)])dnl
     ,
     withval="file"
     AC_MSG_RESULT([TRANSMISSION=$withval])
     TRANSMISSION="$withval"
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs)]))dnl
 
 AC_SUBST(XALT_FUNCTION_TRACKING)
 AC_ARG_WITH(functionTracking,
     AC_HELP_STRING([--with-functionTracking=ans],[Track functions from modules [[yes]]]),
     XALT_FUNCTION_TRACKING="$withval"
     AC_MSG_RESULT([XALT_FUNCTION_TRACKING=$with_functionTracking])
-    AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$with_functionTracking")dnl
+    AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$with_functionTracking",[Track functions from modules])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([XALT_FUNCTION_TRACKING=$withval])
     XALT_FUNCTION_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$withval",[Track functions from modules]))dnl
 
 AC_SUBST(XALT_FILE_PREFIX)
 AC_ARG_WITH(xaltFilePrefix,
     AC_HELP_STRING([--with-xaltFilePrefix=ans],[Prefix where the json files are written [[$HOME]]]),
     XALT_FILE_PREFIX="$withval"
     AC_MSG_RESULT([XALT_FILE_PREFIX=$with_xaltFilePrefix])
-    AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$with_xaltFilePrefix")dnl
+    AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$with_xaltFilePrefix",[Prefix where the json files are written])dnl
     ,
     withval="USE_HOME"
     AC_MSG_RESULT([XALT_FILE_PREFIX=$withval])
     XALT_FILE_PREFIX="$withval"
-    AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval",[Prefix where the json files are written]))dnl
 
 AC_SUBST(XALT_GPU_TRACKING)
 AC_ARG_WITH(trackGPU,
     AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables {yes(nvml),no,dcgm,nvml}, [[no]]]),
     XALT_GPU_TRACKING="$withval"
     AC_MSG_RESULT([XALT_GPU_TRACKING=$with_trackGPU])
-    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$with_trackGPU")dnl
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$with_trackGPU",[Track GPU executables])dnl
     ,
     withval="no"
     AC_MSG_RESULT([XALT_GPU_TRACKING=$withval])
     XALT_GPU_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$withval",[Track GPU executables]))dnl
 
 AC_SUBST(XALT_MPI_TRACKING)
 AC_ARG_WITH(trackMPI,
     AC_HELP_STRING([--with-trackMPI=ans],[Track MPI executables, [[yes]]]),
     XALT_MPI_TRACKING="$withval"
     AC_MSG_RESULT([XALT_MPI_TRACKING=$with_trackMPI])
-    AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$with_trackMPI")dnl
+    AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$with_trackMPI",[Track MPI executables])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([XALT_MPI_TRACKING=$withval])
     XALT_MPI_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$withval",[Track MPI executables]))dnl
 
 AC_SUBST(XALT_SCALAR_TRACKING)
 AC_ARG_WITH(trackScalarPrgms,
-    AC_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi, non-spsr executables, [[yes]]]),
+    AC_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi executables[[yes]]]),
     XALT_SCALAR_TRACKING="$withval"
     AC_MSG_RESULT([XALT_SCALAR_TRACKING=$with_trackScalarPrgms])
-    AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$with_trackScalarPrgms")dnl
+    AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$with_trackScalarPrgms",[Track non-mpi executables])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([XALT_SCALAR_TRACKING=$withval])
     XALT_SCALAR_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$withval",[Track non-mpi executables]))dnl
 
 AC_SUBST(COMPUTE_SHA1SUM)
 AC_ARG_WITH(computeSHA1,
-    AC_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sum on libraries, [[no]]]),
+    AC_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sums on libraries, [[no]]]),
     COMPUTE_SHA1SUM="$withval"
     AC_MSG_RESULT([COMPUTE_SHA1SUM=$with_computeSHA1])
-    AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$with_computeSHA1")dnl
+    AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$with_computeSHA1",,[Compute SHAs sums on libraries])dnl
     ,
     withval="no"
     AC_MSG_RESULT([COMPUTE_SHA1SUM=$withval])
     COMPUTE_SHA1SUM="$withval"
-    AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$withval"))dnl
-
+    AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$withval",[Compute SHAs sums on libraries]))dnl
 
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
     AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
     ETC_DIR="$withval"
     AC_MSG_RESULT([ETC_DIR=$with_etcDir])
-    AC_DEFINE_UNQUOTED(ETC_DIR, "$with_etcDir")dnl
+    AC_DEFINE_UNQUOTED(ETC_DIR, "$with_etcDir",[Directory where xalt_db.conf and reverseMapD can be found])dnl
     ,
     withval="."
     AC_MSG_RESULT([ETC_DIR=$withval])
     ETC_DIR="$withval"
-    AC_DEFINE_UNQUOTED(ETC_DIR, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(ETC_DIR, "$withval",[Directory where xalt_db.conf and reverseMapD can be found]))dnl
 
 AC_SUBST(XALT_CONFIG_PY)
 AC_ARG_WITH(config,
     AC_HELP_STRING([--with-config=ans],[A python file defining the accept, ignore, hostname pattern lists [[NO DEFAULT]]]),
     XALT_CONFIG_PY="$withval"
     AC_MSG_RESULT([XALT_CONFIG_PY=$with_config])
-    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$with_config")dnl
+    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$with_config",[A python file defining the site configuration])dnl
     ,
     withval="no"
     AC_MSG_RESULT([XALT_CONFIG_PY=$withval])
     XALT_CONFIG_PY="$withval"
-    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$withval",[A python file defining the site configuration]))dnl
 
 AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
     AC_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient/MySQL-python module [[yes]]]),
     MYSQLDB="$withval"
     AC_MSG_RESULT([MYSQLDB=$with_MySQL])
-    AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL")dnl
+    AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL",[Require the mysqlclient/MySQL-python module])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([MYSQLDB=$withval])
     MYSQLDB="$withval"
-    AC_DEFINE_UNQUOTED(MYSQLDB, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(MYSQLDB, "$withval",[Require the mysqlclient/MySQL-python module]))dnl
 
 AC_SUBST(SYSTEM_PATH)
 AC_ARG_WITH(systemPath,
     AC_HELP_STRING([--with-systemPath=[ans]],[]),
     SYSTEM_PATH="$withval"
     AC_MSG_RESULT([SYSTEM_PATH=$with_systemPath])
-    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$with_systemPath")dnl
+    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$with_systemPath",[The system path that XALT will use (typically /usr/bin:/bin)])dnl
     ,
     withval="/usr/bin:/bin"
     AC_MSG_RESULT([SYSTEM_PATH=$withval])
     SYSTEM_PATH="$withval"
-    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"[The system path that XALT will use (typically /usr/bin:/bin)]))dnl
 
 AC_SUBST(SYSLOG_MSG_SZ)
 AC_ARG_WITH(syslogMsgSz,
@@ -163,79 +162,79 @@ AC_ARG_WITH(cxxLDLibraryPath,
     withval=""
     AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$withval])
     CXX_LD_LIBRARY_PATH="$withval"
-    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$withval",[LD_LIBRARY_PATH for c++ programs]))dnl
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
     AC_HELP_STRING([--with-syshostConfig=ans],[How to determine syshost[[no default]]]),
     SYSHOST_CONFIG="$withval"
     AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
-    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig")dnl
+    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig",[How to determine syshost])dnl
     ,
     withval="no"
     AC_MSG_RESULT([SYSHOST_CONFIG=$withval])
     SYSHOST_CONFIG="$withval"
-    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$withval",[How to determine syshost]))dnl
 
 AC_SUBST(MY_HOSTNAME_PARSER)
 AC_ARG_WITH(hostnameParser,
     AC_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser c_file:file.c or library:file_64.a or library:file_64.a:file_32.a [[no]]]),
     MY_HOSTNAME_PARSER="$withval"
     AC_MSG_RESULT([MY_HOSTNAME_PARSER=$with_hostnameParser])
-    AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$with_hostnameParser")dnl
+    AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$with_hostnameParser",[Replace built-in lex based hostname parser])dnl
     ,
     withval="no"
     AC_MSG_RESULT([MY_HOSTNAME_PARSER=$withval])
     MY_HOSTNAME_PARSER="$withval"
-    AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$withval",[Replace built-in lex based hostname parser]))dnl
 
 AC_SUBST(STATIC_LIBS)
 AC_ARG_WITH(staticLibs,
     AC_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only dcgm) [[no]]]),
     STATIC_LIBS="$withval"
     AC_MSG_RESULT([STATIC_LIBS=$with_staticLibs])
-    AC_DEFINE_UNQUOTED(STATIC_LIBS, "$with_staticLibs")dnl
+    AC_DEFINE_UNQUOTED(STATIC_LIBS, "$with_staticLibs",[Link with static libraries (currently only dcgm)])dnl
     ,
     withval="no"
     AC_MSG_RESULT([STATIC_LIBS=$withval])
     STATIC_LIBS="$withval"
-    AC_DEFINE_UNQUOTED(STATIC_LIBS, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(STATIC_LIBS, "$withval",[Link with static libraries (currently only dcgm)]))dnl
 
 AC_SUBST(PRELOAD_ONLY)
 AC_ARG_WITH(preloadOnly,
     AC_HELP_STRING([--with-preloadOnly=ans],[Only use XALT in preload only mode[[yes]]]),
     PRELOAD_ONLY="$withval"
     AC_MSG_RESULT([PRELOAD_ONLY=$with_preloadOnly])
-    AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$with_preloadOnly")dnl
+    AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$with_preloadOnly",[Only use XALT in preload only mode])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([PRELOAD_ONLY=$withval])
     PRELOAD_ONLY="$withval"
-    AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$withval",[Only use XALT in preload only mode]))dnl
 
 AC_SUBST(BAD_INSTALL)
 AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
     AC_HELP_STRING([--with-IrefuseToInstallXALTCorrectly=ans],[Install XALT incorrectly [[no]]]),
     BAD_INSTALL="$withval"
     AC_MSG_RESULT([BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly])
-    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$with_IrefuseToInstallXALTCorrectly")dnl
+    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$with_IrefuseToInstallXALTCorrectly",[A site that insist to install XALT incorrectly])dnl
     ,
     withval="no"
     AC_MSG_RESULT([BAD_INSTALL=$withval])
     BAD_INSTALL="$withval"
-    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval",[A site that insist to install XALT incorrectly]))dnl
 
 AC_SUBST(BIT32)
 AC_ARG_WITH(32bit,
     AC_HELP_STRING([--with-32bit],[Allow for 32 bits executables[[yes]]]),
     BIT32="$withval"
     AC_MSG_RESULT([BIT32=$with_32bit])
-    AC_DEFINE_UNQUOTED(BIT32, "$with_32bit")dnl
+    AC_DEFINE_UNQUOTED(BIT32, "$with_32bit",[Build 32bit libraries as well])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([BIT32=$withval])
     BIT32="$withval"
-    AC_DEFINE_UNQUOTED(BIT32, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(BIT32, "$withval",[Build 32bit libraries as well]))dnl
 
 AC_SUBST(XALT_TMPDIR)
 AC_ARG_WITH(tmpdir,
@@ -301,7 +300,7 @@ fi
 
 AC_SUBST(XALT_INSTALL_OS)
 XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
-AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS")
+AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
@@ -332,10 +331,11 @@ fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
+
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
+                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h or uuid.h])])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -348,7 +348,7 @@ AC_CHECK_HEADER(gelf.h, [],
 AC_SUBST(HAVE_WORKING_LIBUUID)
 HAVE_WORKING_LIBUUID=no
 if test $ac_cv_header_uuid_uuid_h = yes; then
-  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID) HAVE_WORKING_LIBUUID=yes], [])
+  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID,1, [libuuid exist]) HAVE_WORKING_LIBUUID=yes], [])
 fi
 
 if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
@@ -384,9 +384,9 @@ if test $XALT_GPU_TRACKING = "dcgm" ; then
                      [Define to 1 if you have DCGM.])],
                   [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   if test "$STATIC_LIBS" = yes; then
-    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])], [-ldl])
+    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])], [-ldl])
   else
-    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   fi
 elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
   AC_CHECK_HEADER(nvml.h,
@@ -398,8 +398,8 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
                      [Define to 1 if you have dlfcn.h.])],
                   [AC_MSG_ERROR([Unable to include GPU tracking without dlfcn.h])])
   AC_SEARCH_LIBS([dlopen], [dl dld],
-                 [AC_DEFINE([HAVE_DLOPEN], [1])
-                  AC_DEFINE([USE_NVML], [1])
+                 [AC_DEFINE([HAVE_DLOPEN], [1],[Using dlopen library])
+                  AC_DEFINE([USE_NVML], [1],[Using NVML library])
                   HAVE_NVML=yes],
                  [AC_MSG_ERROR([Unable to find dlopen])])
 fi

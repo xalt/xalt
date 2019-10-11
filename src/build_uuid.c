@@ -2,11 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <dlfcn.h>
-#include <uuid/uuid.h>
 #include "xalt_obfuscate.h"
 #include "build_uuid.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
+#include <uuid/uuid.h>
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 void build_uuid(char * my_uuid_str)
 {

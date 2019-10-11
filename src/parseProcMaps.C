@@ -90,6 +90,11 @@ void parseProcMaps(pid_t pid, std::vector<Libpair>& libA, double& t_maps, double
       if (xalt_so)
         continue;
 
+      // Step g: remove trailing newline
+      char *nl = strchr(p,'\n');
+      if (nl)
+        *nl = '\0';
+
       path.assign(p);
 
       soSet.insert(path);
