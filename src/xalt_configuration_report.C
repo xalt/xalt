@@ -204,7 +204,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_VERSION:                    " << XALT_VERSION                   << "\n";
   std::cout << "XALT_GIT_VERSION:                " << XALT_GIT_VERSION               << "\n";
   std::cout << "XALT_VERSION_STR:                " << XALT_VERSION_STR               << "\n";
-  std::cout << "*------------------------------  ------------------------------------------------*\n";
+  std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "XALT_EXECUTABLE_TRACKING:        " << executable_tracking            << "\n";
   std::cout << "XALT_FUNCTION_TRACKING:          " << xalt_func_tracking             << "\n";
   std::cout << "XALT_SYSHOST:                    " << syshost                        << "\n";
