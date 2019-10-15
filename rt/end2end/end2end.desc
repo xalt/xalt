@@ -144,8 +144,8 @@ test_descript = {
      $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
 
      displayThis "build and run segv program"
-     gcc -o segv $(testDir)/segv.c
-     ./segv
+     mpicc -o segv $(testDir)/segv.c
+     mpirun -n 2 ./segv
 
      displayThis "build and run fpe program"
      gcc -o fpe $(testDir)/fpe.c

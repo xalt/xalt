@@ -1,4 +1,22 @@
-int main(void)
+#include <stdio.h>
+#include "mpi.h"
+int main(int argc, char* argv[])
 {
-  return *(int *)0=1;
+  
+  int ierr, myProc, nProc;
+
+  ierr = MPI_Init(&argc, &argv);
+  
+  MPI_Comm_rank(MPI_COMM_WORLD, &myProc);
+  MPI_Comm_size(MPI_COMM_WORLD, &nProc);
+
+  if (myProc == 0)
+    {
+      printf("Hello World from proc: %d out of %d !\n",myProc, nProc);
+      *(int *)0 = 1;
+    }
+
+  MPI_Finalize();
+
+  return 0;
 }
