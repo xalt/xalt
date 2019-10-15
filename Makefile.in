@@ -262,8 +262,6 @@ world_update:
             echo "All files not checked in => try again"                      		      ; \
 	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then         		        \
             echo "configure is out of date => try again"                      		      ; \
-	elif [ $(srcdir)/libuuid/src/configure -ot $(srcdir)/libuuid/src/configure.ac ]; then   \
-            echo "libuuid/src/configure is out of date => try again"                          ; \
         else                                                                  		        \
 	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` 		      ; \
             git push        github     $$branchName                           		      ; \
@@ -275,8 +273,15 @@ world_update:
 gittag:
         ifneq ($(TAG),)
 	  @git status -s > /tmp/git_st_$$$$                                         ; \
-          if [ -s /tmp/git_st_$$$$ ]; then                                 	      \
+	  my_tag=`expr substr $(TAG) 1 5`                                           ; \
+	  if [ -s /tmp/git_st_$$$$ ]; then         	                              \
 	    echo "All files not checked in => try again"                            ; \
+          elif [ $$my_tag != "xalt-" ]; then                                          \
+            echo                                                                    ; \
+            echo "TAG needs to be in the form: xalt-#.##.##  => try again"          ; \
+            echo                                                                    ; \
+	  elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then               \
+            echo "configure is out of date => try again"                            ; \
 	  else                                                             	      \
             vtag=$(TAG)                                                             ; \
             vtag="$${vtag#xalt-}"                                                   ; \
