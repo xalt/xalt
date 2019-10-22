@@ -50,6 +50,8 @@ a prefix of **/opt/apps**.  Then you can run as root::
     $ /opt/apps/xalt/xalt/sbin/create_xalt_directories.sh
 
 
+.. _xalt_modulefile-label:
+
 XALT modulefile
 ^^^^^^^^^^^^^^^
 
@@ -88,7 +90,7 @@ The following is a TCL modulefile::
   prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
 
-  # Uncomment this to use XALT inside Singularity containers
+p  # Uncomment this to use XALT inside Singularity containers
   #setenv SINGULARITYENV_LD_PRELOAD /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   #prepend-path  SINGULARITY_BINDPATH   /opt/apps/xalt/xalt
 

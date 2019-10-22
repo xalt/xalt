@@ -28,7 +28,7 @@
 
 ##########################################################################
 #
-# ld wrapper: Add XALT "scribble" to executable or shared library.
+# ld wrapper: Add XALT "watermark" to executable or shared library.
 #             Then run real ld, with trace.  Save the link trace
 #             into an XALT link record.
 #

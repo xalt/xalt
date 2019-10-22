@@ -35,6 +35,7 @@ So the steps for each line is to:
   d) search for an ".so" in the file
   e) Make sure that the .so end the file name or it is .so.1.23.1
   f) remove libxalt_init.so
+  g) remove trailing newline.
 */
 
 ArgV            argV;

@@ -20,11 +20,11 @@ XALT 2 could track every single program on your cluster, XALT 2 allows
 for site controllable filtering.  Otherwise an data collection scheme
 would get overwhelmed.
 
-How XALT2 works
-^^^^^^^^^^^^^^^
+How XALT works
+^^^^^^^^^^^^^^
 
-XALT2 works in two parts. It provides an *ld* wrapper shell script
-which adds a *watermark* to every executable built with XALT2 as well
+XALT works in two parts. It provides an *ld* wrapper shell script
+which adds a *watermark* to every executable built with XALT as well
 as create a \*.json record of the link for further analysis.
 
 The second part is to measure the run-time and other information about
@@ -116,6 +116,7 @@ Advanced Topics
 
    100_execstack
    110_db
+   115_xalt_internal_design
    120_xalt_json
 
 FAQ

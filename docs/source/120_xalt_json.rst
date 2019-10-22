@@ -6,6 +6,11 @@ XALT's ld wrapper and the actively tracked executable by XALT generate
 database. There are three different types of \*.json records: link, pkg,
 and run.
 
+XALT uses the convention that array names have a trailing "A" and
+dictionary or hash tables end in a "T".  It is not completely
+consistent.
+
+
 Link \*.json records
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -166,6 +171,11 @@ The "ptA" in the process tree that the executable ran under.  The
 first entry in the parent process of the current executable.  The next
 entry is the parent process of the one above it. The process tree
 traversed until just before the init or systemd process.
+
+At one point the **userT** table contained both double precision
+number and strings.  But it became convenient to split the numbers
+from the strings so **userDT** became the holder of the double
+precision numbers and **userT** now contains just strings.
 
 The "userDT" table contains all the numerical values associated with the
 process.  These include the start_time, end_time and run_time. Note
