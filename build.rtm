@@ -106,10 +106,17 @@ case $SYSHOST in
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
-  frontera | longhorn)
+  frontera)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
     CONF_OPTS=" --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no"
+    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
+    ;;
+
+  longhorn)
+    echo "Building $SYSHOST"
+    base="$HOME/l/pkg"
+    CONF_OPTS=" --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=yes"
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
