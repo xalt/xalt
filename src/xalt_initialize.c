@@ -776,7 +776,7 @@ void myinit(int argc, char **argv)
   if (!v || strcmp(v,"no") != 0)
     {
       int signalA[] = {SIGHUP, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT, SIGBUS, 
-		       SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1};
+		       SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1, SIGALRM};
       int signalSz  = N_ELEMENTS(signalA);
       struct sigaction action;
       struct sigaction old;
