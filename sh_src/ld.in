@@ -38,6 +38,7 @@
 unset LD_PRELOAD
 CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
 XALT_DIR=@xalt_dir@
+XALT_ETC_DIR=@etc_dir@
 HAVE_DCGM=@have_dcgm@
 MY_NAME=$(PATH=@xalt_system_path@ basename $0)
 MY_DIR=$(PATH=@xalt_system_path@ dirname $(PATH=@xalt_system_path@ readlink -f $0))
@@ -246,13 +247,18 @@ trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 # failed link for function tracking
 function_tracking()
 {
-  if [ "$XALT_FUNCTION_TRACKING" = "yes" ]; then
-     StripA=( $(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
-     tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
-     $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+  if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
+     if [ -d "$XALT_ETC_DIR/reverseMapD" -o -f "$XALT_ETC_DIR/xalt_rmapT.json" ]; then
+     	StripA=( $(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
+     	$MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+     else
+        touch $FUNCRAW
+        tracing_msg "Function Tracking is disabled: no reserveMap files"
+     fi
   else
      touch $FUNCRAW
-     tracing_msg "Not function tracking"
+     tracing_msg "Function Tracking is disabled by configuration or env. vars."
   fi
 }
 
