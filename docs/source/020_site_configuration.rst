@@ -11,6 +11,7 @@ namely the filtering is covered next.
 #. Specify how XALT should transmit data to a VM
 #. Track MPI and/or Non-MPI?
 #. Track GPU usage.
+#. Function tracking.
 
 Download XALT
 ^^^^^^^^^^^^^
@@ -253,3 +254,33 @@ These commands need to be run on every reboot.
 
 
 Next we cover how to control how XALT filters executables.
+
+Function Tracking
+^^^^^^^^^^^^^^^^^
+
+XALT can track function usage. That is XALT can detect that a user
+code has called a library found in the site's system module tree. For
+this to work a site needs to build a reverseMap file. Site can use
+Lmod to build the reverseMap file even if the site doesn't use Lmod
+for their users (See :ref:`reverseMap-label` for details).  There is a
+slight performance penalty for function tracking.  It requires that
+programs be linked twice.  By default XALT assumes that a site is
+interested in function tracking but this can be disabled by
+configuring XALT like this::
+
+    --with-functionTracking=no
+
+XALT also disables function tracking if the reverseMap file is not
+found when attempting to link.  For XALT to use the reverseMap file
+during linking site will need to configure XALT with the "etc"
+directory specified.  This is the directory location is where the
+**reverseMapD** directory can be found.
+
+     --with-etcDir=/path/to/reverseMapD_parent
+
+For example TACC uses::
+
+     --with-etcDir=/tmp/moduleData
+
+where the **reverseMapD** directory can be found.
+

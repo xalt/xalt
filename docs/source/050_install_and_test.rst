@@ -91,7 +91,7 @@ The following is a TCL modulefile::
   prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
 
-p  # Uncomment this to use XALT inside Singularity containers
+  # Uncomment this to use XALT inside Singularity containers
   #setenv SINGULARITYENV_LD_PRELOAD /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   #prepend-path  SINGULARITY_BINDPATH   /opt/apps/xalt/xalt
 

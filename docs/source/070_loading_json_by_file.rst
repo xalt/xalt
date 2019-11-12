@@ -56,3 +56,7 @@ run at the same time::
 This script should be run as root or an account which can transverse
 the directories that contain the json record files.
 
+As the above script shows, the reverseMapD directory is specified.
+A up-to-date version of the **xalt_rmapT.json** needs to be in that
+directory (See :ref:`reverseMap-label` for details on how to create
+that file).

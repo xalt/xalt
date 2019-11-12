@@ -101,8 +101,8 @@ are divided into the following steps.
    010_prereqs
    020_site_configuration
    030_site_filtering
-   040_install_and_test
-   050_reverse_map
+   040_reverse_map
+   050_install_and_test
    060_setup_db
    070_loading_json_by_file
    080_loading_json_by_syslog

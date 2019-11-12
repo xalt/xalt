@@ -84,6 +84,8 @@ are ours in /etc/logrotate.d/xalt::
    }  
 
 
+.. _syslog_reverseMap-label:
+
 Create directory structure for loading json records
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -98,19 +100,19 @@ create the following structure::
    ├── maverick
    │   ├── createDB.py -> ../../xalt/xalt/sbin/createDB.py
    │   ├── reverseMapD
-   │   │   ├── jsonReverseMapT.json
+   │   │   ├── xalt_rmapT.json
    │   └── xalt_maverick_db.conf
    ├── stampede2
        ├── createDB.py -> ../../xalt/xalt/sbin/createDB.py
        ├── reverseMapD
-       │   ├── jsonReverseMapT.json
+       │   ├── xalt_rmapT.json
        └── xalt_stampede2_db.conf
 
 
 
 The point of this structure is to have a location for each cluster
 your site is saving and a location where the reverseMap file,
-jsonReverseMapT.json is located.
+xalt_rmapT.json is located.
 
 You will have to have a cron job which builds the reverseMap daily on
 each cluster.  Then that file will have to be copied or somehow made
@@ -166,3 +168,4 @@ as follows and assuming that the syslog files are in /data/log::
     $ ~swtools/process_xalt/store_xalt_data stampede2 /data/log/xalt_stampede2.log-*;
  
 Once you have the process setup you can delete the syslog files.
+
