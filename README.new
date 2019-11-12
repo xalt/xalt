@@ -29,4 +29,5 @@ XALT 2.7+
 	       xalt_initialize.c to the xalt_run_submission executable.
     (2.7.14) * Fix bug that was created with 2.7.11. Now XALT_TRACING=yes works with all mpi tasks and
                XALT_TRACING=yes0 just traces from mpi task 0.
-	       
+    (2.7.15) * Switch XALTdb.py and Rmap_XALT.py to use xalt_rmapT.json instead of jsonReverseMapT.json
+    

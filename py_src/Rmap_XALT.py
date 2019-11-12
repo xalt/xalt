@@ -50,7 +50,7 @@ class Rmap(object):
     rmapFn  = None
     for dir in rmapA:
       for ext in searchA:
-        rmapFn = os.path.join(dir, "jsonReverseMapT" + ext)
+        rmapFn = os.path.join(dir, "xalt_rmapT" + ext)
         if (os.access(rmapFn, os.R_OK)):
           break
         rmapFn = None
@@ -59,17 +59,9 @@ class Rmap(object):
       f        = open(rmapFn,"r")
       t        = json.loads(f.read())
       f.close()
-      tsFn     = t.get('timestampFn')
-      if (tsFn):
-        tsMtime = os.stat(tsFn).st_mtime
-        if (rmpMtime >= tsMtime):
-          self.__rmapT  = t['reverseMapT']
-          if 'xlibmap' in t:
-            self.__libmap = t['xlibmap']
-      else:
-        self.__rmapT = t['reverseMapT']
-        if 'xlibmap' in t:
-          self.__libmap = t['xlibmap']
+      self.__rmapT = t['reverseMapT']
+      if 'xlibmap' in t:
+        self.__libmap = t['xlibmap']
         
 
   def reverseMapT(self):
