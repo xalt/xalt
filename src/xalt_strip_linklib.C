@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  std::string rmapD = ""; // Must specify XALT_ETC_DIR to specify location of rmapD
+  std::string rmapD = ""; // If this is an empty string then XALT_ETC_DIR is used to specify location of rmapD
   Table       rmapT;
   Vstring     xlibmapA;
   buildRmapT(rmapD, rmapT, xlibmapA);

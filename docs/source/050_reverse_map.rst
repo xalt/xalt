@@ -9,15 +9,20 @@ and .so) whose call to their function will be tracked by
 XALT. ReverseMap and Libmap are stored in the same file.::
 
     $ $LMOD_DIR/spider -o jsonReverseMapT $MODULEPATH > jsonReverseMapT.json
+    $ $LMOD_DIR/spider -o xalt_rmapT      $MODULEPATH > xalt_rmapT.json
 
 On a Cray (XC, XE, XK), this is a bit more involved, so a script has been
 provided under contrib/ directory in XALT source distribution to make this
 easier. One can simply use this script and run::
 
-   $ xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
+    $ xalt/contrib/build_reverseMapT_cray/cray_build_rmapT.sh $XALT_ETC_DIR
 
 where $XALT_ETC_DIR where you would like to store these files for
 ingestion into the database. 
+
+
+
+
 
 How this works
 ^^^^^^^^^^^^^^

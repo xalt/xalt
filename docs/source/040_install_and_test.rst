@@ -29,7 +29,8 @@ Here is how we configure XALT for stampede2::
       --with-syshostConfig=nth_name:2             \
       --with-config=Config/TACC_config.py         \
       --with-transmission=syslog                  \
-      --with-MySQL=no
+      --with-MySQL=no                             \
+      --with-etcDir=/tmp/moduleData
     $ make install
 
 If the current version of XALT is X.Y.Z then this will install XALT in

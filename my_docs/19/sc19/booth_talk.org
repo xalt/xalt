@@ -1,0 +1,21 @@
+Things to talk about in booth talk on XALT: 
+
+* XALT 2.4 was available for SC 18
+
+* XALT catches signals such as SEGSEGV, SEGFPE
+
+* XALT can used to track executions inside a Singularity container
+
+* Better Support for tracking gpu usage (not performance)
+
+* XALT No longer hard codes paths.  Instead uses /bin:/usr/bin (configure option)
+
+* XALT has fought with libuuid.  Now libuuid is NOT part of user code.
+
+* Many many speed improvement during execution:
+** Now reads /proc/$PID/maps for shared libraries (avoid running ldd on executable)
+** Now reads XALT watermark directly through a libelf call (Vendor note). 
+   This avoid running objdump on executable. 
+
+* Changes in sampling:
+   Now all MPI programs are sampled if they are less than 256 tasks
