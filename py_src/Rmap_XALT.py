@@ -32,8 +32,8 @@ class Rmap(object):
   def __init__(self, rmapD):
     """
     This ctor opens the reverse map directory. It looks for a file named
-    "jsonReverseMapT.json".  If that file is not found it looks for
-    "jsonReverseMapT.old.json".  The file is read in and converted to a
+    "xalt_rmapT.json".  If that file is not found it looks for
+    "xalt_rmapT.old.json".  The file is read in and converted to a
     python table.   The contents contain a timestampfn key value pair.
     
     The reverse map table is return in all cases except when the timestamp
@@ -54,6 +54,8 @@ class Rmap(object):
         if (os.access(rmapFn, os.R_OK)):
           break
         rmapFn = None
+      if (rmapFn):
+        break
     if (rmapFn):
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")
@@ -62,7 +64,39 @@ class Rmap(object):
       self.__rmapT = t['reverseMapT']
       if 'xlibmap' in t:
         self.__libmap = t['xlibmap']
+      return
         
+    # Look for jsonReverseMapT.json and convert it to xalt_rmapT style.
+    for dir in rmapA:
+      for ext in searchA:
+        rmapFn = os.path.join(dir, "jsonReverseMapT" + ext)
+        if (os.access(rmapFn, os.R_OK)):
+          break
+        rmapFn = None
+      if (rmapFn):
+        break
+    if (rmapFn):
+      rmpMtime = os.stat(rmapFn).st_mtime
+      f        = open(rmapFn,"r")
+      t        = json.loads(f.read())
+      f.close()
+      oldT     = t['reverseMapT']
+      if 'xlibmap' in t:
+        self.__libmap = t['xlibmap']
+
+    defaultPat = re.compile(r'default:?')
+    rmapT = {}
+    for key in oldT:
+      entry = oldT[key]
+      flavor = entry['flavor'][0]
+      flavor = defaultPat.sub('',flavor)
+      if (flavor):
+        moduleName = entry['pkg'] + '(' + flavor + ')'
+      else:
+        moduleName = entry['pkg']
+      rmapT[key] = moduleName
+
+    self.__rmapT = rmapT
 
   def reverseMapT(self):
     """

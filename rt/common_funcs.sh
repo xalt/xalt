@@ -33,11 +33,11 @@ displayThis()
 
 buildRmapT()
 {
-  echo "<build xalt_rmapT.json and jsonReverseMapT.json files>"
+  echo "<build xalt_rmapT.json file>"
   mkdir reverseMapD
   MPATH=${LMOD_DEFAULT_MODULEPATH-$MODULEPATH}
   $LMOD_DIR/spider -o xalt_rmapT      $MPATH > $outputDir/reverseMapD/xalt_rmapT.json
-  $LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
+  #$LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
   echo "<finish>"
 }
 
