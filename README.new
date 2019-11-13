@@ -36,5 +36,3 @@ XALT 2.7+
     (2.7.16) * To protect sites that use jsonReverseMapT.json for directory to module name mapping, I have
                modified Rmap_XALT.py to look first for xalt_rmapT.json.  If not found then search for
 	       jsonReverseMapT.json and convert it to xalt_rmapT style.
-	       
-   
