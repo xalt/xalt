@@ -79,6 +79,7 @@ CXX_SRC     :=                             \
                xalt_extract_linker.C  	   \
                xalt_generate_watermark.C   \
                xalt_generate_linkdata.C    \
+	       xalt_rmap_exist.C           \
                xalt_run_submission.C       \
                xalt_strip_linklib.C        \
                xalt_utils.C                \
@@ -93,6 +94,10 @@ UUIDGEN_OBJS := $(patsubst %.c, %.o, $(UUIDGEN_SRC))
 TRP_EXEC     := $(DESTDIR)$(LIBEXEC)/test_record_pkg
 TRP_CXX_SRC  := test_record_pkg.C capture.C
 TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
+
+XRE_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_rmap_exist
+XRE_CXX_SRC  := xalt_rmap_exist.C xalt_utils.C
+XRE_OBJS     := $(patsubst %.C, %.o, $(XRE_CXX_SRC)) 
 
 XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
 XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C buildEnvT.C      \
@@ -170,7 +175,7 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         rm -f $@.$$$$
 
 all: ECHO COPY_ALL_LIBS                                         \
-          $(MY_HOSTNAME_PARSER_TARGET)                          \
+          $(MY_HOSTNAME_PARSER_TARGET) $(XRE_EXEC)              \
           $(XRS_EXEC) $(XGM_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(XRP_EXEC) $(UUIDGEN_EXEC)               \
           $(TRP_EXEC) build_init build_init_32bit_$(HAVE_32BIT) \
@@ -207,6 +212,9 @@ $(TRP_EXEC) : $(TRP_OBJS)
 
 $(XRP_EXEC) : $(XRP_OBJS)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz -ldl
+
+$(XRE_EXEC) : $(XRE_OBJS)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ 
 
 $(XRS_EXEC) : $(XRS_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl

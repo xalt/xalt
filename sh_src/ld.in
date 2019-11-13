@@ -197,7 +197,7 @@ SYS_HOST_CMD=$XALT_SBIN/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=$XALT_BIN/my_uuidgen
-
+XALT_RMAP_EXIST=$XALT_LIBEXEC_DIR/xalt_rmap_exist
 
 UUID=$($UUIDGEN)
 WRKDIR=$(PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
@@ -248,7 +248,7 @@ trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
 function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
-     if [ -d "$XALT_ETC_DIR/reverseMapD" -o -f "$XALT_ETC_DIR/xalt_rmapT.json" ]; then
+     if $XALT_RMAP_EXIST ; then
      	StripA=( $(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
      	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
      	$MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1

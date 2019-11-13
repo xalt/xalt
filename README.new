@@ -32,3 +32,4 @@ XALT 2.7+
     (2.7.15) * Switch XALTdb.py and Rmap_XALT.py to use xalt_rmapT.json instead of jsonReverseMapT.json
              * Update documentation to explain reverseMap file and function tracking
 	     * ld.in only does function tracking if reverseMap file exists.
+             * use xalt_rmap_exist command to determine if reverseMap file exists.
