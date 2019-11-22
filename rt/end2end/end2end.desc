@@ -46,8 +46,8 @@ test_descript = {
 
      export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
-     displayThis "mpirun -n 1 ./hello\ .mpi"
-     mpirun -n 1 ./hello\ .mpi 
+     displayThis "mpirun -n 1 ./hello\ .mpi --abc def"
+     mpirun -n 1 ./hello\ .mpi --abc def
      
      displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
      rm -rf Ðì®
@@ -96,6 +96,11 @@ test_descript = {
      displayThis "XALT_TRACING=yes ./helloñññ" '`i+1`' "a;'"
      export XALT_EXECUTABLE_TRACKING=yes
      XALT_TRACING=yes ./helloñññ '`i+1`' "a;'"
+
+     displayThis "Turn off command line recording for: mpirun -n 1 ./hello\ .mpi --abc def"
+     export XALT_CMDLINE_RECORD=no
+     mpirun -n 1 ./hello\ .mpi --abc def
+     unset XALT_CMDLINE_RECORD
 
      displayThis "XALT_SCALAR_TRACKING=no ./helloñññ"
      XALT_SCALAR_TRACKING=no ./helloñññ
@@ -176,7 +181,7 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 16 --runs 18 --pkgs 3
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 16 --runs 19 --pkgs 3
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

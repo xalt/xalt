@@ -108,6 +108,10 @@ int main(int argc, char* argv[])
   if (computeSHA1 == NULL)
     computeSHA1 = XALT_COMPUTE_SHA1;
 
+  const char* cmdline_record = getenv("XALT_CMDLINE_RECORD");
+  if (cmdline_record == NULL)
+    cmdline_record = XALT_CMDLINE_RECORD;
+
   const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
@@ -170,6 +174,7 @@ int main(int argc, char* argv[])
       json.add("XALT_DIR",                      XALT_DIR);
       json.add("BAD_INSTALL",                   BAD_INSTALL);
       json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
+      json.add("XALT_CMDLINE_RECORD",           cmdline_record);
       json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
       json.add("XALT_SYSHOST_CONFIG",           SYSHOST_CONFIG);
       json.add("XALT_MPI_TRACKING",             xalt_mpi_tracking);
@@ -208,6 +213,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_EXECUTABLE_TRACKING:        " << executable_tracking            << "\n";
   std::cout << "XALT_FUNCTION_TRACKING:          " << xalt_func_tracking             << "\n";
   std::cout << "XALT_SYSHOST:                    " << syshost                        << "\n";
+  std::cout << "XALT_CMDLINE_RECORD:             " << cmdline_record                 << "\n";
   std::cout << "XALT_FILE_PREFIX:                " << XALT_FILE_PREFIX               << "\n";
   std::cout << "XALT_PRIME_NUMBER:               " << XALT_PRIME_NUMBER              << "\n";
   std::cout << "XALT_INTERFACE_VERSION:          " << XALT_INTERFACE_VERSION         << "\n";

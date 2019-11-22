@@ -17,6 +17,7 @@
 #define SYSLOG_MSG_SZ               @SYSLOG_MSG_SZ@
 #define TRANSMISSION               "@TRANSMISSION@"
 #define UUID_STR                   "@UUID_STR@"
+#define XALT_CMDLINE_RECORD        "@XALT_CMDLINE_RECORD@"
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
 #define XALT_CONFIG_PY             "@XALT_CONFIG_PY@"
 #define XALT_DIR                   "@prefix@/xalt/xalt/"

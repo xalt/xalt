@@ -663,6 +663,7 @@ MYSQLDB
 XALT_CONFIG_PY
 ETC_DIR
 COMPUTE_SHA1SUM
+XALT_CMDLINE_RECORD
 XALT_SCALAR_TRACKING
 XALT_MPI_TRACKING
 XALT_GPU_TRACKING
@@ -725,6 +726,7 @@ with_xaltFilePrefix
 with_trackGPU
 with_trackMPI
 with_trackScalarPrgms
+with_cmdlineRecord
 with_computeSHA1
 with_etcDir
 with_config
@@ -1381,6 +1383,8 @@ Optional Packages:
   --with-trackMPI=ans     Track MPI executables, [[yes]]
   --with-trackScalarPrgms=ans
                           Track non-mpi executables[[yes]]
+  --with-cmdlineRecord=ans
+                          Record the program's execution command line[[yes]]
   --with-computeSHA1=ans  compute SHA1 sums on libraries, [[no]]
   --with-etcDir=ans       Directory where xalt_db.conf and reverseMapD can be
                           found [[.]]
@@ -3149,6 +3153,31 @@ $as_echo "XALT_SCALAR_TRACKING=$withval" >&6; }
 
 cat >>confdefs.h <<_ACEOF
 #define XALT_SCALAR_TRACKING "$withval"
+_ACEOF
+
+fi
+
+
+
+
+# Check whether --with-cmdlineRecord was given.
+if test "${with_cmdlineRecord+set}" = set; then :
+  withval=$with_cmdlineRecord; XALT_CMDLINE_RECORD="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CMDLINE_RECORD=$with_cmdlineRecord" >&5
+$as_echo "XALT_CMDLINE_RECORD=$with_cmdlineRecord" >&6; }
+
+cat >>confdefs.h <<_ACEOF
+#define XALT_CMDLINE_RECORD "$with_cmdlineRecord"
+_ACEOF
+
+else
+  withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CMDLINE_RECORD=$withval" >&5
+$as_echo "XALT_CMDLINE_RECORD=$withval" >&6; }
+    XALT_CMDLINE_RECORD="$withval"
+
+cat >>confdefs.h <<_ACEOF
+#define XALT_CMDLINE_RECORD "$withval"
 _ACEOF
 
 fi
@@ -6482,6 +6511,7 @@ echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
 echo "XALT_ETC_DIR........................................." : $ETC_DIR
 echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
+echo "XALT EXECUTION CMDLINE Record........................" : $XALT_CMDLINE_RECORD
 echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING

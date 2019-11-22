@@ -85,6 +85,19 @@ AC_ARG_WITH(trackScalarPrgms,
     XALT_SCALAR_TRACKING="$withval"
     AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$withval",[Track non-mpi executables]))dnl
 
+
+AC_SUBST(XALT_CMDLINE_RECORD)
+AC_ARG_WITH(cmdlineRecord,
+    AC_HELP_STRING([--with-cmdlineRecord=ans],[Record the program's execution command line[[yes]]]),
+    XALT_CMDLINE_RECORD="$withval"
+    AC_MSG_RESULT([XALT_CMDLINE_RECORD=$with_cmdlineRecord])
+    AC_DEFINE_UNQUOTED(XALT_CMDLINE_RECORD, "$with_cmdlineRecord",[Record the program's execution command line])dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_CMDLINE_RECORD=$withval])
+    XALT_CMDLINE_RECORD="$withval"
+    AC_DEFINE_UNQUOTED(XALT_CMDLINE_RECORD, "$withval",[Record the program's execution command line]))dnl
+
 AC_SUBST(COMPUTE_SHA1SUM)
 AC_ARG_WITH(computeSHA1,
     AC_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sums on libraries, [[no]]]),

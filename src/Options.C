@@ -194,6 +194,13 @@ Options::Options(int argc, char** argv)
         }
     }
 
+  const char* cmdline_record = getenv("XALT_CMDLINE_RECORD");
+  if (cmdline_record == NULL)
+    cmdline_record = XALT_CMDLINE_RECORD;
+  
+  if (strcasecmp(cmdline_record,"yes") != 0)
+    m_userCmdLine = "[]";
+
   if (m_exec != "unknown")
     {
       std::vector<std::string> result;

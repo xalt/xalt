@@ -83,6 +83,7 @@ echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
 echo "XALT_ETC_DIR........................................." : $ETC_DIR
 echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
+echo "XALT EXECUTION CMDLINE Record........................" : $XALT_CMDLINE_RECORD
 echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
