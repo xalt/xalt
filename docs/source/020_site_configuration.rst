@@ -114,6 +114,15 @@ XALT use use the value of the environment variable $MY_HOSTNAME to
 specify the name of the cluster.
 
 
+Turning off command line tracking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sites may wish to not track the user's command line in the database.
+This can be accomplished by configuring with::
+
+   --with-cmdlineRecord=no
+
+
 Using your system gcc/g++
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
