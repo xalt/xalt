@@ -19,7 +19,7 @@ Dr. Robert McLay
 We wanted to be able to answer the questions: what software do
 researchers actually use on high-end computers, and how successful are
 they in their efforts to use it?  With the information that xalt
-collects, high-end computer administrators can answer our questons by
+collects, high-end computer administrators can answer our questions by
 tracking continuous job-level information to learn what products
 researchers do and do not need.  Drilling down to data driven usage
 statistics helps stakeholders conduct business in a more efficient,
