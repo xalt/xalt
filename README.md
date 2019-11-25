@@ -77,7 +77,7 @@ Features:
    
    1. A static version of libuuid.a is now part of XALT.
 
-   2. XALT nolonger hardcodes paths at configure time. Instead
+   2. XALT no longer hard-codes paths at configure time. Instead
       it used --with-systemPath=/usr/bin:/bin to control where XALT 
       looks for executables such as basename
 
