@@ -11,6 +11,7 @@
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"
+#define HAVE_NVML                  "@HAVE_NVML@"
 #define HAVE_WORKING_LIBUUID       "@HAVE_WORKING_LIBUUID@"
 #define MY_HOSTNAME_PARSER         "@MY_HOSTNAME_PARSER@"
 #define SYSHOST_CONFIG             "@SYSHOST_CONFIG@"

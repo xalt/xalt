@@ -39,3 +39,5 @@ XALT 2.7+
     (2.7.17) * Issue #20: Added a configure/Env. Var to control whether the complete command line
                will be recorded.
     (2.7.18) * Issue #21: README.md doc patch.
+    (2.7.19) * Fix bug with reporting GPU tracking when HAVE_DCGM=no and HAVE_NVML=yes in
+               xalt_configuration_report

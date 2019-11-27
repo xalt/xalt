@@ -123,8 +123,8 @@ int main(int argc, char* argv[])
   const char* xalt_gpu_tracking = getenv("XALT_GPU_TRACKING");
   if (xalt_gpu_tracking == NULL)
     xalt_gpu_tracking = XALT_GPU_TRACKING;
-  if (strcmp(HAVE_DCGM,"no") == 0)
-    xalt_gpu_tracking = HAVE_DCGM;
+  if (strcasecmp(HAVE_DCGM,"no") == 0 && strcasecmp(HAVE_NVML,"no") == 0)
+    xalt_gpu_tracking = "no";
           
   const char* xalt_func_tracking = getenv("XALT_FUNCTION_TRACKING");
   if (xalt_func_tracking == NULL)
