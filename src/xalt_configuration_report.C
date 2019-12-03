@@ -101,7 +101,8 @@ int main(int argc, char* argv[])
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"none")      != 0 ) && 
       (strcasecmp(transmission,"syslog")    != 0 ) && 
-      (strcasecmp(transmission,"syslogv1")  != 0 ))
+      (strcasecmp(transmission,"syslogv1")  != 0 ) &&
+      (strcasecmp(transmission,"elastic")   != 0 ))
     transmission = "file";
 
   const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
