@@ -670,6 +670,7 @@ XALT_GPU_TRACKING
 XALT_FILE_PREFIX
 XALT_FUNCTION_TRACKING
 TRANSMISSION
+XALT_LOGGING_URL
 XALT_INTERFACE_VERSION
 OBJEXT
 EXEEXT
@@ -721,6 +722,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 with_transmission
+with_xaltLoggingUrl
 with_functionTracking
 with_xaltFilePrefix
 with_trackGPU
@@ -1372,8 +1374,10 @@ if test -n "$ac_init_help"; then
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-transmission=ans transmission style (file,syslog,file_separate_dirs)
+  --with-transmission=ans transmission style (file,syslog,file_separate_dirs,curl)
                           [[file]]
+  --with-xaltLoggingUrl=ans
+                          Logging url when using curl transmission [[]]
   --with-functionTracking=ans
                           Track functions from modules [[yes]]
   --with-xaltFilePrefix=ans
@@ -3033,6 +3037,31 @@ $as_echo "TRANSMISSION=$withval" >&6; }
 
 cat >>confdefs.h <<_ACEOF
 #define TRANSMISSION "$withval"
+_ACEOF
+
+fi
+
+
+
+
+# Check whether --with-xaltLoggingUrl was given.
+if test "${with_xaltLoggingUrl+set}" = set; then :
+  withval=$with_xaltLoggingUrl; XALT_LOGGING_URL="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_LOGGING_URL=$with_xaltLoggingUrl" >&5
+$as_echo "XALT_LOGGING_URL=$with_xaltLoggingUrl" >&6; }
+
+cat >>confdefs.h <<_ACEOF
+#define XALT_LOGGING_URL "$with_xaltLoggingUrl"
+_ACEOF
+
+else
+  withval=""
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_LOGGING_URL=$withval" >&5
+$as_echo "XALT_LOGGING_URL=$withval" >&6; }
+    XALT_LOGGING_URL="$withval"
+
+cat >>confdefs.h <<_ACEOF
+#define XALT_LOGGING_URL "$withval"
 _ACEOF
 
 fi
@@ -6508,6 +6537,7 @@ echo
 echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
+echo "XALT_LOGGING_URL....................................." : $XALT_LOGGING_URL
 echo "XALT_ETC_DIR........................................." : $ETC_DIR
 echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH

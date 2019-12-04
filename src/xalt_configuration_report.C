@@ -101,8 +101,13 @@ int main(int argc, char* argv[])
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"none")      != 0 ) && 
       (strcasecmp(transmission,"syslog")    != 0 ) && 
-      (strcasecmp(transmission,"syslogv1")  != 0 ))
+      (strcasecmp(transmission,"syslogv1")  != 0 ) &&
+      (strcasecmp(transmission,"curl")      != 0 ))
     transmission = "file";
+
+  const char *log_url = getenv("XALT_LOGGING_URL");
+  if (log_url == NULL)
+    log_url = XALT_LOGGING_URL;
 
   const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
   if (computeSHA1 == NULL)
@@ -168,6 +173,8 @@ int main(int argc, char* argv[])
       json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
       if (strcmp(transmission,"syslog") == 0)
         json.add("XALT_LOGGING_TAG",            syslog_tag);
+      if (strcmp(transmission,"curl") == 0)
+        json.add("XALT_LOGGING_URL",            log_url);
       json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
       json.add("XALT_COMPUTE_SHA1",             computeSHA1);
       json.add("XALT_ETC_DIR",                  xalt_etc_dir);
@@ -220,6 +227,8 @@ int main(int argc, char* argv[])
   std::cout << "XALT_TRANSMISSION_STYLE:         " << transmission                   << "\n";
   if (strcmp(transmission,"syslog") == 0)
     std::cout << "XALT_LOGGING_TAG:                " << syslog_tag                   << "\n";
+  if (strcmp(transmission,"curl") == 0)
+    std::cout << "XALT_LOGGING_URL:                " << log_url                      << "\n";
   std::cout << "XALT_COMPUTE_SHA1 on libraries:  " << computeSHA1                    << "\n";
   std::cout << "XALT_ETC_DIR:                    " << xalt_etc_dir                   << "\n";
   std::cout << "XALT_DIR:                        " << XALT_DIR                       << "\n";

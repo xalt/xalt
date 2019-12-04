@@ -62,6 +62,7 @@ PATH_TO_MKTEMP        	:= @PATH_TO_MKTEMP@
 PATH_TO_PSTREE       	:= @PATH_TO_PSTREE@
 USE_ARGPARSE         	:= @USE_CONTRIB_ARGPARSE@
 XALT_FILE_PREFIX     	:= @XALT_FILE_PREFIX@
+XALT_LOGGING_URL        := @XALT_LOGGING_URL@
 XALT_PRIME_NUMBER     	:= @XALT_PRIME_NUMBER@
 XALT_PRIME_FMT     	:= @XALT_PRIME_FMT@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
@@ -154,7 +155,7 @@ build_compiled:
                 HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
-                UUID_STR=$(UUID_STR) all
+                UUID_STR=$(UUID_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL) all
 
 
 build_uuid:
@@ -247,6 +248,7 @@ __installMe:
 	        -e 's|@xalt_tracking_mpi_only@|$(TRACKING_MPI_ONLY)|g'     	  \
 	        -e 's|@xalt_site_dir@|$(SITE)|g'                           	  \
 	        -e 's|@xalt_file_prefix@|$(XALT_FILE_PREFIX)|g'            	  \
+	        -e 's|@xalt_logging_url@|$(XALT_LOGGING_URL)|g'            	  \
 	        -e 's|@xalt_prime_number@|$(XALT_PRIME_NUMBER)|g'            	  \
 	        -e 's|@xalt_prime_fmt@|$(XALT_PRIME_FMT)|g'             	  \
 	        -e 's|@xalt_enable_backgrounding@|$(ENABLE_BACKGROUNDING)|g'      \

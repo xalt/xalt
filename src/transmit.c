@@ -1,4 +1,5 @@
 #define  _GNU_SOURCE
+#include <curl/curl.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -14,6 +15,30 @@
 #include "xalt_base_types.h"
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
+
+struct response {
+  char *memory;
+  size_t size;
+};
+
+/* Callback to handle the HTTP response */
+static size_t _write_callback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  size_t realsize = size * nmemb;
+  struct response *mem = (struct response *)userp;
+
+  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+  if (ptr == NULL) {
+    return 0;
+  }
+
+  mem->memory = ptr;
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+
+  return realsize;
+}
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
               const char* syshost, char* resultDir, const char* resultFn)
@@ -33,7 +58,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"syslog")    != 0 ) && 
       (strcasecmp(transmission,"none")      != 0 ) && 
-      (strcasecmp(transmission,"syslogv1")  != 0 ))
+      (strcasecmp(transmission,"syslogv1")  != 0 ) &&
+      (strcasecmp(transmission,"curl")      != 0 ))
     transmission = "file";
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0 )
@@ -112,5 +138,74 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
             iend = sz;
         }
       free(b64);
+    }
+  else if (strcasecmp(transmission, "curl") == 0)
+    {
+
+      CURLcode res;
+      CURL *hnd;
+      struct curl_slist *slist = NULL;
+      struct response chunk;
+      const char *log_url = NULL;
+      const char *status = NULL;
+
+      log_url = getenv("XALT_LOGGING_URL");
+      if (log_url == NULL)
+        log_url = XALT_LOGGING_URL;
+
+      if (strcasecmp(log_url,"") == 0)  {
+        // Log error to syslog
+        asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Logging URL should be provided\n",
+                 XALT_SYSTEM_PATH, syshost);
+        system(cmdline);
+        free(cmdline);
+        return;
+      }
+
+
+      slist = curl_slist_append(slist, "content-type: application/json");
+      chunk.memory = malloc(1);
+      chunk.size = 0;
+
+      hnd = curl_easy_init();
+      if (hnd) {
+        curl_easy_setopt(hnd, CURLOPT_URL, log_url);
+        curl_easy_setopt(hnd, CURLOPT_POST, 1);
+        curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, jsonStr);
+        curl_easy_setopt(hnd, CURLOPT_POSTFIELDSIZE, strlen(jsonStr));
+        curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, slist);
+        curl_easy_setopt(hnd, CURLOPT_HEADER, 1);
+        curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, _write_callback);
+        curl_easy_setopt(hnd, CURLOPT_WRITEDATA, (void *) &chunk);
+
+        res = curl_easy_perform(hnd);
+
+        if(res != CURLE_OK) {
+          // Log error to syslog
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s curl_easy_perform() failed: %s\n",
+                   XALT_SYSTEM_PATH, syshost, curl_easy_strerror(res));
+          system(cmdline);
+          free(cmdline);
+        }
+        else {
+          strtok(chunk.memory, " ");
+          status = strtok(NULL, " ");
+          if ((strcmp(status, "100") == 0)) {
+            (void)  strtok(NULL, " ");
+            status = strtok(NULL, " ");
+          }
+          if ((strcmp(status, "200") != 0) && (strcmp(status, "201") != 0)) {
+            asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s HTTP status code %s received from %s\n",
+                     XALT_SYSTEM_PATH, syshost, status, log_url);
+            system(cmdline);
+            free(cmdline);
+          }
+        }
+
+        curl_easy_cleanup(hnd);
+      }
+
+      free(chunk.memory);
+      curl_slist_free_all(slist);
     }
 }

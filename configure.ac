@@ -15,15 +15,27 @@ AH_TOP(
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs) [[file]]]),
+    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs)])dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs,curl)])dnl
     ,
     withval="file"
     AC_MSG_RESULT([TRANSMISSION=$withval])
     TRANSMISSION="$withval"
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs)]))dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs,curl)]))dnl
+
+AC_SUBST(XALT_LOGGING_URL)
+AC_ARG_WITH(xaltLoggingUrl,
+    AC_HELP_STRING([--with-xaltLoggingUrl=ans],[Logging URL for transmission [[]]]),
+    XALT_LOGGING_URL="$withval"
+    AC_MSG_RESULT([XALT_LOGGING_URL=$with_xaltLoggingUrl])
+    AC_DEFINE_UNQUOTED(XALT_LOGGING_URL, "$with_xaltLoggingUrl",[Logging URL for transmission])dnl
+    ,
+    withval="USE_ENV"
+    AC_MSG_RESULT([XALT_LOGGING_URL=$withval])
+    XALT_LOGGING_URL="$withval"
+    AC_DEFINE_UNQUOTED(XALT_LOGGING_URL, "$withval",[Logging URL for transmission]))dnl
 
 AC_SUBST(XALT_FUNCTION_TRACKING)
 AC_ARG_WITH(functionTracking,
