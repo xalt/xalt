@@ -59,7 +59,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       (strcasecmp(transmission,"syslog")    != 0 ) && 
       (strcasecmp(transmission,"none")      != 0 ) && 
       (strcasecmp(transmission,"syslogv1")  != 0 ) &&
-      (strcasecmp(transmission,"elastic")   != 0 ))
+      (strcasecmp(transmission,"curl")      != 0 ))
     transmission = "file";
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0 )
@@ -139,7 +139,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         }
       free(b64);
     }
-  else if (strcasecmp(transmission, "elastic") == 0)
+  else if (strcasecmp(transmission, "curl") == 0)
     {
 
       CURLcode res;
@@ -149,17 +149,21 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       const char *log_url = NULL;
       const char *status = NULL;
 
-      slist = curl_slist_append(slist, "content-type: application/json");
       log_url = getenv("XALT_LOGGING_URL");
-      if (log_url == NULL) {
+      if (log_url == NULL)
+        log_url = XALT_LOGGING_URL;
+
+      if (strcasecmp(log_url,"") == 0)  {
         // Log error to syslog
         asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Logging URL should be provided\n",
-                   XALT_SYSTEM_PATH, syshost);
+                 XALT_SYSTEM_PATH, syshost);
         system(cmdline);
         free(cmdline);
         return;
       }
 
+
+      slist = curl_slist_append(slist, "content-type: application/json");
       chunk.memory = malloc(1);
       chunk.size = 0;
 

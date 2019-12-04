@@ -106,7 +106,7 @@
 /* The system path that XALT will use (typically /usr/bin:/bin) */
 #undef SYSTEM_PATH
 
-/* transmission style (file,syslog,file_separate_dirs) */
+/* transmission style (file,syslog,file_separate_dirs,curl) */
 #undef TRANSMISSION
 
 /* Using DCGM */
@@ -129,6 +129,9 @@
 
 /* Name of the OS that installed XALT */
 #undef XALT_INSTALL_OS
+
+/* Logging URL for transmission */
+#undef XALT_LOGGING_URL
 
 /* Track MPI executables */
 #undef XALT_MPI_TRACKING
