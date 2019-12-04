@@ -365,7 +365,11 @@ AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h or uuid.h])])
+                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
+AC_CHECK_HEADER(curl/curl.h,
+                [AC_DEFINE([HAVE_CURL_CURL_H], 1,
+                   [Define to 1 if you have <curl/curl.h>.])],
+                [AC_MSG_ERROR([Unable to build XALT without curl/curl.h])])
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -558,6 +562,7 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
 fi
 
 AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
+AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XALT without libcurl])])
 
 MY_TMPDIR=`mktemp -d`
 
@@ -567,6 +572,8 @@ gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
 
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
+AC_SUBST(CURL_STR)
+CRYPTO_STR=`$LOCATE_SO libcurl.so`
 AC_SUBST(UUID_STR)
 
 

@@ -187,7 +187,7 @@ all: ECHO COPY_ALL_LIBS                                         \
 
 
 COPY_ALL_LIBS:
-	for i in $(CRYPTO_STR) $(UUID_STR); do                    \
+	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR); do        \
 	  baseNM="$${i%%:*}";                                     \
           realNM="$${i##*:}";                                     \
 	  cp  $$realNM $(DESTDIR)$(LIB64);                        \
@@ -211,19 +211,19 @@ $(TRP_EXEC) : $(TRP_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XRP_EXEC) : $(XRP_OBJS)
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz -ldl -lcurl
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz -ldl #-lcurl
 
 $(XRE_EXEC) : $(XRE_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ 
 
 $(XRS_EXEC) : $(XRS_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl -lcurl
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl #-lcurl 
 
 $(XGM_EXEC): $(XGM_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XGL_EXEC): $(XGL_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl -lcurl
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl #-lcurl 
 
 $(XEL_EXEC) : $(XEL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^

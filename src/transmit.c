@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <zlib.h>
+#include <dlfcn.h>
 #include "transmit.h"
 #include "zstring.h"
 #include "base64.h"
@@ -142,6 +143,19 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   else if (strcasecmp(transmission, "curl") == 0)
     {
 
+
+#if 0
+
+      void *handle;
+      char *error;
+
+      struct curl_slist (*curl_slist_append)(struct curl_slist *list, const char * string);
+      CURLcode          (*curl_easy_setopt)( CURL *handle, CURLoption option, parameter);
+      CURLcode          (*curl_easy_perform)(CURL *easy_handle);
+      CURLcode          (*curl_easy_cleanup)(CURL *easy_handle);
+      void              (*curl_slist_free_all)(struct curl_slist *list);
+
+
       CURLcode res;
       CURL *hnd;
       struct curl_slist *slist = NULL;
@@ -154,6 +168,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         log_url = XALT_LOGGING_URL;
 
       if (strcasecmp(log_url,"") == 0)  {
+        DEBUG0(stderr,"  Logging URL should be provided!\n");
         // Log error to syslog
         asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Logging URL should be provided\n",
                  XALT_SYSTEM_PATH, syshost);
@@ -161,24 +176,89 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         free(cmdline);
         return;
       }
+      
+      handle = dlopen("libcurl.so", RTLD_LAZY);
+      if (!handle)
+        {
+          handle = dlopen(XALT_DIR "lib64/libcurl.so", RTLD_LAZY);
+          if (!handle)
+            {
+              DEBUG0(stderr,"  Unable to dlopen libcurl.so!\n");
+              asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Unable to dlopen libcurl.so\n",
+                       XALT_SYSTEM_PATH, syshost);
+              system(cmdline);
+              free(cmdline);
+              return;
+            }
+        }
+      
+      curl_slist_append = dlsym(handle,"curl_slist_append");
+      if ((error = dlerror()) != NULL) 
+        {
+          DEBUG1(stderr,"  Unable to dlsym %s\n","curl_slist_append");
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Unable to dlsym %s\n",
+                   XALT_SYSTEM_PATH, syshost,"curl_slist_append");
+          system(cmdline);
+          free(cmdline);
+          return;
+        }
+      curl_easy_setopt = dlsym(handle,"curl_easy_setopt");
+      if ((error = dlerror()) != NULL) 
+        {
+          DEBUG1(stderr,"  Unable to dlsym %s\n","curl_easy_setopt");
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Unable to dlsym %s\n",
+                   XALT_SYSTEM_PATH, syshost,"curl_easy_setopt");
+          system(cmdline);
+          free(cmdline);
+          return;
+        }
+      curl_easy_perform = dlsym(handle,"curl_easy_perform");
+      if ((error = dlerror()) != NULL) 
+        {
+          DEBUG1(stderr,"  Unable to dlsym %s\n","curl_easy_perform");
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Unable to dlsym %s\n",
+                   XALT_SYSTEM_PATH, syshost,"curl_easy_perform");
+          system(cmdline);
+          free(cmdline);
+          return;
+        }
+      curl_easy_cleanup = dlsym(handle,"curl_easy_cleanup");
+      if ((error = dlerror()) != NULL) 
+        {
+          DEBUG1(stderr,"  Unable to dlsym %s\n","curl_easy_cleanup");
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Unable to dlsym %s\n",
+                   XALT_SYSTEM_PATH, syshost,"curl_easy_cleanup");
+          system(cmdline);
+          free(cmdline);
+          return;
+        }
+      curl_slist_free_all = dlsym(handle,"curl_slist_free_all");
+      if ((error = dlerror()) != NULL) 
+        {
+          DEBUG1(stderr,"  Unable to dlsym %s\n","curl_slist_free_all");
+          asprintf(&cmdline, "PATH=%s logger -t XALT_LOGGING_ERROR_%s Unable to dlsym %s\n",
+                   XALT_SYSTEM_PATH, syshost,"curl_slist_free_all");
+          system(cmdline);
+          free(cmdline);
+          return;
+        }
 
-
-      slist = curl_slist_append(slist, "content-type: application/json");
+      slist = (*curl_slist_append)(slist, "content-type: application/json");
       chunk.memory = malloc(1);
       chunk.size = 0;
 
       hnd = curl_easy_init();
       if (hnd) {
-        curl_easy_setopt(hnd, CURLOPT_URL, log_url);
-        curl_easy_setopt(hnd, CURLOPT_POST, 1);
-        curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, jsonStr);
-        curl_easy_setopt(hnd, CURLOPT_POSTFIELDSIZE, strlen(jsonStr));
-        curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, slist);
-        curl_easy_setopt(hnd, CURLOPT_HEADER, 1);
-        curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, _write_callback);
-        curl_easy_setopt(hnd, CURLOPT_WRITEDATA, (void *) &chunk);
+        (*curl_easy_setopt)(hnd, CURLOPT_URL, log_url);
+        (*curl_easy_setopt)(hnd, CURLOPT_POST, 1);
+        (*curl_easy_setopt)(hnd, CURLOPT_POSTFIELDS, jsonStr);
+        (*curl_easy_setopt)(hnd, CURLOPT_POSTFIELDSIZE, strlen(jsonStr));
+        (*curl_easy_setopt)(hnd, CURLOPT_HTTPHEADER, slist);
+        (*curl_easy_setopt)(hnd, CURLOPT_HEADER, 1);
+        (*curl_easy_setopt)(hnd, CURLOPT_WRITEFUNCTION, _write_callback);
+        (*curl_easy_setopt)(hnd, CURLOPT_WRITEDATA, (void *) &chunk);
 
-        res = curl_easy_perform(hnd);
+        res = (*curl_easy_perform)(hnd);
 
         if(res != CURLE_OK) {
           // Log error to syslog
@@ -202,10 +282,11 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           }
         }
 
-        curl_easy_cleanup(hnd);
+        (*curl_easy_cleanup)(hnd);
       }
 
       free(chunk.memory);
-      curl_slist_free_all(slist);
+      (*curl_slist_free_all)(slist);
+#endif      
     }
 }

@@ -34,11 +34,11 @@ endif
 
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
-#override OPTLVL         += -I$(abs_srcdir)/libuuid/src
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
 CRYPTO_STR              := @CRYPTO_STR@
 UUID_STR                := @UUID_STR@
+CURL_STR                := @CURL_STR@
 BROKER_SERVER           := @BROKER_SERVER@
 BROKER_URI              := @BROKER_URI@
 TRACKING_MPI_ONLY    	:= @XALT_TRACKING_MPI_ONLY@
@@ -155,7 +155,7 @@ build_compiled:
                 HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
-                UUID_STR=$(UUID_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL) all
+                UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL) all
 
 
 build_uuid:
@@ -396,20 +396,13 @@ makefile: $(srcdir)/Makefile.in config.status
 src/makefile: $(srcdir)/src/Makefile.in config.status
 	./config.status $@
 
-libuuid/src/makefile: $(srcdir)/src/Makefile.in
-	./libuuid/src/config.status $@
-
 neat:
 	$(RM) *~
 	cd src ;         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          LIB=$(LIB) LIB64=$(LIB64) $@
-	cd libuuid/src ; $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
-                         LIB=$(LIB) LIB64=$(LIB64) $@ 
 
 clean:  neat
 	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
                          $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          LIB=$(LIB) LIB64=$(LIB64) $@
-	cd libuuid/src ; $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
-                         LIB=$(LIB) LIB64=$(LIB64) $@ 
 clobber: clean
