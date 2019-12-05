@@ -8,6 +8,7 @@
 
 #define BAD_INSTALL                "@BAD_INSTALL@"
 #define CRYPTO_STR                 "@CRYPTO_STR@"
+#define CURL_STR                   "@CURL_STR@"
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"

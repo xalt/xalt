@@ -211,19 +211,19 @@ $(TRP_EXEC) : $(TRP_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XRP_EXEC) : $(XRP_OBJS)
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@ $^ -lz -ldl #-lcurl
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS)  -o $@ $^ -lz -ldl           -Wl,-rpath,$(LIB64) -L$(LIB64) -lcurl
 
 $(XRE_EXEC) : $(XRE_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ 
 
 $(XRS_EXEC) : $(XRS_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl #-lcurl 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl -Wl,-rpath,$(LIB64) -L$(LIB64) -lcurl 
 
 $(XGM_EXEC): $(XGM_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(XGL_EXEC): $(XGL_OBJS)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl #-lcurl 
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -lpthread -ldl -Wl,-rpath,$(LIB64) -L$(LIB64) -lcurl
 
 $(XEL_EXEC) : $(XEL_OBJS)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^

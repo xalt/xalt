@@ -164,8 +164,8 @@ test_descript = {
      gcc -o ill $(testDir)/ill.c
      ./ill
 
-     displayThis "rm xalt_run_submission; ./hello\ .mpi"
-     rm XALT/xalt/xalt/libexec/xalt_run_submission
+     displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi"
+     mv XALT/xalt/xalt/libexec/xalt_run_submission XALT/xalt/xalt/libexec/xalt_run_submission.orig
 
      XALT_TRACING=yes ./hello\ .mpi
 

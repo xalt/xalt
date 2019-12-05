@@ -573,10 +573,15 @@ gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 AC_SUBST(CURL_STR)
-CRYPTO_STR=`$LOCATE_SO libcurl.so`
+for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+  CURL_STR=`$LOCATE_SO libcurl.so$i`
+  if test "$?" = 0; then
+    break;
+  fi
+done
+
+
 AC_SUBST(UUID_STR)
-
-
 for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
   UUID_STR=`$LOCATE_SO libuuid.so$i`
   if test "$?" = 0; then
