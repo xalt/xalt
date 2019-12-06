@@ -155,7 +155,8 @@ build_compiled:
                 HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
-                UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL) all
+                UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL)     \
+                PY_BUILD_TOOLS=$(srcdir)/proj_mgmt/py_build_tools      all
 
 
 build_uuid:

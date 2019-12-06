@@ -1,7 +1,8 @@
 THIS_DIR := $(PARENT_DIR)/src
 VPATH = .:$(THIS_DIR)
-CXX := g++
-CC  := gcc
+CXX 	      	  := g++
+CC  	      	  := gcc    
+COPY_LIBS_TO_XALT := $(PY_BUILD_TOOLS)/copy_system_library_to_xalt.py
 ifeq ($(HAVE_DCGM),yes)
   ifeq ($(STATIC_LIBS),yes)
     LIBDCGM:=-ldcgm_stub -ldl
@@ -189,14 +190,10 @@ all: ECHO COPY_ALL_LIBS                                         \
 COPY_ALL_LIBS:
 	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR); do            \
 	  baseNM="$${i%%:*}";                                         \
-          baseBN="${baseNM##*/}";                                     \
           realNM="$${i##*:}";                                         \
-          dirNM="${baseNM%/*}";                                       \
-          fileA=( $(find $$dirNM -name "$${baseBN}*") );              \
-          for file in "$${fileA[@]}"; do                              \
-             cp -a $$file $(DESTDIR)$(LIB64);                         \
-             f2=$(readlink $$file) && cp -a $$f2 $(DESTDIR)$(LIB64);  \
-          done;                                                       \
+	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64)             \
+                               --base $$baseNM                        \
+                               --real $$realNM;                       \
         done
 
 ECHO:
