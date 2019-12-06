@@ -187,11 +187,16 @@ all: ECHO COPY_ALL_LIBS                                         \
 
 
 COPY_ALL_LIBS:
-	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR); do        \
-	  baseNM="$${i%%:*}";                                     \
-          realNM="$${i##*:}";                                     \
-	  cp  $$realNM $(DESTDIR)$(LIB64);                        \
-          ln -s $${realNM##*/} $(DESTDIR)$(LIB64)/$${baseNM##*/}; \
+	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR); do            \
+	  baseNM="$${i%%:*}";                                         \
+          baseBN="${baseNM##*/}";                                     \
+          realNM="$${i##*:}";                                         \
+          dirNM="${baseNM%/*}";                                       \
+          fileA=( $(find $$dirNM -name "$${baseBN}*") );              \
+          for file in "$${fileA[@]}"; do                              \
+             cp -a $$file $(DESTDIR)$(LIB64);                         \
+             f2=$(readlink $$file) && cp -a $$f2 $(DESTDIR)$(LIB64);  \
+          done;                                                       \
         done
 
 ECHO:
