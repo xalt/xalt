@@ -85,6 +85,7 @@ find_real_command $0 $EXEC_X # this command sets $MY_CMD
 # all the options to ld. Instead we are just "cherry-picking" the options
 # we want to know about.
 
+counter=0
 PARTIAL_LINKING=
 printOptA=()
 PrintOptions=
@@ -101,6 +102,9 @@ do
     prev=
     continue
   fi
+
+  
+  counter=$((counter+1))
 
   case "$option" in
     -*=*) optarg=`builtin echo "$option" | sed  's/[-_a-zA-Z0-9]*=//'` ;;
@@ -149,6 +153,17 @@ do
   #fi
 
 done
+
+############################################################
+# if ld was called with no arguments then let the real ld
+# handle it:
+
+if [ "$counter" = 0 ]; then
+    $MY_CMD "${argA[@]}"
+    exit $?
+fi
+
+
 
 ############################################################
 # See if the print options need to be merged
