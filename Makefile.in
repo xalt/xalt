@@ -156,7 +156,7 @@ build_compiled:
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
                 UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL)     \
-                PY_BUILD_TOOLS=$(srcdir)/proj_mgmt/py_build_tools      all
+                PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools      all
 
 
 build_uuid:
