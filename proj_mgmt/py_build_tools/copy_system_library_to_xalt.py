@@ -100,7 +100,6 @@ def main():
         newFn = os.path.join(dirNm,newFn)
       if (os.path.isfile(newFn)):
         if (fileT[newFn]):
-          fileT[newFn] = False
           cmd = "cp "+newFn+" "+lib64_dir
           print (" ",cmd)
           os.system(cmd)
@@ -113,7 +112,6 @@ def main():
         os.exit(-1)
     else:
       if (fileT[fn]):
-        fileT[fn] = False
         cmd = "cp "+fn+" "+lib64_dir
         print (" ",cmd)
         os.system(cmd)
