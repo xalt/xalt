@@ -577,7 +577,7 @@ AC_SUBST(CURL_STR)
 for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
   CURL_STR=`$LOCATE_SO libcurl.so$i`
   status=$?
-  echo CURL_STR: $CURL_STR
+  echo Status: "$status" CURL_STR: $CURL_STR:
   if test "$status" -eq 0; then
     break;
   fi
