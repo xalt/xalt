@@ -61,8 +61,6 @@ class CmdLineOptions(object):
     return args
 
 def files_in_tree(path,pattern):
-  path = os.path.realpath(path)
-
   fileA = []
   if (not os.path.isdir(path)):
     return fileA
@@ -82,16 +80,17 @@ def main():
   realLib   = args.real
 
   baseBn    = os.path.basename(baseLib)
-  dirNm     = os.path.dirname(baseLib)
+  dirNm     = os.path.realpath(os.path.dirname(baseLib))
   pattern   = os.path.join(dirNm,baseBn)+"*"
   fileA     = files_in_tree(dirNm, pattern)
   fileA.append(realLib)
   fileT     = {}
   for fn in fileA:
+    print("Finding "+fn)
     fileT[fn] = True
 
   for fn in fileT:
-    print(fn+":")
+    print("Storing "fn+":")
     if (os.path.islink(fn)):
       newFn = os.readlink(fn)
       if (newFn.find('/') == -1):
