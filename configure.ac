@@ -578,7 +578,7 @@ for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
   CURL_STR=`$LOCATE_SO libcurl.so$i`
   status=$?
   echo CURL_STR: $CURL_STR
-  if test "$status" eq 0; then
+  if test "$status" -eq 0; then
     break;
   fi
 done
@@ -588,7 +588,7 @@ echo Final_CURL_STR: $CURL_STR
 AC_SUBST(UUID_STR)
 for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
   UUID_STR=`$LOCATE_SO libuuid.so$i`
-  if test "$?" eq 0; then
+  if test "$?" -eq 0; then
     break;
   fi
 done
