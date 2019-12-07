@@ -24,5 +24,6 @@ int main(int argc, char** argv)
   int result = dlinfo(handle, RTLD_DI_LINKMAP,  &map);
   char * name = realpath(map->l_name, NULL);
   printf("%s:%s\n",map->l_name, name);
+  return 0;
 }
   
