@@ -86,11 +86,10 @@ def main():
   fileA.append(realLib)
   fileT     = {}
   for fn in fileA:
-    print("Finding "+fn)
     fileT[fn] = True
 
   for fn in fileT:
-    print("Storing "fn+":")
+    print("Storing "+fn+":")
     if (os.path.islink(fn)):
       newFn = os.readlink(fn)
       if (newFn.find('/') == -1):
