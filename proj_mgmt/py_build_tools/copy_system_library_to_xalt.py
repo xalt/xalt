@@ -91,18 +91,15 @@ def main():
     fileT[fn] = True
 
   for fn in fileT:
-    if (not fileT[fn]):
-      continue
     print(fn+":")
     if (os.path.islink(fn)):
       newFn = os.readlink(fn)
       if (newFn.find('/') == -1):
         newFn = os.path.join(dirNm,newFn)
       if (os.path.isfile(newFn)):
-        if (fileT[newFn]):
-          cmd = "cp "+newFn+" "+lib64_dir
-          print (" ",cmd)
-          os.system(cmd)
+        cmd = "cp "+newFn+" "+lib64_dir
+        print (" ",cmd)
+        os.system(cmd)
         cmd = "ln -sf "+os.path.basename(newFn)+" "+ os.path.join(lib64_dir,os.path.basename(fn))
         print (" ",cmd)
         os.system(cmd)
@@ -111,10 +108,9 @@ def main():
         print ("Cannot deal w/link: ",newFn)
         os.exit(-1)
     else:
-      if (fileT[fn]):
-        cmd = "cp "+fn+" "+lib64_dir
-        print (" ",cmd)
-        os.system(cmd)
+      cmd = "cp "+fn+" "+lib64_dir
+      print (" ",cmd)
+      os.system(cmd)
 
 
 if ( __name__ == '__main__'): main()
