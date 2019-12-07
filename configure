@@ -5214,11 +5214,14 @@ CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
 for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
   CURL_STR=`$LOCATE_SO libcurl.so$i`
-  if test "$?" = 0; then
+  status=$?
+  echo CURL_STR: $CURL_STR
+  if test "$status" = 0; then
     break;
   fi
 done
 
+echo Final_CURL_STR: $CURL_STR
 
 
 for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
