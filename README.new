@@ -41,3 +41,7 @@ XALT 2.7+
     (2.7.18) * Issue #21: README.md doc patch.
     (2.7.19) * Fix bug with reporting GPU tracking when HAVE_DCGM=no and HAVE_NVML=yes in
                xalt_configuration_report
+    (2.7.20) * Issue #22: Allow for the curl transmission style. Copy system libcurl into XALT
+               lib64 install directory and Rpath that directory into xalt_run_submission etc.
+             * Issue #23: Running XALT's "ld" alone now produces an error: No input files just
+               like the real ld.
