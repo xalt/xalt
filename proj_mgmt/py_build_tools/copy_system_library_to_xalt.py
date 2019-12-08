@@ -53,9 +53,10 @@ class CmdLineOptions(object):
   def execute(self):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--lib64",    dest='lib64',    action="store", help="LIB64 install directory")
-    parser.add_argument("--base",     dest='base',     action="store", help="base library")
-    parser.add_argument("--real",     dest='real',     action="store", help="real library")
+    parser.add_argument("--lib64",    dest='lib64',    action="store",                     help="LIB64 install directory")
+    parser.add_argument("--base",     dest='base',     action="store",                     help="base library")
+    parser.add_argument("--real",     dest='real',     action="store",                     help="real library")
+    parser.add_argument("--verbose",  dest='verbose',  action="store_true", default=False, help="Print actions")
     args = parser.parse_args()
     
     return args
@@ -78,6 +79,7 @@ def main():
   lib64_dir = args.lib64
   baseLib   = args.base
   realLib   = args.real
+  verbose   = args.verbose
 
   baseBn    = os.path.basename(baseLib)
   dirNm     = os.path.realpath(os.path.dirname(baseLib))
@@ -89,7 +91,7 @@ def main():
     fileT[fn] = True
 
   for fn in fileT:
-    print("Storing "+fn+":")
+    if (verbose): print("Storing "+fn+":")
     if (os.path.islink(fn)):
       newFn = os.readlink(fn)
       if (newFn.find('/') == -1):
@@ -97,11 +99,11 @@ def main():
       if (os.path.isfile(newFn)):
         if (fileT[newFn]):
           cmd = "cp "+newFn+" "+lib64_dir
-          print (" ",cmd)
+          if (verbose): print (" ",cmd)
           os.system(cmd)
           fileT[newFn] = False
         cmd = "ln -sf "+os.path.basename(newFn)+" "+ os.path.join(lib64_dir,os.path.basename(fn))
-        print (" ",cmd)
+        if (verbose): print (" ",cmd)
         os.system(cmd)
 
       else:
@@ -110,7 +112,7 @@ def main():
     else:
       if (fileT[fn]):
         cmd = "cp "+fn+" "+lib64_dir
-        print (" ",cmd)
+        if (verbose): print (" ",cmd)
         os.system(cmd)
         fileT[fn] = False
 
