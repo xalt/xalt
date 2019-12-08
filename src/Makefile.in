@@ -80,7 +80,7 @@ CXX_SRC     :=                             \
                xalt_extract_linker.C  	   \
                xalt_generate_watermark.C   \
                xalt_generate_linkdata.C    \
-	       xalt_rmap_exist.C           \
+	       xalt_rmap_exists.C          \
                xalt_run_submission.C       \
                xalt_strip_linklib.C        \
                xalt_utils.C                \
@@ -96,8 +96,8 @@ TRP_EXEC     := $(DESTDIR)$(LIBEXEC)/test_record_pkg
 TRP_CXX_SRC  := test_record_pkg.C capture.C
 TRP_OBJS     := $(patsubst %.C, %.o, $(TRP_CXX_SRC))
 
-XRE_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_rmap_exist
-XRE_CXX_SRC  := xalt_rmap_exist.C xalt_utils.C
+XRE_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_rmap_exists
+XRE_CXX_SRC  := xalt_rmap_exists.C xalt_utils.C
 XRE_OBJS     := $(patsubst %.C, %.o, $(XRE_CXX_SRC)) 
 
 XRS_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_run_submission
