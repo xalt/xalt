@@ -137,7 +137,7 @@ OBFUSCATE_HDR           := src/xalt_obfuscate.h
 OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
 
 
-.PHONY: LINKS build_compiled build_uuid
+.PHONY: LINKS build_compiled
 
 all:
 	@echo done
@@ -157,15 +157,6 @@ build_compiled:
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
                 UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL)     \
                 PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools      all
-
-
-build_uuid:
-	cd libuuid/src;                                                                            \
-        $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC)                         \
-                         LIB=$(LIB64) clean;                                                       \
-        $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
-                LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN) LIB=$(LIB64)       \
-                OPTLVL="$(OPTLVL)" all
 
 inst_obfuscate:
 	cp $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)

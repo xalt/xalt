@@ -161,6 +161,7 @@ static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
 static int          have_uuid             = 0;
 static double       probability           = 1.0;
+static double       testing_runtime       = -1.0;
 static pid_t        ppid	          = 0;
 static pid_t        pid  	          = 0;
 static int          errfd	          = -1;
@@ -696,6 +697,10 @@ void myinit(int argc, char **argv)
   exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
+  v = getenv("XALT_TESTING_RUNTIME");
+  if (v)
+    testing_runtime = strtod(v,NULL);
+      
   // Create a start record for any MPI executions with an acceptable number of tasks.
   // or a PKG type 
   if (my_size >= mpi_always_record )
@@ -1003,7 +1008,14 @@ void myfini()
     {
       if (xalt_sampling)
 	{
-	  double run_time = end_time - start_time;
+	  double run_time;
+	  if (testing_runtime > -0.1)
+	    {
+	      run_time = testing_runtime;
+	      end_time = start_time + run_time;
+	    }
+	  else
+	    run_time = end_time - start_time;
 	  probability     = prgm_sample_probability(run_time);
 
 	  if (my_rand >= probability)
