@@ -282,6 +282,10 @@ void myinit(int argc, char **argv)
               perror("uname");
               exit(EXIT_FAILURE);
             }
+	  my_size = compute_value(sizeA);
+	  if (my_size < 1L)
+	    my_size = 1L;
+
           fprintf(stderr, "---------------------------------------------\n"
                           " Date:          %s\n"
                           " XALT Version:  %s\n"
@@ -295,7 +299,7 @@ void myinit(int argc, char **argv)
                   u.version, u.machine);
         }
       get_abspath(exec_path,sizeof(exec_path));
-      fprintf(stderr,"myinit(%ld,%s,%s){\n", my_rank, STR(STATE),exec_path);
+      fprintf(stderr,"myinit(%ld/%ld,%s,%s){\n", my_rank, my_size, STR(STATE),exec_path);
     }
 
   /***********************************************************
@@ -393,11 +397,6 @@ void myinit(int argc, char **argv)
     build_mask |= BIT_MPI;
       
   
-  /* Test for MPI-ness */
-  my_size      = compute_value(sizeA);
-  if (my_size < 1L)
-    my_size = 1L;
-
   /* Get full absolute path to executable */
   get_abspath(exec_path,sizeof(exec_path));
   path_results = keep_path(exec_path);
@@ -410,6 +409,10 @@ void myinit(int argc, char **argv)
       unsetenv("XALT_RUN_UUID");
       return;
     }
+
+  my_size = compute_value(sizeA);
+  if (my_size < 1L)
+    my_size = 1L;
 
   if (my_size > 1L)
     {
@@ -720,6 +723,8 @@ void myinit(int argc, char **argv)
         }
       run_submission_exists = 1;
 
+      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, mpi_always_record);
+
       if (have_uuid)
 	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
       else
@@ -756,8 +761,8 @@ void myinit(int argc, char **argv)
     }
   else
     {
-      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> Not producing a start record\n",
-             xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+      DEBUG4(stderr,"    -> MPI_SIZE: %ld < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
+             my_size, mpi_always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
   /**********************************************************

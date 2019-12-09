@@ -41,7 +41,7 @@ exit 2
 from __future__  import print_function
 from fnmatch     import fnmatch
 from collections import OrderedDict 
-import os, sys, re, argparse
+import os, sys, re, argparse, subprocess
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -100,11 +100,11 @@ def main():
         if (fileT[newFn]):
           cmd = "cp "+newFn+" "+lib64_dir
           if (verbose): print (" ",cmd)
-          os.system(cmd)
+          subprocess.call(cmd)
           fileT[newFn] = False
         cmd = "ln -sf "+os.path.basename(newFn)+" "+ os.path.join(lib64_dir,os.path.basename(fn))
         if (verbose): print (" ",cmd)
-        os.system(cmd)
+        subprocess.call(cmd)
 
       else:
         print ("Cannot deal w/link: ",newFn)
@@ -113,7 +113,7 @@ def main():
       if (fileT[fn]):
         cmd = "cp "+fn+" "+lib64_dir
         if (verbose): print (" ",cmd)
-        os.system(cmd)
+        subprocess.call(cmd)
         fileT[fn] = False
 
 
