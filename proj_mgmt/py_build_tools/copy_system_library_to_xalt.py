@@ -100,11 +100,11 @@ def main():
         if (fileT[newFn]):
           cmd = "cp "+newFn+" "+lib64_dir
           if (verbose): print (" ",cmd)
-          subprocess.call(cmd)
+          subprocess.call(cmd, shell=True)
           fileT[newFn] = False
         cmd = "ln -sf "+os.path.basename(newFn)+" "+ os.path.join(lib64_dir,os.path.basename(fn))
         if (verbose): print (" ",cmd)
-        subprocess.call(cmd)
+        subprocess.call(cmd, shell=True)
 
       else:
         print ("Cannot deal w/link: ",newFn)
@@ -113,7 +113,7 @@ def main():
       if (fileT[fn]):
         cmd = "cp "+fn+" "+lib64_dir
         if (verbose): print (" ",cmd)
-        subprocess.call(cmd)
+        subprocess.call(cmd, shell=True)
         fileT[fn] = False
 
 
