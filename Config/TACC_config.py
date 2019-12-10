@@ -131,7 +131,7 @@ path_patterns = [
 # record. By default MPI_ALWAYS_RECORD = 1.  Namely that all MPI 
 # tasks are recorded.
 
-MPI_ALWAYS_RECORD = 256
+MPI_ALWAYS_RECORD = 128
 
 #------------------------------------------------------------
 # The array of array used by interval_array has the following
@@ -193,7 +193,7 @@ interval_array = [
 
 mpi_interval_array = [
     [    0.0,              0.0001 ],
-    [  600.0,              0.01   ],
+    [  900.0,              0.01   ],
     [ 1800.0,              1.0    ],
     [ sys.float_info.max,  1.0    ]
 ]
