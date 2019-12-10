@@ -251,6 +251,8 @@ void myinit(int argc, char **argv)
   const char * rankA[] = {"OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "PMI_RANK", "SLURM_PROCID",         NULL };
   const char * sizeA[] = {"OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "PMI_SIZE", "SLURM_STEP_NUM_TASKS", NULL };
 
+  pid_str[0] = '\0';
+
   struct utsname u;
 
   my_rank = compute_value(rankA);
@@ -305,12 +307,11 @@ void myinit(int argc, char **argv)
    * Is this is built-in or LD_PRELOAD version of this file?
    ***********************************************************/
 
-  sprintf(&pid_str[0],"%ld",(long) getpid());
-  
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
+      sprintf(&pid_str[0],"%ld",(long) getpid());
       char* env_pid = getenv("__XALT_INITIAL_STATE_PID__");
       if (strcmp(env_pid,pid_str) == 0)
 	{
@@ -443,13 +444,11 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  if (strcmp(argv[0],"./call_hello") == 0)
-    setenv("__XALT_INITIAL_STATE__","REGULAR",1);
-  else
-    {
-      setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
-      setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
-    }
+  if (pid_str[0] == '\0')
+    sprintf(&pid_str[0],"%ld",(long) getpid());
+    
+  setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
+  setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
 
   /* Build a json version of the user's command line. */
 
