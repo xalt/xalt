@@ -177,10 +177,24 @@ MPI_ALWAYS_RECORD = 256
 # Note that scalar execution only uses this table IFF
 # $XALT_SAMPLING equals yes
 
+
 interval_array = [
     [    0.0,              0.0001 ],
     [ 1800.0,              0.01   ],
     [ 7200.0,              1.0    ],
+    [ sys.float_info.max,  1.0    ]
+]
+
+#------------------------------------------------------------
+# Sites can also define a different sampling specification
+# for mpi programs different from interval_array.  If no
+# mpi_interval_array is given then the interval_array is used
+# for both scalar and mpi programs.
+
+mpi_interval_array = [
+    [    0.0,              0.0001 ],
+    [  600.0,              0.01   ],
+    [ 1800.0,              1.0    ],
     [ sys.float_info.max,  1.0    ]
 ]
 

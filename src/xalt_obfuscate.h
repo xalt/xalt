@@ -49,8 +49,10 @@
 #define pathPatternSz               PASTE2(__XALT_pathPatternSz,              MY_NAME)
 #define envPatternA                 PASTE2(__XALT_envPatternA,                MY_NAME)
 #define envPatternSz                PASTE2(__XALT_envPatternSz,               MY_NAME)
-#define rangeA                      PASTE2(__XALT_rangeA,                     MY_NAME)
-#define rangeSz                     PASTE2(__XALT_rangeSz,                    MY_NAME)
+#define scalar_rangeA               PASTE2(__XALT_scalar_rangeA,              MY_NAME)
+#define scalar_rangeSz              PASTE2(__XALT_scalar_rangeSz,             MY_NAME)
+#define mpi_rangeA                  PASTE2(__XALT_mpi_rangeA,                 MY_NAME)
+#define mpi_rangeSz                 PASTE2(__XALT_mpi_rangeSz,                MY_NAME)
 #define mpi_always_record           PASTE2(__XALT_mpi_always_record,          MY_NAME)
 
 #define background                  PASTE2(__XALT_background,                 MY_NAME)

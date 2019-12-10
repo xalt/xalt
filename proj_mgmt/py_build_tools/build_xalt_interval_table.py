@@ -81,28 +81,13 @@ def convert_template(a, inputFn, outputFn):
   of.write("".join(outA))
   of.close()
 
-def main():
-
-  args = CmdLineOptions().execute()
-
-  namespace = {}
-  exec(open(args.confFn).read(), namespace)
-
-  intervalA         = namespace.get('interval_array',       {})
-  mpi_always_record = namespace.get('MPI_ALWAYS_RECORD',     2)
-
-  if (len(intervalA) < 2):
-    intervalA = [
-      [ 0.0,                1.0 ],
-      [ sys.float_info.max, 1.0 ]
-    ]
-
+def check_intervalA(name, intervalA):
   #check first and last entry
   if (intervalA[0][0] > 1.e-8):
-    print("First time entry in interval_array is too big, it should be zero")
+    print("First time entry in",name,"is too big, it should be zero")
     sys.exit(-1)
   if (intervalA[-1][0] < 1.e37):
-    print("Last time entry in wrong.  It should be sys.float_info.max!",)
+    print("Last time entry in wrong in,",name,". It should be sys.float_info.max!",)
     sys.exit(-1)
 
   # Check for increasing time and probabilities 0<= prob <= 1.0
@@ -111,21 +96,43 @@ def main():
     t    = entry[0]
     prob = entry[1]
     if (t < t0):
-      print("the times should be increasing")
+      print("the times should be increasing in:",name)
       sys.exit(-1)
     t0 = t
 
     if (prob < 0.0 or prob > 1.0):
-      print("the probabilities must be 0 <= probability <= 1.0")
+      print("the probabilities must be 0 <= probability <= 1.0 in:",name)
       sys.exit(-1)
 
-  intervalStr = convert_to_string(intervalA)
+def main():
+
+  args = CmdLineOptions().execute()
+
+  namespace = {}
+  exec(open(args.confFn).read(), namespace)
+
+  intervalA         = namespace.get('interval_array',      {})
+  mpi_always_record = namespace.get('MPI_ALWAYS_RECORD',    2)
+
+  if (len(intervalA) < 2):
+    intervalA = [
+      [ 0.0,                1.0 ],
+      [ sys.float_info.max, 1.0 ]
+    ]
+  mpi_intervalA     = namespace.get('mpi_interval_array',  {})
+  if (len(mpi_intervalA) < 2):
+    mpi_intervalA = intervalA
+
+  check_intervalA("intervalA",    intervalA)
+  check_intervalA("mpi_intervalA",mpi_intervalA)
+
+  intervalStr     = convert_to_string(intervalA)
+  mpi_intervalStr = convert_to_string(mpi_intervalA)
   pattA = [
     ['@rangeA@',              intervalStr],
+    ['@mpi_rangeA@',          mpi_intervalStr],
     ['@MPI_ALWAYS_RECORD@',   str(mpi_always_record)],
   ]
   convert_template(pattA, args.input, args.output)
   
-
-
 if ( __name__ == '__main__'): main()
