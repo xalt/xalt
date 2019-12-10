@@ -1206,6 +1206,13 @@ static  double prgm_sample_probability(int ntasks, double runtime)
   double prob = 1.0;
   int sz;
   int i;
+
+  /* Pointer to an array of structs
+     See https://stackoverflow.com/questions/16201607/c-pointer-to-array-of-structs
+     for a discussion of how to do this.
+   */
+
+
   interval (*p_interval)[];
   if (ntasks > 1)
     {
