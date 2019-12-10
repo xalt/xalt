@@ -443,7 +443,7 @@ void myinit(int argc, char **argv)
   pid_t pid = getpid();
   char *pid_str;
   uname(&u);
-  asprintf(&pid_str,"%s:%ld:%s", u.nodename,(long) pid,argv[0],argv[1] || "NULL");
+  asprintf(&pid_str,"%s:%ld:%s:%s", u.nodename,(long) pid,argv[0],argv[1] || "NULL");
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
 
   /* Build a json version of the user's command line. */
