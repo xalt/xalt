@@ -239,7 +239,7 @@ void myinit(int argc, char **argv)
   char * cmdline         = NULL;
   char * ld_preload_strp = NULL;
   char   rand_str[20];
-  char   pid_str[20];
+  char * pid_str         = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[DATESZ];
   const char * v;
@@ -250,8 +250,6 @@ void myinit(int argc, char **argv)
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
   const char * rankA[] = {"OMPI_COMM_WORLD_RANK", "MV2_COMM_WORLD_RANK", "PMI_RANK", "SLURM_PROCID",         NULL };
   const char * sizeA[] = {"OMPI_COMM_WORLD_SIZE", "MV2_COMM_WORLD_SIZE", "PMI_SIZE", "SLURM_STEP_NUM_TASKS", NULL };
-
-  pid_str[0] = '\0';
 
   struct utsname u;
 
@@ -311,7 +309,12 @@ void myinit(int argc, char **argv)
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
-      sprintf(&pid_str[0],"%ld",(long) getpid());
+      if (uname(&u) != 0)
+	{
+	  perror("uname");
+	  exit(EXIT_FAILURE);
+	}
+      asprintf(&pid_str,"%s:%ld",u.nodename, (long) getpid());
       char* env_pid = getenv("__XALT_INITIAL_STATE_PID__");
       if (strcmp(env_pid,pid_str) == 0)
 	{
@@ -444,8 +447,8 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  if (pid_str[0] == '\0')
-    sprintf(&pid_str[0],"%ld",(long) getpid());
+  if (pid_str == NULL)
+    asprintf(&pid_str,"%s:%ld",u.nodename, (long) getpid());
     
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
