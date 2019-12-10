@@ -45,6 +45,5 @@ XALT 2.7+
                lib64 install directory and Rpath that directory into xalt_run_submission etc.
              * Issue #23: Running XALT's "ld" alone now produces an error: No input files just
                like the real ld.
-*WIP*	       
     (2.7.21) * Allow XALT to have separate sampling intervals for scalar or mpi programs.
 	       
