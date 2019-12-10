@@ -239,6 +239,7 @@ void myinit(int argc, char **argv)
   char * cmdline         = NULL;
   char * ld_preload_strp = NULL;
   char   rand_str[20];
+  char   pid_str[20];
   char   dateStr[DATESZ];
   char   fullDateStr[DATESZ];
   const char * v;
@@ -304,13 +305,19 @@ void myinit(int argc, char **argv)
    * Is this is built-in or LD_PRELOAD version of this file?
    ***********************************************************/
 
+  sprintf(&pid_str[0],"%ld",(long) getpid());
+  
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
-      DEBUG2(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" exiting\n}\n\n",v,STR(STATE));
-      reject_flag = XALT_WRONG_STATE;
-      return;
+      char* env_pid = getenv("__XALT_INITIAL_STATE_PID__");
+      if (strcmp(env_pid,pid_str) == 0)
+	{
+	  DEBUG3(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, pid_str,env_pid);
+	  reject_flag = XALT_WRONG_STATE;
+	  return;
+	}
     }
 
   /***********************************************************
@@ -436,7 +443,13 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
+  if (strcmp(argv[0],"./call_hello") == 0)
+    setenv("__XALT_INITIAL_STATE__","REGULAR",1);
+  else
+    {
+      setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
+      setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
+    }
 
   /* Build a json version of the user's command line. */
 
