@@ -13,8 +13,10 @@ typedef struct
 
 const int    mpi_always_record  = @MPI_ALWAYS_RECORD@;
 
-interval     rangeA[]	        = { @rangeA@ };
-const int    rangeSz	        = N_ELEMENTS(rangeA);
+interval     scalar_rangeA[]    = { @rangeA@ };
+interval     mpi_rangeA[]       = { @mpi_rangeA@ };
+const int    scalar_rangeSz     = N_ELEMENTS(scalar_rangeA);
+const int    mpi_rangeSz        = N_ELEMENTS(mpi_rangeA);
 
 #endif
 

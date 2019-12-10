@@ -133,7 +133,7 @@ static long            compute_value(const char **envA);
 static void            get_abspath(char * path, int sz);
 static volatile double epoch();
 static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
-static double          prgm_sample_probability(double runtime);
+static double          prgm_sample_probability(int ntasks, double runtime);
 #ifdef USE_NVML
 static int             load_nvml();
 #endif
@@ -1020,8 +1020,8 @@ void myfini()
 	      end_time = start_time + run_time;
 	    }
 	  else
-	    run_time = end_time - start_time;
-	  probability     = prgm_sample_probability(run_time);
+	    run_time  = end_time - start_time;
+	  probability = prgm_sample_probability(my_size, run_time);
 
 	  if (my_rand >= probability)
 	    {
@@ -1203,15 +1203,35 @@ static void capture(const char* cmdline, char* buffer, int bufSz)
 }  
   
 
-static  double prgm_sample_probability(double runtime)
+static  double prgm_sample_probability(int ntasks, double runtime)
 {
   double prob = 1.0;
+  int sz;
   int i;
-  for (i = 0; i < rangeSz-1; ++i)
+
+  /* Pointer to an array of structs
+     See https://stackoverflow.com/questions/16201607/c-pointer-to-array-of-structs
+     for a discussion of how to do this.
+   */
+
+
+  interval (*p_interval)[];
+  if (ntasks > 1)
     {
-      if (runtime < rangeA[i+1].left)
+      sz	 = mpi_rangeSz;
+      p_interval = &mpi_rangeA;
+    }
+  else
+    {
+      sz	 = scalar_rangeSz;
+      p_interval = &scalar_rangeA;
+    }
+	
+  for (i = 0; i < sz-1; ++i)
+    {
+      if (runtime < (*p_interval)[i+1].left)
   	{
-  	  prob = rangeA[i].prob;
+  	  prob = (*p_interval)[i].prob;
   	  break;
   	}
     }
