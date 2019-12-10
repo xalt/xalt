@@ -440,6 +440,9 @@ void myinit(int argc, char **argv)
     }
 
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
+  char *pid_str;
+  asprintf(pid_str,"%d",getpid());
+  setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
 
   /* Build a json version of the user's command line. */
 
