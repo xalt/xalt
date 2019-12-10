@@ -442,7 +442,7 @@ void myinit(int argc, char **argv)
   setenv("__XALT_INITIAL_STATE__",STR(STATE),1);
   pid_t pid = getpid();
   char *pid_str;
-  asprintf(&pid_str,"%jd",pid);
+  asprintf(&pid_str,"%jd",(intmax_t) pid);
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
 
   /* Build a json version of the user's command line. */
