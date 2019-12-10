@@ -282,9 +282,6 @@ void myinit(int argc, char **argv)
               perror("uname");
               exit(EXIT_FAILURE);
             }
-	  my_size = compute_value(sizeA);
-	  if (my_size < 1L)
-	    my_size = 1L;
 
           fprintf(stderr, "---------------------------------------------\n"
                           " Date:          %s\n"
@@ -298,6 +295,9 @@ void myinit(int argc, char **argv)
                   dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
                   u.version, u.machine);
         }
+      my_size = compute_value(sizeA);
+      if (my_size < 1L)
+	my_size = 1L;
       get_abspath(exec_path,sizeof(exec_path));
       fprintf(stderr,"myinit(%ld/%ld,%s,%s){\n", my_rank, my_size, STR(STATE),exec_path);
     }
@@ -828,7 +828,7 @@ void myfini()
       close(STDERR_FILENO);
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
-      DEBUG3(my_stderr,"\nmyfini(%ld,%s,%s){\n", my_rank, STR(STATE), exec_path);
+      DEBUG4(my_stderr,"\nmyfini(%ld/%ld,%s,%s){\n", my_rank, my_size, STR(STATE), exec_path);
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
@@ -1040,6 +1040,8 @@ void myfini()
 	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n", 
 		   run_time, my_rand, probability, exec_path);
 	}
+      else
+	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
   
   const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
