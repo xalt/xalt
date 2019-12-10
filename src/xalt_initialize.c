@@ -272,29 +272,26 @@ void myinit(int argc, char **argv)
   v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
     {
-      if (!v) 
-        {
-          time_t    now    = (time_t) epoch();
-          strftime(dateStr, DATESZ, "%c", localtime(&now));
-          errno = 0;
-          if (uname(&u) != 0)
-            {
-              perror("uname");
-              exit(EXIT_FAILURE);
-            }
+      time_t    now    = (time_t) epoch();
+      strftime(dateStr, DATESZ, "%c", localtime(&now));
+      errno = 0;
+      if (uname(&u) != 0)
+	{
+	  perror("uname");
+	  exit(EXIT_FAILURE);
+	}
 
-          fprintf(stderr, "---------------------------------------------\n"
-                          " Date:          %s\n"
-                          " XALT Version:  %s\n"
-                          " Nodename:      %s\n"
-                          " System:        %s\n"
-                          " Release:       %s\n"
-                          " O.S. Version:  %s\n"
-                          " Machine:       %s\n"
-                          "---------------------------------------------\n\n",
-                  dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
-                  u.version, u.machine);
-        }
+      fprintf(stderr, "---------------------------------------------\n"
+                      " Date:          %s\n"
+                      " XALT Version:  %s\n"
+                      " Nodename:      %s\n"
+                      " System:        %s\n"
+                      " Release:       %s\n"
+                      " O.S. Version:  %s\n"
+                      " Machine:       %s\n"
+                      "---------------------------------------------\n\n",
+              dateStr, XALT_GIT_VERSION, u.nodename, u.sysname, u.release,
+              u.version, u.machine);
       my_size = compute_value(sizeA);
       if (my_size < 1L)
 	my_size = 1L;
