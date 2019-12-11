@@ -47,7 +47,7 @@ test_descript = {
      export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
      displayThis "mpirun -n 1 ./hello\ .mpi --abc def"
-     mpirun -n 1 ./hello\ .mpi --abc def
+     mpirun -n 1 ./hello\ .mpi --abc def --seq 01
      
      displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
      rm -rf Ðì®
@@ -56,36 +56,36 @@ test_descript = {
      mv helloñ.mpi Ðì®
 
      displayThis "mpirun -n 1 Ðì®/helloñ.mpi"
-     mpirun -n 1 Ðì®/helloñ.mpi
+     mpirun -n 1 Ðì®/helloñ.mpi --seq 02
      
      displayThis "Setting LD_PRELOAD, ./hello\ .mpi"
      export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
-     LD_BIND_NOW=1 ./hello\ .mpi --ntasks p "a';'d"
+     LD_BIND_NOW=1 ./hello\ .mpi --ntasks p "a';'d" --seq 03
      
      g++ -o try.rd $(testDir)/try.C -rdynamic
 
      displayThis "XALT_TRACING=yes ./try.rd > try.log 2>&1"
-     XALT_TRACING=yes ./try.rd > try.PRELOAD.log 2>&1
+     XALT_TRACING=yes ./try.rd --seq 04 > try.PRELOAD.log 2>&1
 
      displayThis "XALT_TRACING=yes LD_PRELOAD= ./try.rd > try.log 2>&1"
-     LD_PRELOAD= XALT_TRACING=yes ./try.rd > try.REGULAR.log 2>&1
+     LD_PRELOAD= XALT_TRACING=yes ./try.rd --seq 05 > try.REGULAR.log 2>&1
 
      export XALT_PRELOAD_ONLY=yes
      displayThis "build empty_regexp"
      gcc -o empty_regexp $(testDir)/empty_regexp.c 
      displayThis "run empty_regexp"
-     ./empty_regexp
+     ./empty_regexp  --seq 06
 
      displayThis "build try_uuid and run it"
      gcc -o try_uuid $(testDir)/try_uuid.c -luuid
-     ./try_uuid '`i+1`'
+     ./try_uuid '`i+1`' --seq 07
 
      displayThis "mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
      
      displayThis "mpirun -n 1 ./helloññ"
      export RTM_PATH="RTM path FOO"
-     mpirun -n 1 ./helloññ
+     mpirun -n 1 ./helloññ --seq 08
 
      displayThis "Disable XALT TRACKING"
      displayThis "mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c"
@@ -95,33 +95,33 @@ test_descript = {
      displayThis "Enable XALT TRACKING"
      displayThis "XALT_TRACING=yes ./helloñññ" '`i+1`' "a;'"
      export XALT_EXECUTABLE_TRACKING=yes
-     XALT_TRACING=yes ./helloñññ '`i+1`' "a;'"
+     XALT_TRACING=yes ./helloñññ '`i+1`' "a;'" --seq 09
 
      displayThis "Turn off command line recording for: mpirun -n 1 ./hello\ .mpi --abc def"
      export XALT_CMDLINE_RECORD=no
-     mpirun -n 1 ./hello\ .mpi --abc def
+     mpirun -n 1 ./hello\ .mpi --abc def --seq 10
      unset XALT_CMDLINE_RECORD
 
      displayThis "XALT_SCALAR_TRACKING=no ./helloñññ"
-     XALT_SCALAR_TRACKING=no ./helloñññ
+     XALT_SCALAR_TRACKING=no ./helloñññ --noseq 11
 
      displayThis "gfortran -fopenmp -o omp_pi"
      gfortran -fopenmp -o omp_pi $(testDir)/omp_pi.f90
 
      displayThis "OMP_NUM_THREADS=4 ./omp_pi"
-     OMP_NUM_THREADS=4 ./omp_pi
+     OMP_NUM_THREADS=4 ./omp_pi --seq 11
 
      displayThis "mpif90 -fopenmp -o hybrid_daxpy"
      mpif90 -fopenmp -o hybrid_daxpy $(testDir)/hybrid_daxpy.f90
      
 
      displayThis "OMP_NUM_THREADS=2 ./mpirun -n 2 ./hybrid_daxpy"
-     OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy
+     OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy --seq 12
 
      displayThis "XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c"
      XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c
      displayThis "./get_XALT_env"
-     ./get_XALT_env
+     ./get_XALT_env --seq 13
 
      gcc -fPIC -c -o a.o $(testDir)/a.c
      gcc -fPIC -c -o b.o $(testDir)/b.c
@@ -136,7 +136,7 @@ test_descript = {
      gcc -O0 -o abc abc.o -L$PWD -labc
      
      displayThis "XALT_TRACING=yes ./abc > /dev/null"
-     LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH XALT_TRACING=yes ./abc > /dev/null
+     LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH XALT_TRACING=yes ./abc --seq 14 > /dev/null
 
      gcc -O2 -flto -c -o foo.o  $(testDir)/foo.c
      gcc -O2 -flto -c -o bar.o  $(testDir)/bar.c
@@ -146,28 +146,28 @@ test_descript = {
      gcc -O2 -flto -o my_flto main.o foo.o bar.o 
 
      displayThis "test_record_pkg"
-     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
+     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg --seq 15
 
      displayThis "build and run segv program"
      mpicc -o segv $(testDir)/segv.c
-     mpirun -n 2 ./segv
+     mpirun -n 2 ./segv --seq 16
 
      displayThis "build and run fpe program"
      gcc -o fpe $(testDir)/fpe.c
-     ./fpe
+     ./fpe --seq 17
 
      displayThis "build and run bus program"
      gcc -o bus $(testDir)/bus.c
-     ./bus
+     ./bus --seq 18
 
      displayThis "build and run ill program"
      gcc -o ill $(testDir)/ill.c
-     ./ill
+     ./ill --seq 19
 
      displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi"
      mv XALT/xalt/xalt/libexec/xalt_run_submission XALT/xalt/xalt/libexec/xalt_run_submission.orig
 
-     XALT_TRACING=yes ./hello\ .mpi
+     XALT_TRACING=yes ./hello\ .mpi --seq 20
 
      unset LD_PRELOAD
      displayThis "Extract Watermark"
