@@ -314,7 +314,7 @@ void myinit(int argc, char **argv)
 	  perror("uname");
 	  exit(EXIT_FAILURE);
 	}
-      asprintf(&pid_str,"%ld:%s", (long) getpid(), ,u.nodename);
+      asprintf(&pid_str,"%ld:%s", (long) getpid(), u.nodename);
       char* env_pid = getenv("__XALT_INITIAL_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
 	{
