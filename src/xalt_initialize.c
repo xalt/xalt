@@ -314,9 +314,9 @@ void myinit(int argc, char **argv)
 	  perror("uname");
 	  exit(EXIT_FAILURE);
 	}
-      asprintf(&pid_str,"%s:%ld",u.nodename, (long) getpid());
+      asprintf(&pid_str,"%ld:%s", (long) getpid(), ,u.nodename);
       char* env_pid = getenv("__XALT_INITIAL_STATE_PID__");
-      if (strcmp(env_pid,pid_str) == 0)
+      if (env_pid && strcmp(env_pid,pid_str) == 0)
 	{
 	  DEBUG3(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, pid_str, env_pid);
 	  reject_flag = XALT_WRONG_STATE;
@@ -452,6 +452,7 @@ void myinit(int argc, char **argv)
     
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
+  free(pid_str);
 
   /* Build a json version of the user's command line. */
 

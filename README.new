@@ -49,5 +49,4 @@ XALT 2.7+
     (2.7.22) * Correctly handle the case where a static parent program is XALT tracking and this parent program
                fork-exec's a non-static child program also under XALT tracking.
     (2.7.23) * Set the pid_str variable as late as possible.
-WIP:
-    (2.7.24) * Add nodename to pid_str.
+    (2.7.24) * Add nodename to pid_str. Free pid_str after use.
