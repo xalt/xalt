@@ -9,6 +9,7 @@ static const int SZ = 4096;
 int xalt_fgets_alloc(FILE *fp, char ** buffer, size_t* sz)
 {
   char*  buf    = *buffer;
+  size_t old_sz = 0;
   size_t size   = *sz;
   size_t used   = 0;
   size_t needed = SZ;
@@ -16,11 +17,13 @@ int xalt_fgets_alloc(FILE *fp, char ** buffer, size_t* sz)
   do {
     if (size < needed)
       {
-	size = needed;
+        old_sz = size;
+	size   = needed;
 	char *buf_new = (char *)realloc(buf, size);
 	if (buf_new == NULL)
 	  {
 	    // Out-of-memory
+            memset(buf,0, old_sz);
 	    free(buf);
 	    *sz     = 0;
 	    *buffer = NULL;

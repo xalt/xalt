@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -20,6 +21,7 @@ void remove_xalt_tmpdir(const char* run_uuid)
   DIR*  dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
     {
+      memset(xalt_tmpdir, 0, strlen(xalt_tmpdir));
       free(xalt_tmpdir);
       return;
     }
@@ -31,9 +33,11 @@ void remove_xalt_tmpdir(const char* run_uuid)
       asprintf(&fullFn,"%s/%s",xalt_tmpdir, dp->d_name);
         
       unlink(fullFn);
+      memset(fullFn, 0, strlen(fullFn));
       free(fullFn);
     }
   rmdir(xalt_tmpdir);
+  memset(xalt_tmpdir, 0, strlen(xalt_tmpdir));
   free(xalt_tmpdir);
 }
 

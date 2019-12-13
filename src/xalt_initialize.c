@@ -452,6 +452,7 @@ void myinit(int argc, char **argv)
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
+  memset(pid_str,0,strlen(pid_str));
   free(pid_str);
 
   /* Build a json version of the user's command line. */
@@ -752,6 +753,7 @@ void myinit(int argc, char **argv)
 		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
+          memset(cmd2, 0, strlen(cmd2));
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
@@ -770,6 +772,7 @@ void myinit(int argc, char **argv)
       uuid_str[36] = '\0';
       DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
       have_uuid = 1;
+      memset(cmdline, 0, strlen(cmdline));
       free(cmdline);
     }
   else
@@ -787,6 +790,7 @@ void myinit(int argc, char **argv)
   if (ld_preload_strp)
     {
       setenv("LD_PRELOAD", ld_preload_strp, 1);
+      memset(ld_preload_strp, 0, strlen(ld_preload_strp));
       free(ld_preload_strp);
     }
 
@@ -927,6 +931,7 @@ void myfini()
               if (result != NVML_SUCCESS)
                 {
                   DEBUG2(my_stderr, "  Unable to get accounting data for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  memset(pids, 0, sizeof(unsigned int)*max_pid_count);
                   free(pids);
                   continue;
                 }
@@ -969,6 +974,7 @@ void myfini()
                     }
                 }
 
+              memset(pids, 0, sizeof(unsigned int)*max_pid_count);
               free(pids);
 
               DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, num_active_pids);
