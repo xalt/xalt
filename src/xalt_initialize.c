@@ -40,6 +40,8 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #ifdef __MACH__
 #  include <libproc.h>
 #endif
@@ -245,6 +247,9 @@ void myinit(int argc, char **argv)
   const char * v;
   xalt_parser  results;
   xalt_parser  path_results;
+  const char   nvidia_dir[] = "/sys/module/nvidia";
+
+
 
   /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
@@ -504,6 +509,16 @@ void myinit(int argc, char **argv)
   if (v == NULL)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcmp(v,"yes") == 0);
+  if (xalt_gpu_tracking)
+    {
+      struct stat s = {0};
+      if (stat(nvidia_dir, &s) !=  0 || ! S_ISDIR(s.st_mode))
+	{
+	  xalt_gpu_tracking = 0;
+          DEBUG1(stderr, "  GPU tracing is turned off. This %s does not exist!\n", nvidia_dir);
+	}
+	  
+    }
 
   do
     {
@@ -567,7 +582,7 @@ void myinit(int argc, char **argv)
 	      uuid_str[36] = '\0';
 	      have_uuid = 1;
 	    }
-	
+
           result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
@@ -743,7 +758,7 @@ void myinit(int argc, char **argv)
 	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
       else
 	strcpy(uuid_option_str, "--build_UUID --return_UUID");
-	
+
       if (xalt_tracing || xalt_run_tracing)
         {
 	  char * cmd2;
@@ -1245,7 +1260,7 @@ static  double prgm_sample_probability(int ntasks, double runtime)
       sz	 = scalar_rangeSz;
       p_interval = &scalar_rangeA;
     }
-	
+
   for (i = 0; i < sz-1; ++i)
     {
       if (runtime < (*p_interval)[i+1].left)
