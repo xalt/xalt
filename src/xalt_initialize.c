@@ -511,19 +511,20 @@ void myinit(int argc, char **argv)
   xalt_gpu_tracking = (strcmp(v,"yes") == 0);
   if (xalt_gpu_tracking)
     {
-      struct stat s = {0};
-      if (stat(nvidia_dir, &s) !=  0 || ! S_ISDIR(s.st_mode))
-	{
-	  xalt_gpu_tracking = 0;
-          DEBUG1(stderr, "  GPU tracing is turned off. This %s does not exist!\n", nvidia_dir);
-	}
-	  
     }
 
   do
     {
       if (xalt_gpu_tracking)
         {
+
+	  struct stat s = {0};
+	  if (stat(nvidia_dir, &s) !=  0 || ! S_ISDIR(s.st_mode))
+	    {
+	      xalt_gpu_tracking = 0;
+	      DEBUG1(stderr, "  GPU tracing is turned off. This %s does not exist!\n", nvidia_dir);
+	      break;
+	    }
           DEBUG0(stderr, "  GPU tracing\n");
 
 #ifdef USE_NVML
@@ -1134,9 +1135,13 @@ static int load_nvml()
   nvml_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
   if (! nvml_handle)
     {
-      DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so: %s\n\n",
-             dlerror());
-      return 0;
+      nvml_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
+      if (! nvml_handle)
+	{
+	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so: %s\n\n",
+		 dlerror());
+	  return 0;
+	}
     }
 
   /* Load symbols */
