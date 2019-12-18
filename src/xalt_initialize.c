@@ -520,7 +520,7 @@ void myinit(int argc, char **argv)
 	  if (stat(nvidia_dir, &s) !=  0 || ! S_ISDIR(s.st_mode))
 	    {
 	      xalt_gpu_tracking = 0;
-	      DEBUG1(stderr, "  GPU tracing is turned off. This %s does not exist!\n", nvidia_dir);
+	      DEBUG1(stderr, "  GPU tracing is turned off. This directory \"%s\" does not exist!\n", nvidia_dir);
 	      break;
 	    }
           DEBUG0(stderr, "  GPU tracing\n");
