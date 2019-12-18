@@ -54,4 +54,4 @@ XALT 2.7+
     (2.7.25) * Zero memory locations before freeing data. Try not to put non-zero memory that
                user code will find with malloc().
 	     * issue #24: check that /sys/module/nvidia exists before trying to track the GPU's
-	     * try to dlopen("libnvidia-ml.so.1") if libnvidia-ml.so can not be found.
+	     * try to dlopen("libnvidia-ml.so.1") if libnvidia-ml.so cannot be found.
