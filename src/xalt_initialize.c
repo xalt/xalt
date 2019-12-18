@@ -132,7 +132,7 @@ static const char * xalt_run_short_descriptA[] = {
 static long            compute_value(const char **envA);
 static void            get_abspath(char * path, int sz);
 static volatile double epoch();
-static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c); 
+static unsigned int    mix(unsigned int a, unsigned int b, unsigned int c);
 static double          prgm_sample_probability(int ntasks, double runtime);
 #ifdef USE_NVML
 static int             load_nvml();
@@ -384,7 +384,7 @@ void myinit(int argc, char **argv)
       DEBUG1(stderr,"    hostname: \"%s\" is rejected -> exiting\n}\n\n",u.nodename);
       reject_flag = XALT_HOSTNAME;
       unsetenv("XALT_RUN_UUID");
-      return; 
+      return;
     }
 
   /***********************************************************
@@ -403,13 +403,13 @@ void myinit(int argc, char **argv)
     v = XALT_MPI_TRACKING;
   if (strcasecmp(v,"yes") == 0)
     build_mask |= BIT_MPI;
-      
-  
+
+
   /* Get full absolute path to executable */
   get_abspath(exec_path,sizeof(exec_path));
   path_results = keep_path(exec_path);
   path_parser_cleanup();
-  
+
   if (path_results == SKIP)
     {
       DEBUG1(stderr,"    executable: \"%s\" is rejected  -> exiting\n}\n\n", exec_path);
@@ -435,8 +435,8 @@ void myinit(int argc, char **argv)
 
   if (path_results == PKGS)
     xalt_kind   = BIT_PKGS;
-      
-                      
+
+
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)
     {
@@ -449,7 +449,7 @@ void myinit(int argc, char **argv)
 
   if (pid_str == NULL)
     asprintf(&pid_str,"%ld:%s",(long) getpid(), u.nodename);
-    
+
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
   free(pid_str);
@@ -503,7 +503,7 @@ void myinit(int argc, char **argv)
   if (v == NULL)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcmp(v,"yes") == 0);
-  
+
   do
     {
       if (xalt_gpu_tracking)
@@ -511,6 +511,16 @@ void myinit(int argc, char **argv)
           DEBUG0(stderr, "  GPU tracing\n");
 
 #ifdef USE_NVML
+          /* check whether the nvidia module is loaded */
+          char nvidiaD[] =  "/sys/module/nvidia";
+          struct stat s = {0};
+
+          if ( xalt_gpu_tracking && (stat(nvidiaD, &s) !=  0 || ! S_ISDIR(s.st_mode))) {
+            xalt_gpu_tracking = 0;
+            break;
+          }
+
+
           /* Open the NVML library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
              that case, the handle will not be created and GPU
@@ -549,7 +559,7 @@ void myinit(int argc, char **argv)
               break;
             }
 
-          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result); 
+          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
 
           if (result != DCGM_ST_OK)
             {
@@ -566,7 +576,7 @@ void myinit(int argc, char **argv)
 	      uuid_str[36] = '\0';
 	      have_uuid = 1;
 	    }
-	      
+
           result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
@@ -664,9 +674,9 @@ void myinit(int argc, char **argv)
 	}
       setenv("XALT_RUN_UUID",uuid_str,1);
     }
-      
+
   time_t my_time = start_time;
-  
+
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&my_time));
   sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
 
@@ -682,7 +692,7 @@ void myinit(int argc, char **argv)
   // Now base64 encode the watermark so it can be safely passed thru a system call.
   b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
 
-  /* 
+  /*
    * XALT is only recording the end record for scalar executables and
    * not the start record.
    */
@@ -716,9 +726,9 @@ void myinit(int argc, char **argv)
   v = getenv("XALT_TESTING_RUNTIME");
   if (v)
     testing_runtime = strtod(v,NULL);
-      
+
   // Create a start record for any MPI executions with an acceptable number of tasks.
-  // or a PKG type 
+  // or a PKG type
   if (my_size >= mpi_always_record )
     {
       char uuid_option_str[100];
@@ -742,7 +752,7 @@ void myinit(int argc, char **argv)
 	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
       else
 	strcpy(uuid_option_str, "--build_UUID --return_UUID");
-	  
+
       if (xalt_tracing || xalt_run_tracing)
         {
 	  char * cmd2;
@@ -763,7 +773,7 @@ void myinit(int argc, char **argv)
        * Since we told xalt_run_submission to build the uuid, we must
        * capture it and copy it to uuid_str.
        ************************************************************/
-      
+
       capture(cmdline, buffer, BUFSZ);
 
       strncpy(&uuid_str[0], buffer, 36);
@@ -798,7 +808,7 @@ void myinit(int argc, char **argv)
   v = getenv("XALT_SIGNAL_HANDLER");
   if (!v || strcmp(v,"no") != 0)
     {
-      int signalA[] = {SIGHUP, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT, SIGBUS, 
+      int signalA[] = {SIGHUP, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT, SIGBUS,
 		       SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1, SIGALRM};
       int signalSz  = N_ELEMENTS(signalA);
       struct sigaction action;
@@ -1041,7 +1051,7 @@ void myfini()
 	      DEBUG4(my_stderr, "    -> exiting because sampling. "
 		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
 		     run_time, my_rand, probability, exec_path);
-	      if (xalt_err) 
+	      if (xalt_err)
 		{
 		  fclose(my_stderr);
 		  close(errfd);
@@ -1050,13 +1060,13 @@ void myfini()
 	      return;
 	    }
 	  else
-	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n", 
+	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
 		   run_time, my_rand, probability, exec_path);
 	}
       else
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
-  
+
   const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
   if (runable == -1)
@@ -1097,7 +1107,7 @@ void myfini()
       DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
     }
 
-  if (xalt_err) 
+  if (xalt_err)
     {
       fclose(my_stderr);
       close(errfd);
@@ -1203,18 +1213,18 @@ static void capture(const char* cmdline, char* buffer, int bufSz)
   fd2 = open("/dev/null", O_WRONLY);
   dup2(fd2, STDERR_FILENO);
   close(fd2);
-  
+
   fp = popen(cmdline,"r");
   fgets(buffer, bufSz, fp);
 
   pclose(fp);
- 
+
   /* restore stderr */
   fflush(stderr);
   dup2(fd1, STDERR_FILENO);
   close(fd1);
-}  
-  
+}
+
 
 static  double prgm_sample_probability(int ntasks, double runtime)
 {
@@ -1239,7 +1249,7 @@ static  double prgm_sample_probability(int ntasks, double runtime)
       sz	 = scalar_rangeSz;
       p_interval = &scalar_rangeA;
     }
-	
+
   for (i = 0; i < sz-1; ++i)
     {
       if (runtime < (*p_interval)[i+1].left)
@@ -1249,7 +1259,7 @@ static  double prgm_sample_probability(int ntasks, double runtime)
   	}
     }
   return prob;
-}  
+}
 
 
 #ifdef __MACH__
