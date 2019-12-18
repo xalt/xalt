@@ -509,9 +509,6 @@ void myinit(int argc, char **argv)
   if (v == NULL)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcmp(v,"yes") == 0);
-  if (xalt_gpu_tracking)
-    {
-    }
 
   do
     {
@@ -519,6 +516,7 @@ void myinit(int argc, char **argv)
         {
 
 	  struct stat s = {0};
+          /* check whether the nvidia module is loaded */
 	  if (stat(nvidia_dir, &s) !=  0 || ! S_ISDIR(s.st_mode))
 	    {
 	      xalt_gpu_tracking = 0;
@@ -528,6 +526,7 @@ void myinit(int argc, char **argv)
           DEBUG0(stderr, "  GPU tracing\n");
 
 #ifdef USE_NVML
+
           /* Open the NVML library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
              that case, the handle will not be created and GPU
@@ -1138,7 +1137,7 @@ static int load_nvml()
       nvml_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
       if (! nvml_handle)
 	{
-	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so: %s\n\n",
+	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
 		 dlerror());
 	  return 0;
 	}
