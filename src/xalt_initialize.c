@@ -1090,9 +1090,9 @@ void myfini()
       char uuid_option_str[100];
 
       if (have_uuid)
-	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
+	sprintf(uuid_option_str,"--uuid \"%s\" --return_uuid", uuid_str);
       else
-	strcpy(uuid_option_str, "--build_UUID");
+	strcpy(uuid_option_str, "--build_UUID --return_uuid");
 
       if (xalt_tracing || xalt_run_tracing )
         {
@@ -1114,7 +1114,11 @@ void myfini()
 	       XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
-      system(cmdline);
+      // We told xalt_run_submission to return the uuid.  We don't need it but we want to make sure that xalt_run_submission completes before ending the program.
+      capture(cmdline, buffer, BUFSZ);
+      strncpy(&uuid_str[0], buffer, 36);
+      uuid_str[36] = '\0';
+      DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
       DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
     }
 

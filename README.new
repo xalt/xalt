@@ -55,3 +55,7 @@ XALT 2.7+
                user code will find with malloc().
 	     * issue #24: check that /sys/module/nvidia exists before trying to track the GPU's
 	     * try to dlopen("libnvidia-ml.so.1") if libnvidia-ml.so cannot be found.
+    (2.7.26) * Have myfini() force xalt_run_submission to return the uuid to make sure that
+               xalt_run_submission finishes before the myfini() routine completes.
+	       
+    	     
