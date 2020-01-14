@@ -25,9 +25,13 @@ def main():
 
   with open(fn) as fh:
     for line in fh:
-      fieldA = line.split(",")
-      chgStr = fieldA[0].strip()
-      FoS    = fieldA[1].strip()
+      idx = line.find(",")
+      if (idx == -1):
+        print("error in line: ",line)
+        os.exit(-1)
+
+      chgStr = line[:idx-1]
+      FoS    = line[idx+1:].strip().replace(",","")
       if (FoS != "Unknown"):
         t[chgStr] = FoS
 

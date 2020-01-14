@@ -324,6 +324,18 @@ def main():
         """)
     print("(%d) create xalt_pkg table" % idx); idx += 1
     
+    # 15
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `xalt_field_of_science` (
+          `fos_id`           int(11)        unsigned NOT NULL auto_increment,
+          `account`          varchar(20)             NOT NULL,
+          `field_of_science` varchar(80)             NOT NULL,
+          `directorate`      varchar(80)             NOT NULL,
+          PRIMARY KEY (`fos_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_bin AUTO_INCREMENT=1
+        """)
+    print("(%d) create xalt_field_of_science table" % idx); idx += 1
+    
     cursor.close()
   except  MySQLdb.Error as e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
