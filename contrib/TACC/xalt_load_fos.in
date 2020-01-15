@@ -39,6 +39,7 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--confFn",     dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
     parser.add_argument("--mapFn",      dest='mapFn',     action="store",       default = "xalt_db.conf", help="map file")
+    parser.add_argument("--dropT",      dest='dropT',     action="store_true",  default = False,          help="Drop xalt_field_of_science table first")
     args = parser.parse_args()
     return args
 
@@ -58,6 +59,11 @@ def main():
   cursor = conn.cursor()
 
   try:
+    if (args.dropT):
+      cursor.execute("""
+          DROP TABLE IF EXISTS `xalt_field_of_science`
+      """)
+
     cursor.execute("""
           CREATE TABLE IF NOT EXISTS `xalt_field_of_science` (
           `fos_id`           int(11)        unsigned NOT NULL auto_increment,

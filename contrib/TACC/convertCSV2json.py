@@ -30,7 +30,7 @@ def main():
         print("error in line: ",line)
         os.exit(-1)
 
-      chgStr = line[:idx-1]
+      chgStr = line[:idx]
       FoS    = line[idx+1:].strip().replace(",","")
       if (FoS != "Unknown"):
         t[chgStr] = FoS
