@@ -817,8 +817,10 @@ void myinit(int argc, char **argv)
   v = getenv("XALT_SIGNAL_HANDLER");
   if (!v || strcmp(v,"no") != 0)
     {
+      DEBUG0(stderr, "    -> Setting up signals\n");
       int signalA[] = {SIGHUP, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT, SIGBUS,
-		       SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1, SIGALRM};
+		       SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1, SIGUSR2,
+		       SIGALRM};
       int signalSz  = N_ELEMENTS(signalA);
       struct sigaction action;
       struct sigaction old;
