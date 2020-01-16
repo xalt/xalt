@@ -32,6 +32,8 @@ def main():
 
       chgStr = line[:idx]
       FoS    = line[idx+1:].strip().replace(",","")
+      if (FoS == "Fluid Particulate and Hyrdaulic Systems"):
+        FoS = "Fluid Particulate and Hydraulic Systems"
       if (FoS != "Unknown"):
         t[chgStr] = FoS
 
@@ -42,3 +44,4 @@ def main():
 
 
 if ( __name__ == '__main__'): main()
+
