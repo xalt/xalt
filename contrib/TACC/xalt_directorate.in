@@ -85,21 +85,45 @@ class Directorate:
   def build(self, args, start_date, end_date):
     query = """
     SELECT
-    t2.directorate                              as Directorate,
-    ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as Corehours,
-    COUNT(t1.date)                              as N_runs,
-    COUNT(DISTINCT(t1.user))                    as N_users
+    t2.directorate                              as directorate,
+    ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as corehours,
+    COUNT(t1.date)                              as n_runs,
+    COUNT(DISTINCT(t1.user))                    as n_users
     FROM xalt_run as t1,
          xalt_field_of_science as t2
     WHERE t1.account = t2.account
     AND   t1.date >= %s and t1.date < %s
+    GROUP by directorate
+    Order by corehours desc
     """
+
+    cursor  = self.__cursor
+    execA   = self.__execA
+    cursor.execute(query)
+    resultA = cursor.fetchall()
+
+    for directorate, corehours, n_runs, n_users in resultA:
+      entryT = {'directorate' : execname,
+                'corehours'   : corehours,
+                'n_runs'      : n_runs,
+                'n_users'     : n_users}
+      execA.append(entryT)
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(["Directorate", "Corehours","# Runs", "N Users"])
+    resultA.append(["-----------", "---------","------", "-------"])
+
+    execA = self.__execA
+    sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    sumCH = 0.0
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append([entryT['directorate'], "%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users'])])
+      sumCH += entryT['corehours']
     
-  
-
-
-
-
+    return resultA, sumCH
 
 class ExecRun:
   """ Holds the executables for a given date range """
