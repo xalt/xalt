@@ -60,3 +60,4 @@ XALT 2.7+
     (2.7.27) * Support new table xalt_field_of_science which connects account string to
                NSF's field_of_science and NSF Directorate
     (2.7.28) * Adding SIG_USR2 to list of captured signals
+             * Correctly always return the UUID from myfini() in xalt_initialize.c

@@ -1092,9 +1092,9 @@ void myfini()
       char uuid_option_str[100];
 
       if (have_uuid)
-	sprintf(uuid_option_str,"--uuid \"%s\" --return_uuid", uuid_str);
+	sprintf(uuid_option_str,"--uuid \"%s\" --return_UUID", uuid_str);
       else
-	strcpy(uuid_option_str, "--build_UUID --return_uuid");
+	strcpy(uuid_option_str, "--build_UUID --return_UUID");
 
       if (xalt_tracing || xalt_run_tracing )
         {
