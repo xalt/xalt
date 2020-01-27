@@ -92,7 +92,7 @@ class Directorate:
     FROM xalt_run as t1,
          xalt_field_of_science as t2
     WHERE t1.account = t2.account
-    AND   t1.date >= %s and t1.date < %s
+    AND   t1.date >= '%s' and t1.date < '%s'
     GROUP by directorate
     Order by corehours desc
     """
@@ -637,15 +637,17 @@ def main():
   print("")
   
   print("")
-  print("-------------------")
+  print("----------------------")
   print("NSF Directorate Report")
-  print("-------------------")
+  print("----------------------")
   print("")
   
   directorateObj = Directorate(cursor)
   directorateA   = directorateObj.build(args, start_date, end_date)
   resultA, sumCH = directorateObj.report_by(args, "directorate")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
+  print("Summary of Jobs grouped by NSF Directorates")
+  print(bt.build_tbl())
   
   return
 
