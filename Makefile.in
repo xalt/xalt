@@ -127,6 +127,7 @@ TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py
                            contrib/TACC/envReport.in         contrib/TACC/reportQ.in           \
                            contrib/TACC/quarter2months.in    contrib/TACC/build_XALT_report.in \
                            contrib/TACC/store_xalt_data.in   contrib/TACC/xalt_load_fos.in     \
+                           contrib/TACC/xalt_directorate.in                                    \
                            contrib/TACC/build_default_user_2_account_str.in
 
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
