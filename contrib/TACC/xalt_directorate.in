@@ -92,14 +92,14 @@ class Directorate:
     FROM xalt_run as t1,
          xalt_field_of_science as t2
     WHERE t1.account = t2.account
-    AND   t1.date >= '%s' and t1.date < '%s'
+    AND   t1.date >= %s and t1.date < %s
     GROUP by directorate
     Order by corehours desc
     """
 
     cursor  = self.__cursor
     execA   = self.__execA
-    cursor.execute(query)
+    cursor.execute(query,(start_date, end_date))
     resultA = cursor.fetchall()
     directorateA = []
 
@@ -612,8 +612,10 @@ def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
   config       = configparser.ConfigParser()     
-  configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
-  config.read(configFn)
+
+  config.read(os.path.join(XALT_ETC_DIR,args.confFn))
+  my_db        = config.get("MYSQL","DB")
+  syshost      = my_db.replace("xalt_","")
 
   conn = MySQLdb.connect              \
          (config.get("MYSQL","HOST"), \
@@ -630,9 +632,9 @@ def main():
   if (args.startD is not None):
     start_date = args.startD
 
-  print("--------------------------------------------")
-  print("XALT REPORT from",start_date,"to",end_date)
-  print("--------------------------------------------")
+  print("-------------------------------------------------------------------")
+  print("XALT REPORT on "+syshost+" from",start_date,"to",end_date)
+  print("-------------------------------------------------------------------")
   print("")
   print("")
   
@@ -644,7 +646,7 @@ def main():
   
   directorateObj = Directorate(cursor)
   directorateA   = directorateObj.build(args, start_date, end_date)
-  resultA, sumCH = directorateObj.report_by(args, "directorate")
+  resultA, sumCH = directorateObj.report_by(args, "corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
   print("Summary of Jobs grouped by NSF Directorates")
   print(bt.build_tbl())
