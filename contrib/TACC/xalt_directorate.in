@@ -101,13 +101,17 @@ class Directorate:
     execA   = self.__execA
     cursor.execute(query)
     resultA = cursor.fetchall()
+    directorateA = []
 
     for directorate, corehours, n_runs, n_users in resultA:
-      entryT = {'directorate' : execname,
+      entryT = {'directorate' : directorate,
                 'corehours'   : corehours,
                 'n_runs'      : n_runs,
                 'n_users'     : n_users}
       execA.append(entryT)
+      directorateA.append(directorate)
+
+    return directorateA
 
   def report_by(self, args, sort_key):
     resultA = []
@@ -632,38 +636,19 @@ def main():
   print("")
   print("")
   
-  ############################################################
-  #  Over all job counts
-  resultA = kinds_of_jobs(cursor, args, start_date, end_date)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
-  print("----------------------")
-  print("Overall Job Counts")
-  print("----------------------")
-  print("")
-  print(bt.build_tbl())
-  print("\n")
-  print("Where        usr: executables built by user")
-  print("             sys: executables managed by system-level modulefiles")
-  print("      usr-script: shell scripts in a user's account")
-  print("      sys-script: shell scripts managed by system-level modulefiles")
-  
-  ############################################################
-  #  Self-build vs. BuildU != RunU
-  resultA = running_other_exec(cursor, args, start_date, end_date)
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
-  print("")
-  print("-----------------------------------------------")
-  print("Comparing Self-build vs. Build User != Run User")
-  print("-----------------------------------------------")
-  print("")
-  print(bt.build_tbl())
-  
   print("")
   print("-------------------")
-  print("Top MPI Executables")
+  print("NSF Directorate Report")
   print("-------------------")
   print("")
   
+  directorateObj = Directorate(cursor)
+  directorateA   = directorateObj.build(args, start_date, end_date)
+  resultA, sumCH = directorateObj.report_by(args, "directorate")
+  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
+  
+  return
+
 
   for style in ('All','MPI','Scalar'):
   
@@ -694,8 +679,6 @@ def main():
     print("\nTop",args.num, style+" Executables sorted by # Users\n")
     print(bt.build_tbl())
   
-  return
-
 
   if (args.full):
     ############################################################
