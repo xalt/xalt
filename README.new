@@ -57,5 +57,6 @@ XALT 2.7+
 	     * try to dlopen("libnvidia-ml.so.1") if libnvidia-ml.so cannot be found.
     (2.7.26) * Have myfini() force xalt_run_submission to return the uuid to make sure that
                xalt_run_submission finishes before the myfini() routine completes.
-	       
-    	     
+    (2.7.27) * Support new table xalt_field_of_science which connects account string to
+               NSF's field_of_science and NSF Directorate
+    (2.7.28) * Adding SIG_USR2 to list of captured signals
