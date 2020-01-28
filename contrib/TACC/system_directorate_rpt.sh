@@ -1,0 +1,51 @@
+#!/bin/bash
+# -*- shell-script -*-
+
+SYSHOST="stampede2"
+
+# setup gcc
+export PATH=/opt/apps/gcc/4.9.1/bin:$PATH
+export LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
+export GCC_LIB=/opt/apps/gcc/4.9.1/lib64
+
+# setup python
+export PATH=/opt/rh/rh-python35/root/usr/bin:$PATH
+export LD_LIBRARY_PATH=/opt/rh/rh-python35/root/usr/lib64:$LD_LIBRARY_PATH
+
+if [ "$SYSHOST" = "stampede" ]; then
+  quarterA=(                          "07/01/2014" "10/01/2014"
+            "01/01/2015" "04/01/2015" "07/01/2015" "10/01/2015"
+            "01/01/2016" "04/01/2016" "07/01/2016" "10/01/2016"
+            "01/01/2017" "04/01/2017" "07/01/2017" "10/01/2017"
+            "01/01/2018" "04/01/2018")
+
+  nameA=(                              "2014_Q3"   "2014_Q4"
+            "2015_Q1"    "2015_Q2"     "2015_Q3"   "2015_Q4"
+            "2016_Q1"    "2016_Q2"     "2016_Q3"   "2016_Q4"
+            "2017_Q1"    "2017_Q2"     "2017_Q3"   "2017_Q4"
+            "2018_Q1")
+
+  confFn="xalt_stampede_db.conf"
+
+fi
+
+if [ "$SYSHOST" = "stampede2" ]; then
+  quarterA=(                          "07/01/2018" "10/01/2018"
+            "01/01/2019" "04/01/2019" "07/01/2019" "10/01/2019"
+            "01/01/2020")
+  nameA=(                              "2018_Q3"   "2018_Q4"
+            "2019_Q1"    "2019_Q2"     "2019_Q3"   "2019_Q4")
+
+  confFn="xalt_stampede2_db.conf"
+fi
+
+
+num="${#quarterA[@]}"
+(( num = $num - 1 ))
+
+for ((i=0; i<$num; i++)); do
+  (( j = $i + 1 ))
+  echo "./xalt_directorate --confFn $confFn --start ${quarterA[$i]} --end ${quarterA[$j]} >  ${SYSHOST}_${nameA[$i]}.txt"
+        ./xalt_directorate --confFn $confFn --start ${quarterA[$i]} --end ${quarterA[$j]} > "${SYSHOST}_${nameA[$i]}.txt"
+done
+
