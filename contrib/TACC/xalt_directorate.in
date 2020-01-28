@@ -247,18 +247,18 @@ def main():
 
   for directorate in directorateA:
     execA = ExecRun(cursor)
-    num = execA.build(args, directorate, start_date, end_date)
+    execA.build(args, directorate, start_date, end_date)
 
     ##########################################################################
     #  Report of Top EXEC of types by Core Hours for a particular directorate
-    resultA, sumCH = execA.report_by(args,"corehours")
-    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    abbrev         = directorate
-    m              = drtPattern.match(abbrev)
+    n, resultA, sumCH = execA.report_by(args,"corehours")
+    bt                = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    abbrev            = directorate
+    m                 = drtPattern.match(abbrev)
     if (m):
-      abbrev = m.group(1)
+      abbrev          = m.group(1)
 
-    print("\nTop",num, "\""+abbrev+"\" Executables sorted by Core-hours (Total Core Hours(M): ",
+    print("\nTop",n, "\""+abbrev+"\" Executables sorted by Core-hours (Total Core Hours(M): ",
             sumCH*1.0e-6,")\n")
     print(bt.build_tbl())
 
