@@ -108,7 +108,7 @@ def main():
 
       else:
         print ("Cannot deal w/link: ",newFn)
-        os.exit(-1)
+        sys.exit(-1)
     else:
       if (fileT[fn]):
         cmd = "cp "+fn+" "+lib64_dir

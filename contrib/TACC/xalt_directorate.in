@@ -176,7 +176,6 @@ class ExecRun:
 
     cursor.execute(query)
     resultA = cursor.fetchall()
-    lenA    = len(resultA)
     execA   = self.__execA
 
     for execname, corehours, n_runs, n_users in resultA:
@@ -185,8 +184,6 @@ class ExecRun:
                 'n_runs'    : n_runs,
                 'n_users'   : n_users}
       execA.append(entryT)
-
-    return lenA
 
   def report_by(self, args, sort_key):
     resultA = []
@@ -202,7 +199,7 @@ class ExecRun:
       resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['execname']])
       sumCH += entryT['corehours']
     
-    return resultA, sumCH
+    return num, resultA, sumCH
 
 def main():
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
