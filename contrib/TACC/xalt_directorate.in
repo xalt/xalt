@@ -41,7 +41,7 @@ exit 2
 #----------------------------------------------------------------------------#
 
 from __future__ import print_function
-import os, sys, base64
+import os, sys, re, base64
 import MySQLdb, argparse
 import time, collections
 from operator import itemgetter
@@ -58,6 +58,22 @@ sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 from BeautifulTbl      import BeautifulTbl
 from xalt_name_mapping import name_mapping
 
+########################################################################
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    fnA = os.path.split(inspect.currentframe().f_code.co_filename)
+    return fnA[1]
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+########################################################################
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -73,7 +89,7 @@ class CmdLineOptions(object):
     parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
     parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
     parser.add_argument("--queue",   dest='queue',     action="store",       default = "%",            help="queue")
-    parser.add_argument("--num",     dest='num',       action="store",       default = 25,             help="top number of entries to report")
+    parser.add_argument("--num",     dest='num',       action="store",       default = 5,              help="top number of entries to report")
     args = parser.parse_args()
     return args
 
@@ -160,14 +176,17 @@ class ExecRun:
 
     cursor.execute(query)
     resultA = cursor.fetchall()
+    lenA    = len(resultA)
+    execA   = self.__execA
 
-    execA = self.__execA
     for execname, corehours, n_runs, n_users in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
                 'n_runs'    : n_runs,
                 'n_users'   : n_users}
       execA.append(entryT)
+
+    return lenA
 
   def report_by(self, args, sort_key):
     resultA = []
@@ -220,23 +239,29 @@ def main():
   print("NSF Directorate Report")
   print("----------------------")
   print("")
-  
+
+  drtPattern     = re.compile(r'.*\(([^)]*)\)')
   directorateObj = Directorate(cursor)
   directorateA   = directorateObj.build(args, start_date, end_date)
   resultA, sumCH = directorateObj.report_by(args, "corehours")
   bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
   print("Summary of Jobs grouped by NSF Directorates")
-  print(bt.build_tbl())
+  print(bt.build_tbl(),"\n")
 
-  execA = ExecRun(cursor)
   for directorate in directorateA:
-    resultA, sumCH = execA.build(args, directorate, start_date,end_date)
+    execA = ExecRun(cursor)
+    num = execA.build(args, directorate, start_date, end_date)
 
     ##########################################################################
     #  Report of Top EXEC of types by Core Hours for a particular directorate
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, "\""+directorate+"\" Executables sorted by Core-hours (Total Core Hours(M): ",
+    abbrev         = directorate
+    m              = drtPattern.match(abbrev)
+    if (m):
+      abbrev = m.group(1)
+
+    print("\nTop",num, "\""+abbrev+"\" Executables sorted by Core-hours (Total Core Hours(M): ",
             sumCH*1.0e-6,")\n")
     print(bt.build_tbl())
 
