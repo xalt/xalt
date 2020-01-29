@@ -13,11 +13,11 @@ export PATH=/opt/rh/rh-python35/root/usr/bin:$PATH
 export LD_LIBRARY_PATH=/opt/rh/rh-python35/root/usr/lib64:$LD_LIBRARY_PATH
 
 if [ "$SYSHOST" = "stampede" ]; then
-  quarterA=(                          "07/01/2014" "10/01/2014"
-            "01/01/2015" "04/01/2015" "07/01/2015" "10/01/2015"
-            "01/01/2016" "04/01/2016" "07/01/2016" "10/01/2016"
-            "01/01/2017" "04/01/2017" "07/01/2017" "10/01/2017"
-            "01/01/2018" "04/01/2018")
+  quarterA=(                          "2014-07-01" "2014-10-01"
+            "2015-01-01" "2015-04-01" "2015-07-01" "2015-10-01"
+            "2016-01-01" "2016-04-01" "2016-07-01" "2016-10-01"
+            "2017-01-01" "2017-04-01" "2017-07-01" "2017-10-01"
+            "2018-01-01" "2018-04-01")
 
   nameA=(                              "2014_Q3"   "2014_Q4"
             "2015_Q1"    "2015_Q2"     "2015_Q3"   "2015_Q4"
@@ -41,9 +41,9 @@ fi
 
 
 num="${#quarterA[@]}"
-(( num = $num - 1 ))
+(( num = $num - 2 ))
 
-for ((i=0; i<$num; i++)); do
+for ((i=$num; i >= 0; i--)); do
   (( j = $i + 1 ))
   echo "./xalt_directorate --confFn $confFn --start ${quarterA[$i]} --end ${quarterA[$j]} >  ${SYSHOST}_${nameA[$i]}.txt"
         ./xalt_directorate --confFn $confFn --start ${quarterA[$i]} --end ${quarterA[$j]} > "${SYSHOST}_${nameA[$i]}.txt"
