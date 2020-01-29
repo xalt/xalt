@@ -653,6 +653,7 @@ XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
 BAD_INSTALL
+SUBDIR
 PRELOAD_ONLY
 STATIC_LIBS
 MY_HOSTNAME_PARSER
@@ -4968,6 +4969,7 @@ fi
 
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
+SUBDIR=xalt/$VERSION
 
 if test $BAD_INSTALL = no; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
