@@ -699,7 +699,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -796,7 +795,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1049,15 +1047,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1195,7 +1184,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1348,7 +1337,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1411,7 +1399,7 @@ Optional Packages:
   --with-preloadOnly=ans  Only use XALT in preload only mode[[yes]]
   --with-IrefuseToInstallXALTCorrectly=ans
                           Install XALT incorrectly [[no]]
-  --with-32bit            Allow for 32 bits executables[[yes]]
+  --with-32bit=ans        Allow for 32 bits executables[[yes]]
   --with-tmpdir=ans       The tmp directory to use with package records
                           [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
@@ -3018,6 +3006,20 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 XALT_INTERFACE_VERSION=5
 
 
+VALID_YN ()
+{
+  ANS=$1
+  MSG=$2
+  case $ANS in
+    yes|no)
+      ;;
+    *)
+      echo $MSG
+      exit 1
+      ;;
+  esac
+}
+
 
 
 # Check whether --with-transmission was given.
@@ -3071,6 +3073,8 @@ fi
 # Check whether --with-functionTracking was given.
 if test "${with_functionTracking+set}" = set; then :
   withval=$with_functionTracking; XALT_FUNCTION_TRACKING="$withval"
+    XALT_FUNCTION_TRACKING=`echo $XALT_FUNCTION_TRACKING | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_FUNCTION_TRACKING "--with-functionTracking=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$with_functionTracking" >&5
 $as_echo "XALT_FUNCTION_TRACKING=$with_functionTracking" >&6; }
 
@@ -3143,6 +3147,8 @@ fi
 # Check whether --with-trackMPI was given.
 if test "${with_trackMPI+set}" = set; then :
   withval=$with_trackMPI; XALT_MPI_TRACKING="$withval"
+    XALT_MPI_TRACKING=`echo $XALT_MPI_TRACKING | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_MPI_TRACKING "--with-trackMPI=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$with_trackMPI" >&5
 $as_echo "XALT_MPI_TRACKING=$with_trackMPI" >&6; }
 
@@ -3167,6 +3173,8 @@ fi
 # Check whether --with-trackScalarPrgms was given.
 if test "${with_trackScalarPrgms+set}" = set; then :
   withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
+    XALT_SCALAR_TRACKING=`echo $XALT_SCALAR_TRACKING | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_SCALAR_TRACKING "--with-trackScalarPrgms=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&5
 $as_echo "XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&6; }
 
@@ -3192,6 +3200,8 @@ fi
 # Check whether --with-cmdlineRecord was given.
 if test "${with_cmdlineRecord+set}" = set; then :
   withval=$with_cmdlineRecord; XALT_CMDLINE_RECORD="$withval"
+    XALT_CMDLINE_RECORD=`echo $XALT_CMDLINE_RECORD | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_CMDLINE_RECORD "--with-cmdlineRecord=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CMDLINE_RECORD=$with_cmdlineRecord" >&5
 $as_echo "XALT_CMDLINE_RECORD=$with_cmdlineRecord" >&6; }
 
@@ -3216,6 +3226,8 @@ fi
 # Check whether --with-computeSHA1 was given.
 if test "${with_computeSHA1+set}" = set; then :
   withval=$with_computeSHA1; COMPUTE_SHA1SUM="$withval"
+    COMPUTE_SHA1SUM=`echo $COMPUTE_SHA1SUM | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $COMPUTE_SHA1SUM "--with-computeSHA1=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$with_computeSHA1" >&5
 $as_echo "COMPUTE_SHA1SUM=$with_computeSHA1" >&6; }
     cat >>confdefs.h <<_ACEOF
@@ -3287,6 +3299,8 @@ fi
 # Check whether --with-MySQL was given.
 if test "${with_MySQL+set}" = set; then :
   withval=$with_MySQL; MYSQLDB="$withval"
+    MYSQLDB=`echo $MYSQLDB | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $MYSQLDB "--with-MySQL=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$with_MySQL" >&5
 $as_echo "MYSQLDB=$with_MySQL" >&6; }
 
@@ -3427,6 +3441,8 @@ fi
 # Check whether --with-staticLibs was given.
 if test "${with_staticLibs+set}" = set; then :
   withval=$with_staticLibs; STATIC_LIBS="$withval"
+    STATIC_LIBS=`echo $STATIC_LIBS | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $STATIC_LIBS "--with-staticLibs=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: STATIC_LIBS=$with_staticLibs" >&5
 $as_echo "STATIC_LIBS=$with_staticLibs" >&6; }
 
@@ -3451,6 +3467,8 @@ fi
 # Check whether --with-preloadOnly was given.
 if test "${with_preloadOnly+set}" = set; then :
   withval=$with_preloadOnly; PRELOAD_ONLY="$withval"
+    PRELOAD_ONLY=`echo $PRELOAD_ONLY | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $PRELOAD_ONLY "--with-preloadOnly=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: PRELOAD_ONLY=$with_preloadOnly" >&5
 $as_echo "PRELOAD_ONLY=$with_preloadOnly" >&6; }
 
@@ -3475,6 +3493,8 @@ fi
 # Check whether --with-IrefuseToInstallXALTCorrectly was given.
 if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
   withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
+    BAD_INSTALL=`echo $BAD_INSTALL | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $BAD_INSTALL "--with-IrefuseToInstallXALTCorrectly=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
 $as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
 
@@ -3499,6 +3519,8 @@ fi
 # Check whether --with-32bit was given.
 if test "${with_32bit+set}" = set; then :
   withval=$with_32bit; BIT32="$withval"
+    BIT32=`echo $BIT32 | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $BIT32 "--with-32bit=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BIT32=$with_32bit" >&5
 $as_echo "BIT32=$with_32bit" >&6; }
 
