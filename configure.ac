@@ -411,6 +411,8 @@ AC_CHECK_HEADER(openssl/sha.h,
 
 AC_CHECK_HEADER(gelf.h, [],
                 [AC_MSG_ERROR([Unable to build XALT without gelf.h. Please install the libelf development package])])
+AC_CHECK_HEADER(syslog.h, [],
+                [AC_MSG_ERROR([Unable to build XALT without syslog.h. Please install the glibc headers package])])
 
 
 AC_SUBST(HAVE_WORKING_LIBUUID)
@@ -473,11 +475,13 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
 fi
 
 AC_SUBST(PKGV)
+AC_SUBST(SUBDIR)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
+SUBDIR=xalt/$VERSION
 
 if test $BAD_INSTALL = no; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then

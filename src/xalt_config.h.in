@@ -5,7 +5,6 @@
  * AC_SUBST() end up in xalt_config.h.in
  */
 
-
 #define BAD_INSTALL                "@BAD_INSTALL@"
 #define CRYPTO_STR                 "@CRYPTO_STR@"
 #define CURL_STR                   "@CURL_STR@"
@@ -22,7 +21,7 @@
 #define XALT_CMDLINE_RECORD        "@XALT_CMDLINE_RECORD@"
 #define XALT_COMPUTE_SHA1          "@COMPUTE_SHA1SUM@"
 #define XALT_CONFIG_PY             "@XALT_CONFIG_PY@"
-#define XALT_DIR                   "@prefix@/xalt/xalt/"
+#define XALT_DEFAULT_DIR           "@prefix@/@SUBDIR@"
 #define XALT_ETC_DIR               "@ETC_DIR@"
 #define XALT_FILE_PREFIX           "@XALT_FILE_PREFIX@"
 #define XALT_FUNCTION_TRACKING     "@XALT_FUNCTION_TRACKING@"

@@ -50,6 +50,7 @@
 #include "xalt_quotestring.h"
 #include "xalt_header.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
@@ -577,7 +578,7 @@ void myinit(int argc, char **argv)
 
 	  if ( ! have_uuid )
 	    {
-	      capture( XALT_DIR "/bin/my_uuidgen", buffer, BUFSZ);
+	      capture(xalt_dir("bin/my_uuidgen"), buffer, BUFSZ);
 	      strncpy(&uuid_str[0], buffer, 36);
 	      uuid_str[36] = '\0';
 	      have_uuid = 1;
@@ -673,7 +674,7 @@ void myinit(int argc, char **argv)
     {
       if ( ! have_uuid )
 	{
-	  capture( XALT_DIR "/bin/my_uuidgen", buffer, BUFSZ);
+	  capture(xalt_dir("bin/my_uuidgen"), buffer, BUFSZ);
 	  strncpy(&uuid_str[0], buffer, 36);
 	  uuid_str[36] = '\0';
 	  have_uuid = 1;
@@ -687,7 +688,7 @@ void myinit(int argc, char **argv)
   sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
 
   setenv("XALT_DATE_TIME",fullDateStr,1);
-  setenv("XALT_DIR",XALT_DIR,1);
+  setenv("XALT_DIR",xalt_dir(NULL),1);
 
   pid  = getpid();
   ppid = getppid();
@@ -739,7 +740,7 @@ void myinit(int argc, char **argv)
     {
       char uuid_option_str[100];
 
-      const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
+      const char * run_submission = xalt_dir("libexec/xalt_run_submission");
       int runable = access(run_submission, X_OK);
 
       if (runable == -1)
@@ -1080,7 +1081,7 @@ void myfini()
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
 
-  const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
+  const char * run_submission = xalt_dir("libexec/xalt_run_submission");
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
   if (runable == -1)
     {
