@@ -180,7 +180,7 @@ int main(int argc, char* argv[])
       json.add("XALT_COMPUTE_SHA1",             computeSHA1);
       json.add("XALT_ETC_DIR",                  xalt_etc_dir);
       json.add("XALT_DIR",                      xalt_dir(NULL));
-      json.add("BAD_INSTALL",                   BAD_INSTALL);
+      json.add("SITE_CONTROLLED_PREFIX",        SITE_CONTROLLED_PREFIX);
       json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
       json.add("XALT_CMDLINE_RECORD",           cmdline_record);
       json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
@@ -234,7 +234,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_COMPUTE_SHA1 on libraries:  " << computeSHA1                    << "\n";
   std::cout << "XALT_ETC_DIR:                    " << xalt_etc_dir                   << "\n";
   std::cout << "XALT_DIR:                        " << xalt_dir(NULL)                 << "\n";
-  std::cout << "BAD_INSTALL:                     " << BAD_INSTALL                    << "\n";
+  std::cout << "SITE_CONTROLLED_PREFIX:          " << SITE_CONTROLLED_PREFIX         << "\n";
   std::cout << "XALT_CONFIG_PY:                  " << XALT_CONFIG_PY                 << "\n";
   std::cout << "XALT_MPI_TRACKING:               " << xalt_mpi_tracking              << "\n";
   std::cout << "XALT_GPU_TRACKING:               " << xalt_gpu_tracking              << "\n";

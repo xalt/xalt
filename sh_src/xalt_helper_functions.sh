@@ -136,7 +136,7 @@ find_real_command()
     IFS=$OLD_IFS
   fi
   if [ "$my_cmd" = unknown ]; then
-    builtin echo "XALT Error: unable to find $my_name"
+    builtin echo -n "XALT Error: unable to find $my_name"
     false
     exit $?
   fi

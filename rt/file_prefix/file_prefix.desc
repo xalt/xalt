@@ -21,7 +21,7 @@ test_descript = {
      export XALT_FILE_PREFIX=$outputDir/DATA 
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
-
+     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$(testDir)/bin:$PATH;
 
      displayThis "installDB"
      installDB 

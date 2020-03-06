@@ -627,7 +627,7 @@ CURL_STR
 CRYPTO_STR
 XALT_GIT_VERSION
 VERSION
-SUBDIR
+XALT_DEFAULT_DIR
 PKGV
 HAVE_DCGM
 HAVE_NVML
@@ -653,7 +653,7 @@ XALT_PRIME_FMT
 XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
-BAD_INSTALL
+SITE_CONTROLLED_PREFIX
 PRELOAD_ONLY
 STATIC_LIBS
 MY_HOSTNAME_PARSER
@@ -700,6 +700,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -741,7 +742,7 @@ with_syshostConfig
 with_hostnameParser
 with_staticLibs
 with_preloadOnly
-with_IrefuseToInstallXALTCorrectly
+with_siteControlledPrefix
 with_32bit
 with_tmpdir
 with_primeNumber
@@ -796,6 +797,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE}'
@@ -1048,6 +1050,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1185,7 +1196,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1338,6 +1349,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1398,8 +1410,8 @@ Optional Packages:
   --with-staticLibs=ans   Link with static libraries (currently only dcgm)
                           [[no]]
   --with-preloadOnly=ans  Only use XALT in preload only mode[[yes]]
-  --with-IrefuseToInstallXALTCorrectly=ans
-                          Install XALT incorrectly [[no]]
+  --with-siteControlledPrefix=ans
+                          A site controlled prefix, [[no]]
   --with-32bit=ans        Allow for 32 bits executables[[yes]]
   --with-tmpdir=ans       The tmp directory to use with package records
                           [[/dev/shm]]
@@ -3491,26 +3503,26 @@ fi
 
 
 
-# Check whether --with-IrefuseToInstallXALTCorrectly was given.
-if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
-  withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
-    BAD_INSTALL=`echo $BAD_INSTALL | tr '[:upper:]' '[:lower:]'`
-    VALID_YN $BAD_INSTALL "--with-IrefuseToInstallXALTCorrectly=ans: ans must be yes or no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
-$as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
+# Check whether --with-siteControlledPrefix was given.
+if test "${with_siteControlledPrefix+set}" = set; then :
+  withval=$with_siteControlledPrefix; SITE_CONTROLLED_PREFIX="$withval"
+    SITE_CONTROLLED_PREFIX=`echo $SITE_CONTROLLED_PREFIX | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $SITE_CONTROLLED_PREFIX "--with-siteControlledPrefix=ans: ans must be yes or no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE_CONTROLLED_PREFIX=$with_siteControlledPrefix" >&5
+$as_echo "SITE_CONTROLLED_PREFIX=$with_siteControlledPrefix" >&6; }
 
 cat >>confdefs.h <<_ACEOF
-#define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
+#define SITE_CONTROLLED_PREFIX "$with_siteControlledPrefix"
 _ACEOF
 
 else
   withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
-$as_echo "BAD_INSTALL=$withval" >&6; }
-    BAD_INSTALL="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE_CONTROLLED_PREFIX=$withval" >&5
+$as_echo "SITE_CONTROLLED_PREFIX=$withval" >&6; }
+    SITE_CONTROLLED_PREFIX="$withval"
 
 cat >>confdefs.h <<_ACEOF
-#define BAD_INSTALL "$withval"
+#define SITE_CONTROLLED_PREFIX "$withval"
 _ACEOF
 
 fi
@@ -5000,35 +5012,39 @@ fi
 
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
-SUBDIR=xalt/$VERSION
+XALT_DEFAULT_DIR=$prefix/xalt/xalt
 
-if test $BAD_INSTALL = no; then
+if test $SITE_CONTROLLED_PREFIX != yes; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
       echo
       echo "===================================================="
-      echo "Do not install XALT with $VERSION as part of the"
-      echo "prefix.  It will lead to many many problems with future"
-      echo "installs of XALT"
+      echo "A site can include the version in the prefix, but"
+      echo "must be aware of the issues with this change. If"
+      echo "your site have static binaries build with older"
+      echo "version of XALT, they will silently NOT be recorded."
       echo
-      echo "Executables built with the current version of XALT"
-      echo "will not work with future installs of XALT!!!"
+      echo "Also sites must define the "XALT_DIR" environment"
+      echo "variable correctly."
       echo
-      echo "If you feel that you know better than the developer"
-      echo "of XALT then you can configure XALT with the configure"
-      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
-      echo "to include the version"
+      echo "If your site wishes to install XALT and control "
+      echo "the prefix then add: "
       echo
-      echo "If you wanted to install XALT in /apps/xalt/$version"
-      echo "set the prefix as:"
+      echo "   --with-siteControlledPrefix=yes"
       echo
-      echo "  ./configure --prefix=/apps"
-      echo
+      echo "to your configure line."
       echo "===================================================="
       echo
       rm -f makefile
       exit 1
    fi
+
+else
+  PKGV=$prefix
+  XALT_DEFAULT_DIR=$prefix
 fi
+
+
+
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
@@ -6640,7 +6656,7 @@ echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
-echo "XALT installed incorrectly..........................." : $BAD_INSTALL
+echo "XALT Site Controlled Prefix.........................." : $SITE_CONTROLLED_PREFIX
 echo
 echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"

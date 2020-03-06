@@ -23,7 +23,7 @@ initialize()
 
 displayThis()
 {
-  XALT_EPOCH_T1=$(LD_PRELOAD= $outputDir/XALT/xalt/xalt/libexec/xalt_epoch "$XALT_EPOCH_T0")
+  XALT_EPOCH_T1=$(LD_PRELOAD= PATH=$outputDir/XALT/xalt/xalt/libexec:$outputDir/XALT/$VERSION/libexec:$PATH xalt_epoch "$XALT_EPOCH_T0")
   echo 
   echo "#==========================================================#"
   echo "  ""$@"
@@ -47,7 +47,7 @@ installXALT()
   mkdir build
 
   (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; \
-   echo "<make>"; make OPTLVL="-g -O0" install Inst_TACC;
+   echo "<make>"; make OPTLVL="-g -O0" install Inst_TACC Inst_RT;
    if  [ "$?" != 0 ]; then
        echo "make failed"
        touch $outputDir/.make_failed
@@ -56,9 +56,6 @@ installXALT()
   if [ -f $outputDir/.make_failed ]; then
       exit 1;
   fi
-  
-  cp $projectDir/proj_mgmt/check_entries_db.py XALT/xalt/xalt/sbin
-  PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$PATH;
   echo "<end make>"
 }
 
@@ -69,6 +66,8 @@ installDB()
   DB_CONF_FN=testxalt_db.conf
   DBUSER=xaltTest
   PASSWD=kutwgbh
+
+  echo PATH=$PATH
 
   conf_create.py     --dbhost localhost --dbuser $DBUSER \
                      --passwd $PASSWD   --dbname $DBNAME

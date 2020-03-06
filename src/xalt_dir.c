@@ -18,9 +18,8 @@ const char* xalt_dir(const char* file) {
     char *joined;
     int ret = asprintf(&joined, "%s/%s", dir, file);
     if (ret > 0) {
-      if (access(joined, F_OK) != 0) {
+      if (access(joined, F_OK) != 0) 
         syslog(LOG_WARNING, "XALT unable to access '%s'", joined);
-      }
 
       /* this will leak memory if the caller does not free() the string */
       return joined;

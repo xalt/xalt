@@ -272,19 +272,19 @@ AC_ARG_WITH(preloadOnly,
     PRELOAD_ONLY="$withval"
     AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$withval",[Only use XALT in preload only mode]))dnl
 
-AC_SUBST(BAD_INSTALL)
-AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
-    AC_HELP_STRING([--with-IrefuseToInstallXALTCorrectly=ans],[Install XALT incorrectly [[no]]]),
-    BAD_INSTALL="$withval"
-    BAD_INSTALL=`echo $BAD_INSTALL | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
-    VALID_YN $BAD_INSTALL "--with-IrefuseToInstallXALTCorrectly=ans: ans must be yes or no"
-    AC_MSG_RESULT([BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly])
-    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$with_IrefuseToInstallXALTCorrectly",[A site that insist to install XALT incorrectly])dnl
+AC_SUBST(SITE_CONTROLLED_PREFIX)
+AC_ARG_WITH(siteControlledPrefix,
+    AC_HELP_STRING([--with-siteControlledPrefix=ans],[A site controlled prefix, [[no]]]),
+    SITE_CONTROLLED_PREFIX="$withval"
+    SITE_CONTROLLED_PREFIX=`echo $SITE_CONTROLLED_PREFIX | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $SITE_CONTROLLED_PREFIX "--with-siteControlledPrefix=ans: ans must be yes or no"
+    AC_MSG_RESULT([SITE_CONTROLLED_PREFIX=$with_siteControlledPrefix])
+    AC_DEFINE_UNQUOTED(SITE_CONTROLLED_PREFIX, "$with_siteControlledPrefix",[A site controlled prefix.])dnl
     ,
     withval="no"
-    AC_MSG_RESULT([BAD_INSTALL=$withval])
-    BAD_INSTALL="$withval"
-    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval",[A site that insist to install XALT incorrectly]))dnl
+    AC_MSG_RESULT([SITE_CONTROLLED_PREFIX=$withval])
+    SITE_CONTROLLED_PREFIX="$withval"
+    AC_DEFINE_UNQUOTED(SITE_CONTROLLED_PREFIX, "$withval",[A site that insist to install XALT incorrectly]))dnl
 
 AC_SUBST(BIT32)
 AC_ARG_WITH(32bit,
@@ -475,41 +475,45 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
 fi
 
 AC_SUBST(PKGV)
-AC_SUBST(SUBDIR)
+AC_SUBST(XALT_DEFAULT_DIR)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
-SUBDIR=xalt/$VERSION
+XALT_DEFAULT_DIR=$prefix/xalt/xalt
 
-if test $BAD_INSTALL = no; then
+if test $SITE_CONTROLLED_PREFIX != yes; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
       echo
       echo "===================================================="
-      echo "Do not install XALT with $VERSION as part of the"
-      echo "prefix.  It will lead to many many problems with future"
-      echo "installs of XALT"
-      echo
-      echo "Executables built with the current version of XALT"
-      echo "will not work with future installs of XALT!!!"
-      echo
-      echo "If you feel that you know better than the developer"
-      echo "of XALT then you can configure XALT with the configure"
-      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
-      echo "to include the version"
+      echo "A site can include the version in the prefix, but"
+      echo "must be aware of the issues with this change. If"
+      echo "your site have static binaries build with older"
+      echo "version of XALT, they will silently NOT be recorded."
       echo 
-      echo "If you wanted to install XALT in /apps/xalt/$version"
-      echo "set the prefix as:"
+      echo "Also sites must define the "XALT_DIR" environment"
+      echo "variable correctly."
       echo
-      echo "  ./configure --prefix=/apps"
+      echo "If your site wishes to install XALT and control "
+      echo "the prefix then add: "
       echo
+      echo "   --with-siteControlledPrefix=yes"
+      echo
+      echo "to your configure line."
       echo "===================================================="
       echo
       rm -f makefile
       exit 1
    fi
+   
+else
+  PKGV=$prefix
+  XALT_DEFAULT_DIR=$prefix
 fi
+
+
+
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then

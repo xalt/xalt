@@ -5,7 +5,7 @@
  */
 
 /* A site that insist to install XALT incorrectly */
-#undef BAD_INSTALL
+#undef SITE_CONTROLLED_PREFIX
 
 /* Build 32bit libraries as well */
 #undef BIT32
