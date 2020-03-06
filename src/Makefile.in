@@ -287,7 +287,7 @@ build_init: $(DESTDIR)$(LIB64)/xalt_quotestring.o     $(DESTDIR)$(LIB64)/xalt_ve
             $(DESTDIR)$(LIB64)/lex.__XALT_path.o      $(DESTDIR)$(LIB64)/lex.__XALT_path_preload.o \
             $(DESTDIR)$(LIB64)/lex.__XALT_host.o      $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o \
             $(DESTDIR)$(LIB64)/base64.o               $(DESTDIR)$(LIB64)/xalt_tmpdir.o             \
-            $(MY_HOSTNAME_PARSER_OBJ)
+            $(DESTDIR)$(LIB64)/xalt_dir.o             $(MY_HOSTNAME_PARSER_OBJ)
 
 build_init_32bit_no:
 
