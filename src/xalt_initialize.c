@@ -50,6 +50,7 @@
 #include "xalt_quotestring.h"
 #include "xalt_header.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"

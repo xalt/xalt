@@ -1,5 +1,6 @@
 #include "xalt_config.h"
 #include "compute_sha1.h"
+#include "xalt_dir.h"
 #include <fcntl.h>
 #include <openssl/sha.h>
 #include <pthread.h>

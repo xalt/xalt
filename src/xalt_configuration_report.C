@@ -4,6 +4,7 @@
 #include "capture.h"
 #include "xalt_syshost.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include "xalt_regex.h"
 #include "xalt_version.h"
 #include "xalt_interval.h"

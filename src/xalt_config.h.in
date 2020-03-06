@@ -1,14 +1,9 @@
 #ifndef XALT_CONFIG_H
 #define XALT_CONFIG_H
 
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-
 /* Remember that AC_DEFINE() end up in xalt_header.h.in
  * AC_SUBST() end up in xalt_config.h.in
  */
-
 
 #define BAD_INSTALL                "@BAD_INSTALL@"
 #define CRYPTO_STR                 "@CRYPTO_STR@"
@@ -43,21 +38,5 @@
 #define XALT_SYSTEM_PATH           "@SYSTEM_PATH@"
 #define XALT_TMPDIR                "@XALT_TMPDIR@"
 #define XALT_VERSION               "@VERSION@"
-
-static const char* xalt_dir(const char* file) {
-  const char* dir = getenv("XALT_DIR") ? getenv("XALT_DIR") : XALT_DEFAULT_DIR;
-
-  if (!file) {
-    return dir;
-  }
-  else {
-    char *joined;
-    int ret = asprintf(&joined, "%s/%s", dir, file);
-    if (ret > 0)
-      return joined;
-    else
-      return file;
-  }
-}
 
 #endif /* XALT_CONFIG_H */

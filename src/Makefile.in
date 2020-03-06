@@ -49,6 +49,7 @@ C_SRC       :=                             \
                jsmn.c             	   \
                transmit.c             	   \
 	       xalt_c_utils.c              \
+               xalt_dir.c                  \
 	       xalt_fgets_alloc.c 	   \
                xalt_initialize.c  	   \
                xalt_record_pkg.c           \
@@ -89,7 +90,7 @@ CXX_SRC     :=                             \
 
 
 UUIDGEN_EXEC := $(DESTDIR)$(BIN)/my_uuidgen
-UUIDGEN_SRC  := my_uuidgen.c build_uuid.c
+UUIDGEN_SRC  := my_uuidgen.c build_uuid.c xalt_dir.c
 UUIDGEN_OBJS := $(patsubst %.c, %.o, $(UUIDGEN_SRC))
 
 TRP_EXEC     := $(DESTDIR)$(LIBEXEC)/test_record_pkg
@@ -105,7 +106,7 @@ XRS_CXX_SRC  := xalt_run_submission.C ConfigParser.C Json.C Options.C Process.C 
                 buildRmapT.C buildUserT.C capture.C extractXALTRecord.C parseJsonStr.C           \
                 translate.C xalt_utils.C epoch.C walkProcessTree.C compute_sha1.C                \
                 parseProcMaps.C pkgRecordTransmit.C
-XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c \
+XRS_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c jsmn.c  __build__/lex.xalt_env.c transmit.c xalt_c_utils.c xalt_dir.c \
                 zstring.c base64.c xalt_tmpdir.c  build_uuid.c xalt_syshost.c
 XRS_OBJS     := $(patsubst %.C, %.o, $(XRS_CXX_SRC)) $(patsubst %.c, %.o, $(XRS_C_SRC))
 
@@ -117,7 +118,7 @@ XGM_OBJS     := $(patsubst %.C, %.o, $(XGM_CXX_SRC)) $(patsubst %.c, %.o, $(XGM_
 XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
 XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
                 Json.C parseLDTrace.C capture.C zstring.C  ConfigParser.C epoch.C compute_sha1.C
-XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c transmit.c xalt_c_utils.c base64.c     \
+XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c transmit.c xalt_c_utils.c base64.c xalt_dir.c    \
                 zstring.c
 XGL_OBJS     := $(patsubst %.C, %.o, $(XGL_CXX_SRC)) $(patsubst %.c, %.o, $(XGL_C_SRC))
 
@@ -148,7 +149,7 @@ S2DB_OBJS    := $(patsubst %.C, %.o, $(S2DB_CXX_SRC)) $(patsubst %.c, %.o, $(S2D
 
 XCR_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
 XCR_CXX_SRC  := xalt_configuration_report.C epoch.C Json.C capture.C
-XCR_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c
+XCR_C_SRC    := xalt_quotestring.c xalt_fgets_alloc.c xalt_dir.c
 XCR_OBJS     := $(patsubst %.C, %.o, $(XCR_CXX_SRC)) $(patsubst %.c, %.o, $(XCR_C_SRC)) xalt_syshost.o
 
 XER_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x
@@ -157,7 +158,7 @@ XER_OBJS     := $(patsubst %.C, %.o, $(XER_CXX_SRC))
 
 XRP_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
 XRP_C_SRC    := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
-                zstring.c base64.c xalt_fgets_alloc.c xalt_syshost.c xalt_tmpdir.c
+                zstring.c base64.c xalt_fgets_alloc.c xalt_syshost.c xalt_tmpdir.c xalt_dir.c
 XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
 
 
@@ -294,7 +295,8 @@ build_init_32bit_yes: $(DESTDIR)$(LIB)/xalt_quotestring_32.o $(DESTDIR)$(LIB)/xa
                       $(DESTDIR)$(LIB)/xalt_fgets_alloc_32.o $(DESTDIR)$(LIB)/xalt_initialize_32.o \
                       $(DESTDIR)$(LIB)/lex.__XALT_path_32.o  $(DESTDIR)$(LIB)/libxalt_init.so      \
                       $(DESTDIR)$(LIB)/lex.__XALT_host_32.o  $(DESTDIR)$(LIB)/base64.o             \
-                      $(DESTDIR)$(LIB)/xalt_tmpdir_32.o      $(MY_HOSTNAME_PARSER_OBJ_32)
+                      $(DESTDIR)$(LIB)/xalt_tmpdir_32.o      $(DESTDIR)$(LIB)/xalt_dir_32.o        \
+                      $(MY_HOSTNAME_PARSER_OBJ_32)
 
 
 
@@ -309,6 +311,8 @@ $(DESTDIR)$(LIB64)/lex.__XALT_host_preload.o: __build__/lex.__XALT_hostL.c xalt_
 $(DESTDIR)$(LIB64)/xalt_quotestring.o: xalt_quotestring.c xalt_quotestring.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/base64.o: base64.c base64.h
+	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
+$(DESTDIR)$(LIB64)/xalt_dir.o: xalt_dir.c xalt_dir.h __build__/xalt_config.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB64)/xalt_tmpdir.o: xalt_tmpdir.c xalt_tmpdir.h __build__/xalt_config.h
 	$(COMPILE.c) $(CF_INIT) -o $@ -c $<
@@ -336,6 +340,8 @@ $(DESTDIR)$(LIB)/xalt_vendor_note_32.o: xalt_vendor_note.c xalt_vendor_note.h
 	$(COMPILE.c) -m32 $(CF_INIT) -Wno-int-to-pointer-cast -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_tmpdir_32.o: xalt_tmpdir.c xalt_tmpdir.h  __build__/xalt_config.h
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
+$(DESTDIR)$(LIB)/xalt_dir_32.o: xalt_dir.c xalt_dir.h  __build__/xalt_config.h
+	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/base64.o: base64.c base64.h
 	$(COMPILE.c) -m32 $(CF_INIT) -o $@ -c $<
 $(DESTDIR)$(LIB)/xalt_quotestring_32.o: xalt_quotestring.c xalt_quotestring.h
@@ -356,6 +362,7 @@ $(DESTDIR)$(LIB)/libxalt_init.so: $(DESTDIR)$(LIB)/xalt_initialize_preload_32.o 
                                   $(DESTDIR)$(LIB)/xalt_tmpdir_32.o             \
                                   $(DESTDIR)$(LIB)/xalt_vendor_note_32.o        \
                                   $(DESTDIR)$(LIB)/base64.o                     \
+                                  $(DESTDIR)$(LIB)/xalt_dir_32.o                \
                                   $(MY_HOSTNAME_PARSER_OBJ_32)
 	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^
 
@@ -367,6 +374,7 @@ $(DESTDIR)$(LIB64)/libxalt_init.so: $(DESTDIR)$(LIB64)/xalt_initialize_preload.o
                                     $(DESTDIR)$(LIB64)/base64.o                  \
                                     $(DESTDIR)$(LIB64)/xalt_tmpdir.o             \
                                     $(DESTDIR)$(LIB64)/xalt_vendor_note.o        \
+                                    $(DESTDIR)$(LIB64)/xalt_dir.o                \
                                     $(MY_HOSTNAME_PARSER_OBJ)                    \
                                     $(DESTDIR)$(LIB64)/xalt_fgets_alloc.o
 	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ $(LIBDCGM) $(LIBNVML)
