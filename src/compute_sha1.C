@@ -1,5 +1,6 @@
 #include "xalt_config.h"
 #include "compute_sha1.h"
+#include "xalt_dir.h"
 #include <fcntl.h>
 #include <openssl/sha.h>
 #include <pthread.h>
@@ -45,7 +46,7 @@ void compute_sha1(std::string& fn, std::string& sha1_str)
       void * handle = dlopen("libcrypto.so", RTLD_LAZY);
       if (!handle)
         {
-          handle = dlopen (XALT_DIR "lib64/libcrypto.so", RTLD_LAZY);
+          handle = dlopen (xalt_dir("lib64/libcrypto.so"), RTLD_LAZY);
           if (!handle) 
             {
               fputs(dlerror(), stderr);

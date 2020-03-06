@@ -627,6 +627,7 @@ CURL_STR
 CRYPTO_STR
 XALT_GIT_VERSION
 VERSION
+SUBDIR
 PKGV
 HAVE_DCGM
 HAVE_NVML
@@ -4649,6 +4650,14 @@ else
 fi
 
 
+ac_fn_c_check_header_mongrel "$LINENO" "syslog.h" "ac_cv_header_syslog_h" "$ac_includes_default"
+if test "x$ac_cv_header_syslog_h" = xyes; then :
+
+else
+  as_fn_error $? "Unable to build XALT without syslog.h. Please install the glibc headers package" "$LINENO" 5
+fi
+
+
 
 
 
@@ -4966,8 +4975,10 @@ fi
 
 
 
+
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
+SUBDIR=xalt/$VERSION
 
 if test $BAD_INSTALL = no; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
