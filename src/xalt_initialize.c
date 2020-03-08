@@ -747,7 +747,7 @@ void myinit(int argc, char **argv)
       if (runable == -1)
         {
           run_submission_exists = 0;
-          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value: %s -> exiting\n}\n\n", run_submission_prgm, xalt_dir(NULL));
+          DEBUG2(stderr, "    -> Quitting => Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value: %s -> exiting\n}\n\n", run_submission_prgm, xalt_dir(NULL));
           reject_flag = XALT_MISSING_RUN_SUBMISSION;
           unsetenv("XALT_RUN_UUID");
           syslog(LOG_WARNING, "XALT: Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value '%s'\n", run_submission_prgm, xalt_dir(NULL));
@@ -1083,7 +1083,7 @@ void myfini()
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
 
-  const char * run_submission_pgrm = xalt_dir("libexec/xalt_run_submission");
+  const char * run_submission_prgm = xalt_dir("libexec/xalt_run_submission");
   int runable = (run_submission_exists == 1) ? 1 : access(run_submission_prgm, X_OK);
   if (runable == -1)
     {
