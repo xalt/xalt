@@ -71,11 +71,19 @@ SETUP_CMD=
 echo SYSHOST: $SYSHOST
 
 case $SYSHOST in
-  rios | mijo | jedrik | vmijo | lmod-test | xalt-lmod)
-    echo "Building rios"
+  rios | jedrik | lmod-test | xalt-lmod)
+    echo "Building on $SYSHOST using rios rules"
     SUDO="sudo"
     base="/opt/apps"
     CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py"
+    ;;
+
+   vmijo)
+    echo "Building on vmijo"
+    SUDO="sudo"
+    base="/opt/apps"
+    CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py \
+       --prefix=/opt/apps/xalt/$PKG_VERSION --with-siteControlledPrefix=yes"
     ;;
 
   xalt)
