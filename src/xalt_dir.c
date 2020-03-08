@@ -11,9 +11,9 @@ const char* xalt_dir(const char* file)
 {
   int i;
   char *joined;
-  const char** dirA[2];
+  const char* dirA[2];
 
-  dirA[0] = (const char *) getenv("XALT_DIR");
+  dirA[0] = getenv("XALT_DIR");
   dirA[1] = XALT_DEFAULT_DIR;
 
   for (i = 0; i < 2; ++i)
