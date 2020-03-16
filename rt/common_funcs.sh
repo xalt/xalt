@@ -54,6 +54,7 @@ installXALT()
    fi
   )
   if [ -f $outputDir/.make_failed ]; then
+      rm $outputDir/.make_failed 
       exit 1;
   fi
   echo "<end make>"

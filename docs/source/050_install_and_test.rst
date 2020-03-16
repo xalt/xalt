@@ -1,23 +1,51 @@
 Running ./configure and building XALT
 -------------------------------------
 
-Installing XALT is different from most applications.  You can only
-have one active XALT running at a time.   It is common
-place to install packages say /apps/xalt/<xalt_version> with
-configure.  However you do not want to have the prefix include the
-"xalt/xalt_version" as part of prefix.
+Installing XALT is different from most applications.  It is common
+to have one version of XALT installed at a time. This is the safe way
+to install XALT.  Namely use the "prefix" to the parent directory
+above XALT.  In other word, if your wishes to install XALT in
+/opt/xalt/<version>, then the configure line looks like::
 
-   **NOTE**: DO NOT PUT THE VERSION OF XALT IN THE CONFIGURATION LINE!!
+    $ ./configure --prefix=/opt ...
 
-Instead you should specify the directory above xalt for the prefix
-value.  So if you would like to install version 2.0 of xalt in
-/apps/xalt/2.0 you SHOULD set prefix to /apps.  XALT will install
-itself in /apps/xalt/2.0 and make a symlink from /apps/xalt/xalt to
-/apps/xalt/2.0.  This way /apps/xalt/xalt will always point to the
-latest version of the XALT software.
+and xalt will be installed in /opt/xalt/X.Y.Z where X.Y.Z the
+current version of XALT.  This is the safest way to install XALT.
 
-If you do not follow this advice then you will have trouble with
-installing future versions of XALT.
+
+Site controlled XALT location
+-----------------------------
+
+A site may wish to control the location of XALT, especially if two or
+more version of XALT will be installed at the same time.  In this case
+a site might configure XALT by::
+
+    $ ./configure --prefix=/opt/xalt/X.Y.Z --with-siteControlledPrefix=yes
+  
+Where X.Y.Z is the current version of XALT.
+
+   **NOTE**: Site which to this must set the *XALT_DIR* environment variable. 
+
+Please the next section if your site uses static binaries.
+
+
+Sites using static executables
+------------------------------
+
+If a site builds static binaries AND has been using XALT with version
+< 2.8, then there is a problem. Those static executables are expecting to
+find XALT in a standard location. Typically if a site has been
+installing XALT in /opt/xalt/X.Y.Z then xalt will install a symlink
+which links /opt/xalt/xalt with /opt/xalt/X.Y.Z.
+
+All static binaries built with XALT version prior to version 2.8 will
+expect to find XALT tools in /opt/xalt/xalt/libexec/*.  If
+/opt/xalt/xalt/... doesn't exist then those old static binaries will
+work but will silently not record data, unless the $XALT_TRACING=yes 
+
+It is recommended that sites with static binaries maintain a symlink
+between /opt/xalt/xalt (or wherever your site has installed XALT) for
+the life of the machine.
 
 Typical configure and build instructions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -69,6 +97,7 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
   local bin   = pathJoin(base,"bin")
 
   prepend_path{"PATH",          bin, priority="100"}
+  prepend_path("XALT_DIR"       base)
   prepend_path("LD_PRELOAD",    pathJoin(base,"$LIB/libxalt_init.so"))
   prepend_path("COMPILER_PATH", bin)
 
@@ -87,6 +116,11 @@ The following is a TCL modulefile::
   # Uncomment this to track GPU usage
   #setenv XALT_GPU_TRACKING              yes
 
+  ############################################################
+  # Change /opt/apps/xalt to match your site!!
+  ############################################################
+
+  setenv        XALT_DIR        /opt/apps/xalt/xalt    
   prepend-path  PATH            /opt/apps/xalt/xalt/bin  100
   prepend-path  LD_PRELOAD      /opt/apps/xalt/xalt/\$LIB/libxalt_init.so
   prepend-path  COMPILER_PATH   /opt/apps/xalt/xalt/bin
