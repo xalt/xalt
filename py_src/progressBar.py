@@ -119,6 +119,9 @@ class ProgressBar(object):
 
     #print("i: ", i, "j: ",j,"k:",k, "fence: ", self.__fence,"mark:",self.__mark)
 
+    if (i >= self.__maxVal):
+      return
+
     if (j >= self.__fence):
       symbol = "-"
       if (( j <= self.__mark and k >= self.__mark) or
@@ -141,8 +144,11 @@ def main():
   Test program for progress bar.
   """
 
-  num = 200
+  num = 201
   pbar = ProgressBar(maxVal=num, ttyOnly=False)
+
+  num = 240
+
   for i in range(num):
     pbar.update(i+1)
   pbar.fini()  
