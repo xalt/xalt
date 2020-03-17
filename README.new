@@ -1,2 +1,3 @@
 XALT 2.8+
-    (2.8.1)  *
+    (2.8.1)  * progressBar.py: handle the case where pbar.update(i) where i could be greater than the max value
+    
