@@ -232,12 +232,12 @@ if [ -z "$BIT32FLAG" ]; then
   fi
   XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o
                          $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/xalt_tmpdir.o $XLD/base64.o
-                         $XLD/xalt_vendor_note.o $MY_HOSTNAME_PARSER_OBJ"
+                         $XLD/xalt_vendor_note.o $XLD/xalt_dir.o $MY_HOSTNAME_PARSER_OBJ"
 else
   XLD=$XALT_DIR/lib
   XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o
                          $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/xalt_tmpdir_32.o $XLD/base64.o
-                         $XLD/my_hostname_parser_32.o $XLD/xalt_vendor_note.o"
+                         $XLD/my_hostname_parser_32.o  $XLD/xalt_dir_32.o $XLD/xalt_vendor_note.o"
 fi
   
 # Get the compiler information

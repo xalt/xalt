@@ -13,6 +13,20 @@ AH_TOP(
  */
 ])
 
+VALID_YN ()
+{
+  ANS=$1
+  MSG=$2
+  case $ANS in
+    yes|no)
+      ;;
+    *)
+      echo $MSG
+      exit 1
+      ;;
+  esac
+}
+
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
@@ -41,6 +55,8 @@ AC_SUBST(XALT_FUNCTION_TRACKING)
 AC_ARG_WITH(functionTracking,
     AC_HELP_STRING([--with-functionTracking=ans],[Track functions from modules [[yes]]]),
     XALT_FUNCTION_TRACKING="$withval"
+    XALT_FUNCTION_TRACKING=`echo $XALT_FUNCTION_TRACKING | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_FUNCTION_TRACKING "--with-functionTracking=ans: ans must be yes or no"
     AC_MSG_RESULT([XALT_FUNCTION_TRACKING=$with_functionTracking])
     AC_DEFINE_UNQUOTED(XALT_FUNCTION_TRACKING, "$with_functionTracking",[Track functions from modules])dnl
     ,
@@ -77,6 +93,8 @@ AC_SUBST(XALT_MPI_TRACKING)
 AC_ARG_WITH(trackMPI,
     AC_HELP_STRING([--with-trackMPI=ans],[Track MPI executables, [[yes]]]),
     XALT_MPI_TRACKING="$withval"
+    XALT_MPI_TRACKING=`echo $XALT_MPI_TRACKING | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_MPI_TRACKING "--with-trackMPI=ans: ans must be yes or no"
     AC_MSG_RESULT([XALT_MPI_TRACKING=$with_trackMPI])
     AC_DEFINE_UNQUOTED(XALT_MPI_TRACKING, "$with_trackMPI",[Track MPI executables])dnl
     ,
@@ -89,6 +107,8 @@ AC_SUBST(XALT_SCALAR_TRACKING)
 AC_ARG_WITH(trackScalarPrgms,
     AC_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi executables[[yes]]]),
     XALT_SCALAR_TRACKING="$withval"
+    XALT_SCALAR_TRACKING=`echo $XALT_SCALAR_TRACKING | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_SCALAR_TRACKING "--with-trackScalarPrgms=ans: ans must be yes or no"
     AC_MSG_RESULT([XALT_SCALAR_TRACKING=$with_trackScalarPrgms])
     AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$with_trackScalarPrgms",[Track non-mpi executables])dnl
     ,
@@ -102,6 +122,8 @@ AC_SUBST(XALT_CMDLINE_RECORD)
 AC_ARG_WITH(cmdlineRecord,
     AC_HELP_STRING([--with-cmdlineRecord=ans],[Record the program's execution command line[[yes]]]),
     XALT_CMDLINE_RECORD="$withval"
+    XALT_CMDLINE_RECORD=`echo $XALT_CMDLINE_RECORD | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_CMDLINE_RECORD "--with-cmdlineRecord=ans: ans must be yes or no"
     AC_MSG_RESULT([XALT_CMDLINE_RECORD=$with_cmdlineRecord])
     AC_DEFINE_UNQUOTED(XALT_CMDLINE_RECORD, "$with_cmdlineRecord",[Record the program's execution command line])dnl
     ,
@@ -114,6 +136,8 @@ AC_SUBST(COMPUTE_SHA1SUM)
 AC_ARG_WITH(computeSHA1,
     AC_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sums on libraries, [[no]]]),
     COMPUTE_SHA1SUM="$withval"
+    COMPUTE_SHA1SUM=`echo $COMPUTE_SHA1SUM | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $COMPUTE_SHA1SUM "--with-computeSHA1=ans: ans must be yes or no"
     AC_MSG_RESULT([COMPUTE_SHA1SUM=$with_computeSHA1])
     AC_DEFINE_UNQUOTED(COMPUTE_SHA1SUM, "$with_computeSHA1",,[Compute SHAs sums on libraries])dnl
     ,
@@ -150,6 +174,8 @@ AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
     AC_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient/MySQL-python module [[yes]]]),
     MYSQLDB="$withval"
+    MYSQLDB=`echo $MYSQLDB | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $MYSQLDB "--with-MySQL=ans: ans must be yes or no"
     AC_MSG_RESULT([MYSQLDB=$with_MySQL])
     AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL",[Require the mysqlclient/MySQL-python module])dnl
     ,
@@ -222,6 +248,8 @@ AC_SUBST(STATIC_LIBS)
 AC_ARG_WITH(staticLibs,
     AC_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only dcgm) [[no]]]),
     STATIC_LIBS="$withval"
+    STATIC_LIBS=`echo $STATIC_LIBS | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $STATIC_LIBS "--with-staticLibs=ans: ans must be yes or no"
     AC_MSG_RESULT([STATIC_LIBS=$with_staticLibs])
     AC_DEFINE_UNQUOTED(STATIC_LIBS, "$with_staticLibs",[Link with static libraries (currently only dcgm)])dnl
     ,
@@ -234,6 +262,8 @@ AC_SUBST(PRELOAD_ONLY)
 AC_ARG_WITH(preloadOnly,
     AC_HELP_STRING([--with-preloadOnly=ans],[Only use XALT in preload only mode[[yes]]]),
     PRELOAD_ONLY="$withval"
+    PRELOAD_ONLY=`echo $PRELOAD_ONLY | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $PRELOAD_ONLY "--with-preloadOnly=ans: ans must be yes or no"
     AC_MSG_RESULT([PRELOAD_ONLY=$with_preloadOnly])
     AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$with_preloadOnly",[Only use XALT in preload only mode])dnl
     ,
@@ -242,22 +272,26 @@ AC_ARG_WITH(preloadOnly,
     PRELOAD_ONLY="$withval"
     AC_DEFINE_UNQUOTED(PRELOAD_ONLY, "$withval",[Only use XALT in preload only mode]))dnl
 
-AC_SUBST(BAD_INSTALL)
-AC_ARG_WITH(IrefuseToInstallXALTCorrectly,
-    AC_HELP_STRING([--with-IrefuseToInstallXALTCorrectly=ans],[Install XALT incorrectly [[no]]]),
-    BAD_INSTALL="$withval"
-    AC_MSG_RESULT([BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly])
-    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$with_IrefuseToInstallXALTCorrectly",[A site that insist to install XALT incorrectly])dnl
+AC_SUBST(SITE_CONTROLLED_PREFIX)
+AC_ARG_WITH(siteControlledPrefix,
+    AC_HELP_STRING([--with-siteControlledPrefix=ans],[A site controlled prefix, [[no]]]),
+    SITE_CONTROLLED_PREFIX="$withval"
+    SITE_CONTROLLED_PREFIX=`echo $SITE_CONTROLLED_PREFIX | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $SITE_CONTROLLED_PREFIX "--with-siteControlledPrefix=ans: ans must be yes or no"
+    AC_MSG_RESULT([SITE_CONTROLLED_PREFIX=$with_siteControlledPrefix])
+    AC_DEFINE_UNQUOTED(SITE_CONTROLLED_PREFIX, "$with_siteControlledPrefix",[A site controlled prefix.])dnl
     ,
     withval="no"
-    AC_MSG_RESULT([BAD_INSTALL=$withval])
-    BAD_INSTALL="$withval"
-    AC_DEFINE_UNQUOTED(BAD_INSTALL, "$withval",[A site that insist to install XALT incorrectly]))dnl
+    AC_MSG_RESULT([SITE_CONTROLLED_PREFIX=$withval])
+    SITE_CONTROLLED_PREFIX="$withval"
+    AC_DEFINE_UNQUOTED(SITE_CONTROLLED_PREFIX, "$withval",[A site that insist to install XALT incorrectly]))dnl
 
 AC_SUBST(BIT32)
 AC_ARG_WITH(32bit,
-    AC_HELP_STRING([--with-32bit],[Allow for 32 bits executables[[yes]]]),
+    AC_HELP_STRING([--with-32bit=ans],[Allow for 32 bits executables[[yes]]]),
     BIT32="$withval"
+    BIT32=`echo $BIT32 | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $BIT32 "--with-32bit=ans: ans must be yes or no"
     AC_MSG_RESULT([BIT32=$with_32bit])
     AC_DEFINE_UNQUOTED(BIT32, "$with_32bit",[Build 32bit libraries as well])dnl
     ,
@@ -377,6 +411,8 @@ AC_CHECK_HEADER(openssl/sha.h,
 
 AC_CHECK_HEADER(gelf.h, [],
                 [AC_MSG_ERROR([Unable to build XALT without gelf.h. Please install the libelf development package])])
+AC_CHECK_HEADER(syslog.h, [],
+                [AC_MSG_ERROR([Unable to build XALT without syslog.h. Please install the glibc headers package])])
 
 
 AC_SUBST(HAVE_WORKING_LIBUUID)
@@ -439,39 +475,45 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
 fi
 
 AC_SUBST(PKGV)
+AC_SUBST(XALT_DEFAULT_DIR)
 AC_SUBST(VERSION)
 AC_SUBST(XALT_GIT_VERSION)
 
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
+XALT_DEFAULT_DIR=$prefix/xalt/xalt
 
-if test $BAD_INSTALL = no; then
+if test $SITE_CONTROLLED_PREFIX != yes; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
       echo
       echo "===================================================="
-      echo "Do not install XALT with $VERSION as part of the"
-      echo "prefix.  It will lead to many many problems with future"
-      echo "installs of XALT"
-      echo
-      echo "Executables built with the current version of XALT"
-      echo "will not work with future installs of XALT!!!"
-      echo
-      echo "If you feel that you know better than the developer"
-      echo "of XALT then you can configure XALT with the configure"
-      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
-      echo "to include the version"
+      echo "A site can include the version in the prefix, but"
+      echo "must be aware of the issues with this change. If"
+      echo "your site have static binaries build with older"
+      echo "version of XALT, they will silently NOT be recorded."
       echo 
-      echo "If you wanted to install XALT in /apps/xalt/$version"
-      echo "set the prefix as:"
+      echo "Also sites must define the "XALT_DIR" environment"
+      echo "variable correctly."
       echo
-      echo "  ./configure --prefix=/apps"
+      echo "If your site wishes to install XALT and control "
+      echo "the prefix then add: "
       echo
+      echo "   --with-siteControlledPrefix=yes"
+      echo
+      echo "to your configure line."
       echo "===================================================="
       echo
       rm -f makefile
       exit 1
    fi
+   
+else
+  PKGV=$prefix
+  XALT_DEFAULT_DIR=$prefix
 fi
+
+
+
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then

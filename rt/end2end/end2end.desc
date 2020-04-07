@@ -13,27 +13,33 @@ test_descript = {
 
      initialize
 
-     installXALT --with-syshostConfig=nth_name:2 
+     rm -rf XALT
+
+     VERSION=`cat $(projectDir)/.version`
+      
+     installXALT --with-syshostConfig=nth_name:2 --prefix=$(outputDir)/XALT/$VERSION --with-siteControlledPrefix=yes
      displayThis "buildRmapT"
      buildRmapT
 
+     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools" u2acct.json
+     mkdir "xalt tools"
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
+     XALT_BIN=$outputDir/XALT/$VERSION/bin
+     PATH="$XALT_BIN:$outputDir/XALT/$VERSION/sbin:$outputDir/xalt tools:$PATH";
 
 
      displayThis "installDB"
      installDB 
 
-     rm -rf get_XALT_env hello* hybrid_daxpy map.log omp_pi results.csv "xalt tools" u2acct.json
-     mkdir "xalt tools"
 
      echo '{ "mclay": "A-xyzzy" }' > u2acct.json
 
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
-     PATH="$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$outputDir/xalt tools:$PATH";
 
+   
+     export XALT_DIR=$(outputDir)/XALT/$VERSION 
      export COMPILER_PATH=$XALT_BIN
      export SBATCH_ACCOUNT=rtm
      export SLURM_JOB_ID=12345
@@ -59,7 +65,7 @@ test_descript = {
      mpirun -n 1 Ðì®/helloñ.mpi --seq 02
      
      displayThis "Setting LD_PRELOAD, XALT_TRACING=yes ./hello\ .mpi --seq 03"
-     export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
+     export LD_PRELOAD=$outputDir/XALT/$VERSION/lib64/libxalt_init.so
      LD_BIND_NOW=1 XALT_TRACING=yes ./hello\ .mpi --ntasks p "a';'d" --seq 03
      
      g++ -o try.rd $(testDir)/try.C -rdynamic
@@ -146,7 +152,7 @@ test_descript = {
      gcc -O2 -flto -o my_flto main.o foo.o bar.o 
 
      displayThis "test_record_pkg --seq 15"
-     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg --seq 15
+     $(outputDir)/XALT/$VERSION/libexec/test_record_pkg --seq 15
 
      displayThis "build and run segv program (seq 16)"
      mpicc -o segv $(testDir)/segv.c
@@ -165,7 +171,7 @@ test_descript = {
      ./ill --seq 19
 
      displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 20"
-     mv XALT/xalt/xalt/libexec/xalt_run_submission XALT/xalt/xalt/libexec/xalt_run_submission.orig
+     mv XALT/$VERSION/libexec/xalt_run_submission XALT/$VERSION/libexec/xalt_run_submission.orig
 
      XALT_TRACING=yes ./hello\ .mpi --seq 20
 

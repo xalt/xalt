@@ -4,6 +4,7 @@
 #include "capture.h"
 #include "xalt_syshost.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include "xalt_regex.h"
 #include "xalt_version.h"
 #include "xalt_interval.h"
@@ -87,7 +88,7 @@ int main(int argc, char* argv[])
 
 
   Vstring     resultA;
-  std::string cmd     = XALT_DIR "/bin/xalt_print_os";
+  std::string cmd     = xalt_dir("bin/xalt_print_os");
   capture(cmd, resultA);
   std::string current_os_descript = resultA[0];
 
@@ -178,8 +179,8 @@ int main(int argc, char* argv[])
       json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
       json.add("XALT_COMPUTE_SHA1",             computeSHA1);
       json.add("XALT_ETC_DIR",                  xalt_etc_dir);
-      json.add("XALT_DIR",                      XALT_DIR);
-      json.add("BAD_INSTALL",                   BAD_INSTALL);
+      json.add("XALT_DIR",                      xalt_dir(NULL));
+      json.add("SITE_CONTROLLED_PREFIX",        SITE_CONTROLLED_PREFIX);
       json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
       json.add("XALT_CMDLINE_RECORD",           cmdline_record);
       json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
@@ -232,8 +233,8 @@ int main(int argc, char* argv[])
     std::cout << "XALT_LOGGING_URL:                " << log_url                      << "\n";
   std::cout << "XALT_COMPUTE_SHA1 on libraries:  " << computeSHA1                    << "\n";
   std::cout << "XALT_ETC_DIR:                    " << xalt_etc_dir                   << "\n";
-  std::cout << "XALT_DIR:                        " << XALT_DIR                       << "\n";
-  std::cout << "BAD_INSTALL:                     " << BAD_INSTALL                    << "\n";
+  std::cout << "XALT_DIR:                        " << xalt_dir(NULL)                 << "\n";
+  std::cout << "SITE_CONTROLLED_PREFIX:          " << SITE_CONTROLLED_PREFIX         << "\n";
   std::cout << "XALT_CONFIG_PY:                  " << XALT_CONFIG_PY                 << "\n";
   std::cout << "XALT_MPI_TRACKING:               " << xalt_mpi_tracking              << "\n";
   std::cout << "XALT_GPU_TRACKING:               " << xalt_gpu_tracking              << "\n";

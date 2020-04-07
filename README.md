@@ -37,6 +37,23 @@ See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercompu
 
 ## ChangeLog
 
+### XALT 2.8:
+
+Features/Bug:
+
+   1. xalt_syslog_to_db.py and xalt_file_to_db.py support --u2acct that allows sites to specify a default charge account string when it is not specify in the job script. 
+
+   2. Better support for using XALT_FILE_PREFIX.  Use uuid hash value to chose the 000 to upto a prime number-1 (prime=997 (default)) directory when using XALT_FILE_PREFIX.
+
+   3. Separate Site controllable filter for MPI executables for all MPI tasks < MPI_ALWAYS_RECORD.
+
+   4. Stopping building libuuid. Instead copy libuuid.so from system to XALT's lib64 directory for Container support.  Similar support for other libraries.
+
+   5. Site can control whether the command line is captured or not.
+
+   6. Support curl transmission.
+
+
 ### XALT 2.7:
 
 Features/Bug:

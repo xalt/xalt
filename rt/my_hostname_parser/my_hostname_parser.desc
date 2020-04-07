@@ -27,6 +27,8 @@ test_descript = {
      ar cr libhost.a host.o keep.o
 
      installXALT --with-hostnameParser=library:$(outputDir)/libhost.a$LIBHOST_32 --with-xaltFilePrefix=$(outputDir)/LOG --with-syshostConfig=nth_name:2 
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$(testDir)/bin:$XALT_BIN:$PATH;
    
      displayThis "buildRmapT"
      buildRmapT
@@ -38,8 +40,6 @@ test_descript = {
      displayThis "module commands"
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
-     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 
      export COMPILER_PATH=$XALT_BIN
      export SBATCH_ACCOUNT=rtm

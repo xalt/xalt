@@ -37,6 +37,7 @@
 #include "xalt_regex.h"
 #include "xalt_interval.h"
 #include <errno.h>
+#include <syslog.h>
 #include <sys/utsname.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -50,6 +51,7 @@
 #include "xalt_quotestring.h"
 #include "xalt_header.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
@@ -577,7 +579,7 @@ void myinit(int argc, char **argv)
 
 	  if ( ! have_uuid )
 	    {
-	      capture( XALT_DIR "/bin/my_uuidgen", buffer, BUFSZ);
+	      capture(xalt_dir("bin/my_uuidgen"), buffer, BUFSZ);
 	      strncpy(&uuid_str[0], buffer, 36);
 	      uuid_str[36] = '\0';
 	      have_uuid = 1;
@@ -673,7 +675,7 @@ void myinit(int argc, char **argv)
     {
       if ( ! have_uuid )
 	{
-	  capture( XALT_DIR "/bin/my_uuidgen", buffer, BUFSZ);
+	  capture(xalt_dir("bin/my_uuidgen"), buffer, BUFSZ);
 	  strncpy(&uuid_str[0], buffer, 36);
 	  uuid_str[36] = '\0';
 	  have_uuid = 1;
@@ -687,7 +689,7 @@ void myinit(int argc, char **argv)
   sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
 
   setenv("XALT_DATE_TIME",fullDateStr,1);
-  setenv("XALT_DIR",XALT_DIR,1);
+  setenv("XALT_DIR",xalt_dir(NULL),1);
 
   pid  = getpid();
   ppid = getppid();
@@ -739,15 +741,16 @@ void myinit(int argc, char **argv)
     {
       char uuid_option_str[100];
 
-      const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
-      int runable = access(run_submission, X_OK);
+      const char * run_submission_prgm = xalt_dir("libexec/xalt_run_submission");
+      int runable = access(run_submission_prgm, X_OK);
 
       if (runable == -1)
         {
           run_submission_exists = 0;
-          DEBUG1(stderr, "    -> Quitting => Cannot find xalt_run_submission: %s -> exiting\n}\n\n", run_submission);
+          DEBUG2(stderr, "    -> Quitting => Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value: %s -> exiting\n}\n\n", run_submission_prgm, xalt_dir(NULL));
           reject_flag = XALT_MISSING_RUN_SUBMISSION;
           unsetenv("XALT_RUN_UUID");
+          syslog(LOG_WARNING, "XALT: Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value '%s'\n", run_submission_prgm, xalt_dir(NULL));
           return;
         }
       run_submission_exists = 1;
@@ -763,7 +766,7 @@ void myinit(int argc, char **argv)
         {
 	  char * cmd2;
           asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+                   " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
 		   pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
@@ -772,7 +775,7 @@ void myinit(int argc, char **argv)
 	  free(cmd2);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission, XALT_INTERFACE_VERSION,
+	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
 	       pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
 	       b64_cmdline);
 
@@ -1080,12 +1083,13 @@ void myfini()
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
 
-  const char * run_submission = XALT_DIR "/libexec/xalt_run_submission";
-  int runable = (run_submission_exists == 1) ? 1 : access(run_submission, X_OK);
+  const char * run_submission_prgm = xalt_dir("libexec/xalt_run_submission");
+  int runable = (run_submission_exists == 1) ? 1 : access(run_submission_prgm, X_OK);
   if (runable == -1)
     {
-      DEBUG1(my_stderr, "    -> Quitting => Cannot find xalt_run_submission: %s-> exiting\n}\n\n", run_submission);
+      DEBUG2(my_stderr, "    -> Quitting => Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value: %s -> exiting\n}\n\n", run_submission_prgm, xalt_dir(NULL));
       reject_flag = XALT_MISSING_RUN_SUBMISSION;
+      syslog(LOG_WARNING, "XALT: Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value '%s'\n", run_submission_prgm, xalt_dir(NULL));
     }
   else
     {
@@ -1102,7 +1106,7 @@ void myfini()
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
           asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+                   " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
 		   XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
           //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
@@ -1112,7 +1116,7 @@ void myfini()
 	  fflush(my_stderr);
         }
       asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d  --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission,
+               " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", CXX_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
 	       XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 

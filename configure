@@ -627,6 +627,7 @@ CURL_STR
 CRYPTO_STR
 XALT_GIT_VERSION
 VERSION
+XALT_DEFAULT_DIR
 PKGV
 HAVE_DCGM
 HAVE_NVML
@@ -652,7 +653,7 @@ XALT_PRIME_FMT
 XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
-BAD_INSTALL
+SITE_CONTROLLED_PREFIX
 PRELOAD_ONLY
 STATIC_LIBS
 MY_HOSTNAME_PARSER
@@ -741,7 +742,7 @@ with_syshostConfig
 with_hostnameParser
 with_staticLibs
 with_preloadOnly
-with_IrefuseToInstallXALTCorrectly
+with_siteControlledPrefix
 with_32bit
 with_tmpdir
 with_primeNumber
@@ -1409,9 +1410,9 @@ Optional Packages:
   --with-staticLibs=ans   Link with static libraries (currently only dcgm)
                           [[no]]
   --with-preloadOnly=ans  Only use XALT in preload only mode[[yes]]
-  --with-IrefuseToInstallXALTCorrectly=ans
-                          Install XALT incorrectly [[no]]
-  --with-32bit            Allow for 32 bits executables[[yes]]
+  --with-siteControlledPrefix=ans
+                          A site controlled prefix, [[no]]
+  --with-32bit=ans        Allow for 32 bits executables[[yes]]
   --with-tmpdir=ans       The tmp directory to use with package records
                           [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
@@ -3018,6 +3019,20 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 XALT_INTERFACE_VERSION=5
 
 
+VALID_YN ()
+{
+  ANS=$1
+  MSG=$2
+  case $ANS in
+    yes|no)
+      ;;
+    *)
+      echo $MSG
+      exit 1
+      ;;
+  esac
+}
+
 
 
 # Check whether --with-transmission was given.
@@ -3071,6 +3086,8 @@ fi
 # Check whether --with-functionTracking was given.
 if test "${with_functionTracking+set}" = set; then :
   withval=$with_functionTracking; XALT_FUNCTION_TRACKING="$withval"
+    XALT_FUNCTION_TRACKING=`echo $XALT_FUNCTION_TRACKING | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_FUNCTION_TRACKING "--with-functionTracking=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_FUNCTION_TRACKING=$with_functionTracking" >&5
 $as_echo "XALT_FUNCTION_TRACKING=$with_functionTracking" >&6; }
 
@@ -3143,6 +3160,8 @@ fi
 # Check whether --with-trackMPI was given.
 if test "${with_trackMPI+set}" = set; then :
   withval=$with_trackMPI; XALT_MPI_TRACKING="$withval"
+    XALT_MPI_TRACKING=`echo $XALT_MPI_TRACKING | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_MPI_TRACKING "--with-trackMPI=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_MPI_TRACKING=$with_trackMPI" >&5
 $as_echo "XALT_MPI_TRACKING=$with_trackMPI" >&6; }
 
@@ -3167,6 +3186,8 @@ fi
 # Check whether --with-trackScalarPrgms was given.
 if test "${with_trackScalarPrgms+set}" = set; then :
   withval=$with_trackScalarPrgms; XALT_SCALAR_TRACKING="$withval"
+    XALT_SCALAR_TRACKING=`echo $XALT_SCALAR_TRACKING | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_SCALAR_TRACKING "--with-trackScalarPrgms=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&5
 $as_echo "XALT_SCALAR_TRACKING=$with_trackScalarPrgms" >&6; }
 
@@ -3192,6 +3213,8 @@ fi
 # Check whether --with-cmdlineRecord was given.
 if test "${with_cmdlineRecord+set}" = set; then :
   withval=$with_cmdlineRecord; XALT_CMDLINE_RECORD="$withval"
+    XALT_CMDLINE_RECORD=`echo $XALT_CMDLINE_RECORD | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_CMDLINE_RECORD "--with-cmdlineRecord=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_CMDLINE_RECORD=$with_cmdlineRecord" >&5
 $as_echo "XALT_CMDLINE_RECORD=$with_cmdlineRecord" >&6; }
 
@@ -3216,6 +3239,8 @@ fi
 # Check whether --with-computeSHA1 was given.
 if test "${with_computeSHA1+set}" = set; then :
   withval=$with_computeSHA1; COMPUTE_SHA1SUM="$withval"
+    COMPUTE_SHA1SUM=`echo $COMPUTE_SHA1SUM | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $COMPUTE_SHA1SUM "--with-computeSHA1=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: COMPUTE_SHA1SUM=$with_computeSHA1" >&5
 $as_echo "COMPUTE_SHA1SUM=$with_computeSHA1" >&6; }
     cat >>confdefs.h <<_ACEOF
@@ -3287,6 +3312,8 @@ fi
 # Check whether --with-MySQL was given.
 if test "${with_MySQL+set}" = set; then :
   withval=$with_MySQL; MYSQLDB="$withval"
+    MYSQLDB=`echo $MYSQLDB | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $MYSQLDB "--with-MySQL=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: MYSQLDB=$with_MySQL" >&5
 $as_echo "MYSQLDB=$with_MySQL" >&6; }
 
@@ -3427,6 +3454,8 @@ fi
 # Check whether --with-staticLibs was given.
 if test "${with_staticLibs+set}" = set; then :
   withval=$with_staticLibs; STATIC_LIBS="$withval"
+    STATIC_LIBS=`echo $STATIC_LIBS | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $STATIC_LIBS "--with-staticLibs=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: STATIC_LIBS=$with_staticLibs" >&5
 $as_echo "STATIC_LIBS=$with_staticLibs" >&6; }
 
@@ -3451,6 +3480,8 @@ fi
 # Check whether --with-preloadOnly was given.
 if test "${with_preloadOnly+set}" = set; then :
   withval=$with_preloadOnly; PRELOAD_ONLY="$withval"
+    PRELOAD_ONLY=`echo $PRELOAD_ONLY | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $PRELOAD_ONLY "--with-preloadOnly=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: PRELOAD_ONLY=$with_preloadOnly" >&5
 $as_echo "PRELOAD_ONLY=$with_preloadOnly" >&6; }
 
@@ -3472,24 +3503,26 @@ fi
 
 
 
-# Check whether --with-IrefuseToInstallXALTCorrectly was given.
-if test "${with_IrefuseToInstallXALTCorrectly+set}" = set; then :
-  withval=$with_IrefuseToInstallXALTCorrectly; BAD_INSTALL="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&5
-$as_echo "BAD_INSTALL=$with_IrefuseToInstallXALTCorrectly" >&6; }
+# Check whether --with-siteControlledPrefix was given.
+if test "${with_siteControlledPrefix+set}" = set; then :
+  withval=$with_siteControlledPrefix; SITE_CONTROLLED_PREFIX="$withval"
+    SITE_CONTROLLED_PREFIX=`echo $SITE_CONTROLLED_PREFIX | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $SITE_CONTROLLED_PREFIX "--with-siteControlledPrefix=ans: ans must be yes or no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE_CONTROLLED_PREFIX=$with_siteControlledPrefix" >&5
+$as_echo "SITE_CONTROLLED_PREFIX=$with_siteControlledPrefix" >&6; }
 
 cat >>confdefs.h <<_ACEOF
-#define BAD_INSTALL "$with_IrefuseToInstallXALTCorrectly"
+#define SITE_CONTROLLED_PREFIX "$with_siteControlledPrefix"
 _ACEOF
 
 else
   withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: BAD_INSTALL=$withval" >&5
-$as_echo "BAD_INSTALL=$withval" >&6; }
-    BAD_INSTALL="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: SITE_CONTROLLED_PREFIX=$withval" >&5
+$as_echo "SITE_CONTROLLED_PREFIX=$withval" >&6; }
+    SITE_CONTROLLED_PREFIX="$withval"
 
 cat >>confdefs.h <<_ACEOF
-#define BAD_INSTALL "$withval"
+#define SITE_CONTROLLED_PREFIX "$withval"
 _ACEOF
 
 fi
@@ -3499,6 +3532,8 @@ fi
 # Check whether --with-32bit was given.
 if test "${with_32bit+set}" = set; then :
   withval=$with_32bit; BIT32="$withval"
+    BIT32=`echo $BIT32 | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $BIT32 "--with-32bit=ans: ans must be yes or no"
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: BIT32=$with_32bit" >&5
 $as_echo "BIT32=$with_32bit" >&6; }
 
@@ -4649,6 +4684,14 @@ else
 fi
 
 
+ac_fn_c_check_header_mongrel "$LINENO" "syslog.h" "ac_cv_header_syslog_h" "$ac_includes_default"
+if test "x$ac_cv_header_syslog_h" = xyes; then :
+
+else
+  as_fn_error $? "Unable to build XALT without syslog.h. Please install the glibc headers package" "$LINENO" 5
+fi
+
+
 
 
 
@@ -4966,36 +5009,42 @@ fi
 
 
 
+
 VERSION=$(cat $ac_confdir/.version | sed -e 's/-devel//g')
 PKGV=$prefix/xalt/$VERSION
+XALT_DEFAULT_DIR=$prefix/xalt/xalt
 
-if test $BAD_INSTALL = no; then
+if test $SITE_CONTROLLED_PREFIX != yes; then
    if echo $prefix | grep -i xalt/$VERSION > /dev/null ; then
       echo
       echo "===================================================="
-      echo "Do not install XALT with $VERSION as part of the"
-      echo "prefix.  It will lead to many many problems with future"
-      echo "installs of XALT"
+      echo "A site can include the version in the prefix, but"
+      echo "must be aware of the issues with this change. If"
+      echo "your site have static binaries build with older"
+      echo "version of XALT, they will silently NOT be recorded."
       echo
-      echo "Executables built with the current version of XALT"
-      echo "will not work with future installs of XALT!!!"
+      echo "Also sites must define the "XALT_DIR" environment"
+      echo "variable correctly."
       echo
-      echo "If you feel that you know better than the developer"
-      echo "of XALT then you can configure XALT with the configure"
-      echo "--with-IrefuseToInstallXALTCorrectly=yes and set the prefix"
-      echo "to include the version"
+      echo "If your site wishes to install XALT and control "
+      echo "the prefix then add: "
       echo
-      echo "If you wanted to install XALT in /apps/xalt/$version"
-      echo "set the prefix as:"
+      echo "   --with-siteControlledPrefix=yes"
       echo
-      echo "  ./configure --prefix=/apps"
-      echo
+      echo "to your configure line."
       echo "===================================================="
       echo
       rm -f makefile
       exit 1
    fi
+
+else
+  PKGV=$prefix
+  XALT_DEFAULT_DIR=$prefix
 fi
+
+
+
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
@@ -6607,7 +6656,7 @@ echo "Package version (git) ..............................." : $xaltV
 echo
 echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
-echo "XALT installed incorrectly..........................." : $BAD_INSTALL
+echo "XALT Site Controlled Prefix.........................." : $SITE_CONTROLLED_PREFIX
 echo
 echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"

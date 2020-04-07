@@ -6,6 +6,7 @@
 #include "build_uuid.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include <uuid/uuid.h>
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 void build_uuid(char * my_uuid_str)
@@ -19,7 +20,7 @@ void build_uuid(char * my_uuid_str)
   handle = dlopen ("libuuid.so.1", RTLD_LAZY);
   if (!handle) 
     {
-      handle = dlopen (XALT_DIR "lib64/libuuid.so", RTLD_LAZY);
+      handle = dlopen (xalt_dir("lib64/libuuid.so"), RTLD_LAZY);
       if (!handle) 
         {
           fputs (dlerror(), stderr);
