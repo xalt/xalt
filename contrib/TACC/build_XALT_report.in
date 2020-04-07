@@ -13,19 +13,14 @@ export PATH=/opt/apps/gcc4_9/python/2.7.12/bin:$PATH
 export LD_LIBRARY_PATH=/opt/apps/gcc4_9/python/2.7.12/lib:/opt/apps/intel/15/composer_xe_2015.2.164/mkl/lib/intel64:/opt/apps/intel/15/composer_xe_2015.2.164/compiler/lib/intel64:$LD_LIBRARY_PATH
 
 
-XALT_START_DATE='2019-01-21'
+declare -A startDateT
+startDateT['stampede2'] = '2019-01-21'
+startDateT['frontera']  = '2019-10-01'
 
 today=$(date +%F)
-ystrday=$(date -d "-1day" +%F)
 last30=$(date -d "-30days" +%F)
 last365=$(date -d "-365days" +%F)
-
 last365s=$(date -d "-365days" +%s)
-xalt_start_s=$(date -d $XALT_START_DATE +%s)
-
-if [ "$xalt_start_s" -gt "$last365s" ]; then
-   last365=$(date -d $XALT_START_DATE +%F)
-fi   
 
 SYSHOSTS=( frontera stampede2 )
 
@@ -36,6 +31,14 @@ fi
 cd $HOME/xalt_usage
 
 for i in "${SYSHOSTS[@]}"; do
+   XALT_START_DATE="${startDateT[$i]}"
+   xalt_start_s=$(date -d $XALT_START_DATE +%s)
+
+   if [ "$xalt_start_s" -gt "$last365s" ]; then
+     last365=$(date -d $XALT_START_DATE +%F)
+   fi
+
+
    fn30="XALT-Report-${i}-last30-$today.txt"
    fn365="XALT-Report-${i}-last365-$today.txt"
 
