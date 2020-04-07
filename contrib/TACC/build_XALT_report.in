@@ -27,7 +27,7 @@ if [ "$xalt_start_s" -gt "$last365s" ]; then
    last365=$(date -d $XALT_START_DATE +%F)
 fi   
 
-SYSHOSTS=( maverick stampede2 )
+SYSHOSTS=( frontera stampede2 )
 
 if [ "$1" = "--mail" ]; then
    sendTo="$2"
@@ -45,6 +45,8 @@ for i in "${SYSHOSTS[@]}"; do
 done
 
 if [ -n "$sendTo" ]; then
-   echo "XALT Report for S2 for the last 30 days"  | mail -s $fn30  -a stampede2/last30/$fn30   $sendTo
-   echo "XALT Report for S2 for the last 365 days" | mail -s $fn365 -a stampede2/last365/$fn365 $sendTo
+   for i in "${SYSHOSTS[@]}"; do
+      echo "XALT Report for $i for the last 30 days"  | mail -s $fn30  -a $i/last30/$fn30   $sendTo
+      echo "XALT Report for $i for the last 365 days" | mail -s $fn365 -a $i/last365/$fn365 $sendTo
+  done
 fi
