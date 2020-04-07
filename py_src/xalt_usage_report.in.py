@@ -481,9 +481,9 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
 
     resultA.append([k,
       '{:,.0f}'.format(entryT['corehours']), pSU,
-      entryT['n_runs'],               pR,
-      entryT['n_jobs'],               pJ,
-      entryT['n_users']])
+      '{:,}'.format(entryT['n_runs']),       pR,
+      '{:,}'.format(entryT['n_jobs']),       pJ,
+      '{:,}'.format(entryT['n_users'])])
                  
 
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", " "])
@@ -547,8 +547,8 @@ def running_other_exec(cursor, args, start_date, end_date):
   resultA.append(["Kind", "CoreHrs", "# Runs", "# Users"])
   resultA.append(["----", "-------", "------", "-------"])
 
-  resultA.append(["diff user",'{:,.0f}'.format(resultT['diff']['corehours']), resultT['diff']['n_runs'], resultT['diff']['n_users']])
-  resultA.append(["same user",'{:,.0f}'.format(resultT['same']['corehours']), resultT['same']['n_runs'], resultT['same']['n_users']])
+  resultA.append(["diff user",'{:,.0f}'.format(resultT['diff']['corehours']), '{:,}'.format(resultT['diff']['n_runs']), '{:,}'.format(resultT['diff']['n_users'])])
+  resultA.append(["same user",'{:,.0f}'.format(resultT['same']['corehours']), '{:,}'.format(resultT['same']['n_runs']), '{:,}'.format(resultT['same']['n_users'])])
 
   return resultA
 
