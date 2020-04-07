@@ -14,8 +14,8 @@ export LD_LIBRARY_PATH=/opt/apps/gcc4_9/python/2.7.12/lib:/opt/apps/intel/15/com
 
 
 declare -A startDateT
-startDateT['stampede2'] = '2019-01-21'
-startDateT['frontera']  = '2019-10-01'
+startDateT['stampede2']='2019-01-21'
+startDateT['frontera']='2019-10-01'
 
 today=$(date +%F)
 last30=$(date -d "-30days" +%F)
