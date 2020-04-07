@@ -138,7 +138,8 @@ class ExecRun:
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) , '{:,}'.format(entryT['n_users']),
+                      entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -195,7 +196,7 @@ class ExecRunLink:
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['execname']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) , '{:,}'.format(entryT['n_users']), entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -232,7 +233,7 @@ class CompilerUsageByCount:
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%d" % (entryT['count']), entryT['link_program']])
+      resultA.append(['{:,}'.format(entryT['count']), entryT['link_program']])
     
     return resultA
 
@@ -279,7 +280,7 @@ class CompilerUsageByCoreHours:
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
+      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_runs']), \
                       entryT['link_program']])
     return resultA
 
@@ -341,8 +342,8 @@ class Libraries:
     
         
     for k, entryT in sorted(libT.items(), key=lambda v: v[1][sort_key], reverse=True):
-      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
-                      "%d" % (entryT['n_jobs']), entryT['module']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_runs']), \
+                      '{:,}'.format(entryT['n_jobs']), entryT['module']])
 
     return resultA
   def group_report_by(self, args, sort_key):
@@ -375,8 +376,8 @@ class Libraries:
             g_entry[key] += entry[key]
         
     for k, entryT in sorted(groupT.items(), key=lambda v: v[1][sort_key], reverse=True):
-      resultA.append(["%.0f" % (entryT['corehours']), "%d" % (entryT['n_users']), "%d" % (entryT['n_runs']), \
-                      "%d" % (entryT['n_jobs']), entryT['module']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_runs']), \
+                      '{:,}'.format(entryT['n_jobs']), entryT['module']])
 
     return resultA
 
@@ -417,7 +418,7 @@ class ModuleExec:
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(["%.0f" % (entryT['corehours']),  "%d" % (entryT['n_runs']) , "%d" %(entryT['n_users']), entryT['modules']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) , '{:,}'.format(entryT['n_users']), entryT['modules']])
     
     return resultA
         
@@ -479,20 +480,20 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
     pJ  = percent_str(entryT['n_jobs'],    float(totalT['n_jobs']))
 
     resultA.append([k,
-      "%.0f" % (entryT['corehours']), pSU,
+      '{:,.0f}'.format(entryT['corehours']), pSU,
       entryT['n_runs'],               pR,
       entryT['n_jobs'],               pJ,
       entryT['n_users']])
                  
 
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", " "])
-  resultA.append(["Total", "%.0f" % (totalT['corehours']), "100", "%.0f" % (totalT['n_runs']), "100", "%.0f" % (totalT['n_jobs']), "100", " "])
+  resultA.append(["Total", '{:,.0f}'.format(totalT['corehours']), "100", '{:,.0f}'.format(totalT['n_runs']), "100", '{:,.0f}'.format(totalT['n_jobs']), "100", " "])
   return resultA
 
 def percent_str(entry, total):
   result = 0.0
   if (total != 0.0):
-    result = "%.0f" % (100.0 * entry/total)
+    result = '{:,.0f}'.format(100.0 * entry/total)
   return result
 
 
@@ -546,8 +547,8 @@ def running_other_exec(cursor, args, start_date, end_date):
   resultA.append(["Kind", "CoreHrs", "# Runs", "# Users"])
   resultA.append(["----", "-------", "------", "-------"])
 
-  resultA.append(["diff user","%.0f" % (resultT['diff']['corehours']), resultT['diff']['n_runs'], resultT['diff']['n_users']])
-  resultA.append(["same user","%.0f" % (resultT['same']['corehours']), resultT['same']['n_runs'], resultT['same']['n_users']])
+  resultA.append(["diff user",'{:,.0f}'.format(resultT['diff']['corehours']), resultT['diff']['n_runs'], resultT['diff']['n_users']])
+  resultA.append(["same user",'{:,.0f}'.format(resultT['same']['corehours']), resultT['same']['n_runs'], resultT['same']['n_users']])
 
   return resultA
 
@@ -612,7 +613,7 @@ def main():
   print("")
   
 
-  for style in ('All','MPI','Scalar'):
+  for style in ('All','MPI','Non-MPI'):
   
     ############################################################
     #  Build top executable list for style type
@@ -641,6 +642,15 @@ def main():
     print("\nTop",args.num, style+" Executables sorted by # Users\n")
     print(bt.build_tbl())
   
+  ############################################################
+  #  Report of Top Modules by Core Hours
+  modA = ModuleExec(cursor)
+  modA.build(args, start_date, end_date)
+  resultA = modA.report_by(args,"corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+  print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
+  print(bt.build_tbl())
+
   return
 
 
@@ -699,14 +709,6 @@ def main():
     print("\nTop",args.num, "MPI Executables sorted by Core-hours for icpc\n")
     print(bt.build_tbl())
 
-  ############################################################
-  #  Report of Top Modules by Core Hours
-  modA = ModuleExec(cursor)
-  modA.build(args, start_date, end_date)
-  resultA = modA.report_by(args,"corehours")
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
-  print(bt.build_tbl())
   
   ############################################################
   # Report on Compiler (linker) usage by Count
