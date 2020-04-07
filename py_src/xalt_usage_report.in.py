@@ -624,7 +624,7 @@ def main():
     #  Report of Top EXEC of All types by Core Hours
     resultA, sumCH = execA.report_by(args,"corehours")
     bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-    print("\nTop",args.num, style, style+" Executables sorted by Core-hours (Total Core Hours(M):",
+    print("\nTop",args.num, style+" Executables sorted by Core-hours (Total Core Hours(M):",
             sumCH*1.0e-6,")\n")
     print(bt.build_tbl())
   
@@ -648,7 +648,7 @@ def main():
   modA.build(args, start_date, end_date)
   resultA = modA.report_by(args,"corehours")
   bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nTop",args.num, "MPI Modules sorted by Core-hours \n")
+  print("\nTop",args.num, "Modules used sorted by Core-hours \n")
   print(bt.build_tbl())
 
   return
