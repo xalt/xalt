@@ -90,7 +90,7 @@ class ExecRun:
 
     sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
     sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
-    sA.append(" COUNT(date) as n_runs, COUNT(DISTINCT(user)) as n_users ",)
+    sA.append(" COUNT(date) as n_runs, COUNT(DISTINCT(user)) as n_users, ",)
     sA.append(" COUNT(DISTINCT(account)) as n_accts ",)
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
@@ -121,12 +121,12 @@ class ExecRun:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, corehours, n_runs, n_users in resultA:
+    for execname, corehours, n_runs, n_users, n_acct in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
                 'n_runs'    : n_runs,
                 'n_users'   : n_users,
-                'n_accts'   : n_accts,
+                'n_accts'   : n_accts}
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
@@ -268,7 +268,7 @@ class CompilerUsageByCoreHours:
     cursor.execute(query, (args.syshost, args.queue, start_date, end_date))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
-    for corehours, n_runs, n_users, link_program in resultA:
+    for corehours, n_runs, n_users, n_accts, link_program in resultA:
       entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
                  'n_accts'     : n_accts,
@@ -320,7 +320,7 @@ class Libraries:
     resultA = cursor.fetchall()
 
     libA = self.__libA
-    for corehours, n_users, n_runs, n_jobs, object_path, module in resultA:
+    for corehours, n_users, n_accts, n_runs, n_jobs, object_path, module in resultA:
       entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
                  'n_accts'     : n_accts,
@@ -412,7 +412,7 @@ class ModuleExec:
     cursor.execute(query, (args.syshost, start_date, end_date))
     resultA = cursor.fetchall()
     modA   = self.__modA
-    for corehours, n_runs, n_users, modules in resultA:
+    for corehours, n_runs, n_users, n_accts,  modules in resultA:
       entryT = { 'corehours' : corehours,
                  'n_runs'    : n_runs,
                  'n_users'   : n_users,
