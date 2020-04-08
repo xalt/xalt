@@ -600,7 +600,7 @@ def main():
   ############################################################
   #  Over all job counts
   resultA = kinds_of_jobs(cursor, args, start_date, end_date)
-  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrr")
+  bt      = BeautifulTbl(tbl=resultA, gap = 4, justify = "lrrrrrrrr")
   print("----------------------")
   print("Overall Job Counts")
   print("----------------------")
@@ -623,13 +623,6 @@ def main():
   print("")
   print(bt.build_tbl())
   
-  print("")
-  print("-------------------")
-  print("Top MPI Executables")
-  print("-------------------")
-  print("")
-  
-
   for style in ('All','MPI','Non-MPI'):
   
     ############################################################
@@ -640,7 +633,7 @@ def main():
     ############################################################
     #  Report of Top EXEC of All types by Core Hours
     resultA, sumCH = execA.report_by(args,"corehours")
-    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
     print("\nTop",args.num, style+" Executables sorted by Core-hours (Total Core Hours(M):",
             sumCH*1.0e-6,")\n")
     print(bt.build_tbl())
@@ -648,14 +641,14 @@ def main():
     ############################################################
     #  Report of Top EXEC of All types by Num Runs
     resultA, sumCH  = execA.report_by(args,"n_runs")
-    bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
     print("\nTop",args.num, style+" Executables sorted by # Jobs\n")
     print(bt.build_tbl())
   
     ############################################################
     #  Report of Top EXEC by All types by Users
     resultA, sumCH = execA.report_by(args,"n_users")
-    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+    bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
     print("\nTop",args.num, style+" Executables sorted by # Users\n")
     print(bt.build_tbl())
   
@@ -664,7 +657,7 @@ def main():
   modA = ModuleExec(cursor)
   modA.build(args, start_date, end_date)
   resultA = modA.report_by(args,"corehours")
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
   print("\nTop",args.num, "Modules used sorted by Core-hours \n")
   print(bt.build_tbl())
 
