@@ -90,7 +90,8 @@ class ExecRun:
 
     sA.append(" ELSE SUBSTRING_INDEX(xalt_run.exec_path,'/',-1) END ")
     sA.append(" AS execname, ROUND(SUM(run_time*num_cores/3600)) as totalcput, ")
-    sA.append(" COUNT(date) as n_runs, COUNT(DISTINCT(user)) as n_users ")
+    sA.append(" COUNT(date) as n_runs, COUNT(DISTINCT(user)) as n_users ",)
+    sA.append(" COUNT(DISTINCT(account)) as n_accts ",)
     sA.append("   FROM xalt_run ")
     sA.append("  WHERE syshost like '%s' ")
     sA.append("    AND queue like '%s' ")
@@ -124,13 +125,14 @@ class ExecRun:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
                 'n_runs'    : n_runs,
-                'n_users'   : n_users}
+                'n_users'   : n_users,
+                'n_accts'   : n_accts,
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["CoreHrs", "# Runs","# Users", "Exec"])
-    resultA.append(["-------", "------","-------", "----"])
+    resultA.append(["CoreHrs", "# Runs", "# Users", "# Accts", "Exec"])
+    resultA.append(["-------", "------", "-------", "-------", "----"])
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
@@ -139,7 +141,7 @@ class ExecRun:
     for i in range(num):
       entryT = sortA[i]
       resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) , '{:,}'.format(entryT['n_users']),
-                      entryT['execname']])
+                      '{:,}'.format(entryT['n_accts']), entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -163,7 +165,8 @@ class ExecRunLink:
 
     sA.append(" ELSE SUBSTRING_INDEX(t1.exec_path,'/',-1) END ")
     sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
-    sA.append(" COUNT(t1.date) as n_runs, COUNT(DISTINCT(t1.user)) as n_users")
+    sA.append(" COUNT(t1.date) as n_runs, COUNT(DISTINCT(t1.user)) as n_users,")
+    sA.append(" COUNT(DISTINCT(t1.account)) as n_acct")
     sA.append("   FROM xalt_run as t1, xalt_link as t2 ")
     sA.append("  WHERE t1.syshost like '%s' ")
     sA.append("    AND t1.date >= '%s' AND t1.date < '%s' ")
@@ -178,17 +181,18 @@ class ExecRunLink:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, corehours, n_runs, n_users in resultA:
+    for execname, corehours, n_runs, n_users, n_accts in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
                 'n_runs'    : n_runs,
-                'n_users'   : n_users}
+                'n_users'   : n_users,
+                'n_accts'   : n_accts}
       execA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["CoreHrs", "# Runs","# Users", "Exec"])
-    resultA.append(["-------", "------","-------", "----"])
+    resultA.append(["CoreHrs", "# Runs", "# Users", "# Accts", "Exec"])
+    resultA.append(["-------", "------", "-------", "-------", "----"])
 
     execA = self.__execA
     sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
@@ -196,7 +200,9 @@ class ExecRunLink:
     sumCH = 0.0
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) , '{:,}'.format(entryT['n_users']), entryT['execname']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']),
+                      '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_accts']),
+                      entryT['execname']])
       sumCH += entryT['corehours']
     
     return resultA, sumCH
@@ -248,6 +254,7 @@ class CompilerUsageByCoreHours:
     ROUND(SUM(t1.run_time*t1.num_cores/3600.0)) as corehours,
     COUNT(t1.date)                              as n_runs,
     COUNT(DISTINCT(t1.user))                    as n_users,
+    COUNT(DISTINCT(t1.account))                 as n_accts,
     t2.link_program                             as link_program
     FROM xalt_run as t1, xalt_link as t2
     WHERE t1.uuid is not NULL
@@ -264,6 +271,7 @@ class CompilerUsageByCoreHours:
     for corehours, n_runs, n_users, link_program in resultA:
       entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
+                 'n_accts'     : n_accts,
                  'n_runs'      : n_runs,
                  'link_program': link_program
                }
@@ -272,15 +280,15 @@ class CompilerUsageByCoreHours:
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['CoreHrs', '# Users','# Runs','Link Program'])
-    resultA.append(['-------', '-------','------','------------'])
+    resultA.append(['CoreHrs', '# Users', '# Accts', '# Runs', 'Link Program'])
+    resultA.append(['-------', '-------', '-------', '------', '------------'])
 
     linkA = self.__linkA
     sortA = sorted(linkA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_runs']), \
+      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_accts']), '{:,}'.format(entryT['n_runs']), \
                       entryT['link_program']])
     return resultA
 
@@ -297,6 +305,7 @@ class Libraries:
 
     query = "select ROUND(SUM(t3.num_cores*t3.run_time/3600.0)) as corehours,        \
                     COUNT(DISTINCT(t3.user)) as n_users,                             \
+                    COUNT(DISTINCT(t3.account)) as n_accts,                          \
                     COUNT(t3.date) as n_runs, COUNT(DISTINCT(t3.job_id)) as n_jobs,  \
                     t1.object_path, t1.module_name as module                         \
                     from xalt_object as t1, join_run_object as t2, xalt_run as t3    \
@@ -314,6 +323,7 @@ class Libraries:
     for corehours, n_users, n_runs, n_jobs, object_path, module in resultA:
       entryT = { 'corehours'   : corehours,
                  'n_users'     : n_users,
+                 'n_accts'     : n_accts,
                  'n_runs'      : n_runs,
                  'n_jobs'      : n_jobs,
                  'object_path' : object_path,
@@ -326,8 +336,8 @@ class Libraries:
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
-    resultA.append(['-------', '-------','------','------','--------------'])
+    resultA.append(['CoreHrs', '# Users', '# Accts','# Runs','# Jobs','Library Module'])
+    resultA.append(['-------', '-------', '-------','------','------','--------------'])
 
     libA = self.__libA
     libT = {}
@@ -342,14 +352,14 @@ class Libraries:
     
         
     for k, entryT in sorted(libT.items(), key=lambda v: v[1][sort_key], reverse=True):
-      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_runs']), \
-                      '{:,}'.format(entryT['n_jobs']), entryT['module']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_accts']),
+                      '{:,}'.format(entryT['n_runs']), '{:,}'.format(entryT['n_jobs']), entryT['module']])
 
     return resultA
   def group_report_by(self, args, sort_key):
     resultA = []
-    resultA.append(['CoreHrs', '# Users','# Runs','# Jobs','Library Module'])
-    resultA.append(['-------', '-------','------','------','--------------'])
+    resultA.append(['CoreHrs', '# Users', '# Accts', '# Runs', '# Jobs', 'Library Module'])
+    resultA.append(['-------', '-------', '-------', '------', '------', '--------------'])
 
     libA = self.__libA
     libT = {}
@@ -376,7 +386,7 @@ class Libraries:
             g_entry[key] += entry[key]
         
     for k, entryT in sorted(groupT.items(), key=lambda v: v[1][sort_key], reverse=True):
-      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_runs']), \
+      resultA.append(['{:,.0f}'.format(entryT['corehours']), '{:,}'.format(entryT['n_users']) , '{:,}'.format(entryT['n_accts']), '{:,}'.format(entryT['n_runs']), \
                       '{:,}'.format(entryT['n_jobs']), entryT['module']])
 
     return resultA
@@ -392,6 +402,7 @@ class ModuleExec:
     ROUND(SUM(run_time*num_cores/3600)) as corehours,
     count(date)                         as n_runs,
     COUNT(DISTINCT(user))               as n_users,
+    COUNT(DISTINCT(account))            as n_accts,
     module_name                         as modules
     from xalt_run where syshost like %s
     and date >= %s and date < %s and  module_name is not null
@@ -405,20 +416,22 @@ class ModuleExec:
       entryT = { 'corehours' : corehours,
                  'n_runs'    : n_runs,
                  'n_users'   : n_users,
+                 'n_accts'   : n_accts,
                  'modules'   : modules }
       modA.append(entryT)
 
   def report_by(self, args, sort_key):
     resultA = []
-    resultA.append(["CoreHrs", "# Runs","# Users", "Modules"])
-    resultA.append(["-------", "------","-------", "-------"])
+    resultA.append(["CoreHrs", "# Runs","# Users","# Accts", "Modules"])
+    resultA.append(["-------", "------","-------","-------", "-------"])
 
     modA = self.__modA
     sortA = sorted(modA, key=itemgetter(sort_key), reverse=True)
     num = min(int(args.num), len(sortA))
     for i in range(num):
       entryT = sortA[i]
-      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) , '{:,}'.format(entryT['n_users']), entryT['modules']])
+      resultA.append(['{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']),
+                      '{:,}'.format(entryT['n_users']), '{:,}'.format(entryT['n_accts']), entryT['modules']])
     
     return resultA
         
@@ -426,7 +439,8 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
 
   query = "SELECT ROUND(SUM(run_time*num_cores/3600)) as corehours,                \
                   COUNT(*) as n_runs, COUNT(DISTINCT(job_id)) as n_jobs,           \
-                  COUNT(DISTINCT(user)) as n_users                                 \
+                  COUNT(DISTINCT(user)) as n_users,                                \
+                  COUNT(DISTINCT(account)) as n_accts                              \
                   from xalt_run where syshost like %s                              \
                   and date >= %s and date < %s and exec_type = %s "
 
@@ -461,6 +475,7 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
                      'n_runs'    : int(row[1]),
                      'n_jobs'    : int(row[2]),
                      'n_users'   : int(row[3]),
+                     'n_accts'   : int(row[4]),
                      'name'      : name
                      }
 
@@ -470,9 +485,9 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
 
 
   resultA = []
-  resultA.append(["Kind", "CoreHrs", "   ", "Runs", "   ", "Jobs", "   ", "Users"])
-  resultA.append(["    ", "  N    ", " % ", " N  ", " % ", " N  ", " % ", "  N  "])
-  resultA.append(["----", "-------", "---", "----", "---", "----", "---", "-----"])
+  resultA.append(["Kind", "CoreHrs", "   ", "Runs", "   ", "Jobs", "   ", "Users", "Accts"])
+  resultA.append(["    ", "  N    ", " % ", " N  ", " % ", " N  ", " % ", "  N  ", "  N  "])
+  resultA.append(["----", "-------", "---", "----", "---", "----", "---", "-----", "-----"])
   
   for k, entryT in sorted(resultT.items(), key=lambda v: v[1]['corehours'],reverse=True):
     pSU = percent_str(entryT['corehours'], totalT['corehours'])
