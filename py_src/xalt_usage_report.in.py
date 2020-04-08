@@ -642,7 +642,7 @@ def main():
     #  Report of Top EXEC of All types by Num Runs
     resultA, sumCH  = execA.report_by(args,"n_runs")
     bt              = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrrl")
-    print("\nTop",args.num, style+" Executables sorted by # Jobs\n")
+    print("\nTop",args.num, style+" Executables sorted by # Runs\n")
     print(bt.build_tbl())
   
     ############################################################
