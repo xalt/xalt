@@ -121,7 +121,7 @@ class ExecRun:
     resultA = cursor.fetchall()
 
     execA = self.__execA
-    for execname, corehours, n_runs, n_users, n_acct in resultA:
+    for execname, corehours, n_runs, n_users, n_accts in resultA:
       entryT = {'execname'  : execname,
                 'corehours' : corehours,
                 'n_runs'    : n_runs,
@@ -166,7 +166,7 @@ class ExecRunLink:
     sA.append(" ELSE SUBSTRING_INDEX(t1.exec_path,'/',-1) END ")
     sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
     sA.append(" COUNT(t1.date) as n_runs, COUNT(DISTINCT(t1.user)) as n_users,")
-    sA.append(" COUNT(DISTINCT(t1.account)) as n_acct")
+    sA.append(" COUNT(DISTINCT(t1.account)) as n_accts")
     sA.append("   FROM xalt_run as t1, xalt_link as t2 ")
     sA.append("  WHERE t1.syshost like '%s' ")
     sA.append("    AND t1.date >= '%s' AND t1.date < '%s' ")
@@ -498,7 +498,9 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
       '{:,.0f}'.format(entryT['corehours']), pSU,
       '{:,}'.format(entryT['n_runs']),       pR,
       '{:,}'.format(entryT['n_jobs']),       pJ,
-      '{:,}'.format(entryT['n_users'])])
+      '{:,}'.format(entryT['n_users']),
+      '{:,}'.format(entryT['n_accts']),
+    ])
                  
 
   resultA.append(["----", "-------", "---", "----", "---", "----", "---", " "])
