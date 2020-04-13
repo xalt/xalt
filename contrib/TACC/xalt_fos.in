@@ -1,0 +1,204 @@
+#!/bin/sh
+# -*- python -*-
+
+################################################################################
+# This file is python 2/3 bilingual. 
+# The line """:" starts a comment in python and is a no-op in shell.
+""":"
+# Shell code to find and run a suitable python interpreter.
+for cmd in python3 python python2; do
+   command -v > /dev/null $cmd && exec $cmd $0 "$@"
+done
+
+echo "Error: Could not find a valid python interpreter --> exiting!" >&2
+exit 2
+":""" # this line ends the python comment and is a no-op in shell.
+################################################################################
+
+#------------------------------------------------------------------------    #
+# This python script gets executable usage on SYSHOST grouped by exec name.  #
+# Total CPU time used, number of jobs, and number of users of the exec are   #
+# shown. Executable with "known" names are shown as all CAPS and grouped     #
+# together even if they have different actual exec name / version, other     #
+# executables are only grouped by their name.                                #
+#                                                                            #
+# Examples:                                                                  #
+#                                                                            #
+# 1. Show the help output:                                                   #
+#   python executable_usage.py -h                                            #
+#                                                                            #
+# 2. Get executable usage on Darter for the last 90 days                     #
+#   python executable_usage.py darter                                        #
+#                                                                            #
+# 3. Get executable usage on Darter for specific period                      #
+#   python executable_usage.py darter --startdate 2015-03-01 \               #
+#          --endate 2015-06-31                                               #
+#                                                                            #
+# 4. Get executable usage on Darter for the last 90 days, excluding all      #
+#    module name with 'ari', 'gcc', and 'craype' in its name                 #
+#   python executable_usage.py darter --exclude ari,gcc,craype               #
+#                                                                            #
+#----------------------------------------------------------------------------#
+
+from __future__ import print_function
+import os, sys, re, base64
+import MySQLdb, argparse
+import time, collections
+from operator import itemgetter
+from datetime import datetime, timedelta
+try:
+  import configparser
+except:
+  import ConfigParser as configparser
+
+dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
+sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
+
+from BeautifulTbl      import BeautifulTbl
+from xalt_name_mapping import name_mapping
+
+########################################################################
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    fnA = os.path.split(inspect.currentframe().f_code.co_filename)
+    return fnA[1]
+
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+########################################################################
+
+class CmdLineOptions(object):
+  """ Command line Options class """
+
+  def __init__(self):
+    """ Empty Ctor """
+    pass
+  
+  def execute(self):
+    """ Specify command line arguments and parse the command line"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--confFn",  dest='confFn',    action="store",       default = "xalt_db.conf", help="db name")
+    parser.add_argument("--start",   dest='startD',    action="store",       default = None,           help="start date")
+    parser.add_argument("--end",     dest='endD',      action="store",       default = None,           help="end date")
+    parser.add_argument("--syshost", dest='syshost',   action="store",       default = "%",            help="syshost")
+    parser.add_argument("--queue",   dest='queue',     action="store",       default = "%",            help="queue")
+    parser.add_argument("--app",     dest='app',       action="store",       default = "NAMD*",        help="App to search for")
+    parser.add_argument("--num",     dest='num',       action="store",       default = 5,              help="top number of entries to report")
+    args = parser.parse_args()
+    return args
+
+class FOS:
+  """ Holds the sums across field of science for a particular app."""
+  def __init__(self, cursor):
+    self.__execA  = []
+    self.__cursor = cursor
+  def build(self, args, start_date, end_date):
+    equiv_patternA = name_mapping()
+    sA = []
+    sA.append("SELECT CASE ")
+    for entry in equiv_patternA:
+      regex = entry[0].lower()
+      name  = entry[1]
+      if (name != args.app):
+        continue
+
+      s     = "WHEN LOWER(SUBSTRING_INDEX(t1.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (regex, name)
+      sA.append(s)
+
+    sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
+    sA.append(" COUNT(t1.date) as n_runs, COUNT(DISTINCT(t1.user)) as n_users, ")
+    sA.append(" t2.field_of_science as fos")
+    sA.append("   FROM xalt_run as t1, ")
+    sA.append("        xalt_field_of_science as t2 ")
+    sA.append("  WHERE execname = '%s' ")
+    sA.append("  AND  date >= '%s' AND date < '%s' ")
+    sA.append("  AND t1.account = t2.account")      
+    sA.append("  GROUP BY fos ORDER BY totalcput DESC")
+    query  = "".join(sA) % (args.app, start_date, end_date)
+
+
+    cursor  = self.__cursor
+    execA   = self.__execA
+    cursor.execute(query)
+    resultA = cursor.fetchall()
+    fosA = []
+
+    for fos, corehours, n_runs, n_users in resultA:
+      if (float(corehours) < 10.0):
+        continue
+      entryT = {'fos'         : fos,
+                'corehours'   : corehours,
+                'n_runs'      : n_runs,
+                'n_users'     : n_users}
+      execA.append(entryT)
+      fosA.append(fos)
+    return fosA
+
+  def report_by(self, args, sort_key):
+    resultA = []
+    resultA.append(["Field of Science", "Corehours","# Runs", "N Users"])
+    resultA.append(["----------------", "---------","------", "-------"])
+
+    execA = self.__execA
+    sortA = sorted(execA, key=itemgetter(sort_key), reverse=True)
+    num = min(int(args.num), len(sortA))
+    sumCH = 0.0
+    for i in range(num):
+      entryT = sortA[i]
+      resultA.append([entryT['fos'], '{:,.0f}'.format(entryT['corehours']),  '{:,}'.format(entryT['n_runs']) ,
+                      '{:,}'.format(entryT['n_users'])])
+      sumCH += entryT['corehours']
+    
+    return resultA, sumCH
+
+def main():
+  XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
+  args         = CmdLineOptions().execute()
+  config       = configparser.ConfigParser()     
+
+  config.read(os.path.join(XALT_ETC_DIR,args.confFn))
+  my_db        = config.get("MYSQL","DB")
+  syshost      = my_db.replace("xalt_","")
+
+  conn = MySQLdb.connect              \
+         (config.get("MYSQL","HOST"), \
+          config.get("MYSQL","USER"), \
+          base64.b64decode(config.get("MYSQL","PASSWD")).decode(), \
+          config.get("MYSQL","DB"))
+  cursor = conn.cursor()
+
+  end_date = time.strftime('%Y-%m-%d')
+  if (args.endD is not None):
+    end_date = args.endD
+  
+  start_date = (datetime.strptime(end_date, "%Y-%m-%d") - timedelta(90)).strftime('%Y-%m-%d');
+  if (args.startD is not None):
+    start_date = args.startD
+
+  print("-------------------------------------------------------------------")
+  print("XALT REPORT on "+syshost+" from",start_date,"to",end_date)
+  print("-------------------------------------------------------------------")
+  print("")
+  print("")
+  
+  print("")
+  print("--------------------------------------------")
+  print("NSF Field of Science Report for",args.app)
+  print("--------------------------------------------")
+  print("")
+
+  fosObj         = FOS(cursor)
+  fosA           = fosObj.build(args, start_date, end_date)
+  resultA, sumCH = fosObj.report_by(args, "corehours")
+  bt             = BeautifulTbl(tbl=resultA, gap = 2, justify = "lrrr")
+  print("Summary of Executions grouped by NSF Field of Science")
+  print(bt.build_tbl(),"\n")
+
+if ( __name__ == '__main__'): main()
