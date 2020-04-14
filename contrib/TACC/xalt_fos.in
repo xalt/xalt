@@ -100,28 +100,18 @@ class FOS:
     self.__execA  = []
     self.__cursor = cursor
   def build(self, args, start_date, end_date):
-    equiv_patternA = name_mapping()
     sA = []
-    sA.append("SELECT CASE ")
-    for entry in equiv_patternA:
-      regex = entry[0].lower()
-      name  = entry[1]
-      if (name != args.app):
-        continue
-
-      s     = "WHEN LOWER(SUBSTRING_INDEX(t1.exec_path,'/',-1)) REGEXP '%s' then '%s' " % (regex, name)
-      sA.append(s)
-
-    sA.append(" AS execname, ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
+    sA.append(" ROUND(SUM(t1.run_time*t1.num_cores/3600)) as totalcput, ")
     sA.append(" COUNT(t1.date) as n_runs, COUNT(DISTINCT(t1.user)) as n_users, ")
     sA.append(" t2.field_of_science as fos")
     sA.append("   FROM xalt_run as t1, ")
     sA.append("        xalt_field_of_science as t2 ")
-    sA.append("  WHERE execname = '%s' ")
+    sA.append("  WHERE ( t1.exec_path like '%%/namd2' ")
+    sA.append("     OR t1.exec_path like '%%/charmrun' )")
     sA.append("  AND  date >= '%s' AND date < '%s' ")
     sA.append("  AND t1.account = t2.account")      
     sA.append("  GROUP BY fos ORDER BY totalcput DESC")
-    query  = "".join(sA) % (args.app, start_date, end_date)
+    query  = "".join(sA) % (start_date, end_date)
 
 
     cursor  = self.__cursor
@@ -130,9 +120,7 @@ class FOS:
     resultA = cursor.fetchall()
     fosA = []
 
-    for fos, corehours, n_runs, n_users in resultA:
-      if (float(corehours) < 10.0):
-        continue
+    for corehours, n_runs, n_users, fos in resultA:
       entryT = {'fos'         : fos,
                 'corehours'   : corehours,
                 'n_runs'      : n_runs,
