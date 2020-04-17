@@ -261,16 +261,16 @@ int main(int argc, char* argv[])
   displayArray("pathPatternA", pathPatternSz, pathPatternA);
   displayArray("envPatternA",  envPatternSz,  envPatternA);
 
-  std::cout << "*----------------------*\n";
-  std::cout << " Array: scalar interval\n";
-  std::cout << "*----------------------*\n";
+  std::cout << "*-------------------------------*\n";
+  std::cout << " Array: Non-MPI (scalar) interval\n";
+  std::cout << "*-------------------------------*\n";
   for (int i = 0; i < scalar_rangeSz-1; ++i)
     std::cout << "Time Range(seconds): [" << scalar_rangeA[i].left << ", " << scalar_rangeA[i+1].left
               << "]: probability: "<< scalar_rangeA[i].prob << "\n";
   std::cout << "\n";
 
   std::cout << "*----------------------*\n";
-  std::cout << " Array: mpi interval\n";
+  std::cout << " Array: MPI interval\n";
   std::cout << "*----------------------*\n";
   for (int i = 0; i < mpi_rangeSz-1; ++i)
     std::cout << "Time Range(seconds): [" << mpi_rangeA[i].left << ", " << mpi_rangeA[i+1].left

@@ -1,3 +1,6 @@
 XALT 2.8+
+WIP:
     (2.8.1)  * progressBar.py: handle the case where pbar.update(i) where i could be greater than the max value
-    
+             * xalt_file_to_db.py.in: Cleaned-up all file not found exceptions
+	     * xalt_configuration_report.C: Added Non-MPI (scalar) to sample array title.
+	     

@@ -168,7 +168,7 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pba
 
       try:
         f     = open(fn,"r")
-      except FileNotFoundError:
+      except:
         continue
   
       try:
@@ -224,7 +224,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT
       XALT_Stack.push("fn: "+fn)
       try:
         f      = open(fn,"r")
-      except FileNotFoundError:
+      except:
         continue
       
       try:

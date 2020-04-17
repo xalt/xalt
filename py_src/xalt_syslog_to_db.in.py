@@ -263,7 +263,7 @@ class ParseSyslog(object):
       t['value'] = vv.decode("utf-8")
       try:
         del recordT[key]
-      except KeyError:
+      except KeyError as e:
         print("Unable to remove recordT["+key+"]")
         print(traceback.format_exc())
 
