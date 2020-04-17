@@ -111,7 +111,7 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, activ
 
       try:
         f     = open(fn,"r")
-      except FileNotFoundError:
+      except:
         continue
   
       try:
