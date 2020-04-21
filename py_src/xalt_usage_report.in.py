@@ -96,7 +96,7 @@ class ExecRun:
     sA.append("  WHERE syshost like '%s' ")
     sA.append("    AND queue like '%s' ")
     sA.append("    AND date >= '%s' AND date < '%s' ")
-    if (style == 'Scalar'):
+    if (style == 'Scalar' or style == 'Non-MPI'):
        sA.append("    AND num_cores <= '1' ")
     elif (style == 'Scalar_05'):
        sA.append("    AND num_cores <= '1' ")
