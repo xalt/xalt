@@ -576,11 +576,17 @@ def main():
   configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
   config.read(configFn)
 
+  dbName       = config.get("MYSQL","DB")
+
+  syshost      = args.syshost
+  if (syshost == '%') :
+    syshost    = dbName[5:]  # strip off "xalt_"
+
   conn = MySQLdb.connect              \
          (config.get("MYSQL","HOST"), \
           config.get("MYSQL","USER"), \
           base64.b64decode(config.get("MYSQL","PASSWD")).decode(), \
-          config.get("MYSQL","DB"))
+          dbName)
   cursor = conn.cursor()
 
   end_date = time.strftime('%Y-%m-%d')
@@ -591,9 +597,9 @@ def main():
   if (args.startD is not None):
     start_date = args.startD
 
-  print("--------------------------------------------")
-  print("XALT REPORT from",start_date,"to",end_date)
-  print("--------------------------------------------")
+  print("-------------------------------------------------------------")
+  print("XALT REPORT on",syshost,"from",start_date,"to",end_date)
+  print("-------------------------------------------------------------")
   print("")
   print("")
   

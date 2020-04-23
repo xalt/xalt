@@ -42,8 +42,8 @@ for i in "${SYSHOSTS[@]}"; do
    fn30="XALT-Report-${i}-last30-$today.txt"
    fn365="XALT-Report-${i}-last365-$today.txt"
 
-   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --start $last30  --end $today > $i/last30/$fn30
-   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --start $last365 --end $today > $i/last365/$fn365
+   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --syshost $i --start $last30  --end $today > $i/last30/$fn30
+   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --syshost $i --start $last365 --end $today > $i/last365/$fn365
 
 done
 
@@ -62,5 +62,7 @@ if [ -n "$sendTo" ]; then
    cd ./xalt_rpts
    zip ../xalt_rpts_$today.zip *
    cd ..
-   echo "XALT Reports for $today" | mail -s "XALT Reports for $today in a zip file" -a xalt_rpts_$today.zip 
+   echo "XALT Reports for $today" | mail -s "XALT Reports for $today in a zip file" -a xalt_rpts_$today.zip $sendTo
+   sleep 10
+   rm ./xalt_rpts_$today.zip
 fi
