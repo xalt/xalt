@@ -48,8 +48,19 @@ for i in "${SYSHOSTS[@]}"; do
 done
 
 if [ -n "$sendTo" ]; then
+   rm -rf ./xalt_rpts
+   mkdir ./xalt_rpts
    for i in "${SYSHOSTS[@]}"; do
-      echo "XALT Report for $i for the last 30 days"  | mail -s $fn30  -a $i/last30/$fn30   $sendTo
-      echo "XALT Report for $i for the last 365 days" | mail -s $fn365 -a $i/last365/$fn365 $sendTo
-  done
+       fn30="XALT-Report-${i}-last30-$today.txt"
+       fn365="XALT-Report-${i}-last365-$today.txt"
+       for fn in $i/last30/$fn30 $i/last365/$fn365; do
+          if [ -f $fn ]; then
+	     cp $fn ./xalt_rpts
+          fi
+       done
+   done
+   cd ./xalt_rpts
+   zip ../xalt_rpts_$today.zip *
+   cd ..
+   echo "XALT Reports for $today" | mail -s "XALT Reports for $today in a zip file" -a xalt_rpts_$today.zip 
 fi
