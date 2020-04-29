@@ -19,8 +19,6 @@ startDateT['frontera']='2019-10-01'
 
 today=$(date +%F)
 last30=$(date -d "-30days" +%F)
-last365=$(date -d "-365days" +%F)
-last365s=$(date -d "-365days" +%s)
 
 SYSHOSTS=( frontera stampede2 )
 
@@ -33,6 +31,9 @@ cd $HOME/xalt_usage
 for i in "${SYSHOSTS[@]}"; do
    XALT_START_DATE="${startDateT[$i]}"
    xalt_start_s=$(date -d $XALT_START_DATE +%s)
+
+   last365=$(date -d "-365days" +%F)
+   last365s=$(date -d "-365days" +%s)
 
    if [ "$xalt_start_s" -gt "$last365s" ]; then
      last365=$(date -d $XALT_START_DATE +%F)
