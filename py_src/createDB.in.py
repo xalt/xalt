@@ -63,6 +63,28 @@ class CmdLineOptions(object):
     args = parser.parse_args()
     return args
 
+def parseVersion(s):
+  factorA = [ 1000000, 1000, 1]
+  patt    = re.compile(r"^([0-9.]+)")
+  m       = patt.match(s)
+  if (not m):
+    return 0
+  else:
+    s     = m.group()
+
+  a       = s.split(".")
+  i       = 0
+  v       = 0
+  sz      = 3
+  for vv in a:
+    v     = v + int(vv)*factorA[i]
+    i     = i + 1
+    if (i >= sz):
+      break
+    
+  return v
+
+
 def main():
   """
   This program creates the Database used by XALT.
@@ -88,8 +110,15 @@ def main():
     conn   = xalt.connect()
     cursor = conn.cursor()
 
-    # If MySQL version < 4.1, comment out the line below
-    cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
+    cursor.execute("SHOW VARIABLES like 'version'")
+    row      = cursor.fetchone()
+    mysqlV   = row[1]
+    currentV = parseVersion(mysqlV)
+
+    if   (currentV >= parseVersion("6.0")):
+       cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
+    elif (currentV >  parseVersion("4.1")):
+       cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO,NO_AUTO_CREATE_USER\"")
 
     # drop db if requested.
     if (args.drop):
