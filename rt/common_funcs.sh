@@ -66,7 +66,7 @@ installDB()
   DBNAME=testxalt
   DB_CONF_FN=testxalt_db.conf
   DBUSER=xaltTest
-  PASSWD=kutwgbh
+  PASSWD=KutWgbh1@
 
   echo PATH=$PATH
 
