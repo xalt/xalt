@@ -47,6 +47,41 @@ sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 from XALTdb     import XALTdb
 from xalt_util  import dbConfigFn
 import argparse
+
+Have_version = True
+
+try:
+  from packaging import version
+except:
+  Have_version = False
+
+
+
+def parseVersion(s):
+  factorA = [ 1000000, 1000, 1]
+  patt    = re.compile(r"^([0-9.]+)")
+  m       = patt.match(s)
+  if (not m):
+    s     = "0.0.0"
+  else:
+    s     = m.group()
+
+  if (Have_version):
+    return version.parse(s)
+
+  a       = s.split(".")
+  i       = 0
+  v       = 0
+  sz      = 3
+  for vv in a:
+    v     = v + int(vv)*factorA[i]
+    i     = i + 1
+    if (i >= sz):
+      break
+    
+  return v
+
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -62,27 +97,6 @@ class CmdLineOptions(object):
     parser.add_argument("--confFn",      dest='confFn', action="store",      default = None,           help="xalt")
     args = parser.parse_args()
     return args
-
-def parseVersion(s):
-  factorA = [ 1000000, 1000, 1]
-  patt    = re.compile(r"^([0-9.]+)")
-  m       = patt.match(s)
-  if (not m):
-    return 0
-  else:
-    s     = m.group()
-
-  a       = s.split(".")
-  i       = 0
-  v       = 0
-  sz      = 3
-  for vv in a:
-    v     = v + int(vv)*factorA[i]
-    i     = i + 1
-    if (i >= sz):
-      break
-    
-  return v
 
 
 def main():
