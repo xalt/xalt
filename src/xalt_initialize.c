@@ -83,8 +83,8 @@
 #endif
 
 
-#define DATESZ    100
-#define DATESZ2   200
+#define DATESZ      100
+#define FULLDATESZ  2*DATESZ
 
 typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
 typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;
@@ -246,7 +246,7 @@ void myinit(int argc, char **argv)
   char   rand_str[20];
   char * pid_str         = NULL;
   char   dateStr[DATESZ];
-  char   fullDateStr[DATESZ2];
+  char   fullDateStr[FULLDATESZ];
   const char * v;
   xalt_parser  results;
   xalt_parser  path_results;
