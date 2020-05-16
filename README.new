@@ -5,5 +5,3 @@ WIP:
     (2.8.2)  * xalt_configuration_report.C: Added Non-MPI (scalar) to sample array title.
 	     * py_src/createDB.in.py: add parseVersion() and initialize DB depending MySQL version and
 	       use packaging.version if installed instead of home grown solution.
-	       
-	     
