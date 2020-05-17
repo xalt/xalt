@@ -83,7 +83,7 @@
 #endif
 
 
-#define DATESZ      100
+#define DATESZ      40
 #define FULLDATESZ  2*DATESZ
 
 typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
