@@ -63,7 +63,7 @@ def find_libs(libT, execNm):
     fieldA = line.split()
     N      = len(fieldA)
     if (N < 3):
-      break
+      continue
     if (fieldA[1] == "=>"):
       my_name = fieldA[0]
       m       = patt.match(my_name)
