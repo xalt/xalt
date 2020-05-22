@@ -57,8 +57,10 @@ def find_libs(libT, execNm):
                             stderr = subprocess.STDOUT, shell =True)
   output = p.communicate()[0]
   lineA  = output.decode("utf-8").splitlines()
-  patt   = re.compile(r"(.*).so")
+  libNmPatt = re.compile(r"(.*).so")
+  libNmPatt = re.compile(r"(.*).so")
   for line in lineA:
+    line   = re.sub("\(.*\)","",line)
     fieldA = line.split()
     N      = len(fieldA)
     if (N < 1):
