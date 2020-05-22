@@ -1,8 +1,10 @@
 XALT 2.8+
     (2.8.1)  * progressBar.py: handle the case where pbar.update(i) where i could be greater than the max value
              * xalt_file_to_db.in.py: Cleaned-up all file not found exceptions
-WIP:
     (2.8.2)  * xalt_configuration_report.C: Added Non-MPI (scalar) to sample array title.
 	     * py_src/createDB.in.py: add parseVersion() and initialize DB depending MySQL version and
 	       use packaging.version if installed instead of home grown solution.
              * Make FULLDATESZ be twice the size of DATESZ to avoid gcc warning.
+	     * Issue 28: Copy system libraries in to install (lib64) directory to support
+	       executable like xalt_run_submission
+	       
