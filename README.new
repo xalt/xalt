@@ -5,6 +5,6 @@ XALT 2.8+
 	     * py_src/createDB.in.py: add parseVersion() and initialize DB depending MySQL version and
 	       use packaging.version if installed instead of home grown solution.
              * Make FULLDATESZ be twice the size of DATESZ to avoid gcc warning.
-	     * Issue 28: Copy system libraries in to install (lib64) directory to support
+	     * Issue #28: Copy system libraries in to install (lib64) directory to support
 	       executable like xalt_run_submission
 	       
