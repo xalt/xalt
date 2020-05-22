@@ -362,6 +362,13 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
+if test x$CXX_LD_LIBRARY_PATH = "x"; then
+  XALT_LD_LIBRARY_PATH=$prefix/lib64
+else
+  XALT_LD_LIBRARY_PATH=$prefix/lib64:CXX_LD_LIBRARY_PATH
+fi
+AC_SUBST(XALT_LD_LIBRARY_PATH)
+
 AC_SUBST(XALT_INSTALL_OS)
 XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])

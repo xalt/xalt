@@ -55,7 +55,7 @@ HAVE_DCGM         	:= @HAVE_DCGM@
 HAVE_NVML               := @HAVE_NVML@
 STATIC_LIBS             := @STATIC_LIBS@
 PRELOAD_ONLY            := @PRELOAD_ONLY@	
-CXX_LD_LIBRARY_PATH  	:= @CXX_LD_LIBRARY_PATH@
+XALT_LD_LIBRARY_PATH  	:= @XALT_LD_LIBRARY_PATH@
 HAVE_32BIT           	:= @HAVE_32BIT@
 XALT_INSTALL_OS         := @XALT_INSTALL_OS@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
@@ -246,7 +246,7 @@ __installMe:
            sed  -e 's|@PREFIX@|$(prefix)|g'                            	   	  \
 	        -e 's|@etc_dir@|$(ETC_DIR)|g'                              	  \
 	        -e 's|@syslog_msg_sz@|$(SYSLOG_MSG_SZ)|g'                  	  \
-	        -e 's|@cxx_ld_library_path@|$(CXX_LD_LIBRARY_PATH)|g'  	          \
+	        -e 's|@xalt_ld_library_path@|$(XALT_LD_LIBRARY_PATH)|g'           \
 	        -e 's|\@git\@|$(GIT_VERSION)|g'                              	  \
 	        -e 's|@have_working_libuuid@|$(HAVE_LIBUUID)|g'            	  \
 	        -e 's|@have_dcgm@|$(HAVE_DCGM)|g'                       	  \

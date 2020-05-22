@@ -36,7 +36,7 @@
 
 
 unset LD_PRELOAD
-CXX_LD_LIBRARY_PATH=@cxx_ld_library_path@
+XALT_LD_LIBRARY_PATH=@xalt_ld_library_path@
 XALT_DIR=@xalt_dir@
 XALT_ETC_DIR=@etc_dir@
 HAVE_DCGM=@have_dcgm@
@@ -210,7 +210,7 @@ STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
 SYS_HOST_CMD=$XALT_SBIN/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
-SYSHOST=$(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $SYS_HOST_CMD)
+SYSHOST=$(LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=$XALT_BIN/my_uuidgen
 XALT_RMAP_EXISTS=$XALT_LIBEXEC_DIR/xalt_rmap_exists
 
@@ -241,10 +241,10 @@ else
 fi
   
 # Get the compiler information
-COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $EXTRACT_LINKER)
+COMP_T=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 
-EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+EPOCH=$(PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
 
 # If the $ARGSRC exists then build it
 # otherwise don't try to link with it.
@@ -264,7 +264,7 @@ function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
      if $XALT_RMAP_EXISTS ; then
-     	StripA=( $(LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     	StripA=( $(LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
      	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
      	$MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
      else
@@ -334,6 +334,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # Generate link data.  
-PATH=@xalt_system_path@ LD_LIBRARY_PATH=$CXX_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
+PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
 
 exit $status

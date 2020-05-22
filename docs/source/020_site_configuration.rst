@@ -126,12 +126,13 @@ This can be accomplished by configuring with::
 Using your system gcc/g++
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You must build XALT with the system gcc/g++. If your system g++
-is older than 4.8.5 (on Centos 6 for example) then XALT can support
-that system but it is slightly more complicated.
-Make sure that when you install XALT that the gcc and g++ are the
-system ones.  Note that user executables can be built with any other
-compilers and will accept an XALT built with system gcc/g++
+You must build XALT with the system gcc/g++. Even if you have a new
+gcc available, you must install XALT with the system gcc/g++. If your
+system g++ is older than 4.8.5 (on Centos 6 for example) then XALT can
+support that system but it is slightly more complicated.  Make sure
+that when you install XALT that the gcc and g++ are the system ones.
+Note that user executables can be built with any other compilers and
+will accept an XALT built with system gcc/g++
 
 .. _old_gcc-label:
 

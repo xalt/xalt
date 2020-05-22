@@ -2,5 +2,5 @@
 # -*- shell -*-
 
 MY_DIR=$(PATH=@xalt_system_path@ dirname $(PATH=@xalt_system_path@ readlink -f $0))
-LD_LIBRARY_PATH=@cxx_ld_library_path@ $MY_DIR/../libexec/xalt_configuration_report.x "$@"
+LD_LIBRARY_PATH=@xalt_ld_library_path@ $MY_DIR/../libexec/xalt_configuration_report.x "$@"
 

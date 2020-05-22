@@ -3,6 +3,7 @@ VPATH = .:$(THIS_DIR)
 CXX 	      	  := g++
 CC  	      	  := gcc    
 COPY_LIBS_TO_XALT := $(PY_BUILD_TOOLS)/copy_system_library_to_xalt.py
+FIND_LIBS_TO_XALT := $(PY_BUILD_TOOLS)/find_required_libraries.py
 ifeq ($(HAVE_DCGM),yes)
   ifeq ($(STATIC_LIBS),yes)
     LIBDCGM:=-ldcgm_stub -ldl
@@ -176,7 +177,9 @@ XRP_OBJS     := $(patsubst %.c, %.o, $(XRP_C_SRC))
         sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
-all: ECHO COPY_ALL_LIBS                                         \
+all: build_all COPY_ALL_LIBS
+
+build_all: ECHO                                                 \
           $(MY_HOSTNAME_PARSER_TARGET) $(XRE_EXEC)              \
           $(XRS_EXEC) $(XGM_EXEC) $(XGL_EXEC) $(XEL_EXEC)       \
           $(XSL_EXEC) $(XRP_EXEC) $(UUIDGEN_EXEC)               \
@@ -188,13 +191,18 @@ all: ECHO COPY_ALL_LIBS                                         \
           $(DESTDIR)$(LIBEXEC)/xalt_epoch
 
 
-COPY_ALL_LIBS:
-	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR); do            \
-	  baseNM="$${i%%:*}";                                         \
-          realNM="$${i##*:}";                                         \
-	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64)             \
-                               --base $$baseNM                        \
-                               --real $$realNM;                       \
+
+COPY_ALL_LIBS: build_all
+	REQ_LIBS=`$(FIND_LIBS_TO_XALT) $(XRS_EXEC) $(XGL_EXEC) $(XRE_EXEC) $(XEL_EXEC) $(XCR_EXEC)`;\
+	for i in $$REQ_LIBS; do                                        \
+          cp $$i $(DESTDIR)$(LIB64);                                   \
+        done
+	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR)            ; do \
+	  baseNM="$${i%%:*}";                                          \
+          realNM="$${i##*:}";                                          \
+	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64)              \
+                               --base $$baseNM                         \
+                               --real $$realNM;                        \
         done
 
 ECHO:
