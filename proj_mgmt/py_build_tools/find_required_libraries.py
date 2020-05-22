@@ -62,7 +62,7 @@ def find_libs(libT, execNm):
     line   = re.sub("\(.*\)","",line)
     fieldA = line.split()
     N      = len(fieldA)
-    if (N < 1):
+    if (N < 3):
       break
     if (fieldA[1] == "=>"):
       my_name = fieldA[0]
