@@ -120,6 +120,7 @@ int main(int argc, char* argv[])
   char* key = NULL;
   asprintf(&key,"pkg_%s_%s",run_uuid, &uuid_str[24]);
 
+  fprintf(stderr,"key: %s\n",key);
   transmit("file", json_str, "pkg", key, my_host, xalt_tmpdir, resultFn);
 
   free(xalt_tmpdir);

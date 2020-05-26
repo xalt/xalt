@@ -14,7 +14,7 @@ bool extractXALTRecordString(std::string& exec, std::string& watermark)
   std::string QQ    = "\\\"";
   replace_all(execQ, Q, QQ);
 
-  cmd  = "PATH=" XALT_SYSTEM_PATH " objdump -s -j .xalt \"" + execQ + "\" 2> /dev/null";
+  cmd  = "XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH " objdump -s -j .xalt \"" + execQ + "\" 2> /dev/null";
     
   capture(cmd, result);
 

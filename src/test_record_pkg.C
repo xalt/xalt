@@ -6,13 +6,16 @@ int main(int argc, char* argv[])
 {
   char* run_uuid = getenv("XALT_RUN_UUID");
   if (! run_uuid)
-    exit(0);
+    {
+      fprintf(stderr,"Leaving test_record_pkg because XALT_RUN_UUID is not set -> no records\n");
+      exit(0);
+    }
 
   char* xaltDir = getenv("XALT_DIR");
 
   std::string cmd;
 
-  cmd.assign("XALT_EXECUTABLE_TRACKING=no ")
+  cmd.assign("XALT_EXECUTABLE_TRACKING=no ");
   cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
@@ -27,7 +30,7 @@ int main(int argc, char* argv[])
     
   system(cmd.c_str());
 
-  cmd.assign("XALT_EXECUTABLE_TRACKING=no ")
+  cmd.assign("XALT_EXECUTABLE_TRACKING=no ");
   cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
@@ -42,7 +45,7 @@ int main(int argc, char* argv[])
     
   system(cmd.c_str());
 
-  cmd.assign("XALT_EXECUTABLE_TRACKING=no ")
+  cmd.assign("XALT_EXECUTABLE_TRACKING=no ");
   cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);

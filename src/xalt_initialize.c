@@ -766,7 +766,7 @@ void myinit(int argc, char **argv)
       if (xalt_tracing || xalt_run_tracing)
         {
 	  char * cmd2;
-          asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+          asprintf(&cmd2, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
                    " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
 		   pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, watermark, pathArg, ldLibPathArg,
 		   usr_cmdline);
@@ -775,7 +775,7 @@ void myinit(int argc, char **argv)
           memset(cmd2, 0, strlen(cmd2));
 	  free(cmd2);
         }
-      asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
+      asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
 	       pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
 	       b64_cmdline);
@@ -1106,7 +1106,7 @@ void myfini()
           int    dLen;
 	  char * cmd2    = NULL;
           char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
-          asprintf(&cmd2, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+          asprintf(&cmd2, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                    " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
 		   XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
@@ -1116,7 +1116,7 @@ void myfini()
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
-      asprintf(&cmdline, "LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d  --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
+      asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d  --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
 	       XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);

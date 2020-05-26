@@ -211,7 +211,7 @@ Options::Options(int argc, char** argv)
       std::string QQ    = "\\\"";
       replace_all(execQ, Q, QQ);
 
-      cmd = "PATH=" XALT_SYSTEM_PATH " file \"" + execQ + "\"";
+      cmd = "XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH " file \"" + execQ + "\"";
       capture(cmd, result);
       if (result.size() > 0 &&
           (result[0].find("script") != std::string::npos ||

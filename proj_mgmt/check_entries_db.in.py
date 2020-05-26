@@ -63,6 +63,7 @@ class CmdLineOptions(object):
     parser.add_argument("--links",     dest='links',    action="store", default="1",          help="number of links required to pass")
     parser.add_argument("--functions", dest='nfuncs',   action="store", default="0",          help="number of functions required to pass")
     parser.add_argument("--objects",   dest='objects',  action="store", default="10",         help="number of objects required to pass")
+    parser.add_argument("--env_vars",  dest='numEnv',   action="store", default="4",          help="number of env. vars required to pass")
     parser.add_argument("--pkgs",      dest='pkgs',     action="store", default="0",          help="number of packages required to pass")
     
     args = parser.parse_args()
@@ -77,6 +78,17 @@ def count_rows(conn, tableName):
     row   = result.fetch_row()
     count = int(row[0][0])
   return count
+
+
+def eq(a,b):
+  return a == b, "=="
+
+def ge(a,b):
+  return a >= b, ">="
+
+def display_colored_text(color, text):
+  colored_text = "\033[1;"+color+text+"\033[00m"
+  return colored_text
 
 
 def main():
@@ -102,29 +114,41 @@ def main():
 
   conn.close()
 
-  result = 'diff'
+  result = 'passed'
   num    = int(args.runs)
   nfuncs = int(args.nfuncs)
   nlinks = int(args.links)
   pkgs   = int(args.pkgs)
   objs   = int(args.objects)
-  if (tableT['xalt_link']       == nlinks and
-      tableT['xalt_run']        == num    and
-      tableT['xalt_pkg']        == pkgs   and
-      tableT['xalt_function']   >= nfuncs and
-      tableT['xalt_object']     >= objs   and
-      tableT['xalt_env_name']   >   4 ):
+  numEnv = int(args.numEnv)
+  testT  = {
+    'xalt_link'     : [ nlinks, eq ],
+    'xalt_run'      : [ num,    eq ],
+    'xalt_pkg'      : [ pkgs,   eq ],
+    'xalt_function' : [ nfuncs, ge ],
+    'xalt_object'   : [ objs,   ge ],
+    'xalt_env_name' : [numEnv,  ge ],
+  }
+    
+  sA = []
 
-    result = "passed"
-  else:
-    print("Expected:")
-    print(" links:       ",nlinks)
-    print(" runs:        ",num)
-    print(" pkgs:        ",pkgs)
-    print(" functions >= ",nfuncs)
-    print(" objects   >= ",objs)
-    print(" env names >  4")
+  for key in testT:
+    value = tableT[key]
+    goldV = testT[key][0]
+    tstFn = testT[key][1]
+    my_result, kind = tstFn(value, goldV)
+    if (not my_result):
+      result = "diff"
+      sA.append("Not correct: "+key+" -> "+str(value)+" "+kind+" "+str(goldV))
 
+  if (sA):
+    red    = "31m"
+    banner = display_colored_text(red,"======================================================================")
+    print(banner)
+    for line in sA:
+      print(line)
+    print(banner)
+      
   f = open(args.resultFn,"w")
   f.write(result+"\n")
   f.close()

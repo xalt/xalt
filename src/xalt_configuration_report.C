@@ -88,7 +88,8 @@ int main(int argc, char* argv[])
 
 
   Vstring     resultA;
-  std::string cmd     = xalt_dir("bin/xalt_print_os");
+  std::string cmd      = "XALT_EXECUTABLE_TRACKING=no ";
+  cmd.append(xalt_dir("bin/xalt_print_os"));
   capture(cmd, resultA);
   std::string current_os_descript = resultA[0];
 
