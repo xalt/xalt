@@ -8,3 +8,5 @@ XALT 2.8+
 	     * Issue #28: Copy system libraries in to install (lib64) directory to support
 	       executable like xalt_run_submission
     (2.8.3)  * Issue #28: deal with issues on Centos w.r.t. copying files to install lib64 directory.
+    (2.8.4)  * Issue #28: Correctly set XALT_LD_LIBRARY_PATH for both SITE_CONTROLLED_PREFIX equal yes and no.
+    

@@ -4191,11 +4191,6 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
-if test x$CXX_LD_LIBRARY_PATH = "x"; then
-  XALT_LD_LIBRARY_PATH=$prefix/lib64
-else
-  XALT_LD_LIBRARY_PATH=$prefix/lib64:CXX_LD_LIBRARY_PATH
-fi
 
 
 
@@ -5051,7 +5046,11 @@ else
   XALT_DEFAULT_DIR=$prefix
 fi
 
-
+if test x$CXX_LD_LIBRARY_PATH = "x"; then
+  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
+else
+  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64:CXX_LD_LIBRARY_PATH
+fi
 
 
 echo "VERSION=$VERSION"
@@ -6685,6 +6684,7 @@ echo "XALT Using NVML......................................" : $HAVE_NVML
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
+echo "XALT_LD_LIBRARY_PATH................................." : $XALT_LD_LIBRARY_PATH
 echo "XALT_LOGGING_URL....................................." : $XALT_LOGGING_URL
 echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT

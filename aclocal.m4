@@ -96,6 +96,7 @@ echo "XALT Using NVML......................................" : $HAVE_NVML
 echo "XALT build with MySQL support........................" : $Using_MYSQL
 echo "XALT Compute SHA1 sum for libraries.................." : $COMPUTE_SHA1SUM
 echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_PATH
+echo "XALT_LD_LIBRARY_PATH................................." : $XALT_LD_LIBRARY_PATH
 echo "XALT_LOGGING_URL....................................." : $XALT_LOGGING_URL
 echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT

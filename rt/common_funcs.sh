@@ -46,7 +46,9 @@ installXALT()
   rm -rf XALT build .make_failed
   mkdir build
 
-  (cd build; echo "<configure>";$projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; \
+  (cd build; echo "<configure>";
+   echo $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
+        $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
    echo "<make>"; make OPTLVL="-g -O0" install Inst_TACC Inst_RT;
    if  [ "$?" != 0 ]; then
        echo "make failed"

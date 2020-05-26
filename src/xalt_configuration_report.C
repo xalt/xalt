@@ -194,6 +194,7 @@ int main(int argc, char* argv[])
       json.add("XALT_INSTALL_OS",               XALT_INSTALL_OS);
       json.add("XALT_CURRENT_OS",               current_os_descript);
       json.add("CXX_LD_LIBRARY_PATH",           cxx_ld_library_path);
+      json.add("XALT_LD_LIBRARY_PATH",          XALT_LD_LIBRARY_PATH);
       json.add("HAVE_32BIT",                    HAVE_32BIT);
       json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
       json.add("HAVE_DCGM",                     HAVE_DCGM);
@@ -245,6 +246,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSHOST_CONFIG:             " << SYSHOST_CONFIG                 << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:              " << SYSLOG_MSG_SZ                  << "\n";
   std::cout << "CXX_LD_LIBRARY_PATH:             " << cxx_ld_library_path            << "\n";
+  std::cout << "XALT_LD_LIBRARY_PATH:            " << XALT_LD_LIBRARY_PATH           << "\n";
   std::cout << "XALT_INSTALL_OS:                 " << XALT_INSTALL_OS                << "\n";
   std::cout << "CURRENT_OS:                      " << current_os_descript            << "\n";
   std::cout << "XALT_PRELOAD_ONLY:               " << XALT_PRELOAD_ONLY              << "\n";

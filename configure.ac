@@ -362,11 +362,6 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
-if test x$CXX_LD_LIBRARY_PATH = "x"; then
-  XALT_LD_LIBRARY_PATH=$prefix/lib64
-else
-  XALT_LD_LIBRARY_PATH=$prefix/lib64:CXX_LD_LIBRARY_PATH
-fi
 AC_SUBST(XALT_LD_LIBRARY_PATH)
 
 AC_SUBST(XALT_INSTALL_OS)
@@ -519,7 +514,11 @@ else
   XALT_DEFAULT_DIR=$prefix
 fi
 
-
+if test x$CXX_LD_LIBRARY_PATH = "x"; then
+  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
+else
+  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64:CXX_LD_LIBRARY_PATH
+fi
 
 
 echo "VERSION=$VERSION"
