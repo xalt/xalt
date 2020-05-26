@@ -12,7 +12,8 @@ int main(int argc, char* argv[])
 
   std::string cmd;
 
-  cmd.assign(xaltDir);
+  cmd.assign("XALT_EXECUTABLE_TRACKING=no ")
+  cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
   cmd.append(" program R");
@@ -26,7 +27,8 @@ int main(int argc, char* argv[])
     
   system(cmd.c_str());
 
-  cmd.assign(xaltDir);
+  cmd.assign("XALT_EXECUTABLE_TRACKING=no ")
+  cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
   cmd.append(" program R");
@@ -40,7 +42,8 @@ int main(int argc, char* argv[])
     
   system(cmd.c_str());
 
-  cmd.assign(xaltDir);
+  cmd.assign("XALT_EXECUTABLE_TRACKING=no ")
+  cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");
   cmd.append(run_uuid);
   cmd.append(" program R");
