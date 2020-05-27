@@ -115,19 +115,13 @@ def main():
   conn.close()
 
   result = 'passed'
-  num    = int(args.runs)
-  nfuncs = int(args.nfuncs)
-  nlinks = int(args.links)
-  pkgs   = int(args.pkgs)
-  objs   = int(args.objects)
-  numEnv = int(args.numEnv)
   testT  = {
-    'xalt_link'     : [ nlinks, eq ],
-    'xalt_run'      : [ num,    eq ],
-    'xalt_pkg'      : [ pkgs,   eq ],
-    'xalt_function' : [ nfuncs, ge ],
-    'xalt_object'   : [ objs,   ge ],
-    'xalt_env_name' : [numEnv,  ge ],
+    'xalt_link'     : [ int(args.links),   eq ],
+    'xalt_run'      : [ int(args.runs),    eq ],
+    'xalt_pkg'      : [ int(args.pkgs),    eq ],
+    'xalt_function' : [ int(args.nfuncs),  ge ],
+    'xalt_object'   : [ int(args.objects), ge ],
+    'xalt_env_name' : [ int(args.numEnv),  ge ],
   }
     
   sA = []
@@ -138,10 +132,10 @@ def main():
     tstFn = testT[key][1]
     my_result, kind = tstFn(value, goldV)
     if (not my_result):
-      result = "diff"
       sA.append("Not correct: "+key+" -> "+str(value)+" "+kind+" "+str(goldV))
 
   if (sA):
+    result = "diff"
     red    = "31m"
     banner = display_colored_text(red,"======================================================================")
     print(banner)
