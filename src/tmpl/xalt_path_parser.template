@@ -2,7 +2,6 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
-#include "xalt_config.h"
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 static char * strbuf   = NULL;
@@ -17,7 +16,6 @@ enum {
 
 %%
 @path_patterns@
-@xalt_default_dir_pattern@
 .*\/bin/my_uuidgen    		  { return SKIP; }
 .*\/xalt_file_to_db    		  { return SKIP; }
 .*\/xalt_print_os    		  { return SKIP; }

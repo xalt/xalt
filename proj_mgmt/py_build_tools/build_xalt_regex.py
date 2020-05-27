@@ -95,14 +95,10 @@ def main():
   pathPatternStr = convert_pattern( namespace.get('path_patterns',           {}))
   envPatternStr  = convert_pattern( namespace.get('env_patterns',            {}))
 
-  defaultDirStr  = args.defaultDirStr.replace('/',r'\/')+r'\/.* { return SKIP; }'
-
-
   pattA = [
     ['@hostname_patterns@',        hostPatternStr],
     ['@path_patterns@',            pathPatternStr],
-    ['@env_patterns@',             envPatternStr],
-    ['@xalt_default_dir_pattern@', defaultDirStr]
+    ['@env_patterns@',             envPatternStr]
   ]
 
   convert_template(pattA, args.input, args.output)
