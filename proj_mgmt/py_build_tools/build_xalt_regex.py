@@ -36,7 +36,6 @@ class CmdLineOptions(object):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--confFn",      dest='confFn',     action="store", help="python config file")
-    parser.add_argument("--default_dir", dest='defaultDir', action="store", help="xalt default dir")
     parser.add_argument("--input",       dest='input',      action="store", help="input template file")
     parser.add_argument("--output",      dest='output',     action="store", help="output header file")
     args = parser.parse_args()
