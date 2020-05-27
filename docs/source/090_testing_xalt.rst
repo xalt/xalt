@@ -4,7 +4,7 @@ Testing XALT to produce \*.json output
 The generation of \*.json files part of XALT can be tested in a user
 account without any making any changes to the system level.  These
 techniques can be use when trying to debug how XALT is working (or not
-working).  Using the environment variable **XALT_TRACING** will give
+working).  Setting the environment variable **XALT_TRACING** will give
 verbose output.
 
 
