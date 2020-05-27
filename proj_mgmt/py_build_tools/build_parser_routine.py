@@ -82,6 +82,14 @@ def main():
   exec(open(args.confFn).read(), namespace)
   patternStr = "@" + args.pattern + "@"
 
+  defaultDirStr  = args.defaultDirStr.replace('/',r'\/')+r'\/.* { return SKIP; }'
+  pattA = [
+    ['@hostname_patterns@',        hostPatternStr],
+    ['@path_patterns@',            pathPatternStr],
+    ['@env_patterns@',             envPatternStr],
+    ['@xalt_default_dir_pattern@', defaultDirStr]
+  ]
+
   convert_template(patternStr, namespace.get(args.pattern, []), args.input, args.output)
 
 if ( __name__ == '__main__'): main()
