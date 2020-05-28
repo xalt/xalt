@@ -123,44 +123,15 @@ This can be accomplished by configuring with::
    --with-cmdlineRecord=no
 
 
-Using your system gcc/g++
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Built XALT with gcc/g++ 4.8.5 or newer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You must build XALT with the system gcc/g++. Even if you have a new
-gcc available, you must install XALT with the system gcc/g++. If your
-system g++ is older than 4.8.5 (on Centos 6 for example) then XALT can
-support that system but it is slightly more complicated.  Make sure
-that when you install XALT that the gcc and g++ are the system ones.
-Note that user executables can be built with any other compilers and
-will accept an XALT built with system gcc/g++
+You can build XALT with the system gcc/g++ as long as it is at least
+version 4.8.5 or newer.  As of version 2.8.4+, XALT copies all the
+required shared libraries to the install directory.
 
-.. _old_gcc-label:
-
-If your g++ is older than 4.8.5
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If your site's system g++ is older than version 4.8.5 then XALT can
-work but you'll need to install a later version of gcc/g++ and make it
-available to XALT.  This requires a couple of modifications.
-
-First you'll need to take a the g++.sh file in the distribution and
-make it work for your site. You will also have to use the following
-options when configuring XALT::
-
-    CXX=$PWD/g++.sh --with-cxxLDLibraryPath=...
-
-where the LD_LIBRARY_PATH you set in g++.sh you'll need to specify on
-the command line used to configure XALT.  For example, one system at
-TACC required g++.sh to be::
-
-     #!/bin/bash
-     export LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
-     /opt/apps/gcc/4.9.1/bin/g++ "$@"
-
-and the configure line looked like::
-
-     ./configure CXX=$PWD/g++.sh --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
-
+If your system gcc/g++ is older (like on Centos 6), please install and
+use a more modern version of gcc/g++.
 
 Defining $PATH used by XALT programs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

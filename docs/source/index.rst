@@ -118,6 +118,7 @@ Advanced Topics
    110_db
    115_xalt_internal_design
    120_xalt_json
+   130_known_problems
 
 FAQ
 ^^^
