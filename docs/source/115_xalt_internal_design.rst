@@ -161,5 +161,11 @@ XALT uses the sigaction struct to register the handler.  Since
 *myinit()* is called before main, it is likely that it does so first.
 However it only registers a new handler if the old one is NULL.
 
-
-
+This works for non-MPI program execution.  For MPI program execution
+there are a some issues.  First, since XALT is only active on task 0,
+a signal event on tasks other than zero are ignored.  Also job
+schedulers such as SLURM do send a TERM signal when the job terminates
+for time, this signal is not always passed through the MPI job runner
+(i.e. mpiexec) to the MPI application. Since this is not reliable,
+XALT will continue to produce start records for large number of tasks
+for MPI jobs.
