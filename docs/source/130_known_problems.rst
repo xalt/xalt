@@ -34,7 +34,7 @@ such as *asprintf()* does with the memory they use.
 
 This issue appears to be rare as only one case has been reported.
 
-Segfaults due to name collusion
+Segfaults due to name collision
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When XALT is being used,  the names used in the libxalt.so are in the
@@ -51,17 +51,19 @@ You can detect this kind of problem if the program aborts in the
 
 Earlier versions of XALT include libuuid routines as part of the
 user executable.  Later versions have moved these calls to the
-*xalt_run_submission* program so this particular name collusion has
+*xalt_run_submission* program so this particular name collision has
 been removed.
 
-This name collusion is a potential problem in any executable.  XALT
+This name collision is a potential problem in any executable.  XALT
 uses macros to rename all names under its control to names that is
-exceedingly unlikely to be found in user code.  However XALT cannot
-control user codes, particular FORTRAN codes, that reuse names of
-routines in the C library that XALT depends on. Normally, FORTRAN
-programs do not present a problem because the subroutine or function
-ABC is usually linked in with the name *abc_*. But the fortran
-compilers can optionally not add the trailing underscore.
+exceedingly unlikely to be found in user code (see
+src/xalt_obfuscate.h).  However XALT cannot control user codes,
+particular FORTRAN codes, that reuse names of routines in the C
+library that XALT depends on. Normally, FORTRAN programs do not
+present a problem because the subroutine or function ABC is usually
+linked in with the name *abc_*. But the fortran compilers can
+optionally told to not add the trailing underscore. By removing the
+trailing underscore, the FORTRAN routine can collide
 
 C or C++ programs are unlikely to reuse names from the C library but
 this can be a problem for FORTRAN programs which turn off the trailing
