@@ -63,8 +63,8 @@ library that XALT depends on. Normally, FORTRAN programs do not
 present a problem because the subroutine or function ABC is usually
 linked in with the name *abc_*. But the fortran compilers can
 optionally told to not add the trailing underscore. By removing the
-trailing underscore, the FORTRAN routine can collide with C routine
-names.
+trailing underscore, FORTRAN routines can collide with the names of C
+routines.
 
 C or C++ programs are unlikely to reuse names from the C library but
 this can be a problem for FORTRAN programs which turn off the trailing
