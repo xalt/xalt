@@ -17,6 +17,7 @@ enum {
 %%
 @path_patterns@
 .*\/bin/my_uuidgen    		  { return SKIP; }
+.*\/logger       		  { return SKIP; }
 .*\/xalt_file_to_db    		  { return SKIP; }
 .*\/xalt_print_os    		  { return SKIP; }
 .*\/xalt_syslog_to_db  		  { return SKIP; }
