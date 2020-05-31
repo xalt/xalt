@@ -25,7 +25,6 @@ enum {
 .*\/xalt_configuration_report\.x  { return SKIP; }
 .*\/xalt_syshost    		  { return SKIP; }
 .*\/xalt_record_pkg 		  { return SKIP; }
-.*\/xalt_record_pkg 		  { return SKIP; }
 .*                                { return KEEP; }
 %%
 

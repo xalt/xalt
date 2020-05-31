@@ -36,6 +36,8 @@ class CmdLineOptions(object):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--confFn",      dest='confFn',     action="store", help="python config file")
+    parser.add_argument("--xalt_cfg",    dest='xaltCFG',    action="store", help="XALT std config")
+    parser.add_argument("--default_dir", dest='defaultDir', action="store", help="xalt default dir", )
     parser.add_argument("--input",       dest='input',      action="store", help="input template file")
     parser.add_argument("--output",      dest='output',     action="store", help="output header file")
     args = parser.parse_args()
@@ -88,13 +90,30 @@ def main():
 
   args = CmdLineOptions().execute()
 
+  # Read and process site configuration file.
+
   namespace = {}
   exec(open(args.confFn).read(), namespace)
+  hostPattA = namespace.get('hostname_patterns',       []))
+  pathPattA = namespace.get('path_patterns',           []))
+  envPattA  = namespace.get('env_patterns',            []))
 
-  hostPatternStr = convert_pattern( namespace.get('hostname_patterns',       {}))
-  pathPatternStr = convert_pattern( namespace.get('path_patterns',           {}))
-  envPatternStr  = convert_pattern( namespace.get('env_patterns',            {}))
+  # Read and process the XALT configuration file that provides the defaults.
 
+  # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
+  if (args.defaultDir):
+    hostPattA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
+
+  namespace = {}
+  exec(open(args.xaltCFG).read(), namespace)
+  hostPattA.extend(namespace.get('hostname_patterns',  []))
+  pathPattA.extend(namespace.get('path_patterns',      []))
+  envPattA.extend( namespace.get('env_patterns',       []))
+
+  hostPatternStr = convert_pattern( hostPattA)
+  pathPatternStr = convert_pattern( pathPattA)
+  envPatternStr  = convert_pattern( envPattA)
+  
   pattA = [
     ['@hostname_patterns@',        hostPatternStr],
     ['@path_patterns@',            pathPatternStr],

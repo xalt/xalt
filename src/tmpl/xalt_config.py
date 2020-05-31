@@ -1,0 +1,44 @@
+# This is the config file that XALT uses to set defaults for the
+# tables. These patterns are used after the site config file.
+#
+
+#------------------------------------------------------------
+# At the end of the  hostname patterns we mark all hosts
+# as ignored. The Site file better accept some hostname or
+# XALT won't track on any computers.
+hostname_patterns = [
+  ['IGNORE', r'.*']                    # skip all hosts
+  ]
+
+#------------------------------------------------------------
+# This "table" is use to filter executables by their path
+# The value on the left is either KEEP or SKIP.  If the value
+# is KEEP then if the path matches the regular expression then
+# the executable is acceptable as far as the path test goes.
+# If the value on the left is SKIP then if the path matches
+# the regular expression then executable is not acceptable so
+# no XALT tracking is done for that path.
+
+# These executables are the XALT executables that must NEVER
+# be tracked.
+
+path_patterns = [
+    ['SKIP',  r'.*/bin/my_uuidgen'],
+    ['SKIP',  r'.*/logger'],
+    ['SKIP',  r'.*/xalt_print_os'],
+    ['SKIP',  r'.*/xalt_syslog_to_db'],
+    ['SKIP',  r'.*/xalt_extract_record.x'],
+    ['SKIP',  r'.*/xalt_configuration_report.x'],
+    ['SKIP',  r'.*/xalt_syshost'],
+    ['SKIP',  r'.*/xalt_record_pkg'],
+    ['KEEP',  r'.*']
+  ]
+    
+#------------------------------------------------------------
+# XALT filter environment variables.  By default XALT will not
+# record any env. vars in the xalt_env table.
+
+env_patterns = [
+    [ 'SKIP', r'.*' ],
+  ]
+
