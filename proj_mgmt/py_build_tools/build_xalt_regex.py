@@ -100,6 +100,10 @@ def main():
 
   # Read and process the XALT configuration file that provides the defaults.
 
+  hostPattA.append(["=======", "========================="])
+  pathPattA.append(["=======", "========================="])
+  envPattA.append( ["=======", "========================="])
+
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
     pathPattA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
