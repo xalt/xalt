@@ -260,8 +260,8 @@ int main(int argc, char* argv[])
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
   std::cout << "*------------------------------------------------------------------------------*\n"
-            << "Note: The patterns at the top of each array come from XALT_CONFIG_PY file\n"
-            << "      and the bottom come from the src/tmpl/xalt_config.py file\n"
+            << "Note: The patterns above the equal signs in each array come from XALT_CONFIG_PY\n"
+            << "      file and the pattens below come from the src/tmpl/xalt_config.py file\n"
             << "*------------------------------------------------------------------------------*\n\n";
 
   displayArray("hostnameA",    hostnameSz,    hostnameA);
