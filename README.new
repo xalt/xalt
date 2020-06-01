@@ -14,3 +14,6 @@ XALT 2.8+
 W.I.P:
     (2.8.5)  * Issue #29: Automatically add XALT_DEFAULT_DIR to the list of paths to ignore
                by modifying proj_mgmt/py_build_tools/build_parser_routine.py
+             * Use src/tmpl/xalt_config.py to hold the default patterns.
+             * Report XALT_CONFIG_PY and src/tmpl/xalt_config.py with xalt_configuration_report.x
+               Add comment to say that the patterns come from both files.

@@ -4,6 +4,7 @@ hostname_patterns = [
 ]
 path_patterns = [
   ['PKGS',  r'.*\/test_record_pkg'],
+  ['SKIP', r'.*\/lua'],
   ['SKIP', r'.*\/expr'],
   ['SKIP', r'.*\/cc1'],
   ['SKIP', r'.*\/bash'],

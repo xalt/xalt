@@ -14,7 +14,6 @@ enum {
 
 %%
 @hostname_patterns@
-.*   { return SKIP; }
 %%
 
 int yywrap()

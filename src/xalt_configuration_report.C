@@ -259,6 +259,11 @@ int main(int argc, char* argv[])
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 
+  std::cout << "*------------------------------------------------------------------------------*\n"
+            << "Note: The patterns at the top of each array come from XALT_CONFIG_PY file\n"
+            << "      and the bottom come from the src/tmpl/xalt_config.py file\n"
+            << "*------------------------------------------------------------------------------*\n\n";
+
   displayArray("hostnameA",    hostnameSz,    hostnameA);
   std::cout << "\nRemember that \"PKGS\" means a program that can also track internal packages\n";
   displayArray("pathPatternA", pathPatternSz, pathPatternA);

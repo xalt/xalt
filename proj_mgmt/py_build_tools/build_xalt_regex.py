@@ -94,15 +94,15 @@ def main():
 
   namespace = {}
   exec(open(args.confFn).read(), namespace)
-  hostPattA = namespace.get('hostname_patterns',       []))
-  pathPattA = namespace.get('path_patterns',           []))
-  envPattA  = namespace.get('env_patterns',            []))
+  hostPattA = namespace.get('hostname_patterns',       [])
+  pathPattA = namespace.get('path_patterns',           [])
+  envPattA  = namespace.get('env_patterns',            [])
 
   # Read and process the XALT configuration file that provides the defaults.
 
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
-    hostPattA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
+    pathPattA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
 
   namespace = {}
   exec(open(args.xaltCFG).read(), namespace)

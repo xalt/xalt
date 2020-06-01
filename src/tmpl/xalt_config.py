@@ -7,7 +7,7 @@
 # as ignored. The Site file better accept some hostname or
 # XALT won't track on any computers.
 hostname_patterns = [
-  ['IGNORE', r'.*']                    # skip all hosts
+  ['SKIP', r'.*']                    # skip all hosts
   ]
 
 #------------------------------------------------------------
@@ -22,16 +22,18 @@ hostname_patterns = [
 # These executables are the XALT executables that must NEVER
 # be tracked.
 
+# Note that the XALT install directory is automatically added 
+
 path_patterns = [
-    ['SKIP',  r'.*/bin/my_uuidgen'],
-    ['SKIP',  r'.*/logger'],
-    ['SKIP',  r'.*/xalt_print_os'],
-    ['SKIP',  r'.*/xalt_syslog_to_db'],
-    ['SKIP',  r'.*/xalt_extract_record.x'],
-    ['SKIP',  r'.*/xalt_configuration_report.x'],
-    ['SKIP',  r'.*/xalt_syshost'],
-    ['SKIP',  r'.*/xalt_record_pkg'],
-    ['KEEP',  r'.*']
+  ['SKIP',  r'.*\/bin\/my_uuidgen'],
+  ['SKIP',  r'.*\/logger'],
+  ['SKIP',  r'.*\/xalt_print_os'],
+  ['SKIP',  r'.*\/xalt_syslog_to_db'],
+  ['SKIP',  r'.*\/xalt_extract_record.x'],
+  ['SKIP',  r'.*\/xalt_configuration_report.x'],
+  ['SKIP',  r'.*\/xalt_syshost'],
+  ['SKIP',  r'.*\/xalt_record_pkg'],
+  ['KEEP',  r'.*']
   ]
     
 #------------------------------------------------------------
@@ -39,6 +41,6 @@ path_patterns = [
 # record any env. vars in the xalt_env table.
 
 env_patterns = [
-    [ 'SKIP', r'.*' ],
+  [ 'IGNORE', r'.*' ],
   ]
 

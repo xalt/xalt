@@ -37,6 +37,7 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--default_dir", dest='defaultDir', action="store", help="xalt default dir", )
     parser.add_argument("--confFn",      dest='confFn',     action="store", help="python config file")
+    parser.add_argument("--xalt_cfg",    dest='xaltCFG',    action="store", help="XALT std config")
     parser.add_argument("--pattern",     dest='pattern',    action="store", help="name of pattern")
     parser.add_argument("--input",       dest='input',      action="store", help="input template file")
     parser.add_argument("--output",      dest='output',     action="store", help="output file")
@@ -80,13 +81,17 @@ def main():
   args = CmdLineOptions().execute()
   namespace = {}
   exec(open(args.confFn).read(), namespace)
-  patternStr = "@" + args.pattern + "@"
-  replaceA       = namespace.get(args.pattern, [])
+  replaceA   = namespace.get(args.pattern, [])
 
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
     replaceA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
 
-  convert_template(patternStr, namespace.get(args.pattern, []), args.input, args.output)
+
+  namespace = {}
+  exec(open(args.xaltCFG).read(), namespace)
+  replaceA.extend(namespace.get(args.pattern, []))
+
+  convert_template("@" + args.pattern + "@", replaceA, args.input, args.output)
 
 if ( __name__ == '__main__'): main()
