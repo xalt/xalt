@@ -11,7 +11,6 @@ XALT 2.8+
     (2.8.4)  * Issue #28: Correctly set XALT_LD_LIBRARY_PATH for both SITE_CONTROLLED_PREFIX equal yes and no.
              * Issue #29: When xalt_initialize.c and xalt_run_submission.C and ld.in call or capture the
                output of a command, set XALT_EXECUTABLE_TRACKING=no every time.
-W.I.P:
     (2.8.5)  * Issue #29: Automatically add XALT_DEFAULT_DIR to the list of paths to ignore
                by modifying proj_mgmt/py_build_tools/build_parser_routine.py
              * Use src/tmpl/xalt_config.py to hold the default patterns.
