@@ -16,3 +16,7 @@ XALT 2.8+
              * Use src/tmpl/xalt_config.py to hold the default patterns.
              * Report XALT_CONFIG_PY and src/tmpl/xalt_config.py with xalt_configuration_report.x
                Add comment to say that the patterns come from both files.
+W.I.P:
+    (2.8.6)  * Fix truncation bug w.r.t. pkg_path.
+    
+	    

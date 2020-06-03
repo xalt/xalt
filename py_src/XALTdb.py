@@ -533,7 +533,7 @@ class XALTdb(object):
         program     = pkgT['program'][:12]
         pkg_name    = pkgT['package_name'][:64]
         pkg_version = pkgT['package_version'][:32]
-        pkg_path    = pkgT['package_path'][:10]
+        pkg_path    = pkgT['package_path'][:1024]
         
         query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
         cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))

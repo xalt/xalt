@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
   cmd.append(run_uuid);
   cmd.append(" package_name acme");
   cmd.append(" package_version 1.0");
-  cmd.append(" package_path /A/B/acme/1.0");
+  cmd.append(" package_path /opt/apps/intel18/R/3.5/acme/1.0");
   
   fprintf(stderr,"%s\n",cmd.c_str());
     
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
   cmd.append(run_uuid);
   cmd.append(" package_name foo");
   cmd.append(" package_version 2.0");
-  cmd.append(" package_path /A/B/foo/2.0");
+  cmd.append(" package_path /opt/apps/intel18/R/3.5/foo/2.0");
   
   fprintf(stderr,"%s\n",cmd.c_str());
     
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
   cmd.append(run_uuid);
   cmd.append(" package_name bar");
   cmd.append(" package_version 3.0");
-  cmd.append(" package_path /A/B/bar/3.0");
+  cmd.append(" package_path /opt/apps/intel18/R/3.5/bar/3.0");
   
   fprintf(stderr,"%s\n",cmd.c_str());
     
