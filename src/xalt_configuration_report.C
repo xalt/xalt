@@ -8,11 +8,11 @@
 #include "xalt_regex.h"
 #include "xalt_version.h"
 #include "xalt_interval.h"
+#include <string.h>
 #include <iostream>
 #include <iomanip>
 #include <time.h>
 #include <stdlib.h>
-#include <string.h>
 #include "epoch.h"
 #include "Json.h"
 
@@ -24,8 +24,14 @@ void displayArray(const char *name, int n, const char **A)
   std::cout << " Array: " << name << "\n";
   std::cout << "*----------------------*\n";
 
+  int j = 0;
   for (int i = 0; i < n; ++i)
-    std::cout << std::setw(4) << i << ": " << A[i] << "\n";
+    {
+      if (strncmp(A[i],"====",4) == 0)
+        std::cout << "================== src/tmpl/xalt_config.py ==================\n";
+      else
+        std::cout << std::setw(4) << j++ << ": " << A[i] << "\n";
+    }
   std::cout << "\n";
 }
 
