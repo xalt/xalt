@@ -20,24 +20,24 @@ def keep_pkg(fullname, path):
   return True, ".*"
   
 
-def main():
-  testA = [
-    { 'fullname' : '_json', 'path' : "/a/_json.py" },
-    { 'fullname' : 'a.b',   'path' : "/a/a/b.py" },
-    { 'fullname' : 'foo',   'path' : "built-in" },
-    { 'fullname' : 'bar',   'path' : "/home1/00515/mclay/.local/bar.py" },
-    { 'fullname' : 'baz',   'path' : "/home1/00515/mclay/baz.py" },
-    { 'fullname' : 'json',  'path' : "/opt/apps/python/json.py" },
-    ]
-
-  for entry in testA:
-    fullname            = entry['fullname']
-    path                = entry['path']
-    result,reason, kind = keep_pkg(fullname, path)
-    print(result, kind, reason, fullname, path)
-    
-  
-
-
-if ( __name__ == '__main__'): main()
+#def main():
+#  testA = [
+#    { 'fullname' : '_json', 'path' : "/a/_json.py" },
+#    { 'fullname' : 'a.b',   'path' : "/a/a/b.py" },
+#    { 'fullname' : 'foo',   'path' : "built-in" },
+#    { 'fullname' : 'bar',   'path' : "/home1/00515/mclay/.local/bar.py" },
+#    { 'fullname' : 'baz',   'path' : "/home1/00515/mclay/baz.py" },
+#    { 'fullname' : 'json',  'path' : "/opt/apps/python/json.py" },
+#    ]
+#
+#  for entry in testA:
+#    fullname            = entry['fullname']
+#    path                = entry['path']
+#    result,reason, kind = keep_pkg(fullname, path)
+#    print(result, kind, reason, fullname, path)
+#    
+#  
+#
+#
+#if ( __name__ == '__main__'): main()
     
