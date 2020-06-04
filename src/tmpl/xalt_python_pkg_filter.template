@@ -1,0 +1,43 @@
+# -*- python -*-
+
+from __future__ import print_function
+import os, sys, re
+
+@python_pkg_patterns@
+
+def keep_pkg(fullname, path):
+  for entry in python_pkg_patternA:
+    kind = entry['kind']
+    patt = entry['patt']
+    if (kind == 'path'):
+      m    = patt.match(path)
+      if (m):
+        return entry['k_s'] == 'KEEP', entry['bare_patt'], kind
+    if (kind == 'name'):
+      m    = patt.match(fullname)
+      if (m):
+        return entry['k_s'] == 'KEEP', entry['bare_patt'], kind
+  return True, ".*"
+  
+
+def main():
+  testA = [
+    { 'fullname' : '_json', 'path' : "/a/_json.py" },
+    { 'fullname' : 'a.b',   'path' : "/a/a/b.py" },
+    { 'fullname' : 'foo',   'path' : "built-in" },
+    { 'fullname' : 'bar',   'path' : "/home1/00515/mclay/.local/bar.py" },
+    { 'fullname' : 'baz',   'path' : "/home1/00515/mclay/baz.py" },
+    { 'fullname' : 'json',  'path' : "/opt/apps/python/json.py" },
+    ]
+
+  for entry in testA:
+    fullname            = entry['fullname']
+    path                = entry['path']
+    result,reason, kind = keep_pkg(fullname, path)
+    print(result, kind, reason, fullname, path)
+    
+  
+
+
+if ( __name__ == '__main__'): main()
+    

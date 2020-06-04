@@ -41,6 +41,12 @@ path_patterns = [
 # record any env. vars in the xalt_env table.
 
 env_patterns = [
-  [ 'IGNORE', r'.*' ],
+  [ 'SKIP', r'.*' ],
   ]
 
+#------------------------------------------------------------
+# XALT filter python package filter.
+
+python_pkg_patterns = [
+    { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*"      },  # keep all other patterns
+]  
