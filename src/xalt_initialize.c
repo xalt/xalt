@@ -34,7 +34,6 @@
 #include <time.h>
 #include <sys/time.h>
 #include <limits.h>
-#include "xalt_regex.h"
 #include "xalt_interval.h"
 #include <errno.h>
 #include <syslog.h>
@@ -85,6 +84,7 @@
 
 #define DATESZ      40
 #define FULLDATESZ  2*DATESZ
+#define N_ELEMENTS(a) (sizeof(a)/sizeof((a)[0]))
 
 typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
 typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;

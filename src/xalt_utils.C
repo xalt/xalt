@@ -15,7 +15,6 @@
 
 #include "xalt_utils.h"
 #include "xalt_config.h"
-#include "xalt_regex.h"
 #include "Options.h"
 
 #define DATESZ 100

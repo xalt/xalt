@@ -270,10 +270,11 @@ int main(int argc, char* argv[])
             << "      file and the pattens below come from the src/tmpl/xalt_config.py file\n"
             << "*------------------------------------------------------------------------------*\n\n";
 
-  displayArray("hostnameA",    hostnameSz,    hostnameA);
+  displayArray("hostnameA",     hostnameSz,     hostnameA);
   std::cout << "\nRemember that \"PKGS\" means a program that can also track internal packages\n";
-  displayArray("pathPatternA", pathPatternSz, pathPatternA);
-  displayArray("envPatternA",  envPatternSz,  envPatternA);
+  displayArray("pathPatternA",  pathPatternSz,  pathPatternA);
+  displayArray("envPatternA",   envPatternSz,   envPatternA);
+  displayArray("pyPkgPatternA", pyPkgPatternSz, pyPkgPatternA);
 
   std::cout << "*-------------------------------*\n";
   std::cout << " Array: Non-MPI (scalar) interval\n";

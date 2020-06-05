@@ -53,7 +53,17 @@ def convert_pattern(list):
     
     a.append('"'+token+' => '+value+'"')
 
-  return ",".join(a)
+  return a
+
+def convert_py_pkg_pattern(list):
+  a = []
+  for entry in list:
+    k_s  = entry['k_s']
+    kind = entry['kind']
+    patt = entry['patt']
+    a.append('"'+"{ 'k_s' : '"+k_s+"', 'kind' : '"+kind+"', 'patt' : r'"+patt+"'},"+'"')
+
+  return a
 
 def convert_template(a, inputFn, outputFn):
   try:
@@ -93,36 +103,36 @@ def main():
   # Read and process site configuration file.
 
   namespace = {}
-  exec(open(args.confFn).read(), namespace)
-  hostPattA = namespace.get('hostname_patterns',       [])
-  pathPattA = namespace.get('path_patterns',           [])
-  envPattA  = namespace.get('env_patterns',            [])
+  exec(open(args.confFn).read(),      namespace)
+  hostStrA  = convert_pattern(        namespace.get('hostname_patterns',   []))
+  pathStrA  = convert_pattern(        namespace.get('path_patterns',       []))
+  envStrA   = convert_pattern(        namespace.get('env_patterns',        []))
+  pyPkgStrA = convert_py_pkg_pattern( namespace.get('python_pkg_patterns', []))
   
 
   # Read and process the XALT configuration file that provides the defaults.
 
-  hostPattA.append(["====", "========================="])
-  pathPattA.append(["====", "========================="])
-  envPattA.append( ["====", "========================="])
+  hostStrA.append(  "====" )
+  pathStrA.append(  "====" )
+  envStrA.append(   "====" )
+  pyPkgStrA.append( "====" )
 
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
-    pathPattA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
+    pathStrA.append(convert_pattern(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*']))
 
   namespace = {}
-  exec(open(args.xaltCFG).read(), namespace)
-  hostPattA.extend(namespace.get('hostname_patterns',  []))
-  pathPattA.extend(namespace.get('path_patterns',      []))
-  envPattA.extend( namespace.get('env_patterns',       []))
+  exec(open(args.xaltCFG).read(),           namespace)
+  hostStrA.extend(  convert_pattern(        namespace.get('hostname_patterns',   [])))
+  pathStrA.extend(  convert_pattern(        namespace.get('path_patterns',       [])))
+  envStrA.extend(   convert_pattern(        namespace.get('env_patterns',        [])))
+  pyPkgStrA.extend( convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
 
-  hostPatternStr = convert_pattern( hostPattA)
-  pathPatternStr = convert_pattern( pathPattA)
-  envPatternStr  = convert_pattern( envPattA)
-  
   pattA = [
-    ['@hostname_patterns@',        hostPatternStr],
-    ['@path_patterns@',            pathPatternStr],
-    ['@env_patterns@',             envPatternStr]
+    ['@hostname_patterns@',        ",".join(hostStrA)],
+    ['@path_patterns@',            ",".join(pathStrA)],
+    ['@env_patterns@',             ",".join(envStrA)],
+    ['@python_pkg_patterns@',      ",".join(pyPkgStrA)],
   ]
 
   convert_template(pattA, args.input, args.output)

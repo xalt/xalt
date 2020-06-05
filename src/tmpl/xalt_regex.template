@@ -4,14 +4,15 @@
 #include "xalt_obfuscate.h"
 
 #define N_ELEMENTS(a) (sizeof(a)/sizeof((a)[0]))
+const char* pathPatternA[]  = { @path_patterns@       };
+const char* hostnameA[]     = { @hostname_patterns@   };
+const char* envPatternA[]   = { @env_patterns@        };
+const char* pyPkgPatternA[] = { @python_pkg_patterns@ };
 
-const char* pathPatternA[] = { @path_patterns@     };
-const char* hostnameA[]    = { @hostname_patterns@ };
-const char* envPatternA[]  = { @env_patterns@      };
-
-const int   pathPatternSz = N_ELEMENTS(pathPatternA);
-const int   hostnameSz    = N_ELEMENTS(hostnameA);
-const int   envPatternSz  = N_ELEMENTS(envPatternA);
+const int   pathPatternSz   = N_ELEMENTS(pathPatternA);
+const int   hostnameSz      = N_ELEMENTS(hostnameA);
+const int   envPatternSz    = N_ELEMENTS(envPatternA);
+const int   pyPkgPatternSz  = N_ELEMENTS(pyPkgPatternA);
 
 
 
