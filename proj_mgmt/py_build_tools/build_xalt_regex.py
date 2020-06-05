@@ -97,6 +97,7 @@ def main():
   hostPattA = namespace.get('hostname_patterns',       [])
   pathPattA = namespace.get('path_patterns',           [])
   envPattA  = namespace.get('env_patterns',            [])
+  
 
   # Read and process the XALT configuration file that provides the defaults.
 
