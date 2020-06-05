@@ -61,7 +61,7 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
       
       for entry in replaceA:
         kind = entry['kind'].lower()
-        patt = entry['patt']
+        patt = entry['patt'].replace("\\/","/")
         k_s  = entry['k_s'].upper()
         if ( k_s != "KEEP" and k_s != "SKIP"):
           print("Bad k_s value for patt: ",patt)
