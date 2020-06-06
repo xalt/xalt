@@ -109,17 +109,18 @@ def main():
   envStrA   = convert_pattern(        namespace.get('env_patterns',        []))
   pyPkgStrA = convert_py_pkg_pattern( namespace.get('python_pkg_patterns', []))
   
-
   # Read and process the XALT configuration file that provides the defaults.
 
-  hostStrA.append(  "====" )
-  pathStrA.append(  "====" )
-  envStrA.append(   "====" )
-  pyPkgStrA.append( "====" )
+  hostStrA.append(  '"===="' )
+  pathStrA.append(  '"===="' )
+  envStrA.append(   '"===="' )
+  pyPkgStrA.append( '"===="' )
 
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
-    pathStrA.append(convert_pattern(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*']))
+    pattDefDir = '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'
+    ddA = [ ['SKIP', pattDefDir] ]
+    pathStrA.extend(convert_pattern(ddA))
 
   namespace = {}
   exec(open(args.xaltCFG).read(),           namespace)
