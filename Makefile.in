@@ -97,9 +97,13 @@ LIB64                	:= $(PKGV)/lib64
 LIBEXEC              	:= $(PKGV)/libexec
 BIN                  	:= $(PKGV)/bin
 SBIN                 	:= $(PKGV)/sbin
+SITE_PKG_DIR            := $(PKGV)/site_packages
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
-                           $(DESTDIR)$(INC)
+                           $(DESTDIR)$(INC) $(DESTDIR)/$(SITE_PKG_DIR)
+
+SITE_PKG                := py_src/xalt_sitcustomize.py
+SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
 
 BIN_PKG              	:=                                                                     \
                            sh_src/ld.in                                                        \
@@ -109,7 +113,6 @@ BIN_PKG              	:=                                                        
                            sh_src/xalt_extract_record.in                                       \
                            sh_src/xalt_configuration_report.in                                 \
                            sh_src/xalt_print_os.in 
-
 BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 
 SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py             \
@@ -117,7 +120,6 @@ SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py
                            py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py \
                            sh_src/create_xalt_directories.sh.in                                \
                            py_src/xalt_scalar_bins_usage_report.in.py    
-
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 
 RT_PKG                  := proj_mgmt/check_entries_db.in.py
@@ -128,8 +130,6 @@ LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py
                            py_src/xalt_global.py             py_src/Rmap_XALT.py               \
                            py_src/xalt_util.py               py_src/xalt_name_mapping.py       \
                            py_src/xalt_transmission_factory.py
-
-
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
 
@@ -142,7 +142,6 @@ TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py
                            contrib/TACC/xalt_directorate.in  contrib/TACC/xalt_fos.in          \
                            contrib/TACC/system_directorate_rpt.in                              \
                            contrib/TACC/build_default_user_2_account_str.in
-
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 
 INIT_SRC             	:= src/xalt_initialize.c
@@ -157,7 +156,7 @@ OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
 all:
 	@echo done
 
-install: $(DIRLIST) LINKS Inst_sbin Inst_bin Inst_libexec Use_getent_yes                           \
+install: $(DIRLIST) LINKS Inst_site_py Inst_sbin Inst_bin Inst_libexec Use_getent_yes              \
          Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate
 	@if test "$(SITE_CONTROLLED_PREFIX)" = "no" ; then                                         \
 	  echo $(RM) $(DESTDIR)$(PKG);                                                             \
@@ -206,6 +205,9 @@ LINKS: $(DIRLIST)
         rm -f x86_64-linux-gnu i386-linux-gnu;      \
         ln -s ../lib64 x86_64-linux-gnu;            \
         ln -s . i386-linux-gnu
+
+Inst_site_py: $(SITE_PKG_DIR)
+	cp $(SITE_PKG) $(SITE_PKG_DIR)/sitecustomize.py
 
 Inst_libexec: $(LIBEXEC_PKG)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe

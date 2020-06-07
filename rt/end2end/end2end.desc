@@ -170,6 +170,14 @@ test_descript = {
      gcc -o ill $(testDir)/ill.c
      ./ill --seq 19
 
+     displayThis "Test python3 package recording"
+     PYTHONPATH=$XALT_DIR/site_packages:$PYTHONPATH
+     PYTHONPATH=${PYTHONPATH%:}
+
+     python3 $(testDir)/pkg_tracking.py
+   
+     unset PYTHONPATH
+
      displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 20"
      mv XALT/$VERSION/libexec/xalt_run_submission XALT/$VERSION/libexec/xalt_run_submission.orig
 
