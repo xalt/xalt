@@ -15,7 +15,8 @@ test_descript = {
 
      module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-     PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$(testDir)/bin:$PATH;
+     XALT_DIR=$outputDir/XALT/xalt/xalt/
+     PATH=$XALT_DIR/bin:$XALT_DIR/sbin:$(testDir)/bin:$PATH;
 
      initialize
      export MY_HOST=`uname -n`
