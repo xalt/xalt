@@ -119,8 +119,7 @@ def main():
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
     pattDefDir = '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'
-    ddA = [ ['SKIP', pattDefDir] ]
-    pathStrA.extend(convert_pattern(ddA))
+    pathStrA.extend(convert_pattern([ ['SKIP', pattDefDir] ])
 
   namespace = {}
   exec(open(args.xaltCFG).read(),           namespace)

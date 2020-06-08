@@ -170,10 +170,18 @@ test_descript = {
      gcc -o ill $(testDir)/ill.c
      ./ill --seq 19
 
-     displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 20"
+     displayThis "Test python3 package recording (seq 20)"
+     PYTHONPATH=$XALT_DIR/site_packages:$PYTHONPATH
+     PYTHONPATH=${PYTHONPATH%:}
+
+     python3 $(testDir)/pkg_tracking.py
+   
+     unset PYTHONPATH
+
+     displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 21"
      mv XALT/$VERSION/libexec/xalt_run_submission XALT/$VERSION/libexec/xalt_run_submission.orig
 
-     XALT_TRACING=yes ./hello\ .mpi --seq 20
+     XALT_TRACING=yes ./hello\ .mpi --seq 21
 
      unset LD_PRELOAD
      displayThis "Extract Watermark"

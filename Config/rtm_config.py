@@ -220,13 +220,12 @@ MPI_ALWAYS_RECORD = 2
 #------------------------------------------------------------
 # Python pattern for python package tracking
 
+# Note that sys, os, re, and subprocess can not be tracked due to the way that python tracking works.
+
 python_pkg_patterns = [
   { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^[^/]"      },  # SKIP all built-in packages
   { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^_"         },  # SKIP names that start with a underscore
   { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r".*\."       },  # SKIP all names that are divided with periods: a.b.c
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^os$"       },  # SKIP os
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^re$"       },  # SKIP re
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^sys$"      },  # SKIP sys
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*/.local/" },  # KEEP all packages installed by users
   { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"/home"      },  # SKIP all other packages in user locations
   ]
