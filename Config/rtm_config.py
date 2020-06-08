@@ -228,4 +228,4 @@ python_pkg_patterns = [
   { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r".*\."       },  # SKIP all names that are divided with periods: a.b.c
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*/.local/" },  # KEEP all packages installed by users
   { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"/home"      },  # SKIP all other packages in user locations
-  ]
+]
