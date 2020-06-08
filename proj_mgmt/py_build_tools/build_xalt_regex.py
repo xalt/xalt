@@ -58,9 +58,9 @@ def convert_pattern(list):
 def convert_py_pkg_pattern(list):
   a = []
   for entry in list:
-    k_s  = entry['k_s']
-    kind = entry['kind']
-    patt = entry['patt']
+    k_s  = entry['k_s'].replace("\\","\\\\")
+    kind = entry['kind'].replace("\\","\\\\")
+    patt = entry['patt'].replace("\\","\\\\")
     a.append('"'+"{ 'k_s' : '"+k_s+"', 'kind' : '"+kind+"', 'patt' : r'"+patt+"'},"+'"')
 
   return a
