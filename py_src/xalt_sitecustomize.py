@@ -36,7 +36,6 @@ class RecorderRTM(object):
   def find_spec(self, fullname, path, target=None):
 
     result = None
-
     for entry in sys.meta_path:
       cls  = type(entry)
       if (cls.__name__ != "RecorderRTM" ):
