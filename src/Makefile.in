@@ -188,6 +188,7 @@ build_all: ECHO                                                 \
           $(DESTDIR)$(LIBEXEC)/xalt_realpath          	        \
 	  $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x    	\
 	  $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x    	\
+	  $(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py   \
           $(DESTDIR)$(LIBEXEC)/xalt_epoch
 
 
@@ -262,6 +263,9 @@ $(DESTDIR)$(LIBEXEC)/xalt_epoch: xalt_epoch.o epoch.o
 
 $(DESTDIR)$(SBIN)/xalt_syshost: xalt_syshost_main.o xalt_fgets_alloc.o
 	$(LINK.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+
+$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py: __build__/xalt_python_pkg_filter.py
+	cp $^ $@
 
 __build__/lex.xalt_env.c: $(CURDIR)/__build__/xalt_env_parser.lex
 	flex -P xalt_env -o $@ $^

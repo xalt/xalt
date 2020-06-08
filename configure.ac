@@ -692,6 +692,12 @@ if test "$?" != 0; then
    exit 1
 fi	
 
+$PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_python_filter_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_python_pkg_filter.template --output src/__build__/xalt_python_pkg_filter.py
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi	
+
 
 #########################################################################
 ## check to see if the following programs can be found from SYSTEM_PATH:

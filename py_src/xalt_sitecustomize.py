@@ -1,7 +1,7 @@
 #### this should go into sitecustomize.py ####
 import sys, os, subprocess
 
-from xalt_pkg_filter import keep_pkg
+from xalt_python_pkg_filter import keep_pkg
 
 class RecorderRTM(object):
   """

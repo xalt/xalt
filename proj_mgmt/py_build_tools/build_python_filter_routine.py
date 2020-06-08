@@ -69,7 +69,7 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
         if ( kind != "name" and kind != "path"):
           print("Bad k_s value for patt: ",patt)
           sys.exit(-1)
-        line = "  { 'k_s' : '" + k_s +"', 'kind' : '" + kind + "', 'patt' : re.compile( r'" + patt + "'), 'bare_patt' : '"+patt+"' },\n"
+        line = "  { 'k_s' : '" + k_s +"', 'kind' : '" + kind + "', 'patt' : re.compile( r'" + patt + "'), 'bare_patt' : r'"+patt+"' },\n"
         outA.append(line)
 
       outA.append("]\n")

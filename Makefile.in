@@ -102,7 +102,7 @@ DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
                            $(DESTDIR)$(INC) $(DESTDIR)/$(SITE_PKG_DIR)
 
-SITE_PKG                := py_src/xalt_sitcustomize.py
+SITE_PKG                := py_src/xalt_sitecustomize.py
 SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
 
 BIN_PKG              	:=                                                                     \
@@ -180,7 +180,8 @@ build_compiled:
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
                 MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
                 UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL)     \
-                PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools      all
+                SITE_PKG_DIR=$(SITE_PKG_DIR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools \
+                all
 
 inst_obfuscate:
 	cp $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)
