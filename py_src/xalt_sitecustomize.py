@@ -12,7 +12,7 @@ class RecorderRTM(object):
 
   def __init__(self, uuid, version_str):
     self._keepT   = {}
-    self._cmd     = "XALT_EXECUTABLE_TRACKING=no " + os.path.join(os.environ.get("XALT_DIR","/unknown"),"libexec/xalt_report_pkg") + 
+    self._cmd     = "XALT_EXECUTABLE_TRACKING=no " + os.path.join(os.environ.get("XALT_DIR","/unknown"),"libexec/xalt_record_pkg") + \
                     " -u " + uuid + " program python xalt_run_uuid " + uuid + " package_version " + version_str
     
     
@@ -53,7 +53,7 @@ class RecorderRTM(object):
     path = result.origin
 
     if (self.__keep(fullname, path)):
-      self._report(fullname, path)
+      self.__report(fullname, path)
 
     return result
 
@@ -83,9 +83,11 @@ class RecorderRTM(object):
           break
 
     if (path and  self.__keep(fullname, path)):
-      self._report(fullname, path)
+      self.__report(fullname, path)
 
     return result
+
+
 
 
 uuid        = os.environ.get("XALT_RUN_UUID",None)
@@ -95,7 +97,8 @@ if (uuid):
     s = str(i)
     if (s == 'final'):
       break
+    sA.append(s)
   version_str = '.'.join(sA)
-  sA.append(s)
+
   sys.meta_path.insert(0, RecorderRTM(uuid, version_str))
 

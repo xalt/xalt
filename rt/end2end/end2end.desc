@@ -171,14 +171,17 @@ test_descript = {
      ./ill --seq 19
 
      displayThis "Test python3 package recording (seq 20)"
+     OLD_PY_PATH=$PYTHONPATH
      PYTHONPATH=$XALT_DIR/site_packages:$PYTHONPATH
-     PYTHONPATH=${PYTHONPATH%:}
-
-     python3 $(testDir)/pkg_tracking.py
+     export PYTHONPATH=${PYTHONPATH%:}
+     python3 $(testDir)/pkg_tracking.py --seq 20
    
-     unset PYTHONPATH
+     displayThis "Test python2 package recording (seq 21)"
+     python2 $(testDir)/pkg_tracking.py --seq 21
 
-     displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 21"
+     PYTHONPATH=$OLD_PY_PATH
+
+     displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 22"
      mv XALT/$VERSION/libexec/xalt_run_submission XALT/$VERSION/libexec/xalt_run_submission.orig
 
      XALT_TRACING=yes ./hello\ .mpi --seq 21
@@ -195,7 +198,7 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 16 --runs 19 --pkgs 3
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 16 --runs 21 --pkgs 13
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

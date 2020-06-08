@@ -118,7 +118,7 @@ def main():
   testT  = {
     'xalt_link'     : [ int(args.links),   eq ],
     'xalt_run'      : [ int(args.runs),    eq ],
-    'xalt_pkg'      : [ int(args.pkgs),    eq ],
+    'xalt_pkg'      : [ int(args.pkgs),    ge ],
     'xalt_function' : [ int(args.nfuncs),  ge ],
     'xalt_object'   : [ int(args.objects), ge ],
     'xalt_env_name' : [ int(args.numEnv),  ge ],

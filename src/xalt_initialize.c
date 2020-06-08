@@ -682,6 +682,7 @@ void myinit(int argc, char **argv)
 	  have_uuid = 1;
 	}
       setenv("XALT_RUN_UUID",uuid_str,1);
+      DEBUG1(stderr,"    -> Setting XALT_RUN_UUID: %s\n",uuid_str);
     }
 
   time_t my_time = start_time;
