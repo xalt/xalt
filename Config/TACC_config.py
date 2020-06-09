@@ -266,3 +266,22 @@ env_patterns = [
     [ 'KEEP', r'^_LMFILES_=.*'],
   ]
 
+#------------------------------------------------------------
+# Python pattern for python package tracking
+
+# Note that sys, os, re, and subprocess can not be tracked due to the way that python tracking works.
+
+python_pkg_patterns = [
+  { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^[^/]"               },  # SKIP all built-in packages
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^_"                  },  # SKIP names that start with a underscore
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r".*\."                },  # SKIP all names that are divided with periods: a.b.c
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*/.local/"          },  # KEEP all packages installed by users
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch/projects"  },  # KEEP all packages the system project directories
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch1/projects" },  # KEEP all packages the system project directories
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch2/projects" },  # KEEP all packages the system project directories
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch3/projects" },  # KEEP all packages the system project directories
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/work/projects"     },  # KEEP all packages the system project directories
+  { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^/home"              },  # SKIP all other packages in user locations
+  { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^/work"              },  # SKIP all other packages in user locations
+  { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^/scratch"           },  # SKIP all other packages in user locations
+]
