@@ -48,9 +48,9 @@ env_patterns = [
 # XALT filter python package filter.
 
 python_pkg_patterns = [
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^os$"          },  # SKIP os
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^re$"          },  # SKIP re
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^sys$"         },  # SKIP sys
-  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^subrprocess$" },  # SKIP subprocess
-  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*"            },  # keep all other patterns
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^os$"         },  # SKIP os
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^re$"         },  # SKIP re
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^sys$"        },  # SKIP sys
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^subprocess$" },  # SKIP subprocess
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*"           },  # keep all other patterns
 ]  

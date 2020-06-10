@@ -39,7 +39,7 @@ test_descript = {
 
      export COMPILER_PATH=$XALT_BIN
      export XALT_EXECUTABLE_TRACKING=yes
-     export XALT_TRANSMISSION_STYLE=syslog
+     export XALT_TRANSMISSION_STYLE=logger
      export LD_PRELOAD="$outputDir"'/XALT/xalt/xalt/$LIB/libxalt_init.so'
      
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"

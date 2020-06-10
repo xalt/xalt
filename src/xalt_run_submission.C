@@ -16,7 +16,6 @@
 #include "transmit.h"
 #include "buildRmapT.h"
 #include "run_submission.h"
-#include "xalt_utils.h"
 #include "build_uuid.h"
 
 int main(int argc, char* argv[], char* env[])
