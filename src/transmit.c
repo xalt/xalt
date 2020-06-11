@@ -163,7 +163,6 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         {
           syslog(LOG_INFO, "V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
                    kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
-          free(msg);
           istrt = iend;
           iend  = istrt + blkSz;
           if (iend > sz)
