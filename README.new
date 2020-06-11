@@ -17,3 +17,4 @@ XALT 2.8+
              * Report XALT_CONFIG_PY and src/tmpl/xalt_config.py with xalt_configuration_report.x
                Add comment to say that the patterns come from both files.
     (2.8.6)  * Fix truncation bug w.r.t. pkg_path.
+    (2.8.7)  * Include python 2 and python 3 package tracking support.

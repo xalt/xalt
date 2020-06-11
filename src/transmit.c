@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <syslog.h>
 #include <unistd.h>
 #include <zlib.h>
 #include <dlfcn.h>
@@ -58,6 +59,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
   if ((strcasecmp(transmission,"file")      != 0 ) &&
       (strcasecmp(transmission,"syslog")    != 0 ) && 
+      (strcasecmp(transmission,"logger")    != 0 ) && 
       (strcasecmp(transmission,"none")      != 0 ) && 
       (strcasecmp(transmission,"syslogv1")  != 0 ) &&
       (strcasecmp(transmission,"curl")      != 0 ))
@@ -114,7 +116,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       free(cmdline);
       
     }
-  else if (strcasecmp(transmission, "syslog") == 0)
+  else if (strcasecmp(transmission, "logger") == 0)
     {
       int   sz;
       int   zslen;
@@ -139,6 +141,39 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
             iend = sz;
         }
       free(b64);
+    }
+  else if (strcasecmp(transmission, "syslog") == 0)
+    {
+      char* msg;
+      char* logNm;
+      int   sz;
+      int   zslen;
+      char* zs      = compress_string(jsonStr, &zslen);
+      char* b64     = base64_encode(zs, zslen, &sz);
+      
+      int   blkSz   = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
+      int   nBlks   = (sz -  1)/blkSz + 1;
+      int   istrt   = 0;
+      int   iend    = blkSz;
+      int   i;
+
+      asprintf(&logNm, "XALT_LOGGING_%s",syshost);
+      openlog(logNm, 0, LOG_USER);
+
+      for (i = 0; i < nBlks; i++)
+        {
+          asprintf(&msg,"V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
+                   kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
+          syslog(LOG_INFO, msg);
+          free(msg);
+          istrt = iend;
+          iend  = istrt + blkSz;
+          if (iend > sz)
+            iend = sz;
+        }
+      closelog()
+      free(b64);
+      free(logNm);
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
