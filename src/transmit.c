@@ -171,7 +171,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           if (iend > sz)
             iend = sz;
         }
-      closelog()
+      closelog();
       free(b64);
       free(logNm);
     }
