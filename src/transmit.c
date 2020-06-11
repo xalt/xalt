@@ -144,7 +144,6 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "syslog") == 0)
     {
-      char* msg;
       char* logNm;
       int   sz;
       int   zslen;
@@ -162,9 +161,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          asprintf(&msg,"V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
+          syslog(LOG_INFO, "V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
                    kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
-          syslog(LOG_INFO, msg);
           free(msg);
           istrt = iend;
           iend  = istrt + blkSz;
