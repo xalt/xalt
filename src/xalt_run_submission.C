@@ -169,7 +169,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Send uuid back to xalt_initialize if asked for.
   if (options.returnUUID())
-    fprintf(stderr,"%s\n", uuid_str);
+    fprintf(stdout,"%s\n", uuid_str);
 
   DEBUG0(stderr,"  }\n\n");
   if (xalt_tracing)
