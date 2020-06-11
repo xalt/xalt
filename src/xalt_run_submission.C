@@ -22,7 +22,7 @@
 int main(int argc, char* argv[], char* env[])
 {
   char *      p_dbg        = getenv("XALT_TRACING");
-  int         xalt_tracing = (p_dbg && ( strcmp(p_dbg,"yes") == 0 || strcmp(p_dbg,"run") == 0));
+  int         xalt_tracing = (p_dbg && ( strncmp(p_dbg,"yes",3) == 0 || strncmp(p_dbg,"run",3) == 0));
 
   Options     options(argc, argv);
   double      t0, t1;
@@ -30,8 +30,6 @@ int main(int argc, char* argv[], char* env[])
   DTable      measureT;
   bool        end_record = (options.endTime() > 0.0);
   char        uuid_str[37];
-  
-  
   
   const char* suffix = end_record ? ".zzz" : ".aaa";
   DEBUG1(stderr,"\n  xalt_run_submission(%s) {\n",suffix);
@@ -172,7 +170,7 @@ int main(int argc, char* argv[], char* env[])
   //*********************************************************************
   // Send uuid back to xalt_initialize if asked for.
   if (options.returnUUID())
-    fprintf(stdout,"%s\n", uuid_str);
+    fprintf(stderr,"%s\n", uuid_str);
 
   DEBUG0(stderr,"  }\n\n");
   if (xalt_tracing)

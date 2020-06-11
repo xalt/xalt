@@ -861,6 +861,8 @@ void myfini()
   double run_time;
   int    xalt_err = xalt_tracing || xalt_run_tracing;
 
+  char * p_dbg;
+
   if (xalt_err)
     {
       fflush(stderr);
@@ -1126,7 +1128,7 @@ void myfini()
       capture(cmdline, buffer, BUFSZ);
       strncpy(&uuid_str[0], buffer, 36);
       uuid_str[36] = '\0';
-      DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
+      DEBUG1(my_stderr,"    -> uuid: %s\n", uuid_str);
       DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
     }
 
@@ -1229,17 +1231,32 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
   return c;
 }
 
+//static void capture(const char* cmdline, char* buffer, int bufSz)
+//{
+//  FILE* fp;
+//
+//  /* swallow stderr */
+//  int fd1, fd2;
+//  fflush(stderr);
+//  fd1 = dup(STDERR_FILENO);
+//  fd2 = open("/dev/null", O_WRONLY);
+//  dup2(fd2, STDERR_FILENO);
+//  close(fd2);
+//
+//  fp = popen(cmdline,"r");
+//  fgets(buffer, bufSz, fp);
+//
+//  pclose(fp);
+//
+//  /* restore stderr */
+//  fflush(stderr);
+//  dup2(fd1, STDERR_FILENO);
+//  close(fd1);
+//}
+
 static void capture(const char* cmdline, char* buffer, int bufSz)
 {
   FILE* fp;
-
-  /* swallow stderr */
-  int fd1, fd2;
-  fflush(stderr);
-  fd1 = dup(STDERR_FILENO);
-  fd2 = open("/dev/null", O_WRONLY);
-  dup2(fd2, STDERR_FILENO);
-  close(fd2);
 
   fp = popen(cmdline,"r");
   fgets(buffer, bufSz, fp);
@@ -1248,8 +1265,6 @@ static void capture(const char* cmdline, char* buffer, int bufSz)
 
   /* restore stderr */
   fflush(stderr);
-  dup2(fd1, STDERR_FILENO);
-  close(fd1);
 }
 
 
