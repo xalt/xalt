@@ -4210,7 +4210,7 @@ fi
 transmission=`echo $TRANSMISSION | tr A-Z a-z`
 
 found=no
-for i in file file_separate_dirs syslog none; do
+for i in file file_separate_dirs syslog logger none; do
    if test $transmission = $i ; then
       found=yes
       break
