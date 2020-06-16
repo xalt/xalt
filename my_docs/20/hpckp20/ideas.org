@@ -1,0 +1,28 @@
+Here are some notes for my talk at HPCKP'20
+
+XALT:
+
+
+* What is XALT?
+** Tracks program execution on your cluster
+** It can track what program run on your system 
+** And what libraries
+** XALT is a census taker, NOT a performance tool
+** Extremely cheap execution penalty (~ 0.001 secs)
+** Generate *.json records
+** XALT provides a MYSQL database to hold information.
+* Brief History 
+** XALT was a NSF funded project.
+** Work has continued because TACC (and others) have found it useful
+** Original version only tracked mpi program execution
+* How does it work: Two Parts
+** LD wrapper
+** ELF trick to record 
+* LD wrapper
+** Linux compiler call ld to build the executable in an ELF format
+** XALT provides an LD wrapper script
+*** It injects a watermark that knows the build user, the modules, the machine, ...
+*** Records the shared libraries that built the executable
+*** Generates a *.json record that can be stored in a database
+* ELF Trick
+** 
