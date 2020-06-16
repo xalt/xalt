@@ -6,7 +6,8 @@ XALT:
 * What is XALT?
 ** Tracks program execution on your cluster
 ** It can track what program run on your system 
-** And what libraries
+** And what libraries are used
+** Optionally can track "imports" in Python, R, MATLAB (PKGS)
 ** XALT is a census taker, NOT a performance tool
 ** Extremely cheap execution penalty (~ 0.001 secs)
 ** Generate *.json records
@@ -25,4 +26,4 @@ XALT:
 *** Records the shared libraries that built the executable
 *** Generates a *.json record that can be stored in a database
 * ELF Trick
-** 
+** Show how 
