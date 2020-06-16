@@ -70,7 +70,12 @@ then::
     This is run after main()
 
 This is all **without** making a single change to the ./try
-executable file.
+executable file.  This can get more complicated.  Example code is
+included in the source.  See ./libelf_trick and type **make test** to
+see this in action.
+
+
+
 
 The actual shared library that XALT builds generates a \*.json file
 that contains the run-time, the number of task and other information

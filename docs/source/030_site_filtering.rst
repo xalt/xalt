@@ -21,15 +21,15 @@ For testing purposes, you might consider using the
 Config/rtm_config.py as your model for your config.py file and then
 switch to converting the TACC_config.py file for production.
 
-XALT supports scalar (non-MPI) program sampling based on execution
+XALT supports scalar (non-MPI) and MPI program sampling based on execution
 time.  If you have setup XALT to track scalar or PKGS programs then
 you can also control what percentage will be sampled.  Note that the
 environment variable:
 
-    XALT_SCALAR_SAMPLING=yes
+    XALT_SAMPLING=yes
 
 must be set to "yes" in order for sampling to occur.  If this variable
-is unset or is not set to "yes" then all scalar program execution are
+is unset or is not set to "yes" then all program execution are
 tracked.  This designed this way to make testing easier.
 
 XALT also provides tracking of certain scalar programs (assuming your
@@ -50,6 +50,7 @@ compiled and linked into XALT for speed.
 
 In other words, the config.py is **only used to build!**  It is
 ignored by running programs on your system.
+
 
 Tracking execution based on hostname
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -183,18 +184,54 @@ scalar executables (including PKGS programs like R, MATLAB and
 Python).  The details on how to control the sampling.  TACC uses the
 follow scheme::
 
-    0    -  900 seconds (1 in 10000 chance of being recorded)
-    900  - 1800 seconds (1 in 100   chance of being recorded)
-    1800 -  inf seconds (1 in 1     chance of being recorded)
+    0    - 1800 seconds (1 in 10000 chance of being recorded)
+    1800 - 7200 seconds (1 in 100   chance of being recorded)
+    7200 -  inf seconds (1 in 1     chance of being recorded)
 
 
 This is expressed in your SITE_config.py file as::
 
     interval_array = [
         [    0.0,             0.0001 ],
-        [  900.0,             0.01   ],
-        [ 1800.0,             1.0    ],
+        [ 1800.0,             0.01   ],
+        [ 7200.0,             1.0    ],
         [ sys.float_info.max, 1.0    ]
+    ]   
+
+Sampling MPI executables
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+MPI program execution presents an issue when it come to
+tracking. Scalar (non-MPI) executions only produce an end record.
+This means that if a scalar program abort before termination and is
+not caught by the XALT signal handler, there is no XALT record
+generated.
+
+XALT is more interested in long running program, especially MPI
+ones. Many long running MPI programs do not terminate, they use the
+time-out feature of the local scheduler such as SLURM to end the job
+after the maximum time in the job. XALT wants to capture these long
+running MPI executions.  However, it is quite possible to overload the
+machine keeping the XALT database with frequent short time, lower task
+count MPI executions. So XALT allows MPI executions to be sampled. But
+XALT has another setting, called MPI_ALWAYS_RECORD.  TACC sets this to 128.
+This means that MPI executions are sampled if they have 127 tasks
+or fewer are sampled.  
+
+Sampling also means that there is no start record. For MPI executions
+that are 128 and bigger do produce a start record but there is no
+sampling.  That is all MPI executions which have 128 tasks or greater
+are always recorded.  This also means that MPI execution which have
+127 or fewer tasks than do not terminate normally will have no chance
+of a record.
+
+TACC uses the following sampling table::
+
+    mpi_interval_array = [
+        [    0.0,              0.0001 ],
+        [  900.0,              0.01   ],
+        [ 1800.0,              1.0    ],
+        [ sys.float_info.max,  1.0    ]
     ]   
 
 Controlling the Environment Variables collected
@@ -203,7 +240,5 @@ Controlling the Environment Variables collected
 You also get to control the user's environment that gets stored.  This
 information can get quite large so it is important that you limit the
 size of the environment that you record.  It is recommended that you
-store no more that 10 enviroment variables per job on average.  So
+store no more that 10 environment variables per job on average.  So
 only pick important variables.
-
-

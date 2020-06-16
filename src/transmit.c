@@ -46,9 +46,10 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
               const char* syshost, char* resultDir, const char* resultFn)
 {
   char * cmdline = NULL;
+  char * logNm   = NULL;
   char * p_dbg        = getenv("XALT_TRACING");
-  int    xalt_tracing = (p_dbg && (strcmp(p_dbg,"yes")  == 0 ||
-				   strcmp(p_dbg,"run")  == 0 ));
+  int    xalt_tracing = (p_dbg && (strncmp(p_dbg,"yes",3)  == 0 ||
+				   strncmp(p_dbg,"run",3)  == 0 ));
 
   if (strcasecmp(transmission,"directdb") == 0)
     {
@@ -144,7 +145,6 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "syslog") == 0)
     {
-      char* logNm;
       int   sz;
       int   zslen;
       char* zs      = compress_string(jsonStr, &zslen);
@@ -161,7 +161,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          syslog(LOG_INFO, "V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
+          syslog(LOG_INFO, "V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s",
                    kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
           istrt = iend;
           iend  = istrt + blkSz;
@@ -187,11 +187,11 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       if (strcasecmp(log_url,"") == 0)  {
         DEBUG0(stderr,"  Logging URL should be provided!\n");
-        // Log error to syslog
-        asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_ERROR_%s Logging URL should be provided\n",
-                 XALT_SYSTEM_PATH, syshost);
-        system(cmdline);
-        free(cmdline);
+        asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
+        openlog(logNm, LOG_PID, LOG_USER);
+        syslog(LOG_INFO, "Logging URL should be provided");
+        closelog();
+        free(logNm);
         return;
       }
       
@@ -215,10 +215,11 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         if(res != CURLE_OK) {
           // Log error to syslog
 	  DEBUG1(stderr,"  curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
-          asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_ERROR_%s curl_easy_perform() failed: %s\n",
-                   XALT_SYSTEM_PATH, syshost, curl_easy_strerror(res));
-          system(cmdline);
-          free(cmdline);
+          asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
+          openlog(logNm, LOG_PID, LOG_USER);
+          syslog(LOG_INFO, "curl_easy_perform() failed: %s",curl_easy_strerror(res));
+          closelog();
+          free(logNm);
         }
         else {
           strtok(chunk.memory, " ");
@@ -229,10 +230,11 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           }
           if ((strcmp(status, "200") != 0) && (strcmp(status, "201") != 0)) {
 	    DEBUG2(stderr,"   HTTP status code %s received from %s\n",status, log_url);
-            asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_ERROR_%s HTTP status code %s received from %s\n",
-                     XALT_SYSTEM_PATH, syshost, status, log_url);
-            system(cmdline);
-            free(cmdline);
+            asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
+            openlog(logNm, LOG_PID, LOG_USER);
+            syslog(LOG_INFO, "HTTP status code %s received from %s",status, log_url);
+            closelog();
+            free(logNm);
           }
         }
 

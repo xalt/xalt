@@ -1,0 +1,59 @@
+Here are some notes on what I want to talk about with Brent and Team
+from UTSA:
+
+* Hi, I'm Robert McLay.  I am the manager of the HPC Software Tools Group
+** We have several tools at TACC
+*** Lmod: An Environment Module Tools
+*** XALT: Software Census Taker on Clusters
+*** The startup scripts in /etc/profile.d
+*** The user startup scripts defaults: 
+     .bashrc, .profile, .cshrc, .login
+*** Sanitycheck: A series of automated test:
+      ssh keys setup correctly
+      not blocked from queues
+      not over quota
+*** HPC Tips: One tip per login
+     Tip 44   (See "module help tacc_tips" for features or how to disable)
+
+        You can create a multiple directories at one time with "mkdir -p a/{d1,d2}/{src,inc}".
+        This is the same as "mkdir -p a/d1/src a/d1/inc a/d2/src a/d2/inc".
+*** Shell Startup Debug
+*** TACC Stats
+
+*** Reframe: CSCS testing tool.
+
+* XALT:
+** Brief history
+** Show libelf trick
+** What questions to you have?
+** Documentation: xalt.readthedocs.io
+** What will you do with the data?
+** What we do with the data.
+*** Who is running what particular program
+*** GPU usage?
+*** Top 20 executable by Core Hours, Num of Users, Num of Times
+** Setup:
+*** ./configure; make; make install
+*** We add xalt to the TACC module that all user load by default.
+** syshost name
+** XALT data transmission
+*** File
+*** syslog
+*** curl
+** The site-config.py file
+*** Each site needs to configure their site configuration *.py file
+*** Regex patterns to match what hostnames you wish to track: 
+     We track execution only on compute nodes
+*** path patterns
+    PKGS: R, MATLAB, python: we can track "imports"
+*** Sample programs like cp, awk, perl
+*** Ignore everything else what is in /usr, /bin, etc
+*** Ignore compiler, mpiexec etc
+*** Configure programs from autoconf, Cmake
+** Sampling
+*** Scalar Samping
+*** MPI sampling versus MPI_ALWAYS_RECORD issue
+** Env. Patterns
+*** Skip almost all save a few
+** Python patterns
+

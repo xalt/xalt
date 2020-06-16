@@ -211,12 +211,13 @@ want to track MPI programs you can do::
 Track GPU usage
 ^^^^^^^^^^^^^^^
 
-Optionally, XALT can track NVIDIA GPU usage.
+Optionally, XALT can track NVIDIA GPU usage. First download from
+NVIDIA the datacenter GPU management software (DCGM) package and
+install it on ALL nodes on your cluster that might have NVIDIA GPU's
 
 You can tell XALT to track GPU usage by configuring it with::
 
    --with-trackGPU=yes
-
 
 Note
 ~~~~
