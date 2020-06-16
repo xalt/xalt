@@ -19,9 +19,10 @@ XALT:
 ** XALT was a NSF funded project.
 ** Work has continued because TACC (and others) have found it useful
 ** Original version only tracked mpi program execution
-* How does it work: Two Parts
+* How does it work: Three Parts
 ** LD wrapper
 ** ELF trick to record 
+** Import package: sitecustomize.py
 * LD wrapper
 ** Linux compiler call ld to build the executable in an ELF format
 ** XALT provides an LD wrapper script
@@ -33,6 +34,12 @@ XALT:
 ** Show what happens with ls
 ** Show source fix to capture stderr
 ** Show what happens with ls version 2
+* Python 2/3 sitecustomize.py
+** This if found is run by both python 2 and 3.
+** All pythons use sys.meta_path to locate import
+** Can register an object with sys.meta_path to capture python imports 
+   With out changing a single line of user python code.
+** All you need to is to put the path in PYTHONPATH.
 * What one might do with the data?
 ** Top 20 executables (MPI/not MPI), SU, number, users
 ** GPU usage
