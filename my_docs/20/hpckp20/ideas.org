@@ -126,7 +126,7 @@ XALT:
 * What one does with the data?
 * Where is XALT used?
   Show google analytics results
-* Conclusion
+* Conclusions
 
 
 
