@@ -257,6 +257,7 @@ ld is /bin/ld
   \begin{itemize}
     \item Uses FLEX to compile in patterns
     \item Use regex expression to control what to keep and ignore.
+    \item These Flex $\Rightarrow$ C routine provide fast regex parsing.
   \end{itemize}
 \end{frame}
 
@@ -336,6 +337,7 @@ env\_patterns = [
 
 % page 27
 \begin{frame}{Who is using MPI-3: MPI\_I*}
+    What codes link in MPI-3 routines.  (Not necessarily Run)
     \begin{tabular}{|l|r|r|}
         \hline
         Function Name            & N Users    & N Progs \\\hline\hline
@@ -353,7 +355,7 @@ env\_patterns = [
     \item Signal handler
     \item Optionally Track GPU Usage
     \item Track Singularity Container Usage
-    \item Removed two system calls for improved speed
+    \item Removed three system calls for improved speed
   \end{itemize}
 \end{frame}
 
@@ -380,7 +382,7 @@ env\_patterns = [
 
 % page 31
 \begin{frame}[fragile]
-    \frametitle{Python: sitecustomize.py}
+    \frametitle{Filtering python packages}
  {\small
     \begin{semiverbatim}
 \{ 'k\_s':'SKIP', 'kind':'path', 'patt': r"^[^/]" \},
@@ -420,7 +422,7 @@ Build\_User           mclay
 Build\_compiler       icc
 Build\_date           Fri Jun 09 13:52:19 2019
 Build\_host           c455-011.stampede2.tacc.utexas.edu
-XALT\_Version         2.8.5
+XALT\_Version         2.7
     \end{semiverbatim}
 }
 \end{frame}
@@ -469,6 +471,7 @@ XALT\_Version         2.8.5
       \begin{itemize}
         \item Source: github.com/xalt/xalt.git, xalt.sf.net
         \item Documentation: XALT 2 $\Rightarrow$ xalt.readthedocs.org
+        \item Join mailing list: https://sourceforge.net/projects/xalt/lists/xalt-users
       \end{itemize}
   \end{itemize}
 \end{frame}
