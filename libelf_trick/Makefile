@@ -26,7 +26,7 @@ clobber: clean
 	$(RM) $(TARGETS)
 
 test:	all
-	echo; .try; echo
+	echo; ./try; echo
 	LD_PRELOAD=./libxalt.so  ./try  ; echo
 	LD_PRELOAD=./libxalt.so  ls     ; echo
 	LD_PRELOAD=./libxalt2.so ls     ; echo
