@@ -215,6 +215,7 @@ ld is /bin/ld
     \item Move Compiler's ld to ld.x
     \item Small change in XALT's ld to find ld.x
     \item Must do this for every new compiler install.
+    \item Or put xalt's bin path before compiler path in module
     \item Or treat every executable like \texttt{ls} or \texttt{ABAQUS}
   \end{itemize}
 \end{frame}
@@ -267,7 +268,7 @@ ld is /bin/ld
  {\small
     \begin{semiverbatim}
 hostname\_patterns = [
-   ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\..*']
+   ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\textbackslash{}..*']
   ['KEEP', '^nid[0-9][0-9][0-9][0-9][0-9].*']
 ]
 path\_patterns = [
@@ -362,7 +363,7 @@ env\_patterns = [
 % page 29
 \begin{frame}{Tracking R packages}
   \begin{itemize}
-    \item XALT 2 can now track R package usage
+    \item XALT can now track R package usage
     \item James McComb \& Michael Scott from IU developed the R part
     \item They do this by intercepting the ``imports''
   \end{itemize}
@@ -385,10 +386,10 @@ env\_patterns = [
     \frametitle{Filtering python packages}
  {\small
     \begin{semiverbatim}
-\{ 'k\_s':'SKIP', 'kind':'path', 'patt': r"^[^/]" \},
-\{ 'k\_s':'SKIP', 'kind':'name', 'patt': r"^_"    \},
-\{ 'k\_s':'SKIP', 'kind':'name', 'patt': r".*\textbackslash." \},
-\{ 'k\_s':'KEEP', 'kind':'path', 'patt': r".*/.local/" \},
+\{ 'k\_s':'SKIP','kind':'path','patt': r"^[^/]" \},
+\{ 'k\_s':'SKIP','kind':'name','patt': r"^_"    \},
+\{ 'k\_s':'SKIP','kind':'name','patt': r".*\textbackslash." \},
+\{ 'k\_s':'KEEP','kind':'path','patt': r".*/.local/" \},
     \end{semiverbatim}
 }
 \end{frame}
@@ -441,7 +442,7 @@ XALT\_Version         2.7
 \begin{frame}{New Feature: Track Singularity Container Usage}
   \begin{itemize}
     \item Sites can configure their Singularity script to include XALT
-    \item It works well with syslog or file transfer of data
+    \item It works well with syslog, file  or curl transfer of data
     \item Thanks to Scott McMillan from NVIDIA for the contribution.
   \end{itemize}
 \end{frame}
@@ -464,6 +465,15 @@ myfini(0/1,LD_PRELOAD,/path/to/hello)\{
     -> XALT_SAMPLING = "no" All programs tracked!
   Recording State at end of scalar user program:
     XALT_EXECUTABLE_TRACKING=no /path/to/xalt_run_submission ...
+
+  xalt_run_submission(.zzz) \{
+    building UUID: ...
+    Extracted recordT from executable
+    Built userT, userDT, scheduler: SLURM
+    Using XALT_TRANSMISSION_STYLE: file
+    cmdlineA: ["./hello"]
+    Built json string
+  \}
     -> leaving myfini
 \}
     \end{semiverbatim}
