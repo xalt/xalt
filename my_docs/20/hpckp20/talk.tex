@@ -448,17 +448,41 @@ XALT\_Version         2.7
 
 % page 36
 \begin{frame}[fragile]
+    \frametitle{Debugging XALT}
+ {\tiny
+    \begin{semiverbatim}
+\$ XALT\_TRACING=yes XALT\_SAMPLING=no ./hello
+
+myinit(0/1,LD_PRELOAD,/path/to/hello)\{
+    -> Setting up signals
+    -> Leaving myinit
+\}
+
+Hello World!
+
+myfini(0/1,LD_PRELOAD,/path/to/hello)\{
+    -> XALT_SAMPLING = "no" All programs tracked!
+  Recording State at end of scalar user program:
+    XALT_EXECUTABLE_TRACKING=no /path/to/xalt_run_submission ...
+    -> leaving myfini
+\}
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 37
+\begin{frame}[fragile]
     \frametitle{XALT Doc usage by Country}
     \center{\includegraphics[width=.9\textwidth]{XALT_usage_by_country}}
 \end{frame}
 
-% page 37
+% page 38
 \begin{frame}[fragile]
     \frametitle{XALT Doc usage by City}
     \center{\includegraphics[width=.9\textwidth]{XALT_usage_by_city}}
 \end{frame}
 
-% page 38
+% page 39
 \begin{frame}{Conclusion}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
