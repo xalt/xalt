@@ -98,7 +98,6 @@ find_real_command()
     # If this is a bash script (and not a bash script in sh mode) then
     # use type to list all possible "ld" or "ibrun".  
 
-    check=0
     for exe in $(type -p -a $my_name); do
       # Now check to see if this choice has the magic string in the first 5 lines.
       # Only if it doesn't contain the magic string then $exe is MY_CMD.
@@ -113,7 +112,6 @@ find_real_command()
     # old fashion way. Otherwise the logic is the same as bash version.
     OLD_IFS=$IFS
     IFS=:
-    check=0
     for dir in $PATH; do
       exe="$dir/$my_name"
       if [ -x $exe ]; then
