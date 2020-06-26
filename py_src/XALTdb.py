@@ -36,6 +36,10 @@ try:
   import configparser
 except:
   import ConfigParser as configparser
+try:
+  input = raw_input
+except:
+  pass
 
 warnings.filterwarnings("ignore", "Unknown table.*")
 
@@ -156,10 +160,10 @@ class XALTdb(object):
   def __readFromUser(self):
     """ Ask user for database access info. (private) """
 
-    self.__host   = raw_input("Database host:")
-    self.__user   = raw_input("Database user:")
+    self.__host   = input("Database host:")
+    self.__user   = input("Database user:")
     self.__passwd = getpass.getpass("Database pass:")
-    self.__db     = raw_input("Database name:")
+    self.__db     = input("Database name:")
 
   def __readConfig(self):
     """ Read database access info from config file. (private)"""

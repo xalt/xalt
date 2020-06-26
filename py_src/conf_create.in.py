@@ -43,6 +43,11 @@ try:
 except:
   import ConfigParser as configparser
 
+try:
+  input = raw_input
+except:
+  pass
+
 dirNm, execName = os.path.split(sys.argv[0])
 sys.path.insert(1,os.path.abspath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
@@ -71,10 +76,10 @@ class CreateConf(object):
     self.__db     = args.dbname 
     
   def __readFromUser(self):
-    if (not self.__host):   self.__host   = raw_input("Database host: ")
-    if (not self.__user):   self.__user   = raw_input("Database user: ")
+    if (not self.__host):   self.__host   = input("Database host: ")
+    if (not self.__user):   self.__user   = input("Database user: ")
     if (not self.__passwd): self.__passwd = getpass.getpass("Database pass: ")
-    if (not self.__db):     self.__db     = raw_input("Database name: ")
+    if (not self.__db):     self.__db     = input("Database name: ")
     
   def __writeConfig(self):
     config=configparser.ConfigParser()
