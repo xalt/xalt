@@ -763,7 +763,7 @@ void myinit(int argc, char **argv)
         }
       run_submission_exists = 1;
 
-      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, always_record);
+      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, (int) always_record);
 
       if (have_uuid)
 	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
@@ -804,7 +804,7 @@ void myinit(int argc, char **argv)
   else
     {
       DEBUG4(stderr,"    -> MPI_SIZE: %ld < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
-             my_size, always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+             my_size, (int) always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
   /**********************************************************
