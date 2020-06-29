@@ -1131,7 +1131,9 @@ void myfini()
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       // We told xalt_run_submission to return the uuid.  We don't need it but we want to make sure that xalt_run_submission completes before ending the program.
+      setenv("RDMAV_FORK_SAFE","1",1);
       capture(cmdline, buffer, BUFSZ);
+      unsetenv("RDMAV_FORK_SAFE");
       strncpy(&uuid_str[0], buffer, 36);
       uuid_str[36] = '\0';
       DEBUG1(my_stderr,"    -> uuid: %s\n", uuid_str);
