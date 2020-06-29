@@ -117,6 +117,11 @@ int main(int argc, char* argv[])
   if (log_url == NULL)
     log_url = XALT_LOGGING_URL;
 
+  long        always_record     = mpi_always_record;
+  const char *always_record_str = getenv("XALT_MPI_ALWAYS_RECORD");
+  if (always_record_str)
+    always_record = strtol(always_record_str, (char **) NULL, 10);
+
   const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
   if (computeSHA1 == NULL)
     computeSHA1 = XALT_COMPUTE_SHA1;
@@ -196,7 +201,7 @@ int main(int argc, char* argv[])
       json.add("XALT_GPU_TRACKING",             xalt_gpu_tracking);
       json.add("XALT_SCALAR_TRACKING",          xalt_scalar_tracking);
       json.add("XALT_SAMPLING",                 xalt_sampling);
-      json.add("MPI_ALWAYS_RECORD",             mpi_always_record);
+      json.add("MPI_ALWAYS_RECORD",             (int) always_record);
       json.add("XALT_SYSLOG_MSG_SZ",            SYSLOG_MSG_SZ);
       json.add("XALT_INSTALL_OS",               XALT_INSTALL_OS);
       json.add("XALT_CURRENT_OS",               current_os_descript);
@@ -248,7 +253,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_GPU_TRACKING:               " << xalt_gpu_tracking              << "\n";
   std::cout << "XALT_SCALAR_TRACKING:            " << xalt_scalar_tracking           << "\n";
   std::cout << "XALT_SAMPLING:                   " << xalt_sampling                  << "\n";
-  std::cout << "MPI_ALWAYS_RECORD:               " << mpi_always_record              << "\n";
+  std::cout << "MPI_ALWAYS_RECORD:               " << always_record                  << "\n";
   std::cout << "XALT_SYSTEM_PATH:                " << XALT_SYSTEM_PATH               << "\n";
   std::cout << "XALT_SYSHOST_CONFIG:             " << SYSHOST_CONFIG                 << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:              " << SYSLOG_MSG_SZ                  << "\n";
