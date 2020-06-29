@@ -165,6 +165,7 @@ static int          run_submission_exists = -1;             /* 0 => does not exi
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
 static int          have_uuid             = 0;
+static long         always_record         = 0L;
 static double       probability           = 1.0;
 static double       testing_runtime       = -1.0;
 static pid_t        ppid	          = 0;
@@ -737,9 +738,14 @@ void myinit(int argc, char **argv)
   if (v)
     testing_runtime = strtod(v,NULL);
 
+  always_record = mpi_always_record;
+  v = getenv("XALT_MPI_ALWAYS_RECORD");
+  if (v)
+    always_record = strtol(v,(char **) NULL, 10);
+
   // Create a start record for any MPI executions with an acceptable number of tasks.
   // or a PKG type
-  if (my_size >= mpi_always_record )
+  if (my_size >= always_record )
     {
       char uuid_option_str[100];
 
@@ -757,7 +763,7 @@ void myinit(int argc, char **argv)
         }
       run_submission_exists = 1;
 
-      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, mpi_always_record);
+      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, always_record);
 
       if (have_uuid)
 	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
@@ -798,7 +804,7 @@ void myinit(int argc, char **argv)
   else
     {
       DEBUG4(stderr,"    -> MPI_SIZE: %ld < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
-             my_size, mpi_always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+             my_size, always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
   /**********************************************************
@@ -1051,8 +1057,8 @@ void myfini()
     }
 #endif
 
-  // Sample all scalar executions and all MPI executions less than **mpi_always_record**
-  if (my_size < mpi_always_record)
+  // Sample all scalar executions and all MPI executions less than **always_record**
+  if (my_size < always_record)
     {
       if (xalt_sampling)
 	{
