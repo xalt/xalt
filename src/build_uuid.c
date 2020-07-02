@@ -4,7 +4,6 @@
 #include <dlfcn.h>
 #include "xalt_obfuscate.h"
 #include "build_uuid.h"
-#include "xalt_fgets_alloc.h"
 #include "xalt_config.h"
 #include "xalt_dir.h"
 #include <uuid/uuid.h>
