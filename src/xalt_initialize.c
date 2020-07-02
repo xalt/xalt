@@ -762,7 +762,7 @@ void myinit(int argc, char **argv)
         }
       run_submission_exists = 1;
 
-      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, always_record);
+      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, (int) always_record);
 
       if (have_uuid)
 	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
@@ -803,7 +803,7 @@ void myinit(int argc, char **argv)
   else
     {
       DEBUG4(stderr,"    -> MPI_SIZE: %ld < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
-             my_size, always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+             my_size, (int) always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
   /**********************************************************
@@ -1130,7 +1130,9 @@ void myfini()
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       // We told xalt_run_submission to return the uuid.  We don't need it but we want to make sure that xalt_run_submission completes before ending the program.
+      setenv("RDMAV_FORK_SAFE","1",1);
       capture(cmdline, buffer, BUFSZ);
+      unsetenv("RDMAV_FORK_SAFE");
       strncpy(&uuid_str[0], buffer, 36);
       uuid_str[36] = '\0';
       DEBUG1(my_stderr,"    -> uuid: %s\n", uuid_str);
