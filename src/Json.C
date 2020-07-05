@@ -83,19 +83,22 @@ void Json::add(const char* name, Vstring& v)
       m_s += "\":[";
     }
 
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep   = blank0;
+
   for ( auto const & it : v)
     {
       m_s += "\"";
       m_s += xalt_quotestring(it.c_str());
-      m_s += "\",";
+      m_s += "\"";
+      m_s += sep;
+      sep = comma;
     }
 
   if (name)
     {
-      if (m_s.back() == ',')
-        m_s.replace(m_s.size()-1,2,"],");
-      else
-        m_s += "],";
+      m_s += "],";
     }
 }
 
