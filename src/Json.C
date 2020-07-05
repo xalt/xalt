@@ -85,7 +85,7 @@ void Json::add(const char* name, Vstring& v)
 
   const char* blank0 = "";
   const char* comma  = ",";
-  const char* sep   = blank0;
+  const char* sep    = blank0;
 
   for ( auto const & it : v)
     {
@@ -93,7 +93,7 @@ void Json::add(const char* name, Vstring& v)
       m_s += "\"";
       m_s += xalt_quotestring(it.c_str());
       m_s += "\"";
-      sep = comma;
+      sep  = comma;
     }
 
   if (name)
@@ -108,7 +108,7 @@ void Json::add(const char* name, Set& set)
 
   const char* blank0 = "";
   const char* comma  = ",";
-  const char* sep   = blank0;
+  const char* sep    = blank0;
 
   for ( auto const & it : set)
     {
@@ -116,7 +116,7 @@ void Json::add(const char* name, Set& set)
       m_s += "\"";
       m_s += xalt_quotestring(it.c_str());
       m_s += "\"";
-      sep = comma;
+      sep  = comma;
     }
       
   m_s += "],";
@@ -134,7 +134,7 @@ void Json::add(const char* name, Table& t)
     }
   const char* blank0 = "";
   const char* comma  = ",";
-  const char* sep   = blank0;
+  const char* sep    = blank0;
 
   for ( auto & it : t)
     {
@@ -152,7 +152,7 @@ void Json::add(const char* name, Table& t)
       m_s += "\":\"";
       m_s += xalt_quotestring(v.c_str());
       m_s += "\"";
-      sep = comma;
+      sep  = comma;
     }
   if (name)
     m_s += "},";
@@ -168,7 +168,7 @@ void Json::add(const char* name, CTable& t)
     }
   const char* blank0 = "";
   const char* comma  = ",";
-  const char* sep   = blank0;
+  const char* sep    = blank0;
 
   for ( auto const & it : t)
     {
@@ -208,7 +208,7 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
     }
   const char* blank0 = "";
   const char* comma  = ",";
-  const char* sep   = blank0;
+  const char* sep    = blank0;
 
   for ( auto const & it : ptA)
     {
@@ -234,7 +234,7 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
           m_s += "\"";
           m_s += xalt_quotestring(jt.c_str());
           m_s += "\"";
-          sep = comma;
+          sep  = comma;
         }
       m_s += "]},";
       if (strbuff)
@@ -258,31 +258,34 @@ void Json::add(const char* name, DTable& t)
       m_s += name;
       m_s += "\":{";
     }
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep    = blank0;
+
   for ( auto const & it : t)
     {
       char * strbuff = NULL;
       auto & k = it.first;
       auto   v = it.second;
       asprintf(&strbuff, "%f", v);
+      m_s += sep;
       m_s += "\"";
       m_s += k;
       m_s += "\":";
       m_s += strbuff;
-      m_s += ",";
+      sep  = comma;
       if (strbuff)
         free(strbuff);
     }
   if (name)
-    {
-      if (m_s.back() == ',')
-        m_s.replace(m_s.size()-1,2,"},");
-      else
-        m_s += "},";
-    }
+    m_s += "},";
 }
 
 void Json::add(const char* name, std::vector<Libpair>&  libA)
 {
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep    = blank0;
   m_s += "\"";
   m_s += name;
   m_s += "\":[";
@@ -293,36 +296,35 @@ void Json::add(const char* name, std::vector<Libpair>&  libA)
       if (idx != std::string::npos)
         lib.replace(idx,2,"\\\"");
 
+      m_s += sep;
       m_s += "[\"";
       m_s += xalt_quotestring(lib.c_str());
       m_s += "\",\"";
       m_s += it.sha1;
-      m_s += "\"],";
+      m_s += "\"]";
+      sep  = comma;
     }
-  if (m_s.back() == ',')
-    m_s.replace(m_s.size()-1,2,"],");
-  else
-    m_s += "],";
+  m_s += "],";
 }
 
 void Json::add(const char* name, int n, const char **A)
 {
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep    = blank0;
   m_s += "\"";
   m_s += name;
   m_s += "\":[";
   for (int i = 0; i < n; ++i)
     {
+      m_s += sep;
       m_s += "\"";
       m_s += xalt_quotestring(A[i]);
-      m_s += "\",";
+      m_s += "\"";
+      sep  = comma;
     }
   if (name)
-    {
-      if (m_s.back() == ',')
-        m_s.replace(m_s.size()-1,2,"],");
-      else
-        m_s += "],";
-    }
+    m_s += "],";
 }
 std::string& Json::result()
 {
