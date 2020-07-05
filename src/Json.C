@@ -113,14 +113,13 @@ void Json::add(const char* name, Set& set)
   for ( auto const & it : set)
     {
       m_s += "\"";
+      m_s += sep;
       m_s += xalt_quotestring(it.c_str());
-      m_s += "\",";
+      m_s += "\"";
+      sep = comma;
     }
       
-  if (m_s.back() == ',')
-    m_s.replace(m_s.size()-1,2,"],");
-  else
-    m_s += "],";
+  m_s += "],";
 }
 
 
@@ -133,6 +132,10 @@ void Json::add(const char* name, Table& t)
       m_s += name;
       m_s += "\":{";
     }
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep   = blank0;
+
   for ( auto & it : t)
     {
       auto & k = it.first;
@@ -144,18 +147,15 @@ void Json::add(const char* name, Table& t)
         continue;
       
       m_s += "\"";
+      m_s += sep;
       m_s += k;
       m_s += "\":\"";
       m_s += xalt_quotestring(v.c_str());
-      m_s += "\",";
+      m_s += "\"";
+      sep = comma;
     }
   if (name)
-    {
-      if (m_s.back() == ',')
-        m_s.replace(m_s.size()-1,2,"},");
-      else
-        m_s += "},";
-    }
+    m_s += "},";
 }
 
 void Json::add(const char* name, CTable& t)
