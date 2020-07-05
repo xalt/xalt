@@ -89,8 +89,8 @@ void Json::add(const char* name, Vstring& v)
 
   for ( auto const & it : v)
     {
-      m_s += "\"";
       m_s += sep;
+      m_s += "\"";
       m_s += xalt_quotestring(it.c_str());
       m_s += "\"";
       sep = comma;
@@ -112,8 +112,8 @@ void Json::add(const char* name, Set& set)
 
   for ( auto const & it : set)
     {
-      m_s += "\"";
       m_s += sep;
+      m_s += "\"";
       m_s += xalt_quotestring(it.c_str());
       m_s += "\"";
       sep = comma;
@@ -146,8 +146,8 @@ void Json::add(const char* name, Table& t)
       if (v.find("() {") == 0)
         continue;
       
-      m_s += "\"";
       m_s += sep;
+      m_s += "\"";
       m_s += k;
       m_s += "\":\"";
       m_s += xalt_quotestring(v.c_str());
@@ -166,6 +166,10 @@ void Json::add(const char* name, CTable& t)
       m_s += name;
       m_s += "\":{";
     }
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep   = blank0;
+
   for ( auto const & it : t)
     {
       auto k = it.first;
@@ -176,19 +180,16 @@ void Json::add(const char* name, CTable& t)
       if (strcmp("() {",v) == 0)
         continue;
       
+      m_s += sep;
       m_s += "\"";
       m_s += k;
       m_s += "\":\"";
       m_s += xalt_quotestring(v);
-      m_s += "\",";
+      m_s += "\"";
+      sep = comma;
     }
   if (name)
-    {
-      if (m_s.back() == ',')
-        m_s.replace(m_s.size()-1,2,"},");
-      else
-        m_s += "},";
-    }
+    m_s += "},";
 }
 
 // "processTree":
@@ -205,6 +206,10 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       m_s += name;
       m_s += "\":[";
     }
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep   = blank0;
+
   for ( auto const & it : ptA)
     {
       char * strbuff = NULL;
@@ -221,16 +226,17 @@ void Json::add(const char* name, std::vector<ProcessTree>& ptA)
       m_s += "\",\"pid\":";
       m_s += strbuff;
       m_s += ",\"cmdlineA\":[";
+
+      sep   = blank0;
       for ( auto const & jt : cmdlineA)
         {
+          m_s += sep;
           m_s += "\"";
           m_s += xalt_quotestring(jt.c_str());
-          m_s += "\",";
+          m_s += "\"";
+          sep = comma;
         }
-      if (m_s.back() == ',')
-        m_s.replace(m_s.size()-1,2,"]},");
-      else
-        m_s += "]},";
+      m_s += "]},";
       if (strbuff)
         free(strbuff);
     }
