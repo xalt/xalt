@@ -90,16 +90,14 @@ void Json::add(const char* name, Vstring& v)
   for ( auto const & it : v)
     {
       m_s += "\"";
+      m_s += sep;
       m_s += xalt_quotestring(it.c_str());
       m_s += "\"";
-      m_s += sep;
       sep = comma;
     }
 
   if (name)
-    {
-      m_s += "],";
-    }
+    m_s += "],";
 }
 
 void Json::add(const char* name, Set& set)
@@ -107,6 +105,10 @@ void Json::add(const char* name, Set& set)
   m_s += "\"";
   m_s += name;
   m_s += "\":[";
+
+  const char* blank0 = "";
+  const char* comma  = ",";
+  const char* sep   = blank0;
 
   for ( auto const & it : set)
     {
