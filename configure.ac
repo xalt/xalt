@@ -1,5 +1,5 @@
 AC_INIT(Makefile.in)
-AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/xalt_header.h.in)
+AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/util/xalt_header.h.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 dnl AC_CONFIG_SUBDIRS(libuuid/src)
@@ -726,6 +726,6 @@ fi
 
   
 
-AC_OUTPUT(makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in)
+AC_OUTPUT(makefile:Makefile.in src/__build__/xalt_config.h:src/util/xalt_config.h.in src/makefile:src/Makefile.in)
 
 AX_SUMMARIZE_CONFIG
