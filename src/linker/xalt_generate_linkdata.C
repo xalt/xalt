@@ -10,7 +10,6 @@
 #include "Json.h"
 #include "xalt_config.h"
 #include "transmit.h"
-#include "buildRmapT.h"
 #include "xalt_utils.h"
 //#include "link_direct2db.h"
 #include "link_submission.h"
@@ -84,17 +83,6 @@ int main(int argc, char* argv[])
   if (transmission == NULL)
     transmission = TRANSMISSION;
 
-  //if (strcasecmp(transmission,"direct2db") == 0)
-  //  {
-  //    std::string rmapD = ""; // Must use XALT_ETC_DIR to specify rmapD location!
-  //    Table       rmapT;
-  //    Vstring     xlibmapA;
-  //    buildRmapT(rmapD, rmapT, xlibmapA);
-  //
-  //    link_direct2db("xalt_db.conf", linklineA, resultT, libA, funcSet, rmapT);
-  //    return 0;
-  //  }
-  
   Json json;
   json.add("resultT",  resultT);
   json.add("linkA",    libA);

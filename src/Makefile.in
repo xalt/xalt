@@ -117,7 +117,7 @@ XGM_C_SRC    := epoch.c jsmn.c xalt_quotestring.c
 XGM_OBJS     := $(patsubst %.C, %.o, $(XGM_CXX_SRC)) $(patsubst %.c, %.o, $(XGM_C_SRC))
 
 XGL_EXEC     := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
-XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C buildRmapT.C xalt_utils.C     \
+XGL_CXX_SRC  := xalt_generate_linkdata.C parseJsonStr.C parseJsonStr.C xalt_utils.C                 \
                 Json.C parseLDTrace.C capture.C zstring.C  ConfigParser.C epoch.C compute_sha1.C
 XGL_C_SRC    := xalt_fgets_alloc.c  xalt_quotestring.c jsmn.c transmit.c xalt_c_utils.c base64.c xalt_dir.c    \
                 zstring.c
