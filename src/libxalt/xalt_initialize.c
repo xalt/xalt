@@ -46,6 +46,8 @@
 #  include <libproc.h>
 #endif
 #include "xalt_obfuscate.h"
+#include "xalt_types.h"
+#include "insert.h"
 #include "base64.h"
 #include "xalt_quotestring.h"
 #include "xalt_header.h"
@@ -55,6 +57,7 @@
 #include "xalt_hostname_parser.h"
 #include "xalt_tmpdir.h"
 #include "xalt_vendor_note.h"
+#include "build_uuid.h"
 
 #if USE_DCGM && USE_NVML
 #error "Both DCGM and NVML enabled.  This is not allowed."
@@ -98,7 +101,7 @@ static const char * xalt_reasonA[] = {
   "__XALT_INITIAL_STATE__ is different from STATE",
   "XALT is trying to be twice in the same STATE",
   "XALT only tracks rank 0, in mpi programs",
-  "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
+  "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: "   XALT_CONFIG_PY ,
   "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
   "XALT has problem with a JSON string",
   "XALT execute type does not match requested type",
@@ -158,8 +161,8 @@ static char *       exec_pathQ;
 static char *       usr_cmdline;
 static char *       b64_cmdline;
 
+static bool         have_watermark        = false;
 static char *       watermark             = NULL;
-static char *       b64_watermark         = NULL;
 static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
@@ -504,7 +507,7 @@ void myinit(int argc, char **argv)
       return;
     }
   xalt_quotestring_free();
-  b64_cmdline = base64_encode(usr_cmdline, qsLen, &b64_len);
+  //b64_cmdline = base64_encode(usr_cmdline, qsLen, &b64_len);
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
@@ -580,9 +583,7 @@ void myinit(int argc, char **argv)
 
 	  if ( ! have_uuid )
 	    {
-	      capture(xalt_dir("bin/my_uuidgen"), buffer, BUFSZ);
-	      strncpy(&uuid_str[0], buffer, 36);
-	      uuid_str[36] = '\0';
+	      build_uuid(&uuid_str[0]);
 	      have_uuid = 1;
 	    }
 
@@ -676,16 +677,14 @@ void myinit(int argc, char **argv)
     {
       if ( ! have_uuid )
 	{
-	  capture(xalt_dir("bin/my_uuidgen"), buffer, BUFSZ);
-	  strncpy(&uuid_str[0], buffer, 36);
-	  uuid_str[36] = '\0';
+	  build_uuid(&uuid_str[0]);
 	  have_uuid = 1;
 	}
       setenv("XALT_RUN_UUID",uuid_str,1);
       DEBUG1(stderr,"    -> Setting XALT_RUN_UUID: %s\n",uuid_str);
     }
 
-  time_t my_time = start_time;
+  time_t my_time = (time_t) start_time;
 
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&my_time));
   sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
@@ -697,10 +696,14 @@ void myinit(int argc, char **argv)
   ppid = getppid();
 
   // This routine returns either "FALSE" for nothing found or the watermark.
-  xalt_vendor_note(&watermark, xalt_tracing);
+  have_watermark = xalt_vendor_note(&watermark, xalt_tracing);
 
-  // Now base64 encode the watermark so it can be safely passed thru a system call.
-  b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
+  // If MPI program and no vendor watermark then try extracting the watermark
+  // with objdump via extractXALTRecord(...)
+  if (my_size > 1L && ! have_watermark )
+    have_watermark = extractXALTRecord(exec_path, &watermark);
+
+  //b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
 
   /*
    * XALT is only recording the end record for scalar executables and
@@ -779,8 +782,9 @@ void myinit(int argc, char **argv)
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], cmd2);
           memset(cmd2, 0, strlen(cmd2));
-	  free(cmd2);
+	  free(cmd2);p
         }
+
       asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
 	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
 	       pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
@@ -1104,10 +1108,14 @@ void myfini()
     {
       char uuid_option_str[100];
 
-      if (have_uuid)
-	sprintf(uuid_option_str,"--uuid \"%s\" --return_UUID", uuid_str);
-      else
-	strcpy(uuid_option_str, "--build_UUID --return_UUID");
+      if (! have_watermark && my_size < 2L)
+	have_watermark = extractXALTRecord(exec_path, &watermark);
+	
+      if (! have_uuid)
+	{
+	  build_uuid(&uuid_str[0]);
+	  have_uuid = 1;
+	}
 
       if (xalt_tracing || xalt_run_tracing )
         {
@@ -1124,15 +1132,19 @@ void myfini()
                   xalt_run_short_descriptA[run_mask], cmd2);
 	  fflush(my_stderr);
         }
+      /*************************************************
+       * Note: watermark will be either the real thing or == NULL (not FALSE ! ).
+       * run_submission(xalt_tracing, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_kind,
+       *                uuid_str, probability, num_gpus, watermark, usr_cmdline)
+       *
+       *************************************************/
       asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d  --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
                " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
 	       XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
 	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
 
       // We told xalt_run_submission to return the uuid.  We don't need it but we want to make sure that xalt_run_submission completes before ending the program.
-      setenv("RDMAV_FORK_SAFE","1",1);
       capture(cmdline, buffer, BUFSZ);
-      unsetenv("RDMAV_FORK_SAFE");
       strncpy(&uuid_str[0], buffer, 36);
       uuid_str[36] = '\0';
       DEBUG1(my_stderr,"    -> uuid: %s\n", uuid_str);
@@ -1269,9 +1281,6 @@ static void capture(const char* cmdline, char* buffer, int bufSz)
   fgets(buffer, bufSz, fp);
 
   pclose(fp);
-
-  /* restore stderr */
-  fflush(stderr);
 }
 
 

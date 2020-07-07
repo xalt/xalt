@@ -48,6 +48,7 @@ int main(int argc, char* argv[], char* env[])
   t1 = t0;
   std::vector<ProcessTree> ptA;
   walkProcessTree(options.ppid(), ptA);
+  DEBUG0(stderr,"    Built processTree table\n");
   measureT["04_WalkProcTree_"] = epoch() - t1;
     
   //*********************************************************************

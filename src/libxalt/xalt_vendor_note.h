@@ -5,7 +5,8 @@
 #define XALT_STAMP_SUPPORTED_VERSION (0x02)
 
 #include "xalt_obfuscate.h"
+#include <stdbool.h>
 
-void xalt_vendor_note(char ** watermark, int xalt_tracing);
+bool xalt_vendor_note(char ** watermark, int xalt_tracing);
 
 #endif //XALT_VENDOR_NOTE_H
