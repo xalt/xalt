@@ -1134,7 +1134,7 @@ void myfini()
         }
       /*************************************************
        * Note: watermark will be either the real thing or == NULL (not FALSE ! ).
-       * run_submission(xalt_tracing, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_kind,
+       * run_submission(xalt_tracing, pid, ppid, start_time, end_time, exec_path, my_size, xalt_kind,
        *                uuid_str, probability, num_gpus, watermark, usr_cmdline)
        *
        *************************************************/

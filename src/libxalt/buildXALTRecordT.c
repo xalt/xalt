@@ -164,26 +164,3 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   utstring_free(xaltRecord);
   return true;
 }
-
-
-
-
-//int main()
-//{
-//
-//  const char *w = "<XALT_VERSION>%%2.8.7%%.<Build.Syshost>%%jedrik%%.<Build.User>%%Robert_%_%_T._%_%_McLay%%.";
-//  char *watermark = strdup(w);
-//
-//  S2S_t *recordT = NULL;
-//
-//  S2S_t *e, *tmp;
-//
-//  buildXALTRecordT(watermark, &recordT);
-//  
-//  HASH_ITER(hh, recordT, e, tmp)
-//    {
-//      printf("recordT[\"%s\"]:\"%s\";\n",utstring_body(e->key), utstring_body(e->value));
-//    }
-//    
-//  return 0;
-//}
