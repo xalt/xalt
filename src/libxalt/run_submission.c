@@ -75,7 +75,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   char* exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
-  double run_time = (end_record) ? end_time - start_time : 0.0;
+  const char* syshost  = xalt_syshost();
+  double      run_time = (end_record) ? end_time - start_time : 0.0;
   insert_key_double(&userDT, "start_time",  start_time);
   insert_key_double(&userDT, "end_time",    end_time);
   insert_key_double(&userDT, "run_time",    run_time);
@@ -83,7 +84,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   insert_key_double(&userDT, "num_tasks",   num_tasks);
   insert_key_double(&userDT, "num_gpus",    num_gpus);
 
-  insert_key_string(&userT,  "syshost",     xalt_syshost());
+  insert_key_string(&userT,  "syshost",     syshost);
   insert_key_string(&userT,  "run_uuid",    uuid_str);
   insert_key_string(&userT,  "exec_path",   exec_pathQ);
   insert_key_string(&userT,  "exec_type",   "binary");
@@ -144,8 +145,17 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   json_fini(         &json, &json_result_str);
   DEBUG0(stderr,"    Built json string\n");
 
-  
+  char* resultFn  = NULL;
+  char* resultDir = NULL;  
 
+  char key[50];
+  sprintf(&key[0], "%s%s", (end_record) ? "run_fini_" : "run_strt_", uuid_str);
+
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
+    {
+      build_resultDir(&resultDir, "run", transmission, uuid_str);
+      build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
+    }
 
 }
 
