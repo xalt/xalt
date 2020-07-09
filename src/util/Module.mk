@@ -32,10 +32,17 @@ EXTR_REC_C_SRC   := extractMain.c buildXALTRecordT.c capture.c
 EXTR_REC_C_SRC   := $(addprefix $(local_dir)/, $(EXTR_REC_C_SRC))
 EXTR_REC_OBJ     := $(patsubst %.c, %.o, $(EXTR_REC_C_SRC))
 
+CFG_RPT_X        := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
+CFG_RPT_CXX_SRC  := xalt_configuration_report.C
+CFG_RPT_CXX_SRC  := $(addprefix $(local_dir)/, $(CFG_RPT_CXX_SRC))
+CFG_RPT_C_SRC    := epoch.c capture.c xalt_dir.c
+CFG_RPT_C_SRC    := $(addprefix $(local_dir)/, $(CFG_RPT_C_SRC)) __build__/xalt_syshost.c
+CFG_RPT_OBJ      := $(patsubst %.C, %.o, $(CFG_RPT_CXX_SRC)) \
+                    $(patsubst %.c, %.o, $(CFG_RPT_C_SRC))
 
 c_sources     += $(local_c_src) 
 cxx_sources   += $(local_cxx_source)
-programs      += $(EXTR_REC_X) $(EPOCH_X) 
+programs      += $(EXTR_REC_X) $(EPOCH_X) $(CFG_RPT_X)
 
 
 $(EPOCH_X) : $(EPOCH_OBJ)
@@ -43,3 +50,6 @@ $(EPOCH_X) : $(EPOCH_OBJ)
 
 $(EXTR_REC_X) : $(EXTR_REC_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+
+$(CFG_RPT_X): $(CFG_RPT_OBJ)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^

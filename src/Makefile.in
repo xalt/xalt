@@ -1,3 +1,4 @@
+VPATH       = __build__
 CC          := gcc
 CXX         := g++
 CFLAGS      := -g -O0

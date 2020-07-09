@@ -14,7 +14,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include "epoch.h"
-#include "Json.h"
+//include "Json.h"
+#include "utarray.h"
 
 const int dateSZ=100;
 
@@ -93,11 +94,13 @@ int main(int argc, char* argv[])
   syslog_tag.append(syshost);
 
 
-  Vstring     resultA;
+  UT_array*   resultA;
   std::string cmd      = "XALT_EXECUTABLE_TRACKING=no ";
   cmd.append(xalt_dir("bin/xalt_print_os"));
-  capture(cmd, resultA);
-  std::string current_os_descript = resultA[0];
+  capture(cmd.c_str(), &resultA);
+  char **pp = NULL;
+  pp = (char**) utarray_next(resultA, pp);
+  std::string current_os_descript = *pp;
 
   char    dateStr[dateSZ];
   time_t  now = (time_t) epoch();
@@ -170,59 +173,59 @@ int main(int argc, char* argv[])
   if (cxx_ld_library_path == "")
     cxx_ld_library_path = "<empty>";
 
-  if (argc == 2 && strcmp(argv[1],"--json") == 0) 
-    {
-      Json json;
-      json.add("DATE",                          dateStr);
-      json.add("XALT_EXECUTABLE_TRACKING",      executable_tracking);
-      json.add("XALT_PRELOAD_ONLY",             xalt_preload_only);
-      json.add("XALT_SYSHOST",                  syshost);
-      json.add("XALT_VERSION",                  XALT_VERSION);
-      json.add("XALT_INTERFACE_VERSION",        XALT_INTERFACE_VERSION);
-      json.add("XALT_GIT_VERSION",              XALT_GIT_VERSION);
-      json.add("XALT_VERSION_STR",              XALT_VERSION_STR);
-      json.add("XALT_FILE_PREFIX",              XALT_FILE_PREFIX);
-      json.add("XALT_TRANSMISSION_STYLE",       transmission);
-      json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
-      if (strcmp(transmission,"syslog") == 0)
-        json.add("XALT_LOGGING_TAG",            syslog_tag);
-      if (strcmp(transmission,"curl") == 0)
-        json.add("XALT_LOGGING_URL",            log_url);
-      json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
-      json.add("XALT_COMPUTE_SHA1",             computeSHA1);
-      json.add("XALT_ETC_DIR",                  xalt_etc_dir);
-      json.add("XALT_DIR",                      xalt_dir(NULL));
-      json.add("SITE_CONTROLLED_PREFIX",        SITE_CONTROLLED_PREFIX);
-      json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
-      json.add("XALT_CMDLINE_RECORD",           cmdline_record);
-      json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
-      json.add("XALT_SYSHOST_CONFIG",           SYSHOST_CONFIG);
-      json.add("XALT_MPI_TRACKING",             xalt_mpi_tracking);
-      json.add("XALT_GPU_TRACKING",             xalt_gpu_tracking);
-      json.add("XALT_SCALAR_TRACKING",          xalt_scalar_tracking);
-      json.add("XALT_SAMPLING",                 xalt_sampling);
-      json.add("MPI_ALWAYS_RECORD",             (int) always_record);
-      json.add("XALT_SYSLOG_MSG_SZ",            SYSLOG_MSG_SZ);
-      json.add("XALT_INSTALL_OS",               XALT_INSTALL_OS);
-      json.add("XALT_CURRENT_OS",               current_os_descript);
-      json.add("CXX_LD_LIBRARY_PATH",           cxx_ld_library_path);
-      json.add("XALT_LD_LIBRARY_PATH",          XALT_LD_LIBRARY_PATH);
-      json.add("HAVE_32BIT",                    HAVE_32BIT);
-      json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
-      json.add("HAVE_DCGM",                     HAVE_DCGM);
-      json.add("CRYPTO_STR",                    CRYPTO_STR);
-      json.add("UUID_STR",                      UUID_STR);
-      json.add("CURL_STR",                      CURL_STR);
-
-      json.add("hostnameA",    hostnameSz,      hostnameA);
-      json.add("pathPatternA", pathPatternSz,   pathPatternA);
-      json.add("envPatternA",  envPatternSz,    envPatternA);
-      json.fini();
-
-      std::string jsonStr = json.result();
-      std::cout << jsonStr << std::endl;
-      return 0;
-    }
+//  if (argc == 2 && strcmp(argv[1],"--json") == 0) 
+//    {
+//      Json json;
+//      json.add("DATE",                          dateStr);
+//      json.add("XALT_EXECUTABLE_TRACKING",      executable_tracking);
+//      json.add("XALT_PRELOAD_ONLY",             xalt_preload_only);
+//      json.add("XALT_SYSHOST",                  syshost);
+//      json.add("XALT_VERSION",                  XALT_VERSION);
+//      json.add("XALT_INTERFACE_VERSION",        XALT_INTERFACE_VERSION);
+//      json.add("XALT_GIT_VERSION",              XALT_GIT_VERSION);
+//      json.add("XALT_VERSION_STR",              XALT_VERSION_STR);
+//      json.add("XALT_FILE_PREFIX",              XALT_FILE_PREFIX);
+//      json.add("XALT_TRANSMISSION_STYLE",       transmission);
+//      json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
+//      if (strcmp(transmission,"syslog") == 0)
+//        json.add("XALT_LOGGING_TAG",            syslog_tag);
+//      if (strcmp(transmission,"curl") == 0)
+//        json.add("XALT_LOGGING_URL",            log_url);
+//      json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
+//      json.add("XALT_COMPUTE_SHA1",             computeSHA1);
+//      json.add("XALT_ETC_DIR",                  xalt_etc_dir);
+//      json.add("XALT_DIR",                      xalt_dir(NULL));
+//      json.add("SITE_CONTROLLED_PREFIX",        SITE_CONTROLLED_PREFIX);
+//      json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
+//      json.add("XALT_CMDLINE_RECORD",           cmdline_record);
+//      json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
+//      json.add("XALT_SYSHOST_CONFIG",           SYSHOST_CONFIG);
+//      json.add("XALT_MPI_TRACKING",             xalt_mpi_tracking);
+//      json.add("XALT_GPU_TRACKING",             xalt_gpu_tracking);
+//      json.add("XALT_SCALAR_TRACKING",          xalt_scalar_tracking);
+//      json.add("XALT_SAMPLING",                 xalt_sampling);
+//      json.add("MPI_ALWAYS_RECORD",             (int) always_record);
+//      json.add("XALT_SYSLOG_MSG_SZ",            SYSLOG_MSG_SZ);
+//      json.add("XALT_INSTALL_OS",               XALT_INSTALL_OS);
+//      json.add("XALT_CURRENT_OS",               current_os_descript);
+//      json.add("CXX_LD_LIBRARY_PATH",           cxx_ld_library_path);
+//      json.add("XALT_LD_LIBRARY_PATH",          XALT_LD_LIBRARY_PATH);
+//      json.add("HAVE_32BIT",                    HAVE_32BIT);
+//      json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
+//      json.add("HAVE_DCGM",                     HAVE_DCGM);
+//      json.add("CRYPTO_STR",                    CRYPTO_STR);
+//      json.add("UUID_STR",                      UUID_STR);
+//      json.add("CURL_STR",                      CURL_STR);
+//
+//      json.add("hostnameA",    hostnameSz,      hostnameA);
+//      json.add("pathPatternA", pathPatternSz,   pathPatternA);
+//      json.add("envPatternA",  envPatternSz,    envPatternA);
+//      json.fini();
+//
+//      std::string jsonStr = json.result();
+//      std::cout << jsonStr << std::endl;
+//      return 0;
+//    }
 
   std::cout << "*------------------------------------------------------------------------------*\n";
   std::cout << "                      XALT Configuration Report\n";
