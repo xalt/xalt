@@ -141,9 +141,9 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   // We are now at the first line after the "Contents of ..."
   while( (pp= (char**) utarray_next(resultA, pp)) != NULL)
     {
-      char *q  = strstr(*pp, "  ");
-      q       += strcspn(q," ");
-      utstring_bincpy(xaltRecord, q, strlen(q)-1);
+      char *q   = strstr(*pp, "  ");
+      q        += strspn(q," ");
+      utstring_bincpy(xaltRecord, q, strlen(q)-1); // Do not copy the trailing newline.
     }
 
   utarray_free(resultA);
