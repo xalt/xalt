@@ -1,5 +1,6 @@
 CC          := gcc
 CXX         := g++
+CFLAGS      := -g -O0
 
 # Collect information from each module in these four variables.
 # Initialize them here as simple variables.
@@ -21,6 +22,24 @@ CPPFLAGS     += $(addprefix -I, $(include_dirs))
 
 vpath %.h $(include_dirs)
 
+all:
+
+ifeq "$(MAKECMDGOALS)" "clean"
+  INCLUDE_DEPS := no
+endif
+
+ifeq "$(MAKECMDGOALS)" "clobber"
+  INCLUDE_DEPS := no
+endif
+
+#include linker/Module.mk
+include util/Module.mk
+
+ifneq ($(INCLUDE_DEPS),no)
+  include $(dependencies)
+endif
+
+
 .PHONY: all
 all: $(programs)
 
@@ -37,20 +56,6 @@ clean:
 clobber:
 	$(RM) $(programs) $(libraries)  
 
-ifeq "$(MAKECMDGOALS)" "clean"
-  INCLUDE_DEPS := no
-endif
-
-ifeq "$(MAKECMDGOALS)" "clobber"
-  INCLUDE_DEPS := no
-endif
-
-#include linker/Module.mk
-include util/Module.mk
-
-ifneq ($(INCLUDE_DEPS),no)
-  include $(dependencies)
-endif
 
 
 

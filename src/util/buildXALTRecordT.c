@@ -112,17 +112,18 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
                        " objdump -s -j .xalt \"%s\" 2> /dev/null", execQ);
   
   free(execQ);
-  utstring_free(cmd);
 
   UT_array* resultA;
-  utarray_new(resultA, &ut_str_icd);
   capture(utstring_body(cmd), &resultA);
+  utstring_free(cmd);
 
-  bool  found = false;
-  char **pp   = NULL;
+  const char* match = "Contents of section";
+  int         m_len = strlen(match);
+  bool        found = false;
+  char        **pp  = NULL;
   while( (pp= (char**) utarray_next(resultA, pp)) != NULL)
     {
-      if (strcmp(*pp,"Contents of section") == 0)
+      if (strncmp(*pp, match, m_len) == 0)
 	{
 	  found = true;
 	  break;
@@ -142,7 +143,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
     {
       char *q  = strstr(*pp, "  ");
       q       += strcspn(q," ");
-      utstring_bincpy(xaltRecord, q, strlen(q));
+      utstring_bincpy(xaltRecord, q, strlen(q)-1);
     }
 
   utarray_free(resultA);
