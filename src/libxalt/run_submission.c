@@ -16,8 +16,8 @@
 #include "run_submission.h"
 #include "epoch.h"
 
-static const char* blank0      = "";
-static const char* comma       = ",";
+static const char* blank0 = "";
+static const char* comma  = ",";
 
 void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
 		    char* exec_path, long my_size, int num_gpus, const char* xalt_kind, const char* uuid_str,
@@ -36,6 +36,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   S2D_t       	 measureT = NULL;
   SET_t          libT     = NULL;
   double      	 t1;
+
+  DEBUG1(my_stderr,"\n  run_submission(%s) {\n",suffix);
 
   //************************************************************
   // Walk Process tree to find parent processes
@@ -157,5 +159,86 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
       build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
     }
 
+  transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn);
+  xalt_quotestring_free();
+  if (resultFn)
+    {
+      free(resultFn);
+      free(resultDir);
+    }
+
+  if (strcmp(xalt_kind,"PKGS") == 0)
+    pkgRecordTransmit(uuid_str, syshost, transmission);
+
+  DEBUG0(stderr,"  }\n\n");
+  if (xalt_tracing)
+    fflush(my_stderr);
 }
 
+void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* transmission)
+{
+  char * xalt_tmpdir = create_xalt_tmpdir_str(uuid_str);
+  DIR*   dirp        = opendir(xalt_tmpdir);
+  if (dirp == NULL)
+    {
+      free(xalt_tmpdir);
+      return;
+    }
+
+  char* c_home = getenv("HOME");
+  char* c_user = getenv("USER");
+  if (c_home == NULL || c_user == NULL )
+    return;
+
+  int         ulen      = 12;
+  char*       resultDir = NULL;
+  
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
+    build_resultDir(&resultDir, "pkg", transmission, uuid_str);
+
+  UT_string *jsonStr, *fullName, *key;
+  utstring_new(jsonStr);
+  utstring_new(fullName);
+  utstring_new(key);
+
+  struct dirent* dp;
+  while ( (dp = readdir(dirp)) != NULL)
+    {
+      if (fnmatch("pkg.*.json", dp->d_name, 0) == 0)
+        {
+          char*       buf     = NULL;
+          size_t      sz      = 0;
+	  utstring_clear(jsonStr);
+	  utstring_clear(fullName);
+	  utstring_clear(key);
+
+	  utstring_printf(fullName,"%s/%s",xalt_tmpdir,dp->d_name);
+          FILE* fp = fopen(utstring_body(fullName), "r");
+          if (fp)
+            {
+              while( xalt_fgets_alloc(fp, &buf, &sz))
+		utstring_bincpy(jsonStr, buf, strlen(buf));
+              free(buf);
+              sz = 0; buf = NULL;
+
+              // build key from dp->d_name;
+              //                                                                           0123456789 1234567
+              //pkg.rios.2018_11_06_16_14_13_7992.user.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
+              int my_len = strlen(dp->d_name);
+	      utstring_printf(key,"pkg_%s_%.*s",uuid_str, ulen, &dp->d_name[my_len - 17]);
+              // transmit jsonStr
+              
+              transmit(transmission, utstring_body(jsonStr), "pkg", utstring_body(key), syshost,
+		       resultDir, dp->d_name);
+              unlink(utstring_body(fullName));
+            }
+          fclose(fp);
+        }
+    }
+  utstring_free(jsonStr);
+  utstring_free(fullName);
+  utstring_free(key);
+  rmdir(xalt_tmpdir);
+  free(resultDir);
+  free(xalt_tmpdir);
+}

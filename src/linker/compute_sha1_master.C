@@ -1,5 +1,6 @@
 #include "xalt_config.h"
 #include "compute_sha1.h"
+#include "compute_sha1_master.h"
 #include "xalt_dir.h"
 #include <fcntl.h>
 #include <openssl/sha.h>
@@ -13,66 +14,9 @@
 #include <unistd.h>
 #include <dlfcn.h>
 
-static void (*sha1)(const unsigned char *d, size_t n, unsigned char *md) = NULL;
-
 pthread_mutex_t mutex;
 long            fnSzG;
 int             iworkG = -1;  
-
-void compute_sha1(std::string& fn, std::string& sha1_str)
-{
-  struct stat    st;
-  int            fd, i;
-  char *         error;
-  char           sha1buf[41];
-  unsigned long  fileSz;
-  unsigned char* buffer;
-  unsigned char  hash[SHA_DIGEST_LENGTH];
-  
-  fd     = open(fn.c_str(), O_RDONLY);
-  fstat(fd, &st);
-  fileSz = st.st_size;
-
-  buffer = (unsigned char *) mmap(0, fileSz, PROT_READ, MAP_SHARED, fd, 0);
-  if (buffer == MAP_FAILED)
-    {
-      close(fd);
-      perror("Error mmapping the file");
-      exit(EXIT_FAILURE);
-    }
-
-  if (sha1 == NULL)
-    {
-      void * handle = dlopen("libcrypto.so", RTLD_LAZY);
-      if (!handle)
-        {
-          handle = dlopen (xalt_dir("lib64/libcrypto.so"), RTLD_LAZY);
-          if (!handle) 
-            {
-              fputs(dlerror(), stderr);
-              memset(hash, '\0', SHA_DIGEST_LENGTH);
-              return;
-            }
-        }
-      *(void **)(&sha1) = dlsym(handle, "SHA1");
-      if ((error = dlerror()) != NULL) 
-        {
-          fputs(error, stderr);
-          memset(hash, '\0', SHA_DIGEST_LENGTH);
-          return;
-        }
-    }
-
-  (*sha1)(buffer, fileSz, hash);
-  if (munmap(buffer, fileSz) == -1) 
-    perror("Error un-mmapping the file");
-
-  close(fd);
-
-  for (i = 0; i < 20; i++)
-    sprintf(&sha1buf[i*2], "%02x", hash[i]);
-  sha1_str.assign(sha1buf);
-}
 
 void* do_work(void *t)
 {
@@ -83,7 +27,7 @@ void* do_work(void *t)
       pthread_mutex_unlock(&mutex);
       if (iworkG >= fnSzG)
         break;
-      compute_sha1(argV[iworkG].fn, argV[iworkG].sha1);
+      compute_sha1(argV[iworkG].fn.c_str(), &argV[iworkG].sha1[0]);
     }
   pthread_exit(NULL);
 }

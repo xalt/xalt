@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "compute_sha1.h"
+#include "compute_sha1_master.h"
 #include "link_submission.h"
 #include "xalt_fgets_alloc.h"
 #include "xalt_config.h"

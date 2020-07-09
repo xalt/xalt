@@ -194,7 +194,7 @@ AC_ARG_WITH(systemPath,
     withval="/usr/bin:/bin"
     AC_MSG_RESULT([SYSTEM_PATH=$withval])
     SYSTEM_PATH="$withval"
-    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"[The system path that XALT will use (typically /usr/bin:/bin)]))dnl
+    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval",[The system path that XALT will use (typically /usr/bin:/bin)]))dnl
 
 AC_SUBST(SYSLOG_MSG_SZ)
 AC_ARG_WITH(syslogMsgSz,

@@ -29,11 +29,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   char*       c_resultDir = NULL;
   
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
-    {
-      std::string resultDir;
-      build_resultDir(resultDir, "pkg", transmission, uuid_str);
-      c_resultDir = strdup(resultDir.c_str());
-    }
+    build_resultDir(c_resultDir, "pkg", transmission, uuid_str);
 
   std::string my_resultFn;
   struct dirent* dp;

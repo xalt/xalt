@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "xalt_c_utils.h"
+#define DATESZ 100
 
 int isDirectory(const char *path)
 {
@@ -44,16 +45,34 @@ void build_resultDir(char **resultDir, const char* kind, const char* transmissio
   if ((c_home != NULL) && (strcasecmp(xalt_file_prefix,"USE_HOME") == 0))
     {
       if (strcasecmp(transmission,"file_separate_dirs") == 0)
-	asprintf(&resultDir,"%s/.xalt.d/%s/",c_home,kind);
+	asprintf(resultDir,"%s/.xalt.d/%s/",c_home,kind);
       else
-	asprintf(&resultDir,"%s/.xalt.d/",c_home);
+	asprintf(resultDir,"%s/.xalt.d/",c_home);
     }
   else
     {
       long hashV = strtol(&uuid[29], 0, 16) % XALT_PRIME_NUMBER;
       if (strcasecmp(transmission,"file_separate_dirs") == 0)
-	asprintf(&resultDir, "%s/%s/" XALT_PRIME_FMT, "/",xalt_file_prefix,kind,hashV);
+	asprintf(resultDir, "%s/%s/" XALT_PRIME_FMT, "/",xalt_file_prefix,kind,hashV);
       else
-	asprintf(&resultDir, "%s/" XALT_PRIME_FMT, "/",xalt_file_prefix,hashV);
+	asprintf(resultDir, "%s/" XALT_PRIME_FMT, "/",xalt_file_prefix,hashV);
+    }
+}
+
+void build_resultFn(char** resultFn, double start, const char* syshost, const char* uuid, const char* kind,
+		    const char* suffix)
+{
+  char* home = getenv("HOME");
+  char* user = getenv("USER");
+  char  dateStr[DATESZ];
+
+  if (home != NULL && user != NULL)
+    {
+      double frac = start - floor(start);
+      time_t time = (time_t) start;
+      strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
+      
+      asprintf(resultFn, "%s.%s.%s_%04d.%s%s.%s.json", kind, syshost, dateStr, (int) frac*10000.0,
+	       user, suffix, uuid);
     }
 }

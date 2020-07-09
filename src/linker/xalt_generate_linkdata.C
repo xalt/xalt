@@ -11,6 +11,7 @@
 #include "xalt_config.h"
 #include "transmit.h"
 #include "xalt_utils.h"
+#include "xalt_c_utils.h"
 //#include "link_direct2db.h"
 #include "link_submission.h"
 #include "parseJsonStr.h"
@@ -94,18 +95,17 @@ int main(int argc, char* argv[])
   std::string key("link_");
   key.append(uuid);
 
-  char* c_resultDir = NULL;
-  char* c_resultFn = NULL;
+  char* resultDir = NULL;
+  char* resultFn  = NULL;
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
-      std::string resultDir, resultFn;
-      build_resultDir(resultDir, "link", transmission, uuid);
-      build_resultFn(resultFn, start, syshost, uuid, "link", "");
-      c_resultFn  = strdup(resultFn.c_str());
-      c_resultDir = strdup(resultDir.c_str());
+      build_resultDir(&resultDir, "link", transmission, uuid);
+      build_resultFn( &resultFn,  start, syshost, uuid, "link", "");
     }
 
-  transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, c_resultDir, c_resultFn);
+  transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, resultDir, resultFn);
+  free(resultDir);
+  free(resultFn);
   return 0;
 }

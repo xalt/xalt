@@ -1,7 +1,9 @@
 #include <string.h>
 #include "buildXALTRecordT.h"
+#include "xalt_config.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include "utarray.h"
 #include "capture.h"
 
 void buildXALTRecordT(char* watermark, S2S_t** recordT)
@@ -50,22 +52,6 @@ void buildXALTRecordT(char* watermark, S2S_t** recordT)
     }
 }
 
-#define DATA_SIZE 1024
-
-static void capture(const char* cmdline, UT_array** p_resultA)
-{
-  FILE* fp;
-  fp = popen(cmdline,"r");
-  UT_array* resultA = *p_resultA;
-
-  char* eof;
-  char data[DATA_SIZE];
-  while( (eof = fgets(data, DATA_SIZE, fp)) != NULL)
-    utarray_push_back(resultA, data);
-  pclose(fp);
-}
-
-
   /*
    * The results of the objdump command looks like this (after the "Contents ..." line)
    *  0000 58414c54 5f4c696e 6b5f496e 666f0000  XALT_Link_Info..
@@ -100,11 +86,11 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
 
   // Convert exec_path to execQ where '"' are backslash quoted.
 
-  int   len   = strlen(exec_path);
-  char* execQ = (char *)malloc(len*3*sizeof(char));
-  char* p     = exec_path;
-  char* q     = execQ;
-  char  Q     = '"';
+  int   len      = strlen(exec_path);
+  char* execQ    = (char *)malloc(len*3*sizeof(char));
+  char* q        = execQ;
+  char  Q        = '"';
+  const char* p  = exec_path;
   const char* QQ = "\\\"";
 
   while(*p)
@@ -154,8 +140,8 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   // We are now at the first line after the "Contents of ..."
   while( (pp= (char**) utarray_next(resultA, pp)) != NULL)
     {
-      char q* = strstr(*pp, "  ");
-      q       = strcspn(q," ");
+      char *q  = strstr(*pp, "  ");
+      q       += strcspn(q," ");
       utstring_bincpy(xaltRecord, q, strlen(q));
     }
 

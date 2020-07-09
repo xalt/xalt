@@ -7,9 +7,9 @@
 struct Arg
 {
   Arg(const std::string& fnIn)
-    : fn(fnIn), sha1("") {}
+    : fn(fnIn), {sha1[0] = '\0';}
   std::string fn;
-  std::string sha1;
+  char sha1[41];
 };
 
 typedef std::vector<Arg> ArgV;
