@@ -55,11 +55,13 @@ REC_PKG_C        := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring
 REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) __build__/xalt_syshost.c
 REC_PKG_OBJ      := $(patsubst %.c, %.o, $(REC_PKG_C))
 
+SYSHOST_X        := $(DESTDIR)$(SBIN)/xalt_syshost
+
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
 cxx_sources   	 += $(local_cxx_src)
 programs      	 += $(EXTR_REC_X) $(EPOCH_X) $(CFG_RPT_X) $(REC_PKG_X) \
-                    $(TST_REC_PKG_X)
+                    $(TST_REC_PKG_X) $(SYSHOST_X)
 #=====================================================================#
 
 $(EPOCH_X) : $(EPOCH_OBJ)
@@ -77,3 +79,10 @@ $(REC_PKG_X): $(REC_PKG_OBJ)
 
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+
+$(SYSHOST_X): __build__/xalt_syshost_main.o util/xalt_fgets_alloc.o
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $<
+
+__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fgets_alloc.h
+	$(COMPILE.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) $(LDFLAGS) -o $@ $<
+

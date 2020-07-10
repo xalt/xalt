@@ -5,7 +5,7 @@
 #include "xalt_syshost.h"
 #include "buildEnvT.h"
 #include "buildJson.h"
-#include "buildXALTRecord.h"
+#include "buildXALTRecordT.h"
 #include "compute_sha1.h"
 #include "insert.h"
 #include "processTree.h"

@@ -57,7 +57,9 @@
 #include "xalt_hostname_parser.h"
 #include "xalt_tmpdir.h"
 #include "xalt_vendor_note.h"
+#include "buildXALTRecordT.h"
 #include "build_uuid.h"
+#include "run_submission.h"
 
 #if USE_DCGM && USE_NVML
 #error "Both DCGM and NVML enabled.  This is not allowed."
@@ -159,11 +161,9 @@ static char         uuid_str[37];
 static char         exec_path[PATH_MAX+1];
 static char *       exec_pathQ;
 static char *       usr_cmdline;
-static char *       b64_cmdline;
 
 static bool         have_watermark        = false;
 static char *       watermark             = NULL;
-static int          run_submission_exists = -1;             /* 0 => does not exist; 1 => exists; -1 => status unknown */
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
 static int          have_uuid             = 0;
@@ -250,6 +250,7 @@ void myinit(int argc, char **argv)
   char * pid_str         = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[FULLDATESZ];
+  double t0 = epoch();
   const char * v;
   xalt_parser  results;
   xalt_parser  path_results;
@@ -264,6 +265,7 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
+  
   my_rank = compute_value(rankA);
 
   p_dbg = getenv("XALT_TRACING");
@@ -284,7 +286,7 @@ void myinit(int argc, char **argv)
   v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
     {
-      time_t    now    = (time_t) epoch();
+      time_t    now    = (time_t) t0;
       strftime(dateStr, DATESZ, "%c", localtime(&now));
       errno = 0;
       if (uname(&u) != 0)
@@ -507,7 +509,6 @@ void myinit(int argc, char **argv)
       return;
     }
   xalt_quotestring_free();
-  //b64_cmdline = base64_encode(usr_cmdline, qsLen, &b64_len);
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
@@ -621,13 +622,12 @@ void myinit(int argc, char **argv)
   while(0);
 #endif
 
-  start_time = epoch();
+  start_time = t0;
   frac_time  = start_time - (long) (start_time);
 
-  /**********************************************************
-   * Save LD_PRELOAD and clear it before running
-   * xalt_run_submission.
-   *********************************************************/
+  /**************************************************************
+   * Save LD_PRELOAD and clear it before calling run_submission()
+   ***************************************************************/
 
   p = getenv("LD_PRELOAD");
   if (p)
@@ -701,7 +701,7 @@ void myinit(int argc, char **argv)
   // If MPI program and no vendor watermark then try extracting the watermark
   // with objdump via extractXALTRecord(...)
   if (my_size > 1L && ! have_watermark )
-    have_watermark = extractXALTRecord(exec_path, &watermark);
+    have_watermark = extractXALTRecordString(exec_path, &watermark);
 
   //b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
 
@@ -733,9 +733,6 @@ void myinit(int argc, char **argv)
   sprintf(&rand_str[0],"%10.6f",my_rand);
   setenv("XALT_RANDOM_NUMBER",rand_str,1);
 
-  exec_pathQ = strdup(xalt_quotestring(exec_path));
-  xalt_quotestring_free();
-
   v = getenv("XALT_TESTING_RUNTIME");
   if (v)
     testing_runtime = strtod(v,NULL);
@@ -749,60 +746,25 @@ void myinit(int argc, char **argv)
   // or a PKG type
   if (my_size >= always_record )
     {
-      char uuid_option_str[100];
-
-      const char * run_submission_prgm = xalt_dir("libexec/xalt_run_submission");
-      int runable = access(run_submission_prgm, X_OK);
-
-      if (runable == -1)
-        {
-          run_submission_exists = 0;
-          DEBUG2(stderr, "    -> Quitting => Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value: %s -> exiting\n}\n\n", run_submission_prgm, xalt_dir(NULL));
-          reject_flag = XALT_MISSING_RUN_SUBMISSION;
-          unsetenv("XALT_RUN_UUID");
-          syslog(LOG_WARNING, "XALT: Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value '%s'\n", run_submission_prgm, xalt_dir(NULL));
-          return;
-        }
-      run_submission_exists = 1;
 
       DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, (int) always_record);
 
-      if (have_uuid)
-	sprintf(uuid_option_str,"--uuid \"%s\"", uuid_str);
-      else
-	strcpy(uuid_option_str, "--build_UUID --return_UUID");
+      if ( ! have_uuid )
+	{
+	  build_uuid(&uuid_str[0]);
+	  have_uuid = 1;
+	}
 
       if (xalt_tracing || xalt_run_tracing)
         {
-	  char * cmd2;
-          asprintf(&cmd2, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-                   " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
-		   pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, watermark, pathArg, ldLibPathArg,
-		   usr_cmdline);
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
-                  xalt_run_short_descriptA[run_mask], cmd2);
-          memset(cmd2, 0, strlen(cmd2));
-	  free(cmd2);p
+                  xalt_run_short_descriptA[run_mask], exec_path);
         }
 
-      asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end 0 --exec \"%s\" --ntasks %ld"
-	       " --kind \"%s\" %s --prob %g --ngpus 0 --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm, XALT_INTERFACE_VERSION,
-	       pid, ppid, start_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str, probability, b64_watermark, pathArg, ldLibPathArg,
-	       b64_cmdline);
+      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, my_size, num_gpus, xalt_run_short_descriptA[xalt_kind],
+		     uuid_str, watermark, usr_cmdline, env, stderr);
 
-      /*************************************************************
-       * Since we told xalt_run_submission to build the uuid, we must
-       * capture it and copy it to uuid_str.
-       ************************************************************/
-
-      capture(cmdline, buffer, BUFSZ);
-
-      strncpy(&uuid_str[0], buffer, 36);
-      uuid_str[36] = '\0';
       DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
-      have_uuid = 1;
-      memset(cmdline, 0, strlen(cmdline));
-      free(cmdline);
     }
   else
     {
@@ -868,6 +830,7 @@ void myfini()
   FILE * my_stderr = NULL;
   char * cmdline;
   double run_time;
+  double t0 = epoch();
   int    xalt_err = xalt_tracing || xalt_run_tracing;
 
   char * p_dbg;
@@ -1096,60 +1059,26 @@ void myfini()
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
 
-  const char * run_submission_prgm = xalt_dir("libexec/xalt_run_submission");
-  int runable = (run_submission_exists == 1) ? 1 : access(run_submission_prgm, X_OK);
-  if (runable == -1)
-    {
-      DEBUG2(my_stderr, "    -> Quitting => Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value: %s -> exiting\n}\n\n", run_submission_prgm, xalt_dir(NULL));
-      reject_flag = XALT_MISSING_RUN_SUBMISSION;
-      syslog(LOG_WARNING, "XALT: Cannot find xalt_run_submission program (%s). Check $XALT_DIR for valid value '%s'\n", run_submission_prgm, xalt_dir(NULL));
-    }
-  else
-    {
-      char uuid_option_str[100];
+    if (! have_watermark && my_size < 2L)
+    	have_watermark = extractXALTRecordString(exec_path, &watermark);
+    	
+    if (! have_uuid)
+    	{
+    	  build_uuid(&uuid_str[0]);
+    	  have_uuid = 1;
+    	}
 
-      if (! have_watermark && my_size < 2L)
-	have_watermark = extractXALTRecord(exec_path, &watermark);
-	
-      if (! have_uuid)
-	{
-	  build_uuid(&uuid_str[0]);
-	  have_uuid = 1;
-	}
+    if (xalt_tracing || xalt_run_tracing )
+      {
+        fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
+                xalt_run_short_descriptA[run_mask], exec_path);
+    	  fflush(my_stderr);
+      }
 
-      if (xalt_tracing || xalt_run_tracing )
-        {
-          int    dLen;
-	  char * cmd2    = NULL;
-          char * decoded = (char *) base64_decode(b64_cmdline, strlen(b64_cmdline), &dLen);
-          asprintf(&cmd2, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-                   " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
-		   XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
-		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
-          //		   probability, num_gpus, watermark, pathArg, ldLibPathArg, decoded);
-	  fprintf(my_stderr,"  len: %u, b64_cmd: %s\n", (unsigned int) strlen(b64_cmdline), b64_cmdline);
-          fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
-                  xalt_run_short_descriptA[run_mask], cmd2);
-	  fflush(my_stderr);
-        }
-      /*************************************************
-       * Note: watermark will be either the real thing or == NULL (not FALSE ! ).
-       * run_submission(xalt_tracing, pid, ppid, start_time, end_time, exec_path, my_size, xalt_kind,
-       *                uuid_str, probability, num_gpus, watermark, usr_cmdline)
-       *
-       *************************************************/
-      asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=\"%s\" PATH=\"%s\" \"%s\" --interfaceV %s --pid %d --ppid %d  --start \"%.4f\" --end \"%.4f\" --exec \"%s\""
-               " --ntasks %ld --kind \"%s\" %s --prob %g --ngpus %d --watermark \"%s\" %s %s -- %s", XALT_LD_LIBRARY_PATH, XALT_SYSTEM_PATH, run_submission_prgm,
-	       XALT_INTERFACE_VERSION, pid, ppid, start_time, end_time, exec_pathQ, my_size, xalt_run_short_descriptA[xalt_kind], uuid_option_str,
-	       probability, num_gpus, b64_watermark, pathArg, ldLibPathArg, b64_cmdline);
-
-      // We told xalt_run_submission to return the uuid.  We don't need it but we want to make sure that xalt_run_submission completes before ending the program.
-      capture(cmdline, buffer, BUFSZ);
-      strncpy(&uuid_str[0], buffer, 36);
-      uuid_str[36] = '\0';
-      DEBUG1(my_stderr,"    -> uuid: %s\n", uuid_str);
-      DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
-    }
+    run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, my_size,
+    		     num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
+    		     usr_cmdline, env, my_stderr);
+    DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
 
   if (xalt_err)
     {
