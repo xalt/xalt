@@ -3,6 +3,7 @@
 #include "buildJson.h"
 #include "processTree.h"
 #include "utlist.h"
+#include "xalt_quotestring.h"
 
 static const char* dquote      = "\"";
 static const char* s_colon     = "\":\"";
@@ -231,7 +232,7 @@ void json_add_ptA(Json_t* json, const char* sep, const char* name, processTree_t
 	{
 	  utarray_push_back(json->m_s, &inner_sep);
 	  utarray_push_back(json->m_s, &dquote);
-	  utarray_push_back(json->m_s, xalt_quotestring(p));
+	  utarray_push_back(json->m_s, xalt_quotestring(*p));
 	  utarray_push_back(json->m_s, &dquote);
 	  inner_sep = comma;
 	}
@@ -239,4 +240,43 @@ void json_add_ptA(Json_t* json, const char* sep, const char* name, processTree_t
     }
   utarray_push_back(json->m_s, &end_bracket);
   xalt_quotestring_free();
+}
+
+void json_add_array(Json_t* json, const char* sep, const char* name, int n, const char** A)
+{
+  utarray_push_back(json->m_s, &sep);
+  utarray_push_back(json->m_s, &dquote);
+  utarray_push_back(json->m_s, &name);
+  utarray_push_back(json->m_s, &a_colon);
+  
+  const char*    my_sep   = blank0;
+  for (int i = 0; i < n; ++i)
+    {
+      utarray_push_back(json->m_s, &my_sep);
+      utarray_push_back(json->m_s, &dquote);
+      utarray_push_back(json->m_s, xalt_quotestring(A[i]));
+      utarray_push_back(json->m_s, &dquote);
+      my_sep = comma;
+    }
+  utarray_push_back(json->m_s, &end_bracket);
+}
+
+void json_add_utarray(  Json_t* json, const char* sep, const char* name, UT_array** A)
+{
+  utarray_push_back(json->m_s, &sep);
+  utarray_push_back(json->m_s, &dquote);
+  utarray_push_back(json->m_s, &name);
+  utarray_push_back(json->m_s, &a_colon);
+  
+  char**         p        = NULL;
+  const char*    my_sep   = blank0;
+  while( (p = (char **)utarray_next(json->m_s, p)) != NULL)
+    {
+      utarray_push_back(json->m_s, &my_sep);
+      utarray_push_back(json->m_s, &dquote);
+      utarray_push_back(json->m_s, xalt_quotestring(*p));
+      utarray_push_back(json->m_s, &dquote);
+      my_sep = comma;
+    }
+  utarray_push_back(json->m_s, &end_bracket);
 }

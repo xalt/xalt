@@ -1,4 +1,4 @@
-VPATH       = __build__
+VPATH.s     := __build__:util
 CC          := gcc
 CXX         := g++
 CFLAGS      := -g -O0
@@ -13,11 +13,12 @@ libraries    :=
 extra_clean  :=
 
 LIBEXEC      := $(HOME)/t/xalt/3.0/libexec
+LIB64        := $(HOME)/t/xalt/3.0/lib64
 
 dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources))
 objects      = $(subst .c,.o,$(c_sources)) $(subst .C,.o,$(cxx_sources))
 
-include_dirs := __build__ linker util
+include_dirs := __build__ linker util libxalt
 
 CPPFLAGS     += $(addprefix -I, $(include_dirs))
 
@@ -33,7 +34,7 @@ ifeq "$(MAKECMDGOALS)" "clobber"
   INCLUDE_DEPS := no
 endif
 
-#include linker/Module.mk
+include linker/Module.mk
 include util/Module.mk
 
 ifneq ($(INCLUDE_DEPS),no)
@@ -63,12 +64,12 @@ clobber:
 %.d: %.c
 	@set -e; rm -f $@;                                  \
         $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;       \
-        sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+        sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
 %.d: %.C
 	@set -e; rm -f $@;                                  \
         $(CXX) -MM $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$;    \
-        sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+        sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 

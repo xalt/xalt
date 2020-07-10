@@ -1,8 +1,14 @@
+#define _GNU_SOURCE
+#include "xalt_config.h"
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
 #include "xalt_c_utils.h"
+
 #define DATESZ 100
 
 int isDirectory(const char *path)
@@ -36,7 +42,6 @@ void build_resultDir(char **resultDir, const char* kind, const char* transmissio
 {
 
   char* c_home = getenv("HOME");
-  utstring_new(dir);
   
   const char * xalt_file_prefix = getenv("XALT_FILE_PREFIX");
   if (xalt_file_prefix == NULL)
@@ -51,15 +56,15 @@ void build_resultDir(char **resultDir, const char* kind, const char* transmissio
     }
   else
     {
-      long hashV = strtol(&uuid[29], 0, 16) % XALT_PRIME_NUMBER;
+      int hashV = (int) strtol(&uuid_str[29], 0, 16) % XALT_PRIME_NUMBER;
       if (strcasecmp(transmission,"file_separate_dirs") == 0)
-	asprintf(resultDir, "%s/%s/" XALT_PRIME_FMT, "/",xalt_file_prefix,kind,hashV);
+	asprintf(resultDir, "%s/%s/" XALT_PRIME_FMT "/",xalt_file_prefix, kind, hashV);
       else
-	asprintf(resultDir, "%s/" XALT_PRIME_FMT, "/",xalt_file_prefix,hashV);
+	asprintf(resultDir, "%s/" XALT_PRIME_FMT "/",xalt_file_prefix,hashV);
     }
 }
 
-void build_resultFn(char** resultFn, double start, const char* syshost, const char* uuid, const char* kind,
+void build_resultFn(char** resultFn, double start, const char* syshost, const char* uuid_str, const char* kind,
 		    const char* suffix)
 {
   char* home = getenv("HOME");
@@ -72,7 +77,7 @@ void build_resultFn(char** resultFn, double start, const char* syshost, const ch
       time_t time = (time_t) start;
       strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&time));
       
-      asprintf(resultFn, "%s.%s.%s_%04d.%s%s.%s.json", kind, syshost, dateStr, (int) frac*10000.0,
-	       user, suffix, uuid);
+      asprintf(resultFn, "%s.%s.%s_%04d.%s%s.%s.json", kind, syshost, dateStr, (int) (frac*10000.0),
+	       user, suffix, uuid_str);
     }
 }

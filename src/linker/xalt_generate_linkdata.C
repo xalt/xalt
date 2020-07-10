@@ -7,14 +7,18 @@
 #include <sys/types.h>
 
 #include "xalt_types.h"
-#include "Json.h"
+#include "xalt_cxx_types.h"
+#include "buildJson.h"
 #include "xalt_config.h"
 #include "transmit.h"
 #include "xalt_utils.h"
 #include "xalt_c_utils.h"
-//#include "link_direct2db.h"
 #include "link_submission.h"
+#include "insert.h"
 #include "parseJsonStr.h"
+
+static const char* blank0 = "";
+static const char* comma  = ",";
 
 double convert_double(const char* name, const char* s)
 {
@@ -64,28 +68,32 @@ int main(int argc, char* argv[])
   Vstring     linklineA;
   parseCompTJsonStr("COMP_T", compT, compiler, compilerPath, linklineA);
 
-  Table resultT;
+  S2S_t* recordT  = NULL;
 
   const char* user = getenv("USER");
   if (user == NULL)
     user = "unknown";
 
-  resultT["uuid"]          = uuid;
-  resultT["link_program"]  = compiler;
-  resultT["link_path"]     = compilerPath;
-  resultT["build_user"]    = user;
-  resultT["build_epoch"]   = build_epoch;
-  resultT["exec_path"]     = execname;
-  resultT["hash_id"]       = sha1sum;
-  resultT["wd"]            = wd;
-  resultT["build_syshost"] = syshost;
+  insert_key_string(&resultT, "uuid",          uuid);
+  insert_key_string(&resultT, "link_program",  compiler);
+  insert_key_string(&resultT, "link_path",     compilerPath);
+  insert_key_string(&resultT, "build_user",    user);
+  insert_key_string(&resultT, "build_epoch",   build_epoch);
+  insert_key_string(&resultT, "exec_path",     execname);
+  insert_key_string(&resultT, "hash_id",       sha1sum);
+  insert_key_string(&resultT, "wd",            wd);
+  insert_key_string(&resultT, "build_syshost", syshost);
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
 
-  Json json;
-  json.add("resultT",  resultT);
+  char*       jsonStr;
+  Json_t      json;
+  const char* my_sep = blank0;
+  json_init(Json_TABLE, &json);
+
+  json_add_S2S(&json, my_sep, "resultT",  resultT); my_sep = comma
   json.add("linkA",    libA);
   json.add("function", funcSet);
   json.add("link_line",linklineA);

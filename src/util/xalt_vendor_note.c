@@ -119,7 +119,7 @@ int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size
   return 0;
 }
 
-int xalt_vendor_note(char ** watermark, int xalt_tracingIn)
+bool xalt_vendor_note(char ** watermark, int xalt_tracingIn)
 {
   *watermark = NULL;
   xalt_tracing = xalt_tracingIn;

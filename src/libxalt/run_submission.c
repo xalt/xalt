@@ -139,12 +139,13 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
   json_add_json_str( &json, my_sep, "cmdlineA",  usr_cmdline);   my_sep = comma;
+  json_add_SET(      &json, my_sep, "libA"       libT);
   json_add_ptA(      &json, my_sep, "ptA",       ptA);
   json_add_S2S(      &json, my_sep, "envT",      envT);
   json_add_S2S(      &json, my_sep, "userT",     userT);
   json_add_S2D(      &json, my_sep, "userDT",    userDT);
   json_add_S2S(      &json, my_sep, "xaltLinkT", recordT);
-  json_fini(         &json, &json_result_str);
+  json_fini(         &json, &jsonStr);
   DEBUG0(stderr,"    Built json string\n");
 
   char* resultFn  = NULL;
