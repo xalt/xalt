@@ -9,8 +9,9 @@
 #include "xalt_fgets_alloc.h"
 #include "xalt_utils.h"
 #include "parseJsonStr.h"
+#include "xalt_cxx_types.h"
 
-void buildRmapT(std::string& rmapD, Table& rmapT, Vstring& xlibmapA)
+void buildRmapT(std::string& rmapD, S2S_t** rmapT, UT_array** xlibmapA)
 {
   
   FILE *fp = xalt_json_file_open(rmapD, "reverseMapD/xalt_rmapT");

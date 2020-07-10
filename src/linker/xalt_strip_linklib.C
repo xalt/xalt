@@ -11,31 +11,37 @@
 #include <stdio.h>
 
 #include "buildRmapT.h"
+#include "xalt_cxx_types.h"
 
 int main(int argc, char* argv[])
 {
   std::string rmapD = ""; // If this is an empty string then XALT_ETC_DIR is used to specify location of rmapD
-  Table       rmapT;
-  Vstring     xlibmapA;
-  buildRmapT(rmapD, rmapT, xlibmapA);
+  S2S_t*      rmapT = NULL; 
+  UT_array*   xlibmapA;
+  utarray_new(xlibmapA, &ut_str_icd);
+  
+  buildRmapT(rmapD, &rmapT, &xlibmapA);
 
   Set reflibSet;
   Vstring resultA;
   std::string libname;
   std::string::size_type idx;
-
-  for (auto const & it : xlibmapA)
+  char **pp;
+  std::string tmp;
+  
+  while( (pp= (char**) utarray_next(xlibmapA, pp)) != NULL)
     {
-      idx = it.rfind(".a");
+      tmp.assign(*pp);
+      idx = tmp.rfind(".a");
       if (idx != std::string::npos)
-        libname = it.substr(0,idx);  // from trailing "." to end of string
+        libname = tmp.substr(0,idx);  // from trailing "." to end of string
       else
         {
-          idx = it.rfind(".so");
+          idx = tmp.rfind(".so");
           if (idx != std::string::npos)
-            libname = it.substr(0,idx);  // from trailing "." to end of string
+            libname = tmp.substr(0,idx);  // from trailing "." to end of string
           else
-            libname = it;
+            libname = tmp;
         }
       reflibSet.insert(libname);
     }

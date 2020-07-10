@@ -5,6 +5,39 @@
 #include "xalt_quotestring.h"
 #include "parseJsonStr.h"
 #include "utarray.h"
+#include "insert.h"
+
+void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, S2S_t** t)
+{
+  if (tokens[i].type != JSMN_OBJECT)
+    {
+      fprintf(stderr,"processTable for: %s, token type is not an object\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+  const char* key;
+  const char* value;
+  const char* p;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        return;
+
+      if (tokens[i].type != JSMN_STRING && tokens[i+1].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processTable for: %s, token types are not strings\n",name);
+          exit(1);
+        }
+      key   = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      value = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      insert_key_string(t, key, value);
+    }
+}
 
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, UT_array** p_vA)
 {

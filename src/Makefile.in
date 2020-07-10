@@ -54,6 +54,8 @@ neat:
 
 clean:
 	$(RM) $(objects) $(dependencies)
+	$(RM) -rf __build__
+	$(RM) linker/*.d.[0-9][0-9]* util/*.d.[0-9][0-9]* libxalt/*.d.[0-9][0-9]* 
 
 clobber:
 	$(RM) $(programs) $(libraries)  

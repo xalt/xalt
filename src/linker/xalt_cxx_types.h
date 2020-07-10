@@ -5,9 +5,11 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 
 typedef std::unordered_map<std::string,std::string> Table;
+typedef std::unordered_set<std::string>             Set;
 typedef std::vector<std::string>                    Vstring;
 typedef unsigned int                                uint;
 

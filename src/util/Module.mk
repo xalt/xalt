@@ -1,6 +1,7 @@
 local_dir     	 := util
 
 local_c_src   	 := base64.c            \
+	            buildJson.c         \
 	            buildXALTRecordT.c  \
 		    build_uuid.c        \
 	            capture.c           \
@@ -17,6 +18,7 @@ local_c_src   	 := base64.c            \
 		    xalt_quotestring.c  \
 		    xalt_record_pkg.c   \
 		    xalt_tmpdir.c       \
+		    xalt_vendor_note.c  \
 		    zstring.c
 local_c_src   	 := $(addprefix $(local_dir)/, $(local_c_src))
 
