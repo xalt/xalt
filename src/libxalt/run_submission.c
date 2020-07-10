@@ -1,6 +1,6 @@
 #include <time.h>
 #include <string.h>
-
+#include <stdio.h>
 #include "xalt_config.h"
 #include "xalt_syshost.h"
 #include "buildEnvT.h"
@@ -18,10 +18,11 @@
 
 static const char* blank0 = "";
 static const char* comma  = ",";
+extern char **environ;
 
 void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
 		    char* exec_path, long my_size, int num_gpus, const char* xalt_kind, const char* uuid_str,
-		    const char* watermark, const char* usr_cmdline, char* env[], FILE* my_stderr)
+		    const char* watermark, const char* usr_cmdline, FILE* my_stderr)
 {
   char *      	 p_dbg        = getenv("XALT_TRACING");
   int         	 xalt_tracing = (p_dbg && ( strncmp(p_dbg,"yes",3) == 0 || strncmp(p_dbg,"run",3) == 0));
@@ -51,7 +52,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   // Walk env to build the full env table
   // (ignoring shell functions)
   t1 = epoch();
-  buildEnvT(env, &envT);
+  buildEnvT(environ, &envT);
   DEBUG0(my_stderr,"    Built envT\n");
   insert_key_double(&measureT, "03_BuildEnvT_____", epoch() - t1);
 

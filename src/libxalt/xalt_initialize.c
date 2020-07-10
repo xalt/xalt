@@ -762,7 +762,7 @@ void myinit(int argc, char **argv)
         }
 
       run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, my_size, num_gpus, xalt_run_short_descriptA[xalt_kind],
-		     uuid_str, watermark, usr_cmdline, env, stderr);
+		     uuid_str, watermark, usr_cmdline, stderr);
 
       DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
     }
@@ -1077,7 +1077,7 @@ void myfini()
 
     run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, my_size,
     		     num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
-    		     usr_cmdline, env, my_stderr);
+    		     usr_cmdline, my_stderr);
     DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
 
   if (xalt_err)
