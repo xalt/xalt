@@ -11,7 +11,8 @@ local_cxx_src 	 :=                                  \
                     parseLDTrace.C                   \
                     xalt_extract_linker.C            \
                     xalt_generate_linkdata.C         \
-                    xalt_generate_watermark.C
+                    xalt_generate_watermark.C        \
+                    xalt_rmap_exists.C
 local_cxx_src  	 := $(addprefix $(local_dir)/, $(local_cxx_src))
 
 
@@ -46,10 +47,17 @@ LNKDATA_C        := linker/jsmn.c util/insert.c util/xalt_fgets_alloc.c util/bui
                     util/base64.c util/zstring.c
 LNKDATA_OBJ      := $(patsubst %.C, %.o, $(LNKDATA_CXX)) \
                     $(patsubst %.c, %.o, $(LNKDATA_C))
+
+RMAP_EXISTS_X    := $(DESTDIR)$(LIBEXEC)/xalt_rmap_exists
+RMAP_EXISTS_CXX  := xalt_rmap_exists.C xalt_utils.C
+RMAP_EXISTS_CXX  := $(addprefix $(local_dir)/, $(RMAP_EXISTS_CXX))
+RMAP_EXISTS_OBJ  := $(patsubst %.C, %.o, $(RMAP_EXISTS_CXX))
+
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
 cxx_sources   	 += $(local_cxx_src)
-programs      	 += $(UUID_GEN_X) $(EXTR_LNKR_X) $(GEN_WTRMK_X) $(REALPATH_X) $(LNKDATA_X)
+programs      	 += $(UUID_GEN_X) $(EXTR_LNKR_X) $(GEN_WTRMK_X)      \
+                    $(REALPATH_X) $(LNKDATA_X) $(RMAP_EXISTS_X)
 #=====================================================================#
 
 $(REALPATH_X) : $(REALPATH_OBJ)
@@ -67,5 +75,7 @@ $(GEN_WTRMK_X) : $(GEN_WTRMK_OBJ)
 $(LNKDATA_X) : $(LNKDATA_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -ldl -Wl,-rpath,$(LIB64) -L$(LIB64) -lcurl
 
+$(RMAP_EXISTS_X) : $(RMAP_EXISTS_OBJ)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 
