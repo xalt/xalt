@@ -7,6 +7,7 @@ local_c_src   	 := base64.c            \
 		    compute_sha1.c      \
 		    epoch.c             \
                     extractMain.c       \
+	            insert.c            \
 	            process.c           \
 		    transmit.c          \
 		    xalt_c_utils.c      \

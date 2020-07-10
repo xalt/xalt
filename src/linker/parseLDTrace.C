@@ -1,24 +1,35 @@
 #include <stdio.h>
 #include <string.h>
 #include "compute_sha1_master.h"
-#include "link_submission.h"
+#include "parseLDTrace.h"
 #include "xalt_fgets_alloc.h"
+#include "insert.h"
 #include "xalt_config.h"
 
 ArgV            argV;
 
-void addPath2Set(std::string& path, Set& set)
+//void addPath2Set(std::string& path, Set& set)
+//{
+//  char* my_realpath = canonicalize_file_name(path.c_str());
+//  if (my_realpath)
+//    {
+//      path.assign(my_realpath);
+//      set.insert(path);
+//      free(my_realpath);
+//    }
+//}
+
+void addPath2Set(std::string& path, SET_t** libT)
 {
   char* my_realpath = canonicalize_file_name(path.c_str());
   if (my_realpath)
     {
-      path.assign(my_realpath);
-      set.insert(path);
+      insert_key_SET(*libT, my_realpath);
       free(my_realpath);
     }
 }
 
-void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpair>& libA)
+void parseLDTrace(const char* xaltobj, const char* linkfileFn, SET_t** libT)
 {
   std::string path;
   char* buf = NULL;
@@ -27,7 +38,6 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
   Set set;
 
   FILE* fp = fopen(linkfileFn,"r");
-
   while(xalt_fgets_alloc(fp, &buf, &sz))
     {
       // Remove lines with ':'
@@ -65,35 +75,20 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, std::vector<Libpa
             continue;
 
           path.assign(start+1, p);
-          addPath2Set(path, set);
+          addPath2Set(path, libT);
           continue;
         }
 
       // Save everything else (and get rid of the trailing newline!)
       path.assign(buf, len - 1);
-      addPath2Set(path, set);
-    }
-
-  free(buf); sz = 0; buf = NULL;
-
-  for(auto const & it : set)
-    argV.push_back(Arg(it));
-
-  long fnSzG = argV.size();
-
-  compute_sha1_master(fnSzG);  // compute sha1sum for all files.
-
-  for (long i = 0; i < fnSzG; ++i)
-    {
-      Libpair libpair(argV[i].fn, argV[i].sha1);
-      libA.push_back(libpair);
+      addPath2Set(path, libT);
     }
 }
 
-void readFunctionList(const char* fn, Set& funcSet)
+void readFunctionList(const char* fn, SET_t** funcSet)
 {
   char*  buf = NULL;
-  size_t sz  = 0;
+  size_t sz  = 0;ar
   
   FILE* fp = fopen(fn,"r");
   std::string funcName;
@@ -111,7 +106,6 @@ void readFunctionList(const char* fn, Set& funcSet)
     {
       // skip all lines that do not have "undefine references to "
       char* start = strstr(buf,needle);
-      
       if (start == NULL)
         continue;
 
@@ -120,9 +114,9 @@ void readFunctionList(const char* fn, Set& funcSet)
       if (*start == '`')
         start++;
       char*  p   = strchr(start,'\'');
-      size_t len = (p) ? p - start: strlen(start);
-      funcName.assign(start, len);
-      funcSet.insert(funcName);
+      if (p)
+        *p = '\0';
+      insert_key_SET(funcSet, start);
     }
   free(buf); sz  = 0; buf = NULL;
 }

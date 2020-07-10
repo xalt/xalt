@@ -3,6 +3,40 @@
 
 #include "xalt_quotestring.h"
 #include "parseJsonStr.h"
+#include "utarray.h"
+
+void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, UT_array** p_vA)
+{
+  if (tokens[i].type != JSMN_ARRAY)
+    {
+      fprintf(stderr,"processArray for: %s, token type is not an array\n",name);
+      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+      exit(1);
+    }
+
+  int iend = tokens[i].end;
+
+  std::string  value;
+  const char * p; 
+  UT_array* vA = *p_vA;
+
+  ++i;
+  while (i < ntokens)
+    {
+      if (tokens[i].start > iend)
+        return;
+
+      if (tokens[i].type != JSMN_STRING)
+        {
+          fprintf(stderr,"processArray for: %s, token type is not a string\n",name);
+          exit(1);
+        }
+      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+      utarray_push_back(vA, p);
+    }
+}
+
 
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
 {
@@ -51,7 +85,7 @@ void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok
 
 
 void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& compiler, std::string& compilerPath,
-                       Vstring& linklineA)
+                       UT_array** linklineA)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;

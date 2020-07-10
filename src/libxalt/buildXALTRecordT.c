@@ -50,22 +50,6 @@ void buildXALTRecordT(char* watermark, S2S_t** recordT)
     }
 }
 
-#define DATA_SIZE 1024
-
-static void capture(const char* cmdline, UT_array** p_resultA)
-{
-  FILE* fp;
-  fp = popen(cmdline,"r");
-  UT_array* resultA = *p_resultA;
-
-  char* eof;
-  char data[DATA_SIZE];
-  while( (eof = fgets(data, DATA_SIZE, fp)) != NULL)
-    utarray_push_back(resultA, data);
-  pclose(fp);
-}
-
-
   /*
    * The results of the objdump command looks like this (after the "Contents ..." line)
    *  0000 58414c54 5f4c696e 6b5f496e 666f0000  XALT_Link_Info..

@@ -13,7 +13,7 @@
 #include "transmit.h"
 #include "xalt_utils.h"
 #include "xalt_c_utils.h"
-#include "link_submission.h"
+#include "parseLDTrace.h"
 #include "insert.h"
 #include "parseJsonStr.h"
 
@@ -57,16 +57,17 @@ int main(int argc, char* argv[])
   if (strstr(execname,"conftest") != NULL)
     return 1;
 
-  std::vector<Libpair> libA;
-  parseLDTrace(xaltobj, linklineFn, libA);
+  SET_t* libT = NULL;
+  parseLDTrace(xaltobj, linklineFn, &libT);
 
-  Set funcSet;
-  readFunctionList(funcRawFn, funcSet);
+  SET_t* funcSet=NULL;
+  readFunctionList(funcRawFn, &funcSet);
 
   std::string compiler;
   std::string compilerPath;
-  Vstring     linklineA;
-  parseCompTJsonStr("COMP_T", compT, compiler, compilerPath, linklineA);
+  UT_array*   linklineA;
+  utarray_new(linklineA, &ut_str_icd);
+  parseCompTJsonStr("COMP_T", compT, compiler, compilerPath, &linklineA);
 
   S2S_t* recordT  = NULL;
 
@@ -93,13 +94,12 @@ int main(int argc, char* argv[])
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
 
-  json_add_S2S(&json, my_sep, "resultT",  resultT); my_sep = comma
-  json.add("linkA",    libA);
-  json.add("function", funcSet);
-  json.add("link_line",linklineA);
-  json.fini();
+  json_add_S2S(     &json, my_sep, "resultT",   resultT); my_sep = comma;
+  json_add_SET(     &json, my_sep, "linkA",     libT);
+  json_add_SET(     &json, my_sep, "function",  funcSet);
+  json_add_utarray( &json, my_sep, "link_line", linklineA);
+  json_fini(        &json, &jsonStr);
 
-  std::string jsonStr = json.result();
   std::string key("link_");
   key.append(uuid);
 
@@ -112,7 +112,8 @@ int main(int argc, char* argv[])
       build_resultFn( &resultFn,  start, syshost, uuid, "link", "");
     }
 
-  transmit(transmission, jsonStr.c_str(), "link", key.c_str(), syshost, resultDir, resultFn);
+  transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn);
+  free(jsonStr);
   free(resultDir);
   free(resultFn);
   return 0;
