@@ -11,7 +11,7 @@
 #include "buildJson.h"
 #include "xalt_config.h"
 #include "transmit.h"
-#include "xalt_utils.h"
+//include "xalt_utils.h"
 #include "xalt_c_utils.h"
 #include "parseLDTrace.h"
 #include "insert.h"
@@ -69,15 +69,15 @@ int main(int argc, char* argv[])
   utarray_new(linklineA, &ut_str_icd);
   parseCompTJsonStr("COMP_T", compT, compiler, compilerPath, &linklineA);
 
-  S2S_t* recordT  = NULL;
+  S2S_t* resultT  = NULL;
 
   const char* user = getenv("USER");
   if (user == NULL)
     user = "unknown";
 
   insert_key_string(&resultT, "uuid",          uuid);
-  insert_key_string(&resultT, "link_program",  compiler);
-  insert_key_string(&resultT, "link_path",     compilerPath);
+  insert_key_string(&resultT, "link_program",  compiler.c_str());
+  insert_key_string(&resultT, "link_path",     compilerPath.c_str());
   insert_key_string(&resultT, "build_user",    user);
   insert_key_string(&resultT, "build_epoch",   build_epoch);
   insert_key_string(&resultT, "exec_path",     execname);
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
   json_add_S2S(     &json, my_sep, "resultT",   resultT); my_sep = comma;
   json_add_SET(     &json, my_sep, "linkA",     libT);
   json_add_SET(     &json, my_sep, "function",  funcSet);
-  json_add_utarray( &json, my_sep, "link_line", linklineA);
+  json_add_utarray( &json, my_sep, "link_line", &linklineA);
   json_fini(        &json, &jsonStr);
 
   std::string key("link_");

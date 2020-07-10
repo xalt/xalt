@@ -8,7 +8,9 @@ local_c_src   	 := $(addprefix $(local_dir)/, $(local_c_src))
 
 local_cxx_src 	 :=                                  \
 	            parseJsonStr.C                   \
+                    parseLDTrace.C                   \
                     xalt_extract_linker.C            \
+                    xalt_generate_linkdata.C         \
                     xalt_generate_watermark.C
 local_cxx_src  	 := $(addprefix $(local_dir)/, $(local_cxx_src))
 
@@ -36,10 +38,18 @@ REALPATH_X       := $(DESTDIR)$(LIBEXEC)/xalt_realpath
 REALPATH_C       := linker/xalt_realpath.c
 REALPATH_OBJ     := $(patsubst %.c, %.o, $(REALPATH_C))
 
+LNKDATA_X        := $(DESTDIR)$(LIBEXEC)/xalt_generate_linkdata
+LNKDATA_CXX      := xalt_generate_linkdata.C parseJsonStr.C parseLDTrace.C
+LNKDATA_CXX      := $(addprefix $(local_dir)/, $(LNKDATA_CXX))
+LNKDATA_C        := linker/jsmn.c util/insert.c util/xalt_fgets_alloc.c util/buildJson.c    \
+                    util/xalt_quotestring.c util/xalt_c_utils.c util/transmit.c             \
+                    util/base64.c util/zstring.c
+LNKDATA_OBJ      := $(patsubst %.C, %.o, $(LNKDATA_CXX)) \
+                    $(patsubst %.c, %.o, $(LNKDATA_C))
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
 cxx_sources   	 += $(local_cxx_src)
-programs      	 += $(UUID_GEN_X) $(EXTR_LNKR_X) $(GEN_WTRMK_X) $(REALPATH_X)
+programs      	 += $(UUID_GEN_X) $(EXTR_LNKR_X) $(GEN_WTRMK_X) $(REALPATH_X) $(LNKDATA_X)
 #=====================================================================#
 
 $(REALPATH_X) : $(REALPATH_OBJ)
@@ -53,5 +63,9 @@ $(EXTR_LNKR_X) : $(EXTR_LNKR_OBJ)
 
 $(GEN_WTRMK_X) : $(GEN_WTRMK_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+
+$(LNKDATA_X) : $(LNKDATA_OBJ)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lz -ldl -Wl,-rpath,$(LIB64) -L$(LIB64) -lcurl
+
 
 

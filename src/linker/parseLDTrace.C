@@ -1,12 +1,10 @@
+#include "xalt_config.h"
 #include <stdio.h>
 #include <string.h>
-#include "compute_sha1_master.h"
+#include <string>
 #include "parseLDTrace.h"
 #include "xalt_fgets_alloc.h"
 #include "insert.h"
-#include "xalt_config.h"
-
-ArgV            argV;
 
 //void addPath2Set(std::string& path, Set& set)
 //{
@@ -24,7 +22,7 @@ void addPath2Set(std::string& path, SET_t** libT)
   char* my_realpath = canonicalize_file_name(path.c_str());
   if (my_realpath)
     {
-      insert_key_SET(*libT, my_realpath);
+      insert_key_SET(libT, my_realpath);
       free(my_realpath);
     }
 }
@@ -35,8 +33,6 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, SET_t** libT)
   char* buf = NULL;
   size_t sz = 0;
   
-  Set set;
-
   FILE* fp = fopen(linkfileFn,"r");
   while(xalt_fgets_alloc(fp, &buf, &sz))
     {
@@ -88,10 +84,9 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, SET_t** libT)
 void readFunctionList(const char* fn, SET_t** funcSet)
 {
   char*  buf = NULL;
-  size_t sz  = 0;ar
+  size_t sz  = 0;
   
   FILE* fp = fopen(fn,"r");
-  std::string funcName;
 
   // /tmp/ccCZTucS.o: In function `main':
   // /home/mclay/w/xalt/rt/mpi_hello_world.c:10: undefined reference to `MPI_Comm_rank'
@@ -99,12 +94,12 @@ void readFunctionList(const char* fn, SET_t** funcSet)
   // /home/mclay/w/xalt/rt/mpi_hello_world.c:16: undefined reference to `MPI_Finalize'
 
 
-  const char * needle = "undefined reference to ";
-  int   len_needle    = strlen(needle);
+  const char * needle     = "undefined reference to ";
+  int          len_needle = strlen(needle);
 
   while(xalt_fgets_alloc(fp, &buf, &sz))
     {
-      // skip all lines that do not have "undefine references to "
+      // skip all lines that do not have "undefined references to "
       char* start = strstr(buf,needle);
       if (start == NULL)
         continue;

@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
   
   std::string compiler;
   std::string compilerPath;
-  Vstring     linklineA;
+  UT_array**  linklineA;
   parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, linklineA);
   
   //--------------------------------------------------

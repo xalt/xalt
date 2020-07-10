@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 
 #include "xalt_quotestring.h"
 #include "parseJsonStr.h"
@@ -38,37 +39,37 @@ void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok
 }
 
 
-void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
-{
-  if (tokens[i].type != JSMN_ARRAY)
-    {
-      fprintf(stderr,"processArray for: %s, token type is not an array\n",name);
-      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
-              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
-      exit(1);
-    }
-
-  int iend = tokens[i].end;
-
-  std::string  value;
-  const char * p; 
-
-  ++i;
-  while (i < ntokens)
-    {
-      if (tokens[i].start > iend)
-        return;
-
-      if (tokens[i].type != JSMN_STRING)
-        {
-          fprintf(stderr,"processArray for: %s, token type is not a string\n",name);
-          exit(1);
-        }
-      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
-      value.assign(p);
-      vA.push_back(value);
-    }
-}
+//void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, Vstring& vA)
+//{
+//  if (tokens[i].type != JSMN_ARRAY)
+//    {
+//      fprintf(stderr,"processArray for: %s, token type is not an array\n",name);
+//      fprintf(stderr, "%d: type: %d, start: %d, end: %d, size: %d, parent: %d\n",
+//              i, tokens[i].type, tokens[i].start, tokens[i].end, tokens[i].size, tokens[i].parent);
+//      exit(1);
+//    }
+//
+//  int iend = tokens[i].end;
+//
+//  std::string  value;
+//  const char * p; 
+//
+//  ++i;
+//  while (i < ntokens)
+//    {
+//      if (tokens[i].start > iend)
+//        return;
+//
+//      if (tokens[i].type != JSMN_STRING)
+//        {
+//          fprintf(stderr,"processArray for: %s, token type is not a string\n",name);
+//          exit(1);
+//        }
+//      p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
+//      value.assign(p);
+//      vA.push_back(value);
+//    }
+//}
 
 void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value)
 {
