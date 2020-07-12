@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       build_resultDir(&resultDir, "link", transmission, uuid);
-      build_resultFn( &resultFn,  start, syshost, uuid, "link", "");
+      build_resultFn( &resultFn,  "link", start, syshost, uuid, "");
     }
 
   transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn);

@@ -64,8 +64,8 @@ void build_resultDir(char **resultDir, const char* kind, const char* transmissio
     }
 }
 
-void build_resultFn(char** resultFn, double start, const char* syshost, const char* uuid_str, const char* kind,
-		    const char* suffix)
+void build_resultFn(char** resultFn, const char* kind, double start, const char* syshost,
+		    const char* uuid_str, const char* suffix)
 {
   char* home = getenv("HOME");
   char* user = getenv("USER");

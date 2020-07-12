@@ -2,7 +2,15 @@
 #define XALT_SYSHOST_H
 
 #include "xalt_obfuscate.h"
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-extern "C" const char* xalt_syshost();
+  const char* xalt_syshost();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //XALT_SYSHOST_H

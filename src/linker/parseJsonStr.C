@@ -20,7 +20,6 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
   int iend = tokens[i].end;
   const char* key;
   const char* value;
-  const char* p;
 
   ++i;
   while (i < ntokens)

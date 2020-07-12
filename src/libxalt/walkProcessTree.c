@@ -9,7 +9,6 @@ void walkProcessTree(pid_t ppid, processTree_t** ptA)
 {
   pid_t          my_pid = ppid;
   processTree_t* entry;
-  processTree_t* tmp;
 
   process_t proc;
 

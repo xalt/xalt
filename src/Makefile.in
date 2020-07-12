@@ -2,6 +2,7 @@ CC          := gcc
 CXX         := g++
 OPTLVL      := -g -O0
 LIB_OPTIONS := -fPIC -shared
+WARN_FLAGS  := -Wall -Wno-unused-result
 
 CF_INIT     := -I. -fPIC
 COMMON_FLGS := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT) -I__build__ #-I$(THIS_DIR)
@@ -63,7 +64,7 @@ neat:
 	$(RM) linker/*~ util/*~ libxalt/*~ tmpl/*~ *~
 
 clean:
-	$(RM) $(objects) $(dependencies)
+	$(RM) $(objects) $(dependencies) $(extra_clean)
 	$(RM) -rf __build__
 	$(RM) linker/*.d.[0-9][0-9]* util/*.d.[0-9][0-9]* libxalt/*.d.[0-9][0-9]* 
 

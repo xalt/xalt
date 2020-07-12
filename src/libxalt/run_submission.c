@@ -1,6 +1,8 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include <dirent.h>
+#include <fnmatch.h>
 #include "xalt_config.h"
 #include "xalt_syshost.h"
 #include "buildEnvT.h"
@@ -12,17 +14,24 @@
 #include "parseProcMaps.h"
 #include "translate.h"
 #include "parseProcMaps.h"
+#include "xalt_quotestring.h"
 #include "buildJson.h"
 #include "run_submission.h"
 #include "epoch.h"
+#include "xalt_types.h"
+#include "xalt_c_utils.h"
+#include "xalt_tmpdir.h"
+#include "xalt_fgets_alloc.h"
+#include "buildUserT.h"
+#include "transmit.h"
 
 static const char* blank0 = "";
 static const char* comma  = ",";
 extern char **environ;
 
 void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
-		    char* exec_path, long my_size, int num_gpus, const char* xalt_kind, const char* uuid_str,
-		    const char* watermark, const char* usr_cmdline, FILE* my_stderr)
+		    char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
+		    char* watermark, const char* usr_cmdline, FILE* my_stderr)
 {
   char *      	 p_dbg        = getenv("XALT_TRACING");
   int         	 xalt_tracing = (p_dbg && ( strncmp(p_dbg,"yes",3) == 0 || strncmp(p_dbg,"run",3) == 0));
@@ -32,10 +41,10 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   processTree_t* ptA      = NULL;
   S2S_t*      	 envT	  = NULL;
   S2S_t*      	 recordT  = NULL;
-  S2S_t       	 userT	  = NULL;
-  S2D_t       	 userDT	  = NULL;
-  S2D_t       	 measureT = NULL;
-  SET_t          libT     = NULL;
+  S2S_t*       	 userT	  = NULL;
+  S2D_t*      	 userDT	  = NULL;
+  S2D_t*       	 measureT = NULL;
+  SET_t*         libT     = NULL;
   double      	 t1;
 
   DEBUG1(my_stderr,"\n  run_submission(%s) {\n",suffix);
@@ -72,7 +81,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
     {
       HASH_FIND_STR(recordT, "Build_Epoch", e);
       if (e)
-	insert_key_double(&userDT, "Build_Epoch",  strtod(e->value, (char**) NULL));
+	insert_key_double(&userDT, "Build_Epoch",  strtod(utstring_body(e->value), (char**) NULL));
     }
 	  
   char* exec_pathQ = strdup(xalt_quotestring(exec_path));
@@ -93,10 +102,10 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   insert_key_string(&userT,  "exec_type",   "binary");
   free(exec_pathQ);
   buildUserT(&userT, &userDT);
-  translate(envT, userT, &userDT);
+  translate(envT, &userT, &userDT);
 
   HASH_FIND_STR(userT, "scheduler", e);
-  const char * scheduler = (e) ? e->value : "not known";
+  const char * scheduler = (e) ? utstring_body(e->value) : "not known";
   insert_key_double(&measureT, "01_BuildUserT___", epoch() - t1);
   DEBUG1(my_stderr,"    Built userT, userDT, scheduler: %s\n", scheduler);
 
@@ -104,7 +113,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   // Filter envT 
 
   t1 = epoch();
-  filterEnvT(env, &envT);
+  filterEnvT(environ, &envT);
   DEBUG0(my_stderr,"    Filter envT\n");
   insert_key_double(&measureT, "03_BuildEnvT____", epoch() - t1);
 
@@ -112,7 +121,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   // Take sha1sum of the executable
   t1 = epoch();
   char sha1buf[41];
-  compute_sha1(exec_path, &sha1buf);
+  compute_sha1(exec_path, &sha1buf[0]);
   DEBUG1(my_stderr,"    Compute sha1 of exec: %s\n",exec_path);
   insert_key_double(&measureT, "02_Sha1_exec____", epoch() - t1);
 
@@ -130,7 +139,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   
   DEBUG1(my_stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
-  measureT["07____total_____"] = epoch() - t0;
+  insert_key_double(&measureT, "07____total_____", epoch() - t1);
 
   //*********************************************************************
   // So build the Json table string
@@ -140,7 +149,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
   json_add_json_str( &json, my_sep, "cmdlineA",  usr_cmdline);   my_sep = comma;
-  json_add_SET(      &json, my_sep, "libA"       libT);
+  json_add_SET(      &json, my_sep, "libA",      libT);
   json_add_ptA(      &json, my_sep, "ptA",       ptA);
   json_add_S2S(      &json, my_sep, "envT",      envT);
   json_add_S2S(      &json, my_sep, "userT",     userT);

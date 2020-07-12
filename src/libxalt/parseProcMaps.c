@@ -1,8 +1,10 @@
-#include "parseProcMaps.h"
-#include "xalt_config.h"
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "parseProcMaps.h"
+#include "xalt_config.h"
+
 #include "xalt_fgets_alloc.h"
 
 /*
@@ -39,7 +41,7 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
   size_t   sz   = 0;
   char *   fn;
   
-  int my_size = asprintf(&fn, "/proc/%ld/maps", my_pid);
+  (void) asprintf(&fn, "/proc/%d/maps", my_pid);
   FILE* fp    = fopen(fn,"r");
   if (!fp)
     return;
@@ -88,12 +90,12 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
       HASH_FIND_STR(*libT, p, entry);
       if (!entry)
 	{
-	  entry = (SET_t) malloc(sizeof(SET_t));
+	  entry = (SET_t *) malloc(sizeof(SET_t));
 	  utstring_new(   entry->key);
 	  int keylen = strlen(p);
 	  utstring_bincpy(entry->key, p, keylen);
 
-	  HASH_ADD_KEYPTR(hh, *libT, utstring_body(entry->key), keylen);
+	  HASH_ADD_KEYPTR(hh, *libT, utstring_body(entry->key), keylen, entry);
 	}
     }
 }

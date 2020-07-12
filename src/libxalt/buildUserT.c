@@ -80,10 +80,5 @@ void buildUserT(S2S_t** userT, S2D_t** userDT)
   buff = getenv("OMP_NUM_THREADS");
   const char* nt          = (buff) ? buff : "1";
   double      num_threads = strtod(nt, (char **) NULL);
-
+  insert_key_double(userDT, "num_threads", num_threads);
 }
-
-
-	    
-
-  

@@ -52,8 +52,8 @@ void filterEnvT(char* env[], S2S_t ** envT)
 	      if (entry)
 		{
 		  HASH_DELETE(hh, *envT, entry);
-		  utstring_free(entry->name);
 		  utstring_free(entry->key);
+		  utstring_free(entry->value);
 		  free(entry);
 		}
 	    }

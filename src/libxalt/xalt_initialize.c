@@ -150,7 +150,6 @@ static int             load_nvml();
 void myinit(int argc, char **argv);
 void myfini();
 void wrapper_for_myfini(int signum);
-static void capture(const char * cmd, char* buffer, int bufSz);
 #define STR(x)   StR1_(x)
 #define StR1_(x) #x
 
@@ -179,6 +178,7 @@ static double       end_time	          = 0.0;
 static double       frac_time             = 0.0;
 static long         my_rank	          = 0L;
 static long         my_size	          = 1L;
+static int          num_tasks             = 0;
 static int          xalt_kind             = 0;
 static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
@@ -229,14 +229,6 @@ static dcgmHandle_t dcgm_handle           = NULL;
   (*(out)) = __result;               \
 }
 #endif
-
-#define HERE  fprintf(stderr,    "%s:%d\n",__FILE__,__LINE__)
-
-#define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
-#define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
-#define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) fprintf((fp),s,(x1),(x2))
-#define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
-#define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
 
 void myinit(int argc, char **argv)
 {
@@ -309,8 +301,9 @@ void myinit(int argc, char **argv)
       my_size = compute_value(sizeA);
       if (my_size < 1L)
 	my_size = 1L;
+      num_tasks = (int) my_size;
       get_abspath(exec_path,sizeof(exec_path));
-      fprintf(stderr,"myinit(%ld/%ld,%s,%s){\n", my_rank, my_size, STR(STATE),exec_path);
+      fprintf(stderr,"myinit(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE),exec_path);
     }
 
   /***********************************************************
@@ -434,8 +427,9 @@ void myinit(int argc, char **argv)
   my_size = compute_value(sizeA);
   if (my_size < 1L)
     my_size = 1L;
+  num_tasks = (int) my_size;
 
-  if (my_size > 1L)
+  if (num_tasks > 1)
     {
       run_mask |= BIT_MPI;
       xalt_kind = BIT_MPI;
@@ -700,7 +694,7 @@ void myinit(int argc, char **argv)
 
   // If MPI program and no vendor watermark then try extracting the watermark
   // with objdump via extractXALTRecord(...)
-  if (my_size > 1L && ! have_watermark )
+  if (num_tasks > 1 && ! have_watermark )
     have_watermark = extractXALTRecordString(exec_path, &watermark);
 
   //b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
@@ -744,10 +738,11 @@ void myinit(int argc, char **argv)
 
   // Create a start record for any MPI executions with an acceptable number of tasks.
   // or a PKG type
-  if (my_size >= always_record )
+  if (num_tasks >= always_record )
     {
 
-      DEBUG2(stderr, "    -> MPI_SIZE: %ld >= MPI_ALWAYS_RECORD: %d => recording start record!\n",my_size, (int) always_record);
+      DEBUG2(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
+	     num_tasks, (int) always_record);
 
       if ( ! have_uuid )
 	{
@@ -761,15 +756,15 @@ void myinit(int argc, char **argv)
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
 
-      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, my_size, num_gpus, xalt_run_short_descriptA[xalt_kind],
+      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus, xalt_run_short_descriptA[xalt_kind],
 		     uuid_str, watermark, usr_cmdline, stderr);
 
       DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
     }
   else
     {
-      DEBUG4(stderr,"    -> MPI_SIZE: %ld < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
-             my_size, (int) always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
+      DEBUG4(stderr,"    -> MPI_SIZE: %d < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
+             num_tasks, (int) always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
   /**********************************************************
@@ -841,7 +836,7 @@ void myfini()
       close(STDERR_FILENO);
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
-      DEBUG4(my_stderr,"\nmyfini(%ld/%ld,%s,%s){\n", my_rank, my_size, STR(STATE), exec_path);
+      DEBUG4(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
@@ -1024,7 +1019,7 @@ void myfini()
 #endif
 
   // Sample all scalar executions and all MPI executions less than **always_record**
-  if (my_size < always_record)
+  if (num_tasks < always_record)
     {
       if (xalt_sampling)
 	{
@@ -1036,7 +1031,7 @@ void myfini()
 	    }
 	  else
 	    run_time  = end_time - start_time;
-	  probability = prgm_sample_probability(my_size, run_time);
+	  probability = prgm_sample_probability(num_tasks, run_time);
 
 	  if (my_rand >= probability)
 	    {
@@ -1059,7 +1054,7 @@ void myfini()
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
 
-    if (! have_watermark && my_size < 2L)
+    if (! have_watermark && num_tasks < 2)
     	have_watermark = extractXALTRecordString(exec_path, &watermark);
     	
     if (! have_uuid)
@@ -1075,7 +1070,7 @@ void myfini()
     	  fflush(my_stderr);
       }
 
-    run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, my_size,
+    run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
     		     num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
     		     usr_cmdline, my_stderr);
     DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
@@ -1178,40 +1173,6 @@ static unsigned int mix(unsigned int a, unsigned int b, unsigned int c)
   c=c-a;  c=c-b;  c=c^(b >> 15);
   return c;
 }
-
-//static void capture(const char* cmdline, char* buffer, int bufSz)
-//{
-//  FILE* fp;
-//
-//  /* swallow stderr */
-//  int fd1, fd2;
-//  fflush(stderr);
-//  fd1 = dup(STDERR_FILENO);
-//  fd2 = open("/dev/null", O_WRONLY);
-//  dup2(fd2, STDERR_FILENO);
-//  close(fd2);
-//
-//  fp = popen(cmdline,"r");
-//  fgets(buffer, bufSz, fp);
-//
-//  pclose(fp);
-//
-//  /* restore stderr */
-//  fflush(stderr);
-//  dup2(fd1, STDERR_FILENO);
-//  close(fd1);
-//}
-
-static void capture(const char* cmdline, char* buffer, int bufSz)
-{
-  FILE* fp;
-
-  fp = popen(cmdline,"r");
-  fgets(buffer, bufSz, fp);
-
-  pclose(fp);
-}
-
 
 static  double prgm_sample_probability(int ntasks, double runtime)
 {

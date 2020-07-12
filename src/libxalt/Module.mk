@@ -63,6 +63,7 @@ XALT_INIT_D       := xalt_obfuscate.h xalt_types.h insert.h base64.h       \
 #=====================================================================#
 c_sources     	  += $(local_c_src) 
 libraries         += $(LIBXALT_INIT_64)
+extra_clean       += libxalt/xalt_initialize_preload.o
 #=====================================================================#
 
 __build__/lex.xalt_env.c: $(CURDIR)/__build__/xalt_env_parser.lex
