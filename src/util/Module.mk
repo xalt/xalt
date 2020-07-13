@@ -55,7 +55,7 @@ REC_PKG_C        := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring
 REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) __build__/xalt_syshost.c
 REC_PKG_OBJ      := $(patsubst %.c, %.o, $(REC_PKG_C))
 
-SYSHOST_X        := $(DESTDIR)$(SBIN)/xalt_syshost
+SYSHOST_X        := $(DESTDIR)$(LIBEXEC)/xalt_syshost
 
 #=====================================================================#
 c_sources     	 += $(local_c_src) 

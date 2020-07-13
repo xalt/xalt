@@ -20,10 +20,14 @@ extra_clean  :=
 
 LIBEXEC      := $(HOME)/t/xalt/3.0/libexec
 LIB64        := $(HOME)/t/xalt/3.0/lib64
+LIB          := $(HOME)/t/xalt/3.0/lib
 SBIN         := $(HOME)/t/xalt/3.0/sbin
+HAVE_32BIT   := @HAVE_32BIT@
 
-dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources))
-objects      = $(subst .c,.o,$(c_sources)) $(subst .C,.o,$(cxx_sources))
+dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources)) \
+               $(subst .c,.d32,$(c_sources))
+objects      = $(subst .c,.o,$(c_sources)) $(subst .C,.o,$(cxx_sources)) \
+               $(subst .c,.o32,$(c_sources))
 
 include_dirs := __build__ linker util libxalt
 
@@ -57,8 +61,7 @@ all: $(programs) $(libraries)
 
 
 echo:
-	@echo programs: $(programs)
-	@echo CFLAGS: $(CFLAGS)
+	@echo "libraries: $(libraries)"
 
 neat:
 	$(RM) linker/*~ util/*~ libxalt/*~ tmpl/*~ *~
@@ -80,9 +83,20 @@ clobber:
         sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
+%.d32: %.c
+	@set -e; rm -f $@;                                  \
+        $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;       \
+        sed 's,\($(notdir $*)\)\.o *:,$(dir $@)\1.o32 $@: ,' < $@.$$$$ > $@; \
+        rm -f $@.$$$$
+
 %.d: %.C
 	@set -e; rm -f $@;                                  \
         $(CXX) -MM $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$;    \
         sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
+
+%.o32: %.c
+	$(CC) -m32 $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+
 
