@@ -54,3 +54,4 @@ install
 uuid_32
 uuid_64
 .gdb_history
+module.mk

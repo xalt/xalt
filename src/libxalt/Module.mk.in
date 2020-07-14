@@ -98,7 +98,7 @@ BUILD_INIT_32bit_yes := $(XALT_INIT_REG32) $(RUN_SUBMISSION_L32) $(LIBXALT_INIT_
 #=====================================================================#
 c_sources     	  += $(local_c_src) 
 libraries         += $(XALT_INIT_REGULAR) $(LIBXALT_INIT_64) $(RUN_SUBMISSION_LIB) \
-                     $(BUILD_INIT_32bit_yes)
+                     $(BUILD_INIT_32bit_$(HAVE_32BIT))
 extra_clean       += libxalt/xalt_initialize_preload.o   libxalt/xalt_initialize_regular.o   \
                      libxalt/xalt_initialize_preload.o32 libxalt/xalt_initialize_regular.o32 \
 

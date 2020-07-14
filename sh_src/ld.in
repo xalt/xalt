@@ -230,14 +230,10 @@ if [ -z "$BIT32FLAG" ]; then
   elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
       MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.a
   fi
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o $XLD/xalt_quotestring.o $XLD/xalt_fgets_alloc.o
-                         $XLD/lex.__XALT_path.o $XLD/lex.__XALT_host.o $XLD/xalt_tmpdir.o $XLD/base64.o
-                         $XLD/xalt_vendor_note.o $XLD/xalt_dir.o $MY_HOSTNAME_PARSER_OBJ"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_regular.o $XLD/librun_submission.a"
 else
   XLD=$XALT_DIR/lib
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_32.o $XLD/xalt_quotestring_32.o $XLD/xalt_fgets_alloc_32.o
-                         $XLD/lex.__XALT_path_32.o $XLD/lex.__XALT_host_32.o $XLD/xalt_tmpdir_32.o $XLD/base64.o
-                         $XLD/my_hostname_parser_32.o  $XLD/xalt_dir_32.o $XLD/xalt_vendor_note.o"
+  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o32 $XLD/librun_submission.a"
 fi
   
 # Get the compiler information

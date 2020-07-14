@@ -128,8 +128,7 @@ RT_PKG                  := $(patsubst %, $(srcdir)/%, $(RT_PKG))
 LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py             \
                            py_src/xalt_stack.py              py_src/BeautifulTbl.py            \
                            py_src/xalt_global.py             py_src/Rmap_XALT.py               \
-                           py_src/xalt_util.py               py_src/xalt_name_mapping.py       \
-                           py_src/xalt_transmission_factory.py
+                           py_src/xalt_util.py               py_src/xalt_name_mapping.py
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
 
@@ -144,10 +143,7 @@ TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py
                            contrib/TACC/build_default_user_2_account_str.in
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 
-INIT_SRC             	:= src/xalt_initialize.c
-INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
-
-OBFUSCATE_HDR           := src/xalt_obfuscate.h
+OBFUSCATE_HDR           := src/util/xalt_obfuscate.h
 OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
 
 
@@ -194,9 +190,6 @@ echo:
 	@echo MAKE: $(MAKE)
 	@echo MAKEFLAGS: $(MAKEFLAGS)
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
-
-remove_genfiles:
-	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
 
 $(DIRLIST) :
 	mkdir -p $@
@@ -418,6 +411,14 @@ makefile: $(srcdir)/Makefile.in config.status
 
 src/makefile: $(srcdir)/src/Makefile.in config.status
 	./config.status $@
+
+src/util/module.mk: $(srcdir)/src/util/Module.mk.in config.status
+	./config.status $@
+src/linker/module.mk: $(srcdir)/src/linker/Module.mk.in config.status
+	./config.status $@
+src/libxalt/module.mk: $(srcdir)/src/libxalt/Module.mk.in config.status
+	./config.status $@
+
 
 neat:
 	$(RM) *~

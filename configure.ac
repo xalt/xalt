@@ -726,6 +726,11 @@ fi
 
   
 
-AC_OUTPUT(makefile:Makefile.in src/__build__/xalt_config.h:src/util/xalt_config.h.in src/makefile:src/Makefile.in)
+AC_OUTPUT(makefile:Makefile.in                                       \
+          src/__build__/xalt_config.h:src/util/xalt_config.h.in      \
+          src/makefile:src/Makefile.in                               \
+          src/libxalt/module.mk:src/libxalt/Module.mk.in             \
+          src/linker/module.mk:src/linker/Module.mk.in               \
+          src/util/module.mk:src/util/Module.mk.in)
 
 AX_SUMMARIZE_CONFIG

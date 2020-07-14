@@ -1,13 +1,48 @@
-CC          := gcc
-CXX         := g++
-OPTLVL      := -g -O0
-LIB_OPTIONS := -fPIC -shared
-WARN_FLAGS  := -Wall -Wno-unused-result
+COPY_LIBS_TO_XALT := $(PY_BUILD_TOOLS)/copy_system_library_to_xalt.py
+FIND_LIBS_TO_XALT := $(PY_BUILD_TOOLS)/find_required_libraries.py
+THIS_DIR    	  := $(PARENT_DIR)/src
+VPATH       	   = .:$(THIS_DIR)
+CC          	  := gcc
+CXX         	  := g++
+OPTLVL      	  := -g -O0
+LIB_OPTIONS 	  := -fPIC -shared
+WARN_FLAGS  	  := -Wall -Wno-unused-result
 
-CF_INIT     := -I. -fPIC
-COMMON_FLGS := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT) -I__build__ #-I$(THIS_DIR)
-CXXFLAGS    := $(COMMON_FLGS) -std=c++11
-CFLAGS      := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+CF_INIT     	  := -I. -fPIC
+COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT) -I__build__ 
+CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
+CFLAGS      	  := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+
+ifeq ($(HAVE_DCGM),yes)
+  ifeq ($(STATIC_LIBS),yes)
+    LIBDCGM:=-ldcgm_stub -ldl
+  else
+    LIBDCGM:=-ldcgm
+  endif
+endif
+ifeq ($(HAVE_NVML),yes)
+  LIBNVML:=-ldl
+endif
+
+ifneq ($(MY_HOSTNAME_PARSER),no)
+   HAVE_EXTERNAL_HOSTNAME_PARSER := -DHAVE_EXTERNAL_HOSTNAME_PARSER
+   PARSER_TYPE                   := $(firstword $(subst :, ,$(MY_HOSTNAME_PARSER)))
+   ifeq ($(PARSER_TYPE),c_file)
+      MY_HOSTNAME_PARSER_SRC     := $(lastword  $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.o
+      MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.o
+   endif
+   ifeq ($(PARSER_TYPE),library)
+      MY_HOSTNAME_PARSER_LIBRARY := $(word  2, $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_LIB32   := $(word  3, $(subst :, ,$(MY_HOSTNAME_PARSER)))
+      MY_HOSTNAME_PARSER_TARGET  := my_hostname_parser_target
+      ifneq ($(MY_HOSTNAME_PARSER_LIB32),)
+         MY_HOSTNAME_PARSER_TARGET  += my_hostname_parser_target_32
+      endif
+      MY_HOSTNAME_PARSER_OBJ     := $(DESTDIR)$(LIB64)/my_hostname_parser.a
+      MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.a
+   endif
+endif
 
 # Collect information from each module in these four variables.
 # Initialize them here as simple variables.
@@ -18,11 +53,10 @@ cxx_sources  :=
 libraries    :=
 extra_clean  :=
 
-LIBEXEC      := $(HOME)/t/xalt/3.0/libexec
-LIB64        := $(HOME)/t/xalt/3.0/lib64
-LIB          := $(HOME)/t/xalt/3.0/lib
-SBIN         := $(HOME)/t/xalt/3.0/sbin
-HAVE_32BIT   := @HAVE_32BIT@
+ifeq ($(XALT_USE_32BIT),no)
+  HAVE_32BIT := no
+endif
+
 
 dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources)) \
                $(subst .c,.d32,$(c_sources))
@@ -30,6 +64,7 @@ objects      = $(subst .c,.o,$(c_sources)) $(subst .C,.o,$(cxx_sources)) \
                $(subst .c,.o32,$(c_sources))
 
 include_dirs := __build__ linker util libxalt
+include_dirs := $(addprefix $(THIS_DIR)/, $(include_dirs))
 
 CPPFLAGS     += $(addprefix -I, $(include_dirs))
 
@@ -47,9 +82,9 @@ ifeq "$(MAKECMDGOALS)" "clobber"
   INCLUDE_DEPS := no
 endif
 
-include linker/Module.mk
-include util/Module.mk
-include libxalt/Module.mk
+include linker/module.mk
+include util/module.mk
+include libxalt/module.mk
 
 ifneq ($(INCLUDE_DEPS),no)
   include $(dependencies)
@@ -57,25 +92,27 @@ endif
 
 
 .PHONY: all
-all: $(programs) $(libraries)
+all: build_all COPY_ALL_LIBS
 
 
-echo:
-	@echo "libraries: $(libraries)"
+build_all: ECHO $(programs) $(libraries) $(MY_HOSTNAME_PARSER_TARGET)  \
+           $(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py
 
-neat:
-	$(RM) linker/*~ util/*~ libxalt/*~ tmpl/*~ *~
-
-clean:
-	$(RM) $(objects) $(dependencies) $(extra_clean)
-	$(RM) -rf __build__
-	$(RM) linker/*.d.[0-9][0-9]* util/*.d.[0-9][0-9]* libxalt/*.d.[0-9][0-9]* 
-
-clobber:
-	$(RM) $(programs) $(libraries)  
-
-
-
+COPY_ALL_LIBS: build_all
+	REQ_LIBS=`$(FIND_LIBS_TO_XALT) $(programs)`;                   \
+	for i in $$REQ_LIBS; do                                        \
+          baseNM="$${i##*/}";                                          \
+	  if [ ! -f $(DESTDIR)$(LIB64)/$$baseNM ]; then                \
+            cp $$i $(DESTDIR)$(LIB64);                                 \
+          fi;                                                          \
+        done
+	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR)            ; do \
+	  baseNM="$${i%%:*}";                                          \
+          realNM="$${i##*:}";                                          \
+	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64)              \
+                               --base $$baseNM                         \
+                               --real $$realNM;                        \
+        done
 
 %.d: %.c
 	@set -e; rm -f $@;                                  \
@@ -99,4 +136,34 @@ clobber:
 	$(CC) -m32 $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 
+
+ECHO:
+	@echo "XALT_EXECUTABLE_TRACKING: '$(XALT_EXECUTABLE_TRACKING)'"
+
+echo:
+	@echo "libraries:      $(libraries)"
+	@echo "HAVE_32BIT:     $(HAVE_32BIT)"
+	@echo "XALT_USE_32BIT: $(XALT_USE_32BIT)"
+
+neat:
+	$(RM) linker/*~ util/*~ libxalt/*~ tmpl/*~ *~
+
+clean:
+	$(RM) $(objects) $(dependencies) $(extra_clean)
+	$(RM) linker/*.d.[0-9][0-9]* util/*.d.[0-9][0-9]* libxalt/*.d.[0-9][0-9]* 
+	$(RM) linker/*.d32.[0-9][0-9]* util/*.d32.[0-9][0-9]* libxalt/*.d32.[0-9][0-9]* 
+
+clobber:
+	$(RM) $(programs) $(libraries)  
+	$(RM) -rf __build__
+
+
+$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py: __build__/xalt_python_pkg_filter.py
+	cp $^ $@
+
+my_hostname_parser_target:
+	cp $(MY_HOSTNAME_PARSER_LIBRARY)   $(DESTDIR)$(LIB64)/my_hostname_parser.a
+
+my_hostname_parser_target_32:
+	cp $(MY_HOSTNAME_PARSER_LIB32)     $(DESTDIR)$(LIB)/my_hostname_parser_32.a
 

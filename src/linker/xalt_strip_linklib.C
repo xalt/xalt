@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
   Vstring resultA;
   std::string libname;
   std::string::size_type idx;
-  char **pp;
+  char **pp = NULL;
   std::string tmp;
   
   while( (pp= (char**) utarray_next(xlibmapA, pp)) != NULL)
