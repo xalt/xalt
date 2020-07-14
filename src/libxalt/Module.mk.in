@@ -46,10 +46,12 @@ RUN_SUBMISSION_OBJ:= libxalt/run_submission.o            \
 	             util/buildXALTRecordT.o             \
 	             util/buildJson.o                    \
 	             util/process.o                      \
+                     util/transmit.o                     \
                      util/xalt_dir.o                   	 \
                      util/xalt_tmpdir.o                	 \
                      util/xalt_vendor_note.o           	 \
                      util/xalt_fgets_alloc.o             \
+                     util/zstring.o                      \
                      $(MY_HOSTNAME_PARSER_OBJ)
 
 LIBXALT_INIT_32   := $(DESTDIR)$(LIB)/libxalt_init.so
@@ -63,6 +65,7 @@ RUN_SUBMISSION_O32:= libxalt/run_submission.o32          \
                      __build__/lex.__XALT_path.o32       \
                      __build__/lex.__XALT_host.o32       \
 		     util/base64.o32                   	 \
+                     util/transmit.o32                   \
 	             util/build_uuid.o32                 \
 		     util/capture.o32                 	 \
 	             util/buildXALTRecordT.o32           \
@@ -72,6 +75,7 @@ RUN_SUBMISSION_O32:= libxalt/run_submission.o32          \
                      util/xalt_tmpdir.o32              	 \
                      util/xalt_vendor_note.o32         	 \
                      util/xalt_fgets_alloc.o32           \
+                     util/zstring.o32                    \
                      $(MY_HOSTNAME_PARSER_O32)
 
 RUN_SUBMISSION_LIB:= $(DESTDIR)$(LIB64)/librun_submission.a

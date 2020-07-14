@@ -74,6 +74,10 @@ vpath %.C $(include_dirs)
 
 all:
 
+ifeq "$(MAKECMDGOALS)" "neat"
+  INCLUDE_DEPS := no
+endif
+
 ifeq "$(MAKECMDGOALS)" "clean"
   INCLUDE_DEPS := no
 endif
@@ -115,20 +119,20 @@ COPY_ALL_LIBS: build_all
         done
 
 %.d: %.c
-	@set -e; rm -f $@;                                  \
-        $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;       \
+	rm -f $@;                                                        \
+        $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;                    \
         sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
 %.d32: %.c
-	@set -e; rm -f $@;                                  \
-        $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;       \
+	rm -f $@;                                                            \
+        $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;                        \
         sed 's,\($(notdir $*)\)\.o *:,$(dir $@)\1.o32 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
 %.d: %.C
-	@set -e; rm -f $@;                                  \
-        $(CXX) -MM $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$;    \
+	rm -f $@;                                                        \
+        $(CXX) -MM $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$;                 \
         sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
@@ -141,14 +145,14 @@ ECHO:
 	@echo "XALT_EXECUTABLE_TRACKING: '$(XALT_EXECUTABLE_TRACKING)'"
 
 echo:
-	@echo "libraries:      $(libraries)"
+	@echo "INCLUDE_DEPS:   $(INCLUDE_DEPS)"
 	@echo "HAVE_32BIT:     $(HAVE_32BIT)"
 	@echo "XALT_USE_32BIT: $(XALT_USE_32BIT)"
 
 neat:
 	$(RM) linker/*~ util/*~ libxalt/*~ tmpl/*~ *~
 
-clean:
+clean:  echo
 	$(RM) $(objects) $(dependencies) $(extra_clean)
 	$(RM) linker/*.d.[0-9][0-9]* util/*.d.[0-9][0-9]* libxalt/*.d.[0-9][0-9]* 
 	$(RM) linker/*.d32.[0-9][0-9]* util/*.d32.[0-9][0-9]* libxalt/*.d32.[0-9][0-9]* 

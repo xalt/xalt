@@ -1,6 +1,8 @@
 #ifndef ZSTRING_H
 #define ZSTRING_H
 
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {
