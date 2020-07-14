@@ -1,6 +1,9 @@
 #ifndef EPOCH_H
 #define EPOCH_H
 
+
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {

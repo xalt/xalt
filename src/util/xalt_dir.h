@@ -1,6 +1,8 @@
 #ifndef XALT_DIR_H
 #define XALT_DIR_H
 
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

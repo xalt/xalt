@@ -1,10 +1,11 @@
 #ifndef PARSEJSONSTR_H
 #define PARSEJSONSTR_H
 
+#include <string>
 #include "jsmn.h"
 #include "utarray.h"
 #include "xalt_types.h"
-#include <string>
+#include "xalt_obfuscate.h"
 
 void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, S2S_t** t);
 void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, std::string& value);

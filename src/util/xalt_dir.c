@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "xalt_dir.h"
 #include "xalt_config.h"
 
 const char* xalt_dir(const char* file)

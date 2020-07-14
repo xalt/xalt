@@ -1,5 +1,8 @@
 #ifndef TRANSMIT_H
 #define TRANSMIT_H
+
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {

@@ -6,6 +6,8 @@ extern "C"
 {
 #endif
   
+#include "xalt_obfuscate.h"
+
   int keep_env_name(const char * env_string);
   void env_parser_cleanup();
 

@@ -1,6 +1,8 @@
 #ifndef BUILD_UUID_H
 #define BUILD_UUID_H
 
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {

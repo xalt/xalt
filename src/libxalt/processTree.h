@@ -6,6 +6,7 @@
 #include "utstring.h"
 #include "utarray.h"
 #include "xalt_types.h"
+#include "xalt_obfuscate.h"
 
 void walkProcessTree(pid_t pid, processTree_t** ptA);
 

@@ -3,6 +3,7 @@
 
 #include "xalt_types.h"
 #include "utarray.h"
+#include "xalt_obfuscate.h"
 
 #ifdef __cplusplus
 extern "C"

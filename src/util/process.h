@@ -1,14 +1,16 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
+#include <unistd.h>
+#include "utstring.h"
+#include "utarray.h"
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#include <unistd.h>
-#include "utstring.h"
-#include "utarray.h"
 
   typedef struct {
     UT_string* m_exe;

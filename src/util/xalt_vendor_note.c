@@ -50,7 +50,7 @@ typedef struct vendor_note vendor_note;
  * XALT version is 1 byte, The watermark is a array of character strings.
  */
 
-int read_watermark(const void *note, char **ret_watermark)
+static int read_watermark(const void *note, char **ret_watermark)
 {
   const elf_note *elf_note = note;
 
@@ -79,7 +79,7 @@ int read_watermark(const void *note, char **ret_watermark)
   return elf_note->desc_size + elf_note->name_size + 12;
 }
 
-int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size_t size, void *data)
+static int handle_program_header(struct dl_phdr_info *info, __attribute__((unused))size_t size, void *data)
 {
   int j;
   char *   watermark = NULL;

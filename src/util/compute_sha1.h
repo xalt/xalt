@@ -2,6 +2,8 @@
 #define COMPUTE_SHA1_H
 
 #include "utstring.h"
+#include "xalt_obfuscate.h"
+
 void compute_sha1(const char* fn, char* sha1_str);
 
 #endif //COMPUTE_SHA1_H

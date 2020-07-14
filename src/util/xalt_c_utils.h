@@ -1,5 +1,8 @@
 #ifndef XALT_C_UTILS_H
 #define XALT_C_UTILS_H
+
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {

@@ -1,6 +1,7 @@
 /* -*- c -*- */
 %{
 #include <string.h>
+#include "xalt_obfuscate.h"
 
 static char * strbuf   = NULL;
 static unsigned int sz = 0;

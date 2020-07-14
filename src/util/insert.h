@@ -2,6 +2,7 @@
 #define INSERT_H
 
 #include "xalt_types.h"
+#include "xalt_obfuscate.h"
 
 #ifdef __cplusplus
 extern "C"
