@@ -41,8 +41,9 @@ int main(int argc, char* argv[])
   
   std::string compiler;
   std::string compilerPath;
-  UT_array**  linklineA    = NULL;
-  parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, linklineA);
+  UT_array*   linklineA;
+  utarray_new(linklineA, &ut_str_icd);
+  parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, &linklineA);
   
   //--------------------------------------------------
   // Build user, osName, cwd and system;
@@ -130,7 +131,6 @@ int main(int argc, char* argv[])
 
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
-
 
   //------------------------------------------------------
   // Write 2nd block that can be read by a vendor note

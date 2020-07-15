@@ -28,12 +28,13 @@ extern "C"
   void json_add_json_str( Json_t* json, const char* sep, const char* name, const char *   value);
   void json_add_int(      Json_t* json, const char* sep, const char* name, int            value);
   void json_add_double(   Json_t* json, const char* sep, const char* name, double         value);
-  void json_add_SET(      Json_t* json, const char* sep, const char* name, SET_t*         libT);
+  void json_add_SET(      Json_t* json, const char* sep, const char* name, SET_t*         setT);
+  void json_add_libT(     Json_t* json, const char* sep, const char* name, SET_t*         libT);
   void json_add_S2S(      Json_t* json, const char* sep, const char* name, S2S_t*         value);
   void json_add_S2D(      Json_t* json, const char* sep, const char* name, S2D_t*         value);
   void json_add_ptA(      Json_t* json, const char* sep, const char* name, processTree_t* ptA);
   void json_add_array(    Json_t* json, const char* sep, const char* name, int n, const char** A);
-  void json_add_utarray(  Json_t* json, const char* sep, const char* name, UT_array** A);
+  void json_add_utarray(  Json_t* json, const char* sep, const char* name, UT_array* A);
 
 #ifdef __cplusplus
 }

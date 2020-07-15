@@ -119,19 +119,19 @@ COPY_ALL_LIBS: build_all
         done
 
 %.d: %.c
-	rm -f $@;                                                        \
+	@rm -f $@;                                                       \
         $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;                    \
         sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
 %.d32: %.c
-	rm -f $@;                                                            \
+	@rm -f $@;                                                           \
         $(CC) -MM $(CPPFLAGS) $(CFLAGS) $< > $@.$$$$;                        \
         sed 's,\($(notdir $*)\)\.o *:,$(dir $@)\1.o32 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$
 
 %.d: %.C
-	rm -f $@;                                                        \
+	@rm -f $@;                                                       \
         $(CXX) -MM $(CPPFLAGS) $(CXXFLAGS) $< > $@.$$$$;                 \
         sed 's,\($(notdir $*)\.o\) *:,$(dir $@)\1 $@: ,' < $@.$$$$ > $@; \
         rm -f $@.$$$$

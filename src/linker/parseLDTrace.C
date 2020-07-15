@@ -6,17 +6,6 @@
 #include "xalt_fgets_alloc.h"
 #include "insert.h"
 
-//void addPath2Set(std::string& path, Set& set)
-//{
-//  char* my_realpath = canonicalize_file_name(path.c_str());
-//  if (my_realpath)
-//    {
-//      path.assign(my_realpath);
-//      set.insert(path);
-//      free(my_realpath);
-//    }
-//}
-
 void addPath2Set(std::string& path, SET_t** libT)
 {
   char* my_realpath = canonicalize_file_name(path.c_str());
@@ -53,6 +42,10 @@ void parseLDTrace(const char* xaltobj, const char* linkfileFn, SET_t** libT)
       // Ignore all *.o files
       int len = strlen(buf);
       if (len > 2 && strstr(&buf[len-3],".o\n"))
+        continue;
+
+      // Ignore librun_submission.a
+      if (len > 2 && strstr(buf,"librun_submission.a\n"))
         continue;
 
       char * start = strchr(buf,'(');

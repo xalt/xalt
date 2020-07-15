@@ -4,6 +4,7 @@
 #include "processTree.h"
 #include "utlist.h"
 #include "xalt_quotestring.h"
+#include "xalt_base_types.h"
 
 static const char* dquote      = "\"";
 static const char* s_colon     = "\":\"";
@@ -132,7 +133,28 @@ void json_add_S2S(Json_t* json, const char* sep, const char* name, S2S_t* value)
   xalt_quotestring_free();
 }
 
-void json_add_SET(Json_t* json, const char* sep, const char* name, SET_t* libT)
+void json_add_SET(Json_t* json, const char* sep, const char* name, SET_t* setT)
+{
+  utarray_push_back(json->m_s, &sep);
+  utarray_push_back(json->m_s, &dquote);
+  utarray_push_back(json->m_s, &name);
+  utarray_push_back(json->m_s, &a_colon);
+
+  const char* my_sep = blank0;
+  SET_t *entry, *tmp;
+
+  HASH_ITER(hh, setT, entry, tmp)
+    {
+      utarray_push_back(json->m_s, &my_sep);
+      utarray_push_back(json->m_s, &dquote);
+      utarray_push_back(json->m_s, &utstring_body(entry->key));
+      utarray_push_back(json->m_s, &dquote);
+      my_sep = comma;
+    }
+  utarray_push_back(json->m_s, &end_bracket);
+}
+
+void json_add_libT(Json_t* json, const char* sep, const char* name, SET_t* libT)
 {
   utarray_push_back(json->m_s, &sep);
   utarray_push_back(json->m_s, &dquote);
@@ -232,7 +254,8 @@ void json_add_ptA(Json_t* json, const char* sep, const char* name, processTree_t
 	{
 	  utarray_push_back(json->m_s, &inner_sep);
 	  utarray_push_back(json->m_s, &dquote);
-	  utarray_push_back(json->m_s, xalt_quotestring(*p));
+	  const char* q = xalt_quotestring(*p);
+	  utarray_push_back(json->m_s, &q);
 	  utarray_push_back(json->m_s, &dquote);
 	  inner_sep = comma;
 	}
@@ -254,14 +277,16 @@ void json_add_array(Json_t* json, const char* sep, const char* name, int n, cons
     {
       utarray_push_back(json->m_s, &my_sep);
       utarray_push_back(json->m_s, &dquote);
-      utarray_push_back(json->m_s, xalt_quotestring(A[i]));
+      const char* q = xalt_quotestring(A[i]);
+      utarray_push_back(json->m_s, &q);
       utarray_push_back(json->m_s, &dquote);
       my_sep = comma;
     }
   utarray_push_back(json->m_s, &end_bracket);
+  xalt_quotestring_free();
 }
 
-void json_add_utarray(  Json_t* json, const char* sep, const char* name, UT_array** A)
+void json_add_utarray(  Json_t* json, const char* sep, const char* name, UT_array* A)
 {
   utarray_push_back(json->m_s, &sep);
   utarray_push_back(json->m_s, &dquote);
@@ -270,13 +295,15 @@ void json_add_utarray(  Json_t* json, const char* sep, const char* name, UT_arra
   
   char**         p        = NULL;
   const char*    my_sep   = blank0;
-  while( (p = (char **)utarray_next(json->m_s, p)) != NULL)
+  while( (p = (char **)utarray_next(A, p)) != NULL)
     {
       utarray_push_back(json->m_s, &my_sep);
       utarray_push_back(json->m_s, &dquote);
-      utarray_push_back(json->m_s, xalt_quotestring(*p));
+      const char* q = xalt_quotestring(*p);
+      utarray_push_back(json->m_s, &q);
       utarray_push_back(json->m_s, &dquote);
       my_sep = comma;
     }
   utarray_push_back(json->m_s, &end_bracket);
+  xalt_quotestring_free();
 }

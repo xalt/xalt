@@ -27,27 +27,28 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
   process_t proc;
 
   pid_t my_pid = getppid();  // start with parent!
+  init_proc(&proc);
   while(1)
     {
       build_proc(&proc, my_pid);
-      if (proc.m_parent < 2)
+      fflush(stderr);
+
+      if (proc.m_pid < 2)
         break;
 
-
       std::string name = utstring_body(proc.m_name);
-
-      bool found = false;
+      bool ignore = false;
       for (int i = 0; i < ignorePrgSz; ++i)
         {
           if (name == ignorePrgA[i])
             {
-              found = true;
+              ignore = true;
               break;
             }
         }
 
       my_pid = proc.m_parent;
-      if (found)
+      if (ignore)
         continue;
 
       // If here then we have found our guess at the name of the compiler
@@ -56,6 +57,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
       proc_cmdline(&proc, linklineA);
       break;
     }
+  free_proc(&proc);
 }
 
 int main(int argc, char* argv[])
@@ -72,9 +74,9 @@ int main(int argc, char* argv[])
   Json_t      json;
   json_init(Json_TABLE, &json);
 
-  json_add_char_str(&json, my_sep, "compiler",       compiler.c_str());      my_sep = comma;
-  json_add_char_str(&json, my_sep, "compiler_path",  compilerPath.c_str());
-  json_add_utarray( &json, my_sep, "link_line",      &linklineA);
+  json_add_char_str(&json, my_sep, "compiler",     compiler.c_str());      my_sep = comma;
+  json_add_char_str(&json, my_sep, "compilerPath", compilerPath.c_str());
+  json_add_utarray( &json, my_sep, "link_line",    linklineA);
   json_fini(&json, &jsonStr);
 
   fprintf(stdout,"%s\n",jsonStr);

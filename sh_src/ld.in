@@ -201,17 +201,15 @@ MY_HOSTNAME_PARSER_KIND=${MY_HOSTNAME_PARSER_STRING%%:*}
 
 XALT_INC=$XALT_DIR/include
 XALT_LIBEXEC_DIR=$XALT_DIR/libexec
-XALT_BIN=$XALT_DIR/bin
-XALT_SBIN=$XALT_DIR/sbin
 XALT_SITE_DIR=$XALT_DIR/site
 GEN_WATERMARK=$XALT_LIBEXEC_DIR/xalt_generate_watermark
 GEN_LINKDATA=$XALT_LIBEXEC_DIR/xalt_generate_linkdata
 STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
-SYS_HOST_CMD=$XALT__LIBEXEC_DIR/xalt_syshost
+SYS_HOST_CMD=$XALT_LIBEXEC_DIR/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
 SYSHOST=$(XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $SYS_HOST_CMD)
-UUIDGEN=$XALT_BIN/my_uuidgen
+UUIDGEN=$XALT_LIBEXEC_DIR/my_uuidgen
 XALT_RMAP_EXISTS=$XALT_LIBEXEC_DIR/xalt_rmap_exists
 
 UUID=$(XALT_EXECUTABLE_TRACKING=no $UUIDGEN)
@@ -225,22 +223,21 @@ FUNCLIST=$WRKDIR/funclist.txt
 
 if [ -z "$BIT32FLAG" ]; then
   XLD=$XALT_DIR/lib64
-  if [ "$MY_HOSTNAME_PARSER_KIND" = "c_file" ]; then
-      MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.o
-  elif [ "$MY_HOSTNAME_PARSER_KIND" = "library" ]; then
-      MY_HOSTNAME_PARSER_OBJ=$XLD/my_hostname_parser.a
-  fi
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_regular.o $XLD/librun_submission.a"
+  XALT_OBJ_TYPE=o
 else
   XLD=$XALT_DIR/lib
-  XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize.o32 $XLD/librun_submission.a"
+  XALT_OBJ_TYPE=o32
 fi
+SYSLIBS="-ldl -lcurl -lz -lm -lc"
+XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_regular.$XALT_OBJ_TYPE $XLD/librun_submission.a $SYSLIBS"
   
 # Get the compiler information
 COMP_T=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
+tracing_msg "SYSHOST:" $SYSHOST
 
 EPOCH=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+tracing_msg EPOCH "$EPOCH"
 
 # If the $ARGSRC exists then build it
 # otherwise don't try to link with it.
@@ -330,6 +327,8 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
 ###################################################################
 # Generate link data.  
-XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "${SHA1SUM_EXEC%% *}" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
+SHA1=$(echo $SHA1SUM_EXEC | sed -e 's|  */.*||')
+
+XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
 
 exit $status

@@ -36,6 +36,7 @@ void processTable(const char* name, const char* js, int& i, int ntokens, jsmntok
       value = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
       insert_key_string(t, key, value);
     }
+  xalt_quotestring_free();
 }
 
 void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok_t* tokens, UT_array** p_vA)
@@ -66,8 +67,9 @@ void processArray(const char* name, const char* js, int& i, int ntokens, jsmntok
           exit(1);
         }
       p = xalt_unquotestring(&js[tokens[i].start],tokens[i].end - tokens[i].start); ++i;
-      utarray_push_back(vA, p);
+      utarray_push_back(vA, &p);
     }
+  xalt_quotestring_free();
 }
 
 

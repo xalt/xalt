@@ -51,7 +51,6 @@ int main(int argc, char* argv[])
   if (compT.size() == 0)
     compT = "{}";
 
-
   double start = convert_double("startTime",build_epoch);
 
   if (strstr(execname,"conftest") != NULL)
@@ -95,9 +94,9 @@ int main(int argc, char* argv[])
   json_init(Json_TABLE, &json);
 
   json_add_S2S(     &json, my_sep, "resultT",   resultT); my_sep = comma;
-  json_add_SET(     &json, my_sep, "linkA",     libT);
+  json_add_libT(    &json, my_sep, "linkA",     libT);
   json_add_SET(     &json, my_sep, "function",  funcSet);
-  json_add_utarray( &json, my_sep, "link_line", &linklineA);
+  json_add_utarray( &json, my_sep, "link_line", linklineA);
   json_fini(        &json, &jsonStr);
 
   std::string key("link_");

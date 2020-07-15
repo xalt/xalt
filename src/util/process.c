@@ -8,7 +8,7 @@
 #include "xalt_fgets_alloc.h"
 #include "process.h"
 #include "utstring.h"
-
+#include "xalt_base_types.h"
 
 void init_proc(process_t* proc)
 {
@@ -31,7 +31,6 @@ void build_proc(process_t* proc, pid_t my_pid)
       proc->m_parent = -1;
       return;
     }
-  
   
   char*  buf  = NULL;
   size_t sz   = 0;

@@ -149,7 +149,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
   json_add_json_str( &json, my_sep, "cmdlineA",  usr_cmdline);   my_sep = comma;
-  json_add_SET(      &json, my_sep, "libA",      libT);
+  json_add_libT(     &json, my_sep, "libA",      libT);
   json_add_ptA(      &json, my_sep, "ptA",       ptA);
   json_add_S2S(      &json, my_sep, "envT",      envT);
   json_add_S2S(      &json, my_sep, "userT",     userT);
