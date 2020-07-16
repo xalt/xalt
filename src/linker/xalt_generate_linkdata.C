@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
       build_resultFn( &resultFn,  "link", start, syshost, uuid, "");
     }
 
-  transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn);
+  transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn, stderr);
   free(jsonStr);
   free(resultDir);
   free(resultFn);

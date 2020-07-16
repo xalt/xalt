@@ -43,7 +43,7 @@ static size_t _write_callback(void *contents, size_t size, size_t nmemb, void *u
 }
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
-              const char* syshost, char* resultDir, const char* resultFn)
+              const char* syshost, char* resultDir, const char* resultFn, FILE* my_stderr)
 {
   char * cmdline = NULL;
   char * logNm   = NULL;
@@ -53,7 +53,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
   if (strcasecmp(transmission,"directdb") == 0)
     {
-      DEBUG0(stderr,"  Direct to DB transmission is NOT supported!\n");
+      DEBUG0(my_stderr,"  Direct to DB transmission is NOT supported!\n");
       return;
     }
 
@@ -70,7 +70,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     {
       if (resultFn == NULL)
 	{
-	  DEBUG0(stderr,"    resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
+	  DEBUG0(my_stderr,"    resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
 	  return;
 	}
 
@@ -80,7 +80,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 	  if (xalt_tracing)
 	    {
 	      perror("Error: ");
-	      fprintf(stderr,"    unable to mkpath(%s) -> No XALT output\n", resultDir);
+	      fprintf(my_stderr,"    unable to mkpath(%s) -> No XALT output\n", resultDir);
 	    }
 	  return;
 	}
@@ -92,13 +92,13 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       FILE* fp = fopen(tmpFn,"w");
       if (fp == NULL && xalt_tracing)
-	fprintf(stderr,"    Unable to open: %s -> No XALT output\n", fn);
+	fprintf(my_stderr,"    Unable to open: %s -> No XALT output\n", fn);
       else
         {
           fprintf(fp, "%s\n", jsonStr);
           fclose(fp);
           rename(tmpFn, fn);
-          DEBUG2(stderr,"    Wrote json %s file : %s\n",kind, fn);
+          DEBUG2(my_stderr,"    Wrote json %s file : %s\n",kind, fn);
         }
       free(tmpFn);
       free(fn);
@@ -186,7 +186,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         log_url = XALT_LOGGING_URL;
 
       if (strcasecmp(log_url,"") == 0)  {
-        DEBUG0(stderr,"  Logging URL should be provided!\n");
+        DEBUG0(my_stderr,"  Logging URL should be provided!\n");
         asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
         openlog(logNm, LOG_PID, LOG_USER);
         syslog(LOG_INFO, "Logging URL should be provided");
@@ -214,7 +214,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
         if(res != CURLE_OK) {
           // Log error to syslog
-	  DEBUG1(stderr,"  curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
+	  DEBUG1(my_stderr,"  curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
           asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
           openlog(logNm, LOG_PID, LOG_USER);
           syslog(LOG_INFO, "curl_easy_perform() failed: %s",curl_easy_strerror(res));
@@ -229,7 +229,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
             status = strtok(NULL, " ");
           }
           if ((strcmp(status, "200") != 0) && (strcmp(status, "201") != 0)) {
-	    DEBUG2(stderr,"   HTTP status code %s received from %s\n",status, log_url);
+	    DEBUG2(my_stderr,"   HTTP status code %s received from %s\n",status, log_url);
             asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
             openlog(logNm, LOG_PID, LOG_USER);
             syslog(LOG_INFO, "HTTP status code %s received from %s",status, log_url);
@@ -237,7 +237,6 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
             free(logNm);
           }
         }
-
         curl_easy_cleanup(hnd);
       }
 

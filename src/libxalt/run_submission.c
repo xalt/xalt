@@ -179,7 +179,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
       build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
     }
 
-  transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn);
+  transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn, my_stderr);
   xalt_quotestring_free();
   free(jsonStr);
   if (resultFn)
@@ -189,7 +189,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
     }
 
   if (strcmp(xalt_kind,"PKGS") == 0)
-    pkgRecordTransmit(uuid_str, syshost, transmission);
+    pkgRecordTransmit(uuid_str, syshost, transmission, my_stderr);
 
   free(syshost);
   DEBUG0(my_stderr,"  }\n\n");
@@ -197,7 +197,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
     fflush(my_stderr);
 }
 
-void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* transmission)
+void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* transmission, FILE* my_stderr)
 {
   char * xalt_tmpdir = create_xalt_tmpdir_str(uuid_str);
   DIR*   dirp        = opendir(xalt_tmpdir);
@@ -251,7 +251,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
               // transmit jsonStr
               
               transmit(transmission, utstring_body(jsonStr), "pkg", utstring_body(key), syshost,
-		       resultDir, dp->d_name);
+		       resultDir, dp->d_name, my_stderr);
               unlink(utstring_body(fullName));
             }
           fclose(fp);
