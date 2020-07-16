@@ -40,3 +40,18 @@ void walkProcessTree(pid_t ppid, processTree_t** ptA)
 
   free_proc(&proc);
 }
+
+void processTreeFree(processTree_t** ptA)
+{
+  processTree_t* entry, *tmp;
+
+  DL_FOREACH_SAFE(*ptA, entry, tmp)
+    {
+      DL_DELETE(*ptA,entry);
+      utstring_free(entry->m_path);
+      utstring_free(entry->m_name);
+      utarray_free(entry->m_cmdlineA);
+      free(entry);
+    }
+  ptA = NULL;
+}

@@ -59,5 +59,6 @@ void filterEnvT(char* env[], S2S_t ** envT)
 	    }
 	}
     }
+  env_parser_cleanup();
   utstring_free(name);
 }

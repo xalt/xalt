@@ -45,5 +45,6 @@ int hostname_parser(const char * hostname)
 
 void hostname_parser_cleanup()
 {
+  sz = 0;
   free(strbuf);
 }

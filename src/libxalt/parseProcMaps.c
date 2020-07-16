@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "parseProcMaps.h"
 #include "xalt_config.h"
 
@@ -39,15 +40,20 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
 {
   char *   buf  = NULL;
   size_t   sz   = 0;
+  //ssize_t  nchr = 0;
   char *   fn;
   
   (void) asprintf(&fn, "/proc/%d/maps", my_pid);
   FILE* fp    = fopen(fn,"r");
+  free(fn);
   if (!fp)
     return;
 
+  //while((nchr = getline(&buf, &sz, fp)))
   while (xalt_fgets_alloc(fp, &buf, &sz))
     {
+      //buf[--nchr] = '\0'; //strip newline
+
       // Step a:
       // find the start of the file name
       char *p = strstr(buf,"    /");
@@ -98,4 +104,6 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
 	  HASH_ADD_KEYPTR(hh, *libT, utstring_body(entry->key), keylen, entry);
 	}
     }
+  fclose(fp);
+  free(buf);
 }

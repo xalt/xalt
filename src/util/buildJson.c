@@ -59,6 +59,7 @@ void json_fini(Json_t* json, char** p_result)
     }
   *q = '\0';
   *p_result = result;
+  utarray_free(json->m_s);
 }
 
 void json_add_char_str(Json_t* json, const char* sep, const char* name, const char * value)
@@ -170,11 +171,13 @@ void json_add_libT(Json_t* json, const char* sep, const char* name, SET_t* libT)
     {
       utarray_push_back(json->m_s, &my_sep);
       utarray_push_back(json->m_s, &bracketQ);
-      utarray_push_back(json->m_s, &utstring_body(entry->key));
+      const char* q = xalt_quotestring(utstring_body(entry->key));
+      utarray_push_back(json->m_s, &q);
       utarray_push_back(json->m_s, &zero_str);
       my_sep = comma;
     }
   utarray_push_back(json->m_s, &end_bracket);
+  xalt_quotestring_free();
 }
 
 void json_add_S2D(Json_t* json, const char* sep, const char* name, S2D_t* value)
@@ -197,11 +200,12 @@ void json_add_S2D(Json_t* json, const char* sep, const char* name, S2D_t* value)
       utarray_push_back(json->m_s, &n_colon);
 
       utstring_clear(buf);
-      utstring_printf(buf, "%g", entry->value);
+      utstring_printf(buf, "%.4f", entry->value);
       utarray_push_back(json->m_s, &utstring_body(buf));
       my_sep = comma;
     }
   utarray_push_back(json->m_s, &end_brace);
+  utstring_free(buf);
 }
 
 // "processTree":
@@ -222,6 +226,7 @@ void json_add_ptA(Json_t* json, const char* sep, const char* name, processTree_t
 
   const char*    my_sep   = blank0;
   char**         p;
+  const char*    q;
   processTree_t* entry;
 
   utarray_push_back(json->m_s, &sep);
@@ -231,16 +236,15 @@ void json_add_ptA(Json_t* json, const char* sep, const char* name, processTree_t
   
   DL_FOREACH(ptA, entry)
     {
-      const char* my_nameQ = xalt_quotestring(utstring_body(entry->m_name));
-      const char* my_pathQ = xalt_quotestring(utstring_body(entry->m_path));
-
       utarray_push_back(json->m_s, &my_sep);
       my_sep = comma;
       utarray_push_back(json->m_s, &cmd_name);
-      utarray_push_back(json->m_s, &my_nameQ);
+      q = xalt_quotestring(utstring_body(entry->m_name));
+      utarray_push_back(json->m_s, &q);
 
       utarray_push_back(json->m_s, &cmd_path);
-      utarray_push_back(json->m_s, &my_pathQ);
+      q = xalt_quotestring(utstring_body(entry->m_path));
+      utarray_push_back(json->m_s, &q);
 
       utarray_push_back(json->m_s, &pid_str);
       sprintf(&buf[0], "%d", entry->m_pid);

@@ -15,16 +15,11 @@
 
 // Functions
 
-
-
-
-
-
 #define __fini                      PASTE2(__XALT__fini,                      MY_NAME)
 #define __init                      PASTE2(__XALT__init,                      MY_NAME)
 #define myfini                      PASTE2(__XALT_myfini,                     MY_NAME)
 #define myinit                      PASTE2(__XALT_myinit,                     MY_NAME)
-#define wrapper_for_fini            PASTE2(__XALT_wrapper_for_fini,           MY_NAME)
+#define wrapper_for_myfini          PASTE2(__XALT_wrapper_for_myfini,         MY_NAME)
 
 #define base64_decode               PASTE2(__XALT_base64_decode,              HIDE)
 #define base64_encode               PASTE2(__XALT_base64_encode,              HIDE)

@@ -238,7 +238,6 @@ void myinit(int argc, char **argv)
   char * p_dbg;
   char * cmdline         = NULL;
   char * ld_preload_strp = NULL;
-  char   rand_str[20];
   char * pid_str         = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[FULLDATESZ];
@@ -724,9 +723,6 @@ void myinit(int argc, char **argv)
       my_rand	    = (double) rand()/(double) RAND_MAX;
     }
 
-  sprintf(&rand_str[0],"%10.6f",my_rand);
-  setenv("XALT_RANDOM_NUMBER",rand_str,1);
-
   v = getenv("XALT_TESTING_RUNTIME");
   if (v)
     testing_runtime = strtod(v,NULL);
@@ -1067,13 +1063,13 @@ void myfini()
       {
         fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
                 xalt_run_short_descriptA[run_mask], exec_path);
-    	  fflush(my_stderr);
       }
 
     run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
     		     num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
     		     usr_cmdline, my_stderr);
     DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
+    fflush(my_stderr);
 
   if (xalt_err)
     {
@@ -1210,10 +1206,12 @@ static  double prgm_sample_probability(int ntasks, double runtime)
 }
 
 
+#ifndef XALT_MEMORY_TEST
 #ifdef __MACH__
   __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(myinit) *__init = myinit;
   __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(myfini) *__fini = myfini;
 #else
   __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
   __attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
+#endif
 #endif

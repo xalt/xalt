@@ -27,7 +27,8 @@ local_c_src   	  :=                      \
 		     run_submission.c     \
 		     translate.c          \
 		     walkProcessTree.c    \
-		     xalt_initialize.c 
+		     xalt_initialize.c    \
+		     xalt_test.c 
 local_c_src   	  := $(addprefix $(local_dir)/, $(local_c_src))
 
 LIBXALT_INIT_64   := $(DESTDIR)$(LIB64)/libxalt_init.so
@@ -68,6 +69,7 @@ RUN_SUBMISSION_O32:= $(patsubst %.o, %.o32, $(RUN_SUBMISSION_O)) \
 
 RUN_SUBMISSION_LIB:= $(DESTDIR)$(LIB64)/librun_submission.a
 XALT_INIT_REGULAR := $(DESTDIR)$(LIB64)/xalt_initialize_regular.o
+XALT_INIT_MEMTEST := $(DESTDIR)$(LIB64)/xalt_initialize_memtest.o
 LIBXALT_OBJ_64    := libxalt/xalt_initialize_preload.o   \
 	             $(RUN_SUBMISSION_OBJ)
 
@@ -82,6 +84,9 @@ XALT_INIT_D       := xalt_obfuscate.h xalt_types.h insert.h base64.h       \
                      xalt_tmpdir.h xalt_vendor_note.h build_uuid.h         \
                      buildXALTRecordT.h
 
+XALT_TEST         := $(DESTDIR)$(LIBEXEC)/xalt_test
+
+
 BUILD_INIT_32bit_no  :=
 BUILD_INIT_32bit_yes := $(XALT_INIT_REG32) $(RUN_SUBMISSION_L32) $(LIBXALT_INIT_32) 
 
@@ -91,6 +96,7 @@ BUILD_INIT_32bit_yes := $(XALT_INIT_REG32) $(RUN_SUBMISSION_L32) $(LIBXALT_INIT_
 c_sources     	  += $(local_c_src) 
 libraries         += $(XALT_INIT_REGULAR) $(LIBXALT_INIT_64) $(RUN_SUBMISSION_LIB) \
                      $(BUILD_INIT_32bit_$(HAVE_32BIT))
+programs          += $(XALT_TEST) 
 extra_clean       += libxalt/xalt_initialize_preload.o   libxalt/xalt_initialize_regular.o   \
                      libxalt/xalt_initialize_preload.o32 libxalt/xalt_initialize_regular.o32 \
 
@@ -121,6 +127,9 @@ $(XALT_INIT_REGULAR): libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
 $(RUN_SUBMISSION_LIB): $(RUN_SUBMISSION_OBJ)
 	$(AR) $(ARFLAGS) $@ $^
+
+$(XALT_TEST): libxalt/xalt_test.o $(RUN_SUBMISSION_LIB)
+	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LDFLAGS) -o $@ $^ $(LIBDCGM) $(LIBNVML) -ldl -lcurl -lm -lz
 
 #----------------------------------------------------------------------
 #  32 bit 

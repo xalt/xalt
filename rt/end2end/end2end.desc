@@ -181,11 +181,6 @@ test_descript = {
 
      PYTHONPATH=$OLD_PY_PATH
 
-     displayThis "mv xalt_run_submission xalt_run_submission.orig; ./hello\ .mpi --seq 22"
-     mv XALT/$VERSION/libexec/xalt_run_submission XALT/$VERSION/libexec/xalt_run_submission.orig
-
-     XALT_TRACING=yes ./hello\ .mpi --seq 22
-
      unset LD_PRELOAD
      displayThis "Extract Watermark"
      xalt_extract_record libabc.so

@@ -31,7 +31,9 @@ def xalt_syshost_main(sA):
   sA.append("#ifdef HAVE_MAIN")
   sA.append("int main()")
   sA.append("{")
-  sA.append("  printf(\"%s\\n\",xalt_syshost());")
+  sA.append("  char* syshost = xalt_syshost();")
+  sA.append("  printf(\"%s\\n\",syshost);")
+  sA.append("  free(syshost);")
   sA.append("  return 0;")
   sA.append("}")
   sA.append("#endif")
@@ -40,9 +42,10 @@ def xalt_syshost_main(sA):
 def hardcode(name,output):
   sA = []
   sA.append("#include <stdio.h>")
+  sA.append("#include <string.h>")
   sA.append("#include \"xalt_obfuscate.h\"")
-  sA.append("const char * xalt_syshost() {")
-  sA.append("  return \"" + name + "\";")
+  sA.append("char * xalt_syshost() {")
+  sA.append("  return strdup(\"" + name + "\");")
   sA.append("}")
   xalt_syshost_main(sA)
 
@@ -55,6 +58,7 @@ def hardcode(name,output):
 
 def add_hostname_routine(sA):
   sA.append("#include <stdio.h>")
+  sA.append("#include <string.h>")
   sA.append("#include <unistd.h>")
   sA.append("#include <stdlib.h>")
   sA.append("#include <sys/utsname.h>")
@@ -94,13 +98,14 @@ def env_var(var, output):
 
   sA.append("#include <stdio.h>")
   sA.append("#include <stdlib.h>")
+  sA.append("#include <string.h>")
   sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("")
-  sA.append("const char * xalt_syshost()")
+  sA.append("char * xalt_syshost()")
   sA.append("{")
   sA.append("  const char* var = getenv(\"" + var + "\");")
   sA.append("  if (!var) var = \"unknown\";")
-  sA.append("  return var;")
+  sA.append("  return strdup(var);")
   sA.append("}")
   xalt_syshost_main(sA)
 
@@ -118,7 +123,7 @@ def read_file(fname,output):
   sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("#include \"xalt_fgets_alloc.h\"")
   sA.append("")
-  sA.append("const char * xalt_syshost()")
+  sA.append("char * xalt_syshost()")
   sA.append("{")
   sA.append("  const char* fname = \"" + fname + "\";")
   sA.append("  FILE *fp = fopen(fname,\"r\");")
@@ -150,7 +155,7 @@ def nth_name(nth,output):
   sA = []
   add_hostname_routine(sA)
 
-  sA.append("const char* xalt_syshost()")
+  sA.append("char* xalt_syshost()")
   sA.append("{")
   sA.append("  char * my_hostname = hostname();")
   sA.append("")
@@ -175,6 +180,7 @@ def nth_name(nth,output):
   sA.append("  char * w   = (char *) malloc(len+1);")
   sA.append("  memcpy(w,start,len);")
   sA.append("  w[len] = '\\0';")
+  sA.append("  free(my_hostname);")
   sA.append("  return w;")
   sA.append("}")
   xalt_syshost_main(sA)
@@ -192,7 +198,7 @@ def strip_nodename_numbers(output):
   sA.append("#include <string.h>")
   sA.append("#include <sys/utsname.h>")
   sA.append("#include \"xalt_obfuscate.h\"")
-  sA.append("const char* xalt_syshost()")
+  sA.append("char* xalt_syshost()")
   sA.append("{")
   sA.append("  char * my_hostname = hostname();")
   sA.append("")
@@ -237,7 +243,7 @@ def mapping(file,output):
   sA.append("};")
 
 
-  sA.append("const char * xalt_syshost()")
+  sA.append("char * xalt_syshost()")
   sA.append("{")
   sA.append("  char        msgbuf[100];")
   sA.append("  regex_t     regex;")
@@ -257,7 +263,10 @@ def mapping(file,output):
   sA.append("")
   sA.append("      iret = regexec(&regex, my_hostname, 0, NULL, 0);")
   sA.append("      if (iret == 0)")
-  sA.append("        return pair[i].syshost;")
+  sA.append("        {")
+  sA.append("           free(my_hostname);")
+  sA.append("           return strdup(pair[i].syshost);")
+  sA.append("        }")
   sA.append("      else if (iret != REG_NOMATCH)")
   sA.append("        {")
   sA.append("          regerror(iret, &regex, msgbuf, sizeof(msgbuf));")

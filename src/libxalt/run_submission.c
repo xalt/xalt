@@ -87,8 +87,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   char* exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
-  const char* syshost  = xalt_syshost();
-  double      run_time = (end_record) ? end_time - start_time : 0.0;
+  char*  syshost  = xalt_syshost();
+  double run_time = (end_record) ? end_time - start_time : 0.0;
   insert_key_double(&userDT, "start_time",  start_time);
   insert_key_double(&userDT, "end_time",    end_time);
   insert_key_double(&userDT, "run_time",    run_time);
@@ -148,16 +148,25 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   Json_t json;
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
-  json_add_json_str( &json, my_sep, "cmdlineA",  usr_cmdline);   my_sep = comma;
-  json_add_libT(     &json, my_sep, "libA",      libT);
-  json_add_ptA(      &json, my_sep, "ptA",       ptA);
-  json_add_S2S(      &json, my_sep, "envT",      envT);
-  json_add_S2S(      &json, my_sep, "userT",     userT);
-  json_add_S2D(      &json, my_sep, "userDT",    userDT);
-  json_add_S2S(      &json, my_sep, "xaltLinkT", recordT);
+  json_add_json_str( &json, my_sep, "cmdlineA",      usr_cmdline);   my_sep = comma;
+  json_add_char_str( &json, my_sep, "hash_id",       &sha1buf[0]);
+  json_add_libT(     &json, my_sep, "libA",          libT);
+  json_add_ptA(      &json, my_sep, "ptA",           ptA);
+  json_add_S2S(      &json, my_sep, "envT",          envT);
+  json_add_S2S(      &json, my_sep, "userT",         userT);
+  json_add_S2D(      &json, my_sep, "userDT",        userDT);
+  json_add_S2S(      &json, my_sep, "xaltLinkT",     recordT);
+  json_add_S2D(      &json, my_sep, "XALT_measureT", measureT);
   json_fini(         &json, &jsonStr);
-  DEBUG0(stderr,"    Built json string\n");
+  DEBUG0(my_stderr,"    Built json string\n");
 
+  processTreeFree(&ptA);
+  free_S2D(&measureT);
+  free_S2D(&userDT);
+  free_S2S(&userT);
+  free_S2S(&envT);
+  free_S2S(&recordT);
+  free_SET(&libT);
   char* resultFn  = NULL;
   char* resultDir = NULL;  
 
@@ -172,6 +181,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn);
   xalt_quotestring_free();
+  free(jsonStr);
   if (resultFn)
     {
       free(resultFn);
@@ -181,7 +191,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   if (strcmp(xalt_kind,"PKGS") == 0)
     pkgRecordTransmit(uuid_str, syshost, transmission);
 
-  DEBUG0(stderr,"  }\n\n");
+  free(syshost);
+  DEBUG0(my_stderr,"  }\n\n");
   if (xalt_tracing)
     fflush(my_stderr);
 }

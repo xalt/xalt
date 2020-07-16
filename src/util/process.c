@@ -32,9 +32,11 @@ void build_proc(process_t* proc, pid_t my_pid)
       return;
     }
   
-  char*  buf  = NULL;
-  size_t sz   = 0;
-  xalt_fgets_alloc(fp, &buf, &sz);
+  char*  buf   = NULL;
+  size_t sz    = 0;
+  getline(&buf, &sz, fp);
+  //buf[--nchr]  = '\0';
+  //xalt_fgets_alloc(fp, &buf, &sz);
   fclose(fp);
 
   //**************************************************
@@ -51,8 +53,8 @@ void build_proc(process_t* proc, pid_t my_pid)
   proc->m_parent = (int) strtol(p+3, (char **) NULL, 10);
   memset(buf, 0, sz);
   sz = 0;
-  buf = NULL;
   free(buf);
+  buf = NULL;
 
   const size_t bufSz = 2049;
   char buf2[bufSz];

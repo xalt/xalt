@@ -45,5 +45,6 @@ int keep_env_name(const char * env_string)
 
 void env_parser_cleanup()
 {
+  sz = 0;
   free(strbuf);
 }

@@ -31,3 +31,40 @@ void insert_key_SET(SET_t** libT, const char* name)
 
   HASH_ADD_KEYPTR(hh, *libT, utstring_body(entry->key), utstring_len(entry->key), entry);
 }
+
+void free_SET(SET_t** libT)
+{
+  SET_t *entry, *tmp;
+  HASH_ITER(hh, *libT, entry, tmp)
+    {
+      HASH_DEL(*libT, entry);
+      utstring_free(entry->key);
+      free(entry);
+    }
+  libT = NULL;
+}
+
+void free_S2D(S2D_t** userDT)
+{
+  S2D_t *entry, *tmp;
+  HASH_ITER(hh, *userDT, entry, tmp)
+    {
+      HASH_DEL(*userDT, entry);
+      utstring_free(entry->key);
+      free(entry);
+    }
+  userDT = NULL;
+}
+
+void free_S2S(S2S_t** userT)
+{
+  S2S_t *entry, *tmp;
+  HASH_ITER(hh, *userT, entry, tmp)
+    {
+      HASH_DEL(*userT, entry);
+      utstring_free(entry->key);
+      utstring_free(entry->value);
+      free(entry);
+    }
+  userT = NULL;
+}

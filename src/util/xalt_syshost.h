@@ -7,7 +7,7 @@ extern "C"
 {
 #endif
 
-  const char* xalt_syshost();
+  char* xalt_syshost();
 
 #ifdef __cplusplus
 }

@@ -48,7 +48,3 @@ int main(int argc, char* argv[])
       printf("%s%.*s%s\n", utstring_body(entry->key), my_len, blanks, utstring_body(entry->value));
     }
 }
-
-  
-      
-    

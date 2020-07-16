@@ -73,10 +73,10 @@ A Mapping Table in json
 
 A json table can be placed into a file (say my_mapping.json) as follows::
 
-   {
-     "regex1" : "cluster1",
-     "regex2" : "cluster2",
-   }
+   [
+     ["regex1" , "cluster1"],
+     ["regex2" , "cluster2"]
+   ]
 
 The configure line would then have::
 

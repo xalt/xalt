@@ -13,10 +13,5 @@ int main(int argc, char* argv[])
     v = DFLT;
   printf("XALT_DATE_TIME: %s\n",v);
     
-  v = getenv("XALT_RANDOM_NUMBER");
-  if(!v)
-    v = DFLT;
-  printf("XALT_RANDOM_NUMBER: %s\n",v);
-    
   return 0;
 }
