@@ -47,6 +47,7 @@ int keep_path(const char * path)
 
 void path_parser_cleanup()
 {
-  sz = 0;
   free(strbuf);
+  strbuf = NULL;
+  sz     = 0;
 }

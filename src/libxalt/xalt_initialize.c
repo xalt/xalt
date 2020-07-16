@@ -833,6 +833,7 @@ void myfini()
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
       DEBUG4(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
+      fflush(my_stderr);
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
@@ -843,6 +844,7 @@ void myfini()
 
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
 	     xalt_reasonA[reject_flag], exec_path);
+      fflush(my_stderr);
       if (xalt_err)
 	{
 	  fclose(my_stderr);
@@ -1065,6 +1067,7 @@ void myfini()
                 xalt_run_short_descriptA[run_mask], exec_path);
       }
 
+    fflush(my_stderr);
     run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
     		     num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
     		     usr_cmdline, my_stderr);

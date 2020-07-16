@@ -28,11 +28,13 @@ int main(int argc, char **argv)
     "%%unix/unix:local/local:mkl/mkl:noweb/2.11b:StdEnv:ddt/ddt:fdepend/fdepend:settarg:gcc/9.3.0:mpich/3.3.2%%."\
     "<Build_LMFILES>%%/opt/apps/modulefiles/Core/unix/unix.lua:/opt/apps/modulefiles/Core/local/local.lua:/opt/apps/modulefiles/Core/mkl/mkl.lua:/opt/apps/modulefiles/Core/noweb/2.11b.lua:/opt/apps/modulefiles/Core/StdEnv.lua:/opt/apps/modulefiles/Core/ddt/ddt.lua:/opt/apps/modulefiles/Core/fdepend/fdepend.lua:/opt/apps/lmod/lmod/modulefiles/Core/settarg.lua:/opt/apps/modulefiles/Core/gcc/9.3.0.lua:/opt/apps/modulefiles/Compiler/gcc/9/mpich/3.3.2.lua%%."\
     "<Build_CWD>%%/home/mclay/w/xalt/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-9.3.0_mpich-3.3.2-2020_07_14_15_51_54-Linux-x86_64-end2end%%.<Build_Epoch>%%1594869848.4215%%........XALT_Link_Info_End.";
-  char *wm = strdup(watermark);
+  run_submission(t0, pid, ppid, start_time, 0.0, prob, exec_name, num_tasks,
+  		 num_gpus, xalt_kind, uuid, watermark, usr_cmdline, stderr);
+  
+  fprintf(stderr,"round two!\n");
   run_submission(t0, pid, ppid, start_time, end_time, prob, exec_name, num_tasks,
-  		 num_gpus, xalt_kind, uuid, wm, usr_cmdline, stderr);
+  		 num_gpus, xalt_kind, uuid, watermark, usr_cmdline, stderr);
 
-  free(wm);
   fprintf(stderr,"done!\n");
   return 0;
 }

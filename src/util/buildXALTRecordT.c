@@ -6,9 +6,11 @@
 #include "utarray.h"
 #include "capture.h"
 
-void buildXALTRecordT(char* watermark, S2S_t** recordT)
+void buildXALTRecordT(const char* watermark, S2S_t** recordT)
 {
-  char* start = watermark;
+  char* wm    = strdup(watermark);
+  char* start = wm;
+
   while(1)
     {
       char *p = strchr(start,'<');
@@ -50,6 +52,7 @@ void buildXALTRecordT(char* watermark, S2S_t** recordT)
 
       start = s3+1;
     }
+  free(wm);
 }
 
   /*

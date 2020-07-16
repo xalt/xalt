@@ -121,7 +121,7 @@ test_descript = {
      mpif90 -fopenmp -o hybrid_daxpy $(testDir)/hybrid_daxpy.f90
      
 
-     displayThis "OMP_NUM_THREADS=2 ./mpirun -n 2 ./hybrid_daxpy --seq 12"
+     displayThis "OMP_NUM_THREADS=2 mpirun -n 2 ./hybrid_daxpy --seq 12"
      OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy --seq 12
 
      displayThis "XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c"

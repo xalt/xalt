@@ -31,7 +31,7 @@ extern char **environ;
 
 void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
 		    char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
-		    char* watermark, const char* usr_cmdline, FILE* my_stderr)
+		    const char* watermark, const char* usr_cmdline, FILE* my_stderr)
 {
   char *      	 p_dbg        = getenv("XALT_TRACING");
   int         	 xalt_tracing = (p_dbg && ( strncmp(p_dbg,"yes",3) == 0 || strncmp(p_dbg,"run",3) == 0));
@@ -54,7 +54,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   t1 = epoch();
   walkProcessTree(ppid, &ptA);
-  insert_key_double(&measureT, "04_WalkProcTree_", epoch() - t1);
+  insert_key_double(&measureT, "04_WalkProcTree__", epoch() - t1);
   DEBUG0(my_stderr,"    Built processTree table\n");
   
   //************************************************************
@@ -106,7 +106,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   HASH_FIND_STR(userT, "scheduler", e);
   const char * scheduler = (e) ? utstring_body(e->value) : "not known";
-  insert_key_double(&measureT, "01_BuildUserT___", epoch() - t1);
+  insert_key_double(&measureT, "01_BuildUserT____", epoch() - t1);
   DEBUG1(my_stderr,"    Built userT, userDT, scheduler: %s\n", scheduler);
 
   //*********************************************************************
@@ -114,8 +114,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   t1 = epoch();
   filterEnvT(environ, &envT);
-  DEBUG0(my_stderr,"    Filter envT\n");
-  insert_key_double(&measureT, "03_BuildEnvT____", epoch() - t1);
+  DEBUG0(my_stderr,"    Filter envT\n"); 
+  insert_key_double(&measureT, "03_FilterEnvT____", epoch() - t1);
 
   //*********************************************************************
   // Take sha1sum of the executable
@@ -123,7 +123,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   char sha1buf[41];
   compute_sha1(exec_path, &sha1buf[0]);
   DEBUG1(my_stderr,"    Compute sha1 of exec: %s\n",exec_path);
-  insert_key_double(&measureT, "02_Sha1_exec____", epoch() - t1);
+  insert_key_double(&measureT, "02_Sha1_exec_____", epoch() - t1);
 
     
   //*********************************************************************
@@ -131,7 +131,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   t1 = epoch();
   parseProcMaps(pid, &libT);
   DEBUG0(my_stderr,"    Parsed ProcMaps\n");
-  insert_key_double(&measureT, "06_ParseProcMaps", epoch() - t1);
+  insert_key_double(&measureT, "06_ParseProcMaps_", epoch() - t1);
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
@@ -139,7 +139,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   
   DEBUG1(my_stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
-  insert_key_double(&measureT, "07____total_____", epoch() - t1);
+  insert_key_double(&measureT, "07____total______", epoch() - t0);
 
   //*********************************************************************
   // So build the Json table string
