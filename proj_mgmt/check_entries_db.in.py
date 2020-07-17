@@ -80,6 +80,16 @@ def count_rows(conn, tableName):
   return count
 
 
+def count_end_records(conn):
+  count = 0
+  query  = "SELECT COUNT(*) FROM xalt_run where end_time > 0.0";
+  conn.query(query)
+  result = conn.store_result()
+  if (result.num_rows() > 0):
+    row   = result.fetch_row()
+    count = int(row[0][0])
+  return count
+
 def eq(a,b):
   return a == b, "=="
 
@@ -104,13 +114,16 @@ def main():
   conn.query(query)
 
   tableA = [ 'join_link_object', 'join_run_env', 'join_run_object', \
-             'xalt_env_name', 'xalt_link', 'xalt_object', 'xalt_run',
+             'xalt_env_name', 'xalt_link', 'xalt_object',           \
              'xalt_function', 'join_link_function','xalt_pkg']
   tableT = {}
   for tableName in tableA:
     count = count_rows(conn, tableName)
     tableT[tableName] = count
     print(tableName,":", count)
+
+
+  tableT['xalt_run'] = count_end_records(conn)
 
   conn.close()
 
