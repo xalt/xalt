@@ -80,7 +80,6 @@ GIT_PROG             	:= @PATH_TO_GIT@
 GIT_VERSION          	:= $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
 VDATE		     	:= $(shell date +'%F %H:%M')
 
-
 XALT_DIR             	:= $(prefix)/$(package)/$(package)
 PKGV                 	:= $(prefix)/$(package)/$(VERSION)
 PKG                  	:= $(prefix)/$(package)/$(package)

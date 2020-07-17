@@ -124,6 +124,7 @@ def main():
 
 
   tableT['xalt_run'] = count_end_records(conn)
+  print("xalt_run :",tableT['xalt_run'])
 
   conn.close()
 

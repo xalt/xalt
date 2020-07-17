@@ -100,10 +100,9 @@ endif
 
 
 .PHONY: all
-all: build_all COPY_ALL_LIBS
+all: $(MY_HOSTNAME_PARSER_TARGET) build_all COPY_ALL_LIBS
 
-
-build_all: ECHO $(programs) $(libraries) $(MY_HOSTNAME_PARSER_TARGET)  \
+build_all: ECHO $(programs) $(libraries)  \
            $(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py
 
 COPY_ALL_LIBS: build_all
@@ -169,9 +168,8 @@ clobber:
 $(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py: __build__/xalt_python_pkg_filter.py
 	cp $^ $@
 
-my_hostname_parser_target:
+my_hostname_parser_target: 
 	cp $(MY_HOSTNAME_PARSER_LIBRARY)   $(DESTDIR)$(LIB64)/my_hostname_parser.a
 
-my_hostname_parser_target_32:
+my_hostname_parser_target_32: 
 	cp $(MY_HOSTNAME_PARSER_LIB32)     $(DESTDIR)$(LIB)/my_hostname_parser_32.a
-
