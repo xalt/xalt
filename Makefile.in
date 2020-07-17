@@ -101,7 +101,7 @@ SBIN                 	:= $(PKGV)/sbin
 SITE_PKG_DIR            := $(PKGV)/site_packages
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
-                           $(DESTDIR)$(INC) $(DESTDIR)/$(SITE_PKG_DIR)
+                           $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)
 
 SITE_PKG                := py_src/xalt_sitecustomize.py
 SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
@@ -201,23 +201,23 @@ LINKS: $(DIRLIST)
         ln -s ../lib64 x86_64-linux-gnu;            \
         ln -s . i386-linux-gnu
 
-Inst_site_py: $(SITE_PKG_DIR)
+Inst_site_py: $(DESTDIR)$(SITE_PKG_DIR) 
 	cp $(SITE_PKG) $(SITE_PKG_DIR)/sitecustomize.py
 
-Inst_libexec: $(LIBEXEC_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+Inst_libexec: $(LIBEXEC_PKG) $(DESTDIR)$(LIBEXEC)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(LIBEXEC_PKG)" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
-Inst_sbin: $(SBIN_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+Inst_sbin: $(SBIN_PKG) $(DESTDIR)$(SBIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(SBIN_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
-Inst_bin: $(BIN_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+Inst_bin: $(BIN_PKG) $(DESTDIR)$(BIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(BIN_PKG)"     DIRLOC=$(DESTDIR)$(BIN)     __installMe
 
-Inst_TACC: $(TACC_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+Inst_TACC: $(TACC_PKG) $(DESTDIR)$(SBIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(TACC_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
-Inst_RT: $(RT_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+Inst_RT: $(RT_PKG) $(DESTDIR)$(SBIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(RT_PKG)" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
 
 Use_getent_yes:

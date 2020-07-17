@@ -49,7 +49,7 @@ installXALT()
   (cd build; echo "<configure>";
    echo $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
         $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
-   echo "<make>"; make OPTLVL="-g -O0" install Inst_TACC Inst_RT;
+   echo "<make>"; make -j 4 OPTLVL="-g -O0" install Inst_TACC Inst_RT;
    if  [ "$?" != 0 ]; then
        echo "make failed"
        touch $outputDir/.make_failed
