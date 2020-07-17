@@ -8,9 +8,10 @@
 #include <gelf.h>
 #include "xalt_vendor_note.h"
 #include "xalt_base_types.h"
+
+#ifndef HAVE_32BIT
+
 static int xalt_tracing = 0;
-
-
 
 /* data structures */
 struct elf_note {
@@ -49,6 +50,7 @@ typedef struct vendor_note vendor_note;
  * All values are padded to 4 byte boundaries.
  * XALT version is 1 byte, The watermark is a array of character strings.
  */
+
 
 static int read_watermark(const void *note, char **ret_watermark)
 {
@@ -108,13 +110,12 @@ static int handle_program_header(struct dl_phdr_info *info, __attribute__((unuse
                 {
                   offset += read_watermark(notes + offset, &watermark);
                   if (watermark)
-                    break;
+		    goto found;
                 }
-              if (watermark)
-                break;
             }
         }
     }
+ found:
   *pp = watermark;
   return 0;
 }
@@ -128,3 +129,11 @@ bool xalt_vendor_note(char ** watermark, int xalt_tracingIn)
     return 0;
   return 1;
 }
+
+#else
+bool xalt_vendor_note(char ** watermark, int xalt_tracingIn)
+{
+  *watermark = NULL;
+  return 0;
+}
+#endif
