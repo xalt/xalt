@@ -19,7 +19,10 @@ void build_uuid(char * my_uuid_str)
   handle = dlopen ("libuuid.so.1", RTLD_LAZY);
   if (!handle) 
     {
-      handle = dlopen (xalt_dir("lib64/libuuid.so"), RTLD_LAZY);
+      char* fn = xalt_dir("lib64/libuuid.so");
+      handle = dlopen (fn, RTLD_LAZY);
+      if (fn)
+	free(fn);
       if (!handle) 
         {
           fputs (dlerror(), stderr);

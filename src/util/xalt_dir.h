@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-  const char* xalt_dir(const char* file);
+  char* xalt_dir(const char* file);
 
 #ifdef __cplusplus
 }

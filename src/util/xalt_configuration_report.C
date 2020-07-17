@@ -98,7 +98,9 @@ int main(int argc, char* argv[])
 
   UT_array*   resultA;
   std::string cmd      = "XALT_EXECUTABLE_TRACKING=no ";
-  cmd.append(xalt_dir("bin/xalt_print_os"));
+  char* fn = xalt_dir("bin/xalt_print_os");
+  cmd.append(fn);
+  free(fn);
   capture(cmd.c_str(), &resultA);
   char **pp = NULL;
   pp = (char**) utarray_next(resultA, pp);

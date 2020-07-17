@@ -682,8 +682,10 @@ void myinit(int argc, char **argv)
   strftime(dateStr, DATESZ, "%Y_%m_%d_%H_%M_%S",localtime(&my_time));
   sprintf(fullDateStr,"%s_%d",dateStr, (int) (frac_time*10000.0));
 
+  char* my_xalt_dir = xalt_dir(NULL);
   setenv("XALT_DATE_TIME",fullDateStr,1);
-  setenv("XALT_DIR",xalt_dir(NULL),1);
+  setenv("XALT_DIR",my_xalt_dir,1);
+  free(my_xalt_dir);
 
   pid  = getpid();
   ppid = getppid();

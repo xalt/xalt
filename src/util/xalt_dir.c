@@ -4,11 +4,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "xalt_dir.h"
 #include "xalt_config.h"
 
-const char* xalt_dir(const char* file)
+char* xalt_dir(const char* file)
 {
   int i;
   char *joined;
@@ -24,7 +25,7 @@ const char* xalt_dir(const char* file)
         continue;
 
       if (!file) 
-        return dir;
+        return strdup(dir);
 
       int ret = asprintf(&joined, "%s/%s", dir, file);
       if (ret > 0 && access(joined, R_OK) != -1)
@@ -33,5 +34,5 @@ const char* xalt_dir(const char* file)
           return joined;
         }
     }
-  return file;
+  return strdup(file);
 }
