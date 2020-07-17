@@ -9,7 +9,7 @@ LIB_OPTIONS 	  := -fPIC -shared
 WARN_FLAGS  	  := -Wall -Wno-unused-result -Wno-unused-value
 
 CF_INIT     	  := -I. -fPIC
-COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT) -I__build__ 
+COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT)
 CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
 CFLAGS      	  := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
@@ -55,20 +55,24 @@ extra_clean  :=
 
 ifeq ($(XALT_USE_32BIT),no)
   HAVE_32BIT := no
+  DEP32      := 
+  OBJ32      := 
 endif
 
+ifeq ($(HAVE_32BIT),yes)
+  DEP32      := $(subst .c,.d32,$(c_sources))
+  OBJ32      := $(subst .c,.o32,$(c_sources))
+endif
 
-dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources)) \
-               $(subst .c,.d32,$(c_sources))
-objects      = $(subst .c,.o,$(c_sources)) $(subst .C,.o,$(cxx_sources)) \
-               $(subst .c,.o32,$(c_sources))
+dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources)) $(DEP32)
+objects      = $(subst .c,.o,$(c_sources)) $(subst .C,.o,$(cxx_sources)) $(OBJ32)
 
-include_dirs := __build__ linker util libxalt
-include_dirs := $(addprefix $(THIS_DIR)/, $(include_dirs))
+include_dirs := linker util libxalt
+include_dirs :=  __build__ $(addprefix $(THIS_DIR)/, $(include_dirs))
 
 CPPFLAGS     += $(addprefix -I, $(include_dirs))
 
-vpath %.h $(include_dirs)
+vpath %.h $(include_dirs) 
 vpath %.c $(include_dirs)
 vpath %.C $(include_dirs)
 
