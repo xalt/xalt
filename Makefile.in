@@ -407,7 +407,9 @@ dist:
 	$(RM) -rf DIST                                                                      ; 
 
 
-makefile: $(srcdir)/Makefile.in config.status
+SUBMAKEFILES := src/makefile src/util/module.mk src/libxalt/module.mk src/linker/module.mk
+
+makefile : $(srcdir)/Makefile.in config.status $(SUBMAKEFILES)
 	./config.status $@
 
 src/makefile: $(srcdir)/src/Makefile.in config.status

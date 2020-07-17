@@ -60,8 +60,8 @@ ifeq ($(XALT_USE_32BIT),no)
 endif
 
 ifeq ($(HAVE_32BIT),yes)
-  DEP32      := $(subst .c,.d32,$(c_sources))
-  OBJ32      := $(subst .c,.o32,$(c_sources))
+  DEP32      = $(subst .c,.d32,$(c_sources))
+  OBJ32      = $(subst .c,.o32,$(c_sources))
 endif
 
 dependencies = $(subst .c,.d,$(c_sources)) $(subst .C,.d,$(cxx_sources)) $(DEP32)
@@ -151,6 +151,7 @@ echo:
 	@echo "INCLUDE_DEPS:   $(INCLUDE_DEPS)"
 	@echo "HAVE_32BIT:     $(HAVE_32BIT)"
 	@echo "XALT_USE_32BIT: $(XALT_USE_32BIT)"
+	@echo "OBJ32:          $(OBJ32)"
 
 neat:
 	$(RM) linker/*~ util/*~ libxalt/*~ tmpl/*~ *~
@@ -159,6 +160,7 @@ clean:  echo
 	$(RM) $(objects) $(dependencies) $(extra_clean)
 	$(RM) linker/*.d.[0-9][0-9]* util/*.d.[0-9][0-9]* libxalt/*.d.[0-9][0-9]* 
 	$(RM) linker/*.d32.[0-9][0-9]* util/*.d32.[0-9][0-9]* libxalt/*.d32.[0-9][0-9]* 
+	$(RM) __build__/*.o __build__/*.o32  __build__/*.d __build__/*.d32 
 
 clobber:
 	$(RM) $(programs) $(libraries)  
