@@ -89,7 +89,9 @@ ifneq ($(SITE_CONTROLLED_PREFIX),no)
   PKGV                  := $(prefix)
   PKG                   := $(prefix)
 endif
-
+ifeq ($(XALT_USE_32BIT),no)
+  HAVE_32BIT := no
+endif
 
 INC                  	:= $(PKGV)/include
 LIB                  	:= $(PKGV)/lib
@@ -172,11 +174,11 @@ build_compiled:
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
-                HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
-                XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
-                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
-                UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL)     \
-                SITE_PKG_DIR=$(SITE_PKG_DIR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools \
+                HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML) STATIC_LIBS=$(STATIC_LIBS)     \
+                XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER)      \
+                CRYPTO_STR=$(CRYPTO_STR) UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR)                 \
+                XALT_LOGGING_URL=$(XALT_LOGGING_URL) SITE_PKG_DIR=$(SITE_PKG_DIR)                  \
+                PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools                              \
                 all
 
 inst_obfuscate:
@@ -422,11 +424,14 @@ src/libxalt/module.mk: $(srcdir)/src/libxalt/Module.mk.in config.status
 
 neat:
 	$(RM) *~
-	cd src ;         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
-                         LIB=$(LIB) LIB64=$(LIB64) $@
-
+	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
+                         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
 clean:  neat
 	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
                          $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
-                         LIB=$(LIB) LIB64=$(LIB64) $@
+                         HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
 clobber: clean
+	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
+                         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
