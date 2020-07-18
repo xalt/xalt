@@ -29,6 +29,7 @@ void buildRmapT(std::string& rmapD, S2S_t** rmapT, UT_array** xlibmapA)
 
   while(xalt_fgets_alloc(fp, &buf, &sz))
     jsonStr += buf;
+  memset(buf, '\0', sz); 
   free(buf);
   sz = 0; buf = NULL;
 
@@ -81,5 +82,6 @@ void buildRmapT(std::string& rmapD, S2S_t** rmapT, UT_array** xlibmapA)
       else if (mapName == "xlibmap")
         processArray("xalt_rmapT.json",js, i, ntokens, tokens, xlibmapA);
     }
+  memset(tokens, 0, sizeof(jsmntok_t)*maxTokens);
   free(tokens);
 }

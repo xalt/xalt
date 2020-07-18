@@ -112,8 +112,8 @@ int main(int argc, char* argv[])
     }
 
   transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn, stderr);
-  free(jsonStr);
-  free(resultDir);
-  free(resultFn);
+  memset(jsonStr,   '\0', strlen(jsonStr));   free(jsonStr);
+  memset(resultFn,  '\0', strlen(resultFn));  free(resultFn);
+  memset(resultDir, '\0', strlen(resultDir)); free(resultDir);
   return 0;
 }

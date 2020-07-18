@@ -26,9 +26,13 @@ int hostname_parser(const char * hostname)
   unsigned int len = strlen(hostname);
   if (sz < len+2)
     {
+      int oldSz = sz;
       sz = len+2;
       if (strbuf)
-	free(strbuf);
+	{
+	  memset(strbuf, '\0', sz); 
+	  free(strbuf);
+	}
       strbuf = (char *) malloc(sz);
     }
 
@@ -45,6 +49,7 @@ int hostname_parser(const char * hostname)
 
 void hostname_parser_cleanup()
 {
+  memset(strbuf, '\0', sz); 
   free(strbuf);
   strbuf = NULL;
   sz     = 0;

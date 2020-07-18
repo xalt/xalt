@@ -100,8 +100,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           rename(tmpFn, fn);
           DEBUG2(my_stderr,"    Wrote json %s file : %s\n",kind, fn);
         }
-      free(tmpFn);
-      free(fn);
+        memset(tmpFn, '\0', strlen(tmpFn));  free(tmpFn);
+        memset(fn,    '\0', strlen(fn));     free(fn);
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
     {
@@ -112,10 +112,9 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s \"%s:%s\"\n",XALT_SYSTEM_PATH, syshost, kind, b64);
       system(cmdline);
-      free(zs);
-      free(b64);
-      free(cmdline);
-      
+      memset(zs,      '\0', zslen);  	      free(zs);
+      memset(b64,     '\0', b64len); 	      free(b64);
+      memset(cmdline, '\0', strlen(cmdline)); free(cmdline);
     }
   else if (strcasecmp(transmission, "logger") == 0)
     {

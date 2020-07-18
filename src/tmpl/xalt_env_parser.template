@@ -28,7 +28,10 @@ int keep_env_name(const char * env_string)
     {
       sz = len+2;
       if (strbuf)
-	free(strbuf);
+	{
+	  memset(strbuf, '\0', sz); 
+	  free(strbuf);
+	}
       strbuf = (char *) malloc(sz);
     }
 	
@@ -45,6 +48,7 @@ int keep_env_name(const char * env_string)
 
 void env_parser_cleanup()
 {
+  memset(strbuf, '\0', sz); 
   free(strbuf);
   strbuf = NULL;
   sz     = 0;

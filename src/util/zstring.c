@@ -97,6 +97,7 @@ char* uncompress_string(const char* str, int len)
 	  prev = out;
 	  out  = (char *) malloc(totalSz+1);
 	  memcpy(out, prev, oldSz);
+	  memset(prev, '\0', strlen(prev));
 	  free(prev);
 	}
 	    

@@ -30,7 +30,10 @@ int keep_path(const char * path)
     {
       sz = len+2;
       if (strbuf)
-	free(strbuf);
+	{
+	  memset(strbuf, '\0', sz); 
+	  free(strbuf);
+	}
       strbuf = (char *) malloc(sz);
     }
 
@@ -47,6 +50,7 @@ int keep_path(const char * path)
 
 void path_parser_cleanup()
 {
+  memset(strbuf, '\0', sz); 
   free(strbuf);
   strbuf = NULL;
   sz     = 0;
