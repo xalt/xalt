@@ -172,5 +172,6 @@ void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& comp
       else if (mapName == "link_line")
         processArray(name,js, i, ntokens, tokens, linklineA);
     }
+  memset(tokens, 0, sizeof(jsmntok_t)*maxTokens);
   free(tokens);
 }

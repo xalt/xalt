@@ -51,6 +51,7 @@ void processTreeFree(processTree_t** ptA)
       utstring_free(entry->m_path);
       utstring_free(entry->m_name);
       utarray_free(entry->m_cmdlineA);
+      memset(entry, 0, sizeof(processTree_t));
       free(entry);
     }
   ptA = NULL;

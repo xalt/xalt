@@ -184,8 +184,6 @@ static int          xalt_tracing          = 0;
 static int          xalt_run_tracing      = 0;
 static int          xalt_gpu_tracking     = 0;
 static int          xalt_sampling         = 0;
-static char *       pathArg	          = NULL;
-static char *       ldLibPathArg          = NULL;
 static int          num_gpus              = 0;
 static int          b64_len               = 0;
 static int          b64_wm_len            = 0;
@@ -630,38 +628,6 @@ void myinit(int argc, char **argv)
 
   const char * blank = " ";
 
-  char * env_path = getenv("PATH");
-  if (!env_path)
-    {
-      pathArg = (char *) malloc(2);
-      memcpy(pathArg,blank,2);
-    }
-  else
-    {
-      int ilen = 0;
-      int plen = strlen(env_path);
-      pathArg  = (char *) malloc(8 + plen + 2);
-      memcpy(&pathArg[ilen], "--path \"", 8); ilen += 8;
-      memcpy(&pathArg[ilen], env_path, plen); ilen += plen;
-      memcpy(&pathArg[ilen], "\"", 2);
-    }
-
-  char * env_ldlibpath = getenv("LD_LIBRARY_PATH");
-  if (!env_ldlibpath)
-    {
-      ldLibPathArg = (char *) malloc(2);
-      memcpy(ldLibPathArg,blank,2);
-    }
-  else
-    {
-      int ilen     = 0;
-      int plen     = strlen(env_ldlibpath);
-      ldLibPathArg = (char *) malloc(14 + plen + 2);
-      memcpy(&ldLibPathArg[ilen], "--ld_libpath \"", 14); ilen += 14;
-      memcpy(&ldLibPathArg[ilen], env_ldlibpath, plen);   ilen += plen;
-      memcpy(&ldLibPathArg[ilen], "\"", 2);
-    }
-
   /* Push XALT_RUN_UUID, XALT_DATE_TIME into the environment so that things like
    * R and python can know what job and what start time of the this run is.
    */
@@ -685,6 +651,7 @@ void myinit(int argc, char **argv)
   char* my_xalt_dir = xalt_dir(NULL);
   setenv("XALT_DATE_TIME",fullDateStr,1);
   setenv("XALT_DIR",my_xalt_dir,1);
+  memset(my_xalt_dir, '\0', strlen(my_xalt_dir));
   free(my_xalt_dir);
 
   pid  = getpid();
@@ -697,8 +664,6 @@ void myinit(int argc, char **argv)
   // with objdump via extractXALTRecord(...)
   if (num_tasks > 1 && ! have_watermark )
     have_watermark = extractXALTRecordString(exec_path, &watermark);
-
-  //b64_watermark = base64_encode(watermark, strlen(watermark), &b64_wm_len);
 
   /*
    * XALT is only recording the end record for scalar executables and
@@ -1032,7 +997,7 @@ void myfini()
 	  else
 	    run_time  = end_time - start_time;
 	  probability = prgm_sample_probability(num_tasks, run_time);
-
+          
 	  if (my_rand >= probability)
 	    {
 	      DEBUG4(my_stderr, "    -> exiting because sampling. "
@@ -1053,28 +1018,31 @@ void myfini()
       else
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
+  
+  if (! have_watermark && num_tasks < 2)
+    have_watermark = extractXALTRecordString(exec_path, &watermark);
 
-    if (! have_watermark && num_tasks < 2)
-    	have_watermark = extractXALTRecordString(exec_path, &watermark);
-    	
-    if (! have_uuid)
-    	{
-    	  build_uuid(&uuid_str[0]);
-    	  have_uuid = 1;
-    	}
+  if (! have_uuid)
+    {
+      build_uuid(&uuid_str[0]);
+      have_uuid = 1;
+    }
 
-    if (xalt_tracing || xalt_run_tracing )
-      {
-        fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
-                xalt_run_short_descriptA[run_mask], exec_path);
-      }
-
-    fflush(my_stderr);
-    run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
-    		     num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
-    		     usr_cmdline, my_stderr);
-    DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
-    fflush(my_stderr);
+  if (xalt_tracing || xalt_run_tracing )
+    {
+      fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
+              xalt_run_short_descriptA[run_mask], exec_path);
+    }
+  
+  fflush(my_stderr);
+  run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
+                 num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
+                 usr_cmdline, my_stderr);
+  DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
+  build_uuid_cleanup();
+  fflush(my_stderr);
+  free(watermark);
+  free(usr_cmdline);
 
   if (xalt_err)
     {

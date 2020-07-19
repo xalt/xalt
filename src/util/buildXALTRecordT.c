@@ -52,6 +52,7 @@ void buildXALTRecordT(const char* watermark, S2S_t** recordT)
 
       start = s3+1;
     }
+  memset(wm, '\0', strlen(wm));
   free(wm);
 }
 
@@ -114,6 +115,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   utstring_printf(cmd, "XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH
                        " objdump -s -j .xalt \"%s\" 2> /dev/null", execQ);
   
+  memset(execQ, '\0', len*3*sizeof(char));
   free(execQ);
 
   UT_array* resultA;

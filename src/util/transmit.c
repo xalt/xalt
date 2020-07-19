@@ -134,13 +134,15 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
                    XALT_SYSTEM_PATH, syshost, kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
           system(cmdline);
+          memset(cmdline, '\0', strlen(cmdline));
           free(cmdline);
           istrt = iend;
           iend  = istrt + blkSz;
           if (iend > sz)
             iend = sz;
         }
-      free(b64);
+      memset(b64, '\0', sz);    free(b64);
+      memset(zs,  '\0', zslen); free(zs);
     }
   else if (strcasecmp(transmission, "syslog") == 0)
     {
@@ -168,8 +170,9 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
             iend = sz;
         }
       closelog();
-      free(b64);
-      free(logNm);
+      memset(b64,   '\0', sz);            free(b64);
+      memset(zs,    '\0', zslen);         free(zs);
+      memset(logNm, '\0', strlen(logNm)); free(logNm);
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
@@ -190,7 +193,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         openlog(logNm, LOG_PID, LOG_USER);
         syslog(LOG_INFO, "Logging URL should be provided");
         closelog();
-        free(logNm);
+        memset(logNm, '\0', strlen(logNm)); free(logNm);
         return;
       }
       
@@ -218,7 +221,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           openlog(logNm, LOG_PID, LOG_USER);
           syslog(LOG_INFO, "curl_easy_perform() failed: %s",curl_easy_strerror(res));
           closelog();
-          free(logNm);
+          memset(logNm, '\0', strlen(logNm)); free(logNm);
         }
         else {
           strtok(chunk.memory, " ");
@@ -233,12 +236,13 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
             openlog(logNm, LOG_PID, LOG_USER);
             syslog(LOG_INFO, "HTTP status code %s received from %s",status, log_url);
             closelog();
-            free(logNm);
+            memset(logNm, '\0', strlen(logNm)); free(logNm);
           }
         }
         curl_easy_cleanup(hnd);
       }
 
+      memset(chunk.memory, '\0', strlen(chunk.memory));
       free(chunk.memory);
       curl_slist_free_all(slist);
     }

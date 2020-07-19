@@ -26,12 +26,12 @@ int keep_env_name(const char * env_string)
   unsigned int len = strlen(env_string);
   if (sz < len+2)
     {
-      sz = len+2;
       if (strbuf)
 	{
 	  memset(strbuf, '\0', sz); 
 	  free(strbuf);
 	}
+      sz = len+2;
       strbuf = (char *) malloc(sz);
     }
 	

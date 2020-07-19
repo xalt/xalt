@@ -5,6 +5,5 @@
 #include "xalt_obfuscate.h"
 
 void buildEnvT( char* env[], S2S_t ** envT);
-void filterEnvT(char* env[], S2S_t ** envT);
 
 #endif //BUILD_ENVT_H

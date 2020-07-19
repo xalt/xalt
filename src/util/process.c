@@ -52,9 +52,8 @@ void build_proc(process_t* proc, pid_t my_pid)
 
   proc->m_parent = (int) strtol(p+3, (char **) NULL, 10);
   memset(buf, 0, sz);
-  sz = 0;
   free(buf);
-  buf = NULL;
+  sz = 0; buf = NULL;
 
   const size_t bufSz = 2049;
   char buf2[bufSz];

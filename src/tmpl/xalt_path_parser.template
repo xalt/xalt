@@ -28,12 +28,12 @@ int keep_path(const char * path)
   unsigned int len = strlen(path);
   if (sz < len+2)
     {
-      sz = len+2;
       if (strbuf)
 	{
 	  memset(strbuf, '\0', sz); 
 	  free(strbuf);
 	}
+      sz = len+2;
       strbuf = (char *) malloc(sz);
     }
 
