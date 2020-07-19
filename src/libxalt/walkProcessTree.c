@@ -47,7 +47,7 @@ void processTreeFree(processTree_t** ptA)
 
   DL_FOREACH_SAFE(*ptA, entry, tmp)
     {
-      DL_DELETE(*ptA,entry);
+      DL_DELETE(*ptA, entry);
       utstring_free(entry->m_path);
       utstring_free(entry->m_name);
       utarray_free(entry->m_cmdlineA);
