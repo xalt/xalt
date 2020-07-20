@@ -337,6 +337,7 @@ build_tags:
             -e 's|.*/__build__.*$$||g'                           \
             -e 's|.*/stamp-h$$||g'                               \
             -e 's|.*/makefile||g'                                \
+            -e 's|.*/.gdb_history||g'                            \
             -e 's|.*/configure$$||g'                             \
             -e 's|.*/.DS_Store$$||g'                             \
             -e 's|.DS_Store$$||g'                                \
