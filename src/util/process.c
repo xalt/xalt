@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "xalt_c_utils.h"
 #include "xalt_fgets_alloc.h"
 #include "process.h"
 #include "utstring.h"
@@ -53,7 +54,7 @@ void build_proc(process_t* proc, pid_t my_pid)
   proc->m_parent = (int) strtol(p+3, (char **) NULL, 10);
   memset(buf, 0, sz);
   sz = 0;
-  free(buf);
+  my_free(buf);
   buf = NULL;
 
   const size_t bufSz = 2049;
@@ -100,5 +101,5 @@ void proc_cmdline(process_t* proc, UT_array** p_cmdlineA)
     }
 
   memset(buf, 0, sz);
-  free(buf); sz = 0; buf = NULL;
+  my_free(buf); sz = 0; buf = NULL;
 }

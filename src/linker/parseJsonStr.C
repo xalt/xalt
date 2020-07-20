@@ -3,6 +3,7 @@
 #include <string>
 
 #include "xalt_quotestring.h"
+#include "xalt_c_utils.h"
 #include "parseJsonStr.h"
 #include "utarray.h"
 #include "insert.h"
@@ -172,5 +173,5 @@ void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& comp
       else if (mapName == "link_line")
         processArray(name,js, i, ntokens, tokens, linklineA);
     }
-  free(tokens);
+  my_free(tokens);
 }

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "xalt_c_utils.h"
 
 void walkProcessTree(pid_t ppid, processTree_t** ptA)
 {
@@ -51,7 +52,7 @@ void processTreeFree(processTree_t** ptA)
       utstring_free(entry->m_path);
       utstring_free(entry->m_name);
       utarray_free(entry->m_cmdlineA);
-      free(entry);
+      my_free(entry);
     }
   ptA = NULL;
 }

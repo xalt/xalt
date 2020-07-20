@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "xalt_fgets_alloc.h"
+#include "xalt_c_utils.h"
 
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
 
@@ -24,7 +25,7 @@ int xalt_fgets_alloc(FILE *fp, char ** buffer, size_t* sz)
 	  {
 	    // Out-of-memory
             memset(buf,0, old_sz);
-	    free(buf);
+	    my_free(buf);
 	    *sz     = 0;
 	    *buffer = NULL;
 	    return 0;

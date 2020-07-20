@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include "xalt_tmpdir.h"
 #include "xalt_config.h"
+#include "xalt_c_utils.h"
 
 char* create_xalt_tmpdir_str(const char* run_uuid)
 {
@@ -22,7 +23,7 @@ void remove_xalt_tmpdir(const char* run_uuid)
   if (dirp == NULL)
     {
       memset(xalt_tmpdir, 0, strlen(xalt_tmpdir));
-      free(xalt_tmpdir);
+      my_free(xalt_tmpdir);
       return;
     }
 
@@ -34,10 +35,10 @@ void remove_xalt_tmpdir(const char* run_uuid)
         
       unlink(fullFn);
       memset(fullFn, 0, strlen(fullFn));
-      free(fullFn);
+      my_free(fullFn);
     }
   rmdir(xalt_tmpdir);
   memset(xalt_tmpdir, 0, strlen(xalt_tmpdir));
-  free(xalt_tmpdir);
+  my_free(xalt_tmpdir);
 }
 

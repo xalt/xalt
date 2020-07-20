@@ -59,6 +59,7 @@
 #include "xalt_vendor_note.h"
 #include "buildXALTRecordT.h"
 #include "build_uuid.h"
+#include "xalt_c_util.h"
 #include "run_submission.h"
 
 #if USE_DCGM && USE_NVML
@@ -459,7 +460,7 @@ void myinit(int argc, char **argv)
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
   memset(pid_str,0,strlen(pid_str));
-  free(pid_str);
+  my_free(pid_str);
 
   /* Build a json version of the user's command line. */
 
@@ -685,7 +686,7 @@ void myinit(int argc, char **argv)
   char* my_xalt_dir = xalt_dir(NULL);
   setenv("XALT_DATE_TIME",fullDateStr,1);
   setenv("XALT_DIR",my_xalt_dir,1);
-  free(my_xalt_dir);
+  my_free(my_xalt_dir);
 
   pid  = getpid();
   ppid = getppid();
@@ -775,7 +776,7 @@ void myinit(int argc, char **argv)
     {
       setenv("LD_PRELOAD", ld_preload_strp, 1);
       memset(ld_preload_strp, 0, strlen(ld_preload_strp));
-      free(ld_preload_strp);
+      my_free(ld_preload_strp);
     }
 
   /************************************************************
@@ -826,8 +827,7 @@ void myfini()
   double t0 = epoch();
   int    xalt_err = xalt_tracing || xalt_run_tracing;
 
-  char * p_dbg;
-
+  set_end_record();  /* Mark my_free() to not free since we are on the way out */
   if (xalt_err)
     {
       fflush(stderr);
@@ -923,7 +923,7 @@ void myfini()
                 {
                   DEBUG2(my_stderr, "  Unable to get accounting data for GPU %d: %s\n", i, _nvmlErrorString(result));
                   memset(pids, 0, sizeof(unsigned int)*max_pid_count);
-                  free(pids);
+                  my_free(pids);
                   continue;
                 }
 
@@ -966,7 +966,7 @@ void myfini()
                 }
 
               memset(pids, 0, sizeof(unsigned int)*max_pid_count);
-              free(pids);
+              my_free(pids);
 
               DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, num_active_pids);
 

@@ -5,6 +5,7 @@
 #include "parseLDTrace.h"
 #include "xalt_fgets_alloc.h"
 #include "insert.h"
+#include "xalt_c_utils.h"
 
 void addPath2Set(std::string& path, SET_t** libT)
 {
@@ -13,7 +14,7 @@ void addPath2Set(std::string& path, SET_t** libT)
     {
       insert_key_SET(libT, my_realpath);
       memset(my_realpath,  '\0', strlen(my_realpath));
-      free(my_realpath);
+      my_free(my_realpath);
     }
 }
 
@@ -108,5 +109,5 @@ void readFunctionList(const char* fn, SET_t** funcSet)
       insert_key_SET(funcSet, start);
     }
   memset(buf,  '\0', sz);
-  free(buf); sz  = 0; buf = NULL;
+  my_free(buf); sz  = 0; buf = NULL;
 }

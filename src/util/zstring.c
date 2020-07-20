@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <zlib.h>
 #include "zstring.h"
+#include "xalt_c_utils.h"
 
 #define BUFFSZ 32768
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
@@ -45,7 +46,7 @@ char* compress_string(const char* str, int* lenOut)
 	  prev    = out;
 	  out     = (char *)malloc(totalSz+1);
 	  memcpy(out, prev, oldSz);
-	  free(prev);
+	  my_free(prev);
 	}
       if (oldSz < szOut)
 	{
@@ -98,7 +99,7 @@ char* uncompress_string(const char* str, int len)
 	  out  = (char *) malloc(totalSz+1);
 	  memcpy(out, prev, oldSz);
 	  memset(prev, '\0', strlen(prev));
-	  free(prev);
+	  my_free(prev);
 	}
 	    
       if (oldSz < szOut )

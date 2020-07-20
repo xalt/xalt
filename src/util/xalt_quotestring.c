@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "xalt_c_utils.h"
 #include "xalt_quotestring.h"
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__);fflush(stderr)
 
@@ -38,7 +39,7 @@ const char* xalt_quotestring(const char* input)
       if (buff)
         {
           memset(buff, 0, oldSz);
-          free(buff);
+          my_free(buff);
         }
       buff = (char *) malloc(sz);
     }
@@ -112,7 +113,7 @@ const char * xalt_unquotestring(const char * input, int len)
       if (buff)
         {
           memset(buff, 0, oldSz);
-          free(buff);
+          my_free(buff);
         }
       buff = (char *) malloc(sz);
     }
@@ -206,7 +207,7 @@ void xalt_quotestring_free()
   if (buff)
     {
       memset(buff, 0, sz);
-      free(buff);
+      my_free(buff);
     }
   buff = NULL;
   sz   = 0;

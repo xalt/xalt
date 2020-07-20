@@ -81,3 +81,14 @@ void build_resultFn(char** resultFn, const char* kind, double start, const char*
 	       user, suffix, uuid_str);
     }
 }
+
+static bool s_end_record = false;
+void set_end_record()
+{
+  s_end_record = true;
+}
+void my_free(void *ptr)
+{
+  if (s_end_record)
+    free(ptr);
+}

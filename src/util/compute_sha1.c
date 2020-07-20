@@ -1,6 +1,7 @@
 #include "xalt_config.h"
 #include "compute_sha1.h"
 #include "xalt_dir.h"
+#include "xalt_c_utils.h"
 #include <fcntl.h>
 #include <openssl/sha.h>
 #include <stdio.h>
@@ -43,7 +44,7 @@ void compute_sha1(const char* fn, char* sha1buf)
 	  char* fn = xalt_dir("lib64/libcrypto.so");
 	  handle = dlopen(fn, RTLD_LAZY);
 	  if (fn)
-	    free(fn);
+	    my_free(fn);
           if (!handle) 
             {
               fputs(dlerror(), stderr);

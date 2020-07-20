@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "utarray.h"
 #include "capture.h"
+#include "xalt_c_utils.h"
 
 void buildXALTRecordT(const char* watermark, S2S_t** recordT)
 {
@@ -52,7 +53,7 @@ void buildXALTRecordT(const char* watermark, S2S_t** recordT)
 
       start = s3+1;
     }
-  free(wm);
+  my_free(wm);
 }
 
   /*
@@ -114,7 +115,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   utstring_printf(cmd, "XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH
                        " objdump -s -j .xalt \"%s\" 2> /dev/null", execQ);
   
-  free(execQ);
+  my_free(execQ);
 
   UT_array* resultA;
   capture(utstring_body(cmd), &resultA);

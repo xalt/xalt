@@ -6,6 +6,7 @@
 #include "build_uuid.h"
 #include "xalt_config.h"
 #include "xalt_dir.h"
+#include "xalt_c_utils.h"
 #include <uuid/uuid.h>
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 void build_uuid(char * my_uuid_str)
@@ -22,7 +23,7 @@ void build_uuid(char * my_uuid_str)
       char* fn = xalt_dir("lib64/libuuid.so");
       handle = dlopen (fn, RTLD_LAZY);
       if (fn)
-	free(fn);
+	my_free(fn);
       if (!handle) 
         {
           fputs (dlerror(), stderr);

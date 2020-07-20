@@ -100,7 +100,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   insert_key_string(&userT,  "run_uuid",    uuid_str);
   insert_key_string(&userT,  "exec_path",   exec_pathQ);
   insert_key_string(&userT,  "exec_type",   "binary");
-  free(exec_pathQ);
+  my_free(exec_pathQ);
   buildUserT(&userT, &userDT);
   translate(envT, &userT, &userDT);
 
@@ -181,17 +181,17 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn, my_stderr);
   xalt_quotestring_free();
-  free(jsonStr);
+  my_free(jsonStr);
   if (resultFn)
     {
-      free(resultFn);
-      free(resultDir);
+      my_free(resultFn);
+      my_free(resultDir);
     }
 
   if (strcmp(xalt_kind,"PKGS") == 0)
     pkgRecordTransmit(uuid_str, syshost, transmission, my_stderr);
 
-  free(syshost);
+  my_free(syshost);
   DEBUG0(my_stderr,"  }\n\n");
   if (xalt_tracing)
     fflush(my_stderr);
@@ -203,7 +203,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   DIR*   dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
     {
-      free(xalt_tmpdir);
+      my_free(xalt_tmpdir);
       return;
     }
 
@@ -261,6 +261,6 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   utstring_free(fullName);
   utstring_free(key);
   rmdir(xalt_tmpdir);
-  free(resultDir);
-  free(xalt_tmpdir);
+  my_free(resultDir);
+  my_free(xalt_tmpdir);
 }

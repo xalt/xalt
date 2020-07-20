@@ -2,7 +2,7 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
-
+#include "xalt_c_utils.h"
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
 enum {
@@ -30,7 +30,7 @@ int keep_env_name(const char * env_string)
       if (strbuf)
 	{
 	  memset(strbuf, '\0', sz); 
-	  free(strbuf);
+	  my_free(strbuf);
 	}
       strbuf = (char *) malloc(sz);
     }
@@ -49,7 +49,7 @@ int keep_env_name(const char * env_string)
 void env_parser_cleanup()
 {
   memset(strbuf, '\0', sz); 
-  free(strbuf);
+  my_free(strbuf);
   strbuf = NULL;
   sz     = 0;
 }

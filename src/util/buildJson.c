@@ -2,6 +2,7 @@
 #include <string.h>
 #include "buildJson.h"
 #include "processTree.h"
+#include "xalt_c_utils.h"
 #include "utlist.h"
 #include "xalt_quotestring.h"
 #include "xalt_base_types.h"

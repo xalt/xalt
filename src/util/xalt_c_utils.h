@@ -10,6 +10,7 @@ extern "C"
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdbool.h>
 
   int  isDirectory(const char *path);
   int  mkpath(char *path, mode_t mode);
@@ -17,6 +18,8 @@ extern "C"
   void build_resultFn( char** resultFn,  const char* kind, double start, const char* syshost, const char* uuid,
                       const char* suffix);
 
+  void set_end_record();
+  void my_free(void* ptr);
 #ifdef __cplusplus
 }
 #endif

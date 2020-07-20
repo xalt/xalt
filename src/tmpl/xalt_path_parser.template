@@ -2,7 +2,7 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
-#define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
+#include "xalt_c_utils.h"
 
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
@@ -32,7 +32,7 @@ int keep_path(const char * path)
       if (strbuf)
 	{
 	  memset(strbuf, '\0', sz); 
-	  free(strbuf);
+	  my_free(strbuf);
 	}
       strbuf = (char *) malloc(sz);
     }
@@ -51,7 +51,7 @@ int keep_path(const char * path)
 void path_parser_cleanup()
 {
   memset(strbuf, '\0', sz); 
-  free(strbuf);
+  my_free(strbuf);
   strbuf = NULL;
   sz     = 0;
 }

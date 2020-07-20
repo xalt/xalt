@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "parseProcMaps.h"
 #include "xalt_config.h"
+#include "xalt_obfuscate.h"
+#include "xalt_c_utils.h"
 
 #include "xalt_fgets_alloc.h"
 
@@ -45,7 +47,7 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
   
   (void) asprintf(&fn, "/proc/%d/maps", my_pid);
   FILE* fp    = fopen(fn,"r");
-  free(fn);
+  my_free(fn);
   if (!fp)
     return;
 
@@ -105,5 +107,5 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
 	}
     }
   fclose(fp);
-  free(buf);
+  my_free(buf);
 }

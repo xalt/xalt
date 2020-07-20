@@ -39,7 +39,7 @@ void free_SET(SET_t** libT)
     {
       HASH_DEL(*libT, entry);
       utstring_free(entry->key);
-      free(entry);
+      my_free(entry);
     }
   libT = NULL;
 }
@@ -51,7 +51,7 @@ void free_S2D(S2D_t** userDT)
     {
       HASH_DEL(*userDT, entry);
       utstring_free(entry->key);
-      free(entry);
+      my_free(entry);
     }
   userDT = NULL;
 }
@@ -64,7 +64,7 @@ void free_S2S(S2S_t** userT)
       HASH_DEL(*userT, entry);
       utstring_free(entry->key);
       utstring_free(entry->value);
-      free(entry);
+      my_free(entry);
     }
   userT = NULL;
 }
