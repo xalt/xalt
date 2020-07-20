@@ -3,6 +3,7 @@
 
 #include "xalt_base_types.h"
 #include "utstring.h"
+#include "xalt_c_utils.h"
 #include "uthash.h"
 #include "utarray.h"
 

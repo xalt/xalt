@@ -58,8 +58,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   DEBUG0(my_stderr,"    Built processTree table\n");
   
   //************************************************************
-  // Walk env to build the full env table
-  // (ignoring shell functions)
+  // Walk env to build the filtered env table
+  // and ignore shell functions
   t1 = epoch();
   buildEnvT(environ, &envT);
   DEBUG0(my_stderr,"    Built envT\n");
@@ -100,9 +100,10 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   insert_key_string(&userT,  "run_uuid",    uuid_str);
   insert_key_string(&userT,  "exec_path",   exec_pathQ);
   insert_key_string(&userT,  "exec_type",   "binary");
+  memset(exec_pathQ, '\0',strlen(exec_pathQ));
   my_free(exec_pathQ);
   buildUserT(&userT, &userDT);
-  translate(envT, &userT, &userDT);
+  translate(&userT, &userDT);
 
   HASH_FIND_STR(userT, "scheduler", e);
   const char * scheduler = (e) ? utstring_body(e->value) : "not known";
@@ -110,18 +111,11 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   DEBUG1(my_stderr,"    Built userT, userDT, scheduler: %s\n", scheduler);
 
   //*********************************************************************
-  // Filter envT 
-
-  t1 = epoch();
-  filterEnvT(environ, &envT);
-  DEBUG0(my_stderr,"    Filter envT\n"); 
-  insert_key_double(&measureT, "03_FilterEnvT____", epoch() - t1);
-
-  //*********************************************************************
   // Take sha1sum of the executable
   t1 = epoch();
   char sha1buf[41];
   compute_sha1(exec_path, &sha1buf[0]);
+  compute_sha1_cleanup();
   DEBUG1(my_stderr,"    Compute sha1 of exec: %s\n",exec_path);
   insert_key_double(&measureT, "02_Sha1_exec_____", epoch() - t1);
 
@@ -181,16 +175,18 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn, my_stderr);
   xalt_quotestring_free();
+  memset(jsonStr, '\0', strlen(jsonStr));
   my_free(jsonStr);
   if (resultFn)
     {
-      my_free(resultFn);
-      my_free(resultDir);
+      memset(resultFn,  '\0', strlen(resultFn));  my_free(resultFn);
+      memset(resultDir, '\0', strlen(resultDir)); my_free(resultDir);
     }
 
   if (strcmp(xalt_kind,"PKGS") == 0)
     pkgRecordTransmit(uuid_str, syshost, transmission, my_stderr);
 
+  memset(syshost, '\0', strlen(syshost));
   my_free(syshost);
   DEBUG0(my_stderr,"  }\n\n");
   if (xalt_tracing)
@@ -203,6 +199,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   DIR*   dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
     {
+      memset(xalt_tmpdir, '\0', strlen(xalt_tmpdir));
       my_free(xalt_tmpdir);
       return;
     }
@@ -240,7 +237,8 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
             {
               while( xalt_fgets_alloc(fp, &buf, &sz))
 		utstring_bincpy(jsonStr, buf, strlen(buf));
-              free(buf);
+              memset(buf, '\0', sz);
+              my_free(buf);
               sz = 0; buf = NULL;
 
               // build key from dp->d_name;
@@ -261,6 +259,6 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   utstring_free(fullName);
   utstring_free(key);
   rmdir(xalt_tmpdir);
-  my_free(resultDir);
-  my_free(xalt_tmpdir);
+  memset(resultDir,   '\0', strlen(resultDir));   my_free(resultDir);
+  memset(xalt_tmpdir, '\0', strlen(xalt_tmpdir)); my_free(xalt_tmpdir);
 }

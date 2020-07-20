@@ -76,14 +76,18 @@ do {                                                       \
 
 #define utstring_done(s)                                   \
 do {                                                       \
-  if ((s)->d != NULL) free((s)->d);                        \
+  if ((s)->d != NULL) {                                    \
+    memset((s)->d, '\0',(s)->n);                           \
+    my_free((s)->d);                                       \
+  }                                                        \
   (s)->n = 0;                                              \
 } while(0)
 
 #define utstring_free(s)                                   \
 do {                                                       \
   utstring_done(s);                                        \
-  free(s);                                                 \
+  memset(s, 0, sizeof(UT_string));                         \
+  my_free(s);                                              \
 } while(0)
 
 #define utstring_new(s)                                    \

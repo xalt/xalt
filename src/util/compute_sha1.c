@@ -15,6 +15,8 @@
 
 static void (*sha1)(const unsigned char *d, size_t n, unsigned char *md) = NULL;
 
+static void * handle = NULL;
+
 void compute_sha1(const char* fn, char* sha1buf)
 {
   struct stat    st;
@@ -38,13 +40,16 @@ void compute_sha1(const char* fn, char* sha1buf)
 
   if (sha1 == NULL)
     {
-      void * handle = dlopen("libcrypto.so", RTLD_LAZY);
+      handle = dlopen("libcrypto.so", RTLD_LAZY);
       if (!handle)
         {
 	  char* fn = xalt_dir("lib64/libcrypto.so");
 	  handle = dlopen(fn, RTLD_LAZY);
 	  if (fn)
-	    my_free(fn);
+            {
+              memset(fn, '\0', strlen(fn));
+              my_free(fn);
+            }
           if (!handle) 
             {
               fputs(dlerror(), stderr);
@@ -69,4 +74,10 @@ void compute_sha1(const char* fn, char* sha1buf)
 
   for (i = 0; i < 20; i++)
     sprintf(&sha1buf[i*2], "%02x", hash[i]);
+}
+
+void compute_sha1_cleanup()
+{
+  if (handle)
+    dlclose(handle);
 }

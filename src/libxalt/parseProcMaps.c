@@ -47,6 +47,7 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
   
   (void) asprintf(&fn, "/proc/%d/maps", my_pid);
   FILE* fp    = fopen(fn,"r");
+  memset(fn, '\0', strlen(fn));
   my_free(fn);
   if (!fp)
     return;
@@ -107,5 +108,6 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
 	}
     }
   fclose(fp);
-  my_free(buf);
+  memset(buf, '\0', sz);
+  my_free(buf); buf = NULL; sz = 0;
 }

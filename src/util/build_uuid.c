@@ -9,16 +9,17 @@
 #include "xalt_c_utils.h"
 #include <uuid/uuid.h>
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
+
+static void* handle                                  = NULL;
+static void (*my_uuid_generate_random)(uuid_t)       = NULL;
+static void (*my_uuid_unparse_lower)(uuid_t, char*)  = NULL;
+
 void build_uuid(char * my_uuid_str)
 {
-  void *handle;
   char *error;
   uuid_t uuid;
-  void (*uuid_generate_random)(uuid_t);
-  void (*uuid_unparse_lower)(uuid_t, char*);
 
-  handle = dlopen ("libuuid.so.1", RTLD_LAZY);
-  if (!handle) 
+  if (! my_uuid_generate_random)
     {
       char* fn = xalt_dir("lib64/libuuid.so");
       handle = dlopen (fn, RTLD_LAZY);
@@ -26,27 +27,43 @@ void build_uuid(char * my_uuid_str)
 	my_free(fn);
       if (!handle) 
         {
-          fputs (dlerror(), stderr);
-          strcpy(my_uuid_str, BAD_UUID);
+          char* fn = xalt_dir("lib64/libuuid.so");
+          handle = dlopen (fn, RTLD_LAZY);
+          if (fn)
+            {
+              memset(fn, '\0', strlen(fn));
+              free(fn);
+            }
+          if (!handle) 
+            {
+              fputs (dlerror(), stderr);
+              strcpy(my_uuid_str, BAD_UUID);
+              return;
+            }
+        }
+      my_uuid_generate_random = dlsym(handle,"uuid_generate_random");
+      if ((error = dlerror()) != NULL) 
+        {
+          fputs(error, stderr);
+          strcpy(my_uuid_str,BAD_UUID);
+          return;
+        }
+
+      my_uuid_unparse_lower = dlsym(handle,"uuid_unparse_lower");
+      if ((error = dlerror()) != NULL) 
+        {
+          fputs(error, stderr);
+          strcpy(my_uuid_str,BAD_UUID);
           return;
         }
     }
-  uuid_generate_random = dlsym(handle,"uuid_generate_random");
-  if ((error = dlerror()) != NULL) 
-    {
-      fputs(error, stderr);
-      strcpy(my_uuid_str,BAD_UUID);
-      return;
-    }
-  
-  uuid_unparse_lower = dlsym(handle,"uuid_unparse_lower");
-  if ((error = dlerror()) != NULL) 
-    {
-      fputs(error, stderr);
-      strcpy(my_uuid_str,BAD_UUID);
-      return;
-    }
     
-  (*uuid_generate_random)(uuid);
-  (*uuid_unparse_lower)(uuid, my_uuid_str);
+  (*my_uuid_generate_random)(uuid);
+  (*my_uuid_unparse_lower)(uuid, my_uuid_str);
+}
+
+void build_uuid_cleanup()
+{
+  if (handle)
+    dlclose(handle);
 }

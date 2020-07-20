@@ -48,10 +48,11 @@ void processTreeFree(processTree_t** ptA)
 
   DL_FOREACH_SAFE(*ptA, entry, tmp)
     {
-      DL_DELETE(*ptA,entry);
+      DL_DELETE(*ptA, entry);
       utstring_free(entry->m_path);
       utstring_free(entry->m_name);
       utarray_free(entry->m_cmdlineA);
+      memset(entry, 0, sizeof(processTree_t));
       my_free(entry);
     }
   ptA = NULL;

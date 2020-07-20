@@ -27,13 +27,12 @@ int hostname_parser(const char * hostname)
   unsigned int len = strlen(hostname);
   if (sz < len+2)
     {
-      int oldSz = sz;
-      sz = len+2;
       if (strbuf)
 	{
 	  memset(strbuf, '\0', sz); 
 	  my_free(strbuf);
 	}
+      sz = len+2;
       strbuf = (char *) malloc(sz);
     }
 

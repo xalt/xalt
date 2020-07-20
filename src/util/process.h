@@ -2,6 +2,7 @@
 #define PROCESS_H
 
 #include <unistd.h>
+#include "xalt_c_utils.h"
 #include "utstring.h"
 #include "utarray.h"
 #include "xalt_obfuscate.h"
