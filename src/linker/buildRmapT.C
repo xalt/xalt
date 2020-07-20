@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "xalt_obfuscate.h"
 #include "epoch.h"
 #include "xalt_config.h"
 #include "buildRmapT.h"

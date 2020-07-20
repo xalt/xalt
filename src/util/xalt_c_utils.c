@@ -82,13 +82,13 @@ void build_resultFn(char** resultFn, const char* kind, double start, const char*
     }
 }
 
-static bool s_end_record = false;
+static bool s_start_record = true;
 void set_end_record()
 {
-  s_end_record = true;
+  s_start_record = false;
 }
 void my_free(void *ptr)
 {
-  if (s_end_record)
+  if (s_start_record)
     free(ptr);
 }

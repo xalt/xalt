@@ -40,6 +40,7 @@
 #define hostname_parser             PASTE2(__XALT_hostname_parser,            HIDE)
 #define hostname_parser_cleanup     PASTE2(__XALT_hostname_parser_cleanup,    HIDE)
 #define init_proc                   PASTE2(__XALT_init_proc,                  HIDE)
+#define isDirectory                 PASTE2(__XALT_isDirectory,                HIDE)
 #define insert_key_double           PASTE2(__XALT_insert_key_double,          HIDE)
 #define insert_key_string           PASTE2(__XALT_insert_key_string,          HIDE)
 #define json_add_S2D                PASTE2(__XALT_json_add_S2D,               HIDE)

@@ -351,9 +351,6 @@ static int jsmn_parse_string(84,1856
 int jsmn_parse(151,3594
 void jsmn_init(306,7648
 
-src/linker/module.mk,15
-local_dir 1,0
-
 src/linker/xalt_cxx_types.h,352
 #define XALT_CXX_TYPES_H2,25
 typedef std::unordered_map<std::string,std::string11,168
@@ -919,9 +916,6 @@ const int dateSZ=22,484
 void displayArray(24,507
 int main(42,986
 
-src/util/module.mk,15
-local_dir 1,0
-
 src/util/xalt_config.h.in,1139
 #define XALT_CONFIG_H2,22
 #define SITE_CONTROLLED_PREFIX 8,147
@@ -1301,9 +1295,6 @@ static const char* comma 29,657
 void run_submission(32,714
 void pkgRecordTransmit(196,6832
 
-src/libxalt/module.mk,15
-local_dir 1,0
-
 src/libxalt/my_hostname_parser_dummy.c,68
 int my_hostname_parser(4,63
 void my_hostname_parser_cleanup(8,138
@@ -1458,22 +1449,22 @@ gittag:gittag292,15373
             vtag=306,16411
 tags:tags324,17545
 build_tags:build_tags327,17583
-dist:dist397,21941
-SUBMAKEFILES 411,22965
-makefile 413,23057
-src/makefile:src/makefile416,23141
-src/util/module.mk:src/util/module.mk419,23216
-src/linker/module.mk:src/linker/module.mk421,23302
-src/libxalt/module.mk:src/libxalt/module.mk423,23392
-neat:neat427,23486
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR430,23589
-                         HAVE_32BIT=431,23683
-clean:clean432,23762
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR434,23862
-                         HAVE_32BIT=435,23956
-clobber:clobber436,24035
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR438,24137
-                         HAVE_32BIT=439,24231
+dist:dist398,22008
+SUBMAKEFILES 412,23032
+makefile 414,23124
+src/makefile:src/makefile417,23208
+src/util/module.mk:src/util/module.mk420,23283
+src/linker/module.mk:src/linker/module.mk422,23369
+src/libxalt/module.mk:src/libxalt/module.mk424,23459
+neat:neat428,23553
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR431,23656
+                         HAVE_32BIT=432,23750
+clean:clean433,23829
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR435,23929
+                         HAVE_32BIT=436,24023
+clobber:clobber437,24102
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR439,24204
+                         HAVE_32BIT=440,24298
 
 py_src/xalt_stack.py,149
 class Stack(27,1148
