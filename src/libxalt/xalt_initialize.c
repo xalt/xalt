@@ -1005,10 +1005,8 @@ void myfini()
     }
 
   if (xalt_tracing || xalt_run_tracing )
-    {
-      fprintf(my_stderr,"  Recording State at end of %s user program:\n    %s\n",
-              xalt_run_short_descriptA[run_mask], exec_path);
-    }
+    fprintf(my_stderr,"  Recording State at end of %s user program\n",
+	    xalt_run_short_descriptA[run_mask]);
   
   fflush(my_stderr);
   run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
