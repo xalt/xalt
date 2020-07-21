@@ -441,7 +441,7 @@ class XALTdb(object):
           exec_path  = row[ 9]
           exec_mname = row[10]
           if (account == "unknown"):
-            resultT    = json.loads(capture("%s %s" % (check_pytas, user)))
+            resultT    = json.loads(capture("LD_PRELOAD= %s %s" % (check_pytas, user)))
             account    = resultT.get('account','unknown')
           
           anon_user  = self.__convert(conn, "xalt_user",   "U","anon_user", userT, user)

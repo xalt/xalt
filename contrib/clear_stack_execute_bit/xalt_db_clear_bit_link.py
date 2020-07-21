@@ -66,7 +66,7 @@ def capture(cmd):
 def clear_stack_bit(file):
   result = capture("execstack " + file)
   if (result[0:1] == 'X'):
-    os.system("execstack -c " + file)
+    os.system("LD_PRELOAD= execstack -c " + file)
     print("clearing stack bit on: ",file)
 
 def main():
