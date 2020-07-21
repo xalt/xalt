@@ -110,7 +110,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       char* zs      = compress_string(jsonStr,&zslen);
       char* b64     = base64_encode(zs, zslen, &b64len);
 
-      asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s \"%s:%s\"\n",XALT_SYSTEM_PATH, syshost, kind, b64);
+      asprintf(&cmdline, "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s \"%s:%s\"\n",XALT_SYSTEM_PATH, syshost, kind, b64);
       system(cmdline);
       memset(zs,      '\0', zslen);  	      my_free(zs);
       memset(b64,     '\0', b64len); 	      my_free(b64);
@@ -131,7 +131,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          asprintf(&cmdline, "XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
+          asprintf(&cmdline, "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
                    XALT_SYSTEM_PATH, syshost, kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
           system(cmdline);
           memset(cmdline, '\0', strlen(cmdline));
