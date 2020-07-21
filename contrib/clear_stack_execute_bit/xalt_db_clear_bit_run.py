@@ -44,7 +44,7 @@ def find_run_files(cursor, args, startdate, enddate):
   for entry in a:
     file = entry[0]
     if (os.path.isfile(file)):
-      result = capture("execstack " + file)
+      result = capture("LD_PRELOAD= execstack " + file)
       if (result[0:1] == 'X'):
         resultT[file] = True
       

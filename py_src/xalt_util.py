@@ -91,7 +91,7 @@ def extract_compiler():
   except ImportError as e:
     ignore_programs = ['pstree', 'ld', 'collect2', 'python', 'sh']
     pstree_bin = "@path_to_pstree@"
-    pstree = capture("%s -l -sp %d" % (pstree_bin, os.getpid())).strip()
+    pstree = capture("LD_PRELOAD= %s -l -sp %d" % (pstree_bin, os.getpid())).strip()
     if (pstree == "unknown"):
       return result
 
@@ -108,7 +108,7 @@ def extract_compiler():
         if os.path.exists(proc_path):
           path = os.path.realpath(proc_path)
         try:
-          cmdline = capture("ps -o cmd -p %s" % pid).strip().split("\n")[1]
+          cmdline = capture("LD_PRELOAD= ps -o cmd -p %s" % pid).strip().split("\n")[1]
         except:
           cmdline = 'unknown'
           pass

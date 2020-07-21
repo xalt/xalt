@@ -385,7 +385,7 @@ def main():
   xalt   = XALTdb(args.confFn)
 
   if (xalt_file_prefix == "USE_HOME"):
-    num     = int(capture("getent passwd | wc -l"))
+    num     = int(capture("LD_PRELOAD= getent passwd | wc -l"))
     pbar    = ProgressBar(maxVal=num)
   else:
     xaltDir = build_resultDir("", transmission, "")

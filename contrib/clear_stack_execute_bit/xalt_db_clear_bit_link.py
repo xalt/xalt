@@ -41,7 +41,7 @@ def find_link_files(cursor, args, startdate, enddate):
   for entry in a:
     file = entry[0]
     if (os.path.isfile(file)):
-      result = capture("execstack " + file)
+      result = capture("LD_PRELOAD= execstack " + file)
       if (result[0:1] == 'X'):
         resultT[file] = True
       
@@ -64,7 +64,7 @@ def capture(cmd):
   return p.communicate()[0]
 
 def clear_stack_bit(file):
-  result = capture("execstack " + file)
+  result = capture("LD_PRELOAD= execstack " + file)
   if (result[0:1] == 'X'):
     os.system("LD_PRELOAD= execstack -c " + file)
     print("clearing stack bit on: ",file)
