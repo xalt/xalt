@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
 
 
   UT_array*   resultA;
-  std::string cmd      = "XALT_EXECUTABLE_TRACKING=no ";
+  std::string cmd      = "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no ";
   char* fn = xalt_dir("bin/xalt_print_os");
   cmd.append(fn);
   free(fn);

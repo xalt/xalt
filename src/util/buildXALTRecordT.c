@@ -113,7 +113,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   UT_string* cmd;
   utstring_new(cmd);
   
-  utstring_printf(cmd, "XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH
+  utstring_printf(cmd, "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH
                        " objdump -s -j .xalt \"%s\" 2> /dev/null", execQ);
   
   memset(execQ, '\0', len*3*sizeof(char));

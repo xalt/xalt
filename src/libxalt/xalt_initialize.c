@@ -236,7 +236,6 @@ void myinit(int argc, char **argv)
   char * p;
   char * p_dbg;
   char * cmdline         = NULL;
-  char * ld_preload_strp = NULL;
   char * pid_str         = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[FULLDATESZ];
@@ -617,16 +616,6 @@ void myinit(int argc, char **argv)
   start_time = t0;
   frac_time  = start_time - (long) (start_time);
 
-  /**************************************************************
-   * Save LD_PRELOAD and clear it before calling run_submission()
-   ***************************************************************/
-
-  p = getenv("LD_PRELOAD");
-  if (p)
-    ld_preload_strp = strdup(p);
-
-  unsetenv("LD_PRELOAD");
-
   const char * blank = " ";
 
   /* Push XALT_RUN_UUID, XALT_DATE_TIME into the environment so that things like
@@ -729,19 +718,6 @@ void myinit(int argc, char **argv)
     {
       DEBUG4(stderr,"    -> MPI_SIZE: %d < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
              num_tasks, (int) always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
-    }
-
-  /**********************************************************
-   * Restore LD_PRELOAD after running xalt_run_submission.
-   * This way the application and child apps will have
-   * LD_PRELOAD set. (I'm looking at you mpiexec.hydra!)
-   *********************************************************/
-
-  if (ld_preload_strp)
-    {
-      setenv("LD_PRELOAD", ld_preload_strp, 1);
-      memset(ld_preload_strp, 0, strlen(ld_preload_strp));
-      my_free(ld_preload_strp);
     }
 
   /************************************************************
