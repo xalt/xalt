@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <string.h>
 #include "buildXALTRecordT.h"
 #include "xalt_config.h"
@@ -110,18 +111,17 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
 	*q++ = *p++;
     }
       
+  UT_array* resultA;
   UT_string* cmd;
   utstring_new(cmd);
   
   utstring_printf(cmd, "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH
                        " objdump -s -j .xalt \"%s\" 2> /dev/null", execQ);
+  capture(utstring_body(cmd), &resultA);
+  utstring_free(cmd);
   
   memset(execQ, '\0', len*3*sizeof(char));
   my_free(execQ);
-
-  UT_array* resultA;
-  capture(utstring_body(cmd), &resultA);
-  utstring_free(cmd);
 
   const char* match = "Contents of section";
   int         m_len = strlen(match);

@@ -59,7 +59,7 @@
 #include "xalt_vendor_note.h"
 #include "buildXALTRecordT.h"
 #include "build_uuid.h"
-#include "xalt_c_util.h"
+#include "xalt_c_utils.h"
 #include "run_submission.h"
 
 #if USE_DCGM && USE_NVML

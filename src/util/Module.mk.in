@@ -32,14 +32,14 @@ EPOCH_C          := $(addprefix $(local_dir)/, $(EPOCH_C))
 EPOCH_OBJ        := $(patsubst %.c, %.o, $(EPOCH_C))
 
 EXTR_REC_X       := $(DESTDIR)$(LIBEXEC)/xalt_extract_record.x
-EXTR_REC_C       := extractMain.c buildXALTRecordT.c capture.c
+EXTR_REC_C       := extractMain.c buildXALTRecordT.c capture.c  xalt_c_utils.c
 EXTR_REC_C       := $(addprefix $(local_dir)/, $(EXTR_REC_C))
 EXTR_REC_OBJ     := $(patsubst %.c, %.o, $(EXTR_REC_C))
 
 CFG_RPT_X        := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
 CFG_RPT_CXX      := xalt_configuration_report.C
 CFG_RPT_CXX      := $(addprefix $(local_dir)/, $(CFG_RPT_CXX))
-CFG_RPT_C        := epoch.c capture.c xalt_dir.c buildJson.c xalt_quotestring.c
+CFG_RPT_C        := epoch.c capture.c xalt_dir.c buildJson.c xalt_quotestring.c xalt_c_utils.c
 CFG_RPT_C        := $(addprefix $(local_dir)/, $(CFG_RPT_C)) __build__/xalt_syshost.c
 CFG_RPT_OBJ      := $(patsubst %.C, %.o, $(CFG_RPT_CXX)) \
                     $(patsubst %.c, %.o, $(CFG_RPT_C))
@@ -68,7 +68,7 @@ $(EPOCH_X) : $(EPOCH_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(EXTR_REC_X) : $(EXTR_REC_OBJ)
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lm
 
 $(CFG_RPT_X): $(CFG_RPT_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
@@ -80,9 +80,9 @@ $(REC_PKG_X): $(REC_PKG_OBJ)
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
-$(SYSHOST_X): __build__/xalt_syshost_main.o util/xalt_fgets_alloc.o
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $<
+$(SYSHOST_X): __build__/xalt_syshost_main.o util/xalt_fgets_alloc.o util/xalt_c_utils.o
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lm
 
-__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fgets_alloc.h
-	$(COMPILE.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) $(LDFLAGS) -o $@ $<
+__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fgets_alloc.h util/xalt_c_utils.h
+	$(COMPILE.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) $(LDFLAGS) -o $@ $< 
 

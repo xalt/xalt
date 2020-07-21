@@ -140,7 +140,7 @@ COPY_ALL_LIBS: build_all
         rm -f $@.$$$$
 
 %.o32: %.c
-	$(CC) -m32 -DHAVE_32BIT $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+	$(CC) -m32 $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 
 

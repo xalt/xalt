@@ -2,7 +2,7 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
-#include "xalt_c_util.h"
+#include "xalt_c_utils.h"
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 static char * strbuf   = NULL;

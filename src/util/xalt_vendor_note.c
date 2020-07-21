@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <link.h>
 #include <gelf.h>
+#include "xalt_config.h"
 #include "xalt_vendor_note.h"
 #include "xalt_base_types.h"
 
