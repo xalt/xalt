@@ -113,7 +113,10 @@ int main(int argc, char* argv[])
 
   transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn, stderr);
   memset(jsonStr,   '\0', strlen(jsonStr));   my_free(jsonStr);
-  memset(resultFn,  '\0', strlen(resultFn));  my_free(resultFn);
-  memset(resultDir, '\0', strlen(resultDir)); my_free(resultDir);
+  if (resultFn)
+    {
+      memset(resultFn,  '\0', strlen(resultFn));  my_free(resultFn);
+      memset(resultDir, '\0', strlen(resultDir)); my_free(resultDir);
+    }
   return 0;
 }
