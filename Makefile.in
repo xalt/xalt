@@ -100,7 +100,7 @@ SBIN                 	:= $(PKGV)/sbin
 SITE_PKG_DIR            := $(PKGV)/site_packages
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
-                           $(DESTDIR)$(INC) $(DESTDIR)/$(SITE_PKG_DIR)
+                           $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)
 
 SITE_PKG                := py_src/xalt_sitecustomize.py
 SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
