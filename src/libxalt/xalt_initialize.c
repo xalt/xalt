@@ -272,7 +272,6 @@ void myinit(int argc, char **argv)
 	errfd	       = dup(STDERR_FILENO);
     }
 
-  v = getenv("__XALT_INITIAL_STATE__");
   if (xalt_tracing)
     {
       time_t    now    = (time_t) t0;
@@ -308,6 +307,7 @@ void myinit(int argc, char **argv)
    * Is this is built-in or LD_PRELOAD version of this file?
    ***********************************************************/
 
+  v = getenv("__XALT_INITIAL_STATE__");
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if any myinit routine has been called */
   if (v && (strcmp(v,STR(STATE)) != 0))
@@ -318,7 +318,7 @@ void myinit(int argc, char **argv)
 	  exit(EXIT_FAILURE);
 	}
       asprintf(&pid_str,"%ld:%s", (long) getpid(), u.nodename);
-      char* env_pid = getenv("__XALT_INITIAL_STATE_PID__");
+      char* env_pid = getenv("__XALT_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
 	{
 	  DEBUG3(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, STR(STATE), env_pid);
@@ -455,7 +455,7 @@ void myinit(int argc, char **argv)
     asprintf(&pid_str,"%ld:%s",(long) getpid(), u.nodename);
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
-  setenv("__XALT_INITIAL_STATE_PID__",pid_str,1);
+  setenv("__XALT_STATE_PID__",        pid_str,1);
   memset(pid_str,0,strlen(pid_str));
   my_free(pid_str);
 
@@ -660,11 +660,16 @@ void myinit(int argc, char **argv)
 
   // This routine returns either "FALSE" for nothing found or the watermark.
   have_watermark = xalt_vendor_note(&watermark, xalt_tracing);
+  DEBUG1(stderr,"    -> Found watermark via vendor note: %s\n", have_watermark ? "true" : "false");
 
   // If MPI program and no vendor watermark then try extracting the watermark
   // with objdump via extractXALTRecord(...)
   if (num_tasks > 1 && ! have_watermark )
-    have_watermark = extractXALTRecordString(exec_path, &watermark);
+    {
+      have_watermark = extractXALTRecordString(exec_path, &watermark);
+      DEBUG1(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
+    }
+
 
   /*
    * XALT is only recording the end record for scalar executables and
@@ -784,23 +789,41 @@ void wrapper_for_myfini(int signum)
   raise(signum);
 }
 
+static void close_out(FILE* fp, int xalt_err)
+{
+  fflush(fp);
+  if (xalt_err)
+    {
+      fclose(fp);
+      close(errfd);
+      close(STDERR_FILENO);
+    }
+}
+
 void myfini()
 {
   FILE * my_stderr = NULL;
   char * cmdline;
+  char * v;
   double run_time;
   double t0 = epoch();
   int    xalt_err = xalt_tracing || xalt_run_tracing;
-
-  set_end_record();  /* Mark my_free() to not free since we are on the way out */
   if (xalt_err)
     {
       fflush(stderr);
       close(STDERR_FILENO);
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
-      DEBUG4(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
-      fflush(my_stderr);
+    }
+
+  set_end_record();  /* Mark my_free() to not free since we are on the way out */
+
+  DEBUG4(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
+  if (getenv("__XALT_FINAL_STATE__"))
+    {
+      DEBUG0(my_stderr,"    -> exiting because myfini() has been called more than once\n}\n\n");
+      close_out(my_stderr, xalt_err);
+      return;
     }
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
@@ -811,18 +834,13 @@ void myfini()
 
       DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
 	     xalt_reasonA[reject_flag], exec_path);
-      fflush(my_stderr);
-      if (xalt_err)
-	{
-	  fclose(my_stderr);
-	  close(errfd);
-	  close(STDERR_FILENO);
-	}
+      close_out(my_stderr, xalt_err);
       return;
     }
 
   end_time = epoch();
   unsetenv("LD_PRELOAD");
+  setenv("__XALT_FINAL_STATE__",    "1",1);
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */

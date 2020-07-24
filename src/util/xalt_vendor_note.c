@@ -10,7 +10,8 @@
 #include "xalt_vendor_note.h"
 #include "xalt_base_types.h"
 
-#ifndef HAVE_32BIT
+// Use the real xalt_vendor_note() only with 64bit executables not 32bit.
+#ifndef WITH_32BIT
 
 static int xalt_tracing = 0;
 

@@ -440,7 +440,6 @@ class XALTdb(object):
         if ( account == "unknown"):
           account = u2acctT.get(user,"unknown")
 
-
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,

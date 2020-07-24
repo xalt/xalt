@@ -110,6 +110,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
       else
 	*q++ = *p++;
     }
+  *q = '\0';
       
   UT_array* resultA;
   UT_string* cmd;
@@ -117,8 +118,6 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   
   utstring_printf(cmd, "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no PATH=" XALT_SYSTEM_PATH
                        " objdump -s -j .xalt \"%s\" 2> /dev/null", execQ);
-  fprintf(stderr,"\ncmd: %s\n\n", utstring_body(cmd));
-
   capture(utstring_body(cmd), &resultA);
   utstring_free(cmd);
   
