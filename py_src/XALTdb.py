@@ -261,13 +261,14 @@ class XALTdb(object):
       link_path   = resultT['link_path']
       cwd         = resultT.get('wd',"UNKNOWN")[:1024].encode("ascii","ignore")
       link_mname  = obj2module(link_path,reverseMapT)
-      link_line   = json.dumps(link_lineA)
+      link_line   = json.dumps(link_lineA)[:2048]
       build_user  = resultT['build_user'].encode("ascii","ignore")
       build_shost = resultT['build_syshost'].encode("ascii","ignore")
       hash_id     = resultT['hash_id']
 
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
+      query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
       cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
                              link_prg,    link_path,   link_mname,
                              link_line,   cwd,         build_user,
@@ -431,7 +432,7 @@ class XALTdb(object):
         #print("not found")
         moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
         exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
-        usr_cmdline   = json.dumps(runT['cmdlineA'])
+        usr_cmdline   = json.dumps(runT['cmdlineA'])[:2048]
         sum_runs      = runT['userDT'].get('sum_runs' ,   0)
         sum_times     = runT['userDT'].get('sum_times',   0.0)
         probability   = runT['userDT'].get('probability', 1.0)
@@ -442,6 +443,7 @@ class XALTdb(object):
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
         cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
                                runT['userT']['syshost'], uuid,                         runT['hash_id'],
                                account,                  runT['userT']['exec_type'],   startTime,
@@ -454,6 +456,7 @@ class XALTdb(object):
         run_id   = cursor.lastrowid
         stored   = True
         recordMe = True 
+        print("usr_cmdline:",usr_cmdline,file=sys.stderr)
 
 
       if (recordMe and endTime > 0):
