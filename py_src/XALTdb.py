@@ -443,6 +443,7 @@ class XALTdb(object):
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
         cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
                                runT['userT']['syshost'], uuid,                         runT['hash_id'],
                                account,                  runT['userT']['exec_type'],   startTime,

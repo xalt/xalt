@@ -202,7 +202,7 @@ LINKS: $(DIRLIST)
         ln -s . i386-linux-gnu
 
 Inst_site_py: $(DESTDIR)$(SITE_PKG_DIR) 
-	cp $(SITE_PKG) $(SITE_PKG_DIR)/sitecustomize.py
+	cp $(SITE_PKG) $(DESTDIR)$(SITE_PKG_DIR)/sitecustomize.py
 
 Inst_libexec: $(LIBEXEC_PKG) $(DESTDIR)$(LIBEXEC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(LIBEXEC_PKG)" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
