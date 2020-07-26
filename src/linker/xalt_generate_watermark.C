@@ -7,6 +7,7 @@
 
 #include "epoch.h"
 #include "xalt_config.h"
+#include "xalt_base_types.h"
 #include "parseJsonStr.h"
 #include "xalt_vendor_note.h"
 

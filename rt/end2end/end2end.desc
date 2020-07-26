@@ -47,87 +47,90 @@ test_descript = {
      export XALT_TRANSMISSION_STYLE=file_separate_dirs
      export XALT_PRELOAD_ONLY=no
 
-     displayThis  "mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c"
-     mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c 
+     displayThis  "mpicc -o hello\ .mpi.01 $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello\ .mpi.01 $(projectDir)/rt/mpi_hello_world.c 
 
      export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
-     displayThis "mpirun -n 1 ./hello\ .mpi --abc def --seq 01"
-     mpirun -n 1 ./hello\ .mpi --abc def --seq 01
+     displayThis "mpirun -n 1 ./hello\ .mpi.01 --abc def --seq 01"
+     mpirun -n 1 ./hello\ .mpi.01 --abc def --seq 01
      
      displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
      rm -rf Ðì®
      mkdir  Ðì®
      mpicc -o helloñ.mpi -Wl,--print-map $(projectDir)/rt/mpi_hello_world.c > map.log 2>&1
-     mv helloñ.mpi Ðì®
+     mv helloñ.mpi Ðì®/helloñ.mpi.02
 
-     displayThis "mpirun -n 1 Ðì®/helloñ.mpi --seq 02"
-     mpirun -n 1 Ðì®/helloñ.mpi --seq 02
+     displayThis "mpirun -n 1 Ðì®/helloñ.mpi.02 --seq 02"
+     mpirun -n 1 Ðì®/helloñ.mpi.02 --seq 02
      
-     displayThis "Setting LD_PRELOAD, XALT_TRACING=yes ./hello\ .mpi --seq 03"
+     displayThis "Setting LD_PRELOAD, XALT_TRACING=yes ./hello\ .mpi.03 --seq 03"
      export LD_PRELOAD=$outputDir/XALT/$VERSION/lib64/libxalt_init.so
-     LD_BIND_NOW=1 XALT_TRACING=yes ./hello\ .mpi --ntasks p "a';'d" --seq 03
+     cp ./hello\ .mpi.01 ./hello\ .mpi.03
+     LD_BIND_NOW=1 XALT_TRACING=yes ./hello\ .mpi.03 --ntasks p "a';'d" --seq 03
      
-     g++ -o try.rd $(testDir)/try.C -rdynamic
+     g++ -o try.rd.04 $(testDir)/try.C -rdynamic
 
-     displayThis "XALT_TRACING=yes ./try.rd --seq 04 > try.log 2>&1"
-     XALT_TRACING=yes ./try.rd --seq 04 > try.PRELOAD.log 2>&1
+     displayThis "XALT_TRACING=yes ./try.rd.04 --seq 04 > try.PRELOAD.log 2>&1"
+     XALT_TRACING=yes ./try.rd.04 --seq 04 > try.PRELOAD.log 2>&1
 
-     displayThis "XALT_TRACING=yes LD_PRELOAD= ./try.rd --seq 05 > try.log 2>&1"
-     LD_PRELOAD= XALT_TRACING=yes ./try.rd --seq 05 > try.REGULAR.log 2>&1
+     displayThis "XALT_TRACING=yes LD_PRELOAD= ./try.rd.05 --seq 05 > try.REGULAR.log 2>&1"
+     cp ./try.rd.04 ./try.rd.05
+     LD_PRELOAD= XALT_TRACING=yes ./try.rd.05 --seq 05 > try.REGULAR.log 2>&1
 
      export XALT_PRELOAD_ONLY=yes
      displayThis "build empty_regexp"
-     gcc -o empty_regexp $(testDir)/empty_regexp.c 
-     displayThis "run empty_regexp --seq 06"
-     ./empty_regexp  --seq 06
+     gcc -o empty_regexp.06 $(testDir)/empty_regexp.c 
+     displayThis "run empty_regexp.06 --seq 06"
+     ./empty_regexp.06  --seq 06
 
      displayThis "build try_uuid and run it (seq 07)"
-     gcc -o try_uuid $(testDir)/try_uuid.c -luuid
-     ./try_uuid '`i+1`' --seq 07
+     gcc -o try_uuid.07 $(testDir)/try_uuid.c -luuid
+     ./try_uuid.07 '`i+1`' --seq 07
 
-     displayThis "mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c"
-     mpicc -o helloññ $(projectDir)/rt/mpi_hello_world.c
+     displayThis "mpicc -o helloññ.08 $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o helloññ.08 $(projectDir)/rt/mpi_hello_world.c
      
-     displayThis "mpirun -n 1 ./helloññ --seq 08"
+     displayThis "mpirun -n 1 ./helloññ.08 --seq 08"
      export RTM_PATH="RTM path FOO"
-     mpirun -n 1 ./helloññ --seq 08
+     mpirun -n 1 ./helloññ.08 --seq 08
 
      displayThis "Disable XALT TRACKING"
-     displayThis "mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c"
+     displayThis "mpicc -o helloñññ.09 $(projectDir)/rt/mpi_hello_world.c"
      unset XALT_EXECUTABLE_TRACKING
-     mpicc -o helloñññ $(projectDir)/rt/mpi_hello_world.c
+     mpicc -o helloñññ.09 $(projectDir)/rt/mpi_hello_world.c
 
      displayThis "Enable XALT TRACKING"
-     displayThis "XALT_TRACING=yes ./helloñññ" '`i+1`' "a;'" "--seq 09"
+     displayThis "XALT_TRACING=yes ./helloñññ.09" '`i+1`' "a;'" "--seq 09"
      export XALT_EXECUTABLE_TRACKING=yes
-     XALT_TRACING=yes ./helloñññ '`i+1`' "a;'" --seq 09
+     XALT_TRACING=yes ./helloñññ.09 '`i+1`' "a;'" --seq 09
 
      displayThis "Turn off command line recording for: mpirun -n 1 ./hello\ .mpi --abc def --seq 10"
      export XALT_CMDLINE_RECORD=no
-     mpirun -n 1 ./hello\ .mpi --abc def --seq 10
+     cp ./hello\ .mpi.01 ./hello\ .mpi.10
+     mpirun -n 1 ./hello\ .mpi.10 --abc def --seq 10
      unset XALT_CMDLINE_RECORD
 
      displayThis "XALT_SCALAR_TRACKING=no ./helloñññ --noseq 11"
      XALT_SCALAR_TRACKING=no ./helloñññ --noseq 11
 
-     displayThis "gfortran -fopenmp -o omp_pi"
-     gfortran -fopenmp -o omp_pi $(testDir)/omp_pi.f90
+     displayThis "gfortran -fopenmp -o omp_pi.11"
+     gfortran -fopenmp -o omp_pi.11 $(testDir)/omp_pi.f90
 
      displayThis "OMP_NUM_THREADS=4 ./omp_pi --seq 11"
-     OMP_NUM_THREADS=4 ./omp_pi --seq 11
+     OMP_NUM_THREADS=4 ./omp_pi.11 --seq 11
 
-     displayThis "mpif90 -fopenmp -o hybrid_daxpy"
-     mpif90 -fopenmp -o hybrid_daxpy $(testDir)/hybrid_daxpy.f90
+     displayThis "mpif90 -fopenmp -o hybrid_daxpy.12"
+     mpif90 -fopenmp -o hybrid_daxpy.12 $(testDir)/hybrid_daxpy.f90
      
 
-     displayThis "OMP_NUM_THREADS=2 mpirun -n 2 ./hybrid_daxpy --seq 12"
-     OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy --seq 12
+     displayThis "OMP_NUM_THREADS=2 mpirun -n 2 ./hybrid_daxpy.12 --seq 12"
+     OMP_NUM_THREADS=2  mpirun -n 2 ./hybrid_daxpy.12 --seq 12
 
      displayThis "XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c"
-     XALT_TRACING=link gcc -o get_XALT_env $(testDir)/get_XALT_env.c
-     displayThis "./get_XALT_env --seq 13"
-     ./get_XALT_env --seq 13
+     XALT_TRACING=link gcc -o get_XALT_env.13 $(testDir)/get_XALT_env.c
+     displayThis "./get_XALT_env.13 --seq 13"
+     ./get_XALT_env.13 --seq 13
 
      gcc -fPIC -c -o a.o $(testDir)/a.c
      gcc -fPIC -c -o b.o $(testDir)/b.c
@@ -139,10 +142,10 @@ test_descript = {
      gcc -O0 -c -o abc.o $(testDir)/abc.c
 
      displayThis "Link abc with libabc.so"
-     gcc -O0 -o abc abc.o -L$PWD -labc
+     gcc -O0 -o abc.14 abc.o -L$PWD -labc
      
-     displayThis "XALT_TRACING=yes ./abc --seq 14 > /dev/null"
-     LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH XALT_TRACING=yes ./abc --seq 14 > /dev/null
+     displayThis "XALT_TRACING=yes ./abc.14 --seq 14 > /dev/null"
+     LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH XALT_TRACING=yes ./abc.14 --seq 14 > /dev/null
 
      gcc -O2 -flto -c -o foo.o  $(testDir)/foo.c
      gcc -O2 -flto -c -o bar.o  $(testDir)/bar.c
@@ -155,20 +158,20 @@ test_descript = {
      $(outputDir)/XALT/$VERSION/libexec/test_record_pkg --seq 15
 
      displayThis "build and run segv program (seq 16)"
-     mpicc -o segv $(testDir)/segv.c
-     mpirun -n 2 ./segv --seq 16
+     mpicc -o segv.16 $(testDir)/segv.c
+     mpirun -n 2 ./segv.16 --seq 16
 
      displayThis "build and run fpe program (seq 17)"
-     gcc -o fpe $(testDir)/fpe.c
-     ./fpe --seq 17
+     gcc -o fpe.17 $(testDir)/fpe.c
+     ./fpe.17 --seq 17
 
      displayThis "build and run bus program (seq 18)"
-     gcc -o bus $(testDir)/bus.c
-     ./bus --seq 18
+     gcc -o bus.18 $(testDir)/bus.c
+     ./bus.18 --seq 18
 
      displayThis "build and run ill program (seq 19)"
-     gcc -o ill $(testDir)/ill.c
-     ./ill --seq 19
+     gcc -o ill.19 $(testDir)/ill.c
+     ./ill.19 --seq 19
 
      displayThis "Test python3 package recording (seq 20)"
      OLD_PY_PATH=$PYTHONPATH

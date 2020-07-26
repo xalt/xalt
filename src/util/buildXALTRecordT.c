@@ -110,6 +110,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
       else
 	*q++ = *p++;
     }
+  *q = '\0';
       
   UT_array* resultA;
   UT_string* cmd;
