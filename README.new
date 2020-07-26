@@ -21,3 +21,4 @@ XALT 2.8+
     (2.8.8)  * Setting $XALT_MPI_ALWAYS_RECORD overrides setting in site config.py file
              * Setting env var RDMAV_FORK_SAFE=1 around the capture() call in myfini().
 	       This avoid problem with UCX version 1.6.1
+    (2.8.10) * Issue #30: Fix bug with python site package install
