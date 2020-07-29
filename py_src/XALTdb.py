@@ -267,8 +267,8 @@ class XALTdb(object):
       hash_id     = resultT['hash_id']
 
       # It is unique: lets store this link record
+      #query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
       query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
-      query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
       cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
                              link_prg,    link_path,   link_mname,
                              link_line,   cwd,         build_user,
@@ -442,8 +442,8 @@ class XALTdb(object):
           account = u2acctT.get(user,"unknown")
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
-        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
         cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
                                runT['userT']['syshost'], uuid,                         runT['hash_id'],
                                account,                  runT['userT']['exec_type'],   startTime,
