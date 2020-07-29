@@ -19,7 +19,7 @@ extern "C"
                       const char* suffix);
 
   void set_end_record();
-  void my_free(void* ptr);
+  void my_free(void* ptr,int sz);
 #ifdef __cplusplus
 }
 #endif

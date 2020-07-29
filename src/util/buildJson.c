@@ -272,13 +272,14 @@ void json_add_ptA(Json_t* json, const char* sep, const char* name, processTree_t
 
 void json_add_array(Json_t* json, const char* sep, const char* name, int n, const char** A)
 {
+  int i;
   utarray_push_back(json->m_s, &sep);
   utarray_push_back(json->m_s, &dquote);
   utarray_push_back(json->m_s, &name);
   utarray_push_back(json->m_s, &a_colon);
   
   const char*    my_sep   = blank0;
-  for (int i = 0; i < n; ++i)
+  for (i = 0; i < n; ++i)
     {
       utarray_push_back(json->m_s, &my_sep);
       utarray_push_back(json->m_s, &dquote);

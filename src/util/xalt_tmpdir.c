@@ -22,8 +22,7 @@ void remove_xalt_tmpdir(const char* run_uuid)
   DIR*  dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
     {
-      memset(xalt_tmpdir, 0, strlen(xalt_tmpdir));
-      my_free(xalt_tmpdir);
+      my_free(xalt_tmpdir, strlen(xalt_tmpdir));
       return;
     }
 
@@ -34,11 +33,9 @@ void remove_xalt_tmpdir(const char* run_uuid)
       asprintf(&fullFn,"%s/%s",xalt_tmpdir, dp->d_name);
         
       unlink(fullFn);
-      memset(fullFn, 0, strlen(fullFn));
-      my_free(fullFn);
+      my_free(fullFn, strlen(fullFn));
     }
   rmdir(xalt_tmpdir);
-  memset(xalt_tmpdir, 0, strlen(xalt_tmpdir));
-  my_free(xalt_tmpdir);
+  my_free(xalt_tmpdir, strlen(xalt_tmpdir));
 }
 

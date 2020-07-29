@@ -37,10 +37,7 @@ const char* xalt_quotestring(const char* input)
       oldSz = sz;
       sz    = currSz;
       if (buff)
-        {
-          memset(buff, 0, oldSz);
-          my_free(buff);
-        }
+	my_free(buff,oldSz);
       buff = (char *) malloc(sz);
     }
   s = buff;
@@ -111,10 +108,7 @@ const char * xalt_unquotestring(const char * input, int len)
       oldSz = sz;
       sz    = currSz;
       if (buff)
-        {
-          memset(buff, 0, oldSz);
-          my_free(buff);
-        }
+	my_free(buff, oldSz);
       buff = (char *) malloc(sz);
     }
   s = buff;
@@ -205,10 +199,8 @@ const char * xalt_unquotestring(const char * input, int len)
 void xalt_quotestring_free()
 {
   if (buff)
-    {
-      memset(buff, 0, sz);
-      my_free(buff);
-    }
+    my_free(buff,sz);
+
   buff = NULL;
   sz   = 0;
 }

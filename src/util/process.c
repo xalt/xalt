@@ -52,8 +52,7 @@ void build_proc(process_t* proc, pid_t my_pid)
   utstring_bincpy(proc->m_name, start, n);
 
   proc->m_parent = (int) strtol(p+3, (char **) NULL, 10);
-  memset(buf, 0, sz);
-  my_free(buf);
+  my_free(buf,sz);
   sz = 0; buf = NULL;
 
   const size_t bufSz = 2049;
@@ -99,6 +98,5 @@ void proc_cmdline(process_t* proc, UT_array** p_cmdlineA)
       p += strlen(p) + 1;
     }
 
-  memset(buf, 0, sz);
-  my_free(buf); sz = 0; buf = NULL;
+  my_free(buf,sz); sz = 0; buf = NULL;
 }

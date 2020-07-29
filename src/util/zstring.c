@@ -46,7 +46,7 @@ char* compress_string(const char* str, int* lenOut)
 	  prev    = out;
 	  out     = (char *)malloc(totalSz+1);
 	  memcpy(out, prev, oldSz);
-	  my_free(prev);
+	  my_free(prev,oldSz);
 	}
       if (oldSz < szOut)
 	{
@@ -98,8 +98,7 @@ char* uncompress_string(const char* str, int len)
 	  prev = out;
 	  out  = (char *) malloc(totalSz+1);
 	  memcpy(out, prev, oldSz);
-	  memset(prev, '\0', strlen(prev));
-	  my_free(prev);
+	  my_free(prev, strlen(prev));
 	}
 	    
       if (oldSz < szOut )

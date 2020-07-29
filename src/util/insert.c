@@ -39,8 +39,7 @@ void free_SET(SET_t** libT)
     {
       HASH_DEL(*libT, entry);
       utstring_free(entry->key);
-      memset(entry, '\0', sizeof(SET_t));
-      my_free(entry);
+      my_free(entry, sizeof(SET_t));
     }
   libT = NULL;
 }
@@ -52,8 +51,7 @@ void free_S2D(S2D_t** userDT)
     {
       HASH_DEL(*userDT, entry);
       utstring_free(entry->key);
-      memset(entry, '\0', sizeof(S2D_t));
-      my_free(entry);
+      my_free(entry, sizeof(S2D_t));
     }
   userDT = NULL;
 }
@@ -66,8 +64,7 @@ void free_S2S(S2S_t** userT)
       HASH_DEL(*userT, entry);
       utstring_free(entry->key);
       utstring_free(entry->value);
-      memset(entry, '\0', sizeof(S2S_t));
-      my_free(entry);
+      my_free(entry, sizeof(S2S_t));
     }
   userT = NULL;
 }

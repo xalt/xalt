@@ -24,8 +24,7 @@ int xalt_fgets_alloc(FILE *fp, char ** buffer, size_t* sz)
 	if (buf_new == NULL)
 	  {
 	    // Out-of-memory
-            memset(buf,0, old_sz);
-	    my_free(buf);
+	    my_free(buf, old_sz);
 	    *sz     = 0;
 	    *buffer = NULL;
 	    return 0;
