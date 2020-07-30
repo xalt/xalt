@@ -53,7 +53,7 @@ test_descript = {
      mpirun -n 2 ./hello.x --seq 02
 
      displayThis  "mpirun -n 1 ./hello.x --seq 03"
-     mpirun -n 1 ./hello.x --seq 02
+     mpirun -n 1 ./hello.x --seq 03
      
      displayThis "test_record_pkg --seq 04"
      $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg --seq 04

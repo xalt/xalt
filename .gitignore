@@ -1,4 +1,3 @@
-
 ########################################################################
 # global list of files to ignore
 .#*
@@ -53,3 +52,10 @@ src/xalt_regex.h
 install
 uuid_32
 uuid_64
+.gdb_history
+module.mk
+*.d32
+*.d
+*.d.[0-9][0-9]*
+*.d32.[0-9][0-9]*
+*.o32

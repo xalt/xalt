@@ -28,6 +28,7 @@ class RecorderRTM(object):
     return True
 
   def __report(self, fullname, path):
+    os.environ['LD_PRELOAD'] = ""
     cmd = self._cmd + " package_name " + fullname + " package_path " + path
     subprocess.call(cmd, shell=True)
 

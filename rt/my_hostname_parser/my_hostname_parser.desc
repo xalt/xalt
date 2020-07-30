@@ -15,13 +15,13 @@ test_descript = {
 
      initialize
 
-     gcc -m32 -I$(projectDir)/src -o host_32.o -c $(testDir)/host.c
+     gcc -m32 -I$(projectDir)/src/util -o host_32.o -c $(testDir)/host.c
      if [ -f host_32.o ]; then
          gcc -m32 -fPIC -o keep_32.o -c $(testDir)/keep.c 
          ar cr libhost_32.a host_32.o keep_32.o
          LIBHOST_32=":$(outputDir)/libhost_32.a"
      fi
-     gcc -fPIC -I$(projectDir)/src -c $(testDir)/host.c
+     gcc -fPIC -I$(projectDir)/src/util -c $(testDir)/host.c
      gcc -fPIC -c $(testDir)/keep.c
    
      ar cr libhost.a host.o keep.o

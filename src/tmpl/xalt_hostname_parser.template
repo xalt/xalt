@@ -2,6 +2,7 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
+#include "xalt_c_utils.h"
 #define HERE fprintf(stderr, "%s:%d\n",__FILE__,__LINE__)
 
 static char * strbuf   = NULL;
@@ -26,9 +27,9 @@ int hostname_parser(const char * hostname)
   unsigned int len = strlen(hostname);
   if (sz < len+2)
     {
-      sz = len+2;
       if (strbuf)
-	free(strbuf);
+	my_free(strbuf,sz);
+      sz = len+2;
       strbuf = (char *) malloc(sz);
     }
 
@@ -45,5 +46,7 @@ int hostname_parser(const char * hostname)
 
 void hostname_parser_cleanup()
 {
-  free(strbuf);
+  my_free(strbuf,sz);
+  strbuf = NULL;
+  sz     = 0;
 }

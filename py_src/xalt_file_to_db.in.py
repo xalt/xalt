@@ -328,6 +328,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("link_json_to_db()")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
+    linkFnA.sort()
     countT['lnk']  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA, countT, active, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
@@ -337,6 +338,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("run_json_to_db()")
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
+    runFnA.sort();
     countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
                                     countT, active, pbar, timeRecord)
     XALT_Stack.pop()
@@ -347,6 +349,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("pkg_json_to_db()")
     pkgFnA         = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
+    pkgFnA.sort()
     countT['pkg'] += pkg_json_to_db(xalt, args.listFn, args.syshost, args.delete, pkgFnA,
                                     countT, active, pbar)
     XALT_Stack.pop()
@@ -385,7 +388,7 @@ def main():
   xalt   = XALTdb(args.confFn)
 
   if (xalt_file_prefix == "USE_HOME"):
-    num     = int(capture("getent passwd | wc -l"))
+    num     = int(capture("LD_PRELOAD= getent passwd | wc -l"))
     pbar    = ProgressBar(maxVal=num)
   else:
     xaltDir = build_resultDir("", transmission, "")
@@ -410,7 +413,6 @@ def main():
   countT['pkg'] = 0
   countT['any'] = 0
 
-  
   if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
       store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)

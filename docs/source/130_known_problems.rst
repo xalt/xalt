@@ -19,7 +19,8 @@ One reported case where a program worked without XALT and segfaulted
 under XALT was due to bad memory management in the user's code. In
 this particular case, the user code was using a link list.  The logic
 in the code required that the next pointer in the link list struct was
-NULL terminated.
+NULL terminated at the end of the link list. However in this user
+code, the step to NULL terminate the tail list was omitted.
 
 Without XALT, the program gets the allocated memory with zero'ed
 because every program starts that way.  With XALT, memory is used and
@@ -30,7 +31,7 @@ implementation.
 
 To minimize this risk, XALT uses *memset()* to clear the memory before
 calling *free()*.  However, XALT can't control what system routines
-such as *asprintf()* does with the memory they use.
+such as *asprintf()* does with the memory they use internally.
 
 This issue appears to be rare as only one case has been reported.
 

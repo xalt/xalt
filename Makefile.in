@@ -80,7 +80,6 @@ GIT_PROG             	:= @PATH_TO_GIT@
 GIT_VERSION          	:= $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
 VDATE		     	:= $(shell date +'%F %H:%M')
 
-
 XALT_DIR             	:= $(prefix)/$(package)/$(package)
 PKGV                 	:= $(prefix)/$(package)/$(VERSION)
 PKG                  	:= $(prefix)/$(package)/$(package)
@@ -89,7 +88,9 @@ ifneq ($(SITE_CONTROLLED_PREFIX),no)
   PKGV                  := $(prefix)
   PKG                   := $(prefix)
 endif
-
+ifeq ($(XALT_USE_32BIT),no)
+  HAVE_32BIT := no
+endif
 
 INC                  	:= $(PKGV)/include
 LIB                  	:= $(PKGV)/lib
@@ -128,8 +129,7 @@ RT_PKG                  := $(patsubst %, $(srcdir)/%, $(RT_PKG))
 LIBEXEC_PKG          	:= py_src/XALTdb.py                  py_src/progressBar.py             \
                            py_src/xalt_stack.py              py_src/BeautifulTbl.py            \
                            py_src/xalt_global.py             py_src/Rmap_XALT.py               \
-                           py_src/xalt_util.py               py_src/xalt_name_mapping.py       \
-                           py_src/xalt_transmission_factory.py
+                           py_src/xalt_util.py               py_src/xalt_name_mapping.py
 LIBEXEC_PKG          	:= $(patsubst %, $(srcdir)/%, $(LIBEXEC_PKG))
 
 
@@ -144,10 +144,7 @@ TACC_PKG             	:= contrib/TACC/monthly_report.in    contrib/TACC/pytas.py
                            contrib/TACC/build_default_user_2_account_str.in
 TACC_PKG             	:= $(patsubst %, $(srcdir)/%, $(TACC_PKG))
 
-INIT_SRC             	:= src/xalt_initialize.c
-INIT_SRC             	:= $(patsubst %, $(srcdir)/%, $(INIT_SRC))
-
-OBFUSCATE_HDR           := src/xalt_obfuscate.h
+OBFUSCATE_HDR           := src/util/xalt_obfuscate.h
 OBFUSCATE_HDR           := $(patsubst %, $(srcdir)/%, $(OBFUSCATE_HDR))
 
 
@@ -176,11 +173,11 @@ build_compiled:
         $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR)  \
                 LDFLAGS="$(LDFLAGS)" LIBEXEC=$(LIBEXEC) SBIN=$(SBIN) BIN=$(BIN)  LIB=$(LIB)        \
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
-                HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML)                                \
-                XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) STATIC_LIBS=$(STATIC_LIBS)                    \
-                MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER) CRYPTO_STR=$(CRYPTO_STR)                  \
-                UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR) XALT_LOGGING_URL=$(XALT_LOGGING_URL)     \
-                SITE_PKG_DIR=$(SITE_PKG_DIR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools \
+                HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML) STATIC_LIBS=$(STATIC_LIBS)     \
+                XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER)      \
+                CRYPTO_STR=$(CRYPTO_STR) UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR)                 \
+                XALT_LOGGING_URL=$(XALT_LOGGING_URL) SITE_PKG_DIR=$(SITE_PKG_DIR)                  \
+                PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools                              \
                 all
 
 inst_obfuscate:
@@ -195,9 +192,6 @@ echo:
 	@echo MAKEFLAGS: $(MAKEFLAGS)
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
 
-remove_genfiles:
-	cd src; $(MAKE) LD_PRELOAD= XALT_EXECUTABLE_TRACKING= PARENT_DIR=$(abs_srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) remove_genfiles
-
 $(DIRLIST) :
 	mkdir -p $@
 
@@ -210,20 +204,20 @@ LINKS: $(DIRLIST)
 Inst_site_py: $(DESTDIR)$(SITE_PKG_DIR)
 	cp $(SITE_PKG) $(DESTDIR)$(SITE_PKG_DIR)/sitecustomize.py
 
-Inst_libexec: $(LIBEXEC_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
+Inst_libexec: $(LIBEXEC_PKG) $(DESTDIR)$(LIBEXEC)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(LIBEXEC_PKG)" DIRLOC=$(DESTDIR)$(LIBEXEC) __installMe
 
-Inst_sbin: $(SBIN_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+Inst_sbin: $(SBIN_PKG) $(DESTDIR)$(SBIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(SBIN_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
-Inst_bin: $(BIN_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(BIN)     __installMe
+Inst_bin: $(BIN_PKG) $(DESTDIR)$(BIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(BIN_PKG)"     DIRLOC=$(DESTDIR)$(BIN)     __installMe
 
-Inst_TACC: $(TACC_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+Inst_TACC: $(TACC_PKG) $(DESTDIR)$(SBIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(TACC_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
-Inst_RT: $(RT_PKG)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$^" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
+Inst_RT: $(RT_PKG) $(DESTDIR)$(SBIN)
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(RT_PKG)" DIRLOC=$(DESTDIR)$(SBIN)    __installMe
 
 
 Use_getent_yes:
@@ -343,6 +337,8 @@ build_tags:
             -e 's|.*/__build__.*$$||g'                           \
             -e 's|.*/stamp-h$$||g'                               \
             -e 's|.*/makefile||g'                                \
+            -e 's|.*/module.mk||g'                               \
+            -e 's|.*/.gdb_history||g'                            \
             -e 's|.*/configure$$||g'                             \
             -e 's|.*/.DS_Store$$||g'                             \
             -e 's|.DS_Store$$||g'                                \
@@ -413,19 +409,32 @@ dist:
 	$(RM) -rf DIST                                                                      ; 
 
 
-makefile: $(srcdir)/Makefile.in config.status
+SUBMAKEFILES := src/makefile src/util/module.mk src/libxalt/module.mk src/linker/module.mk
+
+makefile : $(srcdir)/Makefile.in config.status $(SUBMAKEFILES)
 	./config.status $@
 
 src/makefile: $(srcdir)/src/Makefile.in config.status
 	./config.status $@
 
+src/util/module.mk: $(srcdir)/src/util/Module.mk.in config.status
+	./config.status $@
+src/linker/module.mk: $(srcdir)/src/linker/Module.mk.in config.status
+	./config.status $@
+src/libxalt/module.mk: $(srcdir)/src/libxalt/Module.mk.in config.status
+	./config.status $@
+
+
 neat:
 	$(RM) *~
-	cd src ;         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
-                         LIB=$(LIB) LIB64=$(LIB64) $@
-
+	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
+                         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
 clean:  neat
 	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
                          $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
-                         LIB=$(LIB) LIB64=$(LIB64) $@
+                         HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
 clobber: clean
+	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
+                         $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
+                         HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@

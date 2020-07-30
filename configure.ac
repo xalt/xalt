@@ -1,5 +1,5 @@
 AC_INIT(Makefile.in)
-AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/xalt_header.h.in)
+AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/util/xalt_header.h.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
 dnl AC_CONFIG_SUBDIRS(libuuid/src)
@@ -194,7 +194,7 @@ AC_ARG_WITH(systemPath,
     withval="/usr/bin:/bin"
     AC_MSG_RESULT([SYSTEM_PATH=$withval])
     SYSTEM_PATH="$withval"
-    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval"[The system path that XALT will use (typically /usr/bin:/bin)]))dnl
+    AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$withval",[The system path that XALT will use (typically /usr/bin:/bin)]))dnl
 
 AC_SUBST(SYSLOG_MSG_SZ)
 AC_ARG_WITH(syslogMsgSz,
@@ -694,7 +694,7 @@ fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_python_filter_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_python_pkg_filter.template --output src/__build__/xalt_python_pkg_filter.py
 if test "$?" != 0; then
-   rm -f makefile
+   rm -f makefile			
    exit 1
 fi	
 
@@ -726,6 +726,11 @@ fi
 
   
 
-AC_OUTPUT(makefile:Makefile.in src/__build__/xalt_config.h:src/xalt_config.h.in src/makefile:src/Makefile.in)
+AC_OUTPUT(makefile:Makefile.in                                       \
+          src/__build__/xalt_config.h:src/util/xalt_config.h.in      \
+          src/makefile:src/Makefile.in                               \
+          src/libxalt/module.mk:src/libxalt/Module.mk.in             \
+          src/linker/module.mk:src/linker/Module.mk.in               \
+          src/util/module.mk:src/util/Module.mk.in)
 
 AX_SUMMARIZE_CONFIG
