@@ -161,7 +161,6 @@ static char         uuid_str[37];
 static char         exec_path[PATH_MAX+1];
 static char *       usr_cmdline;
 
-static bool         have_watermark        = false;
 static char *       watermark             = NULL;
 static xalt_status  reject_flag	          = XALT_SUCCESS;
 static int          run_mask              = 0;
@@ -656,13 +655,12 @@ void myinit(int argc, char **argv)
   ppid = getppid();
 
   // This routine returns either "FALSE" for nothing found or the watermark.
-  have_watermark = xalt_vendor_note(&watermark, xalt_tracing);
+  bool have_watermark = xalt_vendor_note(&watermark, xalt_tracing);
   DEBUG1(stderr,"    -> Found watermark via vendor note: %s\n", have_watermark ? "true" : "false");
 
   // If MPI program and no vendor watermark then try extracting the watermark
   // with objdump via extractXALTRecord(...)
   if (num_tasks > 1 && ! have_watermark )
-    //if (! have_watermark )
     {
       have_watermark = extractXALTRecordString(exec_path, &watermark);
       DEBUG1(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
@@ -1032,9 +1030,6 @@ void myfini()
 	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
   
-  if (! have_watermark && num_tasks < 2)
-    have_watermark = extractXALTRecordString(exec_path, &watermark);
-
   if (! have_uuid)
     {
       build_uuid(&uuid_str[0]);
