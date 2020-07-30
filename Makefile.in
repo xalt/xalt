@@ -35,7 +35,7 @@ endif
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
 package              	:= xalt
-VERSION              	:= $(shell cat $(srcdir)/.version)
+VERSliION              	:= $(shell cat $(srcdir)/.version)
 CRYPTO_STR              := @CRYPTO_STR@
 UUID_STR                := @UUID_STR@
 CURL_STR                := @CURL_STR@
@@ -47,7 +47,7 @@ SITE_NAME            	:= @SITE@
 SITE_CONTROLLED_PREFIX  := @SITE_CONTROLLED_PREFIX@
 ETC_DIR              	:= @ETC_DIR@
 prefix               	:= @prefix@
-XALT_V               	:= src/xalt_version.h
+XALT_V               	:= src/util/xalt_version.h
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_LIBUUID            := @HAVE_WORKING_LIBUUID@
