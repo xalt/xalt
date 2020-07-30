@@ -54,8 +54,7 @@ void buildXALTRecordT(const char* watermark, S2S_t** recordT)
 
       start = s3+1;
     }
-  memset(wm, '\0', strlen(wm));
-  my_free(wm);
+  my_free(wm, strlen(wm));
 }
 
   /*
@@ -121,8 +120,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   capture(utstring_body(cmd), &resultA);
   utstring_free(cmd);
   
-  memset(execQ, '\0', len*3*sizeof(char));
-  my_free(execQ);
+  my_free(execQ, len*3*sizeof(char));
 
   const char* match = "Contents of section";
   int         m_len = strlen(match);

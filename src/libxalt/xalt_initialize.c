@@ -456,8 +456,7 @@ void myinit(int argc, char **argv)
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_STATE_PID__",        pid_str,1);
-  memset(pid_str,0,strlen(pid_str));
-  my_free(pid_str);
+  my_free(pid_str,strlen(pid_str));
 
   /* Build a json version of the user's command line. */
 
@@ -652,8 +651,7 @@ void myinit(int argc, char **argv)
   char* my_xalt_dir = xalt_dir(NULL);
   setenv("XALT_DATE_TIME",fullDateStr,1);
   setenv("XALT_DIR",my_xalt_dir,1);
-  memset(my_xalt_dir, '\0', strlen(my_xalt_dir));
-  my_free(my_xalt_dir);
+  my_free(my_xalt_dir, strlen(my_xalt_dir));
 
   pid  = getpid();
   ppid = getppid();
@@ -905,8 +903,7 @@ void myfini()
               if (result != NVML_SUCCESS)
                 {
                   DEBUG2(my_stderr, "  Unable to get accounting data for GPU %d: %s\n", i, _nvmlErrorString(result));
-                  memset(pids, 0, sizeof(unsigned int)*max_pid_count);
-                  my_free(pids);
+                  my_free(pids, sizeof(unsigned int)*max_pid_count);
                   continue;
                 }
 
@@ -947,9 +944,7 @@ void myfini()
                          actually in use. */
                     }
                 }
-
-              memset(pids, 0, sizeof(unsigned int)*max_pid_count);
-              my_free(pids);
+              my_free(pids, sizeof(unsigned int)*max_pid_count);
 
               DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, num_active_pids);
 
@@ -1057,8 +1052,8 @@ void myfini()
   DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
   build_uuid_cleanup();
   fflush(my_stderr);
-  my_free(watermark);
-  my_free(usr_cmdline);
+  my_free(watermark,strlen(watermark));
+  my_free(usr_cmdline,strlen(usr_cmdline));
 
   if (xalt_err)
     {

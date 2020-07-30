@@ -47,4 +47,5 @@ int main(int argc, char* argv[])
       int my_len = leftColWidth - utstring_len(entry->key);
       printf("%s%.*s%s\n", utstring_body(entry->key), my_len, blanks, utstring_body(entry->value));
     }
+  return 0;
 }

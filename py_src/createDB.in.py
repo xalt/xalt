@@ -160,7 +160,7 @@ def main():
           `link_path`        varchar(1024)      NOT NULL,
           `link_module_name` varchar(64)                ,
 
-          `link_line`        varchar(2048)              ,
+          `link_line`        blob                       ,
           `cwd`              varchar(1024)              ,
           `build_user`       varchar(64)        NOT NULL,
 
@@ -240,7 +240,7 @@ def main():
           `exec_path`     varchar(1024)        NOT NULL,
           `module_name`   varchar(64)                  ,
           `cwd`           varchar(1024)        NOT NULL,
-          `cmdline`       varchar(2048)        NOT NULL,
+          `cmdline`       blob                 NOT NULL,
           PRIMARY KEY             (`run_id`   ),
           INDEX  `index_date`     (`date`     ),
           INDEX  `index_run_uuid` (`run_uuid` ),

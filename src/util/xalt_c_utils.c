@@ -87,8 +87,11 @@ void set_end_record()
 {
   s_start_record = false;
 }
-void my_free(void *ptr)
+void my_free(void *ptr,int sz)
 {
   if (s_start_record)
-    free(ptr);
+    {
+      memset(ptr, '\0', sz);
+      free(ptr);
+    }
 }

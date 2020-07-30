@@ -46,10 +46,8 @@ void compute_sha1(const char* fn, char* sha1buf)
 	  char* fn = xalt_dir("lib64/libcrypto.so");
 	  handle = dlopen(fn, RTLD_LAZY);
 	  if (fn)
-            {
-              memset(fn, '\0', strlen(fn));
-              my_free(fn);
-            }
+	    my_free(fn, strlen(fn));
+
           if (!handle) 
             {
               fputs(dlerror(), stderr);

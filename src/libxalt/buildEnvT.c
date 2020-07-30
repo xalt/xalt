@@ -5,7 +5,8 @@
 
 void buildEnvT(char* env[], S2S_t ** envT)
 {
-  for (int i = 0; env[i] != NULL; ++i)
+  int i;
+  for (i = 0; env[i] != NULL; ++i)
     {
       char* w = env[i];
       // Skip any exported bash functions

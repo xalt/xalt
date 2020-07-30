@@ -24,7 +24,7 @@ void build_uuid(char * my_uuid_str)
       char* fn = xalt_dir("lib64/libuuid.so");
       handle = dlopen (fn, RTLD_LAZY);
       if (fn)
-	my_free(fn);
+	my_free(fn, strlen(fn));
       if (!handle) 
         {
           char* fn = xalt_dir("lib64/libuuid.so");

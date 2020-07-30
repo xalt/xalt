@@ -100,8 +100,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   insert_key_string(&userT,  "run_uuid",    uuid_str);
   insert_key_string(&userT,  "exec_path",   exec_pathQ);
   insert_key_string(&userT,  "exec_type",   "binary");
-  memset(exec_pathQ, '\0',strlen(exec_pathQ));
-  my_free(exec_pathQ);
+  my_free(exec_pathQ,strlen(exec_pathQ));
   buildUserT(&userT, &userDT);
   translate(&userT, &userDT);
 
@@ -175,19 +174,17 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn, my_stderr);
   xalt_quotestring_free();
-  memset(jsonStr, '\0', strlen(jsonStr));
-  my_free(jsonStr);
+  my_free(jsonStr, strlen(jsonStr));
   if (resultFn)
     {
-      memset(resultFn,  '\0', strlen(resultFn));  my_free(resultFn);
-      memset(resultDir, '\0', strlen(resultDir)); my_free(resultDir);
+      my_free(resultFn , strlen(resultFn)); 
+      my_free(resultDir, strlen(resultDir));
     }
 
   if (strcmp(xalt_kind,"PKGS") == 0)
     pkgRecordTransmit(uuid_str, syshost, transmission, my_stderr);
 
-  memset(syshost, '\0', strlen(syshost));
-  my_free(syshost);
+  my_free(syshost, strlen(syshost));
   DEBUG0(my_stderr,"  }\n\n");
   if (xalt_tracing)
     fflush(my_stderr);
@@ -199,8 +196,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   DIR*   dirp        = opendir(xalt_tmpdir);
   if (dirp == NULL)
     {
-      memset(xalt_tmpdir, '\0', strlen(xalt_tmpdir));
-      my_free(xalt_tmpdir);
+      my_free(xalt_tmpdir, strlen(xalt_tmpdir));
       return;
     }
 
@@ -237,8 +233,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
             {
               while( xalt_fgets_alloc(fp, &buf, &sz))
 		utstring_bincpy(jsonStr, buf, strlen(buf));
-              memset(buf, '\0', sz);
-              my_free(buf);
+              my_free(buf,sz);
               sz = 0; buf = NULL;
 
               // build key from dp->d_name;
@@ -259,6 +254,6 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   utstring_free(fullName);
   utstring_free(key);
   rmdir(xalt_tmpdir);
-  memset(resultDir,   '\0', strlen(resultDir));   my_free(resultDir);
-  memset(xalt_tmpdir, '\0', strlen(xalt_tmpdir)); my_free(xalt_tmpdir);
+  my_free(resultDir  , strlen(resultDir));  
+  my_free(xalt_tmpdir, strlen(xalt_tmpdir));
 }

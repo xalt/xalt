@@ -28,10 +28,7 @@ int hostname_parser(const char * hostname)
   if (sz < len+2)
     {
       if (strbuf)
-	{
-	  memset(strbuf, '\0', sz); 
-	  my_free(strbuf);
-	}
+	my_free(strbuf,sz);
       sz = len+2;
       strbuf = (char *) malloc(sz);
     }
@@ -49,8 +46,7 @@ int hostname_parser(const char * hostname)
 
 void hostname_parser_cleanup()
 {
-  memset(strbuf, '\0', sz); 
-  my_free(strbuf);
+  my_free(strbuf,sz);
   strbuf = NULL;
   sz     = 0;
 }
