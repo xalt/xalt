@@ -35,7 +35,7 @@ endif
 MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
 package              	:= xalt
-VERSliION              	:= $(shell cat $(srcdir)/.version)
+VERSION              	:= $(shell cat $(srcdir)/.version)
 CRYPTO_STR              := @CRYPTO_STR@
 UUID_STR                := @UUID_STR@
 CURL_STR                := @CURL_STR@
