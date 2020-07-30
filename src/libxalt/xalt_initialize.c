@@ -665,6 +665,8 @@ void myinit(int argc, char **argv)
       have_watermark = extractXALTRecordString(exec_path, &watermark);
       DEBUG1(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
     }
+  else
+    watermark = strdup("FALSE");
 
 
   /*
