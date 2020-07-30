@@ -276,6 +276,8 @@ python_pkg_patterns = [
   { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^_"                  },  # SKIP names that start with a underscore
   { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r".*\."                },  # SKIP all names that are divided with periods: a.b.c
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*/.local/"          },  # KEEP all packages installed by users
+  { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*/site-packages/"   },  # KEEP all site-packages 
+  { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^/opt"               },  # SKIP all python packages in /opt except for ones in .*/site-packages/
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch/projects"  },  # KEEP all packages the system project directories
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch1/projects" },  # KEEP all packages the system project directories
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r"^/scratch2/projects" },  # KEEP all packages the system project directories
