@@ -661,7 +661,8 @@ void myinit(int argc, char **argv)
 
   // If MPI program and no vendor watermark then try extracting the watermark
   // with objdump via extractXALTRecord(...)
-  if (num_tasks > 1 && ! have_watermark )
+  //if (num_tasks > 1 && ! have_watermark )
+  if (! have_watermark )
     {
       have_watermark = extractXALTRecordString(exec_path, &watermark);
       DEBUG1(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
