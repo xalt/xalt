@@ -438,12 +438,13 @@ class XALTdb(object):
         probability   = runT['userDT'].get('probability', 1.0)
         account       = runT['userT']['account']
         user          = runT['userT']['user']
+        container     = runT['userT'].get('container')
         if ( account == "unknown"):
           account = u2acctT.get(user,"unknown")
 
         startTime     = "%.f" % float(runT['userDT']['start_time'])
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
-        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s))"
+        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s), %s)"
         cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
                                runT['userT']['syshost'], uuid,                         runT['hash_id'],
                                account,                  runT['userT']['exec_type'],   startTime,
@@ -451,13 +452,12 @@ class XALTdb(object):
                                num_cores,                runT['userDT']['num_nodes'],  num_threads,
                                num_gpus,                 runT['userT']['queue'],       sum_runs,
                                sum_times,                user,                         runT['userT']['exec_path'],
-                               moduleName,               cwd,                          usr_cmdline))
+                               moduleName,               cwd,                          usr_cmdline,
+                               container))
         query    = ""
         run_id   = cursor.lastrowid
         stored   = True
         recordMe = True 
-        print("usr_cmdline:",usr_cmdline,file=sys.stderr)
-
 
       if (recordMe and endTime > 0):
         timeRecord.add(num_cores, runTime)
