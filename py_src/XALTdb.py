@@ -439,6 +439,8 @@ class XALTdb(object):
         account       = runT['userT']['account']
         user          = runT['userT']['user']
         container     = runT['userT'].get('container')
+        if ( type(container) != type(None)):
+          container = container[:32]
         if ( account == "unknown"):
           account = u2acctT.get(user,"unknown")
 
