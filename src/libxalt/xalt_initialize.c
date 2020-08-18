@@ -96,7 +96,7 @@ typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
-	       XALT_MISSING_RUN_SUBMISSION} xalt_status;
+	       XALT_UNAME_FAILURE} xalt_status;
 
 static const char * xalt_reasonA[] = {
   "Successful XALT tracking",
@@ -227,6 +227,8 @@ static dcgmHandle_t dcgm_handle           = NULL;
 }
 #endif
 
+extern char **environ;
+
 void myinit(int argc, char **argv)
 {
   int    i;
@@ -277,8 +279,9 @@ void myinit(int argc, char **argv)
       errno = 0;
       if (uname(&u) != 0)
 	{
-	  perror("uname");
-	  exit(EXIT_FAILURE);
+          reject_flag = XALT_UNAME_FAILURE;
+          DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          return;
 	}
 
       fprintf(stderr, "---------------------------------------------\n"
@@ -312,8 +315,9 @@ void myinit(int argc, char **argv)
     {
       if (uname(&u) != 0)
 	{
-	  perror("uname");
-	  exit(EXIT_FAILURE);
+          reject_flag = XALT_UNAME_FAILURE;
+          DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          return;
 	}
       asprintf(&pid_str,"%ld:%s", (long) getpid(), u.nodename);
       char* env_pid = getenv("__XALT_STATE_PID__");
@@ -773,6 +777,13 @@ void myinit(int argc, char **argv)
           if (old.sa_handler == NULL)
             sigaction(signum, &action, NULL);
         }
+    }
+  v = getenv("XALT_DUMP_ENV");
+  if (v && strcmp(v, "yes") == 0)
+    {
+      int i;
+      for (i = 0; environ[i] != NULL; ++i)
+        fprintf(stderr,"%s\n",environ[i]);
     }
   DEBUG0(stderr, "    -> Leaving myinit\n}\n\n");
 }
