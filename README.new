@@ -29,4 +29,4 @@ XALT 2.9+
     (2.9.6)  * objdump extraction of watermark only happens for mpi programs run with num_tasks > 1
                Only vendor note extraction of watermark when num_tasks == 1.
     (2.9.7)  * Added container column to end of xalt_run table.
-    
+    (2.9.8)  * Added XALT_DUMP_ENV=yes to dump env vars in myinit()
