@@ -463,7 +463,7 @@ void myinit(int argc, char **argv)
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_STATE_PID__",        pid_str,1);
-  my_free(pid_str,strlen(pid_str));
+  //my_free(pid_str,strlen(pid_str));
 
   /* Build a json version of the user's command line. */
 
