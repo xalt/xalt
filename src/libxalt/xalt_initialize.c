@@ -459,7 +459,7 @@ void myinit(int argc, char **argv)
   //  asprintf(&pid_str,"%ld:%s",(long) getpid(), u.nodename);
 
   if (pid_str[0] == '\0')
-    asprintf(&pid_str[0],"%d:%s",getpid(), u.nodename);
+    sprintf(&pid_str[0],"%d:%s",getpid(), u.nodename);
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_STATE_PID__",        pid_str,1);
