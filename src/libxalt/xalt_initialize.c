@@ -658,7 +658,7 @@ void myinit(int argc, char **argv)
   char* my_xalt_dir = xalt_dir(NULL);
   setenv("XALT_DATE_TIME",fullDateStr,1);
   setenv("XALT_DIR",my_xalt_dir,1);
-  my_free(my_xalt_dir, strlen(my_xalt_dir));
+  //my_free(my_xalt_dir, strlen(my_xalt_dir));
 
   pid  = getpid();
   ppid = getppid();
