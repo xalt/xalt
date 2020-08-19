@@ -237,7 +237,8 @@ void myinit(int argc, char **argv)
   char * p_dbg;
   char * cmdline         = NULL;
   char * ld_preload_strp = NULL;
-  char * pid_str         = NULL;
+  //char * pid_str         = NULL;
+  char   pid_str[100];
   char   dateStr[DATESZ];
   char   fullDateStr[FULLDATESZ];
   const char * v;
@@ -246,6 +247,7 @@ void myinit(int argc, char **argv)
   const char   nvidia_dir[] = "/sys/module/nvidia";
 
 
+  pid_str[0] = '\0';
 
   /* The SLURM env's must be last.  On Stampede2 both PMI_RANK and SLURM_PROCID are set. Only PMI_RANK is correct with multiple ibrun -n -o */
   /* Lonestar 5, Cray XC-40, only has SLURM_PROCID */
@@ -319,7 +321,7 @@ void myinit(int argc, char **argv)
           DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
           return;
 	}
-      asprintf(&pid_str,"%ld:%s", (long) getpid(), u.nodename);
+      sprintf(&pid_str[0],"%d:%s", getpid(), u.nodename);
       char* env_pid = getenv("__XALT_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
 	{
@@ -453,12 +455,15 @@ void myinit(int argc, char **argv)
       return;
     }
 
-  if (pid_str == NULL)
-    asprintf(&pid_str,"%ld:%s",(long) getpid(), u.nodename);
+  //if (pid_str == NULL)
+  //  asprintf(&pid_str,"%ld:%s",(long) getpid(), u.nodename);
+
+  if (pid_str[0] == '\0')
+    asprintf(&pid_str[0],"%d:%s",getpid(), u.nodename);
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_STATE_PID__",        pid_str,1);
-  my_free(pid_str,strlen(pid_str));
+  //my_free(pid_str,strlen(pid_str));
 
   /* Build a json version of the user's command line. */
 
