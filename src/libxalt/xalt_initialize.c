@@ -310,13 +310,13 @@ void myinit(int argc, char **argv)
 
   v = getenv("__XALT_INITIAL_STATE__");
   DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
-  /* Stop tracking if any myinit routine has been called */
+  /* Stop tracking if another myinit() routine has been called with my pid and hostname*/
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
       if (uname(&u) != 0)
 	{
-          reject_flag = XALT_UNAME_FAILURE;
           DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          reject_flag = XALT_UNAME_FAILURE;
           return;
 	}
       asprintf(&pid_str,"%ld:%s", (long) getpid(), u.nodename);
@@ -458,7 +458,7 @@ void myinit(int argc, char **argv)
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_STATE_PID__",        pid_str,1);
-  //my_free(pid_str,strlen(pid_str));
+  my_free(pid_str,strlen(pid_str));
 
   /* Build a json version of the user's command line. */
 
@@ -653,7 +653,7 @@ void myinit(int argc, char **argv)
   char* my_xalt_dir = xalt_dir(NULL);
   setenv("XALT_DATE_TIME",fullDateStr,1);
   setenv("XALT_DIR",my_xalt_dir,1);
-  //my_free(my_xalt_dir, strlen(my_xalt_dir));
+  my_free(my_xalt_dir, strlen(my_xalt_dir));
 
   pid  = getpid();
   ppid = getppid();
