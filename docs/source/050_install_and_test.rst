@@ -39,7 +39,7 @@ installing XALT in /opt/xalt/X.Y.Z then xalt will install a symlink
 which links /opt/xalt/xalt with /opt/xalt/X.Y.Z.
 
 All static binaries built with XALT version prior to version 2.8 will
-expect to find XALT tools in /opt/xalt/xalt/libexec/*.  If
+expect to find XALT tools in /opt/xalt/xalt/libexec/\*.  If
 /opt/xalt/xalt/... doesn't exist then those old static binaries will
 work but will silently not record data, unless the $XALT_TRACING=yes 
 
@@ -107,7 +107,7 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
 
   ------------------------------------------------------------
   -- Only set this in production not for testing!!!
-  setenv("XALT_SCALAR_SAMPLING",  "yes")  
+  setenv("XALT_SAMPLING",  "yes")  
 
 The following is a TCL modulefile::
 
@@ -131,7 +131,7 @@ The following is a TCL modulefile::
 
   ############################################################
   ## Only set this is production not for testing!!!
-  setenv XALT_SCALAR_SAMPLING  yes
+  setenv XALT_SAMPLING  yes
 
 
 Obviously, these modulefiles will need to be modified to match your

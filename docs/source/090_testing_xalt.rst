@@ -91,10 +91,10 @@ You should also try running the link without XALT tracing::
 And check that there is a new \*.json file in ~/.xalt.d
 
 
-Step 6: run a program
-^^^^^^^^^^^^^^^^^^^^^
+Step 6: run a program with XALT tracing turned on 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can run a program under XALT by doing the following::
+Normally XALT will produce no output but for testing you can run a program under XALT by doing the following::
 
     $ export LD_PRELOAD=$HOME/pkg/xalt/xalt/lib64/libxalt_init.so
     $ XALT_TRACING=yes ./try
