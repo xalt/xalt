@@ -261,10 +261,7 @@ void myinit(int argc, char **argv)
       xalt_tracing     = (strcmp(p_dbg,"yes") == 0);
       xalt_run_tracing = (strcmp(p_dbg,"run") == 0);
       if (my_rank == 0 && ((xalt_tracing | xalt_run_tracing) == 0))
-	{
-	  xalt_tracing     = (strcmp(p_dbg,"yes0") == 0);
-	  xalt_run_tracing = (strcmp(p_dbg,"run0") == 0);
-	}
+        xalt_tracing     = (strcmp(p_dbg,"yes0") == 0);
 
       if (xalt_tracing  || xalt_run_tracing)
 	errfd	       = dup(STDERR_FILENO);
