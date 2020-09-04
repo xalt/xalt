@@ -13,6 +13,15 @@ MySQL support and python-MySQL support with $PREFIX=$HOME.  This means
 that ~/xalt/xalt/* will have the XALT package installed.  Lets assume
 that this account is named swtools
 
+When you install XALT in this user account, you must match the
+configuration on the cluster.  Since you are using the file
+transmission style and where the \*.json files are located, the XALT 
+install into this account will know where the \*.json files are
+located. Note that the system install doesn't require support for
+python mysql package, but the one in the swtools account does.
+
+
+
 Create a directory for scripts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -53,6 +62,8 @@ run at the same time::
    
    # remove lock
 
+The **xalt_file_to_db.py** file will know where the \*.json files are
+located because you configured XALT the same as on the system.
 This script should be run as root or an account which can transverse
 the directories that contain the json record files.
 
