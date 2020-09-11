@@ -30,3 +30,6 @@ XALT 2.9+
                Only vendor note extraction of watermark when num_tasks == 1.
     (2.9.7)  * Added container column to end of xalt_run table.
     (2.9.8)  * Added XALT_DUMP_ENV=yes to dump env vars in myinit()
+    (2.9.9)  * Issue #31 Support readline_recursive() for copying system libraries to XALT
+             * Fix bug where XALT_TRACING=run0 would cause run_submission to fail.
+	     

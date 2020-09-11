@@ -64,10 +64,10 @@ test_descript = {
      displayThis "mpirun -n 1 Ðì®/helloñ.mpi.02 --seq 02"
      mpirun -n 1 Ðì®/helloñ.mpi.02 --seq 02
      
-     displayThis "Setting LD_PRELOAD, XALT_TRACING=yes ./hello\ .mpi.03 --seq 03"
+     displayThis "Setting LD_PRELOAD, XALT_TRACING=run ./hello\ .mpi.03 --seq 03"
      export LD_PRELOAD=$outputDir/XALT/$VERSION/lib64/libxalt_init.so
      cp ./hello\ .mpi.01 ./hello\ .mpi.03
-     LD_BIND_NOW=1 XALT_TRACING=yes ./hello\ .mpi.03 --ntasks p "a';'d" --seq 03
+     LD_BIND_NOW=1 XALT_TRACING=run ./hello\ .mpi.03 --ntasks p "a';'d" --seq 03
      
      g++ -o try.rd.04 $(testDir)/try.C -rdynamic
 

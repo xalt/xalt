@@ -722,8 +722,9 @@ void myinit(int argc, char **argv)
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
 
-      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus, xalt_run_short_descriptA[xalt_kind],
-		     uuid_str, watermark, usr_cmdline, stderr);
+      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
+		     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
+		     stderr);
 
       DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
     }
@@ -1051,7 +1052,7 @@ void myfini()
   fflush(my_stderr);
   run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
-                 usr_cmdline, my_stderr);
+                 usr_cmdline, xalt_tracing, my_stderr);
   DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
   build_uuid_cleanup();
   fflush(my_stderr);

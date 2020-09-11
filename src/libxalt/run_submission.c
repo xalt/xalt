@@ -31,10 +31,8 @@ extern char **environ;
 
 void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
 		    char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
-		    const char* watermark, const char* usr_cmdline, FILE* my_stderr)
+		    const char* watermark, const char* usr_cmdline, int xalt_tracing, FILE* my_stderr)
 {
-  char *      	 p_dbg        = getenv("XALT_TRACING");
-  int         	 xalt_tracing = (p_dbg && ( strncmp(p_dbg,"yes",3) == 0 || strncmp(p_dbg,"run",3) == 0));
   bool        	 end_record   = (end_time > 0.0);
   const char* 	 suffix       = end_record ? ".zzz" : ".aaa";
 
