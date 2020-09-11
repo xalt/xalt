@@ -258,8 +258,8 @@ void myinit(int argc, char **argv)
   p_dbg = getenv("XALT_TRACING");
   if (p_dbg)
     {
-      xalt_tracing     = (strcmp(p_dbg,"yes") == 0);
-      xalt_run_tracing = (strcmp(p_dbg,"run") == 0);
+      xalt_tracing     = (strcmp( p_dbg,"yes")   == 0);
+      xalt_run_tracing = (strncmp(p_dbg,"run",3) == 0);
       if (my_rank == 0 && ((xalt_tracing | xalt_run_tracing) == 0))
         xalt_tracing     = (strcmp(p_dbg,"yes0") == 0);
 
