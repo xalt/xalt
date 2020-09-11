@@ -73,6 +73,15 @@ def files_in_tree(path,pattern):
         fileA.append(fn)
   return fileA  
 
+def readlink_recursive(fn, dirNm):
+  if (os.path.islink(fn)):
+    newFn = os.readlink(fn)
+    if (newFn.find('/') == -1):
+      newFn = os.path.join(dirNm,newFn)
+    if (os.path.islink(newFn)):
+      newFn = readlink_recursive(newFn, dirNm)
+    return newFn
+
 def main():
 
   args      = CmdLineOptions().execute()
@@ -93,9 +102,7 @@ def main():
   for fn in fileT:
     if (verbose): print("Storing "+fn+":")
     if (os.path.islink(fn)):
-      newFn = os.readlink(fn)
-      if (newFn.find('/') == -1):
-        newFn = os.path.join(dirNm,newFn)
+      newFn = readlink_recursive(fn, dirNm)
       if (os.path.isfile(newFn)):
         if (fileT[newFn]):
           cmd = "cp "+newFn+" "+lib64_dir
