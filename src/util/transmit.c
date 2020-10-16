@@ -175,6 +175,12 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
+      /*
+       * Passed in args:
+       *   syshost
+       *   jsonStr
+       ************************************************************/
+
       CURLcode res;
       CURL *hnd;
       struct curl_slist *slist = NULL;

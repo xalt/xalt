@@ -228,7 +228,7 @@ def main():
     start_date = args.startD
 
   print("-------------------------------------------------------------")
-  print("XALT Libary Report on",syshost,"from",start_date,"to",end_date)
+  print("XALT Library Report on",syshost,"from",start_date,"to",end_date)
   print("-------------------------------------------------------------")
   print("")
   print("")
