@@ -19,7 +19,8 @@ local_c_src   	 := base64.c            \
 		    xalt_record_pkg.c   \
 		    xalt_tmpdir.c       \
 		    xalt_vendor_note.c  \
-		    zstring.c
+		    zcmprss.c           \
+		    zuncmprss.c
 local_c_src   	 := $(addprefix $(local_dir)/, $(local_c_src))
 
 local_cxx_src 	 := test_record_pkg.C            \
@@ -51,7 +52,7 @@ TST_REC_PKG_OBJ  := $(patsubst %.C, %.o, $(TST_REC_PKG_CXX))
 
 REC_PKG_X        := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
 REC_PKG_C        := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
-                    base64.c zstring.c xalt_fgets_alloc.c xalt_tmpdir.c xalt_dir.c
+                    base64.c zcmprss.c xalt_fgets_alloc.c xalt_tmpdir.c xalt_dir.c
 REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) __build__/xalt_syshost.c
 REC_PKG_OBJ      := $(patsubst %.c, %.o, $(REC_PKG_C))
 

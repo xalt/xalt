@@ -38,7 +38,7 @@ RUN_SUBMISSION_O  := libxalt/run_submission.o            \
                      util/xalt_tmpdir.o                	 \
                      util/xalt_vendor_note.o           	 \
                      util/xalt_quotestring.o             \
-                     util/zstring.o                      
+                     util/zcmprss.o
 
 RUN_SUBMISSION_OBJ:= $(RUN_SUBMISSION_O)                 \
                      $(MY_HOSTNAME_PARSER_OBJ)
