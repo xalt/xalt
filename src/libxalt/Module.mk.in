@@ -116,7 +116,7 @@ $(XALT_TEST): libxalt/xalt_test.o $(RUN_SUBMISSION_LIB)
 #----------------------------------------------------------------------
 
 $(LIBXALT_INIT_32): $(LIBXALT_O32)
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^ $(LIBDCGM) $(LIBNVML) -ldl -lcurl -lm
+	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^ -Wl,-rpath,$(LIB) $(LIBDCGM) $(LIBNVML) -ldl -lcurl -lm
 
 libxalt/xalt_initialize_preload.o32: libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) -m32 $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
