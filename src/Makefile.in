@@ -52,6 +52,7 @@ c_sources    :=
 cxx_sources  :=
 libraries    :=
 extra_clean  :=
+so_libs      :=
 
 ifeq ($(XALT_USE_32BIT),no)
   HAVE_32BIT := no
@@ -106,7 +107,7 @@ build_all: ECHO $(programs) $(libraries)  \
            $(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py
 
 COPY_ALL_LIBS: build_all
-	REQ_LIBS=`$(FIND_LIBS_TO_XALT) $(programs)`;                   \
+	REQ_LIBS=`$(FIND_LIBS_TO_XALT) $(programs) $(so_libs)`;        \
 	for i in $$REQ_LIBS; do                                        \
           baseNM="$${i##*/}";                                          \
 	  if [ ! -f $(DESTDIR)$(LIB64)/$$baseNM ]; then                \
