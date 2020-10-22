@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
       openlog(logNm, LOG_PID, LOG_USER);
       syslog(LOG_INFO, "Logging URL should be provided");
       closelog();
-      my_free(logNm,strlen(logNm));
+      free(logNm);
       return 1;
     }
       
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
           openlog(logNm, LOG_PID, LOG_USER);
           syslog(LOG_INFO, "curl_easy_perform() failed: %s",curl_easy_strerror(res));
           closelog();
-          my_free(logNm,strlen(logNm));
+          free(logNm);
         }
       else
 	{
@@ -112,13 +112,13 @@ int main(int argc, char* argv[])
 	      openlog(logNm, LOG_PID, LOG_USER);
 	      syslog(LOG_INFO, "HTTP status code %s received from %s",status, log_url);
 	      closelog();
-	      my_free(logNm,strlen(logNm));
+	      free(logNm);
 	    }
         }
       curl_easy_cleanup(hnd);
     }
 
-  my_free(chunk.memory, strlen(chunk.memory));
+  free(chunk.memory);
   curl_slist_free_all(slist);
   return 0;
 }

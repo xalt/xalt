@@ -59,7 +59,7 @@ REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) __build__/xalt_sysh
 REC_PKG_OBJ      := $(patsubst %.c, %.o, $(REC_PKG_C))
 
 CURL_TRANS_X     := $(DESTDIR)$(LIBEXEC)/xalt_curl_transmit
-CURL_TRANS_C     := xalt_curl_transmit.c xalt_c_utils.c
+CURL_TRANS_C     := xalt_curl_transmit.c
 CURL_TRANS_OBJ   := $(patsubst %.c, %.o, $(CURL_TRANS_C))
 
 
