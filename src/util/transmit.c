@@ -1,46 +1,23 @@
 #define  _GNU_SOURCE
-#include <curl/curl.h>
+#include <dlfcn.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <stdlib.h>
+#include <sys/wait.h>
 #include <syslog.h>
 #include <unistd.h>
 #include <zlib.h>
-#include <dlfcn.h>
 #include "transmit.h"
 #include "zstring.h"
 #include "base64.h"
 #include "xalt_config.h"
+#include "xalt_dir.h"
 #include "xalt_c_utils.h"
 #include "xalt_base_types.h"
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
-
-struct response {
-  char *memory;
-  size_t size;
-};
-
-/* Callback to handle the HTTP response */
-static size_t _write_callback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-  size_t realsize = size * nmemb;
-  struct response *mem = (struct response *)userp;
-
-  char *ptr = realloc(mem->memory, mem->size + realsize + 1);
-  if (ptr == NULL) {
-    return 0;
-  }
-
-  mem->memory = ptr;
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
-
-  return realsize;
-}
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
               const char* syshost, char* resultDir, const char* resultFn, FILE* my_stderr)
@@ -175,79 +152,54 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
-      /*
-       * Passed in args:
-       *   syshost
-       *   jsonStr
-       ************************************************************/
+      int pid, status, ret = 0;
+      char *myargs [] 	= { NULL, NULL, NULL, NULL};
+      char *myenv  [] 	= { NULL };
 
-      CURLcode res;
-      CURL *hnd;
-      struct curl_slist *slist = NULL;
-      struct response chunk;
-      const char *log_url = NULL;
-      const char *status = NULL;
+      // Prepend $LIB64 to $LD_LIBRARY_PATH
+      int  i;
+      char *ld_lib_path = getenv("LD_LIBRARY_PATH");
+      char *lib64_dir   = xalt_dir("lib64");
+      int  len_lpath    = strlen(ld_lib_path);
+      int  len_l64dir   = strlen(lib64_dir);
+      int  len          = len_l64dir + len_lpath + 2;
+      char *value       = (char *) malloc(len*sizeof(char));
 
-      log_url = getenv("XALT_LOGGING_URL");
-      if (log_url == NULL)
-        log_url = XALT_LOGGING_URL;
+      i = 0;
+      memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
+      value[i] = ':';                             i += 1;
+      memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
+      value[i] = '\0';                            i += 1;
+      setenv("LD_LIBRARY_PATH", value, 1);
+      my_free(value,len);
 
-      if (strcasecmp(log_url,"") == 0)  {
-        DEBUG0(my_stderr,"  Logging URL should be provided!\n");
-        asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
-        openlog(logNm, LOG_PID, LOG_USER);
-        syslog(LOG_INFO, "Logging URL should be provided");
-        closelog();
-        my_free(logNm,strlen(logNm));
-        return;
-      }
-      
-      slist = curl_slist_append(slist, "content-type: application/json");
-      chunk.memory = malloc(1);
-      chunk.size = 0;
+      // Define arguments to xalt_curl_transmit.c
+      char* prgm = xalt_dir("libexec/xalt_curl_transmit"); 
+      myargs[0]  = prgm;
+      myargs[1]  = (char *) syshost;
+      myargs[2]  = (char *) jsonStr;
 
-      hnd = curl_easy_init();
-      if (hnd) {
-        curl_easy_setopt(hnd, CURLOPT_URL, log_url);
-        curl_easy_setopt(hnd, CURLOPT_POST, 1);
-        curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, jsonStr);
-        curl_easy_setopt(hnd, CURLOPT_POSTFIELDSIZE, strlen(jsonStr));
-        curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, slist);
-        curl_easy_setopt(hnd, CURLOPT_HEADER, 1);
-        curl_easy_setopt(hnd, CURLOPT_WRITEFUNCTION, _write_callback);
-        curl_easy_setopt(hnd, CURLOPT_WRITEDATA, (void *) &chunk);
+      // Call xalt_curl_transmit as a child process and wait for it to complete.
+      pid = fork();
+      if (pid == 0)
+	{
+	  // Child process
+	  execve(prgm, myargs, myenv);
+	}
 
-        res = curl_easy_perform(hnd);
+      // Parent: Wait for child to complete
+      if ((ret = waitpid (pid, &status, 0)) != 0)
+	{
+	  DEBUG0(my_stderr, "  waitpid() returned -1: error with xalt_curl_transmit\n");
+	  asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
+	  openlog(logNm, LOG_PID, LOG_USER);
+	  syslog(LOG_INFO, "waitpid() returned -1: error with xalt_curl_transmit");
+	  closelog();
+	  my_free(logNm,strlen(logNm));
+	  return;
+	}
 
-        if(res != CURLE_OK) {
-          // Log error to syslog
-	  DEBUG1(my_stderr,"  curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
-          asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
-          openlog(logNm, LOG_PID, LOG_USER);
-          syslog(LOG_INFO, "curl_easy_perform() failed: %s",curl_easy_strerror(res));
-          closelog();
-          my_free(logNm,strlen(logNm));
-        }
-        else {
-          strtok(chunk.memory, " ");
-          status = strtok(NULL, " ");
-          if ((strcmp(status, "100") == 0)) {
-            (void)  strtok(NULL, " ");
-            status = strtok(NULL, " ");
-          }
-          if ((strcmp(status, "200") != 0) && (strcmp(status, "201") != 0)) {
-	    DEBUG2(my_stderr,"   HTTP status code %s received from %s\n",status, log_url);
-            asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
-            openlog(logNm, LOG_PID, LOG_USER);
-            syslog(LOG_INFO, "HTTP status code %s received from %s",status, log_url);
-            closelog();
-            my_free(logNm,strlen(logNm));
-          }
-        }
-        curl_easy_cleanup(hnd);
-      }
-
-      my_free(chunk.memory, strlen(chunk.memory));
-      curl_slist_free_all(slist);
+      // Free memory
+      my_free(prgm, strlen(prgm));
     }
 }

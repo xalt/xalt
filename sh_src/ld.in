@@ -229,7 +229,7 @@ else
   XLD=$XALT_DIR/lib
   XALT_OBJ_TYPE=o32
 fi
-SYSLIBS="-ldl -lcurl -lz -lm -lc"
+SYSLIBS="-ldl -lz -lm -lc"
 XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_regular.$XALT_OBJ_TYPE $XLD/librun_submission.a $SYSLIBS"
   
 # Get the compiler information

@@ -98,7 +98,7 @@ __build__/lex.__XALT_host.o: __build__/lex.__XALT_host.c xalt_obfuscate.h
 
 
 $(LIBXALT_INIT_64): $(LIBXALT_OBJ_64)
-	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ -Wl,-rpath,$(LIB64) $(LIBDCGM) $(LIBNVML) -ldl -lcurl -lz -lm 
+	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ -Wl,-rpath,$(LIB64) $(LIBDCGM) $(LIBNVML) -ldl -lz -lm 
 
 libxalt/xalt_initialize_preload.o: libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
@@ -116,7 +116,7 @@ $(XALT_TEST): libxalt/xalt_test.o $(RUN_SUBMISSION_LIB)
 #----------------------------------------------------------------------
 
 $(LIBXALT_INIT_32): $(LIBXALT_O32)
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^ -Wl,-rpath,$(LIB) $(LIBDCGM) $(LIBNVML) -ldl -lcurl -lm
+	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^ -Wl,-rpath,$(LIB) $(LIBDCGM) $(LIBNVML) -ldl -lm
 
 libxalt/xalt_initialize_preload.o32: libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) -m32 $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
