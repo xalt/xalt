@@ -36,3 +36,6 @@ XALT 2.9+
 	     * Move curl transport from transmit.c to a separate program (xalt_curl_transport)
     (2.9.10) * Issue #37: Reuse the sha1 value if it is already been computed rather than recomputing.
              * Change XALT_TRACING=run to work like =yes when executable passes path test.
+W.I.P:
+    (2.9.11) * Change XALT_TRACING=run to work like =yes when executable passes path test and it has RANK==0.
+    

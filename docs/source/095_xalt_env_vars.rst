@@ -57,7 +57,8 @@ This variable can take several values:
    be tracked or why not for task 0.
 
 *run* : This shows output just like *yes* except that there is only
-   output when the executable is acceptable by the path test.
+   output when the executable is acceptable by the path test and it
+   is task 0.
 
 
 

@@ -267,7 +267,7 @@ void myinit(int argc, char **argv)
 	errfd	       = dup(STDERR_FILENO);
     }
 
-  if (xalt_run_tracing)
+  if (xalt_run_tracing && my_rank == 0)
     {
       get_abspath(exec_path,sizeof(exec_path));
       path_results = keep_path(exec_path);
