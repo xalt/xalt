@@ -267,6 +267,14 @@ void myinit(int argc, char **argv)
 	errfd	       = dup(STDERR_FILENO);
     }
 
+  if (xalt_run_tracing)
+    {
+      get_abspath(exec_path,sizeof(exec_path));
+      path_results = keep_path(exec_path);
+      path_parser_cleanup();
+      xalt_tracing = (path_results != SKIP);
+    }
+
   if (xalt_tracing)
     {
       time_t    now    = (time_t) t0;
