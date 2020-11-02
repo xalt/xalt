@@ -116,12 +116,16 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
       t1 = epoch();
       compute_sha1(exec_path, &sha1buf[0]);
       compute_sha1_cleanup();
-      DEBUG1(my_stderr,"    Compute sha1 of exec: %s\n",exec_path);
+      DEBUG2(my_stderr,"    Compute sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
       insert_key_double(&measureT, "02_Sha1_exec_____", epoch() - t1);
       need_sha1 = false;
     }
   else
-    insert_key_double(&measureT, "02_Sha1_exec_____", 0.0);
+    {
+      insert_key_double(&measureT, "02_Sha1_exec_____", 0.0);
+      DEBUG2(my_stderr,"    Reuse   sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
+    }
+      
     
     
   //*********************************************************************
