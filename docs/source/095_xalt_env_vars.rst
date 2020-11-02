@@ -56,8 +56,9 @@ This variable can take several values:
    only for task 0. This option will report whether an execution will
    be tracked or why not for task 0.
 
-*run* : This shows output for execution that will be tracked. There is
-   nothing printed when a program is not being tracked.
+*run* : This shows output just like *yes* except that there is only
+   output when the executable is acceptable by the path test.
+
 
 
 Special Debugging variables for XALT
