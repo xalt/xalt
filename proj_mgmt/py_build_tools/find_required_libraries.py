@@ -47,6 +47,7 @@ ignoreT = {
   "libuuid"   : True,
   "libcurl"   : True,
   "libcrypto" : True,
+  "libdl"     : True,
   }
   
 

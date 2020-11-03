@@ -30,7 +30,12 @@ XALT 2.9+
                Only vendor note extraction of watermark when num_tasks == 1.
     (2.9.7)  * Added container column to end of xalt_run table.
     (2.9.8)  * Added XALT_DUMP_ENV=yes to dump env vars in myinit()
-W.I.P.:
     (2.9.9)  * Issue #31 Support readline_recursive() for copying system libraries to XALT
              * Fix bug where XALT_TRACING=run0 would cause run_submission to fail.
-	     
+	     * Do not copy libdl.* from current system to $(LIB64)
+	     * Move curl transport from transmit.c to a separate program (xalt_curl_transport)
+    (2.9.10) * Issue #37: Reuse the sha1 value if it is already been computed rather than recomputing.
+             * Change XALT_TRACING=run to work like =yes when executable passes path test.
+W.I.P:
+    (2.9.11) * Change XALT_TRACING=run to work like =yes when executable passes path test and it has RANK==0.
+    
