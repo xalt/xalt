@@ -1,4 +1,5 @@
 #define  _GNU_SOURCE
+#include <ctype.h>
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,30 +96,81 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "logger") == 0)
     {
-      int   sz;
-      int   zslen;
-      char* zs      = compress_string(jsonStr, &zslen);
-      char* b64     = base64_encode(zs, zslen, &sz);
-      
+      int         i, pid, status, ret = 0;
+      char        *myargs [] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+      char        *myenv  [] = { NULL };
+      const char  *prgm      = "logger";
+      char        *tagStr;
+      char        *kindStr;
+      char        *nbStr;
+      char        *keyStr;
+      char        *syshostStr;
+      char        idxStr[20];
+
+      unsetenv("LD_PRELOAD");
+      setenv("XALT_EXECUTABLE_TRACKING","no",1);
+      setenv("PATH",XALT_SYSTEM_PATH,1);
+
+      int   sz      = strlen(jsonStr);
+      while(isspace(jsonStr[sz-1]))
+	--sz;
+
       int   blkSz   = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
       int   nBlks   = (sz -  1)/blkSz + 1;
-      int   istrt   = 0;
-      int   iend    = blkSz;
-      int   i;
 
+      
+      asprintf(&tagStr,     "XALT_LOGGING_%s", syshost);
+      asprintf(&kindStr,    "kind:%s",         kind);
+      asprintf(&nbStr,      "nb:%d",           nBlks);
+      asprintf(&syshostStr, "syshost:%s",      syshost);
+      asprintf(&keyStr,     "key:%s",          key);
+
+      int istrt	     = 0;
+      int iend	     = blkSz;
+      int  nvalueStr = syslog_msg_sz + 7;
+      char *valueStr = (char *) malloc(nvalueStr);
+
+      myargs[0]	     = (char *) prgm;
+      myargs[1]	     = "-t";
+      myargs[2]	     = tagStr;
+      myargs[3]	     = "V:3";
+      myargs[4]	     = kindStr;
+      myargs[5]	     = nbStr;
+      myargs[6]	     = syshostStr;
+      myargs[7]	     = keyStr;
+      myargs[8]	     = idxStr;
+      myargs[9]	     = valueStr;
+      
       for (i = 0; i < nBlks; i++)
         {
-          asprintf(&cmdline, "LD_PRELOAD= XALT_EXECUTABLE_TRACKING=no PATH=%s logger -t XALT_LOGGING_%s V:2 kind:%s idx:%d nb:%d syshost:%s key:%s value:%.*s\n",
-                   XALT_SYSTEM_PATH, syshost, kind, i, nBlks, syshost, key, iend-istrt, &b64[istrt]);
-          system(cmdline);
-          my_free(cmdline, strlen(cmdline));
+	  sprintf(&idxStr[0],   "idx:%d",     i);
+	  sprintf(&valueStr[0], "value:%.*s", iend-istrt, &jsonStr[istrt]);
+
+	  pid = fork();
+	  if (pid == 0)
+	    {
+	      // Child process
+	      execvpe(prgm, myargs, myenv);
+	    }
+
+	  // Parent: Wait for child to complete
+	  if ( (ret = waitpid(pid, &status, 0)) == -1)
+	    {
+	      DEBUG1(my_stderr, "  waitpid() returned %d: error with logger\n", ret);
+	      return;
+	    }
+	      
           istrt = iend;
           iend  = istrt + blkSz;
           if (iend > sz)
             iend = sz;
         }
-      my_free(b64, sz);
-      my_free(zs,  zslen);
+      my_free(tagStr,  	  strlen(tagStr));
+      my_free(kindStr, 	  strlen(kindStr));
+      my_free(nbStr,   	  strlen(nbStr));
+      my_free(syshostStr, strlen(syshostStr));
+      my_free(keyStr,     strlen(keyStr));
+      my_free(valueStr,   nvalueStr);
     }
   else if (strcasecmp(transmission, "syslog") == 0)
     {
@@ -126,6 +178,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       int   zslen;
       char* zs      = compress_string(jsonStr, &zslen);
       char* b64     = base64_encode(zs, zslen, &sz);
+      
       
       int   blkSz   = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
       int   nBlks   = (sz -  1)/blkSz + 1;
