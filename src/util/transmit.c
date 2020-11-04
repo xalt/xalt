@@ -9,9 +9,7 @@
 #include <sys/wait.h>
 #include <syslog.h>
 #include <unistd.h>
-#include <zlib.h>
 #include "transmit.h"
-#include "zstring.h"
 #include "base64.h"
 #include "xalt_config.h"
 #include "xalt_dir.h"
@@ -23,7 +21,6 @@ const int syslog_msg_sz = SYSLOG_MSG_SZ;
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
               const char* syshost, char* resultDir, const char* resultFn, FILE* my_stderr)
 {
-  char * cmdline = NULL;
   char * logNm   = NULL;
   char * p_dbg        = getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && (strncmp(p_dbg,"yes",3)  == 0 ||
@@ -159,17 +156,10 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
     {
-      int   sz      = strlen(jsonStr);
-      int   blkSz   = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
-      int   nBlks   = (sz -  1)/blkSz + 1;
-      int   istrt   = 0;
-      int   iend    = blkSz;
-      int   i;
-
       asprintf(&logNm, "XALT_LOGGING_%s",syshost);
       openlog(logNm, 0, LOG_USER);
 
-      syslog(LOG_INFO, "%s:%s", kind, &jsonStr[0])
+      syslog(LOG_INFO, "%s:%s", kind, &jsonStr[0]);
       closelog();
       my_free(logNm, strlen(logNm));
     }
