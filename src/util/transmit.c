@@ -140,7 +140,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 	}
 
       // Parent: Wait for child to complete
-      if ((ret = waitpid (pid, &status, 0)) != 0)
+      if ((ret = waitpid (pid, &status, 0)) == -1)
 	{
 	  DEBUG0(my_stderr, "  waitpid() returned -1: error with xalt_curl_transmit\n");
 	  asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
