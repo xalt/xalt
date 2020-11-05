@@ -41,4 +41,4 @@ XALT 2.9+
 	     * Added V:3 version of transmission for syslog/logger style.
 	     * Remove RPATH linking of libxalt_init.so to $(LIB64), remove -lz.
 W.I.P:
-    (2.9.12) * Change test to ((ret = waitpid()) == -1) in curl transmission..
+    (2.9.12) * Change test to ((ret = waitpid()) == -1) in curl transmission.
