@@ -364,6 +364,11 @@ def main():
 
   # Using home directories or a global location.
   xalt_file_prefix = os.environ.get("XALT_FILE_PREFIX","@xalt_file_prefix@")
+  xaltUserA        = os.environ.get("XALT_USERS","<empty>")
+
+  print ("\n################################################################",file=sys.stderr)
+  print ("Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\", XALT_USERS: \""+xaltUserA+"\"",file=sys.stderr)
+  print ("################################################################\n",file=sys.stderr)
 
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
