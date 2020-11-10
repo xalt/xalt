@@ -377,10 +377,10 @@ def main():
     xaltUserStr    = ""
     
 
-  print ("\n################################################################",file=sys.stderr)
-  print ("XALT Git Version: "+Version(),                                      file=sys.stderr)
-  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr,    file=sys.stderr)
-  print ("################################################################\n",file=sys.stderr)
+  print ("\n################################################################")
+  print ("XALT Git Version: "+Version()                                      )
+  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr    )
+  print ("################################################################\n")
 
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
