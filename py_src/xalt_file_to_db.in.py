@@ -98,6 +98,11 @@ class CmdLineOptions(object):
     return args
 
 
+def Version():
+  my_version = "@git@"
+  return my_version
+
+
 def keep_or_delete(fn, deleteFlg):
   delta = my_epoch - os.stat(fn).st_mtime
   if (delta > 86400 and deleteFlg):
@@ -373,7 +378,8 @@ def main():
     
 
   print ("\n################################################################",file=sys.stderr)
-  print ("Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr,      file=sys.stderr)
+  print ("XALT Git Version: "+Version(),                                      file=sys.stderr)
+  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr,    file=sys.stderr)
   print ("################################################################\n",file=sys.stderr)
 
   # Find transmission style

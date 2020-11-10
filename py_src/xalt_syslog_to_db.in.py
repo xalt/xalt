@@ -79,6 +79,10 @@ ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 
+def Version():
+  my_version = "@git@"
+  return my_version
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -359,6 +363,11 @@ def main():
   """
   read from syslog file into XALT db.
   """
+
+  print ("\n################################################################",file=sys.stderr)
+  print ("XALT Git Version: "+Version(),                                      file=sys.stderr)
+  print ("################################################################\n",file=sys.stderr)
+
 
   sA = []
   sA.append("CommandLine:")
