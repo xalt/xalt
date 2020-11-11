@@ -672,9 +672,9 @@ void myinit(int argc, char **argv)
       have_watermark = extractXALTRecordString(exec_path, &watermark);
       DEBUG1(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
     }
-  else
-    watermark = strdup("FALSE");
 
+  if (! have_watermark) 
+    watermark = strdup("FALSE");
 
   /*
    * XALT is only recording the end record for scalar executables and
