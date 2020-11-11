@@ -172,7 +172,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   DEBUG0(my_stderr,"    Built json string\n");
 
   processTreeFree(&ptA);
-  free_S2D(&qaT);
+  free_S2S(&qaT);
   free_S2D(&measureT);
   free_S2D(&userDT);
   free_S2S(&userT);
