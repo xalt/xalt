@@ -37,6 +37,22 @@ See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercompu
 
 ## ChangeLog
 
+### XALT 2.10:
+
+Features/Bug:
+
+   1. It copies necessary libraries to <INSTALL_DIR>/<xalt-version>/lib64
+
+   2. It has remove its dependency on zlib to better support containers. The "syslog" transmission style now send the json string directly. (It is still broken into blocks.)
+
+   3. The XALT DB now contains a column for containers usage/non-usage.
+   
+   4. The env. var. XALT_TRACING now support a "run" value so that only executions that pass the exec path test produce any output.
+
+   5. XALT has now greatly reduced the number of system calls it makes. Only the curl transmission style requires a system call.
+
+   6. Fixed bug where the XALT watermark was ignored (introduced in XALT 2.9.6) 
+
 ### XALT 2.8:
 
 Features/Bug:
