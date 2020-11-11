@@ -71,7 +71,7 @@ test_descript = {
      displayThis  "xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --runs 5 --functions 4 --links 2 --pkgs 8 --objects 10 --env_vars 0
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 5 --functions 4 --links 2 --pkgs 8 --objects 10 --env_vars 0 --uuid 1
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

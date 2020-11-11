@@ -61,7 +61,7 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 2 --pkgs 3
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 2 --pkgs 3 --uuid 1
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 
