@@ -35,6 +35,7 @@
 #define XALT_PRELOAD_ONLY          "@PRELOAD_ONLY@"
 #define XALT_PRIME_FMT             "@XALT_PRIME_FMT@"
 #define XALT_PRIME_NUMBER           @XALT_PRIME_NUMBER@
+#define XALT_SIGNAL_HANDLER        "@XALT_SIGNAL_HANDLER@"
 #define XALT_SCALAR_TRACKING       "@XALT_SCALAR_TRACKING@"
 #define XALT_SYSTEM_PATH           "@SYSTEM_PATH@"
 #define XALT_TMPDIR                "@XALT_TMPDIR@"

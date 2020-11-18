@@ -45,3 +45,6 @@ XALT 2.9+
 XALT 2.10+
     (2.10)   * Fix bug where watermark not recorded even it existed.
     (2.10.1) * Look for libcrypto.so and libuuid.so in $(LIB64) directory before doing a regular dlopen().
+
+W.I.P:
+    (2.10.2) * Disabling signal tracking by default.

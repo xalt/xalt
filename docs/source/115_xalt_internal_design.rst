@@ -75,7 +75,8 @@ run. Note that this is true for FORTRAN executables as well.
 The *myfini()* routine is added to the *.fini_array*.  Any routine
 that is added to that array is run after *main()* completes.  If
 *main()* terminates early then *myfini()* is not called, unless caught
-by the signal handler registered by XALT in *myinit()*.
+by the signal handler registered by XALT in *myinit()* (note this is
+normally disabled).
 
 Setting the LD_PRELOAD environment variable to point to the XALT
 shared library means that every dynamic executable calls the
@@ -151,7 +152,7 @@ end record is that the *myfini()* get called. Typically this means
 that *main()* completes.  So if a program terminates early due to a
 segfault or floating point error then no end record will be produced.
 
-To deal with this the *myinit()* routine registers a signal handler,
+To deal with this the *myinit()* routine can register a signal handler,
 *wrapper_for_myfini()* to be called if necessary.  Note that this only
 happens this execution could be tracked. This wrapper routine
 calls the *myfini()* routine, clears the XALT signal handler and
@@ -169,3 +170,9 @@ for time, this signal is not always passed through the MPI job runner
 (i.e. mpiexec) to the MPI application. Since this is not reliable,
 XALT will continue to produce start records for large number of tasks
 for MPI jobs.
+
+For the above reasons, XALT (as of version 2.10.2+) no longer
+registers a signal handler.  To activate use the configure option
+(--with-signalHandler=yes) or set the
+env. var. XALT_SIGNAL_HANDLER=yes.
+

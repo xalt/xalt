@@ -186,6 +186,7 @@ static int          xalt_sampling         = 0;
 static int          num_gpus              = 0;
 static int          b64_len               = 0;
 static int          b64_wm_len            = 0;
+static int          signal_hdlr_called    = 0;
 #ifdef USE_NVML
 static unsigned long long __time          = 0;
 static void * nvml_handle                 = NULL;
@@ -761,12 +762,13 @@ void myinit(int argc, char **argv)
    * SIGFPE, SIGSEGV, etc will produce an end record.
    *********************************************************/
   v = getenv("XALT_SIGNAL_HANDLER");
-  if (!v || strcmp(v,"no") != 0)
+  if (!v)
+    v = XALT_SIGNAL_HANDLER;
+  if (strcasecmp(v,"yes") == 0)
     {
       DEBUG0(stderr, "    -> Setting up signals\n");
       int signalA[] = {SIGHUP, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT, SIGBUS,
-		       SIGFPE, SIGSEGV, SIGTERM, SIGXCPU, SIGUSR1, SIGUSR2,
-		       SIGALRM};
+		       SIGFPE, SIGTERM, SIGXCPU, SIGUSR1, SIGUSR2, SIGALRM};
       int signalSz  = N_ELEMENTS(signalA);
       struct sigaction action;
       struct sigaction old;
@@ -782,6 +784,9 @@ void myinit(int argc, char **argv)
             sigaction(signum, &action, NULL);
         }
     }
+  else
+    DEBUG0(stderr, "    -> Signals capturing disabled\n");
+    
   v = getenv("XALT_DUMP_ENV");
   if (v && strcmp(v, "yes") == 0)
     {
@@ -798,6 +803,7 @@ void wrapper_for_myfini(int signum)
   sigemptyset( &action.sa_mask);
   action.sa_handler = SIG_DFL;
   sigaction(signum, &action, NULL);
+  signal_hdlr_called = signum;
   myfini();
   raise(signum);
 }
@@ -838,6 +844,9 @@ void myfini()
       close_out(my_stderr, xalt_err);
       return;
     }
+
+  if (signal_hdlr_called)
+    DEBUG1(my_stderr,"    -> my_fini() called via signal handler with signum: %d\n", signal_hdlr_called);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)

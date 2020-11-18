@@ -651,6 +651,7 @@ CXXFLAGS
 CXX
 HAVE_32BIT
 XALT_PRIME_FMT
+XALT_SIGNAL_HANDLER
 XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
@@ -747,6 +748,7 @@ with_siteControlledPrefix
 with_32bit
 with_tmpdir
 with_primeNumber
+with_signalHandler
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1418,6 +1420,9 @@ Optional Packages:
                           [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
                           XALT_FILE_PREFIX, [[997]]
+  --with-signalHandler=ans
+                          Have XALT capture executions that fail with a
+                          signal: [[no]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -3595,6 +3600,28 @@ $as_echo "XALT_PRIME_NUMBER=$withval" >&6; }
     XALT_PRIME_NUMBER="$withval"
     cat >>confdefs.h <<_ACEOF
 #define XALT_PRIME_NUMBER "$withval"
+_ACEOF
+
+fi
+
+
+
+# Check whether --with-signalHandler was given.
+if test "${with_signalHandler+set}" = set; then :
+  withval=$with_signalHandler; XALT_SIGNAL_HANDLER="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SIGNAL_HANDLER=$with-signalHandler" >&5
+$as_echo "XALT_SIGNAL_HANDLER=$with-signalHandler" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SIGNAL_HANDLER "$with-signalHandler"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SIGNAL_HANDLER=$withval" >&5
+$as_echo "XALT_SIGNAL_HANDLER=$withval" >&6; }
+    XALT_SIGNAL_HANDLER="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SIGNAL_HANDLER "$withval"
 _ACEOF
 
 fi
@@ -6697,6 +6724,7 @@ echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_P
 echo "XALT_LD_LIBRARY_PATH................................." : $XALT_LD_LIBRARY_PATH
 echo "XALT_LOGGING_URL....................................." : $XALT_LOGGING_URL
 echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
+echo "XALT signal handler.................................." : $XALT_SIGNAL_HANDLER
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo "CURL_STR............................................." : $CURL_STR

@@ -324,6 +324,18 @@ AC_ARG_WITH(primeNumber,
     XALT_PRIME_NUMBER="$withval"
     AC_DEFINE_UNQUOTED(XALT_PRIME_NUMBER, "$withval"))dnl
 
+AC_SUBST(XALT_SIGNAL_HANDLER)
+AC_ARG_WITH(signalHandler,
+    AC_HELP_STRING([--with-signalHandler=ans],[Have XALT capture executions that fail with a signal: [[no]]]),
+    XALT_SIGNAL_HANDLER="$withval"
+    AC_MSG_RESULT([XALT_SIGNAL_HANDLER=$with-signalHandler])
+    AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$with-signalHandler")dnl
+    ,
+    withval="no"
+    AC_MSG_RESULT([XALT_SIGNAL_HANDLER=$withval])
+    XALT_SIGNAL_HANDLER="$withval"
+    AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$withval"))dnl
+
 AC_SUBST(XALT_PRIME_FMT)
 AC_SUBST(HAVE_32BIT)
 
