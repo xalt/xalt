@@ -49,6 +49,9 @@ following::
 
     int my_copyenv(char *oldenv[])
     {
+       char* eq;
+       int   i;
+
        // The clearenv() function clears the environment of all
        // name-value pairs and sets the value of the external variable
        // environ to NULL. 
@@ -61,9 +64,10 @@ following::
         *eq = '\0';
         setenv(oldenv[i], eq + 1, 1))
     }
+
     int main(int argc, char *argv[])
     {
-       if (my_copyenv(environ))
+       my_copyenv(environ);
     }
     
 The problem with this code is that clearenv() is possibly freeing
