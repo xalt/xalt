@@ -74,6 +74,7 @@
 
 #ifdef USE_DCGM
 /* This code will only ever be active in 64 bit mode and not 32 bit mode */
+#  include <dlfcn.h>
 #  include <dcgm_agent.h>
 #  include <dcgm_structs.h>
 #endif
@@ -577,6 +578,14 @@ void myinit(int argc, char **argv)
             }
 #elif USE_DCGM
 
+          /* Open the DCGM library at runtime.  This avoids failing if
+             the library is not available on a particular system.  In
+             that case, the handle will not be created and GPU
+             tracking will be disabled. */
+          if (load_dcgm() == 0) {
+            xalt_gpu_tracking = 0;
+            break;
+          }
           dcgmReturn_t result;
 
           result = _dcgmInit();
