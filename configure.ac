@@ -479,7 +479,7 @@ if test $XALT_GPU_TRACKING = "dcgm" ; then
     AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   fi
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
-    GPU_STR=`$LOCATE_SO libnvml.so$i`
+    GPU_STR=`$LOCATE_SO libdcgm.so$i`
     if test "$?" -eq 0; then
       break;
     fi
@@ -499,7 +499,7 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
                   HAVE_NVML=yes],
                  [AC_MSG_ERROR([Unable to find dlopen])])
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
-    GPU_STR=`$LOCATE_SO libdcgm.so$i`
+    GPU_STR=`$LOCATE_SO libnvml.so$i`
     echo "i=libdcgm.so$i GPU_STR:  $GPU_STR"
     if test "$?" -eq 0; then
       break;
