@@ -986,7 +986,7 @@ void myfini()
           dlclose(nvml_handle);
         }
 #elif USE_DCGM
-      if (dcgm_handle != NULL)
+      if (dcgm_handle != 0)
         {
           /* Collect DCGM job stats */
           dcgmReturn_t result;
@@ -997,7 +997,7 @@ void myfini()
           dcgmUpdateAllFields(dcgm_handle, 1);
           dcgmJobStopStats(dcgm_handle, uuid_str);
 
-          job_info.version = dcgmJobInfo_version2;
+          job_info.version = dcgmJobInfo_version;
           result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
           if (result == DCGM_ST_OK)
             {
