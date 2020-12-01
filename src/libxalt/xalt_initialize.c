@@ -564,7 +564,7 @@ void myinit(int argc, char **argv)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = (dcgmHandle_t *) NULL;
               break;
             }
 
@@ -574,7 +574,7 @@ void myinit(int argc, char **argv)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = (dcgmHandle_t *) NULL;
               break;
             }
 
@@ -589,7 +589,7 @@ void myinit(int argc, char **argv)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = (dcgmHandle_t *) NULL;
               break;
             }
 
@@ -600,7 +600,7 @@ void myinit(int argc, char **argv)
 	      if (result == DCGM_ST_REQUIRES_ROOT)
 		DEBUG0(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = (dcgmHandle_t *) NULL;
               break;
             }
 
@@ -609,7 +609,7 @@ void myinit(int argc, char **argv)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = (dcgmHandle_t *) NULL;
               break;
             }
 #endif
