@@ -547,10 +547,8 @@ void myinit(int argc, char **argv)
 	      DEBUG1(stderr, "  GPU tracing is turned off. This directory \"%s\" does not exist!\n", nvidia_dir);
 	      break;
 	    }
-          DEBUG0(stderr, "  GPU tracing\n");
-
 #ifdef USE_NVML
-
+          DEBUG0(stderr, "  GPU tracing with NVML\n");
           /* Open the NVML library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
              that case, the handle will not be created and GPU
@@ -577,6 +575,7 @@ void myinit(int argc, char **argv)
               break;
             }
 #elif USE_DCGM
+          DEBUG0(stderr, "  GPU tracing with DCGM\n");
 
           /* Open the DCGM library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
@@ -646,6 +645,9 @@ void myinit(int argc, char **argv)
     }
   while(0);
 #endif
+
+  if (xalt_gpu_tracking == 0)
+    DEBUG0(stderr, "  No GPU tracking\n");
 
   start_time = t0;
   frac_time  = start_time - (long) (start_time);
