@@ -14,11 +14,7 @@ CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
 CFLAGS      	  := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 ifeq ($(HAVE_DCGM),yes)
-  ifeq ($(STATIC_LIBS),yes)
-    LIBDCGM:=-ldcgm_stub -ldl
-  else
-    LIBDCGM:= -ldl
-  endif
+  LIBDCGM:=-ldl
 endif
 ifeq ($(HAVE_NVML),yes)
   LIBNVML:=-ldl

@@ -500,6 +500,7 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
                  [AC_MSG_ERROR([Unable to find dlopen])])
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     GPU_STR=`$LOCATE_SO libdcgm.so$i`
+    echo "i=libdcgm.so$i GPU_STR:  $GPU_STR"
     if test "$?" -eq 0; then
       break;
     fi
