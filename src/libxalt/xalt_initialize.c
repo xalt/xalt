@@ -147,6 +147,9 @@ static double          prgm_sample_probability(int ntasks, double runtime);
 #ifdef USE_NVML
 static int             load_nvml();
 #endif
+#ifdef USE_DCGM
+static int             load_dcgm();
+#endif
 
 void myinit(int argc, char **argv);
 void myfini();
@@ -189,7 +192,7 @@ static int          b64_wm_len            = 0;
 static int          signal_hdlr_called    = 0;
 #ifdef USE_NVML
 static unsigned long long __time          = 0;
-static void * nvml_handle                 = NULL;
+static void * nvml_dl_handle              = NULL;
 static nvmlReturn_t (*_nvmlDeviceGetAccountingBufferSize)(nvmlDevice_t,
                                                           unsigned int *);
 static nvmlReturn_t (*_nvmlDeviceGetAccountingMode)(nvmlDevice_t,
@@ -208,6 +211,7 @@ static nvmlReturn_t (*_nvmlInit)();
 static nvmlReturn_t (*_nvmlShutdown)();
 #endif
 #ifdef USE_DCGM
+static void *       dcgm_dl_handle        = NULL;
 static dcgmHandle_t dcgm_handle           = NULL;
 /* This code will only every be active in 64 bit mode and not 32 bit mode*/
 /* Temporarily disable any stderr messages from DCGM */
@@ -226,6 +230,22 @@ static dcgmHandle_t dcgm_handle           = NULL;
   close(fd1);                        \
   (*(out)) = __result;               \
 }
+
+static dcgmReturn_t (*_dcgmInit)(void);
+static dcgmReturn_t (*_dcgmShutdown)(void);
+static dcgmReturn_t (*_dcgmStartEmbedded)(dcgmOperationMode_t opMode, dcgmHandle_t *pDcgmHandle);
+static dcgmReturn_t (*_dcgmJobStartStats)(dcgmHandle_t pDcgmHandle, dcgmGpuGrp_t groupId, char jobId[64]);
+static dcgmReturn_t (*_dcgmJobGetStats)(dcgmHandle_t pDcgmHandle, char jobId[64], dcgmJobInfo_t *pJobInfo);
+static dcgmReturn_t (*_dcgmJobRemove)(dcgmHandle_t pDcgmHandle, char jobId[64]);
+static dcgmReturn_t (*_dcgmJobStopStats)(dcgmHandle_t pDcgmHandle, char jobId[64]);
+static dcgmReturn_t (*_dcgmStopEmbedded)(dcgmHandle_t pDcgmHandle);
+static dcgmReturn_t (*_dcgmUpdateAllFields)(dcgmHandle_t pDcgmHandle, int waitForUpdate);
+static dcgmReturn_t (*_dcgmWatchJobFields)(dcgmHandle_t pDcgmHandle,
+					   dcgmGpuGrp_t groupId,
+					   long long updateFreq,
+					   double maxKeepAge,
+					   int maxKeepSamples);
+
 #endif
 
 extern char **environ;
@@ -559,7 +579,7 @@ void myinit(int argc, char **argv)
 
           dcgmReturn_t result;
 
-          result = dcgmInit();
+          result = _dcgmInit();
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
@@ -568,7 +588,7 @@ void myinit(int argc, char **argv)
               break;
             }
 
-          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
+          DCGMFUNC2(_dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
 
           if (result != DCGM_ST_OK)
             {
@@ -584,7 +604,7 @@ void myinit(int argc, char **argv)
 	      have_uuid = 1;
 	    }
 
-          result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
+          result = _dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
@@ -593,7 +613,7 @@ void myinit(int argc, char **argv)
               break;
             }
 
-          result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
+          result = _dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr,   "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
@@ -604,7 +624,7 @@ void myinit(int argc, char **argv)
               break;
             }
 
-          result = dcgmUpdateAllFields(dcgm_handle, 1);
+          result = _dcgmUpdateAllFields(dcgm_handle, 1);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
@@ -983,7 +1003,7 @@ void myfini()
             {
               DEBUG1(my_stderr, "  Error shutting down NVML: %s\n", _nvmlErrorString(result));
             }
-          dlclose(nvml_handle);
+          dlclose(nvml_dl_handle);
         }
 #elif USE_DCGM
       if (dcgm_handle != 0)
@@ -994,11 +1014,11 @@ void myfini()
 
           DEBUG0(my_stderr, "  GPU tracing\n");
 
-          dcgmUpdateAllFields(dcgm_handle, 1);
-          dcgmJobStopStats(dcgm_handle, uuid_str);
+          _dcgmUpdateAllFields(dcgm_handle, 1);
+          _dcgmJobStopStats(dcgm_handle, uuid_str);
 
           job_info.version = dcgmJobInfo_version;
-          result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
+          result = _dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
           if (result == DCGM_ST_OK)
             {
               int i = 0;
@@ -1012,9 +1032,9 @@ void myfini()
               DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
             }
 
-          dcgmJobRemove(dcgm_handle, uuid_str);
-          dcgmStopEmbedded(dcgm_handle);
-          dcgmShutdown();
+          _dcgmJobRemove(dcgm_handle, uuid_str);
+          _dcgmStopEmbedded(dcgm_handle);
+          _dcgmShutdown();
         }
 #endif
     }
@@ -1089,11 +1109,11 @@ static int load_nvml()
 {
   /* Open the NVML library.  Let the dynamic loader find it (do not
      specify a path). */
-  nvml_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
-  if (! nvml_handle)
+  nvml_dl_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
+  if ( ! nvml_dl_handle)
     {
-      nvml_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
-      if (! nvml_handle)
+      nvml_dl_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
+      if ( ! nvml_dl_handle)
 	{
 	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
 		 dlerror());
@@ -1103,23 +1123,62 @@ static int load_nvml()
 
   /* Load symbols */
   *(void**)(&_nvmlDeviceGetAccountingBufferSize) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingBufferSize");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingBufferSize");
   *(void**)(&_nvmlDeviceGetAccountingMode) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingMode");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingMode");
   *(void**)(&_nvmlDeviceGetAccountingPids) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingPids");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingPids");
   *(void**)(&_nvmlDeviceGetAccountingStats) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingStats");
-  *(void**)(&_nvmlDeviceGetCount) = dlsym(nvml_handle, "nvmlDeviceGetCount");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingStats");
+  *(void**)(&_nvmlDeviceGetCount) = dlsym(nvml_dl_handle, "nvmlDeviceGetCount");
   *(void**)(&_nvmlDeviceGetHandleByIndex) =
-    dlsym(nvml_handle, "nvmlDeviceGetHandleByIndex");
-  *(void**)(&_nvmlErrorString) = dlsym(nvml_handle, "nvmlErrorString");
-  *(void**)(&_nvmlInit) = dlsym(nvml_handle, "nvmlInit");
-  *(void**)(&_nvmlShutdown) = dlsym(nvml_handle, "nvmlShutdown");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetHandleByIndex");
+  *(void**)(&_nvmlErrorString) = dlsym(nvml_dl_handle, "nvmlErrorString");
+  *(void**)(&_nvmlInit) = dlsym(nvml_dl_handle, "nvmlInit");
+  *(void**)(&_nvmlShutdown) = dlsym(nvml_dl_handle, "nvmlShutdown");
 
   return 1;
 }
 #endif
+
+#ifdef USE_DCGM
+static int load_dcgm()
+{
+  char* fn       = xalt_dir("lib64/libdcgm.so");
+  dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
+  if (fn)
+    my_free(fn, strlen(fn));
+  if ( ! dcgm_dl_handle)
+    {
+      fn             = xalt_dir("lib64/libdcgm.so.1");
+      if (fn)
+	my_free(fn, strlen(fn));
+      dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
+      if ( ! dcgm_dl_handle)
+	{
+	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
+		 dlerror());
+	  return 0;
+	}
+    }
+
+  /* Load symbols */
+  *(void**)(&_dcgmInit)		   = dlsym(dcgm_dl_handle, "dcgmInit");
+  *(void**)(&_dcgmShutdown)	   = dlsym(dcgm_dl_handle, "dcgmShutdown");
+  *(void**)(&_dcgmStartEmbedded)   = dlsym(dcgm_dl_handle, "dcgmStartEmbedded");
+  *(void**)(&_dcgmStopEmbedded)    = dlsym(dcgm_dl_handle, "dcgmStopEmbedded");
+  *(void**)(&_dcgmJobStartStats)   = dlsym(dcgm_dl_handle, "dcgmJobStartStats");
+  *(void**)(&_dcgmJobGetStats)     = dlsym(dcgm_dl_handle, "dcgmJobGetStats");
+  *(void**)(&_dcgmJobRemove)       = dlsym(dcgm_dl_handle, "dcgmJobRemove");
+  *(void**)(&_dcgmJobStopStats)    = dlsym(dcgm_dl_handle, "dcgmJobStopStats");
+  *(void**)(&_dcgmUpdateAllFields) = dlsym(dcgm_dl_handle, "dcgmUpdateAllFields");
+  *(void**)(&_dcgmWatchJobFields)  = dlsym(dcgm_dl_handle, "dcgmWatchJobFields");
+
+  return 1;
+}
+#endif
+
+
 
 static long compute_value(const char **envA)
 {

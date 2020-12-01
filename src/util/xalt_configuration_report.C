@@ -230,6 +230,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "HAVE_DCGM",                HAVE_DCGM);
       json_add_char_str(&json, my_sep,   "CRYPTO_STR",               CRYPTO_STR);
       json_add_char_str(&json, my_sep,   "UUID_STR",                 UUID_STR);
+      json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
 
       json_add_array(&json, my_sep,   "hostnameA",    hostnameSz,      hostnameA);
@@ -286,6 +287,7 @@ int main(int argc, char* argv[])
   std::cout << "CRYPTO_STR:                      " << CRYPTO_STR                     << "\n";
   std::cout << "UUID_STR:                        " << UUID_STR                       << "\n";
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
+  std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 

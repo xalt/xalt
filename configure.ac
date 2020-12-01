@@ -457,7 +457,13 @@ if test -z "$PATH_TO_FLEX" ; then
    exit 1
 fi
 
+MY_TMPDIR=`mktemp -d`
+LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+
+AC_SUBST(GPU_STR)
+GPU_STR=
 AC_SUBST(HAVE_NVML)
 HAVE_NVML=no
 AC_SUBST(HAVE_DCGM)
@@ -472,6 +478,12 @@ if test $XALT_GPU_TRACKING = "dcgm" ; then
   else
     AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   fi
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libnvml.so$i`
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
 elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
   AC_CHECK_HEADER(nvml.h,
                   [AC_DEFINE([HAVE_NVML_H], 1,
@@ -486,6 +498,12 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
                   AC_DEFINE([USE_NVML], [1],[Using NVML library])
                   HAVE_NVML=yes],
                  [AC_MSG_ERROR([Unable to find dlopen])])
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libdcgm.so$i`
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
 fi
 
 AC_SUBST(PKGV)
@@ -626,10 +644,6 @@ AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XA
 
 MY_TMPDIR=`mktemp -d`
 
-LOCATE_SO=$MY_TMPDIR/locate_shared_library
-
-gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
-
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
@@ -648,7 +662,6 @@ for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     break;
   fi
 done
-
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then
