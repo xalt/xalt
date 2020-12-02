@@ -532,7 +532,7 @@ void myinit(int argc, char **argv)
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
-  xalt_gpu_tracking = (strcmp(v,"yes") == 0);
+  xalt_gpu_tracking = (strcmp(v,"no") != 0);
 
   do
     {
