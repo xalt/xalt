@@ -631,6 +631,7 @@ XALT_DEFAULT_DIR
 PKGV
 HAVE_DCGM
 HAVE_NVML
+GPU_STR
 HAVE_WORKING_LIBUUID
 EGREP
 GREP
@@ -671,6 +672,7 @@ XALT_CMDLINE_RECORD
 XALT_SCALAR_TRACKING
 XALT_MPI_TRACKING
 XALT_GPU_TRACKING
+XALT_GPU_TRACKING_STYLE
 XALT_FILE_PREFIX
 XALT_FUNCTION_TRACKING
 XALT_LOGGING_URL
@@ -3141,25 +3143,37 @@ fi
 
 # Check whether --with-trackGPU was given.
 if test "${with_trackGPU+set}" = set; then :
-  withval=$with_trackGPU; XALT_GPU_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING=$with_trackGPU" >&5
-$as_echo "XALT_GPU_TRACKING=$with_trackGPU" >&6; }
+  withval=$with_trackGPU; XALT_GPU_TRACKING_STYLE="$withval"
+    XALT_GPU_TRACKING_STYLE=`echo $XALT_GPU_TRACKING_STYLE | tr '[:upper:]' '[:lower:]'`
+    if test $XALT_GPU_TRACKING_STYLE = yes; then
+       XALT_GPU_TRACKING_STYLE=nvml
+    fi
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING_STYLE=$XALT_GPU_TRACKING_STYLE" >&5
+$as_echo "XALT_GPU_TRACKING_STYLE=$XALT_GPU_TRACKING_STYLE" >&6; }
 
 cat >>confdefs.h <<_ACEOF
-#define XALT_GPU_TRACKING "$with_trackGPU"
+#define XALT_GPU_TRACKING_STYLE "$with_trackGPU"
 _ACEOF
 
 else
   withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING=$withval" >&5
-$as_echo "XALT_GPU_TRACKING=$withval" >&6; }
-    XALT_GPU_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING_STYLE=$withval" >&5
+$as_echo "XALT_GPU_TRACKING_STYLE=$withval" >&6; }
+    XALT_GPU_TRACKING_STYLE="$withval"
 
 cat >>confdefs.h <<_ACEOF
-#define XALT_GPU_TRACKING "$withval"
+#define XALT_GPU_TRACKING_STYLE "$withval"
 _ACEOF
 
 fi
+
+
+if test $XALT_GPU_TRACKING_STYLE = nvml -o $XALT_GPU_TRACKING_STYLE = dcgm ; then
+   XALT_GPU_TRACKING=yes
+else
+   XALT_GPU_TRACKING=no
+fi
+
 
 
 
@@ -4810,12 +4824,18 @@ if test -z "$PATH_TO_FLEX" ; then
    exit 1
 fi
 
+MY_TMPDIR=`mktemp -d`
+LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+
+
+GPU_STR=
 
 HAVE_NVML=no
 
 HAVE_DCGM=no
-if test $XALT_GPU_TRACKING = "dcgm" ; then
+if test $XALT_GPU_TRACKING_STYLE = "dcgm" ; then
   ac_fn_c_check_header_mongrel "$LINENO" "dcgm_agent.h" "ac_cv_header_dcgm_agent_h" "$ac_includes_default"
 if test "x$ac_cv_header_dcgm_agent_h" = xyes; then :
 
@@ -4949,7 +4969,13 @@ else
 fi
 
   fi
-elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libdcgm.so$i`
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
+elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
   ac_fn_c_check_header_mongrel "$LINENO" "nvml.h" "ac_cv_header_nvml_h" "$ac_includes_default"
 if test "x$ac_cv_header_nvml_h" = xyes; then :
 
@@ -5034,6 +5060,13 @@ else
   as_fn_error $? "Unable to find dlopen" "$LINENO" 5
 fi
 
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libnvml.so$i`
+    echo "i=libdcgm.so$i GPU_STR:  $GPU_STR"
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
 fi
 
 
@@ -5288,10 +5321,6 @@ fi
 
 MY_TMPDIR=`mktemp -d`
 
-LOCATE_SO=$MY_TMPDIR/locate_shared_library
-
-gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
-
 
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
@@ -5310,7 +5339,6 @@ for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     break;
   fi
 done
-
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then
@@ -6713,6 +6741,7 @@ echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
+echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
@@ -6729,6 +6758,7 @@ echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo "CURL_STR............................................." : $CURL_STR
 echo "CRYPTO_STR..........................................." : $CRYPTO_STR
+echo "GPU_STR.............................................." : $GPU_STR
 echo "UUID_STR............................................." : $UUID_STR
 echo
 echo '------------------------------------------------------------------------------'

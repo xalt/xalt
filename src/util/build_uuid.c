@@ -25,7 +25,7 @@ void build_uuid(char * my_uuid_str)
       handle = dlopen (fn, RTLD_LAZY);
       if (fn)
 	my_free(fn, strlen(fn));
-      if (!handle) 
+      if ( ! handle) 
         {
           handle = dlopen ("libuuid.so", RTLD_LAZY);
           if (!handle) 

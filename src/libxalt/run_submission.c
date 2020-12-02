@@ -31,7 +31,7 @@ extern char        **environ;
 static char        sha1buf[41];
 static bool        need_sha1 = true;
 
-void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
+void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
 		    char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
 		    const char* watermark, const char* usr_cmdline, int xalt_tracing, FILE* my_stderr)
 {
@@ -46,6 +46,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   S2D_t*      	 userDT	  = NULL;
   S2D_t*       	 measureT = NULL;
   SET_t*         libT     = NULL;
+  double         t0       = epoch();
   double      	 t1;
 
   DEBUG1(my_stderr,"\n  run_submission(%s) {\n",suffix);
@@ -127,8 +128,6 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
       DEBUG2(my_stderr,"    Reuse   sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
     }
       
-    
-    
   //*********************************************************************
   // Parse the /proc/$pid/map file for the shared libraries
   t1 = epoch();
@@ -142,9 +141,8 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   
   DEBUG1(my_stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
-  insert_key_double(&measureT, "07____total______", epoch() - t0);
-
-
+  insert_key_double(&measureT, "07_GPU_Setup_____", xalt_timer->gpu_setup);
+  insert_key_double(&measureT, "08____total______", epoch() - t0 + xalt_timer->init + xalt_timer->fini);
 
   //*********************************************************************
   // Record QA data in json string.

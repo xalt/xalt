@@ -47,6 +47,7 @@
 #endif
 #include "xalt_obfuscate.h"
 #include "xalt_types.h"
+#include "xalt_timer.h"
 #include "insert.h"
 #include "base64.h"
 #include "xalt_quotestring.h"
@@ -74,6 +75,7 @@
 
 #ifdef USE_DCGM
 /* This code will only ever be active in 64 bit mode and not 32 bit mode */
+#  include <dlfcn.h>
 #  include <dcgm_agent.h>
 #  include <dcgm_structs.h>
 #endif
@@ -147,6 +149,9 @@ static double          prgm_sample_probability(int ntasks, double runtime);
 #ifdef USE_NVML
 static int             load_nvml();
 #endif
+#ifdef USE_DCGM
+static int             load_dcgm();
+#endif
 
 void myinit(int argc, char **argv);
 void myfini();
@@ -155,6 +160,7 @@ void wrapper_for_myfini(int signum);
 #define StR1_(x) #x
 
 #define BUFSZ       100
+static xalt_timer_t xalt_timer;
 static int          countA[2];
 static char         buffer[BUFSZ];
 static char         uuid_str[37];
@@ -189,7 +195,7 @@ static int          b64_wm_len            = 0;
 static int          signal_hdlr_called    = 0;
 #ifdef USE_NVML
 static unsigned long long __time          = 0;
-static void * nvml_handle                 = NULL;
+static void * nvml_dl_handle              = NULL;
 static nvmlReturn_t (*_nvmlDeviceGetAccountingBufferSize)(nvmlDevice_t,
                                                           unsigned int *);
 static nvmlReturn_t (*_nvmlDeviceGetAccountingMode)(nvmlDevice_t,
@@ -208,6 +214,7 @@ static nvmlReturn_t (*_nvmlInit)();
 static nvmlReturn_t (*_nvmlShutdown)();
 #endif
 #ifdef USE_DCGM
+static void *       dcgm_dl_handle        = NULL;
 static dcgmHandle_t dcgm_handle           = NULL;
 /* This code will only every be active in 64 bit mode and not 32 bit mode*/
 /* Temporarily disable any stderr messages from DCGM */
@@ -226,6 +233,22 @@ static dcgmHandle_t dcgm_handle           = NULL;
   close(fd1);                        \
   (*(out)) = __result;               \
 }
+
+static dcgmReturn_t (*_dcgmInit)(void);
+static dcgmReturn_t (*_dcgmShutdown)(void);
+static dcgmReturn_t (*_dcgmStartEmbedded)(dcgmOperationMode_t opMode, dcgmHandle_t *pDcgmHandle);
+static dcgmReturn_t (*_dcgmJobStartStats)(dcgmHandle_t pDcgmHandle, dcgmGpuGrp_t groupId, char jobId[64]);
+static dcgmReturn_t (*_dcgmJobGetStats)(dcgmHandle_t pDcgmHandle, char jobId[64], dcgmJobInfo_t *pJobInfo);
+static dcgmReturn_t (*_dcgmJobRemove)(dcgmHandle_t pDcgmHandle, char jobId[64]);
+static dcgmReturn_t (*_dcgmJobStopStats)(dcgmHandle_t pDcgmHandle, char jobId[64]);
+static dcgmReturn_t (*_dcgmStopEmbedded)(dcgmHandle_t pDcgmHandle);
+static dcgmReturn_t (*_dcgmUpdateAllFields)(dcgmHandle_t pDcgmHandle, int waitForUpdate);
+static dcgmReturn_t (*_dcgmWatchJobFields)(dcgmHandle_t pDcgmHandle,
+					   dcgmGpuGrp_t groupId,
+					   long long updateFreq,
+					   double maxKeepAge,
+					   int maxKeepSamples);
+
 #endif
 
 extern char **environ;
@@ -253,7 +276,10 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
-  double t0 = epoch();
+  double t0            = epoch();
+  xalt_timer.init      = 0.0;
+  xalt_timer.fini      = 0.0;
+  xalt_timer.gpu_setup = 0.0;
   my_rank = compute_value(rankA);
 
   p_dbg = getenv("XALT_TRACING");
@@ -508,11 +534,11 @@ void myinit(int argc, char **argv)
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
+  double t_gpu = epoch();
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
-  xalt_gpu_tracking = (strcmp(v,"yes") == 0);
-
+  xalt_gpu_tracking = (strcasecmp(v,"yes") == 0);
   do
     {
       if (xalt_gpu_tracking)
@@ -526,10 +552,8 @@ void myinit(int argc, char **argv)
 	      DEBUG1(stderr, "  GPU tracing is turned off. This directory \"%s\" does not exist!\n", nvidia_dir);
 	      break;
 	    }
-          DEBUG0(stderr, "  GPU tracing\n");
-
 #ifdef USE_NVML
-
+          DEBUG0(stderr, "  GPU tracing with NVML\n");
           /* Open the NVML library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
              that case, the handle will not be created and GPU
@@ -556,25 +580,34 @@ void myinit(int argc, char **argv)
               break;
             }
 #elif USE_DCGM
+          DEBUG0(stderr, "  GPU tracing with DCGM\n");
 
+          /* Open the DCGM library at runtime.  This avoids failing if
+             the library is not available on a particular system.  In
+             that case, the handle will not be created and GPU
+             tracking will be disabled. */
+          if (load_dcgm() == 0) {
+            xalt_gpu_tracking = 0;
+            break;
+          }
           dcgmReturn_t result;
 
-          result = dcgmInit();
+          result = _dcgmInit();
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = 0;
               break;
             }
 
-          DCGMFUNC2(dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
+          DCGMFUNC2(_dcgmStartEmbedded, DCGM_OPERATION_MODE_MANUAL, &dcgm_handle, &result);
 
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = 0;
               break;
             }
 
@@ -584,46 +617,50 @@ void myinit(int argc, char **argv)
 	      have_uuid = 1;
 	    }
 
-          result = dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
+          result = _dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = 0;
               break;
             }
 
-          result = dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
+          result = _dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr,   "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
 	      if (result == DCGM_ST_REQUIRES_ROOT)
 		DEBUG0(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = 0;
               break;
             }
 
-          result = dcgmUpdateAllFields(dcgm_handle, 1);
+          result = _dcgmUpdateAllFields(dcgm_handle, 1);
           if (result != DCGM_ST_OK)
             {
               DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
-              dcgm_handle       = NULL;
+              dcgm_handle       = 0;
               break;
             }
 #endif
         }
     }
   while(0);
+  xalt_timer.gpu_setup = epoch() - t_gpu;
 #endif
+
+  if (xalt_gpu_tracking == 0)
+    DEBUG0(stderr, "  No GPU tracking\n");
 
   start_time = t0;
   frac_time  = start_time - (long) (start_time);
 
   /**********************************************************
    * Save LD_PRELOAD and clear it before running
-   * xalt_run_submission.
+   * run_submission().
    *********************************************************/
 
   p = getenv("LD_PRELOAD");
@@ -711,11 +748,11 @@ void myinit(int argc, char **argv)
   if (v)
     always_record = strtol(v,(char **) NULL, 10);
 
+  xalt_timer.init = epoch() - t0;
   // Create a start record for any MPI executions with an acceptable number of tasks.
   // or a PKG type
   if (num_tasks >= always_record )
     {
-
       DEBUG2(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
 	     num_tasks, (int) always_record);
 
@@ -730,8 +767,8 @@ void myinit(int argc, char **argv)
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
-
-      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
+      
+      run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
 		     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
 		     stderr);
 
@@ -825,8 +862,9 @@ void myfini()
   char * cmdline;
   char * v;
   double run_time;
-  double t0 = epoch();
   int    xalt_err = xalt_tracing || xalt_run_tracing;
+
+  double t0 = epoch();
   if (xalt_err)
     {
       fflush(stderr);
@@ -864,10 +902,47 @@ void myfini()
   unsetenv("LD_PRELOAD");
   setenv("__XALT_FINAL_STATE__",    "1",1);
 
+  // Sample all scalar executions and all MPI executions less than **always_record**
+  if (num_tasks < always_record)
+    {
+      if (xalt_sampling)
+	{
+	  double run_time;
+	  if (testing_runtime > -0.1)
+	    {
+	      run_time = testing_runtime;
+	      end_time = start_time + run_time;
+	    }
+	  else
+	    run_time  = end_time - start_time;
+	  probability = prgm_sample_probability(num_tasks, run_time);
+          
+	  if (my_rand >= probability)
+	    {
+	      DEBUG4(my_stderr, "    -> exiting because sampling. "
+		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
+		     run_time, my_rand, probability, exec_path);
+	      if (xalt_err)
+		{
+		  fclose(my_stderr);
+		  close(errfd);
+		  close(STDERR_FILENO);
+		}
+	      return;
+	    }
+	  else
+	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
+		   run_time, my_rand, probability, exec_path);
+	}
+      else
+	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
+    }
+
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
   if (xalt_gpu_tracking)
     {
+      double t_gpu = epoch();
 #ifdef USE_NVML
       nvmlReturn_t result;
       unsigned int device_count = 0;
@@ -983,10 +1058,10 @@ void myfini()
             {
               DEBUG1(my_stderr, "  Error shutting down NVML: %s\n", _nvmlErrorString(result));
             }
-          dlclose(nvml_handle);
+          dlclose(nvml_dl_handle);
         }
 #elif USE_DCGM
-      if (dcgm_handle != NULL)
+      if (dcgm_handle != 0)
         {
           /* Collect DCGM job stats */
           dcgmReturn_t result;
@@ -994,11 +1069,11 @@ void myfini()
 
           DEBUG0(my_stderr, "  GPU tracing\n");
 
-          dcgmUpdateAllFields(dcgm_handle, 1);
-          dcgmJobStopStats(dcgm_handle, uuid_str);
+          _dcgmUpdateAllFields(dcgm_handle, 1);
+          _dcgmJobStopStats(dcgm_handle, uuid_str);
 
-          job_info.version = dcgmJobInfo_version2;
-          result = dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
+          job_info.version = dcgmJobInfo_version;
+          result = _dcgmJobGetStats(dcgm_handle, uuid_str, &job_info);
           if (result == DCGM_ST_OK)
             {
               int i = 0;
@@ -1012,50 +1087,15 @@ void myfini()
               DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
             }
 
-          dcgmJobRemove(dcgm_handle, uuid_str);
-          dcgmStopEmbedded(dcgm_handle);
-          dcgmShutdown();
+          _dcgmJobRemove(dcgm_handle, uuid_str);
+          _dcgmStopEmbedded(dcgm_handle);
+          _dcgmShutdown();
         }
 #endif
+      xalt_timer.gpu_setup += epoch() - t_gpu;
     }
 #endif
 
-  // Sample all scalar executions and all MPI executions less than **always_record**
-  if (num_tasks < always_record)
-    {
-      if (xalt_sampling)
-	{
-	  double run_time;
-	  if (testing_runtime > -0.1)
-	    {
-	      run_time = testing_runtime;
-	      end_time = start_time + run_time;
-	    }
-	  else
-	    run_time  = end_time - start_time;
-	  probability = prgm_sample_probability(num_tasks, run_time);
-          
-	  if (my_rand >= probability)
-	    {
-	      DEBUG4(my_stderr, "    -> exiting because sampling. "
-		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
-		     run_time, my_rand, probability, exec_path);
-	      if (xalt_err)
-		{
-		  fclose(my_stderr);
-		  close(errfd);
-		  close(STDERR_FILENO);
-		}
-	      return;
-	    }
-	  else
-	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
-		   run_time, my_rand, probability, exec_path);
-	}
-      else
-	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
-    }
-  
   if (! have_uuid)
     {
       build_uuid(&uuid_str[0]);
@@ -1067,7 +1107,8 @@ void myfini()
 	    xalt_run_short_descriptA[run_mask]);
   
   fflush(my_stderr);
-  run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
+  xalt_timer.fini = epoch() - t0;
+  run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
                  usr_cmdline, xalt_tracing, my_stderr);
   DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
@@ -1089,11 +1130,11 @@ static int load_nvml()
 {
   /* Open the NVML library.  Let the dynamic loader find it (do not
      specify a path). */
-  nvml_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
-  if (! nvml_handle)
+  nvml_dl_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
+  if ( ! nvml_dl_handle)
     {
-      nvml_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
-      if (! nvml_handle)
+      nvml_dl_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
+      if ( ! nvml_dl_handle)
 	{
 	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
 		 dlerror());
@@ -1103,23 +1144,62 @@ static int load_nvml()
 
   /* Load symbols */
   *(void**)(&_nvmlDeviceGetAccountingBufferSize) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingBufferSize");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingBufferSize");
   *(void**)(&_nvmlDeviceGetAccountingMode) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingMode");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingMode");
   *(void**)(&_nvmlDeviceGetAccountingPids) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingPids");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingPids");
   *(void**)(&_nvmlDeviceGetAccountingStats) =
-    dlsym(nvml_handle, "nvmlDeviceGetAccountingStats");
-  *(void**)(&_nvmlDeviceGetCount) = dlsym(nvml_handle, "nvmlDeviceGetCount");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetAccountingStats");
+  *(void**)(&_nvmlDeviceGetCount) = dlsym(nvml_dl_handle, "nvmlDeviceGetCount");
   *(void**)(&_nvmlDeviceGetHandleByIndex) =
-    dlsym(nvml_handle, "nvmlDeviceGetHandleByIndex");
-  *(void**)(&_nvmlErrorString) = dlsym(nvml_handle, "nvmlErrorString");
-  *(void**)(&_nvmlInit) = dlsym(nvml_handle, "nvmlInit");
-  *(void**)(&_nvmlShutdown) = dlsym(nvml_handle, "nvmlShutdown");
+    dlsym(nvml_dl_handle, "nvmlDeviceGetHandleByIndex");
+  *(void**)(&_nvmlErrorString) = dlsym(nvml_dl_handle, "nvmlErrorString");
+  *(void**)(&_nvmlInit) = dlsym(nvml_dl_handle, "nvmlInit");
+  *(void**)(&_nvmlShutdown) = dlsym(nvml_dl_handle, "nvmlShutdown");
 
   return 1;
 }
 #endif
+
+#ifdef USE_DCGM
+static int load_dcgm()
+{
+  char* fn       = xalt_dir("lib64/libdcgm.so");
+  dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
+  if (fn)
+    my_free(fn, strlen(fn));
+  if ( ! dcgm_dl_handle)
+    {
+      fn             = xalt_dir("lib64/libdcgm.so.1");
+      if (fn)
+	my_free(fn, strlen(fn));
+      dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
+      if ( ! dcgm_dl_handle)
+	{
+	  DEBUG1(stderr, "    -> Unable to open libdcgm.so or libdcgm.so.1: %s\n\n",
+		 dlerror());
+	  return 0;
+	}
+    }
+
+  /* Load symbols */
+  *(void**)(&_dcgmInit)		   = dlsym(dcgm_dl_handle, "dcgmInit");
+  *(void**)(&_dcgmShutdown)	   = dlsym(dcgm_dl_handle, "dcgmShutdown");
+  *(void**)(&_dcgmStartEmbedded)   = dlsym(dcgm_dl_handle, "dcgmStartEmbedded");
+  *(void**)(&_dcgmStopEmbedded)    = dlsym(dcgm_dl_handle, "dcgmStopEmbedded");
+  *(void**)(&_dcgmJobStartStats)   = dlsym(dcgm_dl_handle, "dcgmJobStartStats");
+  *(void**)(&_dcgmJobGetStats)     = dlsym(dcgm_dl_handle, "dcgmJobGetStats");
+  *(void**)(&_dcgmJobRemove)       = dlsym(dcgm_dl_handle, "dcgmJobRemove");
+  *(void**)(&_dcgmJobStopStats)    = dlsym(dcgm_dl_handle, "dcgmJobStopStats");
+  *(void**)(&_dcgmUpdateAllFields) = dlsym(dcgm_dl_handle, "dcgmUpdateAllFields");
+  *(void**)(&_dcgmWatchJobFields)  = dlsym(dcgm_dl_handle, "dcgmWatchJobFields");
+
+  return 1;
+}
+#endif
+
+
 
 static long compute_value(const char **envA)
 {

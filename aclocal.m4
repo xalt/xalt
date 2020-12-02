@@ -88,6 +88,7 @@ echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
+echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
@@ -104,6 +105,7 @@ echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo "CURL_STR............................................." : $CURL_STR
 echo "CRYPTO_STR..........................................." : $CRYPTO_STR
+echo "GPU_STR.............................................." : $GPU_STR
 echo "UUID_STR............................................." : $UUID_STR
 echo
 echo '------------------------------------------------------------------------------'

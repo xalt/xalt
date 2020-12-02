@@ -145,12 +145,28 @@ int main(int argc, char* argv[])
   if (xalt_mpi_tracking == NULL)
     xalt_mpi_tracking = XALT_MPI_TRACKING;
 
+  std::string gpu_style_str;
   const char* xalt_gpu_tracking = getenv("XALT_GPU_TRACKING");
   if (xalt_gpu_tracking == NULL)
     xalt_gpu_tracking = XALT_GPU_TRACKING;
-  if (strcasecmp(HAVE_DCGM,"no") == 0 && strcasecmp(HAVE_NVML,"no") == 0)
-    xalt_gpu_tracking = "no";
-          
+  if ( strcasecmp(xalt_gpu_tracking,"no") == 0)
+    gpu_style_str.assign("no");
+  else
+    gpu_style_str.assign("yes");
+  bool have_gpu_monitoring = false;
+  if (strcasecmp(HAVE_DCGM,"yes") == 0)
+    {
+      gpu_style_str.append("(dcgm)");
+      have_gpu_monitoring = true;
+    }
+  if (strcasecmp(HAVE_NVML,"yes") == 0)
+    {
+      gpu_style_str.append("(nvml)");
+      have_gpu_monitoring = true;
+    }
+  if ( ! have_gpu_monitoring && strcasecmp(xalt_gpu_tracking,"yes") == 0)
+    gpu_style_str.append("(none)");
+
   const char* xalt_func_tracking = getenv("XALT_FUNCTION_TRACKING");
   if (xalt_func_tracking == NULL)
     xalt_func_tracking = XALT_FUNCTION_TRACKING;
@@ -216,7 +232,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "XALT_SYSTEM_PATH",         XALT_SYSTEM_PATH);
       json_add_char_str(&json, my_sep,   "XALT_SYSHOST_CONFIG",      SYSHOST_CONFIG);
       json_add_char_str(&json, my_sep,   "XALT_MPI_TRACKING",        xalt_mpi_tracking);
-      json_add_char_str(&json, my_sep,   "XALT_GPU_TRACKING",        xalt_gpu_tracking);
+      json_add_char_str(&json, my_sep,   "XALT_GPU_TRACKING",        gpu_style_str.c_str());
       json_add_char_str(&json, my_sep,   "XALT_SCALAR_TRACKING",     xalt_scalar_tracking);
       json_add_char_str(&json, my_sep,   "XALT_SAMPLING",            xalt_sampling);
       json_add_int(     &json, my_sep,   "MPI_ALWAYS_RECORD",        (int) always_record);
@@ -230,6 +246,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "HAVE_DCGM",                HAVE_DCGM);
       json_add_char_str(&json, my_sep,   "CRYPTO_STR",               CRYPTO_STR);
       json_add_char_str(&json, my_sep,   "UUID_STR",                 UUID_STR);
+      json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
 
       json_add_array(&json, my_sep,   "hostnameA",    hostnameSz,      hostnameA);
@@ -268,7 +285,7 @@ int main(int argc, char* argv[])
   std::cout << "SITE_CONTROLLED_PREFIX:          " << SITE_CONTROLLED_PREFIX         << "\n";
   std::cout << "XALT_CONFIG_PY:                  " << XALT_CONFIG_PY                 << "\n";
   std::cout << "XALT_MPI_TRACKING:               " << xalt_mpi_tracking              << "\n";
-  std::cout << "XALT_GPU_TRACKING:               " << xalt_gpu_tracking              << "\n";
+  std::cout << "XALT_GPU_TRACKING:               " << gpu_style_str                  << "\n";
   std::cout << "XALT_SCALAR_TRACKING:            " << xalt_scalar_tracking           << "\n";
   std::cout << "XALT_SAMPLING:                   " << xalt_sampling                  << "\n";
   std::cout << "MPI_ALWAYS_RECORD:               " << always_record                  << "\n";
@@ -286,6 +303,7 @@ int main(int argc, char* argv[])
   std::cout << "CRYPTO_STR:                      " << CRYPTO_STR                     << "\n";
   std::cout << "UUID_STR:                        " << UUID_STR                       << "\n";
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
+  std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 

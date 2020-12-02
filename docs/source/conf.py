@@ -341,8 +341,11 @@ texinfo_documents = [
 
 
 
+<<<<<<< HEAD
+=======
 
 
 
 
 
+>>>>>>> 0376f24299133f7da91ba92a1dad305a5c154416

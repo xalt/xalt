@@ -77,17 +77,29 @@ AC_ARG_WITH(xaltFilePrefix,
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval",[Prefix where the json files are written]))dnl
 
-AC_SUBST(XALT_GPU_TRACKING)
+AC_SUBST(XALT_GPU_TRACKING_STYLE)
 AC_ARG_WITH(trackGPU,
     AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables {yes(nvml),no,dcgm,nvml}, [[no]]]),
-    XALT_GPU_TRACKING="$withval"
-    AC_MSG_RESULT([XALT_GPU_TRACKING=$with_trackGPU])
-    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$with_trackGPU",[Track GPU executables])dnl
+    XALT_GPU_TRACKING_STYLE="$withval"
+    XALT_GPU_TRACKING_STYLE=`echo $XALT_GPU_TRACKING_STYLE | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    if test $XALT_GPU_TRACKING_STYLE = yes; then
+       XALT_GPU_TRACKING_STYLE=nvml
+    fi
+    AC_MSG_RESULT([XALT_GPU_TRACKING_STYLE=$XALT_GPU_TRACKING_STYLE])
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING_STYLE, "$with_trackGPU",[Track GPU executables])dnl
     ,
     withval="no"
-    AC_MSG_RESULT([XALT_GPU_TRACKING=$withval])
-    XALT_GPU_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$withval",[Track GPU executables]))dnl
+    AC_MSG_RESULT([XALT_GPU_TRACKING_STYLE=$withval])
+    XALT_GPU_TRACKING_STYLE="$withval"
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING_STYLE, "$withval",[Track GPU executables]))dnl
+
+AC_SUBST(XALT_GPU_TRACKING)
+if test $XALT_GPU_TRACKING_STYLE = nvml -o $XALT_GPU_TRACKING_STYLE = dcgm ; then
+   XALT_GPU_TRACKING=yes
+else
+   XALT_GPU_TRACKING=no
+fi	
+
 
 AC_SUBST(XALT_MPI_TRACKING)
 AC_ARG_WITH(trackMPI,
@@ -457,12 +469,18 @@ if test -z "$PATH_TO_FLEX" ; then
    exit 1
 fi
 
+MY_TMPDIR=`mktemp -d`
+LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+
+AC_SUBST(GPU_STR)
+GPU_STR=
 AC_SUBST(HAVE_NVML)
 HAVE_NVML=no
 AC_SUBST(HAVE_DCGM)
 HAVE_DCGM=no
-if test $XALT_GPU_TRACKING = "dcgm" ; then
+if test $XALT_GPU_TRACKING_STYLE = "dcgm" ; then
   AC_CHECK_HEADER(dcgm_agent.h,
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
@@ -472,7 +490,13 @@ if test $XALT_GPU_TRACKING = "dcgm" ; then
   else
     AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   fi
-elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libdcgm.so$i`
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
+elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
   AC_CHECK_HEADER(nvml.h,
                   [AC_DEFINE([HAVE_NVML_H], 1,
                      [Define to 1 if you have NVML.])],
@@ -486,6 +510,13 @@ elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
                   AC_DEFINE([USE_NVML], [1],[Using NVML library])
                   HAVE_NVML=yes],
                  [AC_MSG_ERROR([Unable to find dlopen])])
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libnvml.so$i`
+    echo "i=libdcgm.so$i GPU_STR:  $GPU_STR"
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
 fi
 
 AC_SUBST(PKGV)
@@ -626,10 +657,6 @@ AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XA
 
 MY_TMPDIR=`mktemp -d`
 
-LOCATE_SO=$MY_TMPDIR/locate_shared_library
-
-gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
-
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
@@ -648,7 +675,6 @@ for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     break;
   fi
 done
-
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then

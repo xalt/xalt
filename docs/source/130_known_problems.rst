@@ -58,11 +58,12 @@ following::
 
        clearenv();
        for (i = 0; oldenv[i]; i++) {
-        if (!(eq = strchr(oldenv[i], '=')))
-          continue;
+         if (!(eq = strchr(oldenv[i], '=')))
+           continue;
 
-        *eq = '\0';
-        setenv(oldenv[i], eq + 1, 1))
+         *eq = '\0';
+         setenv(oldenv[i], eq + 1, 1);
+       }
     }
 
     int main(int argc, char *argv[])
