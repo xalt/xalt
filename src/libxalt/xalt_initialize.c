@@ -47,6 +47,7 @@
 #endif
 #include "xalt_obfuscate.h"
 #include "xalt_types.h"
+#include "xalt_timer.h"
 #include "insert.h"
 #include "base64.h"
 #include "xalt_quotestring.h"
@@ -159,6 +160,7 @@ void wrapper_for_myfini(int signum);
 #define StR1_(x) #x
 
 #define BUFSZ       100
+static xalt_timer_t xalt_timer;
 static int          countA[2];
 static char         buffer[BUFSZ];
 static char         uuid_str[37];
@@ -274,7 +276,8 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
-  double t0 = epoch();
+  xalt_timer.t0        = epoch();
+  xalt_timer.gpu_setup = 0.0;
   my_rank = compute_value(rankA);
 
   p_dbg = getenv("XALT_TRACING");
@@ -299,7 +302,7 @@ void myinit(int argc, char **argv)
 
   if (xalt_tracing)
     {
-      time_t    now    = (time_t) t0;
+      time_t    now    = (time_t) xalt_timer.t0;
       strftime(dateStr, DATESZ, "%c", localtime(&now));
       errno = 0;
       if (uname(&u) != 0)
@@ -529,6 +532,7 @@ void myinit(int argc, char **argv)
 
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
+  double t_gpu = epoch();
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
@@ -643,17 +647,18 @@ void myinit(int argc, char **argv)
         }
     }
   while(0);
+  xalt_timer.gpu_setup = epoch() - t_gpu;
 #endif
 
   if (xalt_gpu_tracking == 0)
     DEBUG0(stderr, "  No GPU tracking\n");
 
-  start_time = t0;
+  start_time = xalt_timer.t0;
   frac_time  = start_time - (long) (start_time);
 
   /**********************************************************
    * Save LD_PRELOAD and clear it before running
-   * xalt_run_submission.
+   * run_submission().
    *********************************************************/
 
   p = getenv("LD_PRELOAD");
@@ -761,7 +766,7 @@ void myinit(int argc, char **argv)
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
 
-      run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
+      run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
 		     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
 		     stderr);
 
@@ -855,8 +860,9 @@ void myfini()
   char * cmdline;
   char * v;
   double run_time;
-  double t0 = epoch();
   int    xalt_err = xalt_tracing || xalt_run_tracing;
+
+  xalt_timer.t0 = epoch();
   if (xalt_err)
     {
       fflush(stderr);
@@ -894,10 +900,47 @@ void myfini()
   unsetenv("LD_PRELOAD");
   setenv("__XALT_FINAL_STATE__",    "1",1);
 
+  // Sample all scalar executions and all MPI executions less than **always_record**
+  if (num_tasks < always_record)
+    {
+      if (xalt_sampling)
+	{
+	  double run_time;
+	  if (testing_runtime > -0.1)
+	    {
+	      run_time = testing_runtime;
+	      end_time = start_time + run_time;
+	    }
+	  else
+	    run_time  = end_time - start_time;
+	  probability = prgm_sample_probability(num_tasks, run_time);
+          
+	  if (my_rand >= probability)
+	    {
+	      DEBUG4(my_stderr, "    -> exiting because sampling. "
+		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
+		     run_time, my_rand, probability, exec_path);
+	      if (xalt_err)
+		{
+		  fclose(my_stderr);
+		  close(errfd);
+		  close(STDERR_FILENO);
+		}
+	      return;
+	    }
+	  else
+	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
+		   run_time, my_rand, probability, exec_path);
+	}
+      else
+	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
+    }
+
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
   if (xalt_gpu_tracking)
     {
+      double t_gpu = epoch();
 #ifdef USE_NVML
       nvmlReturn_t result;
       unsigned int device_count = 0;
@@ -1047,45 +1090,10 @@ void myfini()
           _dcgmShutdown();
         }
 #endif
+      xalt_timer.gpu_setup += epoch() - t_gpu;
     }
 #endif
 
-  // Sample all scalar executions and all MPI executions less than **always_record**
-  if (num_tasks < always_record)
-    {
-      if (xalt_sampling)
-	{
-	  double run_time;
-	  if (testing_runtime > -0.1)
-	    {
-	      run_time = testing_runtime;
-	      end_time = start_time + run_time;
-	    }
-	  else
-	    run_time  = end_time - start_time;
-	  probability = prgm_sample_probability(num_tasks, run_time);
-          
-	  if (my_rand >= probability)
-	    {
-	      DEBUG4(my_stderr, "    -> exiting because sampling. "
-		     "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
-		     run_time, my_rand, probability, exec_path);
-	      if (xalt_err)
-		{
-		  fclose(my_stderr);
-		  close(errfd);
-		  close(STDERR_FILENO);
-		}
-	      return;
-	    }
-	  else
-	    DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
-		   run_time, my_rand, probability, exec_path);
-	}
-      else
-	DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
-    }
-  
   if (! have_uuid)
     {
       build_uuid(&uuid_str[0]);
@@ -1097,7 +1105,7 @@ void myfini()
 	    xalt_run_short_descriptA[run_mask]);
   
   fflush(my_stderr);
-  run_submission(t0, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
+  run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
                  usr_cmdline, xalt_tracing, my_stderr);
   DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
