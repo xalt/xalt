@@ -748,6 +748,7 @@ void myinit(int argc, char **argv)
   if (v)
     always_record = strtol(v,(char **) NULL, 10);
 
+  xalt_timer.init = epoch() - t0;
   // Create a start record for any MPI executions with an acceptable number of tasks.
   // or a PKG type
   if (num_tasks >= always_record )
@@ -767,9 +768,7 @@ void myinit(int argc, char **argv)
           fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
-
       
-      xalt_timer.init = epoch() - t0;
       run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
 		     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
 		     stderr);
