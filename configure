@@ -4835,7 +4835,7 @@ GPU_STR=
 HAVE_NVML=no
 
 HAVE_DCGM=no
-if test $XALT_GPU_TRACKING = "dcgm" ; then
+if test $XALT_GPU_TRACKING_STYLE = "dcgm" ; then
   ac_fn_c_check_header_mongrel "$LINENO" "dcgm_agent.h" "ac_cv_header_dcgm_agent_h" "$ac_includes_default"
 if test "x$ac_cv_header_dcgm_agent_h" = xyes; then :
 
@@ -4975,7 +4975,7 @@ fi
       break;
     fi
   done
-elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
+elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
   ac_fn_c_check_header_mongrel "$LINENO" "nvml.h" "ac_cv_header_nvml_h" "$ac_includes_default"
 if test "x$ac_cv_header_nvml_h" = xyes; then :
 
