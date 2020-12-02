@@ -532,8 +532,7 @@ void myinit(int argc, char **argv)
   v  = getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
-  xalt_gpu_tracking = (strcmp(v,"no") != 0);
-
+  xalt_gpu_tracking = (strcasecmp(v,"yes") == 0);
   do
     {
       if (xalt_gpu_tracking)
@@ -1167,7 +1166,7 @@ static int load_dcgm()
       dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
       if ( ! dcgm_dl_handle)
 	{
-	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
+	  DEBUG1(stderr, "    -> Unable to open libdcgm.so or libdcgm.so.1: %s\n\n",
 		 dlerror());
 	  return 0;
 	}

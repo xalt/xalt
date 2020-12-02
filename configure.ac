@@ -77,17 +77,29 @@ AC_ARG_WITH(xaltFilePrefix,
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval",[Prefix where the json files are written]))dnl
 
-AC_SUBST(XALT_GPU_TRACKING)
+AC_SUBST(XALT_GPU_TRACKING_STYLE)
 AC_ARG_WITH(trackGPU,
     AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables {yes(nvml),no,dcgm,nvml}, [[no]]]),
-    XALT_GPU_TRACKING="$withval"
-    AC_MSG_RESULT([XALT_GPU_TRACKING=$with_trackGPU])
-    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$with_trackGPU",[Track GPU executables])dnl
+    XALT_GPU_TRACKING_STYLE="$withval"
+    XALT_GPU_TRACKING_STYLE=`echo $XALT_GPU_TRACKING_STYLE | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    if test $XALT_GPU_TRACKING_STYLE = yes; then
+       XALT_GPU_TRACKING_STYLE=nvml
+    fi
+    AC_MSG_RESULT([XALT_GPU_TRACKING_STYLE=$XALT_GPU_TRACKING_STYLE])
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING_STYLE, "$with_trackGPU",[Track GPU executables])dnl
     ,
     withval="no"
-    AC_MSG_RESULT([XALT_GPU_TRACKING=$withval])
-    XALT_GPU_TRACKING="$withval"
-    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING, "$withval",[Track GPU executables]))dnl
+    AC_MSG_RESULT([XALT_GPU_TRACKING_STYLE=$withval])
+    XALT_GPU_TRACKING_STYLE="$withval"
+    AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING_STYLE, "$withval",[Track GPU executables]))dnl
+
+AC_SUBST(XALT_GPU_TRACKING)
+if test XALT_GPU_TRACKING_STYLE = nvml -o XALT_GPU_TRACKING_STYLE = dcgm ; then
+   XALT_GPU_TRACKING=yes
+else
+   XALT_GPU_TRACKING=no
+fi	
+
 
 AC_SUBST(XALT_MPI_TRACKING)
 AC_ARG_WITH(trackMPI,

@@ -672,6 +672,7 @@ XALT_CMDLINE_RECORD
 XALT_SCALAR_TRACKING
 XALT_MPI_TRACKING
 XALT_GPU_TRACKING
+XALT_GPU_TRACKING_STYLE
 XALT_FILE_PREFIX
 XALT_FUNCTION_TRACKING
 XALT_LOGGING_URL
@@ -3142,25 +3143,37 @@ fi
 
 # Check whether --with-trackGPU was given.
 if test "${with_trackGPU+set}" = set; then :
-  withval=$with_trackGPU; XALT_GPU_TRACKING="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING=$with_trackGPU" >&5
-$as_echo "XALT_GPU_TRACKING=$with_trackGPU" >&6; }
+  withval=$with_trackGPU; XALT_GPU_TRACKING_STYLE="$withval"
+    XALT_GPU_TRACKING_STYLE=`echo $XALT_GPU_TRACKING_STYLE | tr '[:upper:]' '[:lower:]'`
+    if test $XALT_GPU_TRACKING_STYLE = yes; then
+       XALT_GPU_TRACKING_STYLE=nvml
+    fi
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING_STYLE=$XALT_GPU_TRACKING_STYLE" >&5
+$as_echo "XALT_GPU_TRACKING_STYLE=$XALT_GPU_TRACKING_STYLE" >&6; }
 
 cat >>confdefs.h <<_ACEOF
-#define XALT_GPU_TRACKING "$with_trackGPU"
+#define XALT_GPU_TRACKING_STYLE "$with_trackGPU"
 _ACEOF
 
 else
   withval="no"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING=$withval" >&5
-$as_echo "XALT_GPU_TRACKING=$withval" >&6; }
-    XALT_GPU_TRACKING="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_GPU_TRACKING_STYLE=$withval" >&5
+$as_echo "XALT_GPU_TRACKING_STYLE=$withval" >&6; }
+    XALT_GPU_TRACKING_STYLE="$withval"
 
 cat >>confdefs.h <<_ACEOF
-#define XALT_GPU_TRACKING "$withval"
+#define XALT_GPU_TRACKING_STYLE "$withval"
 _ACEOF
 
 fi
+
+
+if test XALT_GPU_TRACKING_STYLE = nvml -o XALT_GPU_TRACKING_STYLE = dcgm ; then
+   XALT_GPU_TRACKING=yes
+else
+   XALT_GPU_TRACKING=no
+fi
+
 
 
 
@@ -6728,6 +6741,7 @@ echo "XALT SYSLOG Message Size............................." : $SYSLOG_MSG_SZ
 echo "XALT SYSHOST CONFIG Style............................" : $SYSHOST_CONFIG
 echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRACKING
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
+echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
