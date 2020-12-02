@@ -512,9 +512,7 @@ elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
                  [AC_MSG_ERROR([Unable to find dlopen])])
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     GPU_STR=`$LOCATE_SO libnvidia-ml.so$i`
-    status=$? 
-    echo "i=libnvidia-ml.so$i GPU_STR:  $GPU_STR"
-    if test "$status" -eq 0; then
+    if test "$?" -eq 0; then
       break;
     fi
   done
