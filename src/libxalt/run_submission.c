@@ -143,6 +143,9 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
 
   insert_key_double(&measureT, "07_GPU_Setup_____", xalt_timer->gpu_setup);
   insert_key_double(&measureT, "08____total______", epoch() - t0 + xalt_timer->init + xalt_timer->fini);
+  insert_key_double(&measureT, "09__epoch()-t0___", epoch() - t0);
+  insert_key_double(&measureT, "10__init_________", xalt_timer->init);
+  insert_key_double(&measureT, "11__fini_________", xalt_timer->fini);
 
   //*********************************************************************
   // Record QA data in json string.
