@@ -753,7 +753,6 @@ void myinit(int argc, char **argv)
   // or a PKG type
   if (num_tasks >= always_record )
     {
-
       DEBUG2(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
 	     num_tasks, (int) always_record);
 
