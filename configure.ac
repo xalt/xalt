@@ -94,7 +94,7 @@ AC_ARG_WITH(trackGPU,
     AC_DEFINE_UNQUOTED(XALT_GPU_TRACKING_STYLE, "$withval",[Track GPU executables]))dnl
 
 AC_SUBST(XALT_GPU_TRACKING)
-if test XALT_GPU_TRACKING_STYLE = nvml -o XALT_GPU_TRACKING_STYLE = dcgm ; then
+if test $XALT_GPU_TRACKING_STYLE = nvml -o $XALT_GPU_TRACKING_STYLE = dcgm ; then
    XALT_GPU_TRACKING=yes
 else
    XALT_GPU_TRACKING=no
