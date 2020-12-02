@@ -64,32 +64,26 @@ class CmdLineOptions(object):
     parser.add_argument("--functions", dest='nfuncs',   action="store", default="0",          help="number of functions required to pass")
     parser.add_argument("--objects",   dest='objects',  action="store", default="10",         help="number of objects required to pass")
     parser.add_argument("--env_vars",  dest='numEnv',   action="store", default="4",          help="number of env. vars required to pass")
+    parser.add_argument("--uuid",      dest='uuid',     action="store", default="4",          help="number of build uuids required to pass")
     parser.add_argument("--pkgs",      dest='pkgs',     action="store", default="0",          help="number of packages required to pass")
     
     args = parser.parse_args()
     return args
 
-def count_rows(conn, tableName):
+def count_w_condition(conn, tableName, condition):
   count = 0
-  query  = "SELECT COUNT(*) FROM "+tableName
+  extra = ""
+  if (condition):
+    extra = " where " + condition
+
+  query  = "SELECT COUNT(*) FROM "+ tableName + extra
   conn.query(query)
   result = conn.store_result()
   if (result.num_rows() > 0):
     row   = result.fetch_row()
     count = int(row[0][0])
   return count
-
-
-def count_end_records(conn):
-  count = 0
-  query  = "SELECT COUNT(*) FROM xalt_run where end_time > 0.0";
-  conn.query(query)
-  result = conn.store_result()
-  if (result.num_rows() > 0):
-    row   = result.fetch_row()
-    count = int(row[0][0])
-  return count
-
+  
 def eq(a,b):
   return a == b, "=="
 
@@ -118,13 +112,17 @@ def main():
              'xalt_function', 'join_link_function','xalt_pkg']
   tableT = {}
   for tableName in tableA:
-    count = count_rows(conn, tableName)
+    count = count_w_condition(conn, tableName, None)
     tableT[tableName] = count
     print(tableName,":", count)
 
 
-  tableT['xalt_run'] = count_end_records(conn)
+  tableT['xalt_run'] = count_w_condition(conn,"xalt_run", "end_time > 0.0")
   print("xalt_run :",tableT['xalt_run'])
+
+  tableT['build_uuid'] = count_w_condition(conn,"xalt_run", "uuid is not null")
+  print("build_uuid :",tableT['build_uuid'])
+
 
   conn.close()
 
@@ -136,6 +134,7 @@ def main():
     'xalt_function' : [ int(args.nfuncs),  ge ],
     'xalt_object'   : [ int(args.objects), ge ],
     'xalt_env_name' : [ int(args.numEnv),  ge ],
+    'build_uuid'    : [ int(args.uuid),    ge ],
   }
     
   sA = []
@@ -146,7 +145,7 @@ def main():
     tstFn = testT[key][1]
     my_result, kind = tstFn(value, goldV)
     if (not my_result):
-      sA.append("Not correct: "+key+" -> "+str(value)+" "+kind+" "+str(goldV))
+      sA.append("Not correct: "+key+": "+str(value)+" -> ( Should be: "+key+" "+kind+" "+str(goldV) + " )")
 
   if (sA):
     result = "diff"

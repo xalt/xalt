@@ -157,6 +157,12 @@ int main(int argc, char* argv[])
   else if (strcmp(xalt_func_tracking,"no") != 0)
     xalt_func_tracking = "yes";
     
+  const char* xalt_signal_handler = getenv("XALT_SIGNAL_HANDLER");
+  if (xalt_signal_handler == NULL)
+    xalt_signal_handler = XALT_SIGNAL_HANDLER;
+  else if (strcasecmp(xalt_signal_handler,"yes") != 0)
+    xalt_signal_handler = "no";
+    
   const char* xalt_scalar_tracking = getenv("XALT_SCALAR_TRACKING");
   if (xalt_scalar_tracking == NULL)
     xalt_scalar_tracking = XALT_SCALAR_TRACKING;
@@ -206,6 +212,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "SITE_CONTROLLED_PREFIX",   SITE_CONTROLLED_PREFIX);
       json_add_char_str(&json, my_sep,   "XALT_CONFIG_PY",           XALT_CONFIG_PY);
       json_add_char_str(&json, my_sep,   "XALT_CMDLINE_RECORD",      cmdline_record);
+      json_add_char_str(&json, my_sep,   "XALT_SIGNAL_HANDLER",      xalt_signal_handler);
       json_add_char_str(&json, my_sep,   "XALT_SYSTEM_PATH",         XALT_SYSTEM_PATH);
       json_add_char_str(&json, my_sep,   "XALT_SYSHOST_CONFIG",      SYSHOST_CONFIG);
       json_add_char_str(&json, my_sep,   "XALT_MPI_TRACKING",        xalt_mpi_tracking);
@@ -223,60 +230,13 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "HAVE_DCGM",                HAVE_DCGM);
       json_add_char_str(&json, my_sep,   "CRYPTO_STR",               CRYPTO_STR);
       json_add_char_str(&json, my_sep,   "UUID_STR",                 UUID_STR);
+      json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
 
       json_add_array(&json, my_sep,   "hostnameA",    hostnameSz,      hostnameA);
       json_add_array(&json, my_sep,   "pathPatternA", pathPatternSz,   pathPatternA);
       json_add_array(&json, my_sep,   "envPatternA",  envPatternSz,    envPatternA);
       json_fini(&json, &jsonStr);
-
-////////////////////////////////////////////////////////////////////////
-//     Json json;
-//     json.add("DATE",                          dateStr);
-//     json.add("XALT_EXECUTABLE_TRACKING",      executable_tracking);
-//     json.add("XALT_PRELOAD_ONLY",             xalt_preload_only);
-//     json.add("XALT_SYSHOST",                  syshost);
-//     json.add("XALT_VERSION",                  XALT_VERSION);
-//     json.add("XALT_INTERFACE_VERSION",        XALT_INTERFACE_VERSION);
-//     json.add("XALT_GIT_VERSION",              XALT_GIT_VERSION);
-//     json.add("XALT_VERSION_STR",              XALT_VERSION_STR);
-//     json.add("XALT_FILE_PREFIX",              XALT_FILE_PREFIX);
-//     json.add("XALT_TRANSMISSION_STYLE",       transmission);
-//     json.add("XALT_FUNCTION_TRACKING",        xalt_func_tracking);
-//     if (strcmp(transmission,"syslog") == 0)
-//       json.add("XALT_LOGGING_TAG",            syslog_tag);
-//     if (strcmp(transmission,"curl") == 0)
-//       json.add("XALT_LOGGING_URL",            log_url);
-//     json.add("XALT_PRIME_NUMBER",             XALT_PRIME_NUMBER);
-//     json.add("XALT_COMPUTE_SHA1",             computeSHA1);
-//     json.add("XALT_ETC_DIR",                  xalt_etc_dir);
-//     json.add("XALT_DIR",                      xalt_dir(NULL));
-//     json.add("SITE_CONTROLLED_PREFIX",        SITE_CONTROLLED_PREFIX);
-//     json.add("XALT_CONFIG_PY",                XALT_CONFIG_PY);
-//     json.add("XALT_CMDLINE_RECORD",           cmdline_record);
-//     json.add("XALT_SYSTEM_PATH",              XALT_SYSTEM_PATH);
-//     json.add("XALT_SYSHOST_CONFIG",           SYSHOST_CONFIG);
-//     json.add("XALT_MPI_TRACKING",             xalt_mpi_tracking);
-//     json.add("XALT_GPU_TRACKING",             xalt_gpu_tracking);
-//     json.add("XALT_SCALAR_TRACKING",          xalt_scalar_tracking);
-//     json.add("XALT_SAMPLING",                 xalt_sampling);
-//     json.add("MPI_ALWAYS_RECORD",             (int) always_record);
-//     json.add("XALT_SYSLOG_MSG_SZ",            SYSLOG_MSG_SZ);
-//     json.add("XALT_INSTALL_OS",               XALT_INSTALL_OS);
-//     json.add("XALT_CURRENT_OS",               current_os_descript);
-//     json.add("CXX_LD_LIBRARY_PATH",           cxx_ld_library_path);
-//     json.add("XALT_LD_LIBRARY_PATH",          XALT_LD_LIBRARY_PATH);
-//     json.add("HAVE_32BIT",                    HAVE_32BIT);
-//     json.add("MY_HOSTNAME_PARSER",            MY_HOSTNAME_PARSER);
-//     json.add("HAVE_DCGM",                     HAVE_DCGM);
-//     json.add("CRYPTO_STR",                    CRYPTO_STR);
-//     json.add("UUID_STR",                      UUID_STR);
-//     json.add("CURL_STR",                      CURL_STR);
-//
-//     json.add("hostnameA",    hostnameSz,      hostnameA);
-//     json.add("pathPatternA", pathPatternSz,   pathPatternA);
-//     json.add("envPatternA",  envPatternSz,    envPatternA);
-//     json.fini();
 
       std::cout << jsonStr << std::endl;
       free(jsonStr);
@@ -313,6 +273,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SCALAR_TRACKING:            " << xalt_scalar_tracking           << "\n";
   std::cout << "XALT_SAMPLING:                   " << xalt_sampling                  << "\n";
   std::cout << "MPI_ALWAYS_RECORD:               " << always_record                  << "\n";
+  std::cout << "XALT_SIGNAL_HANDLER:             " << xalt_signal_handler            << "\n";
   std::cout << "XALT_SYSTEM_PATH:                " << XALT_SYSTEM_PATH               << "\n";
   std::cout << "XALT_SYSHOST_CONFIG:             " << SYSHOST_CONFIG                 << "\n";
   std::cout << "XALT_SYSLOG_MSG_SZ:              " << SYSLOG_MSG_SZ                  << "\n";
@@ -326,6 +287,7 @@ int main(int argc, char* argv[])
   std::cout << "CRYPTO_STR:                      " << CRYPTO_STR                     << "\n";
   std::cout << "UUID_STR:                        " << UUID_STR                       << "\n";
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
+  std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
   std::cout << "*------------------------------------------------------------------------------*\n\n";
 

@@ -157,13 +157,14 @@ test_descript = {
      displayThis "test_record_pkg --seq 15"
      $(outputDir)/XALT/$VERSION/libexec/test_record_pkg --seq 15
 
+     export XALT_SIGNAL_HANDLER=yes
      displayThis "build and run segv program (seq 16)"
-     mpicc -o segv.16 $(testDir)/segv.c
-     mpirun -n 2 ./segv.16 --seq 16
+     gcc -o segv.16 $(testDir)/segv.c
+     ./segv.16 --seq 16
 
      displayThis "build and run fpe program (seq 17)"
-     gcc -o fpe.17 $(testDir)/fpe.c
-     ./fpe.17 --seq 17
+     mpicc -o fpe.17 $(testDir)/fpe.c
+     XALT_TRACING=run mpirun -n 2 ./fpe.17 --seq 17
 
      displayThis "build and run bus program (seq 18)"
      gcc -o bus.18 $(testDir)/bus.c
@@ -173,14 +174,19 @@ test_descript = {
      gcc -o ill.19 $(testDir)/ill.c
      ./ill.19 --seq 19
 
-     displayThis "Test python3 package recording (seq 20)"
+     export XALT_SIGNAL_HANDLER=no
+     displayThis "build and run ill program (signals off) (seq 20)"
+     gcc -o ill.20 $(testDir)/ill.c
+     XALT_TRACING=run ./ill.20 --seq 20
+
+     displayThis "Test python3 package recording (seq 21)"
      OLD_PY_PATH=$PYTHONPATH
      PYTHONPATH=$XALT_DIR/site_packages:$PYTHONPATH
      export PYTHONPATH=${PYTHONPATH%:}
-     python3 $(testDir)/pkg_tracking.py --seq 20
+     python3 $(testDir)/pkg_tracking.py --seq 21
    
-     displayThis "Test python2 package recording (seq 21)"
-     python2 $(testDir)/pkg_tracking.py --seq 21
+     displayThis "Test python2 package recording (seq 22)"
+     python2 $(testDir)/pkg_tracking.py --seq 22
 
      PYTHONPATH=$OLD_PY_PATH
 
@@ -196,7 +202,7 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 16 --runs 21 --pkgs 13
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 17 --runs 20 --pkgs 13 --uuid 16
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

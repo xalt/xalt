@@ -22,7 +22,6 @@ RUN_SUBMISSION_O  := libxalt/run_submission.o            \
                      __build__/lex.__XALT_path.o         \
                      __build__/lex.xalt_env.o            \
                      __build__/xalt_syshost.o            \
-		     util/base64.o                     	 \
 		     util/capture.o                   	 \
 		     util/compute_sha1.o                 \
 	             util/buildJson.o                    \
@@ -37,8 +36,7 @@ RUN_SUBMISSION_O  := libxalt/run_submission.o            \
                      util/xalt_fgets_alloc.o             \
                      util/xalt_tmpdir.o                	 \
                      util/xalt_vendor_note.o           	 \
-                     util/xalt_quotestring.o             \
-                     util/zcmprss.o
+                     util/xalt_quotestring.o
 
 RUN_SUBMISSION_OBJ:= $(RUN_SUBMISSION_O)                 \
                      $(MY_HOSTNAME_PARSER_OBJ)
@@ -58,7 +56,7 @@ XALT_INIT_REG32   := $(DESTDIR)$(LIB)/xalt_initialize_regular.o32
 LIBXALT_O32       := libxalt/xalt_initialize_preload.o32   \
 	             $(RUN_SUBMISSION_O32)
 
-XALT_INIT_D       := xalt_obfuscate.h xalt_types.h insert.h base64.h       \
+XALT_INIT_D       := xalt_obfuscate.h xalt_types.h insert.h                \
                      xalt_quotestring.h xalt_header.h xalt_config.h        \
                      xalt_dir.h xalt_path_parser.h  xalt_hostname_parser.h \
                      xalt_tmpdir.h xalt_vendor_note.h build_uuid.h         \
@@ -76,7 +74,6 @@ BUILD_INIT_32bit_yes := $(XALT_INIT_REG32) $(RUN_SUBMISSION_L32) $(LIBXALT_INIT_
 c_sources     	  += $(local_c_src) 
 libraries         += $(XALT_INIT_REGULAR) $(LIBXALT_INIT_64) $(RUN_SUBMISSION_LIB) \
                      $(BUILD_INIT_32bit_$(HAVE_32BIT))
-programs          += $(XALT_TEST) 
 extra_clean       += libxalt/xalt_initialize_preload.o   libxalt/xalt_initialize_regular.o   \
                      libxalt/xalt_initialize_preload.o32 libxalt/xalt_initialize_regular.o32 \
 
@@ -98,7 +95,7 @@ __build__/lex.__XALT_host.o: __build__/lex.__XALT_host.c xalt_obfuscate.h
 
 
 $(LIBXALT_INIT_64): $(LIBXALT_OBJ_64)
-	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ -Wl,-rpath,$(LIB64) $(LIBDCGM) $(LIBNVML) -ldl -lz -lm 
+	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ $(LIBDCGM) $(LIBNVML) -ldl -lm 
 
 libxalt/xalt_initialize_preload.o: libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
@@ -108,15 +105,12 @@ $(XALT_INIT_REGULAR): libxalt/xalt_initialize.c $(XALT_INIT_D)
 $(RUN_SUBMISSION_LIB): $(RUN_SUBMISSION_OBJ)
 	$(AR) $(ARFLAGS) $@ $^
 
-$(XALT_TEST): libxalt/xalt_test.o $(RUN_SUBMISSION_LIB)
-	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LDFLAGS) -o $@ $^ $(LIBDCGM) $(LIBNVML) -ldl -lcurl -lm -lz
-
 #----------------------------------------------------------------------
 #  32 bit 
 #----------------------------------------------------------------------
 
 $(LIBXALT_INIT_32): $(LIBXALT_O32)
-	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^ -Wl,-rpath,$(LIB) $(LIBDCGM) $(LIBNVML) -ldl -lm
+	$(LINK.c) -m32 $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB) -o $@  $^ $(LIBDCGM) $(LIBNVML) -ldl -lm
 
 libxalt/xalt_initialize_preload.o32: libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) -m32 $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<

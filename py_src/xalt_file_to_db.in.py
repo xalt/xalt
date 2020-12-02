@@ -98,6 +98,11 @@ class CmdLineOptions(object):
     return args
 
 
+def Version():
+  my_version = "@git@"
+  return my_version
+
+
 def keep_or_delete(fn, deleteFlg):
   delta = my_epoch - os.stat(fn).st_mtime
   if (delta > 86400 and deleteFlg):
@@ -364,6 +369,18 @@ def main():
 
   # Using home directories or a global location.
   xalt_file_prefix = os.environ.get("XALT_FILE_PREFIX","@xalt_file_prefix@")
+  
+  xaltUserA        = os.environ.get("XALT_USERS")
+  if (xaltUserA):
+    xaltUserStr    = ", XALT_USERS: \"" + xaltUserA + "\""
+  else:
+    xaltUserStr    = ""
+    
+
+  print ("\n################################################################")
+  print ("XALT Git Version: "+Version()                                      )
+  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr    )
+  print ("################################################################\n")
 
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")

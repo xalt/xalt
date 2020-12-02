@@ -33,10 +33,8 @@ XALT to work correctly.
   overridden by an environment variable. **yes** is on and anything else
   is off.
 
-**XALT_SIGNAL_HANDLER** : Normally XALT turns on signal handler to
-  catch segfaults, FPE, etc. Setting this variable to **no** disables
-  this feature.
-
+**XALT_SIGNAL_HANDLER** : Normally XALT disables the signal handler to
+  catch FPE, etc. Setting this variable to **yes** enables this feature.
 
 Debugging variables for XALT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

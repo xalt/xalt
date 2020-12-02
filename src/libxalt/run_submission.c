@@ -39,6 +39,7 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   const char* 	 suffix       = end_record ? ".zzz" : ".aaa";
 
   processTree_t* ptA      = NULL;
+  S2S_t*         qaT      = NULL;
   S2S_t*      	 envT	  = NULL;
   S2S_t*      	 recordT  = NULL;
   S2S_t*       	 userT	  = NULL;
@@ -143,6 +144,13 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
 
   insert_key_double(&measureT, "07____total______", epoch() - t0);
 
+
+
+  //*********************************************************************
+  // Record QA data in json string.
+  insert_key_string(&qaT,"XALT_GIT_VERSION",XALT_GIT_VERSION);
+  insert_key_string(&qaT,"XALT_FILE_PREFIX",XALT_FILE_PREFIX);
+
   //*********************************************************************
   // So build the Json table string
   
@@ -159,10 +167,12 @@ void run_submission(double t0, pid_t pid, pid_t ppid, double start_time, double 
   json_add_S2D(      &json, my_sep, "userDT",        userDT);
   json_add_S2S(      &json, my_sep, "xaltLinkT",     recordT);
   json_add_S2D(      &json, my_sep, "XALT_measureT", measureT);
+  json_add_S2S(      &json, my_sep, "XALT_qaT",      qaT);
   json_fini(         &json, &jsonStr);
   DEBUG0(my_stderr,"    Built json string\n");
 
   processTreeFree(&ptA);
+  free_S2S(&qaT);
   free_S2D(&measureT);
   free_S2D(&userDT);
   free_S2S(&userT);

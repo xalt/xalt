@@ -9,6 +9,7 @@
 #define CRYPTO_STR                 "@CRYPTO_STR@"
 #define CURL_STR                   "@CURL_STR@"
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
+#define GPU_STR                    "@GPU_STR@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"
 #define HAVE_NVML                  "@HAVE_NVML@"
@@ -35,6 +36,7 @@
 #define XALT_PRELOAD_ONLY          "@PRELOAD_ONLY@"
 #define XALT_PRIME_FMT             "@XALT_PRIME_FMT@"
 #define XALT_PRIME_NUMBER           @XALT_PRIME_NUMBER@
+#define XALT_SIGNAL_HANDLER        "@XALT_SIGNAL_HANDLER@"
 #define XALT_SCALAR_TRACKING       "@XALT_SCALAR_TRACKING@"
 #define XALT_SYSTEM_PATH           "@SYSTEM_PATH@"
 #define XALT_TMPDIR                "@XALT_TMPDIR@"

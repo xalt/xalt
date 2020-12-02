@@ -14,8 +14,7 @@
 #include <dlfcn.h>
 
 static void (*sha1)(const unsigned char *d, size_t n, unsigned char *md) = NULL;
-
-static void * handle = NULL;
+static void * handle  = NULL;
 
 void compute_sha1(const char* fn, char* sha1buf)
 {
@@ -40,35 +39,39 @@ void compute_sha1(const char* fn, char* sha1buf)
 
   if (sha1 == NULL)
     {
-      handle = dlopen("libcrypto.so", RTLD_LAZY);
+      char* fn = xalt_dir("lib64/libcrypto.so");
+      handle   = dlopen(fn, RTLD_LAZY);
+      if (fn)
+	my_free(fn, strlen(fn));
+
       if (!handle)
         {
-	  char* fn = xalt_dir("lib64/libcrypto.so");
-	  handle = dlopen(fn, RTLD_LAZY);
-	  if (fn)
-	    my_free(fn, strlen(fn));
-
+	  handle = dlopen("libcrypto.so", RTLD_LAZY);
           if (!handle) 
             {
               fputs(dlerror(), stderr);
               memset(hash, '\0', SHA_DIGEST_LENGTH);
-              return;
             }
         }
-      *(void **)(&sha1) = dlsym(handle, "SHA1");
-      if ((error = dlerror()) != NULL) 
-        {
-          fputs(error, stderr);
-          memset(hash, '\0', SHA_DIGEST_LENGTH);
-          return;
-        }
+      if (handle)
+	{
+	  *(void **)(&sha1) = dlsym(handle, "SHA1");
+	  if ((error = dlerror()) != NULL) 
+	    {
+	      fputs(error, stderr);
+	      memset(hash, '\0', SHA_DIGEST_LENGTH);
+	    }
+	}
     }
 
-  (*sha1)(buffer, fileSz, hash);
-  if (munmap(buffer, fileSz) == -1) 
-    perror("Error un-mmapping the file");
-
-  close(fd);
+  if (sha1)
+    {
+      (*sha1)(buffer, fileSz, hash);
+      if (munmap(buffer, fileSz) == -1) 
+	perror("Error un-mmapping the file");
+      
+      close(fd);
+    }
 
   for (i = 0; i < 20; i++)
     sprintf(&sha1buf[i*2], "%02x", hash[i]);

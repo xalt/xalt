@@ -79,6 +79,10 @@ ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
 
+def Version():
+  my_version = "@git@"
+  return my_version
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -176,6 +180,7 @@ class ParseSyslog(object):
   def __init__(self, leftoverFn):
     self.__recordT    = {}
     self.__leftoverFn = leftoverFn
+    self.__frntPatt   = re.compile("(^.* V:\d+ *)")
 
   def writeRecordT(self):
     leftoverFn = self.__leftoverFn
@@ -197,7 +202,9 @@ class ParseSyslog(object):
   def parse(self, s, clusterName, old):
     if ("XALT_LOGGING_" in s):
       if (" V:2 " in s):
-        return self.__parseSyslogV2(s, clusterName, old)
+        return self.__parseSyslog(2, s, clusterName, old)
+      elif (" V:3 " in s):
+        return self.__parseSyslog(3, s, clusterName, old)
       else:
         return self.__parseSyslogV1(s, clusterName)
     return false, {}
@@ -226,15 +233,19 @@ class ParseSyslog(object):
 
     return t, True
     
-  def __parseSyslogV2(self, s, clusterName, old):
-    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : 2}
+  def __parseSyslog(self, level, s, clusterName, old):
+    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : level}
 
-    idx = s.find(" V:2 ")
-    if (idx  == -1):
+    # Strip off "XALT_LOGGING V:%d" from string and trailing white space.
+    s = self.__frntPatt.sub("",s)
+    s = s.rstrip()
+
+    # extract value string first and remove it from string
+    idx   = s.find("value:")
+    if (idx == -1):
       return t, False
-
-    # Strip off "XALT_LOGGING V:2" from string.
-    s                      = s[idx+5:]
+    t["value"] = s[idx+6:]
+    s          = s[:idx].rstrip()
 
     # Setup parser
     lexer                  = shlex.shlex(s)
@@ -253,7 +264,6 @@ class ParseSyslog(object):
     if (clusterName != ".*" and clusterName != t['syshost']):
       return t, False
 
-
     recordT = self.__recordT
 
     # get the key from the input, then place an entry in the *recordT* table.
@@ -269,12 +279,12 @@ class ParseSyslog(object):
     # If the block is completed then grap the value, remove the entry from *recordT*
     # and return a completed table.
     if (r.completed()):
-      
-      rv   = r.value()
-      b64v = base64.b64decode(rv)
-      vv   = zlib.decompress(b64v)
+      vv   = r.value()
+      if (level == 2):
+        b64v = base64.b64decode(vv)
+        vv   = zlib.decompress(b64v).decode("utf-8")
+      t['value'] = vv
 
-      t['value'] = vv.decode("utf-8")
       try:
         del recordT[key]
       except KeyError as e:
@@ -353,6 +363,11 @@ def main():
   """
   read from syslog file into XALT db.
   """
+
+  print ("\n################################################################")
+  print ("XALT Git Version: "+Version()                                      )
+  print ("################################################################\n")
+
 
   sA = []
   sA.append("CommandLine:")

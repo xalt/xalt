@@ -631,6 +631,7 @@ XALT_DEFAULT_DIR
 PKGV
 HAVE_DCGM
 HAVE_NVML
+GPU_STR
 HAVE_WORKING_LIBUUID
 EGREP
 GREP
@@ -651,6 +652,7 @@ CXXFLAGS
 CXX
 HAVE_32BIT
 XALT_PRIME_FMT
+XALT_SIGNAL_HANDLER
 XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
@@ -747,6 +749,7 @@ with_siteControlledPrefix
 with_32bit
 with_tmpdir
 with_primeNumber
+with_signalHandler
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1418,6 +1421,9 @@ Optional Packages:
                           [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
                           XALT_FILE_PREFIX, [[997]]
+  --with-signalHandler=ans
+                          Have XALT capture executions that fail with a
+                          signal: [[no]]
 
 Some influential environment variables:
   CC          C compiler command
@@ -3601,6 +3607,28 @@ fi
 
 
 
+# Check whether --with-signalHandler was given.
+if test "${with_signalHandler+set}" = set; then :
+  withval=$with_signalHandler; XALT_SIGNAL_HANDLER="$withval"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SIGNAL_HANDLER=$with-signalHandler" >&5
+$as_echo "XALT_SIGNAL_HANDLER=$with-signalHandler" >&6; }
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SIGNAL_HANDLER "$with-signalHandler"
+_ACEOF
+
+else
+  withval="no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SIGNAL_HANDLER=$withval" >&5
+$as_echo "XALT_SIGNAL_HANDLER=$withval" >&6; }
+    XALT_SIGNAL_HANDLER="$withval"
+    cat >>confdefs.h <<_ACEOF
+#define XALT_SIGNAL_HANDLER "$withval"
+_ACEOF
+
+fi
+
+
+
 
 if test "$BIT32" = yes ; then
 
@@ -4783,7 +4811,13 @@ if test -z "$PATH_TO_FLEX" ; then
    exit 1
 fi
 
+MY_TMPDIR=`mktemp -d`
+LOCATE_SO=$MY_TMPDIR/locate_shared_library
 
+gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
+
+
+GPU_STR=
 
 HAVE_NVML=no
 
@@ -4922,6 +4956,12 @@ else
 fi
 
   fi
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libdcgm.so$i`
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
 elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
   ac_fn_c_check_header_mongrel "$LINENO" "nvml.h" "ac_cv_header_nvml_h" "$ac_includes_default"
 if test "x$ac_cv_header_nvml_h" = xyes; then :
@@ -5007,6 +5047,13 @@ else
   as_fn_error $? "Unable to find dlopen" "$LINENO" 5
 fi
 
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    GPU_STR=`$LOCATE_SO libnvml.so$i`
+    echo "i=libdcgm.so$i GPU_STR:  $GPU_STR"
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
 fi
 
 
@@ -5261,10 +5308,6 @@ fi
 
 MY_TMPDIR=`mktemp -d`
 
-LOCATE_SO=$MY_TMPDIR/locate_shared_library
-
-gcc -o $LOCATE_SO $ac_confdir/proj_mgmt/locate_shared_library.c -ldl
-
 
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
@@ -5283,7 +5326,6 @@ for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     break;
   fi
 done
-
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then
@@ -6697,10 +6739,12 @@ echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_P
 echo "XALT_LD_LIBRARY_PATH................................." : $XALT_LD_LIBRARY_PATH
 echo "XALT_LOGGING_URL....................................." : $XALT_LOGGING_URL
 echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
+echo "XALT signal handler.................................." : $XALT_SIGNAL_HANDLER
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo "CURL_STR............................................." : $CURL_STR
 echo "CRYPTO_STR..........................................." : $CRYPTO_STR
+echo "GPU_STR.............................................." : $GPU_STR
 echo "UUID_STR............................................." : $UUID_STR
 echo
 echo '------------------------------------------------------------------------------'

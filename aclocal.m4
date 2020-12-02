@@ -99,10 +99,12 @@ echo "XALT CXX LD_LIBRARY_PATH............................." : $CXX_LD_LIBRARY_P
 echo "XALT_LD_LIBRARY_PATH................................." : $XALT_LD_LIBRARY_PATH
 echo "XALT_LOGGING_URL....................................." : $XALT_LOGGING_URL
 echo "XALT prime number...................................." : $XALT_PRIME_NUMBER
+echo "XALT signal handler.................................." : $XALT_SIGNAL_HANDLER
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo "CURL_STR............................................." : $CURL_STR
 echo "CRYPTO_STR..........................................." : $CRYPTO_STR
+echo "GPU_STR.............................................." : $GPU_STR
 echo "UUID_STR............................................." : $UUID_STR
 echo
 echo '------------------------------------------------------------------------------'
