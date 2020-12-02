@@ -480,7 +480,7 @@ AC_SUBST(HAVE_NVML)
 HAVE_NVML=no
 AC_SUBST(HAVE_DCGM)
 HAVE_DCGM=no
-if test $XALT_GPU_TRACKING = "dcgm" ; then
+if test $XALT_GPU_TRACKING_STYLE = "dcgm" ; then
   AC_CHECK_HEADER(dcgm_agent.h,
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
@@ -496,7 +496,7 @@ if test $XALT_GPU_TRACKING = "dcgm" ; then
       break;
     fi
   done
-elif test $XALT_GPU_TRACKING = yes || test $XALT_GPU_TRACKING = "nvml" ; then
+elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
   AC_CHECK_HEADER(nvml.h,
                   [AC_DEFINE([HAVE_NVML_H], 1,
                      [Define to 1 if you have NVML.])],
