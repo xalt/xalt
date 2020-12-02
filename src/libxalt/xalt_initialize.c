@@ -1129,16 +1129,23 @@ void myfini()
 static int load_nvml()
 {
   /* Open the NVML library.  Let the dynamic loader find it (do not
-     specify a path). */
+     specify a path). then look in the $(LIB64) directory*/
   nvml_dl_handle = dlopen("libnvidia-ml.so", RTLD_LAZY);
   if ( ! nvml_dl_handle)
     {
       nvml_dl_handle = dlopen("libnvidia-ml.so.1", RTLD_LAZY);
       if ( ! nvml_dl_handle)
 	{
-	  DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
-		 dlerror());
-	  return 0;
+	  char* fn = xalt_dir("lib64/libnvidia-ml.so");
+	  nvml_dl_handle = dlopen(fn, RTLD_LAZY);
+	  if (fn)
+	    my_free(fn, strlen(fn));
+	  if ( ! nvml_dl_handle)
+	    {
+	      DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
+		     dlerror());
+	      return 0;
+	    }
 	}
     }
 
@@ -1157,6 +1164,7 @@ static int load_nvml()
   *(void**)(&_nvmlErrorString) = dlsym(nvml_dl_handle, "nvmlErrorString");
   *(void**)(&_nvmlInit) = dlsym(nvml_dl_handle, "nvmlInit");
   *(void**)(&_nvmlShutdown) = dlsym(nvml_dl_handle, "nvmlShutdown");
+  DEBUG0(stderr, "    -> Successfully dynamically linked with nvidia-ml library\n");
 
   return 1;
 }
@@ -1172,9 +1180,9 @@ static int load_dcgm()
   if ( ! dcgm_dl_handle)
     {
       fn             = xalt_dir("lib64/libdcgm.so.1");
+      dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
       if (fn)
 	my_free(fn, strlen(fn));
-      dcgm_dl_handle = dlopen(fn, RTLD_LAZY);
       if ( ! dcgm_dl_handle)
 	{
 	  DEBUG1(stderr, "    -> Unable to open libdcgm.so or libdcgm.so.1: %s\n\n",
@@ -1194,6 +1202,7 @@ static int load_dcgm()
   *(void**)(&_dcgmJobStopStats)    = dlsym(dcgm_dl_handle, "dcgmJobStopStats");
   *(void**)(&_dcgmUpdateAllFields) = dlsym(dcgm_dl_handle, "dcgmUpdateAllFields");
   *(void**)(&_dcgmWatchJobFields)  = dlsym(dcgm_dl_handle, "dcgmWatchJobFields");
+  DEBUG0(stderr, "    -> Successfully dynamically linked with dcgm library\n");
 
   return 1;
 }
