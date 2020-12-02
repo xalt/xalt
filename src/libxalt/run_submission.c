@@ -46,6 +46,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   S2D_t*      	 userDT	  = NULL;
   S2D_t*       	 measureT = NULL;
   SET_t*         libT     = NULL;
+  double         t0       = epoch();
   double      	 t1;
 
   DEBUG1(my_stderr,"\n  run_submission(%s) {\n",suffix);
@@ -141,9 +142,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   DEBUG1(my_stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
   insert_key_double(&measureT, "07_GPU_Setup_____", xalt_timer->gpu_setup);
-  insert_key_double(&measureT, "08____total______", epoch() - xalt_timer->t0);
-
-
+  insert_key_double(&measureT, "08____total______", epoch() - t0 + xalt_timer->init + xalt_timer->fini);
 
   //*********************************************************************
   // Record QA data in json string.

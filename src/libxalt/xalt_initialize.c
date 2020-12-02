@@ -276,7 +276,9 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
-  xalt_timer.t0        = epoch();
+  double t0            = epoch();
+  xalt_timer.init      = 0.0;
+  xalt_timer.fini      = 0.0;
   xalt_timer.gpu_setup = 0.0;
   my_rank = compute_value(rankA);
 
@@ -302,7 +304,7 @@ void myinit(int argc, char **argv)
 
   if (xalt_tracing)
     {
-      time_t    now    = (time_t) xalt_timer.t0;
+      time_t    now    = (time_t) t0;
       strftime(dateStr, DATESZ, "%c", localtime(&now));
       errno = 0;
       if (uname(&u) != 0)
@@ -653,7 +655,7 @@ void myinit(int argc, char **argv)
   if (xalt_gpu_tracking == 0)
     DEBUG0(stderr, "  No GPU tracking\n");
 
-  start_time = xalt_timer.t0;
+  start_time = t0;
   frac_time  = start_time - (long) (start_time);
 
   /**********************************************************
@@ -766,6 +768,8 @@ void myinit(int argc, char **argv)
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
 
+      
+      xalt_timer.init = epoch() - t0;
       run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
 		     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
 		     stderr);
@@ -862,7 +866,7 @@ void myfini()
   double run_time;
   int    xalt_err = xalt_tracing || xalt_run_tracing;
 
-  xalt_timer.t0 = epoch();
+  double t0 = epoch();
   if (xalt_err)
     {
       fflush(stderr);
@@ -1105,6 +1109,7 @@ void myfini()
 	    xalt_run_short_descriptA[run_mask]);
   
   fflush(my_stderr);
+  xalt_timer.fini = epoch() - t0;
   run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
                  usr_cmdline, xalt_tracing, my_stderr);

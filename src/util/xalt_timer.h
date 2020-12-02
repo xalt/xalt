@@ -4,7 +4,8 @@
 
 typedef struct
 {
-  double t0;
+  double init;
+  double fini;
   double gpu_setup;
 } xalt_timer_t;
 
