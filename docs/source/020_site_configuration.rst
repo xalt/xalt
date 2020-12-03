@@ -198,10 +198,9 @@ programs.
 Track MPI and/or Non-MPI executables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-By default XALT tracks two types of programs: scalar and
+XALT tracks two types of programs: scalar and
 MPI. The scalar programs are non-mpi programs, 
-
-Finally there are MPI programs.  Note that an MPI capable programs run
+Note that an MPI capable programs run
 with only one task is considered to be scalar by XALT.  So if you only
 want to track MPI programs you can do::
 
@@ -217,7 +216,26 @@ install it on ALL nodes on your cluster that might have NVIDIA GPU's
 
 You can tell XALT to track GPU usage by configuring it with::
 
-   --with-trackGPU=yes
+   --with-trackGPU=<choice>
+
+Where <choice> can be YES, NVML, or DCGM.  By default YES is the same
+as NVML.  Both NVML and DCGM libraries will let XALT know if a gpu is
+used by a program.  The NVML option is significantly faster so it
+should be used whenever possible. The nvml.h header was in the DCGM
+software but is removed in later version of this software. To let XALT
+know how to find the nvml.h header, the configure and make build
+statements need to be modified to it in the cuda package::
+
+   $ ./configure ... --with-trackGPU=yes CPPFLAGS=-I/path/to/nvml_header
+   $ make ... EXTRA_FLAGS=-I/path/to/nvml_header install
+   
+
+If the libnvidia-ml.so are found during the configure/installation
+phase, it will be copied to XALT's $(LIB64) directory.  This means
+that containers run on a node that has access to a GPU will be able to
+track GPU usage.
+
+
 
 Note
 ~~~~

@@ -105,6 +105,9 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
   -- setenv("SINGULARITYENV_LD_PRELOAD", pathJoin(base,"$LIB/libxalt_init.so"))
   -- prepend_path("SINGULARITY_BINDPATH", base)
 
+  -- Uncomment this line to have XALT track python packages.
+  -- prepend_path("PYTHONPATH",    pathJoin(base,"site_packages"))
+
   ------------------------------------------------------------
   -- Only set this in production not for testing!!!
   setenv("XALT_SAMPLING",  "yes")  
