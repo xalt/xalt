@@ -124,8 +124,8 @@ case $SYSHOST in
   longhorn)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
-    MAKE_OPTS="EXTRA_FLAGS=-I$TACC_CUDA_INC"
-    CONF_OPTS=" --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=dcgm --with-trackGPU=nvml CPPFLAGS=-I$TACC_CUDA_INC"
+    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
+    CONF_OPTS=' --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=dcgm --with-trackGPU=nvml CPPFLAGS=-I$TACC_CUDA_INC'
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt cuda"
     ;;
 
@@ -181,6 +181,8 @@ cmdA=("unload_xalt"
       "-rm -rf $PKG/xalt/$PKG_VERSION"
       "-rm -f src/*.o src/*.d libuuid/src/*.o"
       "$SETUP_CMD"
+      "eval CONF_OPTS=\"$CONF_OPTS\""
+      "eval MAKE_OPTS=\"$MAKE_OPTS\""
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE -j4 $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
