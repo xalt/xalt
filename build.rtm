@@ -178,8 +178,8 @@ unload_xalt ()
 
 lazy_eval ()
 {
-  eval CONF_OPTS="$CONF_OPTS"
-  eval MAKE_OPTS="$MAKE_OPTS"
+  eval "CONF_OPTS=\"$CONF_OPTS\""
+  eval "MAKE_OPTS=\"$MAKE_OPTS\""
 }
 
 cmdA=("unload_xalt"
