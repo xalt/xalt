@@ -176,13 +176,18 @@ unload_xalt ()
    fi
 }
 
+lazy_eval ()
+{
+  eval CONF_OPTS="$CONF_OPTS"
+  eval MAKE_OPTS="$MAKE_OPTS"
+}
+
 cmdA=("unload_xalt"
       "-$MAKE distclean"
       "-rm -rf $PKG/xalt/$PKG_VERSION"
       "-rm -f src/*.o src/*.d libuuid/src/*.o"
       "$SETUP_CMD"
-      "eval CONF_OPTS=\"$CONF_OPTS\""
-      "eval MAKE_OPTS=\"$MAKE_OPTS\""
+      "lazy_eval"
       "./configure --prefix=$PKG $CONF_OPTS"
       "$SUDO $MAKE -j4 $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
