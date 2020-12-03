@@ -49,7 +49,7 @@
 
 Summary: The XALT software usage tracking tool
 Name: xalt
-Version: 2.10.1
+Version: 2.10.2
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Base
@@ -244,3 +244,4 @@ EOF
 
 
 >>>>>>> 0376f24299133f7da91ba92a1dad305a5c154416
+
