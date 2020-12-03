@@ -8,7 +8,7 @@ OPTLVL      	  := -g -O0
 LIB_OPTIONS 	  := -fPIC -shared
 WARN_FLAGS  	  := -Wall -Wno-unused-result -Wno-unused-value
 
-CF_INIT     	  := -I. -fPIC
+CF_INIT     	  := -I. -fPIC $(CPPFLAGS)
 COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT)
 CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
 CFLAGS      	  := $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
