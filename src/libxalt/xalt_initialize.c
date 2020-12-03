@@ -35,6 +35,7 @@
 #include <sys/time.h>
 #include <limits.h>
 #include "xalt_interval.h"
+#include <link.h>
 #include <errno.h>
 #include <syslog.h>
 #include <sys/utsname.h>
@@ -1164,7 +1165,12 @@ static int load_nvml()
   *(void**)(&_nvmlErrorString) = dlsym(nvml_dl_handle, "nvmlErrorString");
   *(void**)(&_nvmlInit) = dlsym(nvml_dl_handle, "nvmlInit");
   *(void**)(&_nvmlShutdown) = dlsym(nvml_dl_handle, "nvmlShutdown");
-  DEBUG0(stderr, "    -> Successfully dynamically linked with nvidia-ml library\n");
+  if (xalt_tracing)
+    {
+      int result = dlinfo(nvml_dl_handle, RTLD_DI_LINKMAP, &map);
+      char* name = realpath(map->l_name, NULL);
+      DEBUG1(stderr, "    -> Successfully dynamically linked with nvidia-ml library:%s\n", name);
+    }
 
   return 1;
 }
@@ -1202,8 +1208,12 @@ static int load_dcgm()
   *(void**)(&_dcgmJobStopStats)    = dlsym(dcgm_dl_handle, "dcgmJobStopStats");
   *(void**)(&_dcgmUpdateAllFields) = dlsym(dcgm_dl_handle, "dcgmUpdateAllFields");
   *(void**)(&_dcgmWatchJobFields)  = dlsym(dcgm_dl_handle, "dcgmWatchJobFields");
-  DEBUG0(stderr, "    -> Successfully dynamically linked with dcgm library\n");
-
+  if (xalt_tracing)
+    {
+      int result = dlinfo(dcgm_dl_handle, RTLD_DI_LINKMAP, &map);
+      char* name = realpath(map->l_name, NULL);
+      DEBUG1(stderr, "    -> Successfully dynamically linked with dcgm library:%s\n", name);
+    }
   return 1;
 }
 #endif
