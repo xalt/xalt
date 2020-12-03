@@ -126,7 +126,7 @@ case $SYSHOST in
     base="$HOME/l/pkg"
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     CONF_OPTS='--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=dcgm --with-trackGPU=nvml CPPFLAGS=-I$TACC_CUDA_INC'
-    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt cuda"
+    SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
     ;;
 
   ls5 )
