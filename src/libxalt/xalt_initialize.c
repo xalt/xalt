@@ -1170,7 +1170,7 @@ static int load_nvml()
       struct link_map * map;
       int result = dlinfo(nvml_dl_handle, RTLD_DI_LINKMAP, &map);
       char* name = realpath(map->l_name, NULL);
-      DEBUG1(stderr, "    -> Successfully dynamically linked with nvidia-ml library:%s\n", name);
+      DEBUG1(stderr, "    -> Successfully dynamically linked with nvidia-ml library: %s\n", name);
     }
 
   return 1;
@@ -1214,7 +1214,7 @@ static int load_dcgm()
       struct link_map * map;
       int result = dlinfo(dcgm_dl_handle, RTLD_DI_LINKMAP, &map);
       char* name = realpath(map->l_name, NULL);
-      DEBUG1(stderr, "    -> Successfully dynamically linked with dcgm library:%s\n", name);
+      DEBUG1(stderr, "    -> Successfully dynamically linked with dcgm library: %s\n", name);
     }
   return 1;
 }
