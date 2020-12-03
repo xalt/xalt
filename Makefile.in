@@ -180,7 +180,7 @@ build_compiled:
                 CRYPTO_STR=$(CRYPTO_STR) UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR)                 \
                 XALT_LOGGING_URL=$(XALT_LOGGING_URL) SITE_PKG_DIR=$(SITE_PKG_DIR)                  \
                 GPU_STR=$(GPU_STR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools           \
-	        CPPFLAGS=$(CPPFLAGS)                                                               \
+	        EXTRA_FLAGS=$(EXTRA_FLAGS)                                                         \
                 all
 
 inst_obfuscate:
