@@ -51,3 +51,4 @@ XALT 2.10+
 	     * Removed -ldcgm from build.  Copy libdcgm.so* or libnvml.so* to $(LIB64)
 	     * xalt_configuration_report now combines gpu tracking and gpu_style (e.g. yes(dcgm))
 	     * Added gpu setup timer report to run_submission()
+	     * Updated docs to explain how to find nvml.h from the cuda pkg.
