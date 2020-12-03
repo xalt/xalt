@@ -1167,6 +1167,7 @@ static int load_nvml()
   *(void**)(&_nvmlShutdown) = dlsym(nvml_dl_handle, "nvmlShutdown");
   if (xalt_tracing)
     {
+      struct link_map * map;
       int result = dlinfo(nvml_dl_handle, RTLD_DI_LINKMAP, &map);
       char* name = realpath(map->l_name, NULL);
       DEBUG1(stderr, "    -> Successfully dynamically linked with nvidia-ml library:%s\n", name);
@@ -1210,6 +1211,7 @@ static int load_dcgm()
   *(void**)(&_dcgmWatchJobFields)  = dlsym(dcgm_dl_handle, "dcgmWatchJobFields");
   if (xalt_tracing)
     {
+      struct link_map * map;
       int result = dlinfo(dcgm_dl_handle, RTLD_DI_LINKMAP, &map);
       char* name = realpath(map->l_name, NULL);
       DEBUG1(stderr, "    -> Successfully dynamically linked with dcgm library:%s\n", name);
