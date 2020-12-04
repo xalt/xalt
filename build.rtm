@@ -75,58 +75,97 @@ case $SYSHOST in
     echo "Building on $SYSHOST using rios rules"
     SUDO="sudo"
     base="/opt/apps"
-    CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py"
+    ETC_DIR="/opt/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/rtm_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="no"
+    MYSQL="yes"
+    CONF_OPTS=""
+    MAKE_OPTS=""
     ;;
 
    vmijo)
     echo "Building on vmijo"
     SUDO="sudo"
     base="/opt/apps"
-    CONF_OPTS="--with-etcDir=/opt/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/rtm_config.py \
-       --prefix=/opt/apps/xalt/$PKG_VERSION --with-siteControlledPrefix=yes"
+    ETC_DIR="/opt/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/rtm_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="no"
+    MYSQL="yes"
+    CONF_OPTS=""
+    MAKE_OPTS=""
     ;;
 
   xalt)
     echo "Building xalt"
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py"
-    ;;
-
-  maverick)
-    echo "Building maverick"
-    base="$HOME/l/pkg"
-    CONF_OPTS="CXX=$PWD/g++.sh --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=syslog --with-MySQL=no --with-cxxLDLibraryPath=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib"
-    MAKE_OPTS="CXX=$PWD/g++.sh"
-    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
+    ETC_DIR="$HOME/l/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/TACC_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="no"
+    MYSQL="yes"
+    CONF_OPTS=""
+    MAKE_OPTS=""
     ;;
 
   maverick2)
     echo "Building maverick2"
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=yes"
-    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
+    ETC_DIR="/tmp/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/TACC_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="nvml"
+    MYSQL="no"
+    SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
+    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
+    CONF_OPTS='-with-MySQL=no CPPFLAGS=-I$TACC_CUDA_INC'
     ;;
 
   stampede2)
     echo "Building s2"
     base="$HOME/l/pkg"
-    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no"
+    ETC_DIR="/tmp/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/TACC_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="no"
+    MYSQL="no"
+    CONF_OPTS=''
+    MAKE_OPTS=''
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
   frontera)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
-    CONF_OPTS=" --with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=yes "
-    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
+    ETC_DIR="/tmp/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/TACC_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="nvml"
+    MYSQL="no"
+    CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC'
+    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
+    SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
     ;;
 
   longhorn)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
-    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
-    CONF_OPTS='--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no --with-trackGPU=dcgm --with-trackGPU=nvml CPPFLAGS=-I$TACC_CUDA_INC'
+    ETC_DIR="/tmp/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/TACC_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="nvml"
+    MYSQL="no"
     SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
+    CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC'
+    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     ;;
 
   ls5 )
@@ -136,20 +175,29 @@ case $SYSHOST in
     if [ "$USER" = swtools ]; then
       EXTRA="--with-xaltFilePrefix=/scratch/projects/XALT"
     fi
-    CONF_OPTS="--with-syshostConfig=hardcode:ls5 --with-config=Config/TACC_config.py --with-transmission=file --with-MySQL=no $EXTRA" #--with-trackGPU=yes
+    ETC_DIR="/tmp/moduleData"
+    SYSHOST_CONF="hardcode:ls5"
+    CONFIG="Config/TACC_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="no"
+    MYSQL="no"
+    CONF_OPTS="$EXTRA"
+    MAKE_OPTS=''
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
-  gligar.os)
-    echo "gligar.os"
-    base="$HOME/l/pkg"
-    SETUP_CMD="module load mysqlclient/1.3.7-foss-2016a-Python-2.7.11"
-    CONF_OPTS="--with-etcDir=$HOME/l/moduleData --with-syshostConfig=nth_name:2 --with-config=Config/UGENT_config.py --with-transmission=file"
-    ;;
 
   *)
     echo "default"
     base="$HOME/l/pkg"
+    ETC_DIR="$HOME/l/moduleData"
+    SYSHOST_CONF="nth_name:2"
+    CONFIG="Config/rtm_config.py"
+    TRANSMISSION="file"
+    TRACK_GPU="no"
+    MYSQL="no"
+    CONF_OPTS=''
+    MAKE_OPTS=''
     ;;
 esac
 BASE_DIR=$base
@@ -188,7 +236,7 @@ cmdA=("unload_xalt"
       "-rm -f src/*.o src/*.d libuuid/src/*.o"
       "$SETUP_CMD"
       "lazy_eval"
-      "./configure --prefix=$PKG $CONF_OPTS"
+      "./configure --prefix=$PKG --with-etcDir=$ETC_DIR --with-syshostConf=$SYSHOST_CONF --with-config=$CONFIG --with-transmission=$TRANSMISSION --with-MySQL=$MYSQL --with-trackGPU=$TRACK_GPU $CONF_OPTS"
       "$SUDO $MAKE -j4 $MAKE_OPTS install"
       "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
       "rm -f config.log"
