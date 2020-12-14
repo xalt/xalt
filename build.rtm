@@ -157,6 +157,10 @@ case $SYSHOST in
   longhorn)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
+    EXTRA=""
+    if [ "$USER" = swtools ]; then
+      EXTRA="--with-xaltFilePrefix=/scratch/projects/XALT"
+    fi
     ETC_DIR="/tmp/moduleData"
     SYSHOST_CONF="nth_name:2"
     CONFIG="Config/TACC_config.py"
@@ -164,7 +168,7 @@ case $SYSHOST in
     TRACK_GPU="nvml"
     MYSQL="no"
     SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
-    CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC'
+    CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC $EXTRA'
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     ;;
 

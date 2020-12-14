@@ -52,3 +52,5 @@ XALT 2.10+
 	     * xalt_configuration_report now combines gpu tracking and gpu_style (e.g. yes(dcgm))
 	     * Added gpu setup timer report to run_submission()
 	     * Updated docs to explain how to find nvml.h from the cuda pkg.
+W.I.P:
+    (2.10.3) * Longhorn now uses --with-xaltFilePrefix=/scratch/projects/XALT
