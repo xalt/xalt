@@ -6,7 +6,6 @@ SYSHOST=${myhost#*.}
 
 SWTOOLS=~swtools
 TRACKING_DIR=$SWTOOLS/process_xalt
-export PYTHONPATH=/home1/02875/swtools/.local/lib/python2.7/site-packages:$TRACKING_DIR
 
 LMOD_DIR=$SWTOOLS/l/pkg/lmod/lmod/libexec
 mpathA=( "/opt/apps/xsede/modulefiles" "/opt/apps/modulefiles" "/opt/apps/tools/modulefiles" "/opt/modulefiles" )
@@ -30,6 +29,7 @@ if [ -x $SWTOOLS/l/pkg/python/python/bin/python3 ]; then
 fi
 
 if [ "$SYSHOST" = "ls5" ]; then
+  export PYTHONPATH=/home1/02875/swtools/.local/lib/python2.7/site-packages:$TRACKING_DIR
   module load intel python2
 fi
 
