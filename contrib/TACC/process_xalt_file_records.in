@@ -1,0 +1,62 @@
+#!/bin/bash
+# -*- shell-script -*-
+myhost=$(hostname -f)
+myhost=${myhost%.tacc.utexas.edu}
+SYSHOST=${myhost#*.}
+
+SWTOOLS=~swtools
+TRACKING_DIR=$SWTOOLS/process_xalt
+export PYTHONPATH=/home1/02875/swtools/.local/lib/python2.7/site-packages:$TRACKING_DIR
+
+LMOD_DIR=$SWTOOLS/l/pkg/lmod/lmod/libexec
+mpathA=( "/opt/apps/xsede/modulefiles" "/opt/apps/modulefiles" "/opt/apps/tools/modulefiles" "/opt/modulefiles" )
+MPATH=""
+for path in "${mpathA[@]}";  do
+  if [ -d $path ]; then
+    MPATH="$MPATH:$path"
+  fi
+done
+MPATH="${MPATH:1}"
+export MODULEPATH=$MPATH
+
+if [ -f /etc/tacc/tacc_functions ]; then
+  . /etc/tacc/tacc_functions
+fi
+
+if [ -x $SWTOOLS/l/pkg/python/python/bin/python3 ]; then
+  export PATH=$SWTOOLS/l/pkg/python/python/bin:$PATH
+  export LD_LIBRARY_PATH=$SWTOOLS/l/pkg/python/python/lib:$LD_LIBRARY_PATH
+  LD_LIBRARY_PATH="${LD_LIBRARY_PATH%:}"
+fi
+
+if [ "$SYSHOST" = "ls5" ]; then
+  module load intel python2
+fi
+
+if [ ! -d $TRACKING_DIR/reverseMapD ]; then
+  mkdir -p $TRACKING_DIR/reverseMapD
+fi
+
+echo "========================================================================"
+XALT_EXECUTABLE_TRACKING=yes LD_PRELOAD= $TRACKING_DIR/xalt_configuration_report --git_version
+echo "========================================================================"
+
+echo ""
+echo "Start Date: $(date)"
+echo "$LMOD_DIR/spider -o xalt_rmapT      $MPATH | python -mjson.tool > $TRACKING_DIR/reverseMapD/xalt_rmapT.json"
+      $LMOD_DIR/spider -o xalt_rmapT      $MPATH | python -mjson.tool > $TRACKING_DIR/reverseMapD/xalt_rmapT.json
+echo "$LMOD_DIR/spider -o jsonReverseMapT $MPATH | python -mjson.tool > $TRACKING_DIR/reverseMapD/jsonReverseMapT.json"
+      $LMOD_DIR/spider -o jsonReverseMapT $MPATH | python -mjson.tool > $TRACKING_DIR/reverseMapD/jsonReverseMapT.json
+
+echo "$TRACKING_DIR/Build_default_user_2_account_str > $TRACKING_DIR/u2acct.json"
+      $TRACKING_DIR/Build_default_user_2_account_str > $TRACKING_DIR/u2acct.json
+
+echo "$TRACKING_DIR/xalt_file_to_db.py --syshost $SYSHOST --confFn $TRACKING_DIR/xalt_${SYSHOST}_db.conf --reverseMapD $TRACKING_DIR/reverseMapD --u2acct $TRACKING_DIR/u2acct.json --delete"
+      $TRACKING_DIR/xalt_file_to_db.py --syshost $SYSHOST --confFn $TRACKING_DIR/xalt_${SYSHOST}_db.conf --reverseMapD $TRACKING_DIR/reverseMapD --u2acct $TRACKING_DIR/u2acct.json --delete
+
+if [ "$?" != 0 ]; then
+   echo "Problem with XALT ingestion on $SYSHOST" | mail -s "swtools@staff.$SYSHOST: Problem with XALT ingestion" mclay@tacc.utexas.edu > /dev/null
+fi
+
+echo "End Date: $(date)"
+echo ""
