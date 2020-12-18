@@ -8,7 +8,7 @@ SWTOOLS=~swtools
 TRACKING_DIR=$SWTOOLS/process_xalt
 
 LMOD_DIR=$SWTOOLS/l/pkg/lmod/lmod/libexec
-mpathA=( "/opt/apps/xsede/modulefiles" "/opt/apps/modulefiles" "/opt/apps/tools/modulefiles" "/opt/modulefiles" )
+mpathA=(  "/opt/apps/modulefiles" "/opt/apps/tools/modulefiles" "/opt/apps/xsede/modulefiles"  )
 MPATH=""
 for path in "${mpathA[@]}";  do
   if [ -d $path ]; then
@@ -17,6 +17,7 @@ for path in "${mpathA[@]}";  do
 done
 MPATH="${MPATH:1}"
 export MODULEPATH=$MPATH
+echo "MODULEPATH=$MPATH"
 
 if [ -f /etc/tacc/tacc_functions ]; then
   . /etc/tacc/tacc_functions
@@ -26,11 +27,6 @@ if [ -x $SWTOOLS/l/pkg/python/python/bin/python3 ]; then
   export PATH=$SWTOOLS/l/pkg/python/python/bin:$PATH
   export LD_LIBRARY_PATH=$SWTOOLS/l/pkg/python/python/lib:$LD_LIBRARY_PATH
   LD_LIBRARY_PATH="${LD_LIBRARY_PATH%:}"
-fi
-
-if [ "$SYSHOST" = "ls5" ]; then
-  export PYTHONPATH=/home1/02875/swtools/.local/lib/python2.7/site-packages:$TRACKING_DIR
-  module load intel python2
 fi
 
 if [ ! -d $TRACKING_DIR/reverseMapD ]; then
