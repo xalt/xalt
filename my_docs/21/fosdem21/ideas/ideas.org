@@ -1,0 +1,15 @@
+Ideas for Fosdem talk:
+
+
+* Main idea:  What are the issues when your xhared library is being linked to every executable?
+** Routine names (avoid name conflict)
+** Memory allocation during init.
+** Memory allocation during fini.
+** Setting environment variables during init.
+
+* Issues with containers:
+** Cannot be guaranteed that libraries will be their in container.
+** Can't rpath in libraries
+** Use dlopen/dlsym to avoid standard dynamic linking
+
+* Issue with libz and macros
