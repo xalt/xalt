@@ -1,7 +1,7 @@
 Ideas for Fosdem talk:
 
 
-* Main idea:  What are the issues when your xhared library is being linked to every executable?
+* Main idea:  What are the issues when your shared library is being linked to every executable?
 ** Routine names (avoid name conflict)
 ** Memory allocation during init.
 ** Memory allocation during fini.
