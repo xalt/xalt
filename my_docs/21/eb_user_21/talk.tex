@@ -95,6 +95,7 @@
     \item Transmit collected data in *.json format
     \item Optionally add codes that executes before main() and after
       main() completes for static builds.
+    \item Having the LD Wrapper is helpful but not required.
   \end{itemize}
 \end{frame}
 
@@ -113,21 +114,20 @@
     \frametitle{ELF Trick (II)}
  {\small
     \begin{semiverbatim}
-  hello.c:
-  #include <stdio.h>
-  int main() { printf("Hello World!!\n"): return 0; }
+{\color{blue}hello.c}:
+#include <stdio.h>
+int main() \{ printf("Hello World!\\n"): return 0; \}
 
-
-  xalt.c:
-  #include <stdio.h>
-  void myinit(int argc, char **argv)
-  \{ fprintf(stderr, "This is run before main()\textbackslash{}n"); \}
-  void myfini()
-  \{ fprintf(stderr,"This is run after main()\textbackslash{}n");\}
-  static \_\_attribute\_\_((section(".init_array")))
-       typeof(myinit) *\_\_init = myinit;
-  static \_\_attribute\_\_((section(".fini_array")))
-       typeof(myfini) *\_\_fini = myfini;
+{\color{blue}xalt.c}:
+#include <stdio.h>
+void myinit(int argc, char **argv)
+\{ fprintf(stderr, "This is run before main()\textbackslash{}n"); \}
+void myfini()
+\{ fprintf(stderr,"This is run after main()\textbackslash{}n");\}
+static \_\_attribute\_\_((section(".init_array")))
+     typeof(myinit) *\_\_init = myinit;
+static \_\_attribute\_\_((section(".fini_array")))
+     typeof(myfini) *\_\_fini = myfini;
     \end{semiverbatim}
 }
 \end{frame}
@@ -137,14 +137,15 @@
     \frametitle{ELF Trick (III)}
  {\small
     \begin{semiverbatim}
-        \texttt{\% ./hello}
-        Hello World!
+{\color{red}\texttt{\% ./hello}}
+Hello World!
 
-        \texttt{\% gcc -c -fPIC xalt.c; gcc -o libxalt.c ... xalt.o}
-        \texttt{\% LD\_PRELOAD=./libxalt.so ./hello}
-        This is run before main()
-        Hello World!
-        This is run after main()
+{\color{red}\texttt{\% gcc -c -fPIC xalt.c;}}
+{\color{red}\texttt{\% gcc -o libxalt.so -fPIC -shared xalt.o}}
+{\color{red}\texttt{\% LD\_PRELOAD=./libxalt.so ./hello}}
+This is run before main()
+Hello World!
+This is run after main()
     \end{semiverbatim}
 }
 \end{frame}
@@ -171,18 +172,7 @@
   \end{itemize}
 \end{frame}
 
-
 % page 13
-\begin{frame}{Lmod to XALT connection (II)}
-  \begin{itemize}
-    \item Need XALT's ld before compiler's ld
-    \item User loads a new compiler module?
-    \item Lmod support path priority:
-    \item \texttt{prepend\_path\{"PATH", "/.../xalt/bin", priority = 100\}}
-  \end{itemize}
-\end{frame}
-
-% page 14
 \begin{frame}{Installing XALT}
   \begin{itemize}
     \item Easy: \texttt{./configure ...; make install}
@@ -194,7 +184,7 @@
   \end{itemize}
 \end{frame}
 
-% page 15 
+% page 14
 \begin{frame}{Site config.py (I)}
   \begin{itemize}
     \item Each site must configure to match their setup
@@ -205,7 +195,7 @@
   \end{itemize}
 \end{frame}
 
-% page 16
+% page 15
 \begin{frame}{Site config.py (II)}
   \begin{itemize}
     \item XALT use config.py to create *.h, *.lex *.py files during build.
@@ -215,7 +205,7 @@
   \end{itemize}
 \end{frame}
 
-% page 17
+% page 16
 \begin{frame}{Hostname, Path and Env Filtering}
   \begin{itemize}
     \item Uses FLEX to compile in patterns
@@ -224,31 +214,31 @@
   \end{itemize}
 \end{frame}
 
-% page 18
+% page 17
 \begin{frame}[fragile]
     \frametitle{TACC\_config.py}
  {\small
     \begin{semiverbatim}
 hostname\_patterns = [
-   ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\textbackslash{}..*']
+  ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\textbackslash{}..*']
   ['KEEP', '^nid[0-9][0-9][0-9][0-9][0-9].*']
 ]
 path\_patterns = [
-    ['PKGS',  r'.*\textbackslash{}/python[0-9.]*'],
-    ['PKGS',  r'.*\textbackslash{}/R'],
-    ['KEEP',  r'^/\textbackslash{}usr\textbackslash{}/bin\textbackslash{}/ddt'],
-    ['SKIP',  r'^\textbackslash{}/bin\textbackslash{}/.*'],
+  ['PKGS',  r'.*\textbackslash{}/python[0-9.]*'],
+  ['PKGS',  r'.*\textbackslash{}/R'],
+  ['KEEP',  r'^/\textbackslash{}usr\textbackslash{}/bin\textbackslash{}/ddt'],
+  ['SKIP',  r'^\textbackslash{}/bin\textbackslash{}/.*'],
 ]
 env\_patterns = [
-    [ 'SKIP', r'^MKLROOT=.*' ],
-    [ 'SKIP', r'^MKL\_DIR=.*' ],
-    [ 'KEEP', r'^I\_MPI\_INFO\_NUMA\_NODE\_NUM=.*'],
+  [ 'SKIP', r'^MKLROOT=.*' ],
+  [ 'SKIP', r'^MKL\_DIR=.*' ],
+  [ 'KEEP', r'^I\_MPI\_INFO\_NUMA\_NODE\_NUM=.*'],
 ]
     \end{semiverbatim}
 }
 \end{frame}
 
-% page 19
+% page 18
 \begin{frame}{How sampling works}
   \begin{itemize}
     \item Changed design to deal with the overload of XALT data
@@ -258,7 +248,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 20
+% page 19
 \begin{frame}{Sampling Non-MPI programs}
   \begin{itemize}
     \item XALT has sampling rules (site configurable!)
@@ -270,7 +260,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 21
+% page 20
 \begin{frame}{Sampling MPI programs}
   \begin{itemize}
     \item Some users are using many short MPI programs to train Deep
@@ -287,7 +277,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 22
+% page 21
 \begin{frame}{XALT is now linking with everything!}
   \begin{itemize}
     \item I feel like a developer on every team.
@@ -297,7 +287,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 23
+% page 22
 \begin{frame}{Memory Collusion w/ user code (I)}
   \begin{itemize}
     \item User serial code creates a link list
@@ -309,7 +299,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 24
+% page 23
 \begin{frame}{Memory Collusion w/ user code (II)}
   \begin{itemize}
     \item Not all user programs allocate and free memory correctly (Surprise!)
@@ -318,7 +308,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 25
+% page 24
 \begin{frame}{Containers}
   \begin{itemize}
     \item XALT requires libuuid.so on host
@@ -331,7 +321,7 @@ env\_patterns = [
 \begin{frame}{Containers (II)}
   \begin{itemize}
     \item XALT copies system libuuid.so to XALT install dir.
-    \item XALT does: \texttt{dlopen("XALT_PATH/lib64/libuuid.so")}
+    \item XALT does: \texttt{dlopen("XALT\_INSTALL\_DIR/lib64/libuuid.so")}
     \item XALT then uses dlsym() to connect to libuuid routines
   \end{itemize}
 \end{frame}
@@ -346,17 +336,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 28
-\begin{frame}{What is new with XALT?}
-  \begin{itemize}
-    \item Tracking R, Python, MATLAB
-    \item Optionally Track GPU Usage
-    \item Track Singularity Container Usage
-    \item \texttt{xalt\_configuration\_report}
-  \end{itemize}
-\end{frame}
-
-% page 29
+% page 27
 \begin{frame}{Tracking R packages}
   \begin{itemize}
     \item XALT can now track R package usage
@@ -365,7 +345,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 30
+% page 28
 \begin{frame}{Tracking Python packages}
   \begin{itemize}
     \item Help from Riccardo Murri
@@ -377,7 +357,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 31
+% page 29
 \begin{frame}[fragile]
     \frametitle{Filtering python packages}
  {\small
@@ -390,7 +370,7 @@ env\_patterns = [
 }
 \end{frame}
 
-% page 32
+% page 30
 \begin{frame}{New program: xalt\_extract\_record}
   \begin{itemize}
     \item This program reads the watermark.
@@ -400,7 +380,7 @@ env\_patterns = [
   \end{itemize}
 \end{frame}
 
-% page 33
+% page 31
 \begin{frame}[fragile]
     \frametitle{Example of xalt\_extract\_record output}
  {\small
@@ -424,7 +404,7 @@ XALT\_Version         2.7
 }
 \end{frame}
 
-% page 34
+% page 32
 \begin{frame}{New Feature: Track GPU usage}
   \begin{itemize}
     \item Optionally, XALT can know if a GPU was used.
@@ -434,7 +414,7 @@ XALT\_Version         2.7
   \end{itemize}
 \end{frame}
 
-% page 35
+% page 33
 \begin{frame}{New Feature: Track Singularity Container Usage}
   \begin{itemize}
     \item Sites can configure their Singularity script to include XALT
@@ -443,7 +423,7 @@ XALT\_Version         2.7
   \end{itemize}
 \end{frame}
 
-% page 36
+% page 34
 \begin{frame}[fragile]
     \frametitle{Debugging XALT}
  {\tiny
@@ -476,19 +456,13 @@ myfini(0/1,LD_PRELOAD,/path/to/hello)\{
 }
 \end{frame}
 
-% page 37
-\begin{frame}[fragile]
-    \frametitle{XALT Doc usage by Country}
-    \center{\includegraphics[width=.9\textwidth]{XALT_usage_by_country}}
-\end{frame}
-
-% page 38
+% page 35
 \begin{frame}[fragile]
     \frametitle{XALT Doc usage by City}
     \center{\includegraphics[width=.9\textwidth]{XALT_usage_by_city}}
 \end{frame}
 
-% page 39
+% page 36
 \begin{frame}{Conclusion}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
