@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "crc.h"
 #include "xalt_types.h"
 #include "xalt_cxx_types.h"
 #include "buildJson.h"

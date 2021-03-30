@@ -13,9 +13,13 @@
  * expressed or implied by its publication or distribution.
  **********************************************************************/
 
-#ifndef _crc_h
-#define _crc_h
+#ifndef _CRC_H
+#define _CRC_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #define FALSE	0
 #define TRUE	!FALSE
@@ -73,5 +77,7 @@ void  crcInit(void);
 crc   crcSlow(char const message[], int nBytes);
 crc   crcFast(char const message[], int nBytes);
 
-
-#endif /* _crc_h */
+#ifdef __cplusplus
+}
+#endif
+#endif /* _CRC_H */

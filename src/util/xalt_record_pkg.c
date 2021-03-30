@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 
   const char *qs;
   strcpy(&json_str[0],"{\"crc\":\"0xFFFF\",");
-  int idx = strlen(&json_str[0])
+  int idx = strlen(&json_str[0]);
   for (i = optind; i < argc; i+=2)
     {
       qs	      = xalt_quotestring(argv[i]);
@@ -106,10 +106,10 @@ int main(int argc, char* argv[])
   json_str[++idx] = '\0';
 
   crcInit();
-  crc crcValue = crcFast(jsonStr,strlen(jsonStr));
+  crc crcValue = crcFast(json_str,strlen(json_str));
   char crcStr[7];
   sprintf(&crcStr[0],"0x%04X",crcValue);
-  memcpy(&jsonStr[8],crcStr,6);
+  memcpy(&json_str[8],crcStr,6);
 
 
   char* resultFn = NULL;
