@@ -156,6 +156,7 @@ class XALTdb(object):
     self.__db     = None
     self.__conn   = None
     self.__confFn = confFn
+    self.__patt   = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
   def __readFromUser(self):
     """ Ask user for database access info. (private) """
@@ -253,21 +254,20 @@ class XALTdb(object):
         return
 
       build_epoch = float(resultT['build_epoch'])
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(resultT['build_epoch'])))
-      dateStr     = time.strftime("%Y-%m-%d",          time.localtime(float(resultT['build_epoch'])))
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(build_epoch))
+      dateStr     = time.strftime("%Y-%m-%d",          time.localtime(build_epoch))
 
-      exec_path   = resultT['exec_path'][:1024].encode("ascii","ignore")
-      link_prg    = resultT['link_program'][:64].encode("ascii","ignore")
-      link_path   = resultT['link_path']
+      exec_path   = resultT.get('exec_path',"")[:1024].encode("ascii","ignore")
+      link_prg    = resultT.get('link_program',"")[:64].encode("ascii","ignore")
+      link_path   = resultT.get('link_path',"")[:1024]
       cwd         = resultT.get('wd',"UNKNOWN")[:1024].encode("ascii","ignore")
       link_mname  = obj2module(link_path,reverseMapT)
       link_line   = json.dumps(link_lineA)[:2048]
-      build_user  = resultT['build_user'].encode("ascii","ignore")
-      build_shost = resultT['build_syshost'].encode("ascii","ignore")
-      hash_id     = resultT['hash_id']
+      build_user  = resultT.get('build_user',"").encode("ascii","ignore")
+      build_shost = resultT.get('build_syshost',"").encode("ascii","ignore")
+      hash_id     = resultT.get('hash_id')
 
       # It is unique: lets store this link record
-      #query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
       query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
       cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
                              link_prg,    link_path,   link_mname,
@@ -379,38 +379,60 @@ class XALTdb(object):
     msg   = ""
     query = ""
     try:
-      conn   = self.connect()
-      cursor = conn.cursor()
-      query  = "USE "+self.db()
+      conn     = self.connect()
+      cursor   = conn.cursor()
+      query    = "USE "+self.db()
       conn.query(query)
-      query  = "START TRANSACTION"
+      query    = "START TRANSACTION"
       conn.query(query)
-      query  = ""
+      query    = ""
+      stored   = False 
+      recordMe = False 
 
-      XALT_Stack.push("SUBMIT_HOST: "+ runT['userT']['submit_host'])
+      if (not ('userT' in runT)):
+        return stored
+      userT = runT['userT']
 
-      cwd         = runT['userT']['cwd'].encode("utf-8","ignore")
-      runTime     = runT['userDT']['run_time']
-      endTime     = runT['userDT']['end_time']
+      if (not ('userDT' in runT)):
+        return stored
+      userDT = runT['userDT']
+
+      XALT_Stack.push("SUBMIT_HOST: "+ userT['submit_host'])
+      
+      cwd         = userT.get('cwd',"UNKNOWN").encode("utf-8","ignore")
+      runTime     = userDT.get('run_time',0.0)
+      endTime     = userDT.get('end_time',0.0)
       runTimeStr  = "%.2f" % (runTime)
       endTimeStr  = "%.2f" % (endTime)
-      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(runT['userDT']['start_time'])))
-      dateStr     = time.strftime("%Y-%m-%d", time.localtime(float(runT['userDT']['start_time'])))
-      xaltLinkT   = runT['xaltLinkT']
+      startTime   = userDT.get('start_time',0.0)
+      if (startTime < 1):
+        return stored
+
+      dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(startTime))
+      dateStr     = time.strftime("%Y-%m-%d",          time.localtime(startTime))
+      xaltLinkT   = runT.get('xaltLinkT',{})
       uuid        = xaltLinkT.get('Build.UUID') or xaltLinkT.get('Build_UUID') 
       #print( "Looking for run_uuid: ",runT['userT']['run_uuid'])
 
-      run_uuid    = runT['userT']['run_uuid'][:36]
+      run_uuid    = userT.get('run_uuid',"UNKNOWN")[:36]
+      if (run_uuid == "UNKNOWN"):
+        return stored
+      uuid_patt = self.__patt
+      m         = uuid_patt.match(run_uuid)
+      if (not m):
+        return stored
+
       msg         = "my run_uuid is: \"" + run_uuid + "\""
       query       = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,[run_uuid])
       query       = ""
       msg         = ""
-      num_cores   = runT['userDT']['num_cores']
-      num_threads = convertToTinyInt(runT['userDT'].get('num_threads',0))
-      num_gpus    = convertToTinyInt(runT['userDT'].get('num_gpus',0))
-      stored      = False 
-      recordMe    = False 
+      num_cores   = userDT.get('num_cores', 1)
+      num_threads = convertToTinyInt(userDT.get('num_threads',0))
+      num_gpus    = convertToTinyInt(userDT.get('num_gpus',   0))
+      exec_path   = userT.get('exec_path')
+      if (not exec_path):
+        return stored
 
       if (cursor.rowcount > 0):
         #print("found")
@@ -430,30 +452,36 @@ class XALTdb(object):
         return
       else:
         #print("not found")
-        moduleName    = obj2module(runT['userT']['exec_path'], reverseMapT)
-        exit_status   = convertToTinyInt(runT['userT'].get('exit_status',0))
-        usr_cmdline   = json.dumps(runT['cmdlineA'])[:2048]
-        sum_runs      = runT['userDT'].get('sum_runs' ,   0)
-        sum_times     = runT['userDT'].get('sum_times',   0.0)
-        probability   = runT['userDT'].get('probability', 1.0)
-        account       = runT['userT']['account']
-        user          = runT['userT']['user']
-        container     = runT['userT'].get('container')
+        moduleName    = obj2module(exec_path, reverseMapT)
+        exit_status   = convertToTinyInt(userT.get('exit_status',0))
+        usr_cmdline   = json.dumps(runT.get('cmdlineA'," "))[:2048]
+        sum_runs      = userDT.get('sum_runs' ,   0)
+        sum_times     = userDT.get('sum_times',   0.0)
+        probability   = userDT.get('probability', 1.0)
+        num_nodes     = userDT.get('num_nodes',   1.0)
+        account       = userT.get('account')
+        job_id        = userT.get('job_id')
+        hash_id       = runT.get('hash_id')
+        syshost       = userT.get('syshost')
+        user          = userT.get('user')
+        queue         = userT.get('queue')
+        container     = userT.get('container')
+        exec_type     = userT.get('exec_type')
+        
         if ( type(container) != type(None)):
           container = container[:32]
         if ( account == "unknown"):
           account = u2acctT.get(user,"unknown")
 
-        startTime     = "%.f" % float(runT['userDT']['start_time'])
-        query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s)"
+        startTimeStr  = "%.f" % startTime
         query  = "INSERT INTO xalt_run VALUES (NULL, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,%s, %s,%s,COMPRESS(%s), %s)"
-        cursor.execute(query, (runT['userT']['job_id'],  run_uuid,                     dateTimeStr,
-                               runT['userT']['syshost'], uuid,                         runT['hash_id'],
-                               account,                  runT['userT']['exec_type'],   startTime,
+        cursor.execute(query, (job_id,                   run_uuid,                     dateTimeStr,
+                               syshost,                  uuid,                         hash_id,
+                               account,                  exec_type,                    startTimeStr,
                                endTimeStr,               runTimeStr,                   probability,
-                               num_cores,                runT['userDT']['num_nodes'],  num_threads,
-                               num_gpus,                 runT['userT']['queue'],       sum_runs,
-                               sum_times,                user,                         runT['userT']['exec_path'],
+                               num_cores,                num_nodes,                    num_threads,
+                               num_gpus,                 queue,                        sum_runs,
+                               sum_times,                user,                         exec_path,
                                moduleName,               cwd,                          usr_cmdline,
                                container))
         query    = ""
@@ -508,9 +536,9 @@ class XALTdb(object):
       print("query: ",query,file=sys.stderr)
       print("msg: ",msg,   file=sys.stderr)
       print("run_to_db(): ",e,file=sys.stderr)
-      print("userDT: ",    runT['userDT'])
-      print("userT: ",     runT['userT'])
-      print("xaltLinkT: ", runT['xaltLinkT'])
+      print("userDT: ",    userDT)
+      print("userT: ",     userT)
+      print("xaltLinkT: ", xaltLinkT)
       print(traceback.format_exc())
       sys.exit (1)
 
@@ -538,10 +566,10 @@ class XALTdb(object):
       if (cursor.rowcount > 0):
         row         = cursor.fetchone()
         run_id      = int(row[0])
-        program     = pkgT['program'][:12]
-        pkg_name    = pkgT['package_name'][:64]
-        pkg_version = pkgT['package_version'][:32]
-        pkg_path    = pkgT['package_path'][:1024]
+        program     = pkgT.get('program')[:12]
+        pkg_name    = pkgT.get('package_name')[:64]
+        pkg_version = pkgT.get('package_version')[:32]
+        pkg_path    = pkgT.get('package_path')[:1024]
         
         query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
         cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))
