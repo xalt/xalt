@@ -11,6 +11,7 @@
 #include "xalt_config.h"
 #include "build_uuid.h"
 #include "xalt_tmpdir.h"
+#include "crc.h"
 
 #define DATESZ    100
 #define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
@@ -82,8 +83,8 @@ int main(int argc, char* argv[])
 
 
   const char *qs;
-  int idx = 0;
-  json_str[idx++] = '{';
+  strcpy(&json_str[0],"{\"crc\":\"0xFFFF\",");
+  int idx = strlen(&json_str[0])
   for (i = optind; i < argc; i+=2)
     {
       qs	      = xalt_quotestring(argv[i]);
@@ -103,6 +104,13 @@ int main(int argc, char* argv[])
     }
   json_str[--idx] = '}';
   json_str[++idx] = '\0';
+
+  crcInit();
+  crc crcValue = crcFast(jsonStr,strlen(jsonStr));
+  char crcStr[7];
+  sprintf(&crcStr[0],"0x%04X",crcValue);
+  memcpy(&jsonStr[8],crcStr,6);
+
 
   char* resultFn = NULL;
   
