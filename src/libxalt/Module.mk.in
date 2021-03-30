@@ -22,6 +22,7 @@ RUN_SUBMISSION_O  := libxalt/run_submission.o            \
                      __build__/lex.__XALT_path.o         \
                      __build__/lex.xalt_env.o            \
                      __build__/xalt_syshost.o            \
+		     util/crc.o                          \
 		     util/capture.o                   	 \
 		     util/compute_sha1.o                 \
 	             util/buildJson.o                    \

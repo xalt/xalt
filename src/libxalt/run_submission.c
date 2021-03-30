@@ -8,6 +8,7 @@
 #include "buildEnvT.h"
 #include "buildJson.h"
 #include "buildXALTRecordT.h"
+#include "crc.h"
 #include "compute_sha1.h"
 #include "insert.h"
 #include "processTree.h"
@@ -156,7 +157,8 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   Json_t json;
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
-  json_add_json_str( &json, my_sep, "cmdlineA",      usr_cmdline);   my_sep = comma;
+  json_add_char_str( &json, my_sep, "crc",          "0xFFFF");     my_sep = comma;
+  json_add_json_str( &json, my_sep, "cmdlineA",      usr_cmdline);
   json_add_char_str( &json, my_sep, "hash_id",       &sha1buf[0]);
   json_add_libT(     &json, my_sep, "libA",          libT);
   json_add_ptA(      &json, my_sep, "ptA",           ptA);
@@ -167,6 +169,13 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   json_add_S2D(      &json, my_sep, "XALT_measureT", measureT);
   json_add_S2S(      &json, my_sep, "XALT_qaT",      qaT);
   json_fini(         &json, &jsonStr);
+
+  crcInit();
+  crc crcValue = crcFast(jsonStr,strlen(jsonStr));
+  char crcStr[7];
+  sprintf(&crcStr[0],"0x%04X",crcValue);
+  memcpy(&jsonStr[8],crcStr,6);
+
   DEBUG0(my_stderr,"    Built json string\n");
 
   processTreeFree(&ptA);

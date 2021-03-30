@@ -5,6 +5,7 @@ local_c_src   	 := buildJson.c          \
 		    build_uuid.c         \
 	            capture.c            \
 		    compute_sha1.c       \
+		    crc.c                \
 		    epoch.c              \
                     extractMain.c        \
 	            insert.c             \
