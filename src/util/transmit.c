@@ -174,6 +174,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       char        *kindStr;
       char        *nbStr;
       char        *keyStr;
+      char        *crcS;
       char        *syshostStr;
       char        idxStr[20];
 
@@ -194,6 +195,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       asprintf(&nbStr,      "nb:%d",           nBlks);
       asprintf(&syshostStr, "syshost:%s",      syshost);
       asprintf(&keyStr,     "key:%s",          key);
+      asprintf(&crcS,       "crcStr:%s",       crcStr);
 
       int istrt	     = 0;
       int iend	     = blkSz;
@@ -203,13 +205,14 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       myargs[0]	     = (char *) prgm;
       myargs[1]	     = "-t";
       myargs[2]	     = tagStr;
-      myargs[3]	     = "V:3";
+      myargs[3]	     = "V:4";
       myargs[4]	     = kindStr;
       myargs[5]	     = nbStr;
       myargs[6]	     = syshostStr;
       myargs[7]	     = keyStr;
-      myargs[8]	     = idxStr;
-      myargs[9]	     = valueStr;
+      myargs[8]	     = crcS;
+      myargs[9]	     = idxStr;
+      myargs[10]     = valueStr;
       
       for (i = 0; i < nBlks; i++)
         {
