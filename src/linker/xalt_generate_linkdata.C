@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
       build_resultFn( &resultFn,  "link", start, syshost, uuid, "");
     }
 
-  transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn, stderr);
+  transmit(transmission, jsonStr, "link", key.c_str(), crcStr, syshost, resultDir, resultFn, stderr);
   my_free(jsonStr,strlen(jsonStr));
   if (resultFn)
     {

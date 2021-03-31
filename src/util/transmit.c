@@ -19,7 +19,8 @@
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
-              const char* syshost, char* resultDir, const char* resultFn, FILE* my_stderr)
+              const char* crcStr, const char* syshost, char* resultDir, const char* resultFn,
+              FILE* my_stderr)
 {
   char * logNm   = NULL;
   char * p_dbg        = getenv("XALT_TRACING");
@@ -92,8 +93,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          syslog(LOG_INFO, "V:3 kind:%s nb:%d syshost:%s key:%s idx:%d value:%.*s",
-                                kind,   nBlks,syshost,   key,   i,     iend-istrt, &jsonStr[istrt]);
+          syslog(LOG_INFO, "V:4 kind:%s nb:%d syshost:%s key:%s crc:%s idx:%d value:%.*s",
+                                kind,   nBlks,syshost,   key,   crcStr,i,     iend-istrt, &jsonStr[istrt]);
           istrt = iend;
           iend  = istrt + blkSz;
           if (iend > sz)
