@@ -236,7 +236,7 @@ class ParseSyslog(object):
     return t, True
     
   def __parseSyslog(self, level, s, clusterName, old):
-    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'crc' : None, 'version' : level}
+    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'crc' : "", 'version' : level}
 
     # Strip off "XALT_LOGGING V:%d" from string and trailing white space.
     s = self.__frntPatt.sub("",s)
@@ -257,9 +257,9 @@ class ParseSyslog(object):
     # Pick off two values at a time.
     try: 
       while True:
-        key    = next(lexer)
-        value  = next(lexer)
-        t[key] = value
+        n     = next(lexer)
+        value = next(lexer)
+        t[n]  = value
     except StopIteration as e:
       pass
   
@@ -270,7 +270,8 @@ class ParseSyslog(object):
 
     # get the key from the input, then place an entry in the *recordT* table.
     # or just add the block to the current record.
-    key  = t['key']
+    key  = t['crc'] + "_" + t['key'] 
+    
     r    = recordT.get(key, None)
     if (r):
       r.addBlk(t)
