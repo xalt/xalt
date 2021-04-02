@@ -167,7 +167,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   else if (strcasecmp(transmission, "logger") == 0)
     {
       int         i, pid, status, ret = 0;
-      char        *myargs [] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+      char        *myargs [] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
       char        *myenv  [] = { NULL };
       const char  *prgm      = "logger";
       char        *tagStr;
@@ -190,6 +190,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       int   nBlks   = (sz -  1)/blkSz + 1;
 
       
+      fprintf(stderr,"crcStr:%s\n", crcStr);
       asprintf(&tagStr,     "XALT_LOGGING_%s", syshost);
       asprintf(&kindStr,    "kind:%s",         kind);
       asprintf(&nbStr,      "nb:%d",           nBlks);

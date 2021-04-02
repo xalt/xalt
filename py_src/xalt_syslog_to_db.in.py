@@ -205,6 +205,8 @@ class ParseSyslog(object):
         return self.__parseSyslog(2, s, clusterName, old)
       elif (" V:3 " in s):
         return self.__parseSyslog(3, s, clusterName, old)
+      elif (" V:4 " in s):
+        return self.__parseSyslog(4, s, clusterName, old)
       else:
         return self.__parseSyslogV1(s, clusterName)
     return false, {}
@@ -234,7 +236,7 @@ class ParseSyslog(object):
     return t, True
     
   def __parseSyslog(self, level, s, clusterName, old):
-    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'version' : level}
+    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'crc' : None, 'version' : level}
 
     # Strip off "XALT_LOGGING V:%d" from string and trailing white space.
     s = self.__frntPatt.sub("",s)
