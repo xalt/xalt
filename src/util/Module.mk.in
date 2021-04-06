@@ -5,7 +5,7 @@ local_c_src   	 := buildJson.c          \
 		    build_uuid.c         \
 	            capture.c            \
 		    compute_sha1.c       \
-		    crc.c                \
+		    crcFast.c            \
 		    epoch.c              \
                     extractMain.c        \
 	            insert.c             \
@@ -52,7 +52,7 @@ TST_REC_PKG_OBJ  := $(patsubst %.C, %.o, $(TST_REC_PKG_CXX))
 
 REC_PKG_X        := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
 REC_PKG_C        := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
-                    xalt_fgets_alloc.c xalt_tmpdir.c xalt_dir.c crc.c
+                    xalt_fgets_alloc.c xalt_tmpdir.c xalt_dir.c crcFast.c
 REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) __build__/xalt_syshost.c
 REC_PKG_OBJ      := $(patsubst %.c, %.o, $(REC_PKG_C))
 
@@ -63,11 +63,15 @@ CURL_TRANS_OBJ   := $(patsubst %.c, %.o, $(CURL_TRANS_C))
 
 SYSHOST_X        := $(DESTDIR)$(BIN)/xalt_syshost
 
+CRC_FAST_LIB     := $(DESTDIR)$(LIB64)/libcrcFast.so
+
+
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
 cxx_sources   	 += $(local_cxx_src)
 programs      	 += $(EXTR_REC_X) $(EPOCH_X) $(CFG_RPT_X) $(REC_PKG_X) \
                     $(TST_REC_PKG_X) $(SYSHOST_X) $(CURL_TRANS_X)
+libraries        += $(CRC_FAST_LIB)
 #=====================================================================#
 
 $(EPOCH_X) : $(EPOCH_OBJ)
@@ -94,3 +98,5 @@ __build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fge
 $(CURL_TRANS_X): $(CURL_TRANS_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -Wl,-rpath,$(LIB64) -L$(LIB64)  -lm -lcurl
 
+$(CRC_FAST_LIB): crcFast.c
+	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^

@@ -55,12 +55,13 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+from Rmap_XALT     import Rmap
 from XALTdb        import XALTdb
 from XALTdb        import TimeRecord
+from ctypes        import *
+from progressBar   import ProgressBar
 from xalt_util     import *
 from xalt_global   import *
-from progressBar   import ProgressBar
-from Rmap_XALT     import Rmap
 
 import inspect
 
@@ -78,6 +79,8 @@ def __FILE__():
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
+libcrc       = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
+version_patt = re.compile(r" V:(\d+) ")
 
 def Version():
   my_version = "@git@"
@@ -119,6 +122,7 @@ class Record(object):
     self.__syshost = t['syshost']
     self.__old     = old
     self.__blkCnt  = 0
+    self.__crc     = t['crcStr']
 
     blkA = []
     for i in range(nblks):
@@ -137,7 +141,19 @@ class Record(object):
         
     
   def completed(self):
-    return (self.__blkCnt >= self.__nblks)
+    retV = False
+    if (self.__blkCnt >= self.__nblks):
+      crcStr = self.__crc
+      if (crcStr == ""):
+        return True
+      crcV  = int(crcStr, 16)
+      s     = self.value()
+      s     = '{"crc":"0xFFFF"' + s[15:]
+      myLen = len(s)
+      data  = s.encode()
+      c     = libcrc.crcFast(c_char_p(data), myLen)
+      retV  = crcV == c
+    return retV
 
   def value(self):
     return "".join(self.__blkA)
@@ -154,12 +170,14 @@ class Record(object):
     
     sPA.append("XALT_LOGGING_")
     sPA.append(self.__syshost)
-    sPA.append(" V:2 kind:")
+    sPA.append(" V:4 kind:")
     sPA.append(self.__kind)
     sPA.append(" syshost:")
     sPA.append(self.__syshost)
     sPA.append(" key:")
     sPA.append(key)
+    sPA.append(" crcStr:")
+    sPA.append(self.__crc)
     sPA.append(" nb:")
     sPA.append(str(nblks))
     ss = "".join(sPA)
@@ -201,12 +219,10 @@ class ParseSyslog(object):
 
   def parse(self, s, clusterName, old):
     if ("XALT_LOGGING_" in s):
-      if (" V:2 " in s):
-        return self.__parseSyslog(2, s, clusterName, old)
-      elif (" V:3 " in s):
-        return self.__parseSyslog(3, s, clusterName, old)
-      elif (" V:4 " in s):
-        return self.__parseSyslog(4, s, clusterName, old)
+      m = version_patt.search(s)
+      if (m):
+        version = int(m.group(1))
+        return self.__parseSyslog(version, s, clusterName, old)
       else:
         return self.__parseSyslogV1(s, clusterName)
     return false, {}
@@ -236,7 +252,7 @@ class ParseSyslog(object):
     return t, True
     
   def __parseSyslog(self, level, s, clusterName, old):
-    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'crc' : "", 'version' : level}
+    t = { 'kind' : None, 'syshost' : None, 'value' : None, 'crcStr' : "", 'version' : level}
 
     # Strip off "XALT_LOGGING V:%d" from string and trailing white space.
     s = self.__frntPatt.sub("",s)
@@ -270,12 +286,13 @@ class ParseSyslog(object):
 
     # get the key from the input, then place an entry in the *recordT* table.
     # or just add the block to the current record.
-    key  = t['crc'] + "_" + t['key'] 
+    key  = t['crcStr'] + "_" + t['key'] 
     
     r    = recordT.get(key, None)
     if (r):
       r.addBlk(t)
     else:
+      
       r            = Record(t, old)
       recordT[key] = r
 
@@ -413,9 +430,6 @@ def main():
 
   fnA    = [ args.leftover, syslogFile ]
 
-  parseSyslog = ParseSyslog(args.leftover)
-
-
   #-----------------------------
   # Figure out size in bytes.
 
@@ -446,6 +460,7 @@ def main():
       try:
         t, done = parseSyslog.parse(line, args.syshost, old)
       except Exception as e:
+        print("xalt_syslog_to_db: Error: %s %s" % (e.args[0], e.args[1]))
         badsyslog += 1
         continue
       

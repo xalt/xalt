@@ -48,7 +48,7 @@ LNKDATA_CXX       := xalt_generate_linkdata.C parseJsonStr.C parseLDTrace.C
 LNKDATA_CXX       := $(addprefix $(local_dir)/, $(LNKDATA_CXX))
 LNKDATA_C         := linker/jsmn.c util/insert.c util/xalt_fgets_alloc.c util/buildJson.c    \
                      util/xalt_quotestring.c util/xalt_c_utils.c util/transmit.c             \
-                     util/xalt_dir.c util/crc.c
+                     util/xalt_dir.c util/crcFast.c
 LNKDATA_OBJ       := $(patsubst %.C, %.o, $(LNKDATA_CXX)) \
                      $(patsubst %.c, %.o, $(LNKDATA_C))
 

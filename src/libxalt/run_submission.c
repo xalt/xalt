@@ -170,7 +170,6 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   json_add_S2S(      &json, my_sep, "XALT_qaT",      qaT);
   json_fini(         &json, &jsonStr);
 
-  crcInit();
   crc crcValue = crcFast(jsonStr,strlen(jsonStr));
   char crcStr[7];
   sprintf(&crcStr[0],"0x%04X",crcValue);

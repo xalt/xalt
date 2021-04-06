@@ -53,12 +53,13 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+from Rmap_XALT     import Rmap
 from XALTdb        import XALTdb
 from XALTdb        import TimeRecord
+from ctypes        import *
+from progressBar   import ProgressBar
 from xalt_util     import *
 from xalt_global   import *
-from progressBar   import ProgressBar
-from Rmap_XALT     import Rmap
 import warnings, getent
 warnings.filterwarnings("ignore", "Unknown table.*")
 
@@ -76,6 +77,8 @@ def __LINE__():
 
 def __FILE__():
     return inspect.currentframe().f_code.co_filename
+
+libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -108,6 +111,18 @@ def keep_or_delete(fn, deleteFlg):
   if (delta > 86400 and deleteFlg):
     os.remove(fn)
 
+def check_string_w_crc(s, crcStr):
+  if (not crcStr):
+    return True
+
+  crcV  = int(crcStr, 16)
+  ss     = '{"crc":"0xFFFF"' + s[15:]
+  myLen = len(ss)
+  data  = ss.encode()
+  c     = libcrc.crcFast(c_char_p(data), myLen)
+  return crcV == c
+
+
 def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, active, pbar):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
@@ -133,8 +148,10 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, activ
       except:
         continue
   
+      s = None
       try:
-        linkT = json.loads(f.read())
+        s     = f.read().rstrip()
+        linkT = json.loads(s)
       except:  
         f.close()
         v = XALT_Stack.pop()
@@ -142,6 +159,9 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, activ
         continue
 
       f.close()
+      if (not check_string_w_crc(s, linkT.get('crc'))):
+        continue;
+
       xalt.link_to_db(reverseMapT, linkT)
       num  += 1
       if (active):
@@ -190,8 +210,10 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pba
       except:
         continue
   
+      s = None
       try:
-        pkgT = json.loads(f.read())
+        s    = f.read().rstrip()
+        pkgT = json.loads(s)
       except:  
         f.close()
         v = XALT_Stack.pop()
@@ -199,6 +221,9 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pba
         continue
 
       f.close()
+      if (not check_string_w_crc(s, pkgT.get('crc'))):
+        continue;
+
       xalt.pkg_to_db(syshost, pkgT)
       num  += 1
       if (active):
@@ -246,8 +271,10 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT
       except:
         continue
       
+      s = None
       try:
-        runT   = json.loads(f.read())
+        s    = f.read().rstrip()
+        runT = json.loads(s)
       except:
         f.close()
         v = XALT_Stack.pop()
@@ -255,6 +282,9 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT
         continue
       f.close()
 
+      if (not check_string_w_crc(s, runT.get('crc'))):
+        continue;
+      
       stored = xalt.run_to_db(reverseMapT, u2acctT, runT, timeRecord)
       try:
         if (deleteFlg):

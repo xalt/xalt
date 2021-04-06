@@ -12,7 +12,6 @@
 #include "buildJson.h"
 #include "xalt_config.h"
 #include "transmit.h"
-//include "xalt_utils.h"
 #include "xalt_c_utils.h"
 #include "parseLDTrace.h"
 #include "insert.h"
@@ -101,7 +100,6 @@ int main(int argc, char* argv[])
   json_add_utarray(  &json, my_sep, "link_line", linklineA);
   json_fini(         &json, &jsonStr);
 
-  crcInit();
   crc crcValue = crcFast(jsonStr,strlen(jsonStr));
   char crcStr[7];
   sprintf(&crcStr[0],"0x%04X",crcValue);

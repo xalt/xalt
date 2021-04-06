@@ -105,7 +105,6 @@ int main(int argc, char* argv[])
   json_str[--idx] = '}';
   json_str[++idx] = '\0';
 
-  crcInit();
   crc crcValue = crcFast(json_str,strlen(json_str));
   char crcStr[7];
   sprintf(&crcStr[0],"0x%04X",crcValue);
