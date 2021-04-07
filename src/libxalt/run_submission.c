@@ -55,8 +55,11 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   // Walk Process tree to find parent processes
 
   t1 = epoch();
+  HERE;
   walkProcessTree(ppid, &ptA);
+  HERE;
   insert_key_double(&measureT, "04_WalkProcTree__", epoch() - t1);
+  HERE;
   DEBUG0(my_stderr,"    Built processTree table\n");
   
   //************************************************************
