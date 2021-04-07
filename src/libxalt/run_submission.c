@@ -275,7 +275,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
               // the crc string must be at the begining of jsonStr
               char * s = utstring_body(jsonStr);
               memcpy(crcStr, &s[8], 6);
-              crcStr[7] = '\0';
+              crcStr[6] = '\0';
 
               // transmit jsonStr
               transmit(transmission, utstring_body(jsonStr), "pkg", utstring_body(key), crcStr, syshost,

@@ -35,9 +35,13 @@ void build_proc(process_t* proc, pid_t my_pid)
   
   char*  buf   = NULL;
   size_t sz    = 0;
-  getline(&buf, &sz, fp);
-  //buf[--nchr]  = '\0';
-  //xalt_fgets_alloc(fp, &buf, &sz);
+  int    iret  = getline(&buf, &sz, fp);
+  if (iret < 1)
+    {
+      proc->m_parent = -1;
+      return;
+    }
+
   fclose(fp);
 
   //**************************************************
