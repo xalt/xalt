@@ -8,6 +8,7 @@
 #include "buildEnvT.h"
 #include "buildJson.h"
 #include "buildXALTRecordT.h"
+#include "crc.h"
 #include "compute_sha1.h"
 #include "insert.h"
 #include "processTree.h"
@@ -159,7 +160,8 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   Json_t json;
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
-  json_add_json_str( &json, my_sep, "cmdlineA",      usr_cmdline);   my_sep = comma;
+  json_add_char_str( &json, my_sep, "crc",          "0xFFFF");     my_sep = comma;
+  json_add_json_str( &json, my_sep, "cmdlineA",      usr_cmdline);
   json_add_char_str( &json, my_sep, "hash_id",       &sha1buf[0]);
   json_add_libT(     &json, my_sep, "libA",          libT);
   json_add_ptA(      &json, my_sep, "ptA",           ptA);
@@ -170,6 +172,12 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   json_add_S2D(      &json, my_sep, "XALT_measureT", measureT);
   json_add_S2S(      &json, my_sep, "XALT_qaT",      qaT);
   json_fini(         &json, &jsonStr);
+
+  crc crcValue = crcFast(jsonStr,strlen(jsonStr));
+  char crcStr[7];
+  sprintf(&crcStr[0],"0x%04X",crcValue);
+  memcpy(&jsonStr[8],crcStr,6);
+
   DEBUG0(my_stderr,"    Built json string\n");
 
   processTreeFree(&ptA);
@@ -192,7 +200,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
       build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
     }
 
-  transmit(transmission, jsonStr, "run", key, syshost, resultDir, resultFn, my_stderr);
+  transmit(transmission, jsonStr, "run", key, crcStr, syshost, resultDir, resultFn, my_stderr);
   xalt_quotestring_free();
   my_free(jsonStr, strlen(jsonStr));
   if (resultFn)
@@ -235,6 +243,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
   utstring_new(jsonStr);
   utstring_new(fullName);
   utstring_new(key);
+  char crcStr[7];
 
   struct dirent* dp;
   while ( (dp = readdir(dirp)) != NULL)
@@ -261,9 +270,15 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
               //pkg.rios.2018_11_06_16_14_13_7992.user.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
               int my_len = strlen(dp->d_name);
 	      utstring_printf(key,"pkg_%s_%.*s",uuid_str, ulen, &dp->d_name[my_len - 17]);
-              // transmit jsonStr
               
-              transmit(transmission, utstring_body(jsonStr), "pkg", utstring_body(key), syshost,
+              // extract crc string from jsonStr:
+              // the crc string must be at the begining of jsonStr
+              char * s = utstring_body(jsonStr);
+              memcpy(crcStr, &s[8], 6);
+              crcStr[7] = '\0';
+
+              // transmit jsonStr
+              transmit(transmission, utstring_body(jsonStr), "pkg", utstring_body(key), crcStr, syshost,
 		       resultDir, dp->d_name, my_stderr);
               unlink(utstring_body(fullName));
             }

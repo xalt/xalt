@@ -6,12 +6,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include "crc.h"
 #include "xalt_types.h"
 #include "xalt_cxx_types.h"
 #include "buildJson.h"
 #include "xalt_config.h"
 #include "transmit.h"
-//include "xalt_utils.h"
 #include "xalt_c_utils.h"
 #include "parseLDTrace.h"
 #include "insert.h"
@@ -93,11 +93,17 @@ int main(int argc, char* argv[])
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
 
-  json_add_S2S(     &json, my_sep, "resultT",   resultT); my_sep = comma;
-  json_add_libT(    &json, my_sep, "linkA",     libT);
-  json_add_SET(     &json, my_sep, "function",  funcSet);
-  json_add_utarray( &json, my_sep, "link_line", linklineA);
-  json_fini(        &json, &jsonStr);
+  json_add_char_str( &json, my_sep, "crc",       "0xFFFF");     my_sep = comma;
+  json_add_S2S(      &json, my_sep, "resultT",   resultT); 
+  json_add_libT(     &json, my_sep, "linkA",     libT);
+  json_add_SET(      &json, my_sep, "function",  funcSet);
+  json_add_utarray(  &json, my_sep, "link_line", linklineA);
+  json_fini(         &json, &jsonStr);
+
+  crc crcValue = crcFast(jsonStr,strlen(jsonStr));
+  char crcStr[7];
+  sprintf(&crcStr[0],"0x%04X",crcValue);
+  memcpy(&jsonStr[8],crcStr,6);
 
   std::string key("link_");
   key.append(uuid);
@@ -111,7 +117,7 @@ int main(int argc, char* argv[])
       build_resultFn( &resultFn,  "link", start, syshost, uuid, "");
     }
 
-  transmit(transmission, jsonStr, "link", key.c_str(), syshost, resultDir, resultFn, stderr);
+  transmit(transmission, jsonStr, "link", key.c_str(), crcStr, syshost, resultDir, resultFn, stderr);
   my_free(jsonStr,strlen(jsonStr));
   if (resultFn)
     {

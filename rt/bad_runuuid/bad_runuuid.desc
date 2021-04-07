@@ -1,0 +1,61 @@
+# -*- python -*-
+
+test_name = "bad_runuuid"
+test_descript = {
+   'description' : "Test bad runuuid",
+   'keywords'    : [ test_name ],
+
+   'active'      : True,
+   'test_name'   : test_name,
+
+   'run_script'  : """
+     . $(projectDir)/rt/common_funcs.sh
+
+     rm -f results.csv
+
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     XALT_DIR=$outputDir/XALT/xalt/xalt/
+     PATH=$XALT_DIR/bin:$XALT_DIR/sbin:$(testDir)/bin:$PATH;
+
+     initialize
+     export MY_HOST=`uname -n`
+     installXALT --with-syshostConfig=env_var:MY_HOST --with-systemPath=$(testDir)/bin:/bin:/usr/bin --with-config=$(testDir)/simpleConfig.py
+     displayThis "buildRmapT"
+     buildRmapT
+
+     echo '{ "mclay": "A-xyzzy" }' > u2acct.json
+
+     displayThis "installDB"
+     installDB
+
+     displayThis "module commands"
+     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
+     module --quiet load gcc mpich
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+
+     export COMPILER_PATH=$XALT_BIN
+     export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_TRANSMISSION_STYLE=logger
+
+     unset LD_LIBRARY_PATH
+     unset LD_PRELOAD
+
+     displayThis  "xalt_syslog_to_db.py"
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/owen.syslog.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
+
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 1 --functions 0 --links 0 --pkgs 0 --objects 45 --env_vars 33 --uuid 0
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
+   """,
+
+   'tests' : [
+      { 'id' : 't1', 'tol' : 1.01e-6},
+   ],
+}

@@ -19,7 +19,8 @@
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
-              const char* syshost, char* resultDir, const char* resultFn, FILE* my_stderr)
+              const char* crcStr, const char* syshost, char* resultDir, const char* resultFn,
+              FILE* my_stderr)
 {
   char * logNm   = NULL;
   char * p_dbg        = getenv("XALT_TRACING");
@@ -92,8 +93,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          syslog(LOG_INFO, "V:3 kind:%s nb:%d syshost:%s key:%s idx:%d value:%.*s",
-                                kind,   nBlks,syshost,   key,   i,     iend-istrt, &jsonStr[istrt]);
+          syslog(LOG_INFO, "V:4 kind:%s nb:%d syshost:%s key:%s crc:%s idx:%d value:%.*s",
+                                kind,   nBlks,syshost,   key,   crcStr,i,     iend-istrt, &jsonStr[istrt]);
           istrt = iend;
           iend  = istrt + blkSz;
           if (iend > sz)
@@ -166,13 +167,14 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   else if (strcasecmp(transmission, "logger") == 0)
     {
       int         i, pid, status, ret = 0;
-      char        *myargs [] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+      char        *myargs [] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
       char        *myenv  [] = { NULL };
       const char  *prgm      = "logger";
       char        *tagStr;
       char        *kindStr;
       char        *nbStr;
       char        *keyStr;
+      char        *crcS;
       char        *syshostStr;
       char        idxStr[20];
 
@@ -193,22 +195,24 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       asprintf(&nbStr,      "nb:%d",           nBlks);
       asprintf(&syshostStr, "syshost:%s",      syshost);
       asprintf(&keyStr,     "key:%s",          key);
+      asprintf(&crcS,       "crcStr:%s",       crcStr);
 
       int istrt	     = 0;
       int iend	     = blkSz;
       int  nvalueStr = syslog_msg_sz + 7;
       char *valueStr = (char *) malloc(nvalueStr);
 
-      myargs[0]	     = (char *) prgm;
-      myargs[1]	     = "-t";
-      myargs[2]	     = tagStr;
-      myargs[3]	     = "V:3";
-      myargs[4]	     = kindStr;
-      myargs[5]	     = nbStr;
-      myargs[6]	     = syshostStr;
-      myargs[7]	     = keyStr;
-      myargs[8]	     = idxStr;
-      myargs[9]	     = valueStr;
+      myargs[ 0] = (char *) prgm;
+      myargs[ 1] = "-t";
+      myargs[ 2] = tagStr;
+      myargs[ 3] = "V:4";
+      myargs[ 4] = kindStr;
+      myargs[ 5] = nbStr;
+      myargs[ 6] = syshostStr;
+      myargs[ 7] = keyStr;
+      myargs[ 8] = crcS;
+      myargs[ 9] = idxStr;
+      myargs[10] = valueStr;
       
       for (i = 0; i < nBlks; i++)
         {
