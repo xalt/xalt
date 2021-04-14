@@ -2,9 +2,11 @@
 aclocal.m4,26
 dnl AX_PYTHON_MODULE(1,0
 
-configure.ac,30
+configure.ac,100
 AC_INIT(1,0
 AC_SUBST(30,467
+       XALT_GPU_TRACKING_STYLE=86,3242
+   XALT_GPU_TRACKING=98,3763
 
 docs/Makefile,1466
 SPHINXOPTS 5,92
@@ -90,9 +92,9 @@ function tracking 41,1525
 function tracking 42,1591
 
 docs/source/020_site_configuration.rst,27
-Function Tracking240,7272
+Function Tracking258,8062
 
-src/Makefile.in,1996
+src/Makefile.in,1964
 COPY_LIBS_TO_XALT 1,0
 FIND_LIBS_TO_XALT 2,70
 THIS_DIR 3,136
@@ -103,64 +105,63 @@ OPTLVL 7,248
 LIB_OPTIONS 8,273
 WARN_FLAGS 9,305
 CF_INIT 11,367
-COMMON_FLGS 12,395
-CXXFLAGS 13,449
-CFLAGS 14,493
-    LIBDCGM:LIBDCGM18,612
-    LIBDCGM:LIBDCGM20,649
-  LIBNVML:LIBNVML24,707
-   HAVE_EXTERNAL_HOSTNAME_PARSER 28,763
-   PARSER_TYPE 29,831
-      MY_HOSTNAME_PARSER_SRC 31,947
-      MY_HOSTNAME_PARSER_OBJ 32,1031
-      MY_HOSTNAME_PARSER_OBJ_32 33,1107
-      MY_HOSTNAME_PARSER_LIBRARY 36,1226
-      MY_HOSTNAME_PARSER_LIB32 37,1309
-      MY_HOSTNAME_PARSER_TARGET 38,1392
-         MY_HOSTNAME_PARSER_TARGET  +=MY_HOSTNAME_PARSER_TARGET  +40,1497
-      MY_HOSTNAME_PARSER_OBJ 42,1577
-      MY_HOSTNAME_PARSER_OBJ_32 43,1653
-programs 50,1855
-c_sources 51,1871
-cxx_sources 52,1887
-libraries 53,1903
-extra_clean 54,1919
-so_libs 55,1935
-  HAVE_32BIT 58,1980
-  DEP32 59,1999
-  OBJ32 60,2016
-  DEP32 64,2065
-  OBJ32 65,2110
-dependencies 68,2162
-objects 69,2244
-include_dirs 71,2327
-include_dirs 72,2363
-CPPFLAGS     +=CPPFLAGS     +74,2434
-all:all80,2564
-  INCLUDE_DEPS 83,2600
-  INCLUDE_DEPS 87,2659
-  INCLUDE_DEPS 91,2720
-.PHONY:.PHONY103,2884
-all:all104,2896
-build_all:build_all106,2955
-COPY_ALL_LIBS:COPY_ALL_LIBS109,3063
-          baseNM=112,3220
-          realNM=119,3650
-%.d:%.d125,3949
-        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *128,4101
-%.d32:%.d32131,4199
-        sed 's,\($(notdir $*)\)\.o *:sed 's,\($(notdir $*)\)\.o *134,4361
-%.d:%.d137,4463
-        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *140,4615
-%.o32:%.o32143,4713
-ECHO:ECHO148,4788
-echo:echo151,4860
-neat:neat157,5024
-clean:clean160,5078
-clobber:clobber166,5368
-$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py:$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py171,5434
-my_hostname_parser_target:my_hostname_parser_target174,5534
-my_hostname_parser_target_32:my_hostname_parser_target_32177,5639
+COMMON_FLGS 12,410
+CXXFLAGS 13,464
+CFLAGS 14,508
+  LIBDCGM:LIBDCGM17,599
+  LIBNVML:LIBNVML20,645
+   HAVE_EXTERNAL_HOSTNAME_PARSER 24,701
+   PARSER_TYPE 25,769
+      MY_HOSTNAME_PARSER_SRC 27,885
+      MY_HOSTNAME_PARSER_OBJ 28,969
+      MY_HOSTNAME_PARSER_OBJ_32 29,1045
+      MY_HOSTNAME_PARSER_LIBRARY 32,1164
+      MY_HOSTNAME_PARSER_LIB32 33,1247
+      MY_HOSTNAME_PARSER_TARGET 34,1330
+         MY_HOSTNAME_PARSER_TARGET  +=MY_HOSTNAME_PARSER_TARGET  +36,1435
+      MY_HOSTNAME_PARSER_OBJ 38,1515
+      MY_HOSTNAME_PARSER_OBJ_32 39,1591
+programs 46,1793
+c_sources 47,1809
+cxx_sources 48,1825
+libraries 49,1841
+extra_clean 50,1857
+so_libs 51,1873
+  HAVE_32BIT 54,1918
+  DEP32 55,1937
+  OBJ32 56,1954
+  DEP32 60,2003
+  OBJ32 61,2048
+dependencies 64,2100
+objects 65,2182
+include_dirs 67,2265
+include_dirs 68,2301
+CPPFLAGS     +=CPPFLAGS     +70,2372
+all:all76,2502
+  INCLUDE_DEPS 79,2538
+  INCLUDE_DEPS 83,2597
+  INCLUDE_DEPS 87,2658
+.PHONY:.PHONY99,2822
+all:all100,2834
+build_all:build_all102,2893
+COPY_ALL_LIBS:COPY_ALL_LIBS105,3001
+          baseNM=108,3158
+          realNM=115,3588
+%.d:%.d121,3887
+        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *124,4039
+%.d32:%.d32127,4137
+        sed 's,\($(notdir $*)\)\.o *:sed 's,\($(notdir $*)\)\.o *130,4299
+%.d:%.d133,4401
+        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *136,4553
+%.o32:%.o32139,4651
+ECHO:ECHO144,4726
+echo:echo147,4798
+neat:neat153,4962
+clean:clean156,5016
+clobber:clobber162,5306
+$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py:$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py167,5372
+my_hostname_parser_target:my_hostname_parser_target170,5472
+my_hostname_parser_target_32:my_hostname_parser_target_32173,5577
 
 src/tmpl/xalt_python_pkg_filter.template,56
 import os,4,56
@@ -271,10 +272,10 @@ src/linker/buildRmapT.h,26
 #define BUILDRMAPT_H2,21
 
 src/linker/xalt_generate_linkdata.C,114
-static const char* blank0 20,389
-static const char* comma 21,421
-double convert_double(23,455
-int main(37,700
+static const char* blank0 20,381
+static const char* comma 21,413
+double convert_double(23,447
+int main(37,692
 
 src/linker/parseLDTrace.C,82
 void addPath2Set(10,185
@@ -495,11 +496,6 @@ unsigned char* base64_decode(122,4374
 src/util/xalt_c_utils.h,28
 #define XALT_C_UTILS_H2,23
 
-src/util/xalt_tmpdir.o32,78
-7g6,1310
-u$u12,3293
-u$X»‘;/YY12,3293
-
 src/util/build_uuid.h,26
 #define BUILD_UUID_H2,21
 
@@ -551,22 +547,26 @@ void free_SET(35,1008
 void free_S2D(47,1225
 void free_S2S(59,1450
 
-src/util/zcmprss.o32,36
-ELFELF1,0
-;äEòE53,4531
-
 src/util/buildXALTRecordT.h,34
 #define BUILD_XALT_RECORDT_H2,29
-
-src/util/xalt_vendor_note.o32,10
-7s6,959
-
-src/util/compute_sha1.o32,10
-r35,1613
 
 src/util/capture.c,43
 #define DATA_SIZE 3,40
 void capture(5,64
+
+src/util/crcFast.c,350
+#define WIDTH 23,793
+#define TOPBIT 24,828
+#undef  REFLECT_DATA27,892
+#define REFLECT_DATA(28,913
+#undef  REFLECT_DATA30,979
+#define REFLECT_DATA(31,1000
+#undef  REFLECT_REMAINDER35,1070
+#define REFLECT_REMAINDER(36,1096
+#undef  REFLECT_REMAINDER38,1159
+#define REFLECT_REMAINDER(39,1185
+crc crcTable[crcTable43,1253
+crc crcFast(78,3359
 
 src/util/base64.h,22
 #define BASE64_H2,17
@@ -634,32 +634,23 @@ static const UT_icd ut_str_icd UTARRAY_UNUSED 242,13151
 static const UT_icd ut_int_icd UTARRAY_UNUSED 243,13254
 static const UT_icd ut_ptr_icd UTARRAY_UNUSED 244,13332
 
-src/util/xalt_c_utils.c,235
+src/util/xalt_c_utils.c,256
 #define _GNU_SOURCE1,0
-#define DATESZ 12,206
-int isDirectory(14,226
-int mkpath(22,370
-void build_resultDir(41,653
-void build_resultFn(67,1507
-static bool s_start_record 85,2076
-void set_end_record(86,2111
-void my_free(90,2163
-
-src/util/base64.o32,196
-ELFELF1,0
-=xò#‚)/#;)=#;<Ÿ8C+/C;C12,6586
-=xò#‚)/#;)=#;<Ÿ8C+/C;+=C;<.óƒWKW12,6586
-KK14,7236
+#define HERE 11,205
+#define DATESZ 13,263
+int isDirectory(15,283
+int mkpath(23,427
+void build_resultDir(42,710
+void build_resultFn(68,1564
+static bool s_start_record 86,2133
+void set_end_record(87,2168
+void my_free(91,2220
 
 src/util/process.c,98
 void init_proc(14,254
 void build_proc(22,396
-void free_proc(70,1566
-void proc_cmdline(76,1664
-
-src/util/buildXALTRecordT.o32,31
-4bb9,4638
-<QÖQÖ107,14815
+void free_proc(74,1589
+void proc_cmdline(80,1687
 
 src/util/zcmprss.c,71
 #define BUFFSZ 8,125
@@ -846,18 +837,47 @@ src/util/xalt_header.h.in,1344
 #undef XALT_MPI_TRACKING137,3214
 #undef XALT_SCALAR_TRACKING140,3272
 
+src/util/xalt_timer.h,115
+#define XALT_TIMERS_H2,22
+  double init;7,63
+  double fini;8,78
+  double gpu_setup;9,93
+} xalt_timer_t;10,113
+
+src/util/crc.h,841
+#define _CRC_H17,566
+#define FALSE	24,629
+#define TRUE	25,646
+#define CRC_CCITT30,734
+typedef unsigned short  crc;35,783
+#define CRC_NAME	37,815
+#define POLYNOMIAL	38,847
+#define INITIAL_REMAINDER	39,876
+#define FINAL_XOR_VALUE	40,910
+#define REFLECT_DATA	41,943
+#define REFLECT_REMAINDER	42,972
+#define CHECK_VALUE	43,1005
+typedef unsigned short  crc;47,1061
+#define CRC_NAME	49,1093
+#define POLYNOMIAL	50,1122
+#define INITIAL_REMAINDER	51,1151
+#define FINAL_XOR_VALUE	52,1185
+#define REFLECT_DATA	53,1218
+#define REFLECT_REMAINDER	54,1246
+#define CHECK_VALUE	55,1278
+typedef unsigned long  crc;59,1334
+#define CRC_NAME	61,1365
+#define POLYNOMIAL	62,1394
+#define INITIAL_REMAINDER	63,1427
+#define FINAL_XOR_VALUE	64,1465
+#define REFLECT_DATA	65,1502
+#define REFLECT_REMAINDER	66,1530
+#define CHECK_VALUE	67,1562
+
 src/util/compute_sha1.c,90
 static void * handle 17,390
 void compute_sha1(19,421
 void compute_sha1_cleanup(80,1739
-
-src/util/zstring.o32,50
-Šii40,2151
-HH51,2459
-;äEòE79,7065
-
-src/util/xalt_dir.o32,11
-7g6,1182
 
 src/util/Module.mk.in,15
 local_dir 1,0
@@ -916,46 +936,45 @@ const int dateSZ=22,484
 void displayArray(24,507
 int main(42,986
 
-src/util/xalt_fgets_alloc.o32,61
- YX  Js<..  h ÉŸKK56,3131
-
-src/util/xalt_config.h.in,1176
+src/util/xalt_config.h.in,1241
 #define XALT_CONFIG_H2,22
 #define SITE_CONTROLLED_PREFIX 8,147
 #define CRYPTO_STR 9,209
 #define CURL_STR 10,259
 #define CXX_LD_LIBRARY_PATH 11,307
-#define HAVE_32BIT 12,366
-#define HAVE_DCGM 13,416
-#define HAVE_NVML 14,465
-#define HAVE_WORKING_LIBUUID 15,514
-#define MY_HOSTNAME_PARSER 16,574
-#define SYSHOST_CONFIG 17,632
-#define SYSLOG_MSG_SZ 18,686
-#define TRANSMISSION 19,738
-#define UUID_STR 20,790
-#define XALT_CMDLINE_RECORD 21,838
-#define XALT_COMPUTE_SHA1 22,897
-#define XALT_CONFIG_PY 23,952
-#define XALT_DEFAULT_DIR 24,1006
-#define XALT_ETC_DIR 25,1062
-#define XALT_FILE_PREFIX 26,1109
-#define XALT_FUNCTION_TRACKING 27,1165
-#define XALT_GIT_VERSION 28,1227
-#define XALT_GPU_TRACKING 29,1283
-#define XALT_INSTALL_OS 30,1340
-#define XALT_INTERFACE_VERSION 31,1395
-#define XALT_LD_LIBRARY_PATH 32,1457
-#define XALT_LOGGING_URL 33,1517
-#define XALT_MPI_TRACKING 34,1573
-#define XALT_PRELOAD_ONLY 35,1630
-#define XALT_PRIME_FMT 36,1682
-#define XALT_PRIME_NUMBER 37,1736
-#define XALT_SIGNAL_HANDLER 38,1792
-#define XALT_SCALAR_TRACKING 39,1851
-#define XALT_SYSTEM_PATH 40,1911
-#define XALT_TMPDIR 41,1962
-#define XALT_VERSION 42,2013
+#define GPU_STR 12,366
+#define HAVE_32BIT 13,413
+#define HAVE_DCGM 14,463
+#define HAVE_NVML 15,512
+#define HAVE_WORKING_LIBUUID 16,561
+#define MY_HOSTNAME_PARSER 17,621
+#define SYSHOST_CONFIG 18,679
+#define SYSLOG_MSG_SZ 19,733
+#define TRANSMISSION 20,785
+#define UUID_STR 21,837
+#define XALT_CMDLINE_RECORD 22,885
+#define XALT_COMPUTE_SHA1 23,944
+#define XALT_CONFIG_PY 24,999
+#define XALT_DEFAULT_DIR 25,1053
+#define XALT_ETC_DIR 26,1109
+#define XALT_FILE_PREFIX 27,1156
+#define XALT_FUNCTION_TRACKING 28,1212
+#define XALT_GIT_VERSION 29,1274
+#define XALT_GPU_TRACKING 30,1330
+#define XALT_GPU_TRACKING_STYLE 31,1387
+#define XALT_INSTALL_OS 32,1450
+#define XALT_INTERFACE_VERSION 33,1505
+#define XALT_LD_LIBRARY_PATH 34,1567
+#define XALT_LOGGING_URL 35,1627
+#define XALT_MPI_TRACKING 36,1683
+#define XALT_PRELOAD_ONLY 37,1740
+#define XALT_PRIME_FMT 38,1792
+#define XALT_PRIME_NUMBER 39,1846
+#define XALT_SIGNAL_HANDLER 40,1902
+#define XALT_SCALAR_TRACKING 41,1961
+#define XALT_SYSTEM_PATH 42,2021
+#define XALT_TMPDIR 43,2072
+#define XALT_VERSION 44,2123
 
 src/util/xalt_types.h,574
 #define XALT_TYPES_H2,21
@@ -983,7 +1002,7 @@ src/util/build_uuid.c,110
 #define BAD_UUID 11,226
 static void* handle 13,283
 void build_uuid(17,467
-void build_uuid_cleanup(59,1488
+void build_uuid_cleanup(59,1490
 
 src/util/utlist.h,4043
 #define UTLIST_H25,1163
@@ -1118,9 +1137,6 @@ src/util/xalt_dir.h,24
 src/util/transmit.h,24
 #define TRANSMIT_H2,19
 
-src/util/xalt_quotestring.o32,14
-opqs	5,1830
-
 src/util/buildJson.h,178
 #define BUILD_JSON_H2,21
      Json_TABLE,15,178
@@ -1135,14 +1151,14 @@ src/util/xalt_quotestring.h,27
 
 src/util/xalt_record_pkg.c,200
 #define _GNU_SOURCE1,0
-#define DATESZ 15,285
-#define HERE 16,307
-#define DEBUG0(17,364
-#define DEBUG1(18,431
-#define DEBUG2(19,503
-#define DEBUG3(20,580
-#define DEBUG4(21,662
-int main(26,791
+#define DATESZ 16,302
+#define HERE 17,324
+#define DEBUG0(18,381
+#define DEBUG1(19,448
+#define DEBUG2(20,520
+#define DEBUG3(21,597
+#define DEBUG4(22,679
+int main(27,808
 
 src/util/xalt_epoch.c,15
 int main(4,58
@@ -1157,103 +1173,99 @@ const char* xalt_quotestring(24,1005
 const char * xalt_unquotestring(93,2727
 void xalt_quotestring_free(199,5732
 
-src/libxalt/xalt_initialize_preload.o32,147
-vfƒ"(ƒ„…óøxžˆJžøxXh0×<„ä2ff253,32189
-~ft~ft271,33121
-
 src/libxalt/buildUserT.h,27
 #define BUILD_USERT_H2,22
 
 src/libxalt/run_submission.h,30
 #define RUN_SUBMISSION_H2,25
 
-src/libxalt/parseProcMaps.o32,42
-1ú‰×)ÐÁï1Ç‹D$ ‰H‹L$$‰x ‰H‹DH‹8,1373
-
-src/libxalt/xalt_initialize.c,3854
+src/libxalt/xalt_initialize.c,3987
 #define  _GNU_SOURCE27,1220
-#  define HOSTNAME_PARSER 82,2483
-#  define HOSTNAME_PARSER_CLEANUP 83,2536
-#  define HOSTNAME_PARSER 85,2603
-#  define HOSTNAME_PARSER_CLEANUP 86,2653
-#define DATESZ 90,2720
-#define FULLDATESZ 91,2743
-#define N_ELEMENTS(92,2772
-typedef enum { BIT_SCALAR 94,2822
-typedef enum { BIT_SCALAR = 1, BIT_PKGS 94,2822
-typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI 94,2822
-typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;94,2822
-typedef enum { PKGS=95,2901
-typedef enum { PKGS=1, KEEP=95,2901
-typedef enum { PKGS=1, KEEP=2, SKIP=95,2901
-typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;95,2901
-typedef enum { XALT_SUCCESS 97,2954
-typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF,97,2954
-typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE,97,2954
-typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,97,2954
-               XALT_MPI_RANK,98,3040
-               XALT_MPI_RANK, XALT_HOSTNAME,98,3040
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH,98,3040
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR,98,3040
-               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,98,3040
-	       XALT_UNAME_FAILURE}XALT_UNAME_FAILURE99,3132
-	       XALT_UNAME_FAILURE} xalt_status;99,3132
-static const char * xalt_reasonA[xalt_reasonA101,3174
-static const char * xalt_build_descriptA[xalt_build_descriptA115,3846
-static const char * xalt_run_descriptA[xalt_run_descriptA126,4361
-static const char * xalt_run_short_descriptA[xalt_run_short_descriptA134,4700
-#define STR(154,5491
-#define StR1_(155,5517
-#define BUFSZ 157,5538
-static int          countA[countA158,5562
-static char         buffer[buffer159,5593
-static char         uuid_str[uuid_str160,5628
-static char         exec_path[exec_path161,5662
-static char *       usr_cmdline;162,5705
-static char *       watermark 164,5739
-static xalt_status  reject_flag	165,5789
-static int          run_mask 166,5847
-static int          have_uuid 167,5894
-static long         always_record 168,5941
-static double       probability 169,5989
-static double       testing_runtime 170,6038
-static pid_t        ppid	171,6088
-static pid_t        pid 172,6128
-static int          errfd	173,6169
-static double       my_rand 174,6211
-static double       start_time	175,6260
-static double       end_time	176,6308
-static double       frac_time 177,6354
-static long         my_rank	178,6403
-static long         my_size	179,6447
-static int          num_tasks 180,6491
-static int          xalt_kind 181,6538
-static int          xalt_tracing 182,6585
-static int          xalt_run_tracing 183,6632
-static int          xalt_gpu_tracking 184,6679
-static int          xalt_sampling 185,6726
-static int          num_gpus 186,6773
-static int          b64_len 187,6820
-static int          b64_wm_len 188,6867
-static int          signal_hdlr_called 189,6914
-static unsigned long long __time 191,6977
-static void * nvml_handle 192,7024
-static dcgmHandle_t dcgm_handle 211,8118
-#define DCGMFUNC2(214,8300
-void myinit(233,8880
-void wrapper_for_myfini(799,26752
-static void close_out(811,27028
-void myfini(822,27187
-static int load_nvml(1088,36741
-static long compute_value(1124,37984
-static void get_abspath(1142,38317
-static volatile double epoch(1157,38647
-static unsigned int mix(1164,38768
-static  double prgm_sample_probability(1178,39151
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1216,39831
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1217,39951
-  __attribute__((section(".init_array"))) __typeof__(1219,40077
-  __attribute__((section(".fini_array"))) __typeof__(1220,40156
+#  define HOSTNAME_PARSER 85,2546
+#  define HOSTNAME_PARSER_CLEANUP 86,2599
+#  define HOSTNAME_PARSER 88,2666
+#  define HOSTNAME_PARSER_CLEANUP 89,2716
+#define DATESZ 93,2783
+#define FULLDATESZ 94,2806
+#define N_ELEMENTS(95,2835
+typedef enum { BIT_SCALAR 97,2885
+typedef enum { BIT_SCALAR = 1, BIT_PKGS 97,2885
+typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI 97,2885
+typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;97,2885
+typedef enum { PKGS=98,2964
+typedef enum { PKGS=1, KEEP=98,2964
+typedef enum { PKGS=1, KEEP=2, SKIP=98,2964
+typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;98,2964
+typedef enum { XALT_SUCCESS 100,3017
+typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF,100,3017
+typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE,100,3017
+typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,100,3017
+               XALT_MPI_RANK,101,3103
+               XALT_MPI_RANK, XALT_HOSTNAME,101,3103
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH,101,3103
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR,101,3103
+               XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,101,3103
+	       XALT_UNAME_FAILURE}XALT_UNAME_FAILURE102,3195
+	       XALT_UNAME_FAILURE} xalt_status;102,3195
+static const char * xalt_reasonA[xalt_reasonA104,3237
+static const char * xalt_build_descriptA[xalt_build_descriptA118,3909
+static const char * xalt_run_descriptA[xalt_run_descriptA129,4424
+static const char * xalt_run_short_descriptA[xalt_run_short_descriptA137,4763
+#define STR(160,5613
+#define StR1_(161,5639
+#define BUFSZ 163,5660
+static xalt_timer_t xalt_timer;164,5684
+static int          countA[countA165,5716
+static char         buffer[buffer166,5747
+static char         uuid_str[uuid_str167,5782
+static char         exec_path[exec_path168,5816
+static char *       usr_cmdline;169,5859
+static char *       watermark 171,5893
+static xalt_status  reject_flag	172,5943
+static int          run_mask 173,6001
+static int          have_uuid 174,6048
+static long         always_record 175,6095
+static double       probability 176,6143
+static double       testing_runtime 177,6192
+static pid_t        ppid	178,6242
+static pid_t        pid 179,6282
+static int          errfd	180,6323
+static double       my_rand 181,6365
+static double       start_time	182,6414
+static double       end_time	183,6462
+static double       frac_time 184,6508
+static long         my_rank	185,6557
+static long         my_size	186,6601
+static int          num_tasks 187,6645
+static int          xalt_kind 188,6692
+static int          xalt_tracing 189,6739
+static int          xalt_run_tracing 190,6786
+static int          xalt_gpu_tracking 191,6833
+static int          xalt_sampling 192,6880
+static int          num_gpus 193,6927
+static int          b64_len 194,6974
+static int          b64_wm_len 195,7021
+static int          signal_hdlr_called 196,7068
+static unsigned long long __time 198,7131
+static void * nvml_dl_handle 199,7178
+static void *       dcgm_dl_handle 218,8272
+static dcgmHandle_t dcgm_handle 219,8322
+#define DCGMFUNC2(222,8504
+void myinit(257,9991
+void wrapper_for_myfini(837,28554
+static void close_out(849,28830
+void myfini(860,28989
+static int load_nvml(1130,38667
+static int load_dcgm(1181,40461
+static long compute_value(1225,42030
+static void get_abspath(1243,42363
+static volatile double epoch(1258,42693
+static unsigned int mix(1265,42814
+static  double prgm_sample_probability(1279,43197
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1317,43877
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1318,43997
+  __attribute__((section(".init_array"))) __typeof__(1320,44123
+  __attribute__((section(".fini_array"))) __typeof__(1321,44202
 
 src/libxalt/xalt_env_parser.h,31
 #define XALT_ENV_PARSER_H2,26
@@ -1286,12 +1298,6 @@ void processTreeFree(45,976
 src/libxalt/parseProcMaps.h,31
 #define PARSE_PROC_MAPS_H2,26
 
-src/libxalt/translate.o32,262
-uÐu50,7897
-uÐKç»;/WW50,7897
-uÐKç»;/WJs¬å;/WW50,7897
-uÐKç»;/WJs¬å;/WMå;/WsJsJ50,7897
-
 src/libxalt/buildEnvT.h,26
 #define BUILD_ENVT_H2,21
 
@@ -1310,12 +1316,12 @@ src/libxalt/Module.mk.in,15
 local_dir 1,0
 
 src/libxalt/run_submission.c,221
-static const char *blank0 blank028,625
-static const char *comma comma29,657
-static char        sha1buf[sha1buf31,720
-static bool        need_sha1 32,752
-void run_submission(34,790
-void pkgRecordTransmit(212,7239
+static const char *blank0 blank029,642
+static const char *comma comma30,674
+static char        sha1buf[sha1buf32,737
+static bool        need_sha1 33,769
+void run_submission(35,807
+void pkgRecordTransmit(224,7867
 
 src/libxalt/my_hostname_parser_dummy.c,68
 int my_hostname_parser(4,63
@@ -1344,7 +1350,7 @@ model-schemas: mydb,35,8943
 README.new,78
     (2.8.1)  * progressBar.py: handle the case where pbar.update(update2,10
 
-Makefile.in,4100
+Makefile.in,4113
 abs_srcdir 22,1051
 srcdir 23,1085
 VPATH 24,1115
@@ -1360,133 +1366,134 @@ VERSION 38,1498
 CRYPTO_STR 39,1555
 UUID_STR 40,1595
 CURL_STR 41,1633
-BROKER_SERVER 42,1671
-BROKER_URI 43,1714
-TRACKING_MPI_ONLY 44,1754
-TRANSMISSION 45,1804
-SITE_NAME 46,1844
-SITE_CONTROLLED_PREFIX 47,1876
-ETC_DIR 48,1928
-prefix 49,1963
-XALT_V 50,1997
-XALT_SYSTEM_PATH 51,2046
-SYSLOG_MSG_SZ 52,2087
-HAVE_LIBUUID 53,2128
-HAVE_DCGM 54,2178
-HAVE_NVML 55,2212
-STATIC_LIBS 56,2251
-PRELOAD_ONLY 57,2292
-XALT_LD_LIBRARY_PATH 58,2335
-HAVE_32BIT 59,2384
-XALT_INSTALL_OS 60,2422
-XALT_SYSTEM_PATH 61,2467
-PATH_TO_MKTEMP 62,2508
-PATH_TO_PSTREE 63,2551
-USE_ARGPARSE 64,2593
-XALT_FILE_PREFIX 65,2641
-XALT_LOGGING_URL 66,2685
-XALT_PRIME_NUMBER 67,2731
-XALT_PRIME_FMT 68,2777
-XALT_FUNCTION_TRACKING 69,2817
-ENABLE_BACKGROUNDING 70,2869
-XALT_CONFIG_PY 71,2917
-XALT_SPEC 72,2959
-XALT_SPEC_PATTERN 73,3006
-CONF_PY 74,3076
-CONF_PY_PATTERN 75,3133
-UPDATE_VERSION 76,3208
-GIT_PROG 79,3271
-GIT_VERSION 80,3310
-VDATE	81,3490
-XALT_DIR 83,3533
-PKGV 84,3590
-PKG 85,3647
-  XALT_DIR 87,3741
-  PKGV 88,3778
-  PKG 89,3815
-  HAVE_32BIT 92,3886
-INC 95,3912
-LIB 96,3953
-LIB64 97,3990
-LIBEXEC 98,4029
-BIN 99,4070
-SBIN 100,4107
-SITE_PKG_DIR 101,4145
-DIRLIST 102,4194
-SITE_PKG 106,4457
-SITE_PKG 107,4513
-BIN_PKG 109,4581
-BIN_PKG 117,5303
-SBIN_PKG 119,5368
-SBIN_PKG 125,5925
-RT_PKG 127,5991
-RT_PKG 128,6051
-LIBEXEC_PKG 130,6117
-LIBEXEC_PKG 134,6495
-TACC_PKG 137,6565
-TACC_PKG 146,7415
-OBFUSCATE_HDR 148,7481
-OBFUSCATE_HDR 149,7534
-.PHONY:.PHONY152,7608
-all:all154,7638
-install:install157,7656
-          echo 'Warning:echo 'Warning167,8567
-build_compiled:build_compiled172,8840
-        $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD174,8951
-                LDFLAGS=175,9052
-                LIB64=176,9153
-                HAVE_LIBUUID=177,9254
-                XALT_FILE_PREFIX=178,9355
-                CRYPTO_STR=179,9456
-                XALT_LOGGING_URL=180,9557
-                PY_BUILD_TOOLS=181,9658
-inst_obfuscate:inst_obfuscate184,9780
-echo:echo188,9838
-$(DIRLIST)$(DIRLIST196,10019
-LINKS:LINKS199,10046
-Inst_site_py:Inst_site_py205,10251
-Inst_libexec:Inst_libexec208,10351
-Inst_sbin:Inst_sbin211,10507
-Inst_bin:Inst_bin214,10654
-Inst_TACC:Inst_TACC217,10798
-Inst_RT:Inst_RT220,10945
-Use_getent_yes:Use_getent_yes224,11084
-Use_argparse_no:Use_argparse_no230,11299
-Use_argparse_yes:Use_argparse_yes232,11317
-__installMe:__installMe235,11468
-           bareN=237,11553
-           fn=238,11632
-           oext=240,11785
-           [ "$$ext" [ "$$ext"242,11938
-           [ "$$ext" [ "$$ext"243,12018
-            [ "$$ext" [ "$$ext"274,14307
-world_update:world_update279,14558
-            echo "All files not checked in echo "All files not checked in282,14745
-            echo "configure is out of date echo "configure is out of date284,14918
-gittag:gittag293,15484
-          elif [ $$my_tag !=elif [ $$my_tag !299,15836
-            echo "TAG needs to be in the form:echo "TAG needs to be in the form301,16012
-            echo "configure is out of date echo "configure is out of date304,16269
-            vtag=306,16434
-            vtag=307,16522
-tags:tags325,17656
-build_tags:build_tags328,17694
-dist:dist399,22119
-SUBMAKEFILES 413,23143
-makefile 415,23235
-src/makefile:src/makefile418,23319
-src/util/module.mk:src/util/module.mk421,23394
-src/linker/module.mk:src/linker/module.mk423,23480
-src/libxalt/module.mk:src/libxalt/module.mk425,23570
-neat:neat429,23664
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR432,23767
-                         HAVE_32BIT=433,23861
-clean:clean434,23940
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR436,24040
-                         HAVE_32BIT=437,24134
-clobber:clobber438,24213
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR440,24315
-                         HAVE_32BIT=441,24409
+GPU_STR 42,1671
+BROKER_SERVER 43,1708
+BROKER_URI 44,1751
+TRACKING_MPI_ONLY 45,1791
+TRANSMISSION 46,1841
+SITE_NAME 47,1881
+SITE_CONTROLLED_PREFIX 48,1913
+ETC_DIR 49,1965
+prefix 50,2000
+XALT_V 51,2034
+XALT_SYSTEM_PATH 52,2083
+SYSLOG_MSG_SZ 53,2124
+HAVE_LIBUUID 54,2165
+HAVE_DCGM 55,2215
+HAVE_NVML 56,2249
+STATIC_LIBS 57,2288
+PRELOAD_ONLY 58,2329
+XALT_LD_LIBRARY_PATH 59,2372
+HAVE_32BIT 60,2421
+XALT_INSTALL_OS 61,2459
+XALT_SYSTEM_PATH 62,2504
+PATH_TO_MKTEMP 63,2545
+PATH_TO_PSTREE 64,2588
+USE_ARGPARSE 65,2630
+XALT_FILE_PREFIX 66,2678
+XALT_LOGGING_URL 67,2722
+XALT_PRIME_NUMBER 68,2768
+XALT_PRIME_FMT 69,2814
+XALT_FUNCTION_TRACKING 70,2854
+ENABLE_BACKGROUNDING 71,2906
+XALT_CONFIG_PY 72,2954
+XALT_SPEC 73,2996
+XALT_SPEC_PATTERN 74,3043
+CONF_PY 75,3113
+CONF_PY_PATTERN 76,3170
+UPDATE_VERSION 77,3245
+GIT_PROG 80,3308
+GIT_VERSION 81,3347
+VDATE	82,3527
+XALT_DIR 84,3570
+PKGV 85,3627
+PKG 86,3684
+  XALT_DIR 88,3778
+  PKGV 89,3815
+  PKG 90,3852
+  HAVE_32BIT 93,3923
+INC 96,3949
+LIB 97,3990
+LIB64 98,4027
+LIBEXEC 99,4066
+BIN 100,4107
+SBIN 101,4144
+SITE_PKG_DIR 102,4182
+DIRLIST 103,4231
+SITE_PKG 107,4494
+SITE_PKG 108,4550
+BIN_PKG 110,4618
+BIN_PKG 118,5340
+SBIN_PKG 120,5405
+SBIN_PKG 126,5962
+RT_PKG 128,6028
+RT_PKG 129,6088
+LIBEXEC_PKG 131,6154
+LIBEXEC_PKG 135,6532
+TACC_PKG 138,6602
+TACC_PKG 148,7549
+OBFUSCATE_HDR 150,7615
+OBFUSCATE_HDR 151,7668
+.PHONY:.PHONY154,7742
+all:all156,7772
+install:install159,7790
+          echo 'Warning:echo 'Warning169,8701
+build_compiled:build_compiled174,8974
+        $(MAKE) LD_PRELOAD=$(MAKE) LD_PRELOAD176,9085
+                LDFLAGS=177,9186
+                LIB64=178,9287
+                HAVE_LIBUUID=179,9388
+                XALT_FILE_PREFIX=180,9489
+                CRYPTO_STR=181,9590
+                XALT_LOGGING_URL=182,9691
+                GPU_STR=183,9792
+inst_obfuscate:inst_obfuscate187,10008
+echo:echo191,10066
+$(DIRLIST)$(DIRLIST199,10247
+LINKS:LINKS202,10274
+Inst_site_py:Inst_site_py208,10479
+Inst_libexec:Inst_libexec211,10579
+Inst_sbin:Inst_sbin214,10735
+Inst_bin:Inst_bin217,10882
+Inst_TACC:Inst_TACC220,11026
+Inst_RT:Inst_RT223,11173
+Use_getent_yes:Use_getent_yes227,11312
+Use_argparse_no:Use_argparse_no233,11527
+Use_argparse_yes:Use_argparse_yes235,11545
+__installMe:__installMe238,11696
+           bareN=240,11781
+           fn=241,11860
+           oext=243,12013
+           [ "$$ext" [ "$$ext"245,12166
+           [ "$$ext" [ "$$ext"246,12246
+            [ "$$ext" [ "$$ext"277,14535
+world_update:world_update282,14786
+            echo "All files not checked in echo "All files not checked in285,14973
+            echo "configure is out of date echo "configure is out of date287,15146
+gittag:gittag296,15712
+          elif [ $$my_tag !=elif [ $$my_tag !302,16064
+            echo "TAG needs to be in the form:echo "TAG needs to be in the form304,16240
+            echo "configure is out of date echo "configure is out of date307,16497
+            vtag=309,16662
+            vtag=310,16750
+tags:tags328,17884
+build_tags:build_tags331,17922
+dist:dist404,22481
+SUBMAKEFILES 418,23505
+makefile 420,23597
+src/makefile:src/makefile423,23681
+src/util/module.mk:src/util/module.mk426,23756
+src/linker/module.mk:src/linker/module.mk428,23842
+src/libxalt/module.mk:src/libxalt/module.mk430,23932
+neat:neat434,24026
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR437,24129
+                         HAVE_32BIT=438,24223
+clean:clean439,24302
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR441,24402
+                         HAVE_32BIT=442,24496
+clobber:clobber443,24575
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR445,24677
+                         HAVE_32BIT=446,24771
 
 py_src/xalt_stack.py,149
 class Stack(27,1148
@@ -1505,35 +1512,36 @@ class MY_FILEH(49,1919
 def main(65,2364
 
 py_src/conf_create.in.py,227
-class CmdLineOptions(57,2048
-  def __init__(58,2078
-  def execute(61,2112
-class CreateConf(71,2573
-  def __init__(72,2599
-  def __readFromUser(78,2764
-  def __writeConfig(84,3083
-  def create(98,3479
-def main(105,3558
+class CmdLineOptions(57,2059
+  def __init__(58,2089
+  def execute(61,2123
+class CreateConf(71,2584
+  def __init__(72,2610
+  def __readFromUser(78,2775
+  def __writeConfig(84,3094
+  def create(98,3490
+def main(105,3569
 
 py_src/xalt_name_mapping.py,57
 def name_mapping(245,18699
 def get_comm_name(248,18744
 
-py_src/xalt_file_to_db.in.py,372
-def __LINE__(71,2585
-def __FILE__(77,2705
-class CmdLineOptions(80,2775
-  def __init__(83,2843
-  def execute(87,2900
-def Version(101,3946
-def keep_or_delete(106,4006
-def link_json_to_db(111,4138
-def pkg_json_to_db(168,5507
-def run_json_to_db(225,6879
-def passwd_generator(281,8397
-def build_resultDir(309,9127
-def store_json_files(321,9443
-def main(364,11017
+py_src/xalt_file_to_db.in.py,406
+def __LINE__(72,2613
+def __FILE__(78,2733
+class CmdLineOptions(83,2883
+  def __init__(86,2951
+  def execute(90,3008
+def Version(104,4054
+def keep_or_delete(109,4114
+def check_string_w_crc(114,4246
+def link_json_to_db(126,4490
+def pkg_json_to_db(188,5976
+def run_json_to_db(250,7463
+def passwd_generator(311,9100
+def build_resultDir(339,9830
+def store_json_files(351,10146
+def main(394,11720
 
 py_src/xalt_extract_linker.py,18
 def main(34,1393
@@ -1636,14 +1644,14 @@ class TimeRecord(78,2475
   def print(128,4082
 class XALTdb(146,5372
   def __init__(151,5506
-  def __readFromUser(160,5751
-  def __readConfig(168,6024
-  def connect(184,6674
-  def db(217,7801
-  def link_to_db(221,7868
-  def load_objects(319,11634
-  def run_to_db(372,13766
-  def pkg_to_db(519,19856
+  def __readFromUser(161,5849
+  def __readConfig(169,6122
+  def connect(185,6772
+  def db(218,7899
+  def link_to_db(222,7966
+  def load_objects(319,11649
+  def run_to_db(372,13781
+  def pkg_to_db(547,20392
 
 py_src/xalt_scalar_bins_usage_report.in.py,961
 def shortName(61,3039
@@ -1681,37 +1689,37 @@ def running_other_exec(521,20251
 def main(576,22730
 
 py_src/createDB.in.py,122
-def parseVersion(60,2053
-class CmdLineOptions(85,2468
-  def __init__(88,2536
-  def execute(92,2593
-def main(102,3119
+def parseVersion(60,2064
+class CmdLineOptions(85,2479
+  def __init__(88,2547
+  def execute(92,2604
+def main(102,3130
 
-py_src/xalt_syslog_to_db.in.py,592
-def __LINE__(67,2482
-def __FILE__(73,2602
-def Version(82,2844
-class CmdLineOptions(86,2903
-  def __init__(89,2971
-  def execute(93,3028
-class Record(110,4421
-  def __init__(115,4533
-  def addBlk(130,4857
-  def completed(139,5149
-  def value(142,5216
-  def prt(145,5268
-class ParseSyslog(177,5937
-  def __init__(180,5976
-  def writeRecordT(185,6125
-  def parse(202,6503
-  def __parseSyslogV1(212,6828
-  def __parseSyslog(236,7443
-class Filter(299,9151
-  def __init__(301,9174
-  def register(305,9263
-  def report_stats(320,9809
-  def apply(337,10338
-def main(362,10999
+py_src/xalt_syslog_to_db.in.py,593
+def __LINE__(68,2521
+def __FILE__(74,2641
+def Version(85,3008
+class CmdLineOptions(89,3067
+  def __init__(92,3135
+  def execute(96,3192
+class Record(113,4585
+  def __init__(118,4697
+  def addBlk(134,5054
+  def completed(143,5346
+  def value(158,5734
+  def prt(161,5786
+class ParseSyslog(195,6509
+  def __init__(198,6548
+  def writeRecordT(203,6697
+  def parse(220,7075
+  def __parseSyslogV1(230,7377
+  def __parseSyslog(254,7992
+class Filter(319,9745
+  def __init__(321,9768
+  def register(325,9857
+  def report_stats(340,10403
+  def apply(357,10932
+def main(382,11593
 
 py_src/BeautifulTbl.py,116
 class BeautifulTbl(5,66
@@ -1775,27 +1783,27 @@ filePrefix=4,36
 filePrefix=13,318
 LAST=21,559
 
-build.rtm,381
+build.rtm,387
 PKG_VERSION=23,1082
   myhost=58,1657
   myhost=60,1717
   first=61,1743
     export SYSHOST=63,1796
 SETUP_CMD=69,1868
-    SUDO=83,2208
-    base=91,2477
-    base=97,2666
-    base=105,3096
-    base=112,3382
-    base=119,3687
-    base=126,3992
-    base=133,4356
-      EXTRA=136,4427
-    base=144,4764
-    base=151,5033
-BASE_DIR=154,5068
-  MAKE=164,5216
-cmdA=178,5392
+    SUDO=90,2282
+    base=104,2547
+    base=117,2812
+    base=131,3216
+    base=145,3549
+    base=159,3943
+      EXTRA=162,4014
+    base=177,4449
+      EXTRA=180,4520
+    base=196,4888
+BASE_DIR=207,5112
+  MAKE=217,5260
+lazy_eval 231,5436
+cmdA=237,5522
 
 libelf_trick/Makefile,237
 CC 1,0
@@ -2302,12 +2310,12 @@ def read_tacc_acct_records(85,3544
 def main(125,4545
 
 contrib/TACC/build_default_user_2_account_str.in,148
-import os,44,1312
-import os, sys,44,1312
-import os, sys, re,44,1312
-def read_project_map_file(46,1338
-  with open(53,1498
-  with open(67,1795
+import os,60,1900
+import os, sys,60,1900
+import os, sys, re,60,1900
+def read_project_map_file(62,1926
+  with open(69,2086
+  with open(83,2383
 
 contrib/TACC/system_directorate_rpt.in,93
 SYSHOST=4,36
@@ -2424,6 +2432,14 @@ PATH=4,36
   startD=16,200
   endD=17,218
   fileNm=19,235
+
+contrib/TACC/process_xalt_file_records.in,115
+myhost=3,35
+SYSHOST=5,91
+SWTOOLS=7,113
+    MPATH=15,370
+  export PATH=27,606
+XALT_EXECUTABLE_TRACKING=37,944
 
 contrib/build_reverseMapT_cray/cray_build_rmapT.sh,154
   BASE_MODULE_PATH=32,1346
@@ -3233,6 +3249,663 @@ includes NCSA, UK NCC, KAUST,27,1383
 includes NCSA, UK NCC, KAUST, NICS,27,1383
 includes NCSA, UK NCC, KAUST, NICS, the University of Utah,27,1383
 Target Audience 34,1712
+
+my_docs/21/eb_user_21/themes/beamerthemeTACC16-169.sty,446
+  \def\beamer@calltheme#1#2#3{\beamer@calltheme13,234
+    \def\beamer@themelist{\beamer@themelist14,266
+  \def\usefolder#1{\usefolder18,414
+    \def\beamer@themelocation{\beamer@themelocation19,434
+  \def\beamer@themelocation{\beamer@themelocation21,472
+\newcommand{\event}\event32,631
+  \def\TACC@eventname{\TACC@eventname34,673
+\newcommand{\sectionframe}\sectionframe37,717
+\newcommand{\subsectionframe}\subsectionframe38,786
+
+my_docs/21/eb_user_21/themes/Makefile,19989
+fileinfo	31,1382
+author	32,1409
+version	33,1433
+.DEFAULT_GOAL	35,1453
+.PHONY:.PHONY38,1621
+.PHONY:.PHONY42,1800
+BUILD_STRATEGY		?=BUILD_STRATEGY		?48,2063
+export LC_ALL		?=export LC_ALL		?52,2228
+neverclean		?=neverclean		?86,3062
+CAT		?=CAT		?669,31015
+CP		?=CP		?670,31027
+DIFF		?=DIFF		?671,31040
+ECHO		?=ECHO		?672,31054
+EGREP		?=EGREP		?673,31068
+ENV		?=ENV		?674,31084
+EXPR		?=EXPR		?675,31096
+MV		?=MV		?676,31110
+SED		?=SED		?677,31123
+SORT		?=SORT		?678,31135
+TOUCH		?=TOUCH		?679,31149
+UNIQ		?=UNIQ		?680,31165
+WHICH		?=WHICH		?681,31179
+XARGS		?=XARGS		?682,31195
+SLEEP		?=SLEEP		?683,31211
+BIBTEX		?=BIBTEX		?685,31258
+DVIPS		?=DVIPS		?686,31276
+LATEX		?=LATEX		?687,31292
+PDFLATEX	?=PDFLATEX	?688,31308
+XELATEX		?=XELATEX		?689,31329
+EPSTOPDF	?=EPSTOPDF	?690,31349
+MAKEINDEX	?=MAKEINDEX	?691,31370
+XINDY		?=XINDY		?692,31393
+KPSEWHICH	?=KPSEWHICH	?693,31409
+GS		?=GS		?694,31432
+CYGPATH		?=CYGPATH		?697,31520
+TPUT		?=TPUT		?699,31570
+PERL		?=PERL		?701,31607
+PYTHON		?=PYTHON		?702,31621
+RST2LATEX	?=RST2LATEX	?703,31639
+CONVERT		?=CONVERT		?705,31688
+DOT		?=DOT		?706,31722
+DOT2TEX		?=DOT2TEX		?707,31746
+FIG2DEV		?=FIG2DEV		?708,31809
+GNUPLOT		?=GNUPLOT		?709,31836
+INKSCAPE	?=INKSCAPE	?710,31866
+XMGRACE		?=XMGRACE		?711,31912
+PNGTOPNM	?=PNGTOPNM	?712,31942
+PPMTOPGM	?=PPMTOPGM	?713,32001
+PNMTOPS		?=PNMTOPS		?714,32067
+GUNZIP		?=GUNZIP		?715,32125
+PSNUP		?=PSNUP		?717,32188
+VIEW_POSTSCRIPT	?=VIEW_POSTSCRIPT	?719,32226
+VIEW_PDF	?=VIEW_PDF	?720,32248
+VIEW_GRAPHICS	?=VIEW_GRAPHICS	?721,32265
+XINDYLANG	?=XINDYLANG	?724,32310
+XINDYENC	?=XINDYENC	?725,32331
+USE_CYGPATH 729,32490
+PS_EMBED_OPTIONS	?=PS_EMBED_OPTIONS	?741,32807
+PS_COMPATIBILITY	?=PS_COMPATIBILITY	?742,32909
+KEEP_TEMP	?=KEEP_TEMP	?745,33014
+DEFAULT_GPI_EPS_FONTSIZE	?=DEFAULT_GPI_EPS_FONTSIZE	?748,33047
+DEFAULT_GPI_PDF_FONTSIZE	?=DEFAULT_GPI_PDF_FONTSIZE	?749,33078
+RST_STYLE_FILE			?=RST_STYLE_FILE			?752,33132
+FIXED_ECHO	756,33314
+ECHO	757,33399
+GNUPLOT_OUTPUT_EXTENSION	?=GNUPLOT_OUTPUT_EXTENSION	?766,33666
+GPI_OUTPUT_EXTENSION 771,33925
+GPI_FSIZE_SYNTAX 776,34180
+    $(findstring fsize:$(findstring fsize780,34268
+BINARY_TARGET_DIR	?=BINARY_TARGET_DIR	?798,34819
+RESTARTS	800,34847
+GRAY	?=GRAY	?854,36736
+remove-files-helper	862,36915
+remove-files	865,37002
+clean-files	870,37228
+remove-temporary-files	899,38203
+cleanse-filename	903,38346
+escape-fname-regex	907,38443
+test-exists	911,38551
+move-if-exists	914,38619
+copy-if-different	918,38792
+copy-if-exists	919,38860
+move-if-different	920,38920
+replace-if-different-and-remove	921,38988
+test-different	928,39214
+test-exists-and-different	929,39271
+get-default	934,39475
+space	962,40278
+colon	963,40306
+comma	964,40319
+sh_true	967,40359
+sh_false	968,40373
+.SUFFIXES:.SUFFIXES971,40441
+RM	975,40522
+QUIET	980,40599
+SHELL	+=SHELL	+986,40736
+this_file	992,40922
+this_file	994,40991
+REAL_TPUT 999,41083
+get-term-code 1004,41216
+black	1006,41278
+red	1007,41317
+green	1008,41354
+yellow	1009,41393
+blue	1010,41433
+magenta	1011,41471
+cyan	1012,41512
+white	1013,41550
+bold	1014,41589
+uline	1015,41624
+reset	1016,41660
+LATEX_COLOR_WARNING	?=LATEX_COLOR_WARNING	?1021,41729
+LATEX_COLOR_ERROR	?=LATEX_COLOR_ERROR	?1022,41760
+LATEX_COLOR_INFO	?=LATEX_COLOR_INFO	?1023,41785
+LATEX_COLOR_UNDERFULL	?=LATEX_COLOR_UNDERFULL	?1024,41811
+LATEX_COLOR_OVERFULL	?=LATEX_COLOR_OVERFULL	?1025,41844
+LATEX_COLOR_PAGES	?=LATEX_COLOR_PAGES	?1026,41877
+LATEX_COLOR_BUILD	?=LATEX_COLOR_BUILD	?1027,41903
+LATEX_COLOR_GRAPHIC	?=LATEX_COLOR_GRAPHIC	?1028,41929
+LATEX_COLOR_DEP		?=LATEX_COLOR_DEP		?1029,41959
+LATEX_COLOR_SUCCESS	?=LATEX_COLOR_SUCCESS	?1030,41985
+LATEX_COLOR_FAILURE	?=LATEX_COLOR_FAILURE	?1031,42019
+get-color	1036,42198
+C_WARNING	1041,42289
+C_ERROR	1042,42328
+C_INFO	1043,42364
+C_UNDERFULL	1044,42398
+C_OVERFULL	1045,42441
+C_PAGES	1046,42482
+C_BUILD	1047,42518
+C_GRAPHIC	1048,42554
+C_DEP	1049,42593
+C_SUCCESS	1050,42625
+C_FAILURE	1051,42664
+C_RESET	1052,42703
+hascleangoals	1060,42866
+hasbuildgoals	1061,42939
+GNUPLOT_SED	1073,43267
+GNUPLOT_GLOBAL	1074,43309
+default_graphic_extension	?=default_graphic_extension	?1077,43406
+latex_build_program		?=latex_build_program		?1078,43439
+build_target_extension		?=build_target_extension		?1079,43472
+hyperref_driver_pattern		?=hyperref_driver_pattern		?1080,43503
+hyperref_driver_error		?=hyperref_driver_error		?1081,43538
+default_graphic_extension	?=default_graphic_extension	?1085,43669
+latex_build_program		?=latex_build_program		?1086,43702
+build_target_extension		?=build_target_extension		?1087,43738
+hyperref_driver_pattern		?=hyperref_driver_pattern		?1088,43769
+hyperref_driver_error		?=hyperref_driver_error		?1089,43804
+default_graphic_extension	?=default_graphic_extension	?1093,43957
+latex_build_program		?=latex_build_program		?1094,43990
+build_target_extension		?=build_target_extension		?1095,44025
+hyperref_driver_pattern		?=hyperref_driver_pattern		?1096,44056
+hyperref_driver_error		?=hyperref_driver_error		?1097,44094
+all_files.tex		?=all_files.tex		?1101,44223
+all_files.tex.sh	?=all_files.tex.sh	?1102,44259
+all_files.tex.pl	?=all_files.tex.pl	?1103,44300
+all_files.tex.py	?=all_files.tex.py	?1104,44341
+all_files.rst		?=all_files.rst		?1105,44382
+all_files.fig		?=all_files.fig		?1106,44418
+all_files.gpi		?=all_files.gpi		?1107,44454
+all_files.dot		?=all_files.dot		?1108,44490
+all_files.xvg		?=all_files.xvg		?1109,44526
+all_files.svg		?=all_files.svg		?1110,44562
+all_files.png		?=all_files.png		?1111,44598
+all_files.jpg		?=all_files.jpg		?1112,44634
+all_files.jpeg		?=all_files.jpeg		?1113,44670
+all_files.eps.gz	?=all_files.eps.gz	?1114,44708
+all_files.eps		?=all_files.eps		?1115,44749
+cleanable-files 1120,44977
+ignore_files 1125,45204
+ignore_patterns	1130,45365
+nodefault_patterns 1133,45467
+filter-buildable	1137,45612
+filter-default	1143,45826
+files.tex	1148,46017
+files.tex.sh	1149,46059
+files.tex.pl	1150,46107
+files.tex.py	1151,46155
+files.rst	1152,46203
+files.gpi	1153,46245
+files.dot	1154,46287
+files.fig	1155,46329
+files.xvg	1156,46371
+files.svg	1157,46413
+files.png	1158,46455
+files.jpg	1159,46497
+files.jpeg	1160,46539
+files.eps.gz	1161,46583
+files.eps	1162,46631
+.SECONDARY:.SECONDARY1169,46998
+default_files.tex	1172,47104
+default_files.tex.sh	1173,47152
+default_files.tex.pl	1174,47206
+default_files.tex.py	1175,47260
+default_files.rst	1176,47314
+default_files.gpi	1177,47362
+default_files.dot	1178,47410
+default_files.fig	1179,47458
+default_files.xvg	1180,47506
+default_files.svg	1181,47554
+default_files.png	1182,47602
+default_files.jpg	1183,47650
+default_files.jpeg	1184,47698
+default_files.eps.gz	1185,47748
+default_files.eps	1186,47802
+concat-files	1190,47946
+all_files_source	1193,48027
+all_files_scripts	1194,48076
+.PHONY:.PHONY1196,48148
+default_files_source	1198,48178
+default_files_scripts	1199,48235
+files_source	1201,48315
+files_scripts	1202,48356
+get-stems	1206,48495
+all_stems.tex	1209,48617
+all_stems.tex.sh	1210,48661
+all_stems.tex.pl	1211,48710
+all_stems.tex.py	1212,48759
+all_stems.rst	1213,48808
+all_stems.fig	1214,48852
+all_stems.gpi	1215,48896
+all_stems.dot	1216,48940
+all_stems.xvg	1217,48984
+all_stems.svg	1218,49028
+all_stems.png	1219,49072
+all_stems.jpg	1220,49116
+all_stems.jpeg	1221,49160
+all_stems.eps.gz	1222,49206
+all_stems.eps	1223,49255
+default_stems.tex	1226,49355
+default_stems.tex.sh	1227,49407
+default_stems.tex.pl	1228,49465
+default_stems.tex.py	1229,49523
+default_stems.rst	1230,49581
+default_stems.fig	1231,49633
+default_stems.gpi	1232,49685
+default_stems.dot	1233,49737
+default_stems.xvg	1234,49789
+default_stems.svg	1235,49841
+default_stems.png	1236,49893
+default_stems.jpg	1237,49945
+default_stems.jpeg	1238,49997
+default_stems.eps.gz	1239,50051
+default_stems.eps	1240,50109
+stems.tex	1243,50228
+stems.tex.sh	1244,50264
+stems.tex.pl	1245,50306
+stems.tex.py	1246,50348
+stems.rst	1247,50390
+stems.fig	1248,50426
+stems.gpi	1249,50462
+stems.dot	1250,50498
+stems.xvg	1251,50534
+stems.svg	1252,50570
+stems.png	1253,50606
+stems.jpg	1254,50642
+stems.jpeg	1255,50678
+stems.eps.gz	1256,50716
+stems.eps	1257,50758
+concat-stems	1261,50890
+graphic_source_extensions	1264,51020
+graphic_source_extensions	+=graphic_source_extensions	+1272,51164
+graphic_target_extensions	1273,51206
+graphic_source_extensions	+=graphic_source_extensions	+1277,51294
+graphic_target_extensions	1278,51327
+graphic_source_extensions	+=graphic_source_extensions	+1282,51432
+graphic_target_extensions	1283,51465
+all_stems_source	1286,51526
+all_stems_script	1287,51575
+all_stems_graphic	1288,51645
+all_stems_ss	1289,51720
+all_stems_sg	1290,51785
+all_stems_ssg	1291,51830
+default_stems_source	1293,51873
+default_stems_script	1294,51930
+default_stems_ss	1295,52008
+default_stems_sg	1296,52084
+default_stems_ssg	1297,52136
+stems_source	1299,52186
+stems_script	1300,52228
+stems_graphic	1301,52291
+stems_gg	1302,52359
+stems_ss	1303,52397
+stems_sg	1304,52450
+stems_ssg	1305,52487
+allowed_source_suffixes	1310,52699
+allowed_source_patterns	1323,52828
+allowed_graphic_suffixes	1325,52900
+allowed_graphic_patterns	1330,52967
+allowed_source_targets	1333,53081
+allowed_graphic_targets	1338,53232
+allowed_batch_source_targets	1343,53401
+allowed_batch_graphic_targets	1355,53594
+real_goals	1362,53765
+specified_source_targets	1365,53849
+specified_batch_source_targets	1369,53957
+specified_graphic_targets	1373,54064
+specified_batch_graphic_targets	1377,54161
+specified_gpi_targets	1381,54270
+source_stems_to_include	1391,54843
+graphic_stems_to_include	1404,55286
+all_pdf_targets	1415,55569
+all_ps_targets	1416,55620
+all_dvi_targets	1417,55669
+all_tex_targets	1418,55720
+all_d_targets	1419,55770
+all_graphics_targets	1420,55817
+all_pstex_targets	1421,55896
+all_dot2tex_targets	1422,55952
+all_known_graphics	1424,56009
+default_pdf_targets	1426,56107
+default_ps_targets	1429,56211
+default_dvi_targets	1430,56270
+pre_pdf_extensions	1431,56331
+rm_ext	1435,56444
+backup_patterns	1438,56609
+graph_stem	1440,56665
+rm_tex 1444,56743
+gpi_sed	1456,57351
+gpi_global	1458,57431
+-e 's/[[:-e 's/[[1474,57882
+-e ':-e '1482,58100
+-e 's!.*!$2:-e 's!.*!$21483,58119
+-e '/^:-e '/^1504,58469
+-e '  s//:-e '  s//1505,58497
+-e '/^:-e '/^1510,58559
+-e '  s//:-e '  s//1511,58576
+-e ':-e '1515,58630
+-e 's/^/:-e 's/^/1516,58650
+-e ':-e '1520,58695
+-e 's/^/:-e 's/^/1521,58715
+-e ':-e '1525,58761
+-e 's/^/:-e 's/^/1526,58783
+-e ':-e '1530,58830
+-e '/^! LaTeX Error:-e '/^! LaTeX Error1531,58844
+-e '/^:-e '/^1534,58909
+-e '  /Default extension:-e '  /Default extension1536,58948
+-e '  s/[[:-e '  s/[[1538,59035
+-e '  s/[[:-e '  s/[[1540,59088
+-e '  s!^.*!$2:-e '  s!^.*!$21546,59239
+-e '/^File:-e '/^File1598,61235
+-e '/^:-e '/^1616,61522
+-e '  s//:-e '  s//1617,61550
+-e '/^:-e '/^1622,61612
+-e '  s//:-e '  s//1623,61629
+-e ':-e '1627,61683
+-e 's/^/:-e 's/^/1628,61703
+-e ':-e '1632,61748
+-e 's/^/:-e 's/^/1633,61768
+-e ':-e '1637,61814
+-e 's/^/:-e 's/^/1638,61836
+-e ':-e '1642,61883
+-e '/^[^[:-e '/^[^[1643,61897
+-e '/^:-e '/^1647,62011
+-e '    s/^:-e '    s/^1649,62070
+-e '  s/[[:-e '  s/[[1653,62152
+-e '  s/'"'"' not found\..*extensions:-e '  s/'"'"' not found\..*extensions1655,62208
+-e '  s/\(.*\)-e '  s/\(.*\1657,62289
+-e '  s/:-e '  s/1660,62434
+-e ':-e '1664,62494
+-e 's/[[:-e 's/[[1665,62513
+-e 's!.*!$1.d:-e 's!.*!$1.d1670,62601
+-e 's!.*!$1.$(build_target_extension) $1._graphics:-e 's!.*!$1.$(build_target_extension) $1._graphics1674,62681
+if $(EGREP) -q '^! LaTeX Error:if $(EGREP) -q '^! LaTeX Error1684,62934
+if $(EGREP) -q ' LaTeX Error:if $(EGREP) -q ' LaTeX Error1708,63730
+-e 's/^No file \(.*\.ind\)\.$$/TARGETS=-e 's/^No file \(.*\.ind\)\.$$/TARGETS1736,64687
+-e 's/^No file \(.*\.[gn]ls\)\.$$/TARGETS=-e 's/^No file \(.*\.[gn]ls\)\.$$/TARGETS1737,64733
+-e 's/[[:-e 's/[[1738,64782
+-e '/^TARGETS=-e '/^TARGETS1739,64809
+-e '  s!^TARGETS=-e '  s!^TARGETS1741,64840
+-e '  s!^TARGETS=-e '  s!^TARGETS1743,64879
+-e 's/[[:-e 's/[[1770,65858
+-e 's!^!$2:-e 's!^!$21775,65975
+$(ECHO) '# vim:$(ECHO) '# vim1798,66503
+$(ECHO) 'INCLUDED_$(call cleanse-filename,$2)$(ECHO) 'INCLUDED_$(call cleanse-filename,$21800,66599
+$(call get-gpi-deps,$1,$(addprefix $(2:$(call get-gpi-deps,$1,$(addprefix $(21801,66660
+-e '/^[[:-e '/^[[1819,67446
+-e '  s/^[[:-e '  s/^[[1825,67574
+-e '  s/[[:-e '  s/[[1826,67652
+-e '  s/.*:-e '  s/.*1829,67860
+-e '  s!.*!$2:-e '  s!.*!$21830,67936
+-e 's/^[[:-e 's/^[[1835,67997
+-e '/^:-e '/^1869,68949
+-e '  s//:-e '  s//1870,68977
+-e '/^:-e '/^1875,69039
+-e '  s//:-e '  s//1876,69056
+-e ':-e '1880,69110
+-e 's/^/:-e 's/^/1881,69130
+-e ':-e '1885,69175
+-e 's/^/:-e 's/^/1886,69195
+-e ':-e '1890,69241
+-e 's/^/:-e 's/^/1891,69263
+-e ':-e '1895,69310
+-e '/^! LaTeX Error:-e '/^! LaTeX Error1896,69324
+-e 's/^[^[:-e 's/^[^[1900,69405
+-e 's/^\(.*\n\)\([^[:-e 's/^\(.*\n\)\([^[1901,69456
+-e '/^!!! .* LaTeX Error:-e '/^!!! .* LaTeX Error1902,69525
+-e '/^:-e '/^1906,69611
+-e '    s/^:-e '    s/^1908,69669
+-e '  s/^:-e '  s/^1911,69727
+-e '  s/^\(.*not found.\).*Enter file name:-e '  s/^\(.*not found.\).*Enter file name1912,69749
+-e '/^:-e '/^1915,69875
+-e '    s/^:-e '    s/^1917,69937
+-e '  s/:-e '  s/1920,69995
+-e '  /could not locate.*any of these extensions:-e '  /could not locate.*any of these extensions1921,70018
+-e '/^\(.* LaTeX Error:-e '/^\(.* LaTeX Error1927,70156
+-e '/.*\(!!! .*Undefined control sequence\)[^[:-e '/.*\(!!! .*Undefined control sequence\)[^[1931,70303
+-e '  s//\1:-e '  s//\11932,70371
+-e '  s/\nl\.[[:-e '  s/\nl\.[[1933,70391
+-e '/^\(!pdfTeX error:-e '/^\(!pdfTeX error1936,70485
+-e '  s/[[:-e '  s/[[1941,70584
+-e '  s/[[:-e '  s/[[1942,70609
+-e ':-e '1946,70671
+-e 's/^xindy:-e 's/^xindy1969,71085
+-e '/^Error:-e '/^Error1979,71265
+-e '  /^Execution stack:-e '  /^Execution stack1980,71303
+-e '/, line [0-9]*:-e '/, line [0-9]*1993,71524
+-e '/, line [0-9]*:-e '/, line [0-9]*1999,71624
+-e '/^Error:-e '/^Error2028,72277
+-e 's/^Warning:-e 's/^Warning2029,72333
+-e     's![.:-e     's![.2042,72657
+-e     's!.*!\\:-e     's!.*!\\2044,72694
+color_tex 2085,73738
+-e '    s/[[:-e '    s/[[2102,74048
+-e '  / *LaTeX Error:-e '  / *LaTeX Error2107,74233
+-e '    s/.*\( *LaTeX Error:-e '    s/.*\( *LaTeX Error2108,74262
+-e '  /.*Warning:-e '  /.*Warning2111,74350
+-e ' -e '2124,74672
+color_bib 2129,74731
+-e '/---/,/^.[^:-e '/---/,/^.[^2133,74811
+-e '  /^.[^:-e '  /^.[^2135,74845
+enlarge_beamer	2150,75167
+test-run-again	2153,75263
+| $(EGREP) -q '^(.*Rerun .*|No file $1\.[^.]+\.|No file .+\.tex\.|LaTeX Warning:| $(EGREP) -q '^(.*Rerun .*|No file $1\.[^.]+\.|No file .+\.tex\.|LaTeX Warning2162,75591
+run-latex	2168,75760
+latex-color-log	2171,75903
+success=2175,76028
+[ "$$success" [ "$$success"2182,76218
+success=2188,76347
+if ! $(XINDY) -q -o $2 -L $(XINDYLANG) -C $(XINDYENC) -I xindy -M $3 -t $4 $1 > /dev/null || $(EGREP) -q '^xindy:if ! $(XINDY) -q -o $2 -L $(XINDYLANG) -C $(XINDYENC) -I xindy -M $3 -t $4 $1 > /dev/null || $(EGREP) -q '^xindy2189,76360
+[ "$$success" [ "$$success"2194,76561
+[ ! -e '$2.cookie' ] && $(ECHO) "restarts=[ ! -e '$2.cookie' ] && $(ECHO) "restarts2203,76857
+restarts=2204,76972
+level=2205,77027
+if $(EXPR) $(MAKELEVEL) '<=if $(EXPR) $(MAKELEVEL) '<2206,77076
+run-bibtex	2217,77397
+$(EPSTOPDF) '$1.cookie' --outfile=$(EPSTOPDF) '$1.cookie' --outfile2224,77705
+default-gpi-fontsize 2232,77943
+$(strip $(if $2,monochrome,$(if $(shell $(EGREP) '^\#\#[[:$(strip $(if $2,monochrome,$(if $(shell $(EGREP) '^\#\#[[2248,78537
+gpi-font-entry 2255,78862
+fnames=2289,79841
+success=2294,79964
+[ "$$success" [ "$$success"2307,80336
+$(CONVERT) $(if $3,-type Grayscale,) '$1' eps2:$(CONVERT) $(if $3,-type Grayscale,) '$1' eps22334,81070
+convert-fig	2339,81224
+convert-fig-pstex	2343,81400
+convert-fig-pstex-t	2347,81578
+convert-dot-tex	2351,81745
+convert-svg	2356,81882
+convert-xvg	2361,82074
+convert-epsgz	2366,82263
+convert-eps	2371,82470
+gray_eps_file	2374,82600
+make-ps	2497,86948
+make-pdf	2503,87189
+echo-build	2508,87380
+echo-graphic	2509,87452
+echo-dep	2510,87513
+echo-list	2514,87626
+.PHONY:.PHONY2520,87697
+all:all2521,87709
+.PHONY:.PHONY2523,87740
+all-pdf:all-pdf2524,87756
+.PHONY:.PHONY2527,87833
+all-ps:all-ps2528,87848
+.PHONY:.PHONY2530,87881
+all-dvi:all-dvi2531,87897
+.PHONY:.PHONY2537,87959
+show:show2538,87972
+source_includes	2546,88089
+graphic_includes 2547,88151
+.PHONY:.PHONY2575,89162
+$(default_stems_ss)$(default_stems_ss2576,89190
+.PHONY:.PHONY2579,89267
+$(addsuffix ._show,$(stems_ssg)$(addsuffix ._show,$(stems_ssg2580,89308
+.SECONDARY:.SECONDARY2584,89426
+%.pdf:%.pdf2585,89457
+.SECONDARY:.SECONDARY2600,89883
+%.ps:%.ps2601,89913
+.SECONDARY:.SECONDARY2660,91834
+%.$(build_target_extension)%.$(build_target_extension2662,91871
+%.bbl:%.bbl2726,93989
+%.ind:%.ind2753,95068
+%.gls:%.gls2758,95202
+%.gls:%.gls2763,95380
+%.gls:%.gls2768,95535
+%.nls:%.nls2773,95688
+.SECONDARY:.SECONDARY2780,95901
+%.tex:%.tex2782,95933
+%.tex:%.tex2785,95994
+%.tex:%.tex2788,96056
+%.tex:%.tex2791,96116
+.PHONY:.PHONY2800,96314
+all-graphics:all-graphics2801,96335
+.PHONY:.PHONY2804,96417
+all-pstex:all-pstex2805,96435
+.PHONY:.PHONY2808,96475
+all-dot2tex:all-dot2tex2809,96495
+.PHONY:.PHONY2811,96533
+show-graphics:show-graphics2812,96555
+$(gray_eps_file)$(gray_eps_file2815,96624
+%.pdf:%.pdf2820,96763
+%.pdf:%.pdf2825,96940
+%.pdf:%.pdf2830,97072
+%.pdf:%.pdf2834,97165
+%.pdf:%.pdf2840,97308
+%.pdf:%.pdf2845,97485
+%.pdf:%.pdf2850,97617
+%.eps:%.eps2857,97718
+%.eps:%.eps2861,97844
+%.eps:%.eps2865,97937
+%.eps:%.eps2869,98068
+%.eps:%.eps2876,98384
+%.eps:%.eps2882,98592
+%.eps:%.eps2886,98716
+%.eps:%.eps2890,98841
+%.eps:%.eps2895,98971
+%.pstex:%.pstex2899,99100
+%.pstex_t:%.pstex_t2903,99201
+%.dot_t:%.dot_t2907,99323
+%.$(build_target_extension).1st.make %.d %.aux %.aux.make %.fls:%.$(build_target_extension).1st.make %.d %.aux %.aux.make %.fls2950,100723
+.SECONDARY:.SECONDARY2980,102123
+%.auxbbl.make:%.auxbbl.make2981,102174
+%.gpi.d:%.gpi.d2990,102554
+%.paper.make:%.paper.make2999,102928
+%.embed.make:%.embed.make3028,103676
+.PHONY:.PHONY3037,103846
+_all_programs:_all_programs3038,103868
+.PHONY:.PHONY3042,103973
+_check_programs:_check_programs3043,103997
+.PHONY:.PHONY3072,104750
+_check_gpi_files:_check_gpi_files3073,104775
+.PHONY:.PHONY3088,105210
+_all_stems:_all_stems3089,105229
+.PHONY:.PHONY3093,105332
+_includes:_includes3094,105350
+.PHONY:.PHONY3101,105581
+_all_sources:_all_sources3102,105602
+.PHONY:.PHONY3106,105706
+_dependency_graph:_dependency_graph3107,105732
+.PHONY:.PHONY3111,105841
+_show_dependency_graph:_show_dependency_graph3112,105872
+.PHONY:.PHONY3118,106118
+_sources:_sources3119,106135
+.PHONY:.PHONY3123,106227
+_scripts:_scripts3124,106244
+.PHONY:.PHONY3128,106340
+_graphic_outputs:_graphic_outputs3129,106365
+.PHONY:.PHONY3133,106484
+_env:_env3134,106497
+.PHONY:.PHONY3150,107020
+clean-generated:clean-generated3151,107044
+.PHONY:.PHONY3155,107190
+clean-deps:clean-deps3156,107209
+.PHONY:.PHONY3159,107296
+clean-tex:clean-tex3160,107314
+.PHONY:.PHONY3163,107376
+clean-graphics:clean-graphics3170,107814
+.PHONY:.PHONY3173,107918
+clean-backups:clean-backups3174,107940
+.PHONY:.PHONY3177,108011
+clean-auxiliary:clean-auxiliary3178,108035
+.PHONY:.PHONY3181,108098
+clean-nographics:clean-nographics3182,108123
+.PHONY:.PHONY3184,108195
+clean:clean3185,108209
+.PHONY:.PHONY3191,108321
+help:help3192,108334
+.PHONY:.PHONY3195,108355
+version:version3196,108371
+.PHONY:.PHONY3887,134631
+
+my_docs/21/eb_user_21/themes/beamerthemeTACC16.sty,182
+\newcommand{\event}\event20,325
+  \def\TACC@eventname{\TACC@eventname22,367
+\newcommand{\sectionframe}\sectionframe25,411
+\newcommand{\subsectionframe}\subsectionframe26,480
+
+my_docs/21/eb_user_21/themes/beamercolorthemeTACC16.sty,120
+\definecolor{inecolor13,281
+\definecolor{inecolor14,319
+\definecolor{inecolor15,361
+\definecolor{inecolor17,442
+
+my_docs/21/eb_user_21/Makefile,102
+TALKS 1,0
+TEX_SUFS 2,21
+%.pdf:%.pdf4,87
+all:all7,120
+clean:clean9,135
+clobber:clobber13,218
+
+my_docs/21/eb_user_21/beamerthemeTACC16.sty,186
+\newcommand{\event}\event55,1366
+  \def\TACC@eventname{\TACC@eventname57,1408
+\newcommand{\sectionframe}\sectionframe60,1452
+\newcommand{\subsectionframe}\subsectionframe61,1521
+
+my_docs/21/eb_user_21/beamercolorthemeTACC16.sty,120
+\definecolor{inecolor13,281
+\definecolor{inecolor14,319
+\definecolor{inecolor15,361
+\definecolor{inecolor16,404
+
+my_docs/21/eb_user_21/beamerthemeTACC.sty,182
+\newcommand{\event}\event20,317
+  \def\TACC@eventname{\TACC@eventname22,359
+\newcommand{\sectionframe}\sectionframe25,403
+\newcommand{\subsectionframe}\subsectionframe26,472
+
+my_docs/21/eb_user_21/beamercolorthemeTACC.sty,556
+\definecolor{inecolor22,886
+\definecolor{inecolor23,952
+\definecolor{inecolor24,1017
+\definecolor{inecolor27,1098
+\definecolor{inecolor28,1172
+\definecolor{inecolor29,1249
+\definecolor{inecolor32,1360
+\definecolor{inecolor33,1433
+\definecolor{inecolor34,1508
+\definecolor{inecolor37,1600
+\definecolor{inecolor38,1672
+\definecolor{inecolor39,1735
+\definecolor{inecolor42,1854
+\definecolor{inecolor43,1924
+\definecolor{inecolor44,1998
+\definecolor{inecolor46,2074
+\definecolor{inecolor47,2146
+\definecolor{inecolor48,2222
+
+my_docs/21/eb_user_21/mpi3.txt,93
+mysql> select t3.function_name,function_name1,0
+mysql> select t3.function_name, COUNT(1,0
 
 my_docs/20/utsa/ideas.org,140
 * Hi,4,81
@@ -8661,6 +9334,9 @@ $(EXEC)$(EXEC8,147
 try.o:try.o11,185
 xalt_quotestring.o:xalt_quotestring.o12,217
 
+rt/bad_runuuid/bad_runuuid.desc,16
+test_name 3,18
+
 rt/big_syslog/bin/logger,10
 TAG=5,42
 
@@ -8772,6 +9448,8 @@ QUICK_START.txt,0
 install.sh,0
 
 rt/syslog/simpleConfig.py,0
+
+rt/bad_runuuid/simpleConfig.py,0
 
 rt/json/tryThis.json,0
 
@@ -9005,6 +9683,34 @@ my_docs/20/hpckp20/themes/beamerouterthemeTACC16-169.sty,0
 
 my_docs/20/hpckp20/themes/license.tex,0
 
+my_docs/21/fosdem21/ideas/ideas.org,0
+
+my_docs/21/eb_user_21/beamerfontthemeTACC16.sty,0
+
+my_docs/21/eb_user_21/ideas.org,0
+
+my_docs/21/eb_user_21/talk.tex,0
+
+my_docs/21/eb_user_21/beamerfontthemeTACC.sty,0
+
+my_docs/21/eb_user_21/beamerinnerthemeTACC.sty,0
+
+my_docs/21/eb_user_21/beamerinnerthemeTACC16.sty,0
+
+my_docs/21/eb_user_21/beamerouterthemeTACC16.sty,0
+
+my_docs/21/eb_user_21/beamerouterthemeTACC.sty,0
+
+my_docs/21/eb_user_21/themes/beamerfontthemeTACC16.sty,0
+
+my_docs/21/eb_user_21/themes/beamerinnerthemeTACC16.sty,0
+
+my_docs/21/eb_user_21/themes/beamerouterthemeTACC16.sty,0
+
+my_docs/21/eb_user_21/themes/beamerouterthemeTACC16-169.sty,0
+
+my_docs/21/eb_user_21/themes/license.tex,0
+
 my_docs/17/hpckp_17/HPCKP_17_Lmod_XALT.txt,0
 
 my_docs/17/isc17/bof.org,0
@@ -9092,96 +9798,6 @@ py_src/xalt_rmap_lmap.in.py,0
 py_src/xalt_global.py,0
 
 mapping.example.json,0
-
-src/libxalt/translate.d32,0
-
-src/libxalt/walkProcessTree.o32,0
-
-src/libxalt/buildEnvT.d32,0
-
-src/libxalt/buildUserT.o32,0
-
-src/libxalt/run_submission.d32,0
-
-src/libxalt/walkProcessTree.d32,0
-
-src/libxalt/run_submission.o32,0
-
-src/libxalt/xalt_test.d32,0
-
-src/libxalt/xalt_initialize.d32,0
-
-src/libxalt/parseProcMaps.d32,0
-
-src/libxalt/buildUserT.d32,0
-
-src/libxalt/buildEnvT.o32,0
-
-src/util/buildJson.o32,0
-
-src/util/buildJson.d32,0
-
-src/util/extractMain.d32,0
-
-src/util/capture.d32,0
-
-src/util/insert.d32,0
-
-src/util/compute_sha1.d32,0
-
-src/util/xalt_c_utils.d32,0
-
-src/util/xalt_tmpdir.d32,0
-
-src/util/build_uuid.o32,0
-
-src/util/transmit.d32,0
-
-src/util/process.d32,0
-
-src/util/buildXALTRecordT.d32,0
-
-src/util/xalt_epoch.d32,0
-
-src/util/epoch.o32,0
-
-src/util/transmit.o32,0
-
-src/util/process.o32,0
-
-src/util/xalt_curl_transmit.d32,0
-
-src/util/xalt_c_utils.o32,0
-
-src/util/zcmprss.d32,0
-
-src/util/build_uuid.d32,0
-
-src/util/xalt_vendor_note.d32,0
-
-src/util/insert.o32,0
-
-src/util/xalt_dir.d32,0
-
-src/util/xalt_record_pkg.d32,0
-
-src/util/capture.o32,0
-
-src/util/zuncmprss.d32,0
-
-src/util/xalt_quotestring.d32,0
-
-src/util/xalt_fgets_alloc.d32,0
-
-src/util/epoch.d32,0
-
-src/util/base64.d32,0
-
-src/linker/jsmn.d32,0
-
-src/linker/my_uuidgen.d32,0
-
-src/linker/xalt_realpath.d32,0
 
 src/tmpl/xalt_config.py,0
 

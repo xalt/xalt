@@ -8,6 +8,7 @@
 #include <math.h>
 #include <time.h>
 #include "xalt_c_utils.h"
+#define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
 
 #define DATESZ 100
 
@@ -89,7 +90,7 @@ void set_end_record()
 }
 void my_free(void *ptr,int sz)
 {
-  if (s_start_record)
+  if (s_start_record && ptr != NULL)
     {
       memset(ptr, '\0', sz);
       free(ptr);
