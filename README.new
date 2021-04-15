@@ -52,5 +52,10 @@ XALT 2.10+
 	     * xalt_configuration_report now combines gpu tracking and gpu_style (e.g. yes(dcgm))
 	     * Added gpu setup timer report to run_submission()
 	     * Updated docs to explain how to find nvml.h from the cuda pkg.
-W.I.P:
     (2.10.3) * Longhorn now uses --with-xaltFilePrefix=/scratch/projects/XALT
+             * Do not segfault when using syslog or logger transmission style if there are PKG record.
+	     * Add duplicate uuid test in syslog with different crc values.
+	     * If getline() fails to read anything in build_proc() then just return with no process tree.
+	     * Generate CRC using crcFast() routine in both Python and C.  Compare values
+	       from generated and received Json strings.
+	     * Add crc to uuid string key when combining syslog records.
