@@ -37,7 +37,7 @@ exit 2
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, sys, re, getpass, base64
+import os, sys, re, getpass, base64, traceback
 try:
   import configparser
 except:
