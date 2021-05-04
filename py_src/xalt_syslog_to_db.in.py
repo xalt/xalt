@@ -101,6 +101,7 @@ class CmdLineOptions(object):
                                                                                help="Store just records that come from syshost")
     parser.add_argument("--leftover_fn", dest='leftover', action="store",      default='leftover.log',
                                                                                help="Name of the leftover file")
+    parser.add_argument("-D",            dest='debug',    action="store_true", help="Debug Flag")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
     parser.add_argument("--filter",      dest='filter',   action="store_true", help="Filter Scalar jobs 30 mins to 60mins")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
@@ -480,7 +481,7 @@ def main():
 
         if ( t['kind'] == "link" ):
           XALT_Stack.push("link_to_db()")
-          xalt.link_to_db(rmapT, value)
+          xalt.link_to_db(args.debug, rmapT, value)
           XALT_Stack.pop()
           lnkCnt += 1
         elif ( t['kind'] == "run" ):
@@ -493,13 +494,13 @@ def main():
              else:
                value['userDT']['probability'] = 0.01
 
-          stored = xalt.run_to_db(rmapT, u2acctT, value, timeRecord)
+          stored = xalt.run_to_db(args.debug, rmapT, u2acctT, value, timeRecord)
           XALT_Stack.pop()
           if (stored):
             runCnt += 1
         elif ( t['kind'] == "pkg" ):
           XALT_Stack.push("pkg_to_db()")
-          xalt.pkg_to_db(t['syshost'], value)
+          xalt.pkg_to_db(args.debug, t['syshost'], value)
           XALT_Stack.pop()
           pkgCnt += 1
         else:

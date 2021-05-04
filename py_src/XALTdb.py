@@ -219,7 +219,7 @@ class XALTdb(object):
     """ Return name of db"""
     return self.__db
 
-  def link_to_db(self, reverseMapT, linkT):
+  def link_to_db(self, debug, reverseMapT, linkT):
     """
     Stores the link table data into the XALT db
     @param reverseMapT: The reverse map table that maps directories to modules
@@ -251,6 +251,7 @@ class XALTdb(object):
       cursor.execute(query, [uuid])
       query  = ""
       if (cursor.rowcount > 0):
+        if (debug): sys.stdout.write("  --> failed to record: link uuid already recorded.\n")
         return
 
       build_epoch = float(resultT['build_epoch'])
@@ -274,6 +275,7 @@ class XALTdb(object):
                              link_line,   cwd,         build_user,
                              build_shost, build_epoch, exec_path))
 
+      if (debug): sys.stdout.write("  --> Success: link recorded: \n")
       query   = ""
       link_id = cursor.lastrowid
 
@@ -369,7 +371,7 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-  def run_to_db(self, reverseMapT, u2acctT, runT, timeRecord):
+  def run_to_db(self, debug, reverseMapT, u2acctT, runT, timeRecord):
     """
     Store the "run" data into the database.
     @param: reverseMapT: The map between directories and modules
@@ -390,10 +392,12 @@ class XALTdb(object):
       recordMe = False 
 
       if (not ('userT' in runT)):
+        if (debug): sys.stdout.write("  --> failed to record: No userT in runT\n")
         return stored
       userT = runT['userT']
 
       if (not ('userDT' in runT)):
+        if (debug): sys.stdout.write("  --> failed to record: No userDT in runT\n")
         return stored
       userDT = runT['userDT']
 
@@ -406,6 +410,7 @@ class XALTdb(object):
       endTimeStr  = "%.2f" % (endTime)
       startTime   = userDT.get('start_time',0.0)
       if (startTime < 1):
+        if (debug): sys.stdout.write("  --> failed to record: startTime epoch is < 1 second\n")
         return stored
 
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(startTime))
@@ -416,6 +421,7 @@ class XALTdb(object):
 
       run_uuid    = userT.get('run_uuid',"UNKNOWN")[:36]
       if (run_uuid == "UNKNOWN"):
+        if (debug): sys.stdout.write("  --> failed to record: run_uuid is UNKNOWN\n")
         return stored
       uuid_patt = self.__patt
       m         = uuid_patt.match(run_uuid)
@@ -432,6 +438,7 @@ class XALTdb(object):
       num_gpus    = convertToTinyInt(userDT.get('num_gpus',   0))
       exec_path   = userT.get('exec_path')
       if (not exec_path):
+        if (debug): sys.stdout.write("  --> failed to record: No exec_path found\n")
         return stored
 
       if (cursor.rowcount > 0):
@@ -449,6 +456,7 @@ class XALTdb(object):
         v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
 
+        if (debug): sys.stdout.write("  --> Success: updated run_time\n")
         return
       else:
         #print("not found")
@@ -489,6 +497,7 @@ class XALTdb(object):
         stored   = True
         recordMe = True 
 
+      if (debug): sys.stdout.write("  --> Success: stored full record\n")
       if (recordMe and endTime > 0):
         timeRecord.add(num_cores, runTime)
 
@@ -544,7 +553,7 @@ class XALTdb(object):
 
     return stored
 
-  def pkg_to_db(self, syshost, pkgT):
+  def pkg_to_db(self, debug, syshost, pkgT):
 
     try:
       conn   = self.connect()
@@ -574,6 +583,9 @@ class XALTdb(object):
         query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
         cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))
         query  = ""
+        if (debug): sys.stdout.write("  --> Success: pkg entry stored\n")
+      else:
+        if (debug): sys.stdout.write("  --> failed to record: No run_uuid to connect packages to\n")
         
       v = XALT_Stack.pop()
       carp("SYSHOST",v)
