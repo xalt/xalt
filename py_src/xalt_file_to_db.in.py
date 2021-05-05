@@ -141,15 +141,18 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
 
   try:
     for fn in linkFnA:
-      if (listFn or debug):
-        sys.stdout.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)   # push fn
 
       try:
         f     = open(fn,"r")
       except:
+        sys.stdout.write(fn+"\n")
+        sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
   
+      if (listFn or debug):
+        sys.stdout.write(fn+"\n")
+        if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
       try:
         s     = f.read().rstrip()
@@ -165,8 +168,11 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
 
       f.close()
       if (not check_string_w_crc(s, linkT.get('crc'))):
+        if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
         continue;
 
+      if (debug):
+        sys.stdout.write("  --> Sending record to xalt.link_to_db()\n")
       xalt.link_to_db(debug, reverseMapT, linkT)
       num  += 1
       if (active):
@@ -273,14 +279,17 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
   query = ""
   try:
     for fn in runFnA:
-      if (listFn or debug):
-        sys.stdout.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)
       try:
         f      = open(fn,"r")
       except:
+        sys.stdout.write(fn+"\n")
+        sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
+      if (listFn or debug):
+        sys.stdout.write(fn+"\n")
+        if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
       try:
         s    = f.read().rstrip()
@@ -295,9 +304,14 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
         continue
       f.close()
 
+      
+      if (debug):   sys.stdout.write("  --> Checking CRC\n")
       if (not check_string_w_crc(s, runT.get('crc'))):
+        if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
         continue;
       
+      if (debug):
+        sys.stdout.write("  --> Sending record to xalt.run_to_db()\n")
       stored = xalt.run_to_db(debug, reverseMapT, u2acctT, runT, timeRecord)
       try:
         if (deleteFlg):
