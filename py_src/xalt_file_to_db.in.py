@@ -112,7 +112,7 @@ def keep_or_delete(fn, deleteFlg):
   if (delta > 86400 and deleteFlg):
     os.remove(fn)
 
-def check_string_w_crc(s, crcStr):
+def check_string_w_crc(s, crcStr, debug):
   if (not crcStr):
     return True
 
@@ -121,7 +121,11 @@ def check_string_w_crc(s, crcStr):
   myLen = len(ss)
   data  = ss.encode()
   c     = libcrc.crcFast(c_char_p(data), myLen)
-  return crcV == c
+  iret  = crcV == c
+  if ((not iret) and debug):
+    print("  --> crcStr:",crcStr.lower()," computed crc:",hex(c))
+    
+  return iret
 
 
 def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT, active, pbar):
@@ -152,6 +156,7 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
   
       if (listFn or debug):
         sys.stdout.write(fn+"\n")
+        if (debug): sys.stdout.write("  --> Trying to open file\n")
         if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
       try:
@@ -167,7 +172,9 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
         continue
 
       f.close()
-      if (not check_string_w_crc(s, linkT.get('crc'))):
+
+      if (debug):   sys.stdout.write("  --> Checking CRC\n")
+      if (not check_string_w_crc(s, linkT.get('crc'), debug) ):
         if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
         continue;
 
@@ -236,7 +243,7 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
         continue
 
       f.close()
-      if (not check_string_w_crc(s, pkgT.get('crc'))):
+      if (not check_string_w_crc(s, pkgT.get('crc'), debug) ):
         continue;
 
       xalt.pkg_to_db(debug, syshost, pkgT)
@@ -289,6 +296,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
       
       if (listFn or debug):
         sys.stdout.write(fn+"\n")
+        if (debug): sys.stdout.write("  --> Trying to open file\n")
         if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
       try:
@@ -306,7 +314,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
 
       
       if (debug):   sys.stdout.write("  --> Checking CRC\n")
-      if (not check_string_w_crc(s, runT.get('crc'))):
+      if (not check_string_w_crc(s, runT.get('crc'), debug) ):
         if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
         continue;
       
