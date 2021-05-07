@@ -120,7 +120,7 @@ def check_string_w_crc(s, crcStr, debug):
   ss     = '{"crc":"0xFFFF"' + s[15:]
   myLen = len(ss)
   data  = ss.encode()
-  c     = libcrc.crcFast(c_char_p(data), myLen)
+  c     = libcrc.crcFast(c_char_p(data), myLen) & 0xFFFF
   iret  = crcV == c
   if ((not iret) and debug):
     print("  --> crcStr:",crcStr.lower()," computed crc:",hex(c))
