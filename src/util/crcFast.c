@@ -94,7 +94,7 @@ crc crcFast(char const message[], int nBytes)
     /*
      * The final remainder is the CRC.
      */
-    return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE);
+    return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE) & 0xFFFF;
 
 }   /* crcFast() */
 
