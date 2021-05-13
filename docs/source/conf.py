@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'XALT 2'
-copyright = u'2018, Robert McLay'
+copyright = u'2021, Robert McLay'
 author = u'Robert McLay'
 
 # The version info for the project you're documenting, acts as replacement for
