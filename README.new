@@ -64,6 +64,8 @@ XALT 2.10+
     (2.10.6) * Issue #45: -D flag now prints status to track progress to entering record into db.
     (2.10.7) * Issue #45: And CRC with 0xFFFF in python test
     (2.10.8) * Issue #45: And final answer in crcFast.c routine with 0xFFFF
+    (2.10.9) * Issue #46: Fix bug where copy_system_library_to_xalt.py failed to copy a library
+               like libuuid.so when the link is across directories rather than in the same dir.
     
     
     

@@ -113,7 +113,7 @@ COPY_ALL_LIBS: build_all
 	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR) $(GPU_STR) ; do \
 	  baseNM="$${i%%:*}";                                          \
           realNM="$${i##*:}";                                          \
-	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64)              \
+	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64) --verbose    \
                                --base $$baseNM                         \
                                --real $$realNM;                        \
         done

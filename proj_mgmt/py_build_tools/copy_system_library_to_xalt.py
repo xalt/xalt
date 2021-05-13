@@ -79,8 +79,10 @@ def readlink_recursive(fn, dirNm):
     if (newFn.find('/') == -1):
       newFn = os.path.join(dirNm,newFn)
     if (os.path.islink(newFn)):
-      newFn = readlink_recursive(newFn, dirNm)
+      pair  = os.path.split(newFn)
+      newFn = readlink_recursive(newFn, pair[0])
     return newFn
+  return fn
 
 def main():
 
