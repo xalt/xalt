@@ -1,71 +1,73 @@
 XALT 2.8+
-    (2.8.1)  * progressBar.py: handle the case where pbar.update(i) where i could be greater than the max value
-             * xalt_file_to_db.in.py: Cleaned-up all file not found exceptions
-    (2.8.2)  * xalt_configuration_report.C: Added Non-MPI (scalar) to sample array title.
-	     * py_src/createDB.in.py: add parseVersion() and initialize DB depending MySQL version and
-	       use packaging.version if installed instead of home grown solution.
-             * Make FULLDATESZ be twice the size of DATESZ to avoid gcc warning.
-	     * Issue #28: Copy system libraries in to install (lib64) directory to support
-	       executable like xalt_run_submission
-    (2.8.3)  * Issue #28: deal with issues on Centos w.r.t. copying files to install lib64 directory.
-    (2.8.4)  * Issue #28: Correctly set XALT_LD_LIBRARY_PATH for both SITE_CONTROLLED_PREFIX equal yes and no.
-             * Issue #29: When xalt_initialize.c and xalt_run_submission.C and ld.in call or capture the
-               output of a command, set XALT_EXECUTABLE_TRACKING=no every time.
-    (2.8.5)  * Issue #29: Automatically add XALT_DEFAULT_DIR to the list of paths to ignore
-               by modifying proj_mgmt/py_build_tools/build_parser_routine.py
-             * Use src/tmpl/xalt_config.py to hold the default patterns.
-             * Report XALT_CONFIG_PY and src/tmpl/xalt_config.py with xalt_configuration_report.x
-               Add comment to say that the patterns come from both files.
-    (2.8.6)  * Fix truncation bug w.r.t. pkg_path.
-    (2.8.7)  * Include python 2 and python 3 package tracking support.
-    (2.8.8)  * Setting $XALT_MPI_ALWAYS_RECORD overrides setting in site config.py file
-             * Setting env var RDMAV_FORK_SAFE=1 around the capture() call in myfini().
-	       This avoid problem with UCX version 1.6.1
-    (2.8.10) * Issue #30: Fix bug with python site package install
-    (2.8.11) * Last version that has a separate xalt_run_submission executable.
+    (2.8.1)   * progressBar.py: handle the case where pbar.update(i) where i could be greater than the max value
+              * xalt_file_to_db.in.py: Cleaned-up all file not found exceptions
+    (2.8.2)   * xalt_configuration_report.C: Added Non-MPI (scalar) to sample array title.
+	      * py_src/createDB.in.py: add parseVersion() and initialize DB depending MySQL version and
+	        use packaging.version if installed instead of home grown solution.
+              * Make FULLDATESZ be twice the size of DATESZ to avoid gcc warning.
+	      * Issue #28: Copy system libraries in to install (lib64) directory to support
+	        executable like xalt_run_submission
+    (2.8.3)   * Issue #28: deal with issues on Centos w.r.t. copying files to install lib64 directory.
+    (2.8.4)   * Issue #28: Correctly set XALT_LD_LIBRARY_PATH for both SITE_CONTROLLED_PREFIX equal yes and no.
+              * Issue #29: When xalt_initialize.c and xalt_run_submission.C and ld.in call or capture the
+                output of a command, set XALT_EXECUTABLE_TRACKING=no every time.
+    (2.8.5)   * Issue #29: Automatically add XALT_DEFAULT_DIR to the list of paths to ignore
+                by modifying proj_mgmt/py_build_tools/build_parser_routine.py
+              * Use src/tmpl/xalt_config.py to hold the default patterns.
+              * Report XALT_CONFIG_PY and src/tmpl/xalt_config.py with xalt_configuration_report.x
+                Add comment to say that the patterns come from both files.
+    (2.8.6)   * Fix truncation bug w.r.t. pkg_path.
+    (2.8.7)   * Include python 2 and python 3 package tracking support.
+    (2.8.8)   * Setting $XALT_MPI_ALWAYS_RECORD overrides setting in site config.py file
+              * Setting env var RDMAV_FORK_SAFE=1 around the capture() call in myfini().
+	        This avoid problem with UCX version 1.6.1
+    (2.8.10)  * Issue #30: Fix bug with python site package install
+    (2.8.11)  * Last version that has a separate xalt_run_submission executable.
 
 XALT 2.9+
-    (2.9.5)  * Merge of runSubmission branch on to master branch
-    (2.9.6)  * objdump extraction of watermark only happens for mpi programs run with num_tasks > 1
-               Only vendor note extraction of watermark when num_tasks == 1.
-    (2.9.7)  * Added container column to end of xalt_run table.
-    (2.9.8)  * Added XALT_DUMP_ENV=yes to dump env vars in myinit()
-    (2.9.9)  * Issue #31 Support readline_recursive() for copying system libraries to XALT
-             * Fix bug where XALT_TRACING=run0 would cause run_submission to fail.
-	     * Do not copy libdl.* from current system to $(LIB64)
-	     * Move curl transport from transmit.c to a separate program (xalt_curl_transport)
-    (2.9.10) * Issue #37: Reuse the sha1 value if it is already been computed rather than recomputing.
-             * Change XALT_TRACING=run to work like =yes when executable passes path test.
-    (2.9.11) * Change XALT_TRACING=run to work like =yes when executable passes path test and it has RANK==0.
-             * Transmit json string directly (no compress/base64 encoding)
-	     * Added V:3 version of transmission for syslog/logger style.
-	     * Remove RPATH linking of libxalt_init.so to $(LIB64), remove -lz.
-    (2.9.12) * Change test to ((ret = waitpid()) == -1) in curl transmission.
+    (2.9.5)   * Merge of runSubmission branch on to master branch
+    (2.9.6)   * objdump extraction of watermark only happens for mpi programs run with num_tasks > 1
+                Only vendor note extraction of watermark when num_tasks == 1.
+    (2.9.7)   * Added container column to end of xalt_run table.
+    (2.9.8)   * Added XALT_DUMP_ENV=yes to dump env vars in myinit()
+    (2.9.9)   * Issue #31 Support readline_recursive() for copying system libraries to XALT
+              * Fix bug where XALT_TRACING=run0 would cause run_submission to fail.
+	      * Do not copy libdl.* from current system to $(LIB64)
+	      * Move curl transport from transmit.c to a separate program (xalt_curl_transport)
+    (2.9.10)  * Issue #37: Reuse the sha1 value if it is already been computed rather than recomputing.
+              * Change XALT_TRACING=run to work like =yes when executable passes path test.
+    (2.9.11)  * Change XALT_TRACING=run to work like =yes when executable passes path test and it has RANK==0.
+              * Transmit json string directly (no compress/base64 encoding)
+	      * Added V:3 version of transmission for syslog/logger style.
+	      * Remove RPATH linking of libxalt_init.so to $(LIB64), remove -lz.
+    (2.9.12)  * Change test to ((ret = waitpid()) == -1) in curl transmission.
 
 XALT 2.10+
-    (2.10)   * Fix bug where watermark not recorded even it existed.
-    (2.10.1) * Look for libcrypto.so and libuuid.so in $(LIB64) directory before doing a regular dlopen().
-    (2.10.2) * Disabling signal tracking by default.
-             * Fixed bug where --with-trackGPU=dcgm failed.
-	     * Made dcgm use load_dcgm() to dynamically link to dcgm routines just like nvml routines
-	     * Removed -ldcgm from build.  Copy libdcgm.so* or libnvml.so* to $(LIB64)
-	     * xalt_configuration_report now combines gpu tracking and gpu_style (e.g. yes(dcgm))
-	     * Added gpu setup timer report to run_submission()
-	     * Updated docs to explain how to find nvml.h from the cuda pkg.
-    (2.10.3) * Longhorn now uses --with-xaltFilePrefix=/scratch/projects/XALT
-	     * Generate CRC using crcFast() routine in both Python and C.  Compare values
-	       from generated and received Json strings.
-	     * Add crc to uuid string key when combining syslog records.
-    (2.10.4) * Add duplicate uuid test in syslog with different crc values.
-	     * If getline() fails to read anything in build_proc() then just return with no process tree.
-             * Do not segfault when using syslog or logger transmission style if there are PKG record.
-	     * Make sure the traceback is imported everywhere needed.
-    (2.10.5) * Issue #45: Add -D flag to xalt_file_to_db.py and xalt_syslog_to_db.py to track failures
-    (2.10.6) * Issue #45: -D flag now prints status to track progress to entering record into db.
-    (2.10.7) * Issue #45: And CRC with 0xFFFF in python test
-    (2.10.8) * Issue #45: And final answer in crcFast.c routine with 0xFFFF
-    (2.10.9) * Issue #46: Fix bug where copy_system_library_to_xalt.py failed to copy a library
-               like libuuid.so when the link is across directories rather than in the same dir.
-    
+    (2.10)    * Fix bug where watermark not recorded even it existed.
+    (2.10.1)  * Look for libcrypto.so and libuuid.so in $(LIB64) directory before doing a regular dlopen().
+    (2.10.2)  * Disabling signal tracking by default.
+              * Fixed bug where --with-trackGPU=dcgm failed.
+	      * Made dcgm use load_dcgm() to dynamically link to dcgm routines just like nvml routines
+	      * Removed -ldcgm from build.  Copy libdcgm.so* or libnvml.so* to $(LIB64)
+	      * xalt_configuration_report now combines gpu tracking and gpu_style (e.g. yes(dcgm))
+	      * Added gpu setup timer report to run_submission()
+	      * Updated docs to explain how to find nvml.h from the cuda pkg.
+    (2.10.3)  * Longhorn now uses --with-xaltFilePrefix=/scratch/projects/XALT
+	      * Generate CRC using crcFast() routine in both Python and C.  Compare values
+	        from generated and received Json strings.
+	      * Add crc to uuid string key when combining syslog records.
+    (2.10.4)  * Add duplicate uuid test in syslog with different crc values.
+	      * If getline() fails to read anything in build_proc() then just return with no process tree.
+              * Do not segfault when using syslog or logger transmission style if there are PKG record.
+	      * Make sure the traceback is imported everywhere needed.
+    (2.10.5)  * Issue #45: Add -D flag to xalt_file_to_db.py and xalt_syslog_to_db.py to track failures
+    (2.10.6)  * Issue #45: -D flag now prints status to track progress to entering record into db.
+    (2.10.7)  * Issue #45: And CRC with 0xFFFF in python test
+    (2.10.8)  * Issue #45: And final answer in crcFast.c routine with 0xFFFF
+    (2.10.9)  * Issue #46: Fix bug where copy_system_library_to_xalt.py failed to copy a library
+                like libuuid.so when the link is across directories rather than in the same dir.
+    (2.10.10) * Issue #46: copy_system_library_to_xalt.py: Handle the case where link is across directories
+                and is relative.
+     
     
     
