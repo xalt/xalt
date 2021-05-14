@@ -116,6 +116,7 @@ COPY_ALL_LIBS: build_all
 	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64) --verbose    \
                                --base $$baseNM                         \
                                --real $$realNM;                        \
+	  if [ $? != 0 ]; then break; fi                               \
         done
 
 %.d: %.c

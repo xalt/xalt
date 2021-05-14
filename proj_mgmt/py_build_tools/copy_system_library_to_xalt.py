@@ -74,18 +74,14 @@ def files_in_tree(path,pattern):
   return fileA  
 
 def readlink_recursive(fn, dirNm):
-  #print("fn:",fn,"dirNm:",dirNm, "os.path.islink(fn):",os.path.islink(fn))
   if (os.path.islink(fn)):
     newFn = os.readlink(fn)
-    #print("  newFn",newFn)
     if (newFn[0:1] != '/'):
       newFn = os.path.join(dirNm,newFn)
-      #print("  newFn",newFn,"dirNm:",dirNm)
     if (os.path.islink(newFn)):
       pair = os.path.split(newFn)
       newFn = readlink_recursive(newFn, pair[0])
-    #print("  returning newFn",newFn)
-    return newFn
+    return os.path.realpath(newFn)
   return fn
 def main():
 
@@ -108,7 +104,6 @@ def main():
     if (verbose): print("Storing "+fn+":")
     if (os.path.islink(fn)):
       newFn = readlink_recursive(fn, dirNm)
-      newFn = os.path.realpath(newFn)
       if (os.path.isfile(newFn)):
         if (fileT.get(newFn)):
           cmd = "cp "+newFn+" "+lib64_dir
