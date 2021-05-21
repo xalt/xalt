@@ -100,7 +100,7 @@ void readFunctionList(const char* fn, SET_t** funcSet)
 
       start += len_needle;
 
-      if (*start == '`')
+      if (*start == '`' || *start == '\'')
         start++;
       char*  p   = strchr(start,'\'');
       if (p)
