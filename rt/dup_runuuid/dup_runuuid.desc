@@ -1,8 +1,8 @@
 # -*- python -*-
 
-test_name = "bad_runuuid"
+test_name = "dup_runuuid"
 test_descript = {
-   'description' : "Test bad runuuid",
+   'description' : "Test dup runuuid",
    'keywords'    : [ test_name ],
 
    'active'      : True,
@@ -42,11 +42,17 @@ test_descript = {
      unset LD_LIBRARY_PATH
      unset LD_PRELOAD
 
-     displayThis  "xalt_syslog_to_db.py"
+     displayThis  "(1) xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/owen.syslog.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
+     displayThis  "(2) xalt_syslog_to_db.py"
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/owen.syslog_2.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
+
+
+
+
      displayThis  "check_entries_db.py"
-     check_entries_db.py --dbname $DBNAME --results results.csv --runs 1 --functions 0 --links 0 --pkgs 0 --objects 45 --env_vars 33 --uuid 0
+     check_entries_db.py --dbname $DBNAME --results results.csv --runs 2 --functions 0 --links 0 --pkgs 0 --objects 45 --env_vars 33 --uuid 0
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 
