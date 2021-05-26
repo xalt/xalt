@@ -93,8 +93,8 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          syslog(LOG_INFO, "V:4 kind:%s nb:%d syshost:%s key:%s crc:%s idx:%d value:%.*s",
-                                kind,   nBlks,syshost,   key,   crcStr,i,     iend-istrt, &jsonStr[istrt]);
+          syslog(LOG_INFO, "V:4 kind:%s idx:%d nb:%d syshost:%s crc:%s key:%s value:%.*s",
+		                kind,   i,     nBlks,syshost,   crcStr,key, iend-istrt, &jsonStr[istrt]);
           istrt = iend;
           iend  = istrt + blkSz;
           if (iend > sz)
@@ -207,11 +207,11 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       myargs[ 2] = tagStr;
       myargs[ 3] = "V:4";
       myargs[ 4] = kindStr;
-      myargs[ 5] = nbStr;
-      myargs[ 6] = syshostStr;
-      myargs[ 7] = keyStr;
+      myargs[ 5] = idxStr;
+      myargs[ 6] = nbStr;
+      myargs[ 7] = syshostStr;
       myargs[ 8] = crcS;
-      myargs[ 9] = idxStr;
+      myargs[ 9] = keyStr;
       myargs[10] = valueStr;
       
       for (i = 0; i < nBlks; i++)
