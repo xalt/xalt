@@ -461,7 +461,8 @@ def main():
       try:
         t, done = parseSyslog.parse(line, args.syshost, old)
       except Exception as e:
-        print("xalt_syslog_to_db: Error: %s %s" % (e.args[0], e.args[1]))
+        print("xalt_syslog_to_db: Error:", e)
+        print(traceback.format_exc())
         badsyslog += 1
         continue
       
