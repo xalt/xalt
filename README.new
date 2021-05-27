@@ -68,6 +68,4 @@ XALT 2.10+
                 like libuuid.so when the link is across directories rather than in the same dir.
     (2.10.10) * Issue #46: copy_system_library_to_xalt.py: Handle the case where link is across directories 
                 and is relative.
-     
-    
-    
+    (2.10.11) * Issue #48: Correctly handle crc: and crcStr: in syslog records.

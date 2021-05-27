@@ -45,11 +45,10 @@ test_descript = {
      displayThis  "(1) xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/owen.syslog.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
+     rm leftover.log
      displayThis  "(2) xalt_syslog_to_db.py"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/owen.syslog_2.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
-
-
-
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/owen.syslog_3.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
      displayThis  "check_entries_db.py"
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 2 --functions 0 --links 0 --pkgs 0 --objects 45 --env_vars 33 --uuid 0

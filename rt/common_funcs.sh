@@ -14,7 +14,7 @@ initialize()
 
   module unload xalt
 
-  rm -f  _stderr.* _stdout.* out.* err.* 
+  rm -f  _stderr.* _stdout.* out.* err.* leftover.*
   rm -rf .xalt.d syslog.* reverseMapD
   rm -f $projectDir/src/*.o $projectDir/src/*.d $projectDir/libuuid/src/*.o
   XALT_EPOCH_T0=$(python3 $projectDir/rt/xalt_epoch.py)

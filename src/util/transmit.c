@@ -93,7 +93,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          syslog(LOG_INFO, "V:4 kind:%s idx:%d nb:%d syshost:%s crc:%s key:%s value:%.*s",
+          syslog(LOG_INFO, "V:4 kind:%s idx:%d nb:%d syshost:%s crcStr:%s key:%s value:%.*s",
 		                kind,   i,     nBlks,syshost,   crcStr,key, iend-istrt, &jsonStr[istrt]);
           istrt = iend;
           iend  = istrt + blkSz;

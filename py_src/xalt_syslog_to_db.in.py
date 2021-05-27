@@ -121,6 +121,8 @@ class Record(object):
     self.__nblks   = nblks
     self.__kind    = t['kind']
     self.__syshost = t['syshost']
+    self.__key     = t['key']
+    self.__version = int(t['version'])
     self.__old     = old
     self.__blkCnt  = 0
     self.__crc     = t['crcStr']
@@ -168,17 +170,19 @@ class Record(object):
     blkA  = self.__blkA
 
     sPA   = []
-    
     sPA.append("XALT_LOGGING_")
     sPA.append(self.__syshost)
-    sPA.append(" V:4 kind:")
+    sPA.append(" V:")
+    sPA.append(str(self.__version))
+    sPA.append(" kind:")
     sPA.append(self.__kind)
     sPA.append(" syshost:")
     sPA.append(self.__syshost)
     sPA.append(" key:")
-    sPA.append(key)
-    sPA.append(" crcStr:")
-    sPA.append(self.__crc)
+    sPA.append(self.__key)
+    if (self.__version > 3):
+      sPA.append(" crcStr:")
+      sPA.append(self.__crc)
     sPA.append(" nb:")
     sPA.append(str(nblks))
     ss = "".join(sPA)
@@ -191,6 +195,7 @@ class Record(object):
         sA.append(str(idx))
         sA.append(" value:")
         sA.append(value)
+        sA.append("\n")
     return "".join(sA)
 
 class ParseSyslog(object):
@@ -280,6 +285,10 @@ class ParseSyslog(object):
     except StopIteration as e:
       pass
   
+    t['orig_key'] = t['key']
+    if ('crc' in t):
+      t['crcStr'] = t['crc']
+    
     if (clusterName != ".*" and clusterName != t['syshost']):
       return t, False
 
@@ -293,7 +302,6 @@ class ParseSyslog(object):
     if (r):
       r.addBlk(t)
     else:
-      
       r            = Record(t, old)
       recordT[key] = r
 
