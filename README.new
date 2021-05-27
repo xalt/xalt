@@ -69,3 +69,4 @@ XALT 2.10+
     (2.10.10) * Issue #46: copy_system_library_to_xalt.py: Handle the case where link is across directories 
                 and is relative.
     (2.10.11) * Issue #48: Correctly handle crc: and crcStr: in syslog records.
+    (2.10.12) * Issue #49: add -lgcc to $SYSLIB in ld linker wrapper when doing a static link.

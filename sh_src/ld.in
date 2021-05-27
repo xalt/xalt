@@ -96,6 +96,7 @@ prev=
 done=false
 BIT32FLAG=
 GCC32FLAG=
+EXTRA_SYSLIB=
 for option
 do
   if [ -n "$prev" ]; then
@@ -120,6 +121,10 @@ do
       ;;
     --trace|-t)
       USER_TRACE="true"
+      ;;
+
+    -static)
+      EXTRA_SYSLIB="-lgcc"
       ;;
 
     elf_i386)
@@ -229,7 +234,7 @@ else
   XLD=$XALT_DIR/lib
   XALT_OBJ_TYPE=o32
 fi
-SYSLIBS="-ldl -lz -lm -lc"
+SYSLIBS="-ldl -lz -lm -lc $EXTRA_SYSLIB"
 XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_regular.$XALT_OBJ_TYPE $XLD/librun_submission.a $SYSLIBS"
   
 # Get the compiler information
