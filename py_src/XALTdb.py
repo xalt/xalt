@@ -400,15 +400,16 @@ class XALTdb(object):
       query    = ""
       stored   = False 
       recordMe = False 
+      dup      = False
 
       if (not ('userT' in runT)):
         if (debug): sys.stdout.write("  --> failed to record: No userT in runT\n")
-        return stored
+        return stored, dup
       userT = runT['userT']
 
       if (not ('userDT' in runT)):
         if (debug): sys.stdout.write("  --> failed to record: No userDT in runT\n")
-        return stored
+        return stored, dup
       userDT = runT['userDT']
 
       XALT_Stack.push("SUBMIT_HOST: "+ userT['submit_host'])
@@ -421,7 +422,7 @@ class XALTdb(object):
       startTime   = userDT.get('start_time',0.0)
       if (startTime < 1):
         if (debug): sys.stdout.write("  --> failed to record: startTime epoch is < 1 second\n")
-        return stored
+        return stored, dup
 
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(startTime))
       dateStr     = time.strftime("%Y-%m-%d",          time.localtime(startTime))
@@ -432,17 +433,17 @@ class XALTdb(object):
       run_uuid    = userT.get('run_uuid',"UNKNOWN")[:36]
       if (run_uuid == "UNKNOWN"):
         if (debug): sys.stdout.write("  --> failed to record: run_uuid is UNKNOWN\n")
-        return stored
+        return stored, dup
       uuid_patt = self.__patt
       m         = uuid_patt.match(run_uuid)
       if (not m):
         if (debug): sys.stdout.write("  --> failed to record: run_uuid does not match uuid pattern\n")
-        return stored
+        return stored, dup
 
 
       if (debug): sys.stdout.write("  --> Searching for run_uuid in db\n")
       msg         = "my run_uuid is: \"" + run_uuid + "\""
-      query       = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
+      query       = "SELECT run_id, end_time FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,[run_uuid])
       query       = ""
       msg         = ""
@@ -452,13 +453,19 @@ class XALTdb(object):
       exec_path   = userT.get('exec_path')
       if (not exec_path):
         if (debug): sys.stdout.write("  --> failed to record: No exec_path found\n")
-        return stored
+        return stored, dup
 
       if (debug): sys.stdout.write("  --> Trying to insert run record into db\n")
       if (cursor.rowcount > 0):
         #print("found")
-        row    = cursor.fetchone()
-        run_id = int(row[0])
+        row        = cursor.fetchone()
+        run_id     = int(row[0])
+        my_endTime = float(row[1])
+        if (my_endTime > 0):
+          dup = True
+          if (debug): sys.stdout.write("  --> Duplicate run_uuid, not recorded\n")
+          return stored, dup
+
         if (endTime > 0):
           query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s, num_gpus=%s WHERE run_id=%s" 
           cursor.execute(query,(runTimeStr, endTimeStr, num_threads, num_gpus, run_id))
@@ -471,7 +478,7 @@ class XALTdb(object):
         carp("SUBMIT_HOST",v)
 
         if (debug): sys.stdout.write("  --> Success: updated run_time\n")
-        return
+
       else:
         #print("not found")
         moduleName    = obj2module(exec_path, reverseMapT)
@@ -570,7 +577,7 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-    return stored
+    return stored, dup
 
   def pkg_to_db(self, debug, syshost, pkgT):
 
