@@ -482,7 +482,7 @@ class XALTdb(object):
         carp("SUBMIT_HOST",v)
 
         if (debug): sys.stdout.write("  --> Success: updated run_time\n")
-
+        return stored, dup
       else:
         #print("not found")
         moduleName    = obj2module(exec_path, reverseMapT)
