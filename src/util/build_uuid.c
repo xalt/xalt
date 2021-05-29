@@ -54,7 +54,6 @@ void build_uuid(char * my_uuid_str)
     
   (*my_uuid_generate_random)(uuid);
   (*my_uuid_unparse_lower)(uuid, my_uuid_str);
-  strcpy(my_uuid_str,"3ae43486-bfe2-11eb-8a3a-b376be588fbc");
 }
 
 void build_uuid_cleanup()
