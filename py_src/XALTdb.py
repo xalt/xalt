@@ -461,7 +461,10 @@ class XALTdb(object):
         row        = cursor.fetchone()
         run_id     = int(row[0])
         my_endTime = float(row[1])
-        if (my_endTime > 0):
+
+        # So either there is an end record already in the database (my_endTime > 0)
+        # OR we are trying to insert a duplicate start record. (endTime is zero).
+        if (my_endTime > 0 or endTime < 0.1):
           dup = True
           if (debug): sys.stdout.write("  --> Duplicate run_uuid, not recorded\n")
           return stored, dup
@@ -474,6 +477,7 @@ class XALTdb(object):
           query = ""
           recordMe = True 
           timeRecord.add(num_cores, runTime)
+          
         v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
 
