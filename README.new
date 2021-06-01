@@ -70,5 +70,5 @@ XALT 2.10+
                 and is relative.
     (2.10.11) * Issue #48: Correctly handle crc: and crcStr: in syslog records.
     (2.10.12) * Issue #49: add -lgcc to $SYSLIB in ld linker wrapper when doing a static link.
-W.I.P:
     (2.10.13) * Return the number of duplicate run_uuids found.
+              * Issue #50: Remove libm from the list of libraries copied to the $(LIB64) directory.
