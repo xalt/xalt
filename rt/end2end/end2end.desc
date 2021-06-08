@@ -200,7 +200,7 @@ test_descript = {
      displayThis "SYSHOST: $SYSHOST"
 
      displayThis "xalt_file_to_db.py "
-     xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
+     xalt_file_to_db.py  --testing --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
      displayThis "xalt_file_to_db.py -D"
      rm -rf $(outputDir)/.orig.xalt.d

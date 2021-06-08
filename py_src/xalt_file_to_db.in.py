@@ -92,6 +92,7 @@ class CmdLineOptions(object):
     parser = argparse.ArgumentParser()
     parser.add_argument("--delete",      dest='delete',  action="store_true", help="delete files after reading")
     parser.add_argument("-D",            dest='debug',   action="store_true", help="Debug Flag")
+    parser.add_argument("--testing",     dest='testing', action="store_true", help="Testing Flag")
     parser.add_argument("--timer",       dest='timer',   action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
@@ -128,7 +129,7 @@ def check_string_w_crc(s, crcStr, debug):
   return iret
 
 
-def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT, active, pbar):
+def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT, pbar):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
 
@@ -182,9 +183,8 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
         sys.stdout.write("  --> Sending record to xalt.link_to_db()\n")
       xalt.link_to_db(debug, reverseMapT, linkT)
       num  += 1
-      if (active):
-        countT['any'] += 1
-        pbar.update(countT['any'])
+      countT['any'] += 1
+      pbar.update(countT['any'])
 
       try:
         if (deleteFlg):
@@ -203,7 +203,7 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
     sys.exit (1)
   return num
 
-def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, active, pbar):
+def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, pbar):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
 
@@ -248,9 +248,8 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
 
       xalt.pkg_to_db(debug, syshost, pkgT)
       num  += 1
-      if (active):
-        countT['any'] += 1
-        pbar.update(countT['any'])
+      countT['any'] += 1
+      pbar.update(countT['any'])
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -269,7 +268,7 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
   return num
 
 
-def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT, active, pbar, timeRecord):
+def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT, pbar, timeRecord):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
@@ -326,9 +325,8 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
           os.remove(fn)
       except:
         pass
-      if (active):
-        countT['any'] += 1
-        pbar.update(countT['any'])
+      countT['any'] += 1
+      pbar.update(countT['any'])
       if (stored):
         num += 1
         
@@ -385,13 +383,6 @@ def build_resultDir(hdir, transmission, kind):
 
 def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord):
 
-  active = True
-  if (homeDir):
-    countT['any'] += 1
-    pbar.update(countT['any'])
-    active = False
-  
-
   xaltDir = build_resultDir(homeDir, transmission, "link")
   XALT_Stack.push("Directory: " + xaltDir)
 
@@ -399,7 +390,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
     XALT_Stack.push("link_json_to_db()")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
     linkFnA.sort()
-    countT['lnk']  += link_json_to_db(xalt, args.debug, args.listFn, rmapT, args.delete, linkFnA, countT, active, pbar)
+    countT['lnk']  += link_json_to_db(xalt, args.debug, args.listFn, rmapT, args.delete, linkFnA, countT, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -410,7 +401,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
     runFnA.sort();
     countT['run'] += run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
-                                    countT, active, pbar, timeRecord)
+                                    countT, pbar, timeRecord)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -421,7 +412,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
     pkgFnA         = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
     pkgFnA.sort()
     countT['pkg'] += pkg_json_to_db(xalt, args.debug, args.listFn, args.syshost, args.delete, pkgFnA,
-                                    countT, active, pbar)
+                                    countT, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -445,7 +436,6 @@ def main():
   print ("\n################################################################")
   print ("XALT Git Version: "+Version()                                      )
   print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr    )
-  print ("################################################################\n")
 
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
@@ -469,13 +459,31 @@ def main():
   args   = CmdLineOptions().execute()
   xalt   = XALTdb(args.confFn)
 
+  num  = 0
   if (xalt_file_prefix == "USE_HOME"):
-    num     = int(capture("LD_PRELOAD= getent passwd | wc -l"))
-    pbar    = ProgressBar(maxVal=num)
+    for user, homeDir in passwd_generator():
+      xaltDir  = build_resultDir(homeDir, transmission, "")
+      allFnA   = files_in_tree(xaltDir, "*/*." + args.syshost + ".*.json")
+      num     += len(allFnA)
   else:
     xaltDir = build_resultDir("", transmission, "")
     allFnA  = files_in_tree(xaltDir, "*/*." + args.syshost + ".*.json")
-    pbar    = ProgressBar(maxVal=len(allFnA))
+    num     = len(allFnA)
+  pbar    = ProgressBar(maxVal=num, fd=sys.stdout)
+
+  
+  print ("  Number of json files to process:",num)
+  print ("################################################################\n")
+
+
+  if (xalt_file_prefix == "USE_HOME" and not args.testing):
+    print ("\n################################################################")
+    print (" Note using ~/.xalt.d to store result is fine for testing.")
+    print (" BUT do not use in production. There is a race condition")
+    print (" Please re-configure xalt to use --with-xaltFilePrefix=...")
+    print (" See https://xalt.readthedocs.io/en/latest/050_install_and_test.html for details")
+    print ("################################################################\n")
+
 
   icnt   = 0
 
