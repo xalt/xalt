@@ -381,8 +381,11 @@ def build_resultDir(hdir, transmission, kind):
 
   return os.path.join(prefix,tail)
 
-def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord):
+def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord):
 
+  linkCnt = 0
+  runCnt  = 0
+  pkgCnt  = 0
   xaltDir = build_resultDir(homeDir, transmission, "link")
   XALT_Stack.push("Directory: " + xaltDir)
 
@@ -390,6 +393,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
     XALT_Stack.push("link_json_to_db()")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
     linkFnA.sort()
+    linkCnt         = len(linkFnA)
     countT['lnk']  += link_json_to_db(xalt, args.debug, args.listFn, rmapT, args.delete, linkFnA, countT, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
@@ -400,6 +404,7 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
     XALT_Stack.push("run_json_to_db()")
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
     runFnA.sort();
+    runCnt         = len(runFnA)
     countT['run'] += run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
                                     countT, pbar, timeRecord)
     XALT_Stack.pop()
@@ -411,11 +416,18 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
     XALT_Stack.push("pkg_json_to_db()")
     pkgFnA         = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
     pkgFnA.sort()
+    pkgCnt         = len(pkgFnA)
     countT['pkg'] += pkg_json_to_db(xalt, args.debug, args.listFn, args.syshost, args.delete, pkgFnA,
                                     countT, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
+  sum = linkCnt + runCnt + pkgCnt
+  if (args.debug and sum > 0):
+    extra = ""
+    if (username):
+      extra = " for user " + username
+    print("Storing the following "+str(sum)+" json files (run: "+str(runCnt)+", link: "+str(linkCnt)+", pkg: "+str(pkgCnt)+")"+extra)
 
 def main():
   """
@@ -481,7 +493,9 @@ def main():
     print (" Note using ~/.xalt.d to store result is fine for testing.")
     print (" BUT do not use in production. There is a race condition")
     print (" Please re-configure xalt to use --with-xaltFilePrefix=...")
-    print (" See https://xalt.readthedocs.io/en/latest/050_install_and_test.html for details")
+    print (" See https://xalt.readthedocs.io/en/latest/020_site_configuration.html for details")
+    print ("")
+    print (" Add the option --testing to silence this warning")
     print ("################################################################\n")
 
 
@@ -505,9 +519,9 @@ def main():
 
   if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
-      store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
+      store_json_files(user, homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
   else:
-    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
+    store_json_files(None, "", transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
 
   xalt.connect().close()
   pbar.fini()
