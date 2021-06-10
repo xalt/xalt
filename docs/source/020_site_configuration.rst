@@ -165,6 +165,11 @@ directories under */global/xalt/*. In particular, the program::
 is used to create a prime number of directories named 000 to 996
 (typically) where the json result files are written.
 
+  **NOTE**: It is important that whatever directory your site uses
+  (e.g. */global/xalt*) be a global shared location that all users can
+  see.  XALT will cause files to be written to this directory tree by
+  every user.
+
 
 So you should probably start with the following for testing to write
 the json record to files in ~/.xalt.d::
