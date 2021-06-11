@@ -455,9 +455,6 @@ def main():
     xaltUserStr    = ""
     
 
-  print ("\n################################################################")
-  print ("XALT Git Version: "+Version()                                      )
-  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr    )
 
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
@@ -482,16 +479,20 @@ def main():
   xalt   = XALTdb(args.confFn)
 
   num  = 0
+  szS = ""
   if (xalt_file_prefix == "USE_HOME"):
     num     = int(capture("LD_PRELOAD= getent passwd | wc -l"))
   else:
     xaltDir = build_resultDir("", transmission, "")
     allFnA  = files_in_tree(xaltDir, "*/*." + args.syshost + ".*.json")
     num     = len(allFnA)
-    print ("  Number of json files to process:",num)
+    szS     = "\n  Number of json files to process: " + str(num)
   pbar    = ProgressBar(maxVal=num, fd=sys.stdout)
 
-  print ("################################################################\n")
+  print ("\n################################################################" )
+  print ("XALT Git Version: "+Version()                                       )
+  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr+szS )
+  print ("################################################################\n" )
   if (xalt_file_prefix == "USE_HOME" and not args.testing):
     print ("\n################################################################")
     print (" Note using ~/.xalt.d to store result is fine for testing.")
