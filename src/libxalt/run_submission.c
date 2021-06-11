@@ -145,10 +145,22 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   insert_key_double(&measureT, "07_GPU_Setup_____", xalt_timer->gpu_setup);
   insert_key_double(&measureT, "08____total______", epoch() - t0 + xalt_timer->init + xalt_timer->fini);
 
+  char* resultFn  = NULL;
+  char* resultDir = NULL;  
+
   //*********************************************************************
   // Record QA data in json string.
   insert_key_string(&qaT,"XALT_GIT_VERSION",XALT_GIT_VERSION);
-  insert_key_string(&qaT,"XALT_FILE_PREFIX",XALT_FILE_PREFIX);
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
+    {
+      build_resultDir(&resultDir, "run", transmission, uuid_str);
+      build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
+
+      insert_key_string(&qaT,"XALT_FILE_PREFIX", XALT_FILE_PREFIX);
+      insert_key_string(&qaT,"XALT_RESULT_DIR",  resultDir);
+      insert_key_string(&qaT,"XALT_RESULT_FILE", resultFn);
+    }
+
 
   //*********************************************************************
   // So build the Json table string
@@ -185,17 +197,9 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   free_S2S(&envT);
   free_S2S(&recordT);
   free_SET(&libT);
-  char* resultFn  = NULL;
-  char* resultDir = NULL;  
 
   char key[50];
   sprintf(&key[0], "%s%s", (end_record) ? "run_fini_" : "run_strt_", uuid_str);
-
-  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
-    {
-      build_resultDir(&resultDir, "run", transmission, uuid_str);
-      build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
-    }
 
   DEBUG0(my_stderr,"    Transmitting jsonStr\n");
   transmit(transmission, jsonStr, "run", key, crcStr, syshost, resultDir, resultFn, my_stderr);
