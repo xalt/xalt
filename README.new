@@ -72,6 +72,8 @@ XALT 2.10+
     (2.10.12) * Issue #49: add -lgcc to $SYSLIB in ld linker wrapper when doing a static link.
     (2.10.13) * Return the number of duplicate run_uuids found.
               * Issue #50: Remove libm from the list of libraries copied to the $(LIB64) directory.
-W.I.P:
     (2.10.14) * Use defined labels constants in transmit.c so that logger and syslog have the
                 same labels TRANSMISSION_STYLE.
+    (2.10.15) * Issue #46: Count number of *.json files then tranmission=file
+    (2.10.16) * Issue #46: Switch back to counting users then tranmission=file.
+    
