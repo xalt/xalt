@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
   char* fn = xalt_dir("bin/xalt_print_os");
   cmd.append(fn);
   free(fn);
-  capture(cmd.c_str(), &resultA);
+  xalt_capture(cmd.c_str(), &resultA);
   char **pp = NULL;
   pp = (char**) utarray_next(resultA, pp);
   std::string current_os_descript = *pp;

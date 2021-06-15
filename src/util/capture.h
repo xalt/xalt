@@ -6,7 +6,7 @@ extern "C"
 #endif
 
 #include "utarray.h"
-void capture(const char* cmd, UT_array** p_resultA);
+void xalt_capture(const char* cmd, UT_array** p_resultA);
 
 #ifdef __cplusplus
 }

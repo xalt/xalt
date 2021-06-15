@@ -2,7 +2,7 @@
 #include "utarray.h"
 #define DATA_SIZE 1024
 
-void capture(const char* cmdline, UT_array** p_resultA)
+void xalt_capture(const char* cmdline, UT_array** p_resultA)
 {
   UT_array* resultA;
   FILE* fp;
