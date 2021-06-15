@@ -103,14 +103,15 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       for (i = 0; i < nBlks; i++)
         {
-          syslog(LOG_INFO, "%s:%d %s:%s %s:%d %s:%d %s:%s %s:%s %s:%s %s:%.*s",
+          /*                   V  kind  host  key   crc   nb      idx     value */                                     
+          syslog(LOG_INFO, "%s:%d %s:%s %s:%s %s:%s %s:%s %s:%02d %s:%02d %s:%.*s",
                  V_LBL,       INTERFACE_Version,
                  KIND_LBL,    kind,
-                 IDX_LBL,     i,
-                 NB_LBL,      nBlks,
                  SYSHOST_LBL, syshost,
-                 CRC_LBL,     crcStr,
                  KEY_LBL,     key,
+                 CRC_LBL,     crcStr,
+                 NB_LBL,      nBlks,
+                 IDX_LBL,     i,
                  VALUE_LBL,   iend-istrt, &jsonStr[istrt]);
           istrt = iend;
           iend  = istrt + blkSz;
@@ -207,13 +208,13 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       int   blkSz   = (sz < syslog_msg_sz) ? sz : syslog_msg_sz;
       int   nBlks   = (sz -  1)/blkSz + 1;
 
-      asprintf(&tagStr,       "%s_%s", XALT_LOGGING_LBL, syshost);
-      asprintf(&interfaceStr, "%s:%d", V_LBL,            INTERFACE_Version);
-      asprintf(&kindStr,      "%s:%s", KIND_LBL,         kind);
-      asprintf(&nbStr,        "%s:%d", NB_LBL,           nBlks);
-      asprintf(&syshostStr,   "%s:%s", SYSHOST_LBL,      syshost);
-      asprintf(&keyStr,       "%s:%s", KEY_LBL,          key);
-      asprintf(&crcS,         "%s:%s", CRC_LBL,          crcStr);
+      asprintf(&tagStr,       "%s_%s",   XALT_LOGGING_LBL, syshost);
+      asprintf(&interfaceStr, "%s:%d",   V_LBL,            INTERFACE_Version);
+      asprintf(&kindStr,      "%s:%s",   KIND_LBL,         kind);
+      asprintf(&syshostStr,   "%s:%s",   SYSHOST_LBL,      syshost);
+      asprintf(&keyStr,       "%s:%s",   KEY_LBL,          key);
+      asprintf(&crcS,         "%s:%s",   CRC_LBL,          crcStr);
+      asprintf(&nbStr,        "%s:%02d", NB_LBL,           nBlks);
 
       int istrt      = 0;
       int iend       = blkSz;
@@ -225,16 +226,16 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       myargs[ 2] = tagStr;
       myargs[ 3] = interfaceStr;
       myargs[ 4] = kindStr;
-      myargs[ 5] = idxStr;
-      myargs[ 6] = nbStr;
-      myargs[ 7] = syshostStr;
-      myargs[ 8] = crcS;
-      myargs[ 9] = keyStr;
+      myargs[ 5] = syshostStr;
+      myargs[ 6] = keyStr;
+      myargs[ 7] = crcS;
+      myargs[ 8] = nbStr;
+      myargs[ 9] = idxStr;
       myargs[10] = valueStr;
 
       for (i = 0; i < nBlks; i++)
         {
-          sprintf(&idxStr[0],   "%s:%d",   IDX_LBL,   i);
+          sprintf(&idxStr[0],   "%s:%02d", IDX_LBL,   i);
           sprintf(&valueStr[0], "%s:%.*s", VALUE_LBL, iend-istrt, &jsonStr[istrt]);
 
           pid = fork();

@@ -117,7 +117,7 @@ class Record(object):
   syslog
   """
   def __init__(self, t, old=False):
-    nblks          = int(t['nb'])
+    nblks          = t['nb']
     self.__nblks   = nblks
     self.__kind    = t['kind']
     self.__syshost = t['syshost']
@@ -135,7 +135,7 @@ class Record(object):
     self.addBlk(t)
 
   def addBlk(self,t):
-    idx               = int(t['idx'])
+    idx                 = t['idx']
     if (0 <= idx and idx < self.__nblks and not self.__blkA[idx] ):
       self.__blkA[idx]  = t['value']
       self.__blkCnt    += 1
@@ -146,6 +146,7 @@ class Record(object):
   def completed(self):
     retV = False
     if (self.__blkCnt >= self.__nblks):
+      #retV = True
       crcStr = self.__crc
       if (crcStr == ""):
         return True
@@ -183,16 +184,16 @@ class Record(object):
     if (self.__version > 3):
       sPA.append(" crcStr:")
       sPA.append(self.__crc)
-    sPA.append(" nb:")
-    sPA.append(str(nblks))
     ss = "".join(sPA)
 
     for idx in range(nblks):
       value = blkA[idx]
       if (value):
         sA.append(ss)
+        sA.append(" nb:")
+        sA.append("%02d" % (nblks))
         sA.append(" idx:")
-        sA.append(str(idx))
+        sA.append("%02d" % (idx))
         sA.append(" value:")
         sA.append(value)
         sA.append("\n")
@@ -262,8 +263,8 @@ class ParseSyslog(object):
 
     # Strip off "XALT_LOGGING V:%d" from string and trailing white space.
     s = self.__frntPatt.sub("",s)
-    s = s.rstrip()
-
+    s = s.rstrip("\n")
+    
     # extract value string first and remove it from string
     idx   = s.find("value:")
     if (idx == -1):
@@ -285,6 +286,19 @@ class ParseSyslog(object):
     except StopIteration as e:
       pass
   
+    t['idx'] = int(t['idx'])
+    t['nb']  = int(t['nb'])
+
+    I = t['idx'] 
+
+    if (t['idx'] < t['nb'] - 1):
+      my_value   = t['value']
+      my_len     = len(my_value)
+      pad        = @syslog_msg_sz@ - my_len
+      if (pad > 0):
+        my_value   = my_value + " "*pad
+      t['value'] = my_value
+
     t['orig_key'] = t['key']
     if ('crc' in t):
       t['crcStr'] = t['crc']
@@ -298,6 +312,7 @@ class ParseSyslog(object):
     # or just add the block to the current record.
     key  = t['crcStr'] + "_" + t['key'] 
     
+    print 
     r    = recordT.get(key, None)
     if (r):
       r.addBlk(t)

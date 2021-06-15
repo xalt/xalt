@@ -117,7 +117,7 @@ def main():
     print(tableName,":", count)
 
 
-  tableT['xalt_run'] = count_w_condition(conn,"xalt_run", "end_time > 0.0")
+  tableT['xalt_run'] = count_w_condition(conn,"xalt_run", None) #"end_time > 0.0")
   print("xalt_run :",tableT['xalt_run'])
 
   tableT['build_uuid'] = count_w_condition(conn,"xalt_run", "uuid is not null")
