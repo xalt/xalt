@@ -146,23 +146,23 @@ class Record(object):
   def completed(self):
     retV = False
     if (self.__blkCnt >= self.__nblks):
-      #retV = True
-      crcStr = self.__crc
-      if (crcStr == ""):
-        return True
-      crcV  = int(crcStr, 16)
-      s     = self.value()
-      s     = '{"crc":"0xFFFF"' + s[15:]
-      myLen = len(s)
-      data  = s.encode()
-      c     = libcrc.crcFast(c_char_p(data), myLen)
-      retV  = crcV == c
+      retV = True
+      #crcStr = self.__crc
+      #if (crcStr == ""):
+      #  return True
+      #crcV  = int(crcStr, 16)
+      #s     = self.value()
+      #s     = '{"crc":"0xFFFF"' + s[15:]
+      #myLen = len(s)
+      #data  = s.encode()
+      #c     = libcrc.crcFast(c_char_p(data), myLen)
+      #retV  = crcV == c
     return retV
 
   def value(self):
     return "".join(self.__blkA)
 
-  def prt(self, key):
+  def prt(self):
     if (self.__old):
       return None
 
@@ -207,6 +207,9 @@ class ParseSyslog(object):
     self.__leftoverFn = leftoverFn
     self.__frntPatt   = re.compile("(^.* V:\d+ *)")
 
+  def num_leftover(self):
+    return len(self.__recordT)
+
   def writeRecordT(self):
     leftoverFn = self.__leftoverFn
     if (os.path.isfile(leftoverFn)):
@@ -217,7 +220,7 @@ class ParseSyslog(object):
       f = open(leftoverFn, "w")
       for key in self.__recordT:
         r = recordT[key]
-        s = r.prt(key)
+        s = r.prt()
         if (s):
           f.write(s)
           
@@ -549,7 +552,8 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
-          ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt)
+        ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,
+        ", leftovers: ",parseSyslog.num_leftover())
   timeRecord.print()
         
   
