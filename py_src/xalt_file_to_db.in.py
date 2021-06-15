@@ -141,8 +141,8 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
   @param linkFnA:     An array of link file names
 
   """
-  num = 0
-  query = ""
+  num    = 0
+  query  = ""
 
   try:
     for fn in linkFnA:
@@ -283,8 +283,9 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
   @param runFnA:      An array of run file names
 
   """
-  num   = 0
-  query = ""
+  dupCnt = 0
+  num    = 0
+  query  = ""
   try:
     for fn in runFnA:
       XALT_Stack.push("fn: "+fn)
@@ -321,7 +322,8 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
       
       if (debug):
         sys.stdout.write("  --> Sending record to xalt.run_to_db()\n")
-      stored = xalt.run_to_db(debug, reverseMapT, u2acctT, runT, timeRecord)
+      stored, dups = xalt.run_to_db(debug, reverseMapT, u2acctT, runT, timeRecord)
+
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -332,6 +334,8 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
         pbar.update(countT['any'])
       if (stored):
         num += 1
+      if (dups):
+        dupCnt += 1
         
       v = XALT_Stack.pop()  
       carp("fn",v)
@@ -342,7 +346,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
     print ("run_json_to_db(): Error:",e)
     print(traceback.format_exc())
     sys.exit (1)
-  return num
+  return num, dupCnt
 
 def passwd_generator():
   """
@@ -415,8 +419,10 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
     runFnA.sort();
     runCnt         = len(runFnA)
-    countT['run'] += run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
+    num, dups      = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
                                     countT, active, pbar, timeRecord)
+    countT['run']  += num
+    countT['dup']  += dups
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -518,6 +524,7 @@ def main():
   countT = {}
   countT['lnk'] = 0
   countT['run'] = 0
+  countT['dup'] = 0
   countT['pkg'] = 0
   countT['any'] = 0
 
@@ -534,7 +541,7 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'])
+  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'] )
   timeRecord.print()
   
 
