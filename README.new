@@ -78,4 +78,7 @@ XALT 2.10+
     (2.10.16) * Issue #46: Switch back to counting users then tranmission=file.
     (2.10.17) * Issue #48: Handle the case where there are trailing blanks written to syslog
               * Issue #48: Ingesting *.json data geneated by xalt-2.10.10
+    (2.10.18) * Issue #46: Do not error out when a duplicate record is trying to be ingested
+              * Issue #48: Do not check crc when doing r.completed()
+
     
