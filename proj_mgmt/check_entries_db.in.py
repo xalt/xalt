@@ -145,7 +145,7 @@ def main():
     tstFn = testT[key][1]
     my_result, kind = tstFn(value, goldV)
     if (not my_result):
-      sA.append("Not correct: "+key+": "+str(value)+" -> ( Should be: "+key+" "+kind+" "+str(goldV) + " )")
+      sA.append("Not correct: "+key+": "+str(value)+" -> ( Expecting: "+key+" "+kind+" "+str(goldV) + " )")
 
   if (sA):
     result = "diff"
