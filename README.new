@@ -80,5 +80,8 @@ XALT 2.10+
               * Issue #48: Ingesting *.json data geneated by xalt-2.10.10
     (2.10.18) * Issue #46: Do not error out when a duplicate record is trying to be ingested
               * Issue #48: Do not check crc when doing r.completed()
-
-    
+    (2.10.19) * Issue #46: When debug, print each user name when ingest *.json files
+              * Issue #46: remove libcrc calls in xalt_file_to_db.in.py
+	      * Issue #53: obfuscate more function names like capture() etc
+              * Issue #54: Make sure that -static builds include -lgcc.
+	      
