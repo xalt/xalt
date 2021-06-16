@@ -2,8 +2,9 @@
 #include "translate.h"
 #include <string.h>
 #include <stdlib.h>
+#include "xalt_obfuscate.h"
 
-const char * safe_get(const char* key, const char* defaultValue)
+static const char * safe_get(const char* key, const char* defaultValue)
 {
   const char* value = getenv(key);
   if (value)
