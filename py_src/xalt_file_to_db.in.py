@@ -78,7 +78,7 @@ def __LINE__():
 def __FILE__():
     return inspect.currentframe().f_code.co_filename
 
-libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
+#libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -174,10 +174,10 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
 
       f.close()
 
-      if (debug):   sys.stdout.write("  --> Checking CRC\n")
-      if (not check_string_w_crc(s, linkT.get('crc'), debug) ):
-        if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
-        continue;
+      #if (debug):   sys.stdout.write("  --> Checking CRC\n")
+      #if (not check_string_w_crc(s, linkT.get('crc'), debug) ):
+      #  if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
+      #  continue;
 
       if (debug):
         sys.stdout.write("  --> Sending record to xalt.link_to_db()\n")
@@ -244,8 +244,8 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
         continue
 
       f.close()
-      if (not check_string_w_crc(s, pkgT.get('crc'), debug) ):
-        continue;
+      #if (not check_string_w_crc(s, pkgT.get('crc'), debug) ):
+      #  continue;
 
       xalt.pkg_to_db(debug, syshost, pkgT)
       num  += 1
@@ -315,10 +315,10 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
       f.close()
 
       
-      if (debug):   sys.stdout.write("  --> Checking CRC\n")
-      if (not check_string_w_crc(s, runT.get('crc'), debug) ):
-        if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
-        continue;
+      #if (debug):   sys.stdout.write("  --> Checking CRC\n")
+      #if (not check_string_w_crc(s, runT.get('crc'), debug) ):
+      #  if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
+      #  continue;
       
       if (debug):
         sys.stdout.write("  --> Sending record to xalt.run_to_db()\n")
@@ -390,6 +390,10 @@ def build_resultDir(hdir, transmission, kind):
 
 def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord):
 
+  xaltDir = build_resultDir(homeDir, transmission, "")
+  if (username and args.debug):
+    sys.stdout.write("\nSearching for *.json files for "+username+" in "+xaltDir+"\n")
+
   active = True
   if (homeDir):
     countT['any'] += 1
@@ -400,9 +404,9 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
   linkCnt = 0
   runCnt  = 0
   pkgCnt  = 0
-  xaltDir = build_resultDir(homeDir, transmission, "link")
   XALT_Stack.push("Directory: " + xaltDir)
 
+  xaltDir = build_resultDir(homeDir, transmission, "link")
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("link_json_to_db()")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
