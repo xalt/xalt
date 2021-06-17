@@ -255,7 +255,7 @@ class XALTdb(object):
       cursor.execute(query, [uuid])
       query  = ""
       if (cursor.rowcount > 0):
-        if (debug): sys.stdout.write("  --> failed to record: build_uuid already recorded.\n")
+        if (debug): sys.stdout.write("  --> failed to record: build_uuid already recorded.\n\n")
         return
 
       build_epoch = float(resultT['build_epoch'])
@@ -403,12 +403,12 @@ class XALTdb(object):
       dup      = False
 
       if (not ('userT' in runT)):
-        if (debug): sys.stdout.write("  --> failed to record: No userT in runT\n")
+        if (debug): sys.stdout.write("  --> failed to record: No userT in runT --> FAILURE\n\n")
         return stored, dup
       userT = runT['userT']
 
       if (not ('userDT' in runT)):
-        if (debug): sys.stdout.write("  --> failed to record: No userDT in runT\n")
+        if (debug): sys.stdout.write("  --> failed to record: No userDT in runT --> FAILURE\n\n")
         return stored, dup
       userDT = runT['userDT']
 
@@ -421,7 +421,7 @@ class XALTdb(object):
       endTimeStr  = "%.2f" % (endTime)
       startTime   = userDT.get('start_time',0.0)
       if (startTime < 1):
-        if (debug): sys.stdout.write("  --> failed to record: startTime epoch is < 1 second\n")
+        if (debug): sys.stdout.write("  --> failed to record: startTime epoch is < 1 second\n\n")
         v = XALT_Stack.pop()  
         return stored, dup
 
@@ -433,14 +433,14 @@ class XALTdb(object):
 
       run_uuid    = userT.get('run_uuid',"UNKNOWN")[:36]
       if (run_uuid == "UNKNOWN"):
-        if (debug): sys.stdout.write("  --> failed to record: run_uuid is UNKNOWN\n")
+        if (debug): sys.stdout.write("  --> failed to record: run_uuid is UNKNOWN --> FAILURE\n\n")
         v = XALT_Stack.pop()  
         carp("SUBMIT_HOST",v)
         return stored, dup
       uuid_patt = self.__patt
       m         = uuid_patt.match(run_uuid)
       if (not m):
-        if (debug): sys.stdout.write("  --> failed to record: run_uuid does not match uuid pattern\n")
+        if (debug): sys.stdout.write("  --> failed to record: run_uuid does not match uuid pattern --> FAILURE\n\n")
         v = XALT_Stack.pop()  
         return stored, dup
 
@@ -456,7 +456,7 @@ class XALTdb(object):
       num_gpus    = convertToTinyInt(userDT.get('num_gpus',   0))
       exec_path   = userT.get('exec_path')
       if (not exec_path):
-        if (debug): sys.stdout.write("  --> failed to record: No exec_path found\n")
+        if (debug): sys.stdout.write("  --> failed to record: No exec_path found --> FAILURE\n\n")
         v = XALT_Stack.pop()  
         carp("SUBMIT_HOST",v)
         return stored, dup
@@ -472,7 +472,7 @@ class XALTdb(object):
         # OR we are trying to insert a duplicate start record. (endTime is zero).
         if (my_endTime > 0 or endTime < 0.1):
           dup = True
-          if (debug): sys.stdout.write("  --> Duplicate run_uuid, not recorded\n")
+          if (debug): sys.stdout.write("  --> Duplicate run_uuid, not recorded --> FAILURE\n\n")
           v = XALT_Stack.pop()  
           carp("SUBMIT_HOST",v)
           return stored, dup

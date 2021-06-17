@@ -51,7 +51,7 @@ installXALT()
         $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
    
    XALT_MAKE_PARALLEL=4
-   if [ -n ${XALT_BUILD_DEBUG+x} ]; then
+   if [ -n "${XALT_BUILD_DEBUG+x}" ]; then
      XALT_MAKE_PARALLEL=1
    fi
 

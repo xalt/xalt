@@ -18,6 +18,7 @@ extern "C"
   void build_resultFn( char** resultFn,  const char* kind, double start, const char* syshost, const char* uuid,
                       const char* suffix);
 
+  char* xalt_file_transmission_method();
   void set_end_record();
   void my_free(void* ptr,int sz);
 #ifdef __cplusplus

@@ -84,6 +84,12 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           fprintf(fp, "%s\n", jsonStr);
           fclose(fp);
           rename(tmpFn, fn);
+          if (xalt_tracing)
+            {
+              char * method = xalt_file_transmission_method();
+              fprintf(my_stderr, "    Using %s method to store json file\n",method);
+              my_free(method,strlen(method));
+            }
           DEBUG2(my_stderr,"    Wrote json %s file : %s\n",kind, fn);
         }
       my_free(tmpFn,strlen(tmpFn));

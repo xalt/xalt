@@ -78,6 +78,8 @@ def __LINE__():
 def __FILE__():
     return inspect.currentframe().f_code.co_filename
 
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+
 #libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
 
 class CmdLineOptions(object):
@@ -185,7 +187,7 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
       num  += 1
       if (active):
         countT['any'] += 1
-        pbar.update(countT['any'])
+        if (not debug): pbar.update(countT['any'])
 
       try:
         if (deleteFlg):
@@ -251,7 +253,7 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
       num  += 1
       if (active):
         countT['any'] += 1
-        pbar.update(countT['any'])
+        if (not debug): pbar.update(countT['any'])
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -331,7 +333,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
         pass
       if (active):
         countT['any'] += 1
-        pbar.update(countT['any'])
+        if (not debug): pbar.update(countT['any'])
       if (stored):
         num += 1
       if (dups):
@@ -397,7 +399,7 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
   active = True
   if (homeDir):
     countT['any'] += 1
-    pbar.update(countT['any'])
+    if (not args.debug): pbar.update(countT['any'])
     active = False
   
 
@@ -409,9 +411,11 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
   xaltDir = build_resultDir(homeDir, transmission, "link")
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("link_json_to_db()")
+    if (args.debug): sys.stdout.write("Searching for */link.*.json file in "+xaltDir+"\n")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
     linkFnA.sort()
     linkCnt         = len(linkFnA)
+    if (args.debug): sys.stdout.write("  --> Found "+str(linkCnt)+" link.*.json files\n\n")
     countT['lnk']  += link_json_to_db(xalt, args.debug, args.listFn, rmapT, args.delete, linkFnA, countT, active, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
@@ -420,9 +424,11 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
   XALT_Stack.push("Directory: " + xaltDir)
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("run_json_to_db()")
+    if (args.debug): sys.stdout.write("Searching for */run.*.json file in "+xaltDir+"\n")
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
     runFnA.sort();
     runCnt         = len(runFnA)
+    if (args.debug): sys.stdout.write("  --> Found "+str(runCnt)+" run.*.json files\n\n")
     num, dups      = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
                                     countT, active, pbar, timeRecord)
     countT['run']  += num
@@ -434,9 +440,11 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
   XALT_Stack.push("Directory: " + xaltDir)
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("pkg_json_to_db()")
+    if (args.debug): sys.stdout.write("Searching for */pkg.*.json file in "+xaltDir+"\n")
     pkgFnA         = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
     pkgFnA.sort()
     pkgCnt         = len(pkgFnA)
+    if (args.debug): sys.stdout.write("  --> Found "+str(pkgCnt)+" pkg.*.json files\n\n")
     countT['pkg'] += pkg_json_to_db(xalt, args.debug, args.listFn, args.syshost, args.delete, pkgFnA,
                                     countT, active, pbar)
     XALT_Stack.pop()

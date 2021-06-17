@@ -52,6 +52,9 @@ test_descript = {
      displayThis "mpirun -n 1 ./hello\ .mpi"
      mpirun -n 1 ./hello\ .mpi 
      
+     displayThis "XALT_TRACING=yes ./hello\ .mpi"
+     XALT_TRACING=yes ./hello\ .mpi 
+     
      displayThis "test_record_pkg"
      $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
 
@@ -64,7 +67,7 @@ test_descript = {
      xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
      displayThis  "check_entries_db.py"
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 2 --pkgs 3 --uuid 1
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 3 --pkgs 3 --uuid 1
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 
