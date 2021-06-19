@@ -493,8 +493,11 @@ def main():
     sA.append('"'+v+'"')
   XALT_Stack.push(" ".join(sA))
 
-  args   = CmdLineOptions().execute()
-  xalt   = XALTdb(args.confFn)
+  args      = CmdLineOptions().execute()
+  xalt      = XALTdb(args.confFn)
+  extra_txt = ""
+  if (args.syshost != "*"):
+    extra_txt = " for "+args.syshost
 
   num  = 0
   szS = ""
@@ -508,7 +511,7 @@ def main():
   pbar    = ProgressBar(maxVal=num, fd=sys.stdout)
 
   print ("\n################################################################" )
-  print ("XALT Git Version: "+Version()                                       )
+  print ("XALT Git Version: "+Version()+extra_txt                             )
   print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr+szS )
   print ("################################################################\n" )
   if (xalt_file_prefix == "USE_HOME" and not args.testing):

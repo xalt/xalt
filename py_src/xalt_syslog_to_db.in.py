@@ -411,11 +411,6 @@ def main():
   read from syslog file into XALT db.
   """
 
-  print ("\n################################################################")
-  print ("XALT Git Version: "+Version()                                      )
-  print ("################################################################\n")
-
-
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:
@@ -425,6 +420,13 @@ def main():
   args       = CmdLineOptions().execute()
   xalt       = XALTdb(args.confFn)
   syslogFile = args.syslog
+  extra_txt  = ""
+  if (args.syshost != ".*"):
+    extra_txt  = " for "+args.syshost
+    
+  print ("\n################################################################")
+  print ("XALT Git Version: "+Version()+extra_txt                            )
+  print ("################################################################\n")
 
   icnt   = 0
   t1     = time.time()

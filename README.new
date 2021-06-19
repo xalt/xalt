@@ -84,9 +84,8 @@ XALT 2.10+
               * Issue #46: remove libcrc calls in xalt_file_to_db.in.py
 	      * Issue #53: obfuscate more function names like capture() etc
               * Issue #54: Make sure that -static builds include -lgcc.
-    (2.10.19) * Issue #46: Add more debugging print stmts for xalt_file_to_db.in.py
+    (2.10.20) * Issue #46: Add more debugging print stmts for xalt_file_to_db.in.py
               * Set make -j4 in common_funcs.sh
 	      * Report what file transmission style: USE_HOME or XALT_FILE_PREFIX
-	      
-	      
-	      
+W.I.P:
+    (2.10.21) * add syshost to banner for xalt_file_to_db.in.py and xalt_syslog_to_db.in.py
