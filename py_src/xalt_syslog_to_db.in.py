@@ -428,6 +428,10 @@ def main():
   print ("XALT Git Version: "+Version()+extra_txt                            )
   print ("################################################################\n")
 
+  if (args.rmapD and not os.path.isdir(args.rmapD)):
+    print("\n\n  --> Error: the argument to --reverseMapD must be a directory --> Exiting")
+    sys.exit(1)
+
   icnt   = 0
   t1     = time.time()
 

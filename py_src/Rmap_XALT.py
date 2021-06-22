@@ -45,6 +45,7 @@ class Rmap(object):
     self.__libmap = {}
     if (not rmapD):
       return
+
     rmapA   = rmapD.split(':')
     searchA = [ ".json", ".old.json"]
     rmapFn  = None
@@ -56,6 +57,10 @@ class Rmap(object):
         rmapFn = None
       if (rmapFn):
         break
+    if (not os.path.isfile(rmapFn)):
+      print("The path :\"",rmapFn,"\" is not a file -> aborting!")
+      sys.exit(1)
+
     if (rmapFn):
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")
@@ -75,6 +80,8 @@ class Rmap(object):
         rmapFn = None
       if (rmapFn):
         break
+
+    oldT = {}
     if (rmapFn):
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")

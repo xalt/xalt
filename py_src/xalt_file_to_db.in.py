@@ -528,6 +528,10 @@ def main():
 
   t1     = time.time()
 
+  if (args.rmapD and not os.path.isdir(args.rmapD)):
+    print("\n\n  --> Error: the argument to --reverseMapD must be a directory --> Exiting")
+    sys.exit(1)
+
   rmapT  = Rmap(args.rmapD).reverseMapT()
 
   u2acctT = {}
