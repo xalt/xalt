@@ -92,3 +92,4 @@ W.I.P:
               * Check that the argument to --reverseMapD is a directory.
 	      * Make sure that the Rmap constructor defines oldT var before use.
               * Check that rmapFn is a file and not a directory.
+	      * Implement record aging in leftover.log

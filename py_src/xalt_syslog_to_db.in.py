@@ -86,6 +86,13 @@ def Version():
   my_version = "@git@"
   return my_version
 
+class Epoch(object):
+  def __init__(self):
+    self.__epoch = int(time.time())
+
+  def time(self):
+    return self.__epoch
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -111,6 +118,9 @@ class CmdLineOptions(object):
     return args
 
 
+s_epoch  = Epoch()
+Num_Days = 3
+
 class Record(object):
   """
   This class holds the pieces of a single record as it comes in from
@@ -126,6 +136,7 @@ class Record(object):
     self.__old     = old
     self.__blkCnt  = 0
     self.__crc     = t['crcStr']
+    self.__epoch   = t['epoch']
 
     blkA = []
     for i in range(nblks):
@@ -194,6 +205,8 @@ class Record(object):
         sA.append("%02d" % (nblks))
         sA.append(" idx:")
         sA.append("%02d" % (idx))
+        sA.append(" epoch:")
+        sA.append(str(self.__epoch))
         sA.append(" value:")
         sA.append(value)
         sA.append("\n")
@@ -291,6 +304,16 @@ class ParseSyslog(object):
   
     t['idx'] = int(t['idx'])
     t['nb']  = int(t['nb'])
+
+    if ('epoch' in t):
+      t['epoch'] = int(t['epoch'])
+    else:
+      t['epoch'] = s_epoch.time()
+
+
+    # if the record is older than Num_days then do not store record.
+    if (t['epoch'] < s_epoch.time() - Num_Days*86400):
+      return t, False
 
     I = t['idx'] 
 
