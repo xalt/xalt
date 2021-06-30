@@ -87,7 +87,6 @@ XALT 2.10+
     (2.10.20) * Issue #46: Add more debugging print stmts for xalt_file_to_db.in.py
               * Set make -j4 in common_funcs.sh
 	      * Report what file transmission style: USE_HOME or XALT_FILE_PREFIX
-W.I.P:
     (2.10.21) * add syshost to banner for xalt_file_to_db.in.py and xalt_syslog_to_db.in.py
               * Check that the argument to --reverseMapD is a directory.
 	      * Make sure that the Rmap constructor defines oldT var before use.
