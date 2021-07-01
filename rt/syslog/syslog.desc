@@ -86,6 +86,9 @@ test_descript = {
      displayThis  "xalt_syslog_to_db.py example_syslog_2.log"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/example_syslog_2.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
+     displayThis  "xalt_syslog_to_db.py syslog_start_byte.log"
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/syslog_start_byte.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
+
      
      displayThis  "check_entries_db.py"
      check_entries_db.py --dbname $DBNAME --results results.csv --runs 122 --functions 4 --links 4 --pkgs 16 --objects 20 --env_vars 0 --uuid 2
