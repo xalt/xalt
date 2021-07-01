@@ -508,71 +508,75 @@ def main():
 
     old = (fn == args.leftover)
 
-    f=open(fn, 'r')
-    for line in f:
-      count += len(line)
-      pbar.update(count)
-      if (not ("XALT_LOGGING" in line)):
-        continue
-      try:
-        t, done = parseSyslog.parse(line, args.syshost, old)
-      except Exception as e:
-        print("xalt_syslog_to_db: Error:", e)
-        print(traceback.format_exc())
-        badsyslog += 1
-        continue
-      
-      if (not done):
-        continue
+    # Open file in binary mode and decode manually
+    # See https://stackoverflow.com/questions/47452824 for reasons.
 
-      ##################################
-      # If the json conversion fails,
-      # then ignore record and keep going
-      try:
-        value = json.loads(t['value'])
-      except Exception as e:
-        continue
+    with open(fn, 'rb') as f:
+      for bline in f:
+        try:
+          line = bline.decode()
+        except UnicodeDecodeError as e:
+          continue
+        count += len(line)
+        pbar.update(count)
+        if (not ("XALT_LOGGING" in line)):
+          continue
+        try:
+          t, done = parseSyslog.parse(line, args.syshost, old)
+        except Exception as e:
+          print("xalt_syslog_to_db: Error:", e)
+          print(traceback.format_exc())
+          badsyslog += 1
+          continue
+        
+        if (not done):
+          continue
 
-      try:
-        XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
+        ##################################
+        # If the json conversion fails,
+        # then ignore record and keep going
+        try:
+          value = json.loads(t['value'])
+        except Exception as e:
+          continue
 
-        if ( t['kind'] == "link" ):
-          XALT_Stack.push("link_to_db()")
-          xalt.link_to_db(args.debug, rmapT, value)
+        try:
+          XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
+
+          if ( t['kind'] == "link" ):
+            XALT_Stack.push("link_to_db()")
+            xalt.link_to_db(args.debug, rmapT, value)
+            XALT_Stack.pop()
+            lnkCnt += 1
+          elif ( t['kind'] == "run" ):
+            XALT_Stack.push("run_to_db()")
+            runTime = value['userDT']['run_time']
+
+            if (args.filter and runTime >= 1800.0 and runTime <= 3600.0 ):
+               if (random.random() > 0.01):
+                 continue
+               else:
+                 value['userDT']['probability'] = 0.01
+
+            stored, dups = xalt.run_to_db(args.debug, rmapT, u2acctT, value, timeRecord)
+            XALT_Stack.pop()
+            if (stored):
+              runCnt += 1
+            if (dups):
+              dupCnt += 1
+
+          elif ( t['kind'] == "pkg" ):
+            XALT_Stack.push("pkg_to_db()")
+            xalt.pkg_to_db(args.debug, t['syshost'], value)
+            XALT_Stack.pop()
+            pkgCnt += 1
+          else:
+            print("Error in xalt_syslog_to_db", file=sys.stderr)
           XALT_Stack.pop()
-          lnkCnt += 1
-        elif ( t['kind'] == "run" ):
-          XALT_Stack.push("run_to_db()")
-          runTime = value['userDT']['run_time']
-
-          if (args.filter and runTime >= 1800.0 and runTime <= 3600.0 ):
-             if (random.random() > 0.01):
-               continue
-             else:
-               value['userDT']['probability'] = 0.01
-
-          stored, dups = xalt.run_to_db(args.debug, rmapT, u2acctT, value, timeRecord)
-          XALT_Stack.pop()
-          if (stored):
-            runCnt += 1
-          if (dups):
-            dupCnt += 1
-
-        elif ( t['kind'] == "pkg" ):
-          XALT_Stack.push("pkg_to_db()")
-          xalt.pkg_to_db(args.debug, t['syshost'], value)
-          XALT_Stack.pop()
-          pkgCnt += 1
-        else:
-          print("Error in xalt_syslog_to_db", file=sys.stderr)
-        XALT_Stack.pop()
-      except Exception as e:
-        print(e, file=sys.stderr)
-        print(traceback.format_exc())
-        badCnt += 1
-
-
-    f.close()
+        except Exception as e:
+          print(e, file=sys.stderr)
+          print(traceback.format_exc())
+          badCnt += 1
 
   pbar.fini()
 

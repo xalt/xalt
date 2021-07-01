@@ -92,3 +92,5 @@ XALT 2.10+
 	      * Make sure that the Rmap constructor defines oldT var before use.
               * Check that rmapFn is a file and not a directory.
 	      * Implement record aging in leftover.log
+    (2.10.22) * Issue #55: read in each line from syslog file in binary mode
+                and decode manually.
