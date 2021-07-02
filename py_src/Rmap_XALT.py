@@ -71,11 +71,11 @@ class Rmap(object):
       if (rmapFn):
         break
 
-    if (rmapFn and not os.path.isfile(rmapFn)):
-      print("The path :\"",rmapFn,"\" is not a file -> aborting!")
-      sys.exit(1)
-      
     if (rmapFn):
+      if ( not os.path.isfile(rmapFn)):
+        print("The path :\"",rmapFn,"\" is not a file -> aborting!")
+        sys.exit(1)
+        
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")
       t        = json.loads(f.read())
@@ -95,12 +95,12 @@ class Rmap(object):
       if (rmapFn):
         break
 
-    if (rmapFn and not os.path.isfile(rmapFn)):
-      print("The path :\"",rmapFn,"\" is not a file -> aborting!")
-      sys.exit(1)
 
     oldT = {}
     if (rmapFn):
+      if (not os.path.isfile(rmapFn)):
+        print("The path :\"",rmapFn,"\" is not a file -> aborting!")
+        sys.exit(1)
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")
       t        = json.loads(f.read())
