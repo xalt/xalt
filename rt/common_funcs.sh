@@ -15,7 +15,7 @@ initialize()
   module unload xalt
 
   rm -f  _stderr.* _stdout.* out.* err.* leftover.* \#* .\#*
-  rm -rf .xalt.d syslog.* reverseMapD
+  rm -rf .xalt.d syslog.*
   rm -f $projectDir/src/*.o $projectDir/src/*.d $projectDir/libuuid/src/*.o
   XALT_EPOCH_T0=$(python3 $projectDir/rt/xalt_epoch.py)
 
@@ -34,10 +34,11 @@ displayThis()
 buildRmapT()
 {
   echo "<build xalt_rmapT.json file>"
-  mkdir reverseMapD
+  rm -rf reverseMapD
+  mkdir  reverseMapD
   MPATH=${LMOD_DEFAULT_MODULEPATH-$MODULEPATH}
   $LMOD_DIR/spider -o xalt_rmapT      $MPATH > $outputDir/reverseMapD/xalt_rmapT.json
-  #$LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
+  $LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
   echo "<finish>"
 }
 

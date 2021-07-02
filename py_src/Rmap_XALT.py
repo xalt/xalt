@@ -27,6 +27,19 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
+########################################################################
+import inspect
+
+def __LINE__():
+    try:
+        raise Exception
+    except:
+        return sys.exc_info()[2].tb_frame.f_back.f_lineno
+
+def __FILE__():
+    fnA = os.path.split(inspect.currentframe().f_code.co_filename)
+    return fnA[1]
+
 class Rmap(object):
   """ This class files the reverseMap File from the reverse map directory"""
   def __init__(self, rmapD):
@@ -57,10 +70,11 @@ class Rmap(object):
         rmapFn = None
       if (rmapFn):
         break
-    if (not os.path.isfile(rmapFn)):
+
+    if (rmapFn and not os.path.isfile(rmapFn)):
       print("The path :\"",rmapFn,"\" is not a file -> aborting!")
       sys.exit(1)
-
+      
     if (rmapFn):
       rmpMtime = os.stat(rmapFn).st_mtime
       f        = open(rmapFn,"r")
@@ -80,6 +94,10 @@ class Rmap(object):
         rmapFn = None
       if (rmapFn):
         break
+
+    if (rmapFn and not os.path.isfile(rmapFn)):
+      print("The path :\"",rmapFn,"\" is not a file -> aborting!")
+      sys.exit(1)
 
     oldT = {}
     if (rmapFn):
