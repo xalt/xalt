@@ -94,3 +94,8 @@ XALT 2.10+
 	      * Implement record aging in leftover.log
     (2.10.22) * Issue #55: read in each line from syslog file in binary mode
                 and decode manually.
+    (2.10.23) * Issue #55: Fix bug where jsonReverseMapT.json was ignored when ingesting *.json records
+              * Report missing XALT_ETC_DIR/reverseMapD/xalt_rmapT.json in xalt_configuration_report.
+              * Now require python module colorama. (must do a pip install for python2)
+	      * Report warning if --reverseMapD option is used but no reverseMap files found.
+	      

@@ -51,10 +51,13 @@ from __future__ import print_function
 from __future__ import division
 import os, sys, re, MySQLdb, json, time, argparse, base64, zlib, shlex, random, traceback
 
+
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+from colorama      import Fore
+from colorama      import Style
 from Rmap_XALT     import Rmap
 from XALTdb        import XALTdb
 from XALTdb        import TimeRecord
@@ -460,6 +463,15 @@ def main():
 
   try:
     rmapT  = Rmap(args.rmapD).reverseMapT()
+    if (args.rmapD and not rmapT):
+      banner  = Style.BRIGHT+Fore.RED+\
+         "#======================================================================#"+\
+          Style.RESET_ALL
+      warning = Style.BRIGHT+Fore.RED+"Warning:"+Style.RESET_ALL
+      print ("\n\n"+banner+"\n" +warning+" --reverseMapD argument specified but neither\n",
+             "         xalt_rmapT.json nor jsonReverseMapT.json files were found!\n",
+             "         -> continuing\n"+banner+"\n\n")
+
   except Exception as e:
     print(e, file=sys.stderr)
     print("Failed to read reverseMap file -> exiting")

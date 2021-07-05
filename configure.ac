@@ -422,6 +422,9 @@ fi
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 
+AC_SUBST(HAVE_PYMOD_COLORAMA)
+AX_PYTHON_MODULE([$PATH_TO_PYTHON],[colorama])
+
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
@@ -612,6 +615,16 @@ if test "$MYSQLDB" = yes; then
       rm -f makefile
       exit 1
    fi
+fi
+
+if test "$HAVE_PYMOD_COLORAMA" = no; then
+   echo
+   echo "======================================================="
+   echo "Unable to install XALT without the python module: colorama"
+   echo "To install for python2 do: pip  install colorama"
+   echo "======================================================="
+   rm -f makefile
+   exit 1
 fi
 
 if test "$SYSHOST_CONFIG" = no; then
