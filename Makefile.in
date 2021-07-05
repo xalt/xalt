@@ -120,8 +120,8 @@ BIN_PKG              	:= $(patsubst %, $(srcdir)/%, $(BIN_PKG))
 SBIN_PKG             	:= py_src/conf_create.in.py          py_src/createDB.in.py             \
                            py_src/xalt_syslog_to_db.in.py    py_src/xalt_usage_report.in.py    \
                            py_src/xalt_file_to_db.in.py      py_src/xalt_split_syslog_fn.in.py \
+                           py_src/xalt_library_usage.in.py   py_src/ansi.py                    \
                            sh_src/create_xalt_directories.sh.in                                \
-                           py_src/xalt_library_usage.in.py                                     \
                            py_src/xalt_scalar_bins_usage_report.in.py    
 SBIN_PKG             	:= $(patsubst %, $(srcdir)/%, $(SBIN_PKG))
 

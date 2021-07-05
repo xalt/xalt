@@ -53,8 +53,7 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
-from colorama      import Fore
-from colorama      import Style
+from ansi          import Fore, Style
 from Rmap_XALT     import Rmap
 from XALTdb        import XALTdb
 from XALTdb        import TimeRecord

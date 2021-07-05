@@ -98,4 +98,6 @@ XALT 2.10+
               * Report missing XALT_ETC_DIR/reverseMapD/xalt_rmapT.json in xalt_configuration_report.
               * Now require python module colorama. (must do a pip install for python2)
 	      * Report warning if --reverseMapD option is used but no reverseMap files found.
+    (2.10.24) * Switch from using colorama to using ansi.py from colorama package.
+    
 	      

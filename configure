@@ -636,7 +636,6 @@ HAVE_WORKING_LIBUUID
 EGREP
 GREP
 CPP
-HAVE_PYMOD_COLORAMA
 HAVE_PYMOD_MYSQLDB
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
@@ -4294,29 +4293,6 @@ $as_echo "no" >&6; }
 	fi
 
 
-
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking python module: colorama" >&5
-$as_echo_n "checking python module: colorama... " >&6; }
-	$PATH_TO_PYTHON -c "import colorama" > /dev/null 2>&1
-	if test $? -eq 0;
-	then
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-		eval HAVE_PYMOD_COLORAMA=yes
-	else
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-		eval HAVE_PYMOD_COLORAMA=no
-		#
-		if test -n ""
-		then
-			as_fn_error $? "failed to find required module colorama" "$LINENO" 5
-			exit 1
-		fi
-	fi
-
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -5186,16 +5162,6 @@ if test "$MYSQLDB" = yes; then
       rm -f makefile
       exit 1
    fi
-fi
-
-if test "$HAVE_PYMOD_COLORAMA" = no; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without the python module: colorama"
-   echo "To install for python2 do: pip  install colorama"
-   echo "======================================================="
-   rm -f makefile
-   exit 1
 fi
 
 if test "$SYSHOST_CONFIG" = no; then

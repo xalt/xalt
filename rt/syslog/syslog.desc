@@ -87,6 +87,7 @@ test_descript = {
      displayThis  "xalt_syslog_to_db.py example_syslog_2.log"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/example_syslog_2.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
+     rm $outputDir/reverseMapD/jsonReverseMapT.json
      displayThis  "xalt_syslog_to_db.py syslog_start_byte.log"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $(testDir)/syslog_start_byte.log --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
