@@ -33,6 +33,7 @@ void buildRmapT(std::string& rmapD, S2S_t** rmapT, UT_array** xlibmapA)
     jsonStr += buf;
   my_free(buf,sz);
   sz = 0; buf = NULL;
+  fclose(fp);
 
   jsmn_parser parser;
   jsmntok_t*  tokens;
