@@ -241,7 +241,7 @@ python_pkg_patterns = [
 # "BAZ"
 
 
-pre_ingest_filter = [
+pre_ingest_patterns = [
 #   precent   path pattern
     [0.0,     r'.*\/foobar'],
     [0.01,    r'.*\/BAZ'],

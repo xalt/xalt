@@ -129,7 +129,7 @@ def main():
   pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
   envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
   pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
-  ingestStrA.extend( convert_pattern(        namespace.get('pre_ingest_patterns', []))
+  ingestStrA.extend( convert_pattern(        namespace.get('pre_ingest_patterns', [])))
 
   pattA = [
     ['@hostname_patterns@',        ",".join(hostStrA)],

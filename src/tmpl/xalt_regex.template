@@ -8,7 +8,6 @@ const char* pathPatternA[]   = { @path_patterns@       };
 const char* hostnameA[]      = { @hostname_patterns@   };
 const char* envPatternA[]    = { @env_patterns@        };
 const char* pyPkgPatternA[]  = { @python_pkg_patterns@ };
-const char* pathPatternA[]   = { @path_patterns@       };
 const char* ingestPatternA[] = { @pre_ingest_patterns@ };
 
 const int   pathPatternSz    = N_ELEMENTS(pathPatternA);
