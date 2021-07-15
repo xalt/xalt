@@ -14,7 +14,7 @@ const int   pathPatternSz    = N_ELEMENTS(pathPatternA);
 const int   hostnameSz       = N_ELEMENTS(hostnameA);
 const int   envPatternSz     = N_ELEMENTS(envPatternA);
 const int   pyPkgPatternSz   = N_ELEMENTS(pyPkgPatternA);
-const int   ingestPatternSz  = N_ELEMENTS(pathPatternA);
+const int   ingestPatternSz  = N_ELEMENTS(ingestPatternA);
 
 
 

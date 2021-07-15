@@ -58,7 +58,7 @@ python_pkg_patterns = [
 #------------------------------------------------------------
 # XALT pre-ingest filter
 # 
-pre_ingest_filter = [
+pre_ingest_patterns = [
 #   precent   path pattern 
     [1.0,     r'.*']                    # accept all remaining executables.
 ]
