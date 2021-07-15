@@ -230,3 +230,19 @@ python_pkg_patterns = [
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*/.local/" },  # KEEP all packages installed by users
   { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"/home"      },  # SKIP all other packages in user locations
 ]
+
+#------------------------------------------------------------
+# XALT will also allow for pre-ingestion filtering of *.json
+# records.  This array contains a list of path patterns that
+# will be filtered.  The 1st column specifies the chance to
+# ingest that *.json record.  The 1st line states that there
+# is a zero percent chance for recording any executable named
+# "foobar" and a 1% chance for recording any executable named
+# "BAZ"
+
+
+pre_ingest_filter = [
+#   precent   path pattern 
+    [0.0,     r'.*\/foobar'],
+    [0.01,    r'.*\/BAZ'],
+]

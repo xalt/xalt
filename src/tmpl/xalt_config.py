@@ -54,3 +54,11 @@ python_pkg_patterns = [
   { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^subprocess$" },  # SKIP subprocess
   { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r".*"           },  # keep all other patterns
 ]  
+
+#------------------------------------------------------------
+# XALT pre-ingest filter
+# 
+pre_ingest_filter = [
+#   precent   path pattern 
+    [1.0,     r'.*']                    # accept all remaining executables.
+]
