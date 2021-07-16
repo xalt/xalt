@@ -1,15 +1,13 @@
 /* -*- c -*- */
 %{
 #include <string.h>
-#include "xalt_obfuscate.h"
-#include "xalt_c_utils.h"
-
+#include <stdio.h>
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
 %}
 
 %%
-@pre_ingest_path_patterns@
+@pre_ingest_patterns@
 %%
 
 int yywrap()
@@ -23,7 +21,7 @@ double pre_ingest_filter(const char * path)
   if (sz < len+2)
     {
       if (strbuf)
-	my_free(strbuf,sz);
+	free(strbuf);
       sz = len+2;
       strbuf = (char *) malloc(sz);
     }
@@ -39,9 +37,3 @@ double pre_ingest_filter(const char * path)
   return token;
 }
 
-void pre_ingest_filter_cleanup()
-{
-  my_free(strbuf,sz);
-  strbuf = NULL;
-  sz     = 0;
-}

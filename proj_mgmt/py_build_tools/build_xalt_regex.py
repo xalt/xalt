@@ -48,7 +48,17 @@ class CmdLineOptions(object):
 def convert_pattern(list):
   a = []
   for entry in list:
-    token = str(entry[0])
+    token = entry[0]
+    value = entry[1].replace("\\","\\\\")
+    
+    a.append('"'+token+' => '+value+'"')
+
+  return a
+
+def convert_ingest_pattern(list):
+  a = []
+  for entry in list:
+    token = "%.4f" % (entry[0])
     value = entry[1].replace("\\","\\\\")
     
     a.append('"'+token+' => '+value+'"')
@@ -108,7 +118,7 @@ def main():
   pathStrA   = convert_pattern(        namespace.get('path_patterns',       []))
   envStrA    = convert_pattern(        namespace.get('env_patterns',        []))
   pyPkgStrA  = convert_py_pkg_pattern( namespace.get('python_pkg_patterns', []))
-  ingestStrA = convert_pattern(        namespace.get('pre_ingest_patterns', []))
+  ingestStrA = convert_ingest_pattern( namespace.get('pre_ingest_patterns', []))
   
   # Read and process the XALT configuration file that provides the defaults.
 
@@ -129,7 +139,7 @@ def main():
   pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
   envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
   pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
-  ingestStrA.extend( convert_pattern(        namespace.get('pre_ingest_patterns', [])))
+  ingestStrA.extend( convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
 
   pattA = [
     ['@hostname_patterns@',        ",".join(hostStrA)],

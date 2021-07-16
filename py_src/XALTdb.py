@@ -26,8 +26,9 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
-import MySQLdb, getpass, time
+import MySQLdb, getpass, time, random, ctypes
 import warnings
+from   ctypes           import *   # used to interact with C shared libraries
 from   xalt_util        import *
 from   xalt_global      import *
 from   BeautifulTbl     import BeautifulTbl
@@ -40,6 +41,12 @@ try:
   input = raw_input
 except:
   pass
+
+#libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
+libpreIngest = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libpreIngest.so")))
+pre_ingest_filter = libpreIngest.pre_ingest_filter
+pre_ingest_filter.argtypes = [c_char_p]
+pre_ingest_filter.restype  = c_double
 
 warnings.filterwarnings("ignore", "Unknown table.*")
 
@@ -386,9 +393,28 @@ class XALTdb(object):
     @param: runT:        The run data stored in a table
     """
     
-    msg   = ""
-    query = ""
+    stored    = False 
+    dup       = False
+    recordMe  = False 
+    if (not ('userT' in runT)):
+      if (debug): sys.stdout.write("  --> failed to record: No userT in runT --> FAILURE\n\n")
+      return stored, dup
+    userT = runT['userT']
+
+    exec_path = userT.get('exec_path')
+    if (not exec_path):
+      if (debug): sys.stdout.write("  --> failed to record: No exec_path found --> FAILURE\n\n")
+      return stored, dup
+    exec_prob = pre_ingest_filter(exec_path.encode())
+    prob      = random.random()
+    if (prob > exec_prob):
+      if (debug): sys.stdout.write("  --> Not record due to pre-ingest filter %.4f > %.4f\n\n" % (prob, exec_prob))
+      return stored, dup
+
     try:
+      msg   = ""
+      query = ""
+
       if (debug): sys.stdout.write("  --> Trying to connect to database\n")
       conn     = self.connect()
       cursor   = conn.cursor()
@@ -398,14 +424,6 @@ class XALTdb(object):
       query    = "START TRANSACTION"
       conn.query(query)
       query    = ""
-      stored   = False 
-      recordMe = False 
-      dup      = False
-
-      if (not ('userT' in runT)):
-        if (debug): sys.stdout.write("  --> failed to record: No userT in runT --> FAILURE\n\n")
-        return stored, dup
-      userT = runT['userT']
 
       if (not ('userDT' in runT)):
         if (debug): sys.stdout.write("  --> failed to record: No userDT in runT --> FAILURE\n\n")
@@ -454,12 +472,6 @@ class XALTdb(object):
       num_cores   = userDT.get('num_cores', 1)
       num_threads = convertToTinyInt(userDT.get('num_threads',0))
       num_gpus    = convertToTinyInt(userDT.get('num_gpus',   0))
-      exec_path   = userT.get('exec_path')
-      if (not exec_path):
-        if (debug): sys.stdout.write("  --> failed to record: No exec_path found --> FAILURE\n\n")
-        v = XALT_Stack.pop()  
-        carp("SUBMIT_HOST",v)
-        return stored, dup
 
       if (debug): sys.stdout.write("  --> Trying to insert run record into db\n")
       if (cursor.rowcount > 0):

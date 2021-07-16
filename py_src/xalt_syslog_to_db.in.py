@@ -81,7 +81,7 @@ def __FILE__():
 ConfigBaseNm = "xalt_db"
 ConfigFn     = ConfigBaseNm + ".conf"
 logger       = config_logger()
-libcrc       = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
+#libcrc       = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
 version_patt = re.compile(r" V:(\d+) ")
 
 def Version():
