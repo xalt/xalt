@@ -408,7 +408,7 @@ class XALTdb(object):
     exec_prob = pre_ingest_filter(exec_path.encode())
     prob      = random.random()
     if (prob > exec_prob):
-      if (debug): sys.stdout.write("  --> Not record due to pre-ingest filter %.4f > %.4f\n\n" % (prob, exec_prob))
+      if (debug): sys.stdout.write("  --> Not recording due to pre-ingest filter %.4f > %.4f for: %s\n\n" % (prob, exec_prob,exec_path))
       return stored, dup
 
     try:
