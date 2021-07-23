@@ -3,6 +3,7 @@
 
 #define HERE do { fprintf(stderr,"%s:%d\n",__FILE__,__LINE__); fflush(stderr); } while(0)
 
+#define MY_DEBUG(fp,format, ...) if (xalt_tracing) do { fprintf((fp),format,__VA_ARGS__);    fflush(fp); } while (0)
 #define DEBUG0(fp,s)             if (xalt_tracing) do { fprintf((fp),s);                     fflush(fp); } while (0)
 #define DEBUG1(fp,s,x1)          if (xalt_tracing) do { fprintf((fp),s,(x1));                fflush(fp); } while (0)
 #define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) do { fprintf((fp),s,(x1),(x2));           fflush(fp); } while (0)
