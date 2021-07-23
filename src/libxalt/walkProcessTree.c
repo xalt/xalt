@@ -21,12 +21,12 @@ void walkProcessTree(pid_t ppid, processTree_t** ptA)
     {
       build_proc(&proc, my_pid);
       if (proc.m_parent < 2)
-	break;
+        break;
 
   HERE;
       entry = (processTree_t *) malloc(sizeof(processTree_t));
       if (! entry )
-	exit(-1);
+        exit(-1);
 
   HERE;
       utstring_new(entry->m_path);

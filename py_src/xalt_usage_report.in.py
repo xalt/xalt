@@ -233,12 +233,11 @@ class CompilerUsageByCount:
     query = """
     SELECT link_program, count(date) as count FROM xalt_link
     WHERE build_syshost like %s
-    AND   queue like %s  
     AND   date >= %s AND date < %s
     GROUP by link_program
     """
     cursor  = self.__cursor
-    cursor.execute(query, (args.syshost, args.queue, start_date, end_date))
+    cursor.execute(query, (args.syshost, start_date, end_date))
     resultA = cursor.fetchall()
     linkA   = self.__linkA
     for link_program, count in resultA:

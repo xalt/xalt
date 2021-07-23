@@ -33,22 +33,22 @@ static char        sha1buf[41];
 static bool        need_sha1 = true;
 
 void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
-		    char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
-		    const char* watermark, const char* usr_cmdline, int xalt_tracing, FILE* my_stderr)
+                    char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
+                    const char* watermark, const char* usr_cmdline, int xalt_tracing, FILE* my_stderr)
 {
-  bool        	 end_record   = (end_time > 0.0);
-  const char* 	 suffix       = end_record ? ".zzz" : ".aaa";
+  bool           end_record   = (end_time > 0.0);
+  const char*    suffix       = end_record ? ".zzz" : ".aaa";
 
   processTree_t* ptA      = NULL;
   S2S_t*         qaT      = NULL;
-  S2S_t*      	 envT	  = NULL;
-  S2S_t*      	 recordT  = NULL;
-  S2S_t*       	 userT	  = NULL;
-  S2D_t*      	 userDT	  = NULL;
-  S2D_t*       	 measureT = NULL;
+  S2S_t*         envT     = NULL;
+  S2S_t*         recordT  = NULL;
+  S2S_t*         userT    = NULL;
+  S2D_t*         userDT   = NULL;
+  S2D_t*         measureT = NULL;
   SET_t*         libT     = NULL;
   double         t0       = epoch();
-  double      	 t1;
+  double         t1;
 
   DEBUG1(my_stderr,"\n  run_submission(%s) {\n",suffix);
 
@@ -87,9 +87,9 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
     {
       HASH_FIND_STR(recordT, "Build_Epoch", e);
       if (e)
-	insert_key_double(&userDT, "Build_Epoch",  strtod(utstring_body(e->value), (char**) NULL));
+        insert_key_double(&userDT, "Build_Epoch",  strtod(utstring_body(e->value), (char**) NULL));
     }
-	  
+          
   char* exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
 
@@ -148,10 +148,22 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   insert_key_double(&measureT, "07_GPU_Setup_____", xalt_timer->gpu_setup);
   insert_key_double(&measureT, "08____total______", epoch() - t0 + xalt_timer->init + xalt_timer->fini);
 
+  char* resultFn  = NULL;
+  char* resultDir = NULL;  
+
   //*********************************************************************
   // Record QA data in json string.
   insert_key_string(&qaT,"XALT_GIT_VERSION",XALT_GIT_VERSION);
-  insert_key_string(&qaT,"XALT_FILE_PREFIX",XALT_FILE_PREFIX);
+  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
+    {
+      build_resultDir(&resultDir, "run", transmission, uuid_str);
+      build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
+
+      insert_key_string(&qaT,"XALT_FILE_PREFIX", XALT_FILE_PREFIX);
+      insert_key_string(&qaT,"XALT_RESULT_DIR",  resultDir);
+      insert_key_string(&qaT,"XALT_RESULT_FILE", resultFn);
+    }
+
 
   //*********************************************************************
   // So build the Json table string
@@ -188,17 +200,9 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   free_S2S(&envT);
   free_S2S(&recordT);
   free_SET(&libT);
-  char* resultFn  = NULL;
-  char* resultDir = NULL;  
 
   char key[50];
   sprintf(&key[0], "%s%s", (end_record) ? "run_fini_" : "run_strt_", uuid_str);
-
-  if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
-    {
-      build_resultDir(&resultDir, "run", transmission, uuid_str);
-      build_resultFn( &resultFn,  "run", start_time, syshost, uuid_str, suffix);
-    }
 
   DEBUG0(my_stderr,"    Transmitting jsonStr\n");
   transmit(transmission, jsonStr, "run", key, crcStr, syshost, resultDir, resultFn, my_stderr);
@@ -258,16 +262,16 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
         {
           char*       buf     = NULL;
           size_t      sz      = 0;
-	  utstring_clear(jsonStr);
-	  utstring_clear(fullName);
-	  utstring_clear(key);
+          utstring_clear(jsonStr);
+          utstring_clear(fullName);
+          utstring_clear(key);
 
-	  utstring_printf(fullName,"%s/%s",xalt_tmpdir,dp->d_name);
+          utstring_printf(fullName,"%s/%s",xalt_tmpdir,dp->d_name);
           FILE* fp = fopen(utstring_body(fullName), "r");
           if (fp)
             {
               while( xalt_fgets_alloc(fp, &buf, &sz))
-		utstring_bincpy(jsonStr, buf, strlen(buf));
+                utstring_bincpy(jsonStr, buf, strlen(buf));
               my_free(buf,sz);
               sz = 0; buf = NULL;
 
@@ -275,7 +279,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
               //                                                                           0123456789 1234567
               //pkg.rios.2018_11_06_16_14_13_7992.user.d20188d7-bbbb-4b91-9f5c-80672045c270.3ee8e5affda9.json
               int my_len = strlen(dp->d_name);
-	      utstring_printf(key,"pkg_%s_%.*s",uuid_str, ulen, &dp->d_name[my_len - 17]);
+              utstring_printf(key,"pkg_%s_%.*s",uuid_str, ulen, &dp->d_name[my_len - 17]);
               
               // extract crc string from jsonStr:
               // the crc string must be at the begining of jsonStr
@@ -285,7 +289,7 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
 
               // transmit jsonStr
               transmit(transmission, utstring_body(jsonStr), "pkg", utstring_body(key), crcStr, syshost,
-		       resultDir, dp->d_name, my_stderr);
+                       resultDir, dp->d_name, my_stderr);
               unlink(utstring_body(fullName));
             }
           fclose(fp);

@@ -16,6 +16,8 @@
 #ifndef _CRC_H
 #define _CRC_H
 
+#include "xalt_obfuscate.h"
+
 #ifdef __cplusplus
 extern "C"
 {

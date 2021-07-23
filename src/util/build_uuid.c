@@ -24,7 +24,7 @@ void build_uuid(char * my_uuid_str)
       char* fn = xalt_dir("lib64/libuuid.so");
       handle = dlopen (fn, RTLD_LAZY);
       if (fn)
-	my_free(fn, strlen(fn));
+        my_free(fn, strlen(fn));
       if ( ! handle) 
         {
           handle = dlopen ("libuuid.so", RTLD_LAZY);
@@ -54,6 +54,9 @@ void build_uuid(char * my_uuid_str)
     
   (*my_uuid_generate_random)(uuid);
   (*my_uuid_unparse_lower)(uuid, my_uuid_str);
+  /* Uncomment for testing duplicated uuid's
+   * strcpy(my_uuid_str,"3ae43486-bfe2-11eb-8a3a-b376be588fbc");
+   */
 }
 
 void build_uuid_cleanup()

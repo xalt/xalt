@@ -51,10 +51,12 @@ from __future__ import print_function
 from __future__ import division
 import os, sys, re, MySQLdb, json, time, argparse, base64, zlib, shlex, random, traceback
 
+
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+from ansi          import Fore, Style
 from Rmap_XALT     import Rmap
 from XALTdb        import XALTdb
 from XALTdb        import TimeRecord
@@ -86,6 +88,13 @@ def Version():
   my_version = "@git@"
   return my_version
 
+class Epoch(object):
+  def __init__(self):
+    self.__epoch = int(time.time())
+
+  def time(self):
+    return self.__epoch
+
 class CmdLineOptions(object):
   """ Command line Options class """
 
@@ -101,6 +110,7 @@ class CmdLineOptions(object):
                                                                                help="Store just records that come from syshost")
     parser.add_argument("--leftover_fn", dest='leftover', action="store",      default='leftover.log',
                                                                                help="Name of the leftover file")
+    parser.add_argument("-D",            dest='debug',    action="store_true", help="Debug Flag")
     parser.add_argument("--timer",       dest='timer',    action="store_true", help="Time runtime")
     parser.add_argument("--filter",      dest='filter',   action="store_true", help="Filter Scalar jobs 30 mins to 60mins")
     parser.add_argument("--reverseMapD", dest='rmapD',    action="store",      help="Path to the directory containing the json reverseMap")
@@ -110,19 +120,25 @@ class CmdLineOptions(object):
     return args
 
 
+s_epoch  = Epoch()
+Num_Days = 3
+
 class Record(object):
   """
   This class holds the pieces of a single record as it comes in from
   syslog
   """
   def __init__(self, t, old=False):
-    nblks          = int(t['nb'])
+    nblks          = t['nb']
     self.__nblks   = nblks
     self.__kind    = t['kind']
     self.__syshost = t['syshost']
+    self.__key     = t['key']
+    self.__version = int(t['version'])
     self.__old     = old
     self.__blkCnt  = 0
     self.__crc     = t['crcStr']
+    self.__epoch   = t['epoch']
 
     blkA = []
     for i in range(nblks):
@@ -132,7 +148,7 @@ class Record(object):
     self.addBlk(t)
 
   def addBlk(self,t):
-    idx               = int(t['idx'])
+    idx                 = t['idx']
     if (0 <= idx and idx < self.__nblks and not self.__blkA[idx] ):
       self.__blkA[idx]  = t['value']
       self.__blkCnt    += 1
@@ -143,22 +159,23 @@ class Record(object):
   def completed(self):
     retV = False
     if (self.__blkCnt >= self.__nblks):
-      crcStr = self.__crc
-      if (crcStr == ""):
-        return True
-      crcV  = int(crcStr, 16)
-      s     = self.value()
-      s     = '{"crc":"0xFFFF"' + s[15:]
-      myLen = len(s)
-      data  = s.encode()
-      c     = libcrc.crcFast(c_char_p(data), myLen)
-      retV  = crcV == c
+      retV = True
+      #crcStr = self.__crc
+      #if (crcStr == ""):
+      #  return True
+      #crcV  = int(crcStr, 16)
+      #s     = self.value()
+      #s     = '{"crc":"0xFFFF"' + s[15:]
+      #myLen = len(s)
+      #data  = s.encode()
+      #c     = libcrc.crcFast(c_char_p(data), myLen)
+      #retV  = crcV == c
     return retV
 
   def value(self):
     return "".join(self.__blkA)
 
-  def prt(self, key):
+  def prt(self):
     if (self.__old):
       return None
 
@@ -167,29 +184,34 @@ class Record(object):
     blkA  = self.__blkA
 
     sPA   = []
-    
     sPA.append("XALT_LOGGING_")
     sPA.append(self.__syshost)
-    sPA.append(" V:4 kind:")
+    sPA.append(" V:")
+    sPA.append(str(self.__version))
+    sPA.append(" kind:")
     sPA.append(self.__kind)
     sPA.append(" syshost:")
     sPA.append(self.__syshost)
     sPA.append(" key:")
-    sPA.append(key)
-    sPA.append(" crcStr:")
-    sPA.append(self.__crc)
-    sPA.append(" nb:")
-    sPA.append(str(nblks))
+    sPA.append(self.__key)
+    if (self.__version > 3):
+      sPA.append(" crcStr:")
+      sPA.append(self.__crc)
     ss = "".join(sPA)
 
     for idx in range(nblks):
       value = blkA[idx]
       if (value):
         sA.append(ss)
+        sA.append(" nb:")
+        sA.append("%02d" % (nblks))
         sA.append(" idx:")
-        sA.append(str(idx))
+        sA.append("%02d" % (idx))
+        sA.append(" epoch:")
+        sA.append(str(self.__epoch))
         sA.append(" value:")
         sA.append(value)
+        sA.append("\n")
     return "".join(sA)
 
 class ParseSyslog(object):
@@ -199,6 +221,9 @@ class ParseSyslog(object):
     self.__recordT    = {}
     self.__leftoverFn = leftoverFn
     self.__frntPatt   = re.compile("(^.* V:\d+ *)")
+
+  def num_leftover(self):
+    return len(self.__recordT)
 
   def writeRecordT(self):
     leftoverFn = self.__leftoverFn
@@ -210,7 +235,7 @@ class ParseSyslog(object):
       f = open(leftoverFn, "w")
       for key in self.__recordT:
         r = recordT[key]
-        s = r.prt(key)
+        s = r.prt()
         if (s):
           f.write(s)
           
@@ -256,8 +281,8 @@ class ParseSyslog(object):
 
     # Strip off "XALT_LOGGING V:%d" from string and trailing white space.
     s = self.__frntPatt.sub("",s)
-    s = s.rstrip()
-
+    s = s.rstrip("\n")
+    
     # extract value string first and remove it from string
     idx   = s.find("value:")
     if (idx == -1):
@@ -279,6 +304,33 @@ class ParseSyslog(object):
     except StopIteration as e:
       pass
   
+    t['idx'] = int(t['idx'])
+    t['nb']  = int(t['nb'])
+
+    if ('epoch' in t):
+      t['epoch'] = int(t['epoch'])
+    else:
+      t['epoch'] = s_epoch.time()
+
+
+    # if the record is older than Num_days then do not store record.
+    if (t['epoch'] < s_epoch.time() - Num_Days*86400):
+      return t, False
+
+    I = t['idx'] 
+
+    if (t['idx'] < t['nb'] - 1):
+      my_value   = t['value']
+      my_len     = len(my_value)
+      pad        = @syslog_msg_sz@ - my_len
+      if (pad > 0):
+        my_value   = my_value + " "*pad
+      t['value'] = my_value
+
+    t['orig_key'] = t['key']
+    if ('crc' in t):
+      t['crcStr'] = t['crc']
+    
     if (clusterName != ".*" and clusterName != t['syshost']):
       return t, False
 
@@ -288,11 +340,11 @@ class ParseSyslog(object):
     # or just add the block to the current record.
     key  = t['crcStr'] + "_" + t['key'] 
     
+    print 
     r    = recordT.get(key, None)
     if (r):
       r.addBlk(t)
     else:
-      
       r            = Record(t, old)
       recordT[key] = r
 
@@ -384,11 +436,6 @@ def main():
   read from syslog file into XALT db.
   """
 
-  print ("\n################################################################")
-  print ("XALT Git Version: "+Version()                                      )
-  print ("################################################################\n")
-
-
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:
@@ -398,12 +445,32 @@ def main():
   args       = CmdLineOptions().execute()
   xalt       = XALTdb(args.confFn)
   syslogFile = args.syslog
+  extra_txt  = ""
+  if (args.syshost != ".*"):
+    extra_txt  = " for "+args.syshost
+    
+  print ("\n################################################################")
+  print ("XALT Git Version: "+Version()+extra_txt                            )
+  print ("################################################################\n")
+
+  if (args.rmapD and not os.path.isdir(args.rmapD)):
+    print("\n\n  --> Error: the argument to --reverseMapD must be a directory --> Exiting")
+    sys.exit(1)
 
   icnt   = 0
   t1     = time.time()
 
   try:
     rmapT  = Rmap(args.rmapD).reverseMapT()
+    if (args.rmapD and not rmapT):
+      banner  = Style.BRIGHT+Fore.RED+\
+         "#======================================================================#"+\
+          Style.RESET_ALL
+      warning = Style.BRIGHT+Fore.RED+"Warning:"+Style.RESET_ALL
+      print ("\n\n"+banner+"\n" +warning+" --reverseMapD argument specified but neither\n",
+             "         xalt_rmapT.json nor jsonReverseMapT.json files were found!\n",
+             "         -> continuing\n"+banner+"\n\n")
+
   except Exception as e:
     print(e, file=sys.stderr)
     print("Failed to read reverseMap file -> exiting")
@@ -420,6 +487,7 @@ def main():
   lnkCnt = 0
   pkgCnt = 0
   runCnt = 0
+  dupCnt = 0
   badCnt = 0
   count  = 0
 
@@ -451,67 +519,75 @@ def main():
 
     old = (fn == args.leftover)
 
-    f=open(fn, 'r')
-    for line in f:
-      count += len(line)
-      pbar.update(count)
-      if (not ("XALT_LOGGING" in line)):
-        continue
-      try:
-        t, done = parseSyslog.parse(line, args.syshost, old)
-      except Exception as e:
-        print("xalt_syslog_to_db: Error: %s %s" % (e.args[0], e.args[1]))
-        badsyslog += 1
-        continue
-      
-      if (not done):
-        continue
+    # Open file in binary mode and decode manually
+    # See https://stackoverflow.com/questions/47452824 for reasons.
 
-      ##################################
-      # If the json conversion fails,
-      # then ignore record and keep going
-      try:
-        value = json.loads(t['value'])
-      except Exception as e:
-        continue
+    with open(fn, 'rb') as f:
+      for bline in f:
+        try:
+          line = bline.decode()
+        except UnicodeDecodeError as e:
+          continue
+        count += len(line)
+        pbar.update(count)
+        if (not ("XALT_LOGGING" in line)):
+          continue
+        try:
+          t, done = parseSyslog.parse(line, args.syshost, old)
+        except Exception as e:
+          print("xalt_syslog_to_db: Error:", e)
+          print(traceback.format_exc())
+          badsyslog += 1
+          continue
+        
+        if (not done):
+          continue
 
-      try:
-        XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
+        ##################################
+        # If the json conversion fails,
+        # then ignore record and keep going
+        try:
+          value = json.loads(t['value'])
+        except Exception as e:
+          continue
 
-        if ( t['kind'] == "link" ):
-          XALT_Stack.push("link_to_db()")
-          xalt.link_to_db(rmapT, value)
+        try:
+          XALT_Stack.push("XALT_LOGGING: " + t['kind'] + " " + t['syshost'])
+
+          if ( t['kind'] == "link" ):
+            XALT_Stack.push("link_to_db()")
+            xalt.link_to_db(args.debug, rmapT, value)
+            XALT_Stack.pop()
+            lnkCnt += 1
+          elif ( t['kind'] == "run" ):
+            XALT_Stack.push("run_to_db()")
+            runTime = value['userDT']['run_time']
+
+            if (args.filter and runTime >= 1800.0 and runTime <= 3600.0 ):
+               if (random.random() > 0.01):
+                 continue
+               else:
+                 value['userDT']['probability'] = 0.01
+
+            stored, dups = xalt.run_to_db(args.debug, rmapT, u2acctT, value, timeRecord)
+            XALT_Stack.pop()
+            if (stored):
+              runCnt += 1
+            if (dups):
+              dupCnt += 1
+
+          elif ( t['kind'] == "pkg" ):
+            XALT_Stack.push("pkg_to_db()")
+            xalt.pkg_to_db(args.debug, t['syshost'], value)
+            XALT_Stack.pop()
+            pkgCnt += 1
+          else:
+            print("Error in xalt_syslog_to_db", file=sys.stderr)
           XALT_Stack.pop()
-          lnkCnt += 1
-        elif ( t['kind'] == "run" ):
-          XALT_Stack.push("run_to_db()")
-          runTime = value['userDT']['run_time']
-
-          if (args.filter and runTime >= 1800.0 and runTime <= 3600.0 ):
-             if (random.random() > 0.01):
-               continue
-             else:
-               value['userDT']['probability'] = 0.01
-
-          stored = xalt.run_to_db(rmapT, u2acctT, value, timeRecord)
-          XALT_Stack.pop()
-          if (stored):
-            runCnt += 1
-        elif ( t['kind'] == "pkg" ):
-          XALT_Stack.push("pkg_to_db()")
-          xalt.pkg_to_db(t['syshost'], value)
-          XALT_Stack.pop()
-          pkgCnt += 1
-        else:
-          print("Error in xalt_syslog_to_db", file=sys.stderr)
-        XALT_Stack.pop()
-      except Exception as e:
-        print(e, file=sys.stderr)
-        print(traceback.format_exc())
-        badCnt += 1
-
-
-    f.close()
+        except Exception as e:
+          print(e, file=sys.stderr)
+          print(traceback.format_exc())
+          badCnt += 1
 
   pbar.fini()
 
@@ -520,7 +596,8 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
-          ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog)
+        ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,
+        ", leftovers: ",parseSyslog.num_leftover())
   timeRecord.print()
         
   

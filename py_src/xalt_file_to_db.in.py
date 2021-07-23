@@ -53,6 +53,7 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../site")))
 
+from ansi          import Fore, Style
 from Rmap_XALT     import Rmap
 from XALTdb        import XALTdb
 from XALTdb        import TimeRecord
@@ -78,7 +79,9 @@ def __LINE__():
 def __FILE__():
     return inspect.currentframe().f_code.co_filename
 
-libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
+#print ("file: '%s', line: %d" % (__FILE__(), __LINE__()), file=sys.stderr)
+
+#libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -91,6 +94,8 @@ class CmdLineOptions(object):
     """ Specify command line arguments and parse the command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--delete",      dest='delete',  action="store_true", help="delete files after reading")
+    parser.add_argument("-D",            dest='debug',   action="store_true", help="Debug Flag")
+    parser.add_argument("--testing",     dest='testing', action="store_true", help="Testing Flag")
     parser.add_argument("--timer",       dest='timer',   action="store_true", help="Time runtime")
     parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
@@ -111,7 +116,7 @@ def keep_or_delete(fn, deleteFlg):
   if (delta > 86400 and deleteFlg):
     os.remove(fn)
 
-def check_string_w_crc(s, crcStr):
+def check_string_w_crc(s, crcStr, debug):
   if (not crcStr):
     return True
 
@@ -119,35 +124,44 @@ def check_string_w_crc(s, crcStr):
   ss     = '{"crc":"0xFFFF"' + s[15:]
   myLen = len(ss)
   data  = ss.encode()
-  c     = libcrc.crcFast(c_char_p(data), myLen)
-  return crcV == c
+  c     = libcrc.crcFast(c_char_p(data), myLen) & 0xFFFF
+  iret  = crcV == c
+  if ((not iret) and debug):
+    print("  --> crcStr:",crcStr.lower()," computed crc:",hex(c))
+    
+  return iret
 
 
-def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, active, pbar):
+def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT, active, pbar):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
 
   @param xalt:        An XALTdb object.
-  @param listFn:      A flag that causes the name of the file to be written to stderr.
+  @param debug:       A flag that prints status of each record.
+  @param listFn:      A flag that causes the name of the file to be written to stdout.
   @param reverseMapT: The Reverse Map Table.
   @param deleteFlg:   A flag that says to delete files after processing.
   @param linkFnA:     An array of link file names
 
   """
-  num = 0
-  query = ""
+  num    = 0
+  query  = ""
 
   try:
     for fn in linkFnA:
-      if (listFn):
-        sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)   # push fn
 
       try:
         f     = open(fn,"r")
       except:
+        sys.stdout.write(fn+"\n")
+        sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
   
+      if (listFn or debug):
+        sys.stdout.write(fn+"\n")
+        if (debug): sys.stdout.write("  --> Trying to open file\n")
+        if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
       try:
         s     = f.read().rstrip()
@@ -155,18 +169,26 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, activ
       except:  
         f.close()
         v = XALT_Stack.pop()
-        keep_or_delete(fn, deleteFlg)
+        if (debug):
+          sys.stdout.write("  --> failed to record: Bad json\n")
+        else:
+          keep_or_delete(fn, deleteFlg)
         continue
 
       f.close()
-      if (not check_string_w_crc(s, linkT.get('crc'))):
-        continue;
 
-      xalt.link_to_db(reverseMapT, linkT)
+      #if (debug):   sys.stdout.write("  --> Checking CRC\n")
+      #if (not check_string_w_crc(s, linkT.get('crc'), debug) ):
+      #  if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
+      #  continue;
+
+      if (debug):
+        sys.stdout.write("  --> Sending record to xalt.link_to_db()\n")
+      xalt.link_to_db(debug, reverseMapT, linkT)
       num  += 1
       if (active):
         countT['any'] += 1
-        pbar.update(countT['any'])
+        if (not debug): pbar.update(countT['any'])
 
       try:
         if (deleteFlg):
@@ -185,11 +207,12 @@ def link_json_to_db(xalt, listFn, reverseMapT, deleteFlg, linkFnA, countT, activ
     sys.exit (1)
   return num
 
-def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pbar):
+def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, active, pbar):
   """
   Reads in each link file name and converts json to python table and sends it to be written to DB.
 
   @param xalt:        An XALTdb object.
+  @param debug:       A flag that prints status of each record.
   @param listFn:      A flag that causes the name of the file to be written to stderr.
   @param syshost:     The name of the cluster being processed.
   @param deleteFlg:   A flag that says to delete files after processing.
@@ -201,7 +224,7 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pba
 
   try:
     for fn in pkgFnA:
-      if (listFn):
+      if (listFn or debug):
         sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)   # push fn
 
@@ -217,18 +240,21 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pba
       except:  
         f.close()
         v = XALT_Stack.pop()
-        keep_or_delete(fn, deleteFlg)
+        if (debug):
+          sys.stdout.write("  --> failed to record: Bad json\n")
+        else:
+          keep_or_delete(fn, deleteFlg)
         continue
 
       f.close()
-      if (not check_string_w_crc(s, pkgT.get('crc'))):
-        continue;
+      #if (not check_string_w_crc(s, pkgT.get('crc'), debug) ):
+      #  continue;
 
-      xalt.pkg_to_db(syshost, pkgT)
+      xalt.pkg_to_db(debug, syshost, pkgT)
       num  += 1
       if (active):
         countT['any'] += 1
-        pbar.update(countT['any'])
+        if (not debug): pbar.update(countT['any'])
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -247,30 +273,36 @@ def pkg_json_to_db(xalt, listFn, syshost, deleteFlg, pkgFnA, countT, active, pba
   return num
 
 
-def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT, active, pbar, timeRecord):
+def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT, active, pbar, timeRecord):
   """
   Reads in each run file name and converts json to python table and sends it to be written to DB.
 
   @param xalt:        An XALTdb object.
-  @param listFn:      A flag that causes the name of the file to be written to stderr.
+  @param debug:       A flag that prints status of each record.
+  @param listFn:      A flag that causes the name of the file to be written to stdout.
   @param reverseMapT: The Reverse Map Table.
   @param u2acctT:     The map for user to default account string
   @param deleteFlg:   A flag that says to delete files after processing.
   @param runFnA:      An array of run file names
 
   """
-  num   = 0
-  query = ""
+  dupCnt = 0
+  num    = 0
+  query  = ""
   try:
     for fn in runFnA:
-      if (listFn):
-        sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)
       try:
         f      = open(fn,"r")
       except:
+        sys.stdout.write(fn+"\n")
+        sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
+      if (listFn or debug):
+        sys.stdout.write(fn+"\n")
+        if (debug): sys.stdout.write("  --> Trying to open file\n")
+        if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
       try:
         s    = f.read().rstrip()
@@ -278,14 +310,23 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT
       except:
         f.close()
         v = XALT_Stack.pop()
-        keep_or_delete(fn, deleteFlg)
+        if (debug):
+          sys.stdout.write("  --> failed to record: Bad json\n")
+        else:
+          keep_or_delete(fn, deleteFlg)
         continue
       f.close()
 
-      if (not check_string_w_crc(s, runT.get('crc'))):
-        continue;
       
-      stored = xalt.run_to_db(reverseMapT, u2acctT, runT, timeRecord)
+      #if (debug):   sys.stdout.write("  --> Checking CRC\n")
+      #if (not check_string_w_crc(s, runT.get('crc'), debug) ):
+      #  if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
+      #  continue;
+      
+      if (debug):
+        sys.stdout.write("  --> Sending record to xalt.run_to_db()\n")
+      stored, dups = xalt.run_to_db(debug, reverseMapT, u2acctT, runT, timeRecord)
+
       try:
         if (deleteFlg):
           os.remove(fn)
@@ -293,9 +334,11 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT
         pass
       if (active):
         countT['any'] += 1
-        pbar.update(countT['any'])
+        if (not debug): pbar.update(countT['any'])
       if (stored):
         num += 1
+      if (dups):
+        dupCnt += 1
         
       v = XALT_Stack.pop()  
       carp("fn",v)
@@ -306,7 +349,7 @@ def run_json_to_db(xalt, listFn, reverseMapT, u2acctT, deleteFlg, runFnA, countT
     print ("run_json_to_db(): Error:",e)
     print(traceback.format_exc())
     sys.exit (1)
-  return num
+  return num, dupCnt
 
 def passwd_generator():
   """
@@ -348,23 +391,33 @@ def build_resultDir(hdir, transmission, kind):
 
   return os.path.join(prefix,tail)
 
-def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord):
+def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord):
+
+  xaltDir = build_resultDir(homeDir, transmission, "")
+  if (username and args.debug):
+    sys.stdout.write("\nSearching for *.json files for "+username+" in "+xaltDir+"\n")
 
   active = True
   if (homeDir):
     countT['any'] += 1
-    pbar.update(countT['any'])
+    if (not args.debug): pbar.update(countT['any'])
     active = False
   
 
-  xaltDir = build_resultDir(homeDir, transmission, "link")
+  linkCnt = 0
+  runCnt  = 0
+  pkgCnt  = 0
   XALT_Stack.push("Directory: " + xaltDir)
 
+  xaltDir = build_resultDir(homeDir, transmission, "link")
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("link_json_to_db()")
+    if (args.debug): sys.stdout.write("Searching for */link.*.json file in "+xaltDir+"\n")
     linkFnA         = files_in_tree(xaltDir, "*/link." + args.syshost + ".*.json")
     linkFnA.sort()
-    countT['lnk']  += link_json_to_db(xalt, args.listFn, rmapT, args.delete, linkFnA, countT, active, pbar)
+    linkCnt         = len(linkFnA)
+    if (args.debug): sys.stdout.write("  --> Found "+str(linkCnt)+" link.*.json files\n\n")
+    countT['lnk']  += link_json_to_db(xalt, args.debug, args.listFn, rmapT, args.delete, linkFnA, countT, active, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -372,10 +425,15 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
   XALT_Stack.push("Directory: " + xaltDir)
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("run_json_to_db()")
+    if (args.debug): sys.stdout.write("Searching for */run.*.json file in "+xaltDir+"\n")
     runFnA         = files_in_tree(xaltDir, "*/run." + args.syshost + ".*.json") 
     runFnA.sort();
-    countT['run'] += run_json_to_db(xalt, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
+    runCnt         = len(runFnA)
+    if (args.debug): sys.stdout.write("  --> Found "+str(runCnt)+" run.*.json files\n\n")
+    num, dups      = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
                                     countT, active, pbar, timeRecord)
+    countT['run']  += num
+    countT['dup']  += dups
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -383,13 +441,22 @@ def store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, 
   XALT_Stack.push("Directory: " + xaltDir)
   if (os.path.isdir(xaltDir)):
     XALT_Stack.push("pkg_json_to_db()")
+    if (args.debug): sys.stdout.write("Searching for */pkg.*.json file in "+xaltDir+"\n")
     pkgFnA         = files_in_tree(xaltDir, "*/pkg." + args.syshost + ".*.json") 
     pkgFnA.sort()
-    countT['pkg'] += pkg_json_to_db(xalt, args.listFn, args.syshost, args.delete, pkgFnA,
+    pkgCnt         = len(pkgFnA)
+    if (args.debug): sys.stdout.write("  --> Found "+str(pkgCnt)+" pkg.*.json files\n\n")
+    countT['pkg'] += pkg_json_to_db(xalt, args.debug, args.listFn, args.syshost, args.delete, pkgFnA,
                                     countT, active, pbar)
     XALT_Stack.pop()
   XALT_Stack.pop()
 
+  sum = linkCnt + runCnt + pkgCnt
+  if (args.debug and sum > 0):
+    extra = ""
+    if (username):
+      extra = " for user " + username
+    print("Storing the following "+str(sum)+" json files (run: "+str(runCnt)+", link: "+str(linkCnt)+", pkg: "+str(pkgCnt)+")"+extra)
 
 def main():
   """
@@ -407,10 +474,6 @@ def main():
     xaltUserStr    = ""
     
 
-  print ("\n################################################################")
-  print ("XALT Git Version: "+Version()                                      )
-  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr    )
-  print ("################################################################\n")
 
   # Find transmission style
   transmission = os.environ.get("XALT_TRANSMISSION_STYLE")
@@ -431,22 +494,61 @@ def main():
     sA.append('"'+v+'"')
   XALT_Stack.push(" ".join(sA))
 
-  args   = CmdLineOptions().execute()
-  xalt   = XALTdb(args.confFn)
+  args      = CmdLineOptions().execute()
+  xalt      = XALTdb(args.confFn)
+  extra_txt = ""
+  if (args.syshost != "*"):
+    extra_txt = " for "+args.syshost
 
+  num  = 0
+  szS = ""
   if (xalt_file_prefix == "USE_HOME"):
     num     = int(capture("LD_PRELOAD= getent passwd | wc -l"))
-    pbar    = ProgressBar(maxVal=num)
   else:
     xaltDir = build_resultDir("", transmission, "")
     allFnA  = files_in_tree(xaltDir, "*/*." + args.syshost + ".*.json")
-    pbar    = ProgressBar(maxVal=len(allFnA))
+    num     = len(allFnA)
+    szS     = "\n  Number of json files to process: " + str(num)
+  pbar    = ProgressBar(maxVal=num, fd=sys.stdout)
+
+  print ("\n################################################################" )
+  print ("XALT Git Version: "+Version()+extra_txt                             )
+  print ("  Using XALT_FILE_PREFIX: \""+xalt_file_prefix+"\""+xaltUserStr+szS )
+  print ("################################################################\n" )
+  if (xalt_file_prefix == "USE_HOME" and not args.testing):
+    print ("\n################################################################")
+    print (" Note using ~/.xalt.d to store result is fine for testing.")
+    print (" BUT do not use in production. There is a race condition")
+    print (" Please re-configure xalt to use --with-xaltFilePrefix=...")
+    print (" See https://xalt.readthedocs.io/en/latest/020_site_configuration.html for details")
+    print ("")
+    print (" Add the option --testing to silence this warning")
+    print ("################################################################\n")
 
   icnt   = 0
 
   t1     = time.time()
 
-  rmapT  = Rmap(args.rmapD).reverseMapT()
+  if (args.rmapD and not os.path.isdir(args.rmapD)):
+    print("\n\n  --> Error: the argument to --reverseMapD must be a directory --> Exiting")
+    sys.exit(1)
+
+  try:
+    rmapT  = Rmap(args.rmapD).reverseMapT()
+    if (args.rmapD and not rmapT):
+      banner  = Style.BRIGHT+Fore.RED+\
+         "#======================================================================#"+\
+          Style.RESET_ALL
+      warning = Style.BRIGHT+Fore.RED+"Warning:"+Style.RESET_ALL
+      print ("\n\n"+banner+"\n" +warning+" --reverseMapD argument specified but neither\n",
+             "         xalt_rmapT.json nor jsonReverseMapT.json files were found!\n",
+             "         -> continuing\n"+banner+"\n\n")
+
+  except Exception as e:
+    print(e, file=sys.stderr)
+    print("Failed to read reverseMap file -> exiting")
+    print(traceback.format_exc())
+    sys.exit(1)
 
   u2acctT = {}
   if (args.u2acct):
@@ -457,14 +559,15 @@ def main():
   countT = {}
   countT['lnk'] = 0
   countT['run'] = 0
+  countT['dup'] = 0
   countT['pkg'] = 0
   countT['any'] = 0
 
   if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
-      store_json_files(homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
+      store_json_files(user, homeDir, transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
   else:
-    store_json_files("", transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
+    store_json_files(None, "", transmission, xalt, rmapT, u2acctT, args, countT, pbar, timeRecord)
 
   xalt.connect().close()
   pbar.fini()
@@ -473,7 +576,7 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'])
+  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'] )
   timeRecord.print()
   
 

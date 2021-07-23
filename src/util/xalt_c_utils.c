@@ -39,6 +39,17 @@ int mkpath(char* file_path, mode_t mode)
   return 0;
 }
 
+const char* xalt_file_transmission_method()
+{
+  const char * xalt_file_prefix = getenv("XALT_FILE_PREFIX");
+  if (xalt_file_prefix == NULL)
+    xalt_file_prefix = XALT_FILE_PREFIX;
+  if (strcasecmp(xalt_file_prefix,"USE_HOME") == 0)
+    return "USE_HOME";
+  return "XALT_FILE_PREFIX";
+}
+
+
 void build_resultDir(char **resultDir, const char* kind, const char* transmission, const char* uuid_str)
 {
 

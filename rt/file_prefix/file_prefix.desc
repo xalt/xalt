@@ -13,12 +13,14 @@ test_descript = {
 
      initialize
 
-     installXALT --with-syshostConfig=nth_name:2 --with-primeNumber=11
-     displayThis "buildRmapT"
-     buildRmapT
-
      export XALT_TRANSMISSION_STYLE="file_separate_dirs"
      export XALT_FILE_PREFIX=$outputDir/DATA 
+
+     installXALT --with-syshostConfig=nth_name:2 --with-primeNumber=11 \
+                 --with-transmission=$XALT_TRANSMISSION_STYLE          \
+                 --with-xaltFilePrefix=$XALT_FILE_PREFIX
+     displayThis "buildRmapT"
+     buildRmapT
 
      export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
      PATH=$outputDir/XALT/xalt/xalt/bin:$outputDir/XALT/xalt/xalt/sbin:$(testDir)/bin:$PATH;
@@ -50,6 +52,9 @@ test_descript = {
      displayThis "mpirun -n 1 ./hello\ .mpi"
      mpirun -n 1 ./hello\ .mpi 
      
+     displayThis "XALT_TRACING=yes ./hello\ .mpi"
+     XALT_TRACING=yes ./hello\ .mpi 
+     
      displayThis "test_record_pkg"
      $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
 
@@ -61,7 +66,8 @@ test_descript = {
      displayThis "xalt_file_to_db.py"
      xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 2 --pkgs 3 --uuid 1
+     displayThis  "check_entries_db.py"
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 1 --runs 3 --pkgs 3 --uuid 1
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

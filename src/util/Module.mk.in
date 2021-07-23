@@ -41,7 +41,7 @@ CFG_RPT_X        := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
 CFG_RPT_CXX      := xalt_configuration_report.C
 CFG_RPT_CXX      := $(addprefix $(local_dir)/, $(CFG_RPT_CXX))
 CFG_RPT_C        := epoch.c capture.c xalt_dir.c buildJson.c xalt_quotestring.c xalt_c_utils.c
-CFG_RPT_C        := $(addprefix $(local_dir)/, $(CFG_RPT_C)) __build__/xalt_syshost.c
+CFG_RPT_C        := $(addprefix $(local_dir)/, $(CFG_RPT_C)) __build__/xalt_syshost.c linker/xalt_utils.C
 CFG_RPT_OBJ      := $(patsubst %.C, %.o, $(CFG_RPT_CXX)) \
                     $(patsubst %.c, %.o, $(CFG_RPT_C))
 

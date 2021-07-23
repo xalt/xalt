@@ -44,6 +44,7 @@ import os, sys, re, subprocess
 
 ignoreT = {
   "libc"      : True,
+  "libm"      : True,
   "libuuid"   : True,
   "libcurl"   : True,
   "libcrypto" : True,

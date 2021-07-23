@@ -1,1 +1,0 @@
-../../compiled/xalt_quotestring.c

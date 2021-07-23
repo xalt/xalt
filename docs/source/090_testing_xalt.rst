@@ -97,7 +97,7 @@ Step 6: run a program with XALT tracing turned on
 Normally XALT will produce no output but for testing you can run a program under XALT by doing the following::
 
     $ export LD_PRELOAD=$HOME/pkg/xalt/xalt/lib64/libxalt_init.so
-    $ XALT_TRACING=yes ./try
+    $ XALT_TRACING=yes XALT_SAMPLING=no ./try
 
 You should see something that looks like::
 

@@ -14,8 +14,8 @@ initialize()
 
   module unload xalt
 
-  rm -f  _stderr.* _stdout.* out.* err.* 
-  rm -rf .xalt.d syslog.* reverseMapD
+  rm -f  _stderr.* _stdout.* out.* err.* leftover.* \#* .\#*
+  rm -rf .xalt.d syslog.*
   rm -f $projectDir/src/*.o $projectDir/src/*.d $projectDir/libuuid/src/*.o
   XALT_EPOCH_T0=$(python3 $projectDir/rt/xalt_epoch.py)
 
@@ -34,10 +34,11 @@ displayThis()
 buildRmapT()
 {
   echo "<build xalt_rmapT.json file>"
-  mkdir reverseMapD
+  rm -rf reverseMapD
+  mkdir  reverseMapD
   MPATH=${LMOD_DEFAULT_MODULEPATH-$MODULEPATH}
   $LMOD_DIR/spider -o xalt_rmapT      $MPATH > $outputDir/reverseMapD/xalt_rmapT.json
-  #$LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
+  $LMOD_DIR/spider -o jsonReverseMapT $MPATH > $outputDir/reverseMapD/jsonReverseMapT.json
   echo "<finish>"
 }
 
@@ -49,7 +50,13 @@ installXALT()
   (cd build; echo "<configure>";
    echo $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
         $projectDir/configure --prefix $outputDir/XALT --with-etcDir=$outputDir --with-config=$projectDir/Config/rtm_config.py "$@" ; 
-   echo "<make>"; make -j 4 OPTLVL="-g -O0" install Inst_TACC Inst_RT;
+   
+   XALT_MAKE_PARALLEL=4
+   if [ -n "${XALT_BUILD_DEBUG+x}" ]; then
+     XALT_MAKE_PARALLEL=1
+   fi
+
+   echo "<make>"; make -j $XALT_MAKE_PARALLEL OPTLVL="-g -O0" install Inst_TACC Inst_RT;
    if  [ "$?" != 0 ]; then
        echo "make failed"
        touch $outputDir/.make_failed

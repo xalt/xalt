@@ -199,10 +199,23 @@ test_descript = {
      SYSHOST=`xalt_syshost`
      displayThis "SYSHOST: $SYSHOST"
 
-     displayThis "xalt_file_to_db.py"
-     xalt_file_to_db.py  --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
+     displayThis "xalt_file_to_db.py "
+     xalt_file_to_db.py  --testing --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 17 --runs 20 --pkgs 13 --uuid 16
+     displayThis "xalt_file_to_db.py -D"
+     rm -rf $(outputDir)/.orig.xalt.d
+     mv $(outputDir)/.xalt.d $(outputDir)/.orig.xalt.d
+     mkdir -p $(outputDir)/.xalt.d/run $(outputDir)/.xalt.d/link
+     cp $(testDir)/run.example.json $(outputDir)/.xalt.d/run/run.$SYSHOST.example.json
+     cp $(testDir)/run.example_2.json $(outputDir)/.xalt.d/run/run.$SYSHOST.example_2.json
+     cp $(testDir)/run.example_2.json $(outputDir)/.xalt.d/run/run.$SYSHOST.example_dup.json
+     cp $(testDir)/run.example_3.json $(outputDir)/.xalt.d/run/run.$SYSHOST.example_3.json
+     cp $(testDir)/link.example.json $(outputDir)/.xalt.d/link/link.$SYSHOST.example.json
+     xalt_file_to_db.py  -D --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
+
+
+     displayThis "check_entries_db.py"
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 18 --runs 23 --pkgs 13 --uuid 16
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

@@ -117,7 +117,7 @@ def main():
     print(tableName,":", count)
 
 
-  tableT['xalt_run'] = count_w_condition(conn,"xalt_run", "end_time > 0.0")
+  tableT['xalt_run'] = count_w_condition(conn,"xalt_run", None) #"end_time > 0.0")
   print("xalt_run :",tableT['xalt_run'])
 
   tableT['build_uuid'] = count_w_condition(conn,"xalt_run", "uuid is not null")
@@ -145,7 +145,7 @@ def main():
     tstFn = testT[key][1]
     my_result, kind = tstFn(value, goldV)
     if (not my_result):
-      sA.append("Not correct: "+key+": "+str(value)+" -> ( Should be: "+key+" "+kind+" "+str(goldV) + " )")
+      sA.append("Not correct: "+key+": "+str(value)+" -> ( Expecting: "+key+" "+kind+" "+str(goldV) + " )")
 
   if (sA):
     result = "diff"

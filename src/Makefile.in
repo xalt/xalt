@@ -110,13 +110,19 @@ COPY_ALL_LIBS: build_all
             cp $$i $(DESTDIR)$(LIB64);                                 \
           fi;                                                          \
         done
+	STATUS="";                                                     \
 	for i in $(CRYPTO_STR) $(UUID_STR) $(CURL_STR) $(GPU_STR) ; do \
 	  baseNM="$${i%%:*}";                                          \
           realNM="$${i##*:}";                                          \
-	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64)              \
+	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64) --verbose    \
                                --base $$baseNM                         \
                                --real $$realNM;                        \
-        done
+	  if [ $$? != 0 ]; then STATUS=FAILURE; break; fi              \
+        done;                                                          \
+        if [ -n "$$STATUS" ]; then                                     \
+           echo "Failed to copy libraries into $(DESTDIR)$(LIB64)";    \
+           false;                                                      \
+        fi
 
 %.d: %.c
 	@rm -f $@;                                                       \

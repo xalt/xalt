@@ -152,8 +152,10 @@ You need to tell XALT how you want to transmit the generated
 data.  There are two choices: either file or syslog.  For testing it
 is best to the the "file" transmission style.  By default XALT will
 write json records in files in the ~/.xalt.d directory.  XALT will
-create that directory if needed.  It is also possible for XALT to
-write all json records into a globally writable location by using the
+create that directory if needed.  Sites should use the "file"
+transmission style and write results to ~/.xalt.d for testing. In
+production sites using the "file" style should use write all json
+records into a globally writable location by using the 
 --with-xaltFilePrefix=/path/to/json/files.  If this is set to
 /global/xalt then XALT will write json files in a series of
 directories under */global/xalt/*. In particular, the program::
@@ -162,6 +164,11 @@ directories under */global/xalt/*. In particular, the program::
 
 is used to create a prime number of directories named 000 to 996
 (typically) where the json result files are written.
+
+  **NOTE**: It is important that whatever directory your site uses for
+  the xaltFilePrefix (e.g. */global/xalt*) be a global shared location
+  that all users can see.  XALT will cause files to be written to this
+  directory tree by every user.
 
 
 So you should probably start with the following for testing to write
@@ -180,6 +187,10 @@ To place each kind of result file in a separate directory do::
 Note that if your site uses **--with-xaltFilePrefix=...** then you
 must create the directories during the installation process.  See 
 :ref:`createXALTdirs` for more information.
+
+  **NOTE**: Sites using "file" transmission style should also
+  use --with-xaltFilePrefix=... in production.
+
 
 To write records to syslog do::
 

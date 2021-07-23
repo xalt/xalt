@@ -5,8 +5,8 @@
  * Description: Fast implementations of the CRC standards.
  *
  * Notes:       The parameters for each supported CRC standard are
- *				defined in the header file crc.h.  The implementations
- *				here should stand up to further additions to that list.
+ *                              defined in the header file crc.h.  The implementations
+ *                              here should stand up to further additions to that list.
  *
  * 
  * Copyright (c) 2000 by Michael Barr.  This software is placed into
@@ -25,18 +25,18 @@
 
 #if (REFLECT_DATA == TRUE)
 #undef  REFLECT_DATA
-#define REFLECT_DATA(X)			((unsigned char) reflect((X), 8))
+#define REFLECT_DATA(X)                 ((unsigned char) reflect((X), 8))
 #else
 #undef  REFLECT_DATA
-#define REFLECT_DATA(X)			(X)
+#define REFLECT_DATA(X)                 (X)
 #endif
 
 #if (REFLECT_REMAINDER == TRUE)
 #undef  REFLECT_REMAINDER
-#define REFLECT_REMAINDER(X)	((crc) reflect((X), WIDTH))
+#define REFLECT_REMAINDER(X)    ((crc) reflect((X), WIDTH))
 #else
 #undef  REFLECT_REMAINDER
-#define REFLECT_REMAINDER(X)	(X)
+#define REFLECT_REMAINDER(X)    (X)
 #endif
 
                           
@@ -77,7 +77,7 @@ crc crcTable[256] = {
 
 crc crcFast(char const message[], int nBytes)
 {
-    crc	           remainder = INITIAL_REMAINDER;
+    crc            remainder = INITIAL_REMAINDER;
     unsigned char  data;
     int            byte;
 
@@ -88,14 +88,12 @@ crc crcFast(char const message[], int nBytes)
     for (byte = 0; byte < nBytes; ++byte)
     {
         data = REFLECT_DATA(message[byte]) ^ (remainder >> (WIDTH - 8));
-  		remainder = crcTable[data] ^ (remainder << 8);
+                remainder = crcTable[data] ^ (remainder << 8);
     }
 
     /*
      * The final remainder is the CRC.
      */
-    return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE);
+    return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE) & 0xFFFF;
 
 }   /* crcFast() */
-
-

@@ -96,6 +96,7 @@ prev=
 done=false
 BIT32FLAG=
 GCC32FLAG=
+EXTRA_SYSLIB=
 for option
 do
   if [ -n "$prev" ]; then
@@ -120,6 +121,10 @@ do
       ;;
     --trace|-t)
       USER_TRACE="true"
+      ;;
+
+    -static)
+      EXTRA_SYSLIB="-lgcc"
       ;;
 
     elf_i386)
@@ -302,14 +307,14 @@ if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
 fi
 
 
-tracing_msg "$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1"
-$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ  $LIBDCGM -t > $LINKLINE_OUT  2>&1
+tracing_msg "$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1"
+             $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    tracing_msg "Bad status when capturing tracing link output"
-   tracing_msg $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
-   $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $LIBDCGM 
+   tracing_msg $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
+               $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
    exit $status
 fi
 

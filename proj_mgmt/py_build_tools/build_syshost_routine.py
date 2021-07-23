@@ -69,7 +69,7 @@ def add_hostname_routine(sA):
   sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("#include \"xalt_c_utils.h\"")
   sA.append("")
-  sA.append("char * hostname()")
+  sA.append("static char * hostname()")
   sA.append("{")
   sA.append("  char* my_hostname;")
   sA.append("  struct addrinfo hints, *info;")

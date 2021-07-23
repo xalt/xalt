@@ -1,5 +1,4 @@
 #include "buildXALTRecordT.h"
-#include "capture.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

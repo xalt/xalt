@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "utarray.h"
+#include "capture.h"
 #define DATA_SIZE 1024
 
 void capture(const char* cmdline, UT_array** p_resultA)

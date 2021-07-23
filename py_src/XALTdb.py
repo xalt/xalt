@@ -219,7 +219,7 @@ class XALTdb(object):
     """ Return name of db"""
     return self.__db
 
-  def link_to_db(self, reverseMapT, linkT):
+  def link_to_db(self, debug, reverseMapT, linkT):
     """
     Stores the link table data into the XALT db
     @param reverseMapT: The reverse map table that maps directories to modules
@@ -237,20 +237,25 @@ class XALTdb(object):
         resultT    = linkT
 
       
+      if (debug): sys.stdout.write("  --> Trying to connect to database\n")
       conn   = self.connect()
       cursor = conn.cursor()
+
+      if (debug): sys.stdout.write("  --> Starting TRANSACTION\n")
       query  = 'USE '+self.db()
       conn.query(query)
       query  = 'START TRANSACTION'
       conn.query(query)
       query  = ""
       
+      if (debug): sys.stdout.write("  --> Searching for build_uuid in db\n")
       uuid   = resultT['uuid'][:36]
       msg    = "my uuid is: \"" + uuid + "\""
       query  = "SELECT uuid FROM xalt_link WHERE uuid=%s"
       cursor.execute(query, [uuid])
       query  = ""
       if (cursor.rowcount > 0):
+        if (debug): sys.stdout.write("  --> failed to record: build_uuid already recorded.\n\n")
         return
 
       build_epoch = float(resultT['build_epoch'])
@@ -267,6 +272,7 @@ class XALTdb(object):
       build_shost = resultT.get('build_syshost',"").encode("ascii","ignore")
       hash_id     = resultT.get('hash_id')
 
+      if (debug): sys.stdout.write("  --> Trying to insert link record into db\n")
       # It is unique: lets store this link record
       query = "INSERT into xalt_link VALUES (NULL, %s,%s,%s, %s,%s,%s, COMPRESS(%s),%s,%s, %s,%s,%s)"
       cursor.execute(query, (uuid,        hash_id,     dateTimeStr, 
@@ -274,15 +280,18 @@ class XALTdb(object):
                              link_line,   cwd,         build_user,
                              build_shost, build_epoch, exec_path))
 
+      if (debug): sys.stdout.write("  --> Success: link recorded\n")
       query   = ""
       link_id = cursor.lastrowid
 
+      if (debug): sys.stdout.write("  --> Trying to insert objects into db\n")
       XALT_Stack.push("load_xalt_objects():"+resultT['exec_path'])
       self.load_objects(conn, linkA, reverseMapT, resultT['build_syshost'], dateStr,
                         "join_link_object", link_id)
       v = XALT_Stack.pop()  # unload function()
       carp("load_xalt_objects()",v)
       
+      if (debug and len(functionA) > 0): sys.stdout.write("  --> Trying to insert functions into db\n")
       # store tracked functions
       for func_name in functionA:
         query = "SELECT func_id FROM xalt_function WHERE function_name=%s"
@@ -306,6 +315,7 @@ class XALTdb(object):
       query = ""
       
       conn.close()
+      if (debug): sys.stdout.write("  --> Done\n\n")
 
     except Exception as e:
       print(XALT_Stack.contents(), file=sys.stderr)
@@ -369,7 +379,7 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-  def run_to_db(self, reverseMapT, u2acctT, runT, timeRecord):
+  def run_to_db(self, debug, reverseMapT, u2acctT, runT, timeRecord):
     """
     Store the "run" data into the database.
     @param: reverseMapT: The map between directories and modules
@@ -379,22 +389,27 @@ class XALTdb(object):
     msg   = ""
     query = ""
     try:
+      if (debug): sys.stdout.write("  --> Trying to connect to database\n")
       conn     = self.connect()
       cursor   = conn.cursor()
       query    = "USE "+self.db()
       conn.query(query)
+      if (debug): sys.stdout.write("  --> Starting TRANSACTION\n")
       query    = "START TRANSACTION"
       conn.query(query)
       query    = ""
       stored   = False 
       recordMe = False 
+      dup      = False
 
       if (not ('userT' in runT)):
-        return stored
+        if (debug): sys.stdout.write("  --> failed to record: No userT in runT --> FAILURE\n\n")
+        return stored, dup
       userT = runT['userT']
 
       if (not ('userDT' in runT)):
-        return stored
+        if (debug): sys.stdout.write("  --> failed to record: No userDT in runT --> FAILURE\n\n")
+        return stored, dup
       userDT = runT['userDT']
 
       XALT_Stack.push("SUBMIT_HOST: "+ userT['submit_host'])
@@ -406,7 +421,9 @@ class XALTdb(object):
       endTimeStr  = "%.2f" % (endTime)
       startTime   = userDT.get('start_time',0.0)
       if (startTime < 1):
-        return stored
+        if (debug): sys.stdout.write("  --> failed to record: startTime epoch is < 1 second\n\n")
+        v = XALT_Stack.pop()  
+        return stored, dup
 
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(startTime))
       dateStr     = time.strftime("%Y-%m-%d",          time.localtime(startTime))
@@ -416,14 +433,21 @@ class XALTdb(object):
 
       run_uuid    = userT.get('run_uuid',"UNKNOWN")[:36]
       if (run_uuid == "UNKNOWN"):
-        return stored
+        if (debug): sys.stdout.write("  --> failed to record: run_uuid is UNKNOWN --> FAILURE\n\n")
+        v = XALT_Stack.pop()  
+        carp("SUBMIT_HOST",v)
+        return stored, dup
       uuid_patt = self.__patt
       m         = uuid_patt.match(run_uuid)
       if (not m):
-        return stored
+        if (debug): sys.stdout.write("  --> failed to record: run_uuid does not match uuid pattern --> FAILURE\n\n")
+        v = XALT_Stack.pop()  
+        return stored, dup
 
+
+      if (debug): sys.stdout.write("  --> Searching for run_uuid in db\n")
       msg         = "my run_uuid is: \"" + run_uuid + "\""
-      query       = "SELECT run_id FROM xalt_run WHERE run_uuid=%s"
+      query       = "SELECT run_id, end_time FROM xalt_run WHERE run_uuid=%s"
       cursor.execute(query,[run_uuid])
       query       = ""
       msg         = ""
@@ -432,12 +456,27 @@ class XALTdb(object):
       num_gpus    = convertToTinyInt(userDT.get('num_gpus',   0))
       exec_path   = userT.get('exec_path')
       if (not exec_path):
-        return stored
+        if (debug): sys.stdout.write("  --> failed to record: No exec_path found --> FAILURE\n\n")
+        v = XALT_Stack.pop()  
+        carp("SUBMIT_HOST",v)
+        return stored, dup
 
+      if (debug): sys.stdout.write("  --> Trying to insert run record into db\n")
       if (cursor.rowcount > 0):
         #print("found")
-        row    = cursor.fetchone()
-        run_id = int(row[0])
+        row        = cursor.fetchone()
+        run_id     = int(row[0])
+        my_endTime = float(row[1])
+
+        # So either there is an end record already in the database (my_endTime > 0)
+        # OR we are trying to insert a duplicate start record. (endTime is zero).
+        if (my_endTime > 0 or endTime < 0.1):
+          dup = True
+          if (debug): sys.stdout.write("  --> Duplicate run_uuid, not recorded --> FAILURE\n\n")
+          v = XALT_Stack.pop()  
+          carp("SUBMIT_HOST",v)
+          return stored, dup
+
         if (endTime > 0):
           query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s, num_gpus=%s WHERE run_id=%s" 
           cursor.execute(query,(runTimeStr, endTimeStr, num_threads, num_gpus, run_id))
@@ -446,10 +485,12 @@ class XALTdb(object):
           query = ""
           recordMe = True 
           timeRecord.add(num_cores, runTime)
+          
         v = XALT_Stack.pop()
         carp("SUBMIT_HOST",v)
 
-        return
+        if (debug): sys.stdout.write("  --> Success: updated run_time\n")
+        return stored, dup
       else:
         #print("not found")
         moduleName    = obj2module(exec_path, reverseMapT)
@@ -489,9 +530,11 @@ class XALTdb(object):
         stored   = True
         recordMe = True 
 
+      if (debug): sys.stdout.write("  --> Success: stored full xalt_run record\n")
       if (recordMe and endTime > 0):
         timeRecord.add(num_cores, runTime)
 
+      if (debug): sys.stdout.write("  --> Trying to insert objects into db\n")
       self.load_objects(conn, runT['libA'], reverseMapT, runT['userT']['syshost'], dateStr,
                         "join_run_object", run_id)
 
@@ -502,6 +545,7 @@ class XALTdb(object):
       #query   = "INSERT INTO xalt_total_env VALUES(NULL, %s, %s, COMPRESS(%s))"
       #cursor.execute(query, [run_id, dateStr, jsonStr])
       
+      if (debug): sys.stdout.write("  --> Trying to insert env vars into db\n")
       # loop over env. vars.
       for key in envT:
 
@@ -530,8 +574,11 @@ class XALTdb(object):
       conn.query(query)
       query = ""
       conn.close()
+      if (debug): sys.stdout.write("  --> Done\n\n")
+      
 
     except Exception as e:
+      if (debug): sys.stdout.write("  --> Exception\n")
       print(XALT_Stack.contents(),file=sys.stderr)
       print("query: ",query,file=sys.stderr)
       print("msg: ",msg,   file=sys.stderr)
@@ -542,9 +589,9 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-    return stored
+    return stored, dup
 
-  def pkg_to_db(self, syshost, pkgT):
+  def pkg_to_db(self, debug, syshost, pkgT):
 
     try:
       conn   = self.connect()
@@ -574,6 +621,9 @@ class XALTdb(object):
         query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
         cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))
         query  = ""
+        if (debug): sys.stdout.write("  --> Success: pkg entry stored\n")
+      else:
+        if (debug): sys.stdout.write("  --> failed to record: No run_uuid to connect packages to\n")
         
       v = XALT_Stack.pop()
       carp("SYSHOST",v)

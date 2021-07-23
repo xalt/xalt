@@ -76,12 +76,13 @@ def files_in_tree(path,pattern):
 def readlink_recursive(fn, dirNm):
   if (os.path.islink(fn)):
     newFn = os.readlink(fn)
-    if (newFn.find('/') == -1):
+    if (newFn[0:1] != '/'):
       newFn = os.path.join(dirNm,newFn)
     if (os.path.islink(newFn)):
-      newFn = readlink_recursive(newFn, dirNm)
-    return newFn
-
+      pair = os.path.split(newFn)
+      newFn = readlink_recursive(newFn, pair[0])
+    return os.path.realpath(newFn)
+  return fn
 def main():
 
   args      = CmdLineOptions().execute()
@@ -104,7 +105,7 @@ def main():
     if (os.path.islink(fn)):
       newFn = readlink_recursive(fn, dirNm)
       if (os.path.isfile(newFn)):
-        if (fileT[newFn]):
+        if (fileT.get(newFn)):
           cmd = "cp "+newFn+" "+lib64_dir
           if (verbose): print (" ",cmd)
           subprocess.call(cmd, shell=True)

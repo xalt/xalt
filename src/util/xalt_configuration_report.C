@@ -8,6 +8,7 @@
 #include "xalt_regex.h"
 #include "xalt_version.h"
 #include "xalt_interval.h"
+#include "xalt_utils.h"
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -16,6 +17,11 @@
 #include "epoch.h"
 #include "buildJson.h"
 #include "utarray.h"
+
+
+//the following are ASCII terminal color codes.
+#define RESET       "\033[0m"
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
 
 static const char* blank0      = "";
 static const char* comma       = ",";
@@ -141,6 +147,17 @@ int main(int argc, char* argv[])
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
+  const char * rmapT_str = "false";
+  bool found_rmapT = false;
+  std::string rmapD = ""; // If this is an empty string then XALT_ETC_DIR is used to specify location of rmapD
+  FILE *fp = xalt_json_file_open(rmapD, "reverseMapD/xalt_rmapT");
+  if (fp)
+    {
+      fclose(fp);
+      found_rmapT = true;
+      rmapT_str   = "true";
+    }
+
   const char* xalt_mpi_tracking = getenv("XALT_MPI_TRACKING");
   if (xalt_mpi_tracking == NULL)
     xalt_mpi_tracking = XALT_MPI_TRACKING;
@@ -248,6 +265,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "UUID_STR",                 UUID_STR);
       json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
+      json_add_char_str(&json, my_sep,   "FOUND_RmapT",              rmapT_str);
 
       json_add_array(&json, my_sep,   "hostnameA",    hostnameSz,      hostnameA);
       json_add_array(&json, my_sep,   "pathPatternA", pathPatternSz,   pathPatternA);
@@ -305,7 +323,21 @@ int main(int argc, char* argv[])
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
   std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
+  if (found_rmapT)
+    std::cout << "Found xalt_rmapT.json:           " << rmapT_str                    << "\n";
+  else
+    std::cout << BOLDRED << "Found xalt_rmapT.json:           " << rmapT_str << RESET <<"\n";
+    
   std::cout << "*------------------------------------------------------------------------------*\n\n";
+
+  if (! found_rmapT)
+    std::cout << "\n*------------------------------------------------------------------------------*\n"
+              << BOLDRED << "Note: " << RESET
+              << "Since XALT cannot find xalt_rmapT.json, function_tracking is turned off\n"
+              << "*------------------------------------------------------------------------------*\n\n";
+    
+
+
 
   std::cout << "*------------------------------------------------------------------------------*\n"
             << "Note: The patterns above the equal signs in each array come from XALT_CONFIG_PY\n"
