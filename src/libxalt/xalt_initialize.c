@@ -311,7 +311,7 @@ void myinit(int argc, char **argv)
       if (uname(&u) != 0)
         {
           reject_flag = XALT_UNAME_FAILURE;
-          DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          DEBUG(stderr, "    -> uname had a failure -> exiting\n}\n\n");
           return;
         }
 
