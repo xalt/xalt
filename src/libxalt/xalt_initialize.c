@@ -311,7 +311,7 @@ void myinit(int argc, char **argv)
       if (uname(&u) != 0)
         {
           reject_flag = XALT_UNAME_FAILURE;
-          DEBUG(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
           return;
         }
 
@@ -340,7 +340,7 @@ void myinit(int argc, char **argv)
    ***********************************************************/
 
   v = getenv("__XALT_INITIAL_STATE__");
-  DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
+  DEBUG(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if another myinit() routine has been called with my pid and hostname*/
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
