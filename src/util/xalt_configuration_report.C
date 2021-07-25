@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
   if (log_url == NULL)
     log_url = XALT_LOGGING_URL;
 
-  long        always_record     = mpi_always_record;
+  long        always_record     = xalt_mpi_always_record;
   const char *always_record_str = getenv("XALT_MPI_ALWAYS_RECORD");
   if (always_record_str)
     always_record = strtol(always_record_str, (char **) NULL, 10);

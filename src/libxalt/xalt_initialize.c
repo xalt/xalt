@@ -744,7 +744,7 @@ void myinit(int argc, char **argv)
   if (v)
     testing_runtime = strtod(v,NULL);
 
-  always_record = mpi_always_record;
+  always_record = xalt_mpi_always_record;
   v = getenv("XALT_MPI_ALWAYS_RECORD");
   if (v)
     always_record = strtol(v,(char **) NULL, 10);
@@ -771,7 +771,7 @@ void myinit(int argc, char **argv)
       
       run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
                      xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
-                     stderr);
+                     always_record, stderr);
 
       DEBUG(stderr,"    -> uuid: %s\n", uuid_str);
     }
@@ -1111,7 +1111,7 @@ void myfini()
   xalt_timer.fini = epoch() - t0;
   run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
-                 usr_cmdline, xalt_tracing, my_stderr);
+                 usr_cmdline, xalt_tracing, always_record, my_stderr);
   DEBUG(my_stderr,"    -> leaving myfini\n}\n\n");
   build_uuid_cleanup();
   fflush(my_stderr);
@@ -1288,7 +1288,7 @@ static  double prgm_sample_probability(int ntasks, double runtime)
    */
 
 
-  interval (*p_interval)[];
+  interval_t (*p_interval)[];
   if (ntasks > 1)
     {
       sz         = mpi_rangeSz;

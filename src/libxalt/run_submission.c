@@ -23,7 +23,6 @@
 #include "xalt_c_utils.h"
 #include "xalt_tmpdir.h"
 #include "xalt_fgets_alloc.h"
-#include "xalt_interval_const.h"
 #include "buildUserT.h"
 #include "transmit.h"
 
@@ -36,7 +35,7 @@ static bool        need_sha1 = true;
 
 void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
                     char* exec_path, int num_tasks, int num_gpus, const char* xalt_kind, const char* uuid_str,
-                    const char* watermark, const char* usr_cmdline, int xalt_tracing, FILE* my_stderr)
+                    const char* watermark, const char* usr_cmdline, int xalt_tracing, long mpi_always_record, FILE* my_stderr)
 {
   bool           end_record   = (end_time > 0.0);
   const char*    suffix       = end_record ? ".zzz" : ".aaa";
@@ -153,12 +152,8 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   //*********************************************************************
   // Record QA data in json string.
   insert_key_string(&qaT,"XALT_GIT_VERSION",XALT_GIT_VERSION);
-  long        always_record     = xalt_mpi_always_record;
-  const char *always_record_str = getenv("XALT_MPI_ALWAYS_RECORD");
-  if (always_record_str)
-    always_record = strtol(always_record_str, (char **) NULL, 10);
 
-  sprintf(&buff[0],"%ld",always_record);
+  sprintf(&buff[0],"%ld",mpi_always_record);
   insert_key_string(&qaT,"XALT_MPI_ALWAYS_RECORD", buff);
   const char* xalt_sampling = getenv("XALT_SAMPLING");
 
