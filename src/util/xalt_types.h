@@ -1,7 +1,7 @@
 #ifndef XALT_TYPES_H
 #define XALT_TYPES_H
 
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 #include "utstring.h"
 #include "xalt_c_utils.h"
 #include "uthash.h"

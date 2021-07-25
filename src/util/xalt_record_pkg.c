@@ -11,15 +11,10 @@
 #include "xalt_config.h"
 #include "build_uuid.h"
 #include "xalt_tmpdir.h"
+#include "xalt_debug_macros.h"
 #include "crc.h"
 
 #define DATESZ    100
-#define HERE fprintf(stderr,"%s:%d\n",__FILE__,__LINE__)
-#define DEBUG0(fp,s)             if (xalt_tracing) fprintf((fp),s)
-#define DEBUG1(fp,s,x1)          if (xalt_tracing) fprintf((fp),s,(x1))
-#define DEBUG2(fp,s,x1,x2)       if (xalt_tracing) fprintf((fp),s,(x1),(x2))
-#define DEBUG3(fp,s,x1,x2,x3)    if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3))
-#define DEBUG4(fp,s,x1,x2,x3,x4) if (xalt_tracing) fprintf((fp),s,(x1),(x2),(x3),(x4))
 
 const  char*           xalt_syshost();
 
@@ -55,13 +50,13 @@ int main(int argc, char* argv[])
   
   if (! my_host)
     {
-      DEBUG0(stderr,"Syshost is not set => quitting!\n");
+      DEBUG(stderr,"Syshost is not set => quitting!\n");
       exit(0);
     }
 
   if (! run_uuid)
     {
-      DEBUG0(stderr,"The run_uuid value is not set => quitting!\n");
+      DEBUG(stderr,"The run_uuid value is not set => quitting!\n");
       exit(0);
     }
 
@@ -77,7 +72,7 @@ int main(int argc, char* argv[])
 
   if ((argc - optind) % 2 == 1)
     {
-      DEBUG1(stderr,"Odd number of parameter passed to %s => quiting!\n",argv[0]);
+      DEBUG(stderr,"Odd number of parameter passed to %s => quiting!\n",argv[0]);
       exit(0);
     }
 

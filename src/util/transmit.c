@@ -14,7 +14,7 @@
 #include "xalt_config.h"
 #include "xalt_dir.h"
 #include "xalt_c_utils.h"
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 
 #define XALT_LOGGING_LBL  "XALT_LOGGING"
 #define KIND_LBL          "kind"
@@ -39,7 +39,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
   if (strcasecmp(transmission,"directdb") == 0)
     {
-      DEBUG0(my_stderr,"  Direct to DB transmission is NOT supported!\n");
+      DEBUG(my_stderr,"  Direct to DB transmission is NOT supported!\n");
       return;
     }
 
@@ -56,7 +56,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     {
       if (resultFn == NULL)
         {
-          DEBUG0(my_stderr,"    resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
+          DEBUG(my_stderr,"    resultFn is NULL, $HOME or $USER might be undefined -> No XALT output\n");
           return;
         }
 
@@ -89,7 +89,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
               const char * method = xalt_file_transmission_method();
               fprintf(my_stderr, "    Using %s method to store json file\n",method);
             }
-          DEBUG2(my_stderr,"    Wrote json %s file : %s\n",kind, fn);
+          DEBUG(my_stderr,"    Wrote json %s file : %s\n",kind, fn);
         }
       my_free(tmpFn,strlen(tmpFn));
       my_free(fn,   strlen(fn));
@@ -166,7 +166,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       // Parent: Wait for child to complete
       if ((ret = waitpid (pid, &status, 0)) == -1)
         {
-          DEBUG0(my_stderr, "  waitpid() returned -1: error with xalt_curl_transmit\n");
+          DEBUG(my_stderr, "  waitpid() returned -1: error with xalt_curl_transmit\n");
           asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
           openlog(logNm, LOG_PID, LOG_USER);
           syslog(LOG_INFO, "waitpid() returned -1: error with xalt_curl_transmit");
@@ -253,7 +253,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           // Parent: Wait for child to complete
           if ( (ret = waitpid(pid, &status, 0)) == -1)
             {
-              DEBUG1(my_stderr, "  waitpid() returned %d: error with logger\n", ret);
+              DEBUG(my_stderr, "  waitpid() returned %d: error with logger\n", ret);
               return;
             }
 

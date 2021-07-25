@@ -104,64 +104,64 @@ CXX 6,226
 OPTLVL 7,248
 LIB_OPTIONS 8,273
 WARN_FLAGS 9,305
-CF_INIT 10,421
-COMMON_FLGS 11,464
-CXXFLAGS 12,518
-CFLAGS 13,562
-  LIBDCGM:LIBDCGM16,653
-  LIBNVML:LIBNVML19,699
-   HAVE_EXTERNAL_HOSTNAME_PARSER 23,755
-   PARSER_TYPE 24,823
-      MY_HOSTNAME_PARSER_SRC 26,939
-      MY_HOSTNAME_PARSER_OBJ 27,1023
-      MY_HOSTNAME_PARSER_OBJ_32 28,1099
-      MY_HOSTNAME_PARSER_LIBRARY 31,1218
-      MY_HOSTNAME_PARSER_LIB32 32,1301
-      MY_HOSTNAME_PARSER_TARGET 33,1384
-         MY_HOSTNAME_PARSER_TARGET  +=MY_HOSTNAME_PARSER_TARGET  +35,1489
-      MY_HOSTNAME_PARSER_OBJ 37,1569
-      MY_HOSTNAME_PARSER_OBJ_32 38,1645
-programs 45,1847
-c_sources 46,1863
-cxx_sources 47,1879
-libraries 48,1895
-extra_clean 49,1911
-so_libs 50,1927
-  HAVE_32BIT 53,1972
-  DEP32 54,1991
-  OBJ32 55,2008
-  DEP32 59,2057
-  OBJ32 60,2102
-dependencies 63,2154
-objects 64,2236
-include_dirs 66,2319
-include_dirs 67,2355
-CPPFLAGS     +=CPPFLAGS     +69,2426
-all:all75,2556
-  INCLUDE_DEPS 78,2592
-  INCLUDE_DEPS 82,2651
-  INCLUDE_DEPS 86,2712
-.PHONY:.PHONY98,2876
-all:all99,2888
-build_all:build_all101,2947
-COPY_ALL_LIBS:COPY_ALL_LIBS104,3055
-          baseNM=107,3212
-          realNM=115,3708
-%.d:%.d126,4363
-        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *129,4515
-%.d32:%.d32132,4613
-        sed 's,\($(notdir $*)\)\.o *:sed 's,\($(notdir $*)\)\.o *135,4775
-%.d:%.d138,4877
-        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *141,5029
-%.o32:%.o32144,5127
-ECHO:ECHO149,5202
-echo:echo152,5274
-neat:neat158,5438
-clean:clean161,5492
-clobber:clobber167,5782
-$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py:$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py172,5848
-my_hostname_parser_target:my_hostname_parser_target175,5948
-my_hostname_parser_target_32:my_hostname_parser_target_32178,6053
+CF_INIT 10,425
+COMMON_FLGS 11,468
+CXXFLAGS 12,522
+CFLAGS 13,566
+  LIBDCGM:LIBDCGM16,669
+  LIBNVML:LIBNVML19,715
+   HAVE_EXTERNAL_HOSTNAME_PARSER 23,771
+   PARSER_TYPE 24,839
+      MY_HOSTNAME_PARSER_SRC 26,955
+      MY_HOSTNAME_PARSER_OBJ 27,1039
+      MY_HOSTNAME_PARSER_OBJ_32 28,1115
+      MY_HOSTNAME_PARSER_LIBRARY 31,1234
+      MY_HOSTNAME_PARSER_LIB32 32,1317
+      MY_HOSTNAME_PARSER_TARGET 33,1400
+         MY_HOSTNAME_PARSER_TARGET  +=MY_HOSTNAME_PARSER_TARGET  +35,1505
+      MY_HOSTNAME_PARSER_OBJ 37,1585
+      MY_HOSTNAME_PARSER_OBJ_32 38,1661
+programs 45,1863
+c_sources 46,1879
+cxx_sources 47,1895
+libraries 48,1911
+extra_clean 49,1927
+so_libs 50,1943
+  HAVE_32BIT 53,1988
+  DEP32 54,2007
+  OBJ32 55,2024
+  DEP32 59,2073
+  OBJ32 60,2118
+dependencies 63,2170
+objects 64,2252
+include_dirs 66,2335
+include_dirs 67,2371
+CPPFLAGS     +=CPPFLAGS     +69,2442
+all:all75,2572
+  INCLUDE_DEPS 78,2608
+  INCLUDE_DEPS 82,2667
+  INCLUDE_DEPS 86,2728
+.PHONY:.PHONY98,2892
+all:all99,2904
+build_all:build_all101,2963
+COPY_ALL_LIBS:COPY_ALL_LIBS104,3071
+          baseNM=107,3228
+          realNM=115,3724
+%.d:%.d126,4379
+        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *129,4531
+%.d32:%.d32132,4629
+        sed 's,\($(notdir $*)\)\.o *:sed 's,\($(notdir $*)\)\.o *135,4791
+%.d:%.d138,4893
+        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *141,5045
+%.o32:%.o32144,5143
+ECHO:ECHO149,5218
+echo:echo152,5290
+neat:neat158,5454
+clean:clean161,5508
+clobber:clobber167,5798
+$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py:$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py172,5864
+my_hostname_parser_target:my_hostname_parser_target175,5964
+my_hostname_parser_target_32:my_hostname_parser_target_32178,6069
 
 src/tmpl/xalt_python_pkg_filter.template,56
 import os,4,56
@@ -660,10 +660,10 @@ int isDirectory(15,283
 int mkpath(23,427
 const char* xalt_file_transmission_method(42,710
 void build_resultDir(53,999
-void build_resultFn(79,1861
-static bool s_start_record 97,2432
-void set_end_record(98,2467
-void my_free(102,2519
+void build_resultFn(79,1853
+static bool s_start_record 97,2422
+void set_end_record(98,2457
+void my_free(102,2509
 
 src/util/process.c,98
 void init_proc(14,254
@@ -827,7 +827,7 @@ void json_add_utarray(295,8384
 src/util/xalt_tmpdir.c,93
 #define _GNU_SOURCE1,0
 char* create_xalt_tmpdir_str(11,196
-void remove_xalt_tmpdir(19,372
+void remove_xalt_tmpdir(19,370
 
 src/util/xalt_header.h.in,1344
 #undef SITE_CONTROLLED_PREFIX8,229
@@ -953,14 +953,15 @@ UTSTRING_UNUSED static long _utstring_findR(284,8814
 UTSTRING_UNUSED static long utstring_find(318,9546
 UTSTRING_UNUSED static long utstring_findR(364,10852
 
-src/util/xalt_base_types.h,161
+src/util/xalt_base_types.h,183
 #define XALT_BASE_TYPES_H2,26
 #define HERE 4,53
-#define DEBUG0(6,144
-#define DEBUG1(7,261
-#define DEBUG2(8,378
-#define DEBUG3(9,495
-#define DEBUG4(10,612
+#define DEBUG(6,144
+#define DEBUG0(7,261
+#define DEBUG1(8,378
+#define DEBUG2(9,495
+#define DEBUG3(10,612
+#define DEBUG4(11,729
 
 src/util/epoch.h,21
 #define EPOCH_H2,16
@@ -1190,16 +1191,13 @@ src/util/buildJson.h,178
 src/util/xalt_quotestring.h,27
 #define QUOTESTRING_H2,22
 
-src/util/xalt_record_pkg.c,200
+src/util/xalt_record_pkg.c,130
 #define _GNU_SOURCE1,0
 #define DATESZ 16,302
 #define HERE 17,324
 #define DEBUG0(18,381
-#define DEBUG1(19,448
-#define DEBUG2(20,520
-#define DEBUG3(21,597
-#define DEBUG4(22,679
-int main(27,808
+#define DEBUG(19,498
+int main(24,657
 
 src/util/xalt_epoch.c,15
 int main(4,58
@@ -1293,20 +1291,20 @@ static void *       dcgm_dl_handle 218,8310
 static dcgmHandle_t dcgm_handle 219,8360
 #define DCGMFUNC2(222,8542
 void myinit(257,10169
-void wrapper_for_myfini(837,29038
-static void close_out(849,29314
-void myfini(860,29473
-static int load_nvml(1130,39417
-static int load_dcgm(1181,41302
-static long compute_value(1225,42931
-static void get_abspath(1243,43292
-static volatile double epoch(1258,43636
-static unsigned int mix(1265,43757
-static  double prgm_sample_probability(1279,44140
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1317,44854
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1318,44974
-  __attribute__((section(".init_array"))) __typeof__(1320,45100
-  __attribute__((section(".fini_array"))) __typeof__(1321,45179
+void wrapper_for_myfini(837,29013
+static void close_out(849,29289
+void myfini(860,29448
+static int load_nvml(1130,39375
+static int load_dcgm(1181,41258
+static long compute_value(1225,42885
+static void get_abspath(1243,43246
+static volatile double epoch(1258,43590
+static unsigned int mix(1265,43711
+static  double prgm_sample_probability(1279,44094
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1317,44808
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1318,44928
+  __attribute__((section(".init_array"))) __typeof__(1320,45054
+  __attribute__((section(".fini_array"))) __typeof__(1321,45133
 
 src/libxalt/xalt_env_parser.h,31
 #define XALT_ENV_PARSER_H2,26
@@ -1362,21 +1360,7 @@ static const char *comma comma30,674
 static char        sha1buf[sha1buf32,737
 static bool        need_sha1 33,769
 void run_submission(35,807
-void pkgRecordTransmit(228,8046
-
-src/libxalt/compat.c,329
-#define  _GNU_SOURCE 2,6
-#define  _DEFAULT_SOURCE 3,29
-#define  _BSD_SOURCE 4,56
-int __asprintf_chk 9,139
-int __vsnprintf_chk 21,345
-void __syslog_chk(28,520
-int __fprintf_chk(37,661
-int __sprintf_chk 49,857
-int __vfprintf_chk 61,1055
-void __vsyslog_chk(66,1167
-int __vasprintf_chk 71,1264
-int __vsprintf_chk 75,1395
+void pkgRecordTransmit(228,8041
 
 src/libxalt/my_hostname_parser_dummy.c,68
 int my_hostname_parser(4,63
@@ -1533,22 +1517,22 @@ gittag:gittag296,15712
             vtag=310,16750
 tags:tags328,17884
 build_tags:build_tags331,17922
-dist:dist404,22481
-SUBMAKEFILES 418,23505
-makefile 420,23597
-src/makefile:src/makefile423,23681
-src/util/module.mk:src/util/module.mk426,23756
-src/linker/module.mk:src/linker/module.mk428,23842
-src/libxalt/module.mk:src/libxalt/module.mk430,23932
-neat:neat434,24026
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR437,24129
-                         HAVE_32BIT=438,24223
-clean:clean439,24302
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR441,24402
-                         HAVE_32BIT=442,24496
-clobber:clobber443,24575
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR445,24677
-                         HAVE_32BIT=446,24771
+dist:dist409,22724
+SUBMAKEFILES 423,23748
+makefile 425,23840
+src/makefile:src/makefile428,23924
+src/util/module.mk:src/util/module.mk431,23999
+src/linker/module.mk:src/linker/module.mk433,24085
+src/libxalt/module.mk:src/libxalt/module.mk435,24175
+neat:neat439,24269
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR442,24372
+                         HAVE_32BIT=443,24466
+clean:clean444,24545
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR446,24645
+                         HAVE_32BIT=447,24739
+clobber:clobber448,24818
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR450,24920
+                         HAVE_32BIT=451,25014
 
 py_src/xalt_stack.py,149
 class Stack(27,1148

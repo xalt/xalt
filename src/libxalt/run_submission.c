@@ -50,7 +50,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   double         t0       = epoch();
   double         t1;
 
-  DEBUG1(my_stderr,"\n  run_submission(%s) {\n",suffix);
+  DEBUG(my_stderr,"\n  run_submission(%s) {\n",suffix);
 
   //************************************************************
   // Walk Process tree to find parent processes
@@ -58,14 +58,14 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   t1 = epoch();
   walkProcessTree(ppid, &ptA);
   insert_key_double(&measureT, "04_WalkProcTree__", epoch() - t1);
-  DEBUG0(my_stderr,"    Built processTree table\n");
+  DEBUG(my_stderr,"    Built processTree table\n");
   
   //************************************************************
   // Walk env to build the filtered env table
   // and ignore shell functions
   t1 = epoch();
   buildEnvT(environ, &envT);
-  DEBUG0(my_stderr,"    Built envT\n");
+  DEBUG(my_stderr,"    Built envT\n");
   insert_key_double(&measureT, "03_BuildEnvT_____", epoch() - t1);
 
   //************************************************************
@@ -73,7 +73,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   t1 = epoch();
   buildXALTRecordT(watermark, &recordT);
   insert_key_double(&measureT, "05_Build_RecordT_", epoch() - t1);
-  DEBUG0(my_stderr,"    Extracted recordT from watermark\n");
+  DEBUG(my_stderr,"    Extracted recordT from watermark\n");
 
   //*********************************************************************
   // Build userT, userDT
@@ -110,7 +110,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   HASH_FIND_STR(userT, "scheduler", e);
   const char * scheduler = (e) ? utstring_body(e->value) : "not known";
   insert_key_double(&measureT, "01_BuildUserT____", epoch() - t1);
-  DEBUG1(my_stderr,"    Built userT, userDT, scheduler: %s\n", scheduler);
+  DEBUG(my_stderr,"    Built userT, userDT, scheduler: %s\n", scheduler);
 
   //*********************************************************************
   // Take sha1sum of the executable
@@ -119,28 +119,28 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
       t1 = epoch();
       compute_sha1(exec_path, &sha1buf[0]);
       compute_sha1_cleanup();
-      DEBUG2(my_stderr,"    Compute sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
+      DEBUG(my_stderr,"    Compute sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
       insert_key_double(&measureT, "02_Sha1_exec_____", epoch() - t1);
       need_sha1 = false;
     }
   else
     {
       insert_key_double(&measureT, "02_Sha1_exec_____", 0.0);
-      DEBUG2(my_stderr,"    Reuse   sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
+      DEBUG(my_stderr,"    Reuse   sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
     }
       
   //*********************************************************************
   // Parse the /proc/$pid/map file for the shared libraries
   t1 = epoch();
   parseProcMaps(pid, &libT);
-  DEBUG0(my_stderr,"    Parsed ProcMaps\n");
+  DEBUG(my_stderr,"    Parsed ProcMaps\n");
   insert_key_double(&measureT, "06_ParseProcMaps_", epoch() - t1);
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
   
-  DEBUG1(my_stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
+  DEBUG(my_stderr,"    Using XALT_TRANSMISSION_STYLE: %s\n",transmission);
 
   insert_key_double(&measureT, "07_GPU_Setup_____", xalt_timer->gpu_setup);
   insert_key_double(&measureT, "08____total______", epoch() - t0 + xalt_timer->init + xalt_timer->fini);
@@ -187,7 +187,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   sprintf(&crcStr[0],"0x%04X",crcValue);
   memcpy(&jsonStr[8],crcStr,6);
 
-  DEBUG0(my_stderr,"    Built json string\n");
+  DEBUG(my_stderr,"    Built json string\n");
 
   processTreeFree(&ptA);
   free_S2S(&qaT);
@@ -201,9 +201,9 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   char key[50];
   sprintf(&key[0], "%s%s", (end_record) ? "run_fini_" : "run_strt_", uuid_str);
 
-  DEBUG0(my_stderr,"    Transmitting jsonStr\n");
+  DEBUG(my_stderr,"    Transmitting jsonStr\n");
   transmit(transmission, jsonStr, "run", key, crcStr, syshost, resultDir, resultFn, my_stderr);
-  DEBUG0(my_stderr,"    Done transmitting jsonStr\n");
+  DEBUG(my_stderr,"    Done transmitting jsonStr\n");
   xalt_quotestring_free();
   my_free(jsonStr, strlen(jsonStr));
   if (resultFn)
@@ -214,13 +214,13 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
 
   if (strcmp(xalt_kind,"PKGS") == 0)
     {
-      DEBUG0(my_stderr,"    Transmitting pkg records\n");
+      DEBUG(my_stderr,"    Transmitting pkg records\n");
       pkgRecordTransmit(uuid_str, syshost, transmission, my_stderr);
-      DEBUG0(my_stderr,"    Done transmitting pkg records\n");
+      DEBUG(my_stderr,"    Done transmitting pkg records\n");
     }
 
   my_free(syshost, strlen(syshost));
-  DEBUG0(my_stderr,"  }\n\n");
+  DEBUG(my_stderr,"  }\n\n");
   if (xalt_tracing)
     fflush(my_stderr);
 }

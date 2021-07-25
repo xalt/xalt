@@ -9,7 +9,7 @@
 #include "xalt_fgets_alloc.h"
 #include "process.h"
 #include "utstring.h"
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 
 void init_proc(process_t* proc)
 {

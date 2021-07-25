@@ -5,7 +5,7 @@
 #include "xalt_c_utils.h"
 #include "utlist.h"
 #include "xalt_quotestring.h"
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 
 static const char* dquote      = "\"";
 static const char* s_colon     = "\":\"";
