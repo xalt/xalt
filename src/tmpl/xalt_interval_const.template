@@ -1,0 +1,11 @@
+#ifndef XALT_INTERVAL_CONST_H
+#define XALT_INTERVAL_CONST_H
+
+const int    xalt_mpi_always_record  = @MPI_ALWAYS_RECORD@;
+
+
+#endif // XALT_INTERVAL_CONST_H
+
+/* Local Variables: */
+/* mode: c */
+/* End: */

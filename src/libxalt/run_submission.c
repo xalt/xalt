@@ -23,6 +23,7 @@
 #include "xalt_c_utils.h"
 #include "xalt_tmpdir.h"
 #include "xalt_fgets_alloc.h"
+#include "xalt_interval_const.h"
 #include "buildUserT.h"
 #include "transmit.h"
 
@@ -30,6 +31,7 @@ static const char *blank0 = "";
 static const char *comma  = ",";
 extern char        **environ;
 static char        sha1buf[41];
+static char        buff[40];
 static bool        need_sha1 = true;
 
 void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double start_time, double end_time, double probability,
@@ -151,6 +153,35 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   //*********************************************************************
   // Record QA data in json string.
   insert_key_string(&qaT,"XALT_GIT_VERSION",XALT_GIT_VERSION);
+  long        always_record     = xalt_mpi_always_record;
+  const char *always_record_str = getenv("XALT_MPI_ALWAYS_RECORD");
+  if (always_record_str)
+    always_record = strtol(always_record_str, (char **) NULL, 10);
+
+  sprintf(&buff[0],"%ld",always_record);
+  insert_key_string(&qaT,"XALT_MPI_ALWAYS_RECORD", buff);
+  const char* xalt_sampling = getenv("XALT_SAMPLING");
+
+  const char* xalt_mpi_tracking = getenv("XALT_MPI_TRACKING");
+  if (xalt_mpi_tracking == NULL)
+    xalt_mpi_tracking = XALT_MPI_TRACKING;
+  insert_key_string(&qaT,"XALT_MPI_TRACKING", xalt_mpi_tracking);
+
+  const char* xalt_scalar_tracking = getenv("XALT_SCALAR_TRACKING");
+  if (xalt_scalar_tracking == NULL)
+    xalt_scalar_tracking = XALT_SCALAR_TRACKING;
+  insert_key_string(&qaT,"XALT_SCALAR_TRACKING", xalt_scalar_tracking);
+
+  if (!xalt_sampling)
+    {
+      xalt_sampling = getenv("XALT_SCALAR_SAMPLING");
+      if (!xalt_sampling)
+        xalt_sampling = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+    }
+  if (xalt_sampling == NULL || strcmp(xalt_sampling,"yes") != 0)
+    xalt_sampling = "no";
+  insert_key_string(&qaT,"XALT_SAMPLING", xalt_sampling);
+
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0)
     {
       build_resultDir(&resultDir, "run", transmission, uuid_str);
