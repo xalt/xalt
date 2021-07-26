@@ -20,7 +20,6 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-from time       import sleep
 import os, sys, re, base64, json, traceback
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -155,6 +154,12 @@ class XALTdb(object):
   This XALTdb class opens the XALT database and is responsible for
   all the database interactions.
   """
+
+  FAIL  = 0
+  STORE = 1
+  DUP   = -2
+  SKIP  = -3
+  
   def __init__(self, confFn):
     """ Initialize the class and save the db config file. """
     self.__host   = None
@@ -393,23 +398,21 @@ class XALTdb(object):
     @param: runT:        The run data stored in a table
     """
     
-    stored    = False 
-    dup       = False
     recordMe  = False 
     if (not ('userT' in runT)):
       if (debug): sys.stdout.write("  --> failed to record: No userT in runT --> FAILURE\n\n")
-      return stored, dup
+      return status
     userT = runT['userT']
 
     exec_path = userT.get('exec_path')
     if (not exec_path):
       if (debug): sys.stdout.write("  --> failed to record: No exec_path found --> FAILURE\n\n")
-      return stored, dup
+      return XALTdb.FAIL
     exec_prob = pre_ingest_filter(exec_path.encode())
     prob      = random.random()
     if (prob > exec_prob):
       if (debug): sys.stdout.write("  --> Not recording due to pre-ingest filter %.4f > %.4f for: %s\n\n" % (prob, exec_prob,exec_path))
-      return stored, dup
+      return XALTdb.SKIP
 
     try:
       msg   = ""
@@ -427,7 +430,7 @@ class XALTdb(object):
 
       if (not ('userDT' in runT)):
         if (debug): sys.stdout.write("  --> failed to record: No userDT in runT --> FAILURE\n\n")
-        return stored, dup
+        return XALTdb.FAIL
       userDT = runT['userDT']
 
       XALT_Stack.push("SUBMIT_HOST: "+ userT['submit_host'])
@@ -441,7 +444,7 @@ class XALTdb(object):
       if (startTime < 1):
         if (debug): sys.stdout.write("  --> failed to record: startTime epoch is < 1 second\n\n")
         v = XALT_Stack.pop()  
-        return stored, dup
+        return XALTdb.FAIL
 
       dateTimeStr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(startTime))
       dateStr     = time.strftime("%Y-%m-%d",          time.localtime(startTime))
@@ -454,13 +457,13 @@ class XALTdb(object):
         if (debug): sys.stdout.write("  --> failed to record: run_uuid is UNKNOWN --> FAILURE\n\n")
         v = XALT_Stack.pop()  
         carp("SUBMIT_HOST",v)
-        return stored, dup
+        return XALTdb.FAIL
       uuid_patt = self.__patt
       m         = uuid_patt.match(run_uuid)
       if (not m):
         if (debug): sys.stdout.write("  --> failed to record: run_uuid does not match uuid pattern --> FAILURE\n\n")
         v = XALT_Stack.pop()  
-        return stored, dup
+        return XALTdb.FAIL
 
 
       if (debug): sys.stdout.write("  --> Searching for run_uuid in db\n")
@@ -483,11 +486,10 @@ class XALTdb(object):
         # So either there is an end record already in the database (my_endTime > 0)
         # OR we are trying to insert a duplicate start record. (endTime is zero).
         if (my_endTime > 0 or endTime < 0.1):
-          dup = True
           if (debug): sys.stdout.write("  --> Duplicate run_uuid, not recorded --> FAILURE\n\n")
           v = XALT_Stack.pop()  
           carp("SUBMIT_HOST",v)
-          return stored, dup
+          return XALTdb.DUP
 
         if (endTime > 0):
           query  = "UPDATE xalt_run SET run_time=%s, end_time=%s, num_threads=%s, num_gpus=%s WHERE run_id=%s" 
@@ -502,7 +504,7 @@ class XALTdb(object):
         carp("SUBMIT_HOST",v)
 
         if (debug): sys.stdout.write("  --> Success: updated run_time\n")
-        return stored, dup
+        return XALTdb.STORE
       else:
         #print("not found")
         moduleName    = obj2module(exec_path, reverseMapT)
@@ -539,7 +541,6 @@ class XALTdb(object):
                                container))
         query    = ""
         run_id   = cursor.lastrowid
-        stored   = True
         recordMe = True 
 
       if (debug): sys.stdout.write("  --> Success: stored full xalt_run record\n")
@@ -601,7 +602,7 @@ class XALTdb(object):
       print(traceback.format_exc())
       sys.exit (1)
 
-    return stored, dup
+    return XALTdb.STORE
 
   def pkg_to_db(self, debug, syshost, pkgT):
 

@@ -489,6 +489,7 @@ def main():
   runCnt = 0
   dupCnt = 0
   badCnt = 0
+  skpCnt = 0
   count  = 0
 
   recordT = {}
@@ -569,12 +570,14 @@ def main():
                else:
                  value['userDT']['probability'] = 0.01
 
-            stored, dups = xalt.run_to_db(args.debug, rmapT, u2acctT, value, timeRecord)
+            status = xalt.run_to_db(args.debug, rmapT, u2acctT, value, timeRecord)
             XALT_Stack.pop()
-            if (stored):
+            if (status == XALTdb.STORE):
               runCnt += 1
-            if (dups):
+            if (status == XALTdb.DUP):
               dupCnt += 1
+            if (status == XALTdb.SKIP):
+              skpCnt += 1
 
           elif ( t['kind'] == "pkg" ):
             XALT_Stack.push("pkg_to_db()")
@@ -596,7 +599,7 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
-        ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,
+        ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
         ", leftovers: ",parseSyslog.num_leftover())
   timeRecord.print()
         

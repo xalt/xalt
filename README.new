@@ -108,3 +108,4 @@ W.I.P.:
 	        arguments.  (used trick from the book "Modern C" to handle the case of zero arguments)
 	      * Added XALT_MPI_ALWAYS_RECORD, XALT_MPI_TRACKING, XALT_SCALAR_TRACKING and XALT_SAMPLING
 	        values to XALT_qaT table in *.json records.
+	      * Report number of json records that have been skipped by pre-ingestion filtering.
