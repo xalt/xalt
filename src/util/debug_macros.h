@@ -10,10 +10,10 @@
 #define ARGS_FIRST(...)       ARGS_FIRST0(__VA_ARGS__, 0)
 #define ARGS_FIRST0(_0, ...)  _0
 
-#define ARGS_LAST(...)       ARGS_LAST0(__VA_ARGS__, 0)
-#define ARGS_LAST0(_0, ...)  __VA_ARGS__
+#define ARGS_REST(...)       ARGS_REST0(__VA_ARGS__, 0)
+#define ARGS_REST0(_0, ...)  __VA_ARGS__
 
-#define MAIN_DEBUG(tracing, fp, ...) MAIN_DEBUG_base(tracing, fp, ARGS_FIRST(__VA_ARGS__) "%.0d", ARGS_LAST(__VA_ARGS__))
+#define MAIN_DEBUG(tracing, fp, ...) MAIN_DEBUG_base(tracing, fp, ARGS_FIRST(__VA_ARGS__) "%.0d", ARGS_REST(__VA_ARGS__))
 
 #define MAIN_DEBUG_base(tracing, fp, ...) if (tracing) do { fprintf((fp), __VA_ARGS__  ); fflush(fp); } while (0)
 
