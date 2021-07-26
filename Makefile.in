@@ -410,6 +410,7 @@ build_tags:
 	cd $(srcdir); etags -o TAGS `cat ./my_build/file_list.2`
 
 dist:
+	cd $(srcdir)                                                                        ; \
 	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \
 	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > xalt-$(VERSION).tar            ; \
 	$(RM) -rf DIST                                                                      ; \
@@ -440,15 +441,18 @@ src/libxalt/module.mk: $(srcdir)/src/libxalt/Module.mk.in config.status
 
 
 neat:
-	$(RM) *~
+	cd $(srcdir);                                                                       \
+	$(RM) *~;                                                                           \
 	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
                          $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
 clean:  neat
+	cd $(srcdir);                                                                       \
 	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
                          $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
 clobber: clean
+	cd $(srcdir);                                                                       \
 	cd src ;         LD_PRELOAD= XALT_EXECUTABLE_TRACKING=                              \
                          $(MAKE) PARENT_DIR=$(srcdir) DESTDIR=$(DESTDIR) LIBEXEC=$(LIBEXEC) \
                          HAVE_32BIT=$(HAVE_32BIT) LIB=$(LIB) LIB64=$(LIB64) $@
