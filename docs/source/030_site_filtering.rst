@@ -246,17 +246,17 @@ only pick important variables.
 Pre-ingestion Filtering
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-XALT version 2.10.25+ now support pre-ingestion filtering.  What this
+XALT version 2.10.26+ now support pre-ingestion filtering.  What this
 means that if your site has a large number of json records and wants
 to reduce the number of entries in the database, then your site's
 Config.py file has another array to be filled out.  Below shows an
 example filtering::
 
-pre_ingest_patterns = [
-#   percent   path pattern
-    [0.0,     r'.*\/foobar'],
-    [0.01,    r'.*\/BAZ'],
-]
+    pre_ingest_patterns = [
+    #   percent   path pattern
+        [0.0,     r'.*\/foobar'],
+        [0.01,    r'.*\/BAZ'],
+    ]   
 
 Each row provides a number and a pattern.  Just like all the previous
 patterns, if a pattern matches then it is used and no subsequent
