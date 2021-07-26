@@ -8,7 +8,7 @@
 #include <gelf.h>
 #include "xalt_config.h"
 #include "xalt_vendor_note.h"
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 
 // Use the real xalt_vendor_note() only with 64bit executables not 32bit.
 #ifndef WITH_32BIT

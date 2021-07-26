@@ -9,14 +9,13 @@ typedef struct
 {
   double left;
   double prob;
-} interval;
+} interval_t;
 
-const int    mpi_always_record  = @MPI_ALWAYS_RECORD@;
-
-interval     scalar_rangeA[]    = { @rangeA@ };
-interval     mpi_rangeA[]       = { @mpi_rangeA@ };
-const int    scalar_rangeSz     = N_ELEMENTS(scalar_rangeA);
-const int    mpi_rangeSz        = N_ELEMENTS(mpi_rangeA);
+const int    xalt_mpi_always_record = @MPI_ALWAYS_RECORD@;
+interval_t   scalar_rangeA[]        = { @rangeA@ };
+interval_t   mpi_rangeA[]           = { @mpi_rangeA@ };
+const int    scalar_rangeSz         = N_ELEMENTS(scalar_rangeA);
+const int    mpi_rangeSz            = N_ELEMENTS(mpi_rangeA);
 
 #endif
 

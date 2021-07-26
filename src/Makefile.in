@@ -6,11 +6,11 @@ CC          	  := gcc
 CXX         	  := g++
 OPTLVL      	  := -g -O0
 LIB_OPTIONS 	  := -fPIC -shared
-WARN_FLAGS  	  := -Wall -Wno-unused-result -Wno-unused-value -fno-stack-protector -fno-mudflap -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
+WARN_FLAGS  	  := -Wall -Wno-unused-result -Wno-unused-value -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
 CF_INIT     	  := -I. -fPIC $(EXTRA_FLAGS)
 COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT)
 CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
-CFLAGS      	  := --std=c99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 ifeq ($(HAVE_DCGM),yes)
   LIBDCGM:=-ldl

@@ -311,7 +311,7 @@ void myinit(int argc, char **argv)
       if (uname(&u) != 0)
         {
           reject_flag = XALT_UNAME_FAILURE;
-          DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          DEBUG(stderr, "    -> uname had a failure -> exiting\n}\n\n");
           return;
         }
 
@@ -340,13 +340,13 @@ void myinit(int argc, char **argv)
    ***********************************************************/
 
   v = getenv("__XALT_INITIAL_STATE__");
-  DEBUG2(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
+  DEBUG(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if another myinit() routine has been called with my pid and hostname*/
   if (v && (strcmp(v,STR(STATE)) != 0))
     {
       if (uname(&u) != 0)
         {
-          DEBUG0(stderr, "    -> uname had a failure -> exiting\n}\n\n");
+          DEBUG(stderr, "    -> uname had a failure -> exiting\n}\n\n");
           reject_flag = XALT_UNAME_FAILURE;
           return;
         }
@@ -354,7 +354,7 @@ void myinit(int argc, char **argv)
       char* env_pid = getenv("__XALT_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
         {
-          DEBUG3(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, STR(STATE), env_pid);
+          DEBUG(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, STR(STATE), env_pid);
           reject_flag = XALT_WRONG_STATE;
           return;
         }
@@ -366,7 +366,7 @@ void myinit(int argc, char **argv)
    ***********************************************************/
   if (countA[IDX] > 0)
     {
-      DEBUG2(stderr,"    -> countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
+      DEBUG(stderr,"    -> countA[%d]: %d which is greater than 0 -> exiting\n}\n\n",IDX,countA[IDX]);
       reject_flag = XALT_RUN_TWICE;
       return;
     }
@@ -379,10 +379,10 @@ void myinit(int argc, char **argv)
 
   /* Stop tracking if XALT is turned off */
   v = getenv("XALT_EXECUTABLE_TRACKING");
-  DEBUG1(stderr,"  Test for XALT_EXECUTABLE_TRACKING: %s\n",(v != NULL) ? v : "(NULL)");
+  DEBUG(stderr,"  Test for XALT_EXECUTABLE_TRACKING: %s\n",(v != NULL) ? v : "(NULL)");
   if (!v || strcmp(v,"yes") != 0)
     {
-      DEBUG0(stderr,"    -> XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
+      DEBUG(stderr,"    -> XALT_EXECUTABLE_TRACKING is off -> exiting\n}\n\n");
       reject_flag = XALT_TRACKING_OFF;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -394,10 +394,10 @@ void myinit(int argc, char **argv)
    * Stop tracking if my mpi rank is not zero
    ***********************************************************/
 
-  DEBUG1(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
+  DEBUG(stderr,"  Test for rank == 0, rank: %ld\n",my_rank);
   if (my_rank > 0L)
     {
-      DEBUG0(stderr,"    -> MPI Rank is not zero -> exiting\n}\n\n");
+      DEBUG(stderr,"    -> MPI Rank is not zero -> exiting\n}\n\n");
       reject_flag = XALT_MPI_RANK;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -417,7 +417,7 @@ void myinit(int argc, char **argv)
   HOSTNAME_PARSER_CLEANUP();
   if (results == SKIP)
     {
-      DEBUG1(stderr,"    hostname: \"%s\" is rejected -> exiting\n}\n\n",u.nodename);
+      DEBUG(stderr,"    hostname: \"%s\" is rejected -> exiting\n}\n\n",u.nodename);
       reject_flag = XALT_HOSTNAME;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -448,7 +448,7 @@ void myinit(int argc, char **argv)
 
   if (path_results == SKIP)
     {
-      DEBUG1(stderr,"    executable: \"%s\" is rejected  -> exiting\n}\n\n", exec_path);
+      DEBUG(stderr,"    executable: \"%s\" is rejected  -> exiting\n}\n\n", exec_path);
       reject_flag = XALT_PATH;
       unsetenv("XALT_RUN_UUID");
       return;
@@ -477,7 +477,7 @@ void myinit(int argc, char **argv)
   /* Test for an acceptable executable */
   if ((build_mask & run_mask) == 0)
     {
-      DEBUG2(stderr,"    -> XALT is build to %s, Current %s -> not tracking and exiting\n}\n\n",
+      DEBUG(stderr,"    -> XALT is build to %s, Current %s -> not tracking and exiting\n}\n\n",
              xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
       reject_flag = XALT_NO_OVERLAP;
       unsetenv("XALT_RUN_UUID");
@@ -550,11 +550,11 @@ void myinit(int argc, char **argv)
           if (stat(nvidia_dir, &s) !=  0 || ! S_ISDIR(s.st_mode))
             {
               xalt_gpu_tracking = 0;
-              DEBUG1(stderr, "  GPU tracing is turned off. This directory \"%s\" does not exist!\n", nvidia_dir);
+              DEBUG(stderr, "  GPU tracing is turned off. This directory \"%s\" does not exist!\n", nvidia_dir);
               break;
             }
 #ifdef USE_NVML
-          DEBUG0(stderr, "  GPU tracing with NVML\n");
+          DEBUG(stderr, "  GPU tracing with NVML\n");
           /* Open the NVML library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
              that case, the handle will not be created and GPU
@@ -576,12 +576,12 @@ void myinit(int argc, char **argv)
           result = _nvmlInit();
           if (result != NVML_SUCCESS)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize NVML: %s\n\n", _nvmlErrorString(result));
+              DEBUG(stderr, "    -> Stopping GPU Tracking => Cannot initialize NVML: %s\n\n", _nvmlErrorString(result));
               xalt_gpu_tracking = 0;
               break;
             }
 #elif USE_DCGM
-          DEBUG0(stderr, "  GPU tracing with DCGM\n");
+          DEBUG(stderr, "  GPU tracing with DCGM\n");
 
           /* Open the DCGM library at runtime.  This avoids failing if
              the library is not available on a particular system.  In
@@ -596,7 +596,7 @@ void myinit(int argc, char **argv)
           result = _dcgmInit();
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
+              DEBUG(stderr, "    -> Stopping GPU Tracking => Cannot initialize DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               dcgm_handle       = 0;
               break;
@@ -606,7 +606,7 @@ void myinit(int argc, char **argv)
 
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n\n", errorString(result));
+              DEBUG(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               dcgm_handle       = 0;
               break;
@@ -621,7 +621,7 @@ void myinit(int argc, char **argv)
           result = _dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
+              DEBUG(stderr, "    -> Stopping GPU Tracking => Cannot start DCGM job stats: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               dcgm_handle       = 0;
               break;
@@ -630,9 +630,9 @@ void myinit(int argc, char **argv)
           result = _dcgmWatchJobFields(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, 1000, 1e9, 0);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr,   "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
+              DEBUG(stderr,   "    -> Stopping GPU Tracking => Cannot start DCGM job watch: %s\n\n", errorString(result));
               if (result == DCGM_ST_REQUIRES_ROOT)
-                DEBUG0(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
+                DEBUG(stderr, "    -> May need to enable accounting mode: sudo nvidia-smi -am 1\n");
               xalt_gpu_tracking = 0;
               dcgm_handle       = 0;
               break;
@@ -641,7 +641,7 @@ void myinit(int argc, char **argv)
           result = _dcgmUpdateAllFields(dcgm_handle, 1);
           if (result != DCGM_ST_OK)
             {
-              DEBUG1(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
+              DEBUG(stderr, "    -> Stopping GPU Tracking => Cannot update DCGM job fields: %s\n\n", errorString(result));
               xalt_gpu_tracking = 0;
               dcgm_handle       = 0;
               break;
@@ -654,7 +654,7 @@ void myinit(int argc, char **argv)
 #endif
 
   if (xalt_gpu_tracking == 0)
-    DEBUG0(stderr, "  No GPU tracking\n");
+    DEBUG(stderr, "  No GPU tracking\n");
 
   start_time = t0;
   frac_time  = start_time - (long) (start_time);
@@ -684,7 +684,7 @@ void myinit(int argc, char **argv)
           have_uuid = 1;
         }
       setenv("XALT_RUN_UUID",uuid_str,1);
-      DEBUG1(stderr,"    -> Setting XALT_RUN_UUID: %s\n",uuid_str);
+      DEBUG(stderr,"    -> Setting XALT_RUN_UUID: %s\n",uuid_str);
     }
 
   time_t my_time = (time_t) start_time;
@@ -702,14 +702,14 @@ void myinit(int argc, char **argv)
 
   // This routine returns either "FALSE" for nothing found or the watermark.
   bool have_watermark = xalt_vendor_note(&watermark, xalt_tracing);
-  DEBUG1(stderr,"    -> Found watermark via vendor note: %s\n", have_watermark ? "true" : "false");
+  DEBUG(stderr,"    -> Found watermark via vendor note: %s\n", have_watermark ? "true" : "false");
 
   // If MPI program and no vendor watermark then try extracting the watermark
   // with objdump via extractXALTRecord(...)
   if (num_tasks > 1 && ! have_watermark )
     {
       have_watermark = extractXALTRecordString(exec_path, &watermark);
-      DEBUG1(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
+      DEBUG(stderr,"    -> Found watermark via objdump: %s\n", have_watermark ? "true" : "false");
     }
 
   if (! have_watermark) 
@@ -744,7 +744,7 @@ void myinit(int argc, char **argv)
   if (v)
     testing_runtime = strtod(v,NULL);
 
-  always_record = mpi_always_record;
+  always_record = xalt_mpi_always_record;
   v = getenv("XALT_MPI_ALWAYS_RECORD");
   if (v)
     always_record = strtol(v,(char **) NULL, 10);
@@ -754,7 +754,7 @@ void myinit(int argc, char **argv)
   // or a PKG type
   if (num_tasks >= always_record )
     {
-      DEBUG2(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
+      DEBUG(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
              num_tasks, (int) always_record);
 
       if ( ! have_uuid )
@@ -771,13 +771,13 @@ void myinit(int argc, char **argv)
       
       run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
                      xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
-                     stderr);
+                     always_record, stderr);
 
-      DEBUG1(stderr,"    -> uuid: %s\n", uuid_str);
+      DEBUG(stderr,"    -> uuid: %s\n", uuid_str);
     }
   else
     {
-      DEBUG4(stderr,"    -> MPI_SIZE: %d < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
+      DEBUG(stderr,"    -> MPI_SIZE: %d < MPI_ALWAYS_RECORD: %d, XALT is build to %s, Current %s -> Not producing a start record\n",
              num_tasks, (int) always_record, xalt_build_descriptA[build_mask], xalt_run_descriptA[run_mask]);
     }
 
@@ -804,7 +804,7 @@ void myinit(int argc, char **argv)
     v = XALT_SIGNAL_HANDLER;
   if (strcasecmp(v,"yes") == 0)
     {
-      DEBUG0(stderr, "    -> Setting up signals\n");
+      DEBUG(stderr, "    -> Setting up signals\n");
       int signalA[] = {SIGHUP, SIGQUIT, SIGILL,  SIGTRAP, SIGABRT, SIGBUS,
                        SIGFPE, SIGTERM, SIGXCPU, SIGUSR1, SIGUSR2, SIGALRM};
       int signalSz  = N_ELEMENTS(signalA);
@@ -823,7 +823,7 @@ void myinit(int argc, char **argv)
         }
     }
   else
-    DEBUG0(stderr, "    -> Signals capturing disabled\n");
+    DEBUG(stderr, "    -> Signals capturing disabled\n");
     
   v = getenv("XALT_DUMP_ENV");
   if (v && strcmp(v, "yes") == 0)
@@ -832,7 +832,7 @@ void myinit(int argc, char **argv)
       for (i = 0; environ[i] != NULL; ++i)
         fprintf(stderr,"%s\n",environ[i]);
     }
-  DEBUG0(stderr, "    -> Leaving myinit\n}\n\n");
+  DEBUG(stderr, "    -> Leaving myinit\n}\n\n");
 }
 void wrapper_for_myfini(int signum)
 {
@@ -876,16 +876,16 @@ void myfini()
 
   set_end_record();  /* Mark my_free() to not free since we are on the way out */
 
-  DEBUG4(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
+  DEBUG(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
   if (getenv("__XALT_FINAL_STATE__"))
     {
-      DEBUG0(my_stderr,"    -> exiting because myfini() has been called more than once\n}\n\n");
+      DEBUG(my_stderr,"    -> exiting because myfini() has been called more than once\n}\n\n");
       close_out(my_stderr, xalt_err);
       return;
     }
 
   if (signal_hdlr_called)
-    DEBUG1(my_stderr,"    -> my_fini() called via signal handler with signum: %d\n", signal_hdlr_called);
+    DEBUG(my_stderr,"    -> my_fini() called via signal handler with signum: %d\n", signal_hdlr_called);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
@@ -893,7 +893,7 @@ void myfini()
       if (xalt_kind == BIT_PKGS)
         remove_xalt_tmpdir(&uuid_str[0]);
 
-      DEBUG2(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
+      DEBUG(my_stderr,"    -> exiting because reject is set to: %s for program: %s\n}\n\n",
              xalt_reasonA[reject_flag], exec_path);
       close_out(my_stderr, xalt_err);
       return;
@@ -920,7 +920,7 @@ void myfini()
           
           if (my_rand >= probability)
             {
-              DEBUG4(my_stderr, "    -> exiting because sampling. "
+              DEBUG(my_stderr, "    -> exiting because sampling. "
                      "run_time: %g, (my_rand: %g > prob: %g) for program: %s\n}\n\n",
                      run_time, my_rand, probability, exec_path);
               if (xalt_err)
@@ -932,11 +932,11 @@ void myfini()
               return;
             }
           else
-            DEBUG4(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
+            DEBUG(my_stderr, "    -> Sampling program run_time: %g: (my_rand: %g <= prob: %g) for program: %s\n",
                    run_time, my_rand, probability, exec_path);
         }
       else
-        DEBUG0(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
+        DEBUG(my_stderr, "    -> XALT_SAMPLING = \"no\" All programs tracked!\n");
     }
 
 #if USE_DCGM || USE_NVML
@@ -952,7 +952,7 @@ void myfini()
       result = _nvmlDeviceGetCount(&device_count);
       if (result == NVML_SUCCESS)
         {
-          DEBUG1(my_stderr, "  %d GPUs detected\n", device_count);
+          DEBUG(my_stderr, "  %d GPUs detected\n", device_count);
 
           /* Loop over GPU devices */
           unsigned int i = 0;
@@ -968,7 +968,7 @@ void myfini()
               result = _nvmlDeviceGetHandleByIndex(i, &device);
               if (result != NVML_SUCCESS)
                 {
-                  DEBUG2(my_stderr, "  Unable to get device handle for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  DEBUG(my_stderr, "  Unable to get device handle for GPU %d: %s\n", i, _nvmlErrorString(result));
                   continue;
                 }
 
@@ -976,12 +976,12 @@ void myfini()
               result = _nvmlDeviceGetAccountingMode(device, &mode);
               if (result != NVML_SUCCESS)
                 {
-                  DEBUG2(my_stderr, "  Unable to get accounting mode for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  DEBUG(my_stderr, "  Unable to get accounting mode for GPU %d: %s\n", i, _nvmlErrorString(result));
                   continue;
                 }
               if (mode != NVML_FEATURE_ENABLED)
                 {
-                  DEBUG2(my_stderr, "  Accounting mode is not enabled for GPU %d. Enable accounting mode: sudo nvidia-smi -i %d -am 1\n", i, i);
+                  DEBUG(my_stderr, "  Accounting mode is not enabled for GPU %d. Enable accounting mode: sudo nvidia-smi -i %d -am 1\n", i, i);
                   continue;
                 }
 
@@ -989,7 +989,7 @@ void myfini()
               result = _nvmlDeviceGetAccountingBufferSize(device, &max_pid_count);
               if (result != NVML_SUCCESS)
                 {
-                  DEBUG2(my_stderr, "  Unable to get the accounting buffer size for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  DEBUG(my_stderr, "  Unable to get the accounting buffer size for GPU %d: %s\n", i, _nvmlErrorString(result));
                   continue;
                 }
 
@@ -1002,7 +1002,7 @@ void myfini()
               result = _nvmlDeviceGetAccountingPids(device, &pid_count, pids);
               if (result != NVML_SUCCESS)
                 {
-                  DEBUG2(my_stderr, "  Unable to get accounting data for GPU %d: %s\n", i, _nvmlErrorString(result));
+                  DEBUG(my_stderr, "  Unable to get accounting data for GPU %d: %s\n", i, _nvmlErrorString(result));
                   my_free(pids, sizeof(unsigned int)*max_pid_count);
                   continue;
                 }
@@ -1034,7 +1034,7 @@ void myfini()
                           if (stats.maxMemoryUsage > 0)
                             {
                               num_active_pids++;
-                              DEBUG4(my_stderr, "  PID %d startTime=%llu time=%llu isRunning=%d\n", pids[j], stats.startTime, stats.time, stats.isRunning);
+                              DEBUG(my_stderr, "  PID %d startTime=%llu time=%llu isRunning=%d\n", pids[j], stats.startTime, stats.time, stats.isRunning);
                             }
                         }
                       /* Note that the GPU compute process has not
@@ -1046,7 +1046,7 @@ void myfini()
                 }
               my_free(pids, sizeof(unsigned int)*max_pid_count);
 
-              DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, num_active_pids);
+              DEBUG(my_stderr, "  GPU %d: num compute pids %d\n", i, num_active_pids);
 
               if (num_active_pids > 0) {
                 num_gpus++;
@@ -1057,7 +1057,7 @@ void myfini()
           result = _nvmlShutdown();
           if (result != NVML_SUCCESS)
             {
-              DEBUG1(my_stderr, "  Error shutting down NVML: %s\n", _nvmlErrorString(result));
+              DEBUG(my_stderr, "  Error shutting down NVML: %s\n", _nvmlErrorString(result));
             }
           dlclose(nvml_dl_handle);
         }
@@ -1068,7 +1068,7 @@ void myfini()
           dcgmReturn_t result;
           dcgmJobInfo_t job_info;
 
-          DEBUG0(my_stderr, "  GPU tracing\n");
+          DEBUG(my_stderr, "  GPU tracing\n");
 
           _dcgmUpdateAllFields(dcgm_handle, 1);
           _dcgmJobStopStats(dcgm_handle, uuid_str);
@@ -1078,14 +1078,14 @@ void myfini()
           if (result == DCGM_ST_OK)
             {
               int i = 0;
-              DEBUG1(my_stderr, "  %d GPUs detected\n", job_info.numGpus);
+              DEBUG(my_stderr, "  %d GPUs detected\n", job_info.numGpus);
               for (i = 0 ; i < job_info.numGpus ; i++)
                 {
-                  DEBUG2(my_stderr, "  GPU %d: num compute pids %d\n", i, job_info.gpus[i].numComputePids);
+                  DEBUG(my_stderr, "  GPU %d: num compute pids %d\n", i, job_info.gpus[i].numComputePids);
                   if (job_info.gpus[i].numComputePids > 0)
                     num_gpus++;
                 }
-              DEBUG2(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
+              DEBUG(my_stderr, "  %d of %d GPUs were used\n", num_gpus, job_info.numGpus);
             }
 
           _dcgmJobRemove(dcgm_handle, uuid_str);
@@ -1111,8 +1111,8 @@ void myfini()
   xalt_timer.fini = epoch() - t0;
   run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
-                 usr_cmdline, xalt_tracing, my_stderr);
-  DEBUG0(my_stderr,"    -> leaving myfini\n}\n\n");
+                 usr_cmdline, xalt_tracing, always_record, my_stderr);
+  DEBUG(my_stderr,"    -> leaving myfini\n}\n\n");
   build_uuid_cleanup();
   fflush(my_stderr);
   my_free(watermark,strlen(watermark));
@@ -1143,7 +1143,7 @@ static int load_nvml()
             my_free(fn, strlen(fn));
           if ( ! nvml_dl_handle)
             {
-              DEBUG1(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
+              DEBUG(stderr, "    -> Unable to open libnvidia-ml.so or libnvidia-ml.so.1: %s\n\n",
                      dlerror());
               return 0;
             }
@@ -1170,7 +1170,7 @@ static int load_nvml()
       struct link_map * map;
       int result = dlinfo(nvml_dl_handle, RTLD_DI_LINKMAP, &map);
       char* name = realpath(map->l_name, NULL);
-      DEBUG1(stderr, "    -> Successfully dynamically linked with nvidia-ml library: %s\n", name);
+      DEBUG(stderr, "    -> Successfully dynamically linked with nvidia-ml library: %s\n", name);
     }
 
   return 1;
@@ -1192,7 +1192,7 @@ static int load_dcgm()
         my_free(fn, strlen(fn));
       if ( ! dcgm_dl_handle)
         {
-          DEBUG1(stderr, "    -> Unable to open libdcgm.so or libdcgm.so.1: %s\n\n",
+          DEBUG(stderr, "    -> Unable to open libdcgm.so or libdcgm.so.1: %s\n\n",
                  dlerror());
           return 0;
         }
@@ -1214,7 +1214,7 @@ static int load_dcgm()
       struct link_map * map;
       int result = dlinfo(dcgm_dl_handle, RTLD_DI_LINKMAP, &map);
       char* name = realpath(map->l_name, NULL);
-      DEBUG1(stderr, "    -> Successfully dynamically linked with dcgm library: %s\n", name);
+      DEBUG(stderr, "    -> Successfully dynamically linked with dcgm library: %s\n", name);
     }
   return 1;
 }
@@ -1288,7 +1288,7 @@ static  double prgm_sample_probability(int ntasks, double runtime)
    */
 
 
-  interval (*p_interval)[];
+  interval_t (*p_interval)[];
   if (ntasks > 1)
     {
       sz         = mpi_rangeSz;

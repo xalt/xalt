@@ -1,7 +1,7 @@
 #ifndef XALT_CXX_TYPES_H
 #define XALT_CXX_TYPES_H
 
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 #include <string>
 #include <vector>
 #include <unordered_map>

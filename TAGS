@@ -92,7 +92,7 @@ function tracking 41,1525
 function tracking 42,1591
 
 docs/source/020_site_configuration.rst,27
-Function Tracking258,8062
+Function Tracking269,8533
 
 src/Makefile.in,1964
 COPY_LIBS_TO_XALT 1,0
@@ -104,64 +104,64 @@ CXX 6,226
 OPTLVL 7,248
 LIB_OPTIONS 8,273
 WARN_FLAGS 9,305
-CF_INIT 11,367
-COMMON_FLGS 12,410
-CXXFLAGS 13,464
-CFLAGS 14,508
-  LIBDCGM:LIBDCGM17,599
-  LIBNVML:LIBNVML20,645
-   HAVE_EXTERNAL_HOSTNAME_PARSER 24,701
-   PARSER_TYPE 25,769
-      MY_HOSTNAME_PARSER_SRC 27,885
-      MY_HOSTNAME_PARSER_OBJ 28,969
-      MY_HOSTNAME_PARSER_OBJ_32 29,1045
-      MY_HOSTNAME_PARSER_LIBRARY 32,1164
-      MY_HOSTNAME_PARSER_LIB32 33,1247
-      MY_HOSTNAME_PARSER_TARGET 34,1330
-         MY_HOSTNAME_PARSER_TARGET  +=MY_HOSTNAME_PARSER_TARGET  +36,1435
-      MY_HOSTNAME_PARSER_OBJ 38,1515
-      MY_HOSTNAME_PARSER_OBJ_32 39,1591
-programs 46,1793
-c_sources 47,1809
-cxx_sources 48,1825
-libraries 49,1841
-extra_clean 50,1857
-so_libs 51,1873
-  HAVE_32BIT 54,1918
-  DEP32 55,1937
-  OBJ32 56,1954
-  DEP32 60,2003
-  OBJ32 61,2048
-dependencies 64,2100
-objects 65,2182
-include_dirs 67,2265
-include_dirs 68,2301
-CPPFLAGS     +=CPPFLAGS     +70,2372
-all:all76,2502
-  INCLUDE_DEPS 79,2538
-  INCLUDE_DEPS 83,2597
-  INCLUDE_DEPS 87,2658
-.PHONY:.PHONY99,2822
-all:all100,2834
-build_all:build_all102,2893
-COPY_ALL_LIBS:COPY_ALL_LIBS105,3001
-          baseNM=108,3158
-          realNM=115,3588
-%.d:%.d121,3887
-        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *124,4039
-%.d32:%.d32127,4137
-        sed 's,\($(notdir $*)\)\.o *:sed 's,\($(notdir $*)\)\.o *130,4299
-%.d:%.d133,4401
-        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *136,4553
-%.o32:%.o32139,4651
-ECHO:ECHO144,4726
-echo:echo147,4798
-neat:neat153,4962
-clean:clean156,5016
-clobber:clobber162,5306
-$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py:$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py167,5372
-my_hostname_parser_target:my_hostname_parser_target170,5472
-my_hostname_parser_target_32:my_hostname_parser_target_32173,5577
+CF_INIT 10,425
+COMMON_FLGS 11,468
+CXXFLAGS 12,522
+CFLAGS 13,566
+  LIBDCGM:LIBDCGM16,669
+  LIBNVML:LIBNVML19,715
+   HAVE_EXTERNAL_HOSTNAME_PARSER 23,771
+   PARSER_TYPE 24,839
+      MY_HOSTNAME_PARSER_SRC 26,955
+      MY_HOSTNAME_PARSER_OBJ 27,1039
+      MY_HOSTNAME_PARSER_OBJ_32 28,1115
+      MY_HOSTNAME_PARSER_LIBRARY 31,1234
+      MY_HOSTNAME_PARSER_LIB32 32,1317
+      MY_HOSTNAME_PARSER_TARGET 33,1400
+         MY_HOSTNAME_PARSER_TARGET  +=MY_HOSTNAME_PARSER_TARGET  +35,1505
+      MY_HOSTNAME_PARSER_OBJ 37,1585
+      MY_HOSTNAME_PARSER_OBJ_32 38,1661
+programs 45,1863
+c_sources 46,1879
+cxx_sources 47,1895
+libraries 48,1911
+extra_clean 49,1927
+so_libs 50,1943
+  HAVE_32BIT 53,1988
+  DEP32 54,2007
+  OBJ32 55,2024
+  DEP32 59,2073
+  OBJ32 60,2118
+dependencies 63,2170
+objects 64,2252
+include_dirs 66,2335
+include_dirs 67,2371
+CPPFLAGS     +=CPPFLAGS     +69,2442
+all:all75,2572
+  INCLUDE_DEPS 78,2608
+  INCLUDE_DEPS 82,2667
+  INCLUDE_DEPS 86,2728
+.PHONY:.PHONY98,2892
+all:all99,2904
+build_all:build_all101,2963
+COPY_ALL_LIBS:COPY_ALL_LIBS104,3071
+          baseNM=107,3228
+          realNM=115,3724
+%.d:%.d126,4379
+        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *129,4531
+%.d32:%.d32132,4629
+        sed 's,\($(notdir $*)\)\.o *:sed 's,\($(notdir $*)\)\.o *135,4791
+%.d:%.d138,4893
+        sed 's,\($(notdir $*)\.o\) *:sed 's,\($(notdir $*)\.o\) *141,5045
+%.o32:%.o32144,5143
+ECHO:ECHO149,5218
+echo:echo152,5290
+neat:neat158,5454
+clean:clean161,5508
+clobber:clobber167,5798
+$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py:$(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py172,5864
+my_hostname_parser_target:my_hostname_parser_target175,5964
+my_hostname_parser_target_32:my_hostname_parser_target_32178,6069
 
 src/tmpl/xalt_python_pkg_filter.template,56
 import os,4,56
@@ -180,6 +180,12 @@ interval     mpi_rangeA[mpi_rangeA17,293
 const int    scalar_rangeSz 18,345
 const int    mpi_rangeSz 19,406
 
+src/tmpl/xalt_pre_ingest_filter.template,108
+static char * strbuf 5,58
+static unsigned int sz 6,89
+int yywrap(13,150
+double pre_ingest_filter(18,181
+
 src/tmpl/xalt_hostname_parser.template,191
 #define HERE 6,93
 static char * strbuf 8,152
@@ -190,17 +196,19 @@ int yywrap(20,275
 int hostname_parser(25,306
 void hostname_parser_cleanup(47,729
 
-src/tmpl/xalt_regex.template,359
+src/tmpl/xalt_regex.template,445
 #define XALT_REGEX_H2,21
 #define N_ELEMENTS(6,72
 const char* pathPatternA[pathPatternA7,121
-const char* hostnameA[hostnameA8,178
-const char* envPatternA[envPatternA9,235
-const char* pyPkgPatternA[pyPkgPatternA10,292
-const int   pathPatternSz 12,350
-const int   hostnameSz 13,406
-const int   envPatternSz 14,459
-const int   pyPkgPatternSz 15,514
+const char* hostnameA[hostnameA8,179
+const char* envPatternA[envPatternA9,237
+const char* pyPkgPatternA[pyPkgPatternA10,295
+const char* ingestPatternA[ingestPatternA11,353
+const int   pathPatternSz 13,412
+const int   hostnameSz 14,469
+const int   envPatternSz 15,523
+const int   pyPkgPatternSz 16,579
+const int   ingestPatternSz 17,637
 
 src/tmpl/xalt_env_parser.template,180
 static char * strbuf 6,93
@@ -294,13 +302,13 @@ src/linker/xalt_utils.h,26
 src/linker/Module.mk.in,15
 local_dir 1,0
 
-src/linker/jsmn.c,222
+src/linker/jsmn.c,223
 static jsmntok_t *jsmn_alloc_token(jsmn_alloc_token6,82
-static void jsmn_fill_token(24,444
-static int jsmn_parse_primitive(35,700
-static int jsmn_parse_string(84,1856
-int jsmn_parse(151,3594
-void jsmn_init(306,7648
+static void jsmn_fill_token(24,528
+static int jsmn_parse_primitive(35,812
+static int jsmn_parse_string(84,2367
+int jsmn_parse(151,5477
+void jsmn_init(306,13339
 
 src/linker/xalt_cxx_types.h,352
 #define XALT_CXX_TYPES_H2,25
@@ -521,10 +529,20 @@ bool xalt_vendor_note(136,3781
 src/util/compute_sha1.h,28
 #define COMPUTE_SHA1_H2,23
 
-src/util/transmit.c,79
+src/util/transmit.c,342
 #define  _GNU_SOURCE1,0
-const int syslog_msg_sz 19,370
-void transmit(21,412
+#define XALT_LOGGING_LBL 19,370
+#define KIND_LBL 20,411
+#define NB_LBL 21,444
+#define SYSHOST_LBL 22,475
+#define KEY_LBL 23,511
+#define CRC_LBL 24,543
+#define IDX_LBL 25,578
+#define VALUE_LBL 26,610
+#define V_LBL 27,644
+#define INTERFACE_Version 28,674
+const int syslog_msg_sz 29,703
+void transmit(31,745
 
 src/util/xalt_syshost.h,28
 #define XALT_SYSHOST_H2,23
@@ -551,29 +569,29 @@ src/util/buildXALTRecordT.h,34
 #define BUILD_XALT_RECORDT_H2,29
 
 src/util/capture.c,43
-#define DATA_SIZE 3,40
-void capture(5,64
+#define DATA_SIZE 4,61
+void capture(6,85
 
-src/util/crcFast.c,350
-#define WIDTH 23,793
-#define TOPBIT 24,828
-#undef  REFLECT_DATA27,892
-#define REFLECT_DATA(28,913
-#undef  REFLECT_DATA30,979
-#define REFLECT_DATA(31,1000
-#undef  REFLECT_REMAINDER35,1070
-#define REFLECT_REMAINDER(36,1096
-#undef  REFLECT_REMAINDER38,1159
-#define REFLECT_REMAINDER(39,1185
-crc crcTable[crcTable43,1253
-crc crcFast(78,3359
+src/util/crcFast.c,351
+#define WIDTH 23,845
+#define TOPBIT 24,880
+#undef  REFLECT_DATA27,944
+#define REFLECT_DATA(28,965
+#undef  REFLECT_DATA30,1045
+#define REFLECT_DATA(31,1066
+#undef  REFLECT_REMAINDER35,1150
+#define REFLECT_REMAINDER(36,1176
+#undef  REFLECT_REMAINDER38,1242
+#define REFLECT_REMAINDER(39,1268
+crc crcTable[crcTable43,1339
+crc crcFast(78,3445
 
 src/util/base64.h,22
 #define BASE64_H2,17
 
-src/util/extractMain.c,43
-int ascending_sort(7,111
-int main(14,267
+src/util/extractMain.c,42
+int ascending_sort(6,90
+int main(13,246
 
 src/util/process.h,165
 #define PROCESS_H2,18
@@ -634,17 +652,18 @@ static const UT_icd ut_str_icd UTARRAY_UNUSED 242,13151
 static const UT_icd ut_int_icd UTARRAY_UNUSED 243,13254
 static const UT_icd ut_ptr_icd UTARRAY_UNUSED 244,13332
 
-src/util/xalt_c_utils.c,256
+src/util/xalt_c_utils.c,307
 #define _GNU_SOURCE1,0
 #define HERE 11,205
 #define DATESZ 13,263
 int isDirectory(15,283
 int mkpath(23,427
-void build_resultDir(42,710
-void build_resultFn(68,1564
-static bool s_start_record 86,2133
-void set_end_record(87,2168
-void my_free(91,2220
+const char* xalt_file_transmission_method(42,710
+void build_resultDir(53,999
+void build_resultFn(79,1853
+static bool s_start_record 97,2422
+void set_end_record(98,2457
+void my_free(102,2509
 
 src/util/process.c,98
 void init_proc(14,254
@@ -687,7 +706,7 @@ struct response 16,311
 static size_t _write_callback(22,407
 int main(40,839
 
-src/util/xalt_obfuscate.h,1917
+src/util/xalt_obfuscate.h,2542
 #define XALT_OBFUSCATE2,23
 #define PASTE2(4,47
 #define PaStE2(5,82
@@ -697,61 +716,81 @@ src/util/xalt_obfuscate.h,1917
 #define UNDERSCORE 13,223
 #define MY_NAME 14,252
 #define __fini 18,324
-#define __init 19,411
-#define myfini 20,498
-#define myinit 21,585
-#define wrapper_for_myfini 22,672
-#define base64_decode 24,760
-#define base64_encode 25,844
-#define buildEnvT 26,928
-#define buildUserT 27,1012
-#define buildXALTRecordT 28,1096
-#define build_proc 29,1180
-#define build_resultDir 30,1264
-#define build_resultFn 31,1348
-#define build_uuid 32,1432
-#define compute_sha1 33,1516
-#define compress_string 34,1600
-#define create_xalt_tmpdir_str 35,1684
-#define epoch 36,1768
-#define extractXALTRecordString 37,1852
-#define filterEnvT 38,1936
-#define free_proc 39,2020
-#define hostname_parser 40,2104
-#define hostname_parser_cleanup 41,2188
-#define init_proc 42,2272
-#define isDirectory 43,2356
-#define insert_key_double 44,2440
-#define insert_key_string 45,2524
-#define json_add_S2D 46,2608
-#define json_add_S2S 47,2692
-#define json_add_SET 48,2776
-#define json_add_json_str 49,2860
-#define json_add_ptA 50,2944
-#define json_fini 51,3028
-#define json_init 52,3112
-#define keep_env_name 53,3196
-#define keep_path 54,3280
-#define mkpath 55,3364
-#define my_free 56,3448
-#define my_hostname_parser 57,3532
-#define my_hostname_parser_cleanup 58,3616
-#define parseProcMaps 59,3700
-#define path_parser_cleanup 60,3784
-#define proc_cmdline 61,3868
-#define remove_xalt_tmpdir 62,3952
-#define run_submission 63,4036
-#define set_end_record 64,4120
-#define translate 65,4204
-#define transmit 66,4288
-#define walkProcessTree 67,4372
-#define xalt_dir 68,4456
-#define xalt_fgets_alloc 69,4540
-#define xalt_quotestring 70,4624
-#define xalt_quotestring_free 71,4708
-#define xalt_syshost 72,4792
-#define xalt_unquotestring 73,4876
-#define xalt_vendor_note 74,4960
+#define __init 19,413
+#define myfini 20,502
+#define myinit 21,591
+#define wrapper_for_myfini 22,680
+#define buildEnvT 24,770
+#define buildUserT 25,856
+#define buildXALTRecordT 26,942
+#define build_proc 27,1028
+#define build_resultDir 28,1114
+#define build_resultFn 29,1200
+#define build_uuid 30,1286
+#define build_uuid_cleanup 31,1372
+#define capture 32,1458
+#define compute_sha1 33,1544
+#define compute_sha1_cleanup 34,1630
+#define compress_string 35,1716
+#define crcInit 36,1802
+#define crcFast 37,1888
+#define crcSlow 38,1974
+#define create_xalt_tmpdir_str 39,2060
+#define env_parser_cleanup 40,2146
+#define epoch 41,2232
+#define extractXALTRecordString 42,2318
+#define filterEnvT 43,2404
+#define free_S2D 44,2490
+#define free_S2S 45,2576
+#define free_SET 46,2662
+#define free_proc 47,2748
+#define hostname_parser 48,2834
+#define hostname_parser_cleanup 49,2920
+#define init_proc 50,3006
+#define isDirectory 51,3092
+#define is_directory 52,3178
+#define insert_key_SET 53,3264
+#define insert_key_double 54,3350
+#define insert_key_string 55,3436
+#define json_add_S2D 56,3522
+#define json_add_S2S 57,3608
+#define json_add_SET 58,3694
+#define json_add_array 59,3780
+#define json_add_char_str 60,3866
+#define json_add_double 61,3952
+#define json_add_int 62,4038
+#define json_add_json_str 63,4124
+#define json_add_libT 64,4210
+#define json_add_ptA 65,4296
+#define json_add_utarray 66,4382
+#define json_fini 67,4468
+#define json_init 68,4554
+#define keep_env_name 69,4640
+#define keep_path 70,4726
+#define mkpath 71,4812
+#define my_free 72,4898
+#define my_hostname_parser 73,4984
+#define my_hostname_parser_cleanup 74,5070
+#define parseProcMaps 75,5156
+#define path_parser_cleanup 76,5242
+#define pkgRecordTransmit 77,5328
+#define proc_cmdline 78,5414
+#define processTreeFree 79,5500
+#define queueType 80,5586
+#define remove_xalt_tmpdir 81,5672
+#define run_submission 82,5758
+#define set_end_record 83,5844
+#define translate 84,5930
+#define transmit 85,6016
+#define walkProcessTree 86,6102
+#define xalt_dir 87,6188
+#define xalt_fgets_alloc 88,6274
+#define xalt_file_transmission_method 89,6360
+#define xalt_quotestring 90,6446
+#define xalt_quotestring_free 91,6532
+#define xalt_syshost 92,6618
+#define xalt_unquotestring 93,6704
+#define xalt_vendor_note 94,6790
 
 src/util/xalt_fgets_alloc.c,75
 #define HERE 6,97
@@ -844,35 +883,35 @@ src/util/xalt_timer.h,115
   double gpu_setup;9,93
 } xalt_timer_t;10,113
 
-src/util/crc.h,841
+src/util/crc.h,842
 #define _CRC_H17,566
-#define FALSE	24,629
-#define TRUE	25,646
-#define CRC_CCITT30,734
-typedef unsigned short  crc;35,783
-#define CRC_NAME	37,815
-#define POLYNOMIAL	38,847
-#define INITIAL_REMAINDER	39,876
-#define FINAL_XOR_VALUE	40,910
-#define REFLECT_DATA	41,943
-#define REFLECT_REMAINDER	42,972
-#define CHECK_VALUE	43,1005
-typedef unsigned short  crc;47,1061
-#define CRC_NAME	49,1093
-#define POLYNOMIAL	50,1122
-#define INITIAL_REMAINDER	51,1151
-#define FINAL_XOR_VALUE	52,1185
-#define REFLECT_DATA	53,1218
-#define REFLECT_REMAINDER	54,1246
-#define CHECK_VALUE	55,1278
-typedef unsigned long  crc;59,1334
-#define CRC_NAME	61,1365
-#define POLYNOMIAL	62,1394
-#define INITIAL_REMAINDER	63,1427
-#define FINAL_XOR_VALUE	64,1465
-#define REFLECT_DATA	65,1502
-#define REFLECT_REMAINDER	66,1530
-#define CHECK_VALUE	67,1562
+#define FALSE	26,660
+#define TRUE	27,677
+#define CRC_CCITT32,765
+typedef unsigned short  crc;37,814
+#define CRC_NAME	39,846
+#define POLYNOMIAL	40,878
+#define INITIAL_REMAINDER	41,907
+#define FINAL_XOR_VALUE	42,941
+#define REFLECT_DATA	43,974
+#define REFLECT_REMAINDER	44,1003
+#define CHECK_VALUE	45,1036
+typedef unsigned short  crc;49,1092
+#define CRC_NAME	51,1124
+#define POLYNOMIAL	52,1153
+#define INITIAL_REMAINDER	53,1182
+#define FINAL_XOR_VALUE	54,1216
+#define REFLECT_DATA	55,1249
+#define REFLECT_REMAINDER	56,1277
+#define CHECK_VALUE	57,1309
+typedef unsigned long  crc;61,1365
+#define CRC_NAME	63,1396
+#define POLYNOMIAL	64,1425
+#define INITIAL_REMAINDER	65,1458
+#define FINAL_XOR_VALUE	66,1496
+#define REFLECT_DATA	67,1533
+#define REFLECT_REMAINDER	68,1561
+#define CHECK_VALUE	69,1593
 
 src/util/compute_sha1.c,90
 static void * handle 17,390
@@ -914,14 +953,15 @@ UTSTRING_UNUSED static long _utstring_findR(284,8814
 UTSTRING_UNUSED static long utstring_find(318,9546
 UTSTRING_UNUSED static long utstring_findR(364,10852
 
-src/util/xalt_base_types.h,161
+src/util/xalt_base_types.h,183
 #define XALT_BASE_TYPES_H2,26
 #define HERE 4,53
-#define DEBUG0(6,144
-#define DEBUG1(7,261
-#define DEBUG2(8,378
-#define DEBUG3(9,495
-#define DEBUG4(10,612
+#define DEBUG(6,144
+#define DEBUG0(7,261
+#define DEBUG1(8,378
+#define DEBUG2(9,495
+#define DEBUG3(10,612
+#define DEBUG4(11,729
 
 src/util/epoch.h,21
 #define EPOCH_H2,16
@@ -929,12 +969,14 @@ src/util/epoch.h,21
 src/util/insert.h,22
 #define INSERT_H2,17
 
-src/util/xalt_configuration_report.C,135
-static const char* blank0 20,409
-static const char* comma 21,446
-const int dateSZ=22,484
-void displayArray(24,507
-int main(42,986
+src/util/xalt_configuration_report.C,182
+#define RESET 23,482
+#define BOLDRED 24,512
+static const char* blank0 26,571
+static const char* comma 27,608
+const int dateSZ=28,646
+void displayArray(30,669
+int main(48,1148
 
 src/util/xalt_config.h.in,1241
 #define XALT_CONFIG_H2,22
@@ -1002,7 +1044,7 @@ src/util/build_uuid.c,110
 #define BAD_UUID 11,226
 static void* handle 13,283
 void build_uuid(17,467
-void build_uuid_cleanup(59,1490
+void build_uuid_cleanup(62,1613
 
 src/util/utlist.h,4043
 #define UTLIST_H25,1163
@@ -1149,16 +1191,13 @@ src/util/buildJson.h,178
 src/util/xalt_quotestring.h,27
 #define QUOTESTRING_H2,22
 
-src/util/xalt_record_pkg.c,200
+src/util/xalt_record_pkg.c,130
 #define _GNU_SOURCE1,0
 #define DATESZ 16,302
 #define HERE 17,324
 #define DEBUG0(18,381
-#define DEBUG1(19,448
-#define DEBUG2(20,520
-#define DEBUG3(21,597
-#define DEBUG4(22,679
-int main(27,808
+#define DEBUG(19,498
+int main(24,657
 
 src/util/xalt_epoch.c,15
 int main(4,58
@@ -1179,7 +1218,7 @@ src/libxalt/buildUserT.h,27
 src/libxalt/run_submission.h,30
 #define RUN_SUBMISSION_H2,25
 
-src/libxalt/xalt_initialize.c,3987
+src/libxalt/xalt_initialize.c,4002
 #define  _GNU_SOURCE27,1220
 #  define HOSTNAME_PARSER 85,2546
 #  define HOSTNAME_PARSER_CLEANUP 86,2599
@@ -1205,67 +1244,67 @@ typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_T
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH,101,3103
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR,101,3103
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,101,3103
-	       XALT_UNAME_FAILURE}XALT_UNAME_FAILURE102,3195
-	       XALT_UNAME_FAILURE} xalt_status;102,3195
-static const char * xalt_reasonA[xalt_reasonA104,3237
-static const char * xalt_build_descriptA[xalt_build_descriptA118,3909
-static const char * xalt_run_descriptA[xalt_run_descriptA129,4424
-static const char * xalt_run_short_descriptA[xalt_run_short_descriptA137,4763
-#define STR(160,5613
-#define StR1_(161,5639
-#define BUFSZ 163,5660
-static xalt_timer_t xalt_timer;164,5684
-static int          countA[countA165,5716
-static char         buffer[buffer166,5747
-static char         uuid_str[uuid_str167,5782
-static char         exec_path[exec_path168,5816
-static char *       usr_cmdline;169,5859
-static char *       watermark 171,5893
-static xalt_status  reject_flag	172,5943
-static int          run_mask 173,6001
-static int          have_uuid 174,6048
-static long         always_record 175,6095
-static double       probability 176,6143
-static double       testing_runtime 177,6192
-static pid_t        ppid	178,6242
-static pid_t        pid 179,6282
-static int          errfd	180,6323
-static double       my_rand 181,6365
-static double       start_time	182,6414
-static double       end_time	183,6462
-static double       frac_time 184,6508
-static long         my_rank	185,6557
-static long         my_size	186,6601
-static int          num_tasks 187,6645
-static int          xalt_kind 188,6692
-static int          xalt_tracing 189,6739
-static int          xalt_run_tracing 190,6786
-static int          xalt_gpu_tracking 191,6833
-static int          xalt_sampling 192,6880
-static int          num_gpus 193,6927
-static int          b64_len 194,6974
-static int          b64_wm_len 195,7021
-static int          signal_hdlr_called 196,7068
-static unsigned long long __time 198,7131
-static void * nvml_dl_handle 199,7178
-static void *       dcgm_dl_handle 218,8272
-static dcgmHandle_t dcgm_handle 219,8322
-#define DCGMFUNC2(222,8504
-void myinit(257,9991
-void wrapper_for_myfini(837,28554
-static void close_out(849,28830
-void myfini(860,28989
-static int load_nvml(1130,38667
-static int load_dcgm(1181,40461
-static long compute_value(1225,42030
-static void get_abspath(1243,42363
-static volatile double epoch(1258,42693
-static unsigned int mix(1265,42814
-static  double prgm_sample_probability(1279,43197
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1317,43877
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1318,43997
-  __attribute__((section(".init_array"))) __typeof__(1320,44123
-  __attribute__((section(".fini_array"))) __typeof__(1321,44202
+               XALT_UNAME_FAILURE}XALT_UNAME_FAILURE102,3195
+               XALT_UNAME_FAILURE} xalt_status;102,3195
+static const char * xalt_reasonA[xalt_reasonA104,3244
+static const char * xalt_build_descriptA[xalt_build_descriptA118,3916
+static const char * xalt_run_descriptA[xalt_run_descriptA129,4431
+static const char * xalt_run_short_descriptA[xalt_run_short_descriptA137,4770
+#define STR(160,5620
+#define StR1_(161,5646
+#define BUFSZ 163,5667
+static xalt_timer_t xalt_timer;164,5691
+static int          countA[countA165,5723
+static char         buffer[buffer166,5754
+static char         uuid_str[uuid_str167,5789
+static char         exec_path[exec_path168,5823
+static char *       usr_cmdline;169,5866
+static char *       watermark 171,5900
+static xalt_status  reject_flag 172,5950
+static int          run_mask 173,6008
+static int          have_uuid 174,6055
+static long         always_record 175,6102
+static double       probability 176,6150
+static double       testing_runtime 177,6199
+static pid_t        ppid 178,6249
+static pid_t        pid 179,6296
+static int          errfd 180,6343
+static double       my_rand 181,6391
+static double       start_time 182,6440
+static double       end_time 183,6489
+static double       frac_time 184,6538
+static long         my_rank 185,6587
+static long         my_size 186,6635
+static int          num_tasks 187,6683
+static int          xalt_kind 188,6730
+static int          xalt_tracing 189,6777
+static int          xalt_run_tracing 190,6824
+static int          xalt_gpu_tracking 191,6871
+static int          xalt_sampling 192,6918
+static int          num_gpus 193,6965
+static int          b64_len 194,7012
+static int          b64_wm_len 195,7059
+static int          signal_hdlr_called 196,7106
+static unsigned long long __time 198,7169
+static void * nvml_dl_handle 199,7216
+static void *       dcgm_dl_handle 218,8310
+static dcgmHandle_t dcgm_handle 219,8360
+#define DCGMFUNC2(222,8542
+void myinit(257,10169
+void wrapper_for_myfini(837,29013
+static void close_out(849,29289
+void myfini(860,29448
+static int load_nvml(1130,39375
+static int load_dcgm(1181,41258
+static long compute_value(1225,42885
+static void get_abspath(1243,43246
+static volatile double epoch(1258,43590
+static unsigned int mix(1265,43711
+static  double prgm_sample_probability(1279,44094
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1317,44808
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1318,44928
+  __attribute__((section(".init_array"))) __typeof__(1320,45054
+  __attribute__((section(".fini_array"))) __typeof__(1321,45133
 
 src/libxalt/xalt_env_parser.h,31
 #define XALT_ENV_PARSER_H2,26
@@ -1293,7 +1332,7 @@ void parseProcMaps(41,1981
 
 src/libxalt/walkProcessTree.c,57
 void walkProcessTree(9,156
-void processTreeFree(45,976
+void processTreeFree(45,990
 
 src/libxalt/parseProcMaps.h,31
 #define PARSE_PROC_MAPS_H2,26
@@ -1301,16 +1340,16 @@ src/libxalt/parseProcMaps.h,31
 src/libxalt/buildEnvT.h,26
 #define BUILD_ENVT_H2,21
 
-src/libxalt/translate.c,277
-const char * safe_get(6,84
- UNKNOWN 16,259
- UNKNOWN = -1, SLURM 16,259
- UNKNOWN = -1, SLURM = 1, PBS,16,259
- UNKNOWN = -1, SLURM = 1, PBS, SGE,16,259
- UNKNOWN = -1, SLURM = 1, PBS, SGE, LSF16,259
-} QueueType_t 17,299
-QueueType_t queueType(19,316
-void translate(43,643
+src/libxalt/translate.c,285
+static const char * safe_get(7,112
+ UNKNOWN 17,294
+ UNKNOWN = -1, SLURM 17,294
+ UNKNOWN = -1, SLURM = 1, PBS,17,294
+ UNKNOWN = -1, SLURM = 1, PBS, SGE,17,294
+ UNKNOWN = -1, SLURM = 1, PBS, SGE, LSF17,294
+} QueueType_t 18,334
+QueueType_t queueType(20,351
+void translate(44,678
 
 src/libxalt/Module.mk.in,15
 local_dir 1,0
@@ -1321,7 +1360,7 @@ static const char *comma comma30,674
 static char        sha1buf[sha1buf32,737
 static bool        need_sha1 33,769
 void run_submission(35,807
-void pkgRecordTransmit(224,7867
+void pkgRecordTransmit(228,8041
 
 src/libxalt/my_hostname_parser_dummy.c,68
 int my_hostname_parser(4,63
@@ -1347,8 +1386,8 @@ src/xalt.model.mwb,3321
 òÀÜk`/ﬂ¬¯6BbS%ÊÅÉO?ÆR‡*LÔ3N›M ºûá]ŸÁ|ZˆÚ`ﬁ[ŸÕjüfqÿ|d_Ji}X…®£âèØ√¿qﬂŒïÄu≈ ∏ç—Ñƒa∫§.pI÷¢R∑√P1ùÜ“X!™zXoJÛ%â“˙P—¡M‚Óﬁ˙ìë ct•3Ì&Ñ>£¡æıeΩïáy8	C˙†˘E&Àe≥Í’ÀVÁ›è`Sº∫D·”"öe_JáBÎfø’»”/÷‡ö~ç≥YÔO_ÈDëÑw‰ïÜuµ¸0FCr8Ÿóòzi/ª’"hØ>„_Ÿãg,  ˛#{Dí«éËÁi¸må¬¯‡Ø5ñT¯ﬂ:\£¢?=#ÚiÑ=4˘tJ¢'~öˆ∆ÿvöÄZA‘`ƒ’T@ıøÚË’/ã∂K:™f˝ÂNç«É”Y7û˚NÊ{eÅ⁄æ◊≤ênHñ±X“ßØXÿ˙(â”•ãõ¿"‘x.1ùºÎã5Àh∂tqE^2c©|k3NÎ’”òH2}Ax$Î2¸	Íı§–ÿ+~/E˘I’•¨YÖ)æk”©rzûB:ﬁ‚Gr0ªXY»‚0y Uæi:bhå1¶]Ê~/€9yC•ƒ‹Ø©/∫%qLﬂ%Zò;P±ÉÎü™bc]7u}ﬁÀísõp)Dßê1t˝/AOCuWfí°MïÅL»@@ë†™¿ÙõDß!jŒ¿˙G]dsm@e,ˇ” ‘Å°)@ñMì@ñM32,7610
 model-schemas: mydb,35,8943
 
-README.new,78
-    (2.8.1)  * progressBar.py: handle the case where pbar.update(update2,10
+README.new,79
+    (2.8.1)   * progressBar.py: handle the case where pbar.update(update2,10
 
 Makefile.in,4113
 abs_srcdir 22,1051
@@ -1478,22 +1517,22 @@ gittag:gittag296,15712
             vtag=310,16750
 tags:tags328,17884
 build_tags:build_tags331,17922
-dist:dist404,22481
-SUBMAKEFILES 418,23505
-makefile 420,23597
-src/makefile:src/makefile423,23681
-src/util/module.mk:src/util/module.mk426,23756
-src/linker/module.mk:src/linker/module.mk428,23842
-src/libxalt/module.mk:src/libxalt/module.mk430,23932
-neat:neat434,24026
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR437,24129
-                         HAVE_32BIT=438,24223
-clean:clean439,24302
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR441,24402
-                         HAVE_32BIT=442,24496
-clobber:clobber443,24575
-                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR445,24677
-                         HAVE_32BIT=446,24771
+dist:dist409,22724
+SUBMAKEFILES 423,23748
+makefile 425,23840
+src/makefile:src/makefile428,23924
+src/util/module.mk:src/util/module.mk431,23999
+src/linker/module.mk:src/linker/module.mk433,24085
+src/libxalt/module.mk:src/libxalt/module.mk435,24175
+neat:neat439,24269
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR442,24372
+                         HAVE_32BIT=443,24466
+clean:clean444,24545
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR446,24645
+                         HAVE_32BIT=447,24739
+clobber:clobber448,24818
+                         $(MAKE) PARENT_DIR=$(MAKE) PARENT_DIR450,24920
+                         HAVE_32BIT=451,25014
 
 py_src/xalt_stack.py,149
 class Stack(27,1148
@@ -1526,22 +1565,22 @@ py_src/xalt_name_mapping.py,57
 def name_mapping(245,18699
 def get_comm_name(248,18744
 
-py_src/xalt_file_to_db.in.py,406
-def __LINE__(72,2613
-def __FILE__(78,2733
-class CmdLineOptions(83,2883
-  def __init__(86,2951
-  def execute(90,3008
-def Version(104,4054
-def keep_or_delete(109,4114
-def check_string_w_crc(114,4246
-def link_json_to_db(126,4490
-def pkg_json_to_db(188,5976
-def run_json_to_db(250,7463
-def passwd_generator(311,9100
-def build_resultDir(339,9830
-def store_json_files(351,10146
-def main(394,11720
+py_src/xalt_file_to_db.in.py,408
+def __LINE__(73,2651
+def __FILE__(79,2771
+class CmdLineOptions(86,2999
+  def __init__(89,3067
+  def execute(93,3124
+def Version(109,4366
+def keep_or_delete(114,4426
+def check_string_w_crc(119,4558
+def link_json_to_db(135,4933
+def pkg_json_to_db(210,7114
+def run_json_to_db(276,8815
+def passwd_generator(354,11215
+def build_resultDir(382,11945
+def store_json_files(394,12261
+def main(461,15087
 
 py_src/xalt_extract_linker.py,18
 def main(34,1393
@@ -1555,11 +1594,13 @@ class ProgressBar(67,2072
   def fini(136,3991
 def main(142,4125
 
-py_src/Rmap_XALT.py,95
-class Rmap(30,1343
-  def __init__(32,1440
-  def reverseMapT(101,3484
-  def libMap(109,3629
+py_src/Rmap_XALT.py,139
+def __LINE__(33,1432
+def __FILE__(39,1552
+class Rmap(43,1654
+  def __init__(45,1751
+  def reverseMapT(126,4079
+  def libMap(134,4224
 
 py_src/xalt_sitecustomize.py,144
 class RecorderRTM(6,120
@@ -1585,24 +1626,24 @@ class ExecRunLink:ExecRunLink167,7405
 class CompilerUsageByCount:CompilerUsageByCount228,9688
   def __init__(229,9716
   def build(232,9796
-  def report_by(249,10372
-class CompilerUsageByCoreHours:CompilerUsageByCoreHours263,10806
-  def __init__(264,10838
-  def build(268,10919
-  def report_by(298,12028
-class Libraries:Libraries312,12657
-  def __init__(314,12675
-  def build(318,12755
-  def report_by(354,14834
-  def group_report_by(376,15683
-class ModuleExec:ModuleExec411,16897
-  def __init__(412,16915
-  def build(416,16995
-  def report_by(440,17905
-def kinds_of_jobs(455,18524
-def percent_str(527,21411
-def running_other_exec(534,21547
-def main(589,24100
+  def report_by(248,10334
+class CompilerUsageByCoreHours:CompilerUsageByCoreHours262,10768
+  def __init__(263,10800
+  def build(267,10881
+  def report_by(297,11990
+class Libraries:Libraries311,12619
+  def __init__(313,12637
+  def build(317,12717
+  def report_by(353,14796
+  def group_report_by(375,15645
+class ModuleExec:ModuleExec410,16859
+  def __init__(411,16877
+  def build(415,16957
+  def report_by(439,17867
+def kinds_of_jobs(454,18486
+def percent_str(526,21373
+def running_other_exec(533,21509
+def main(588,24062
 
 py_src/xalt_library_usage.in.py,283
 def shortName(61,3052
@@ -1634,24 +1675,41 @@ def obj_type(218,6276
 def obj2module(241,6762
 def dbConfigFn(264,7300
 
-py_src/XALTdb.py,427
-def __LINE__(49,1775
-def __FILE__(55,1895
-def convertToTinyInt(62,2147
-class TimeRecord(78,2475
-  def __init__(79,2501
-  def add(99,3122
-  def print(128,4082
-class XALTdb(146,5372
-  def __init__(151,5506
-  def __readFromUser(161,5849
-  def __readConfig(169,6122
-  def connect(185,6772
-  def db(218,7899
-  def link_to_db(222,7966
-  def load_objects(319,11649
-  def run_to_db(372,13781
-  def pkg_to_db(547,20392
+py_src/ansi.py,352
+def code_to_chars(12,252
+def set_title(15,311
+def clear_screen(18,370
+def clear_line(21,430
+class AnsiCodes(25,489
+    def __init__(26,514
+class AnsiCursor(36,938
+    def UP(37,964
+    def DOWN(39,1021
+    def FORWARD(41,1080
+    def BACK(43,1142
+    def POS(45,1201
+class AnsiFore(49,1281
+class AnsiBack(71,1805
+class AnsiStyle(93,2337
+
+py_src/XALTdb.py,428
+def __LINE__(56,2166
+def __FILE__(62,2286
+def convertToTinyInt(69,2538
+class TimeRecord(85,2866
+  def __init__(86,2892
+  def add(106,3513
+  def print(135,4473
+class XALTdb(153,5763
+  def __init__(158,5897
+  def __readFromUser(168,6240
+  def __readConfig(176,6513
+  def connect(192,7163
+  def db(225,8290
+  def link_to_db(229,8357
+  def load_objects(336,12753
+  def run_to_db(389,14885
+  def pkg_to_db(606,23788
 
 py_src/xalt_scalar_bins_usage_report.in.py,961
 def shortName(61,3039
@@ -1695,31 +1753,35 @@ class CmdLineOptions(85,2479
   def execute(92,2604
 def main(102,3130
 
-py_src/xalt_syslog_to_db.in.py,593
-def __LINE__(68,2521
-def __FILE__(74,2641
-def Version(85,3008
-class CmdLineOptions(89,3067
-  def __init__(92,3135
-  def execute(96,3192
-class Record(113,4585
-  def __init__(118,4697
-  def addBlk(134,5054
-  def completed(143,5346
-  def value(158,5734
-  def prt(161,5786
-class ParseSyslog(195,6509
-  def __init__(198,6548
-  def writeRecordT(203,6697
-  def parse(220,7075
-  def __parseSyslogV1(230,7377
-  def __parseSyslog(254,7992
-class Filter(319,9745
-  def __init__(321,9768
-  def register(325,9857
-  def report_stats(340,10403
-  def apply(357,10932
-def main(382,11593
+py_src/xalt_syslog_to_db.in.py,692
+def __LINE__(70,2560
+def __FILE__(76,2680
+def Version(87,3048
+class Epoch(91,3107
+  def __init__(92,3128
+  def time(95,3187
+class CmdLineOptions(98,3230
+  def __init__(101,3298
+  def execute(105,3355
+class Record(126,4879
+  def __init__(131,4991
+  def addBlk(150,5444
+  def completed(159,5733
+  def value(175,6149
+  def prt(178,6201
+class ParseSyslog(217,7116
+  def __init__(220,7155
+  def num_leftover(225,7304
+  def writeRecordT(228,7362
+  def parse(245,7737
+  def __parseSyslogV1(255,8039
+  def __parseSyslog(279,8654
+class Filter(371,11060
+  def __init__(373,11083
+  def register(377,11172
+  def report_stats(392,11718
+  def apply(409,12247
+def main(434,12908
 
 py_src/BeautifulTbl.py,116
 class BeautifulTbl(5,66
@@ -1736,7 +1798,7 @@ find_real_command(83,2918
 sh_src/xalt_extract_record.in,13
 MY_DIR=3,13
 
-sh_src/ld.in,830
+sh_src/ld.in,859
 XALT_LD_LIBRARY_PATH=39,1499
     XALT_FILE_PREFIX=50,1923
     XALT_PRELOAD_ONLY=54,2008
@@ -1746,29 +1808,30 @@ XALT_LD_LIBRARY_PATH=39,1499
    XALT_FUNCTION_TRACKING=66,2361
 request_tracing "$@"  # This returns ${argA[@]} and XALT_TRACING=73,2547
 counter=89,3198
-    prev=103,3383
-    -*) optarg=112,3535
-    *) optarg=113,3553
-    *) optarg=; done=113,3553
-      USER_TRACE=122,3700
-      BIT32FLAG=126,3748
-      PrintOptions=131,3862
-      prev=136,3935
-      SHARED_LIB=140,3976
-      PARTIAL_LINKING=144,4016
-    SKIP=185,4940
-    SKIP=187,4974
-   SKIP=190,5033
-  status=196,5342
-XALT_INC=203,5478
-  XLD=226,6383
-  OBJ=250,7177
-LIBDCGM=286,8420
-    LIBDCGM=291,8608
-    XALT_INIT_ROUTINE_OBJ=299,8886
-status=307,9180
-EXEC=316,9453
-  PATH=320,9563
+    prev=104,3397
+    -*) optarg=113,3549
+    *) optarg=114,3567
+    *) optarg=; done=114,3567
+      USER_TRACE=123,3714
+      EXTRA_SYSLIB=127,3761
+      BIT32FLAG=131,3812
+      PrintOptions=136,3926
+      prev=141,3999
+      SHARED_LIB=145,4040
+      PARTIAL_LINKING=149,4080
+    SKIP=190,5004
+    SKIP=192,5038
+   SKIP=195,5097
+  status=201,5406
+XALT_INC=208,5542
+  XLD=231,6447
+  OBJ=255,7241
+LIBDCGM=291,8484
+    LIBDCGM=296,8672
+    XALT_INIT_ROUTINE_OBJ=304,8950
+status=312,9283
+EXEC=321,9596
+  PATH=325,9706
 
 sh_src/xalt_configuration_report.in,13
 MY_DIR=4,29
@@ -1790,20 +1853,20 @@ PKG_VERSION=23,1082
   first=61,1743
     export SYSHOST=63,1796
 SETUP_CMD=69,1868
-    SUDO=90,2282
-    base=104,2547
-    base=117,2812
-    base=131,3216
-    base=145,3549
-    base=159,3943
-      EXTRA=162,4014
-    base=177,4449
-      EXTRA=180,4520
-    base=196,4888
-BASE_DIR=207,5112
-  MAKE=217,5260
-lazy_eval 231,5436
-cmdA=237,5522
+    SUDO=90,2285
+    base=104,2553
+    base=117,2821
+    base=131,3228
+    base=145,3564
+    base=159,3961
+      EXTRA=162,4032
+    base=177,4470
+      EXTRA=180,4541
+    base=196,4912
+BASE_DIR=207,5139
+  MAKE=217,5287
+lazy_eval 231,5463
+cmdA=237,5549
 
 libelf_trick/Makefile,237
 CC 1,0
@@ -1835,36 +1898,37 @@ void myfini(6,99
 __attribute__((section(".init_array"))) __typeof__(11,158
 __attribute__((section(".fini_array"))) __typeof__(12,235
 
-proj_mgmt/py_build_tools/build_xalt_regex.py,190
+proj_mgmt/py_build_tools/build_xalt_regex.py,227
 class CmdLineOptions(28,1158
   def __init__(31,1226
   def execute(35,1283
 def convert_pattern(48,1979
-def convert_py_pkg_pattern(58,2158
-def convert_template(68,2461
-def main(99,3102
+def convert_ingest_pattern(58,2158
+def convert_py_pkg_pattern(68,2355
+def convert_template(78,2658
+def main(109,3299
 
 proj_mgmt/py_build_tools/xalt_prime_check.py,36
 def isPrime(6,103
 def main(23,380
 
 proj_mgmt/py_build_tools/find_required_libraries.py,41
-def find_libs(55,1826
-def main(80,2493
+def find_libs(56,1848
+def main(81,2515
 
 proj_mgmt/py_build_tools/build_syshost_routine.py,313
 def xalt_syshost_main(30,1187
 def hardcode(42,1497
 def add_hostname_routine(59,1854
-def env_var(97,3192
-def read_file(118,3706
-def nth_name(151,4732
-def strip_nodename_numbers(195,5905
-def mapping(225,6677
-class CmdLineOptions(289,8622
-  def __init__(292,8690
-  def execute(296,8745
-def main(310,9376
+def env_var(97,3199
+def read_file(118,3713
+def nth_name(151,4739
+def strip_nodename_numbers(195,5912
+def mapping(225,6684
+class CmdLineOptions(289,8629
+  def __init__(292,8697
+  def execute(296,8752
+def main(310,9383
 
 proj_mgmt/py_build_tools/build_python_filter_routine.py,125
 class CmdLineOptions(28,1158
@@ -1881,7 +1945,7 @@ class CmdLineOptions(28,1158
   def __init__(31,1226
   def execute(35,1283
 def convert_template(48,2071
-def main(79,2743
+def main(79,2748
 
 proj_mgmt/py_build_tools/copy_system_library_to_xalt.py,154
 class CmdLineOptions(46,1773
@@ -1889,7 +1953,7 @@ class CmdLineOptions(46,1773
   def execute(53,1898
 def files_in_tree(64,2540
 def readlink_recursive(76,2812
-def main(85,3071
+def main(86,3132
 
 proj_mgmt/py_build_tools/build_xalt_interval_table.py,186
 class CmdLineOptions(28,1154
@@ -2480,22 +2544,22 @@ system;398,21190
   Ty Coon,502,26386
 
 xalt.spec,797
-package use by R,89,2551
-  --prefix=prefix103,2811
-  %{!?with_mysql:--with-MySQL=MySQL104,2835
-  %{!?with_mysql:--with-MySQL=no} %{?with_mysql:--with-MySQL=MySQL104,2835
-  %{!?with_static:--with-staticLibs=staticLibs105,2903
-  %{!?with_static:--with-staticLibs=no} %{?with_static:--with-staticLibs=staticLibs105,2903
-  %{!?with_gpu:--with-trackGPU=trackGPU106,2983
-  %{!?with_gpu:--with-trackGPU=no} %{?with_gpu:--with-trackGPU=trackGPU106,2983
-  %{!?with_mpi:--with-trackMPI=trackMPI107,3053
-  %{!?with_mpi:--with-trackMPI=no} %{?with_mpi:--with-trackMPI=trackMPI107,3053
-  --with-config=config108,3123
-  --with-syshostConfig=syshostConfig109,3152
-  --with-transmission=transmission110,3189
-%{__make} install DESTDIR=113,3238
-local base 126,3614
-prepend_path(131,3788
+package use by R,89,2552
+  --prefix=prefix103,2812
+  %{!?with_mysql:--with-MySQL=MySQL104,2836
+  %{!?with_mysql:--with-MySQL=no} %{?with_mysql:--with-MySQL=MySQL104,2836
+  %{!?with_static:--with-staticLibs=staticLibs105,2904
+  %{!?with_static:--with-staticLibs=no} %{?with_static:--with-staticLibs=staticLibs105,2904
+  %{!?with_gpu:--with-trackGPU=trackGPU106,2984
+  %{!?with_gpu:--with-trackGPU=no} %{?with_gpu:--with-trackGPU=trackGPU106,2984
+  %{!?with_mpi:--with-trackMPI=trackMPI107,3054
+  %{!?with_mpi:--with-trackMPI=no} %{?with_mpi:--with-trackMPI=trackMPI107,3054
+  --with-config=config108,3124
+  --with-syshostConfig=syshostConfig109,3153
+  --with-transmission=transmission110,3190
+%{__make} install DESTDIR=113,3239
+local base 126,3615
+prepend_path(131,3789
 
 my_docs/Lmod_installation,77
      $ CC=10,297
@@ -9313,35 +9377,11 @@ my_docs/README.vm.txt,124
 rt/file_prefix/file_prefix.desc,16
 test_name 3,18
 
+rt/dup_runuuid/dup_runuuid.desc,16
+test_name 3,18
+
 rt/common_funcs.sh,17
 initialize(4,36
-
-rt/json/try.C,103
-const int sz 5,70
-char buf[buf6,91
-const char* ans1 8,106
-const char* ans2 9,143
-int main(11,176
-
-rt/json/Makefile,164
-EXEC 1,0
-C_SRC 2,17
-CXX_SRC 3,49
-OBJS 4,68
-CFLAGS 5,106
-CXXFLAGS 6,126
-$(EXEC)$(EXEC8,147
-try.o:try.o11,185
-xalt_quotestring.o:xalt_quotestring.o12,217
-
-rt/bad_runuuid/bad_runuuid.desc,16
-test_name 3,18
-
-rt/big_syslog/bin/logger,10
-TAG=5,42
-
-rt/big_syslog/big_syslog.desc,16
-test_name 3,18
 
 rt/syslog/bin/logger,10
 TAG=5,42
@@ -9447,11 +9487,19 @@ QUICK_START.txt,0
 
 install.sh,0
 
+rt/end2end/run.example_3.json,0
+
+rt/end2end/link.example.json,0
+
+rt/end2end/run.foobar_filtered.json,0
+
+rt/end2end/run.example.json,0
+
+rt/end2end/run.example_2.json,0
+
 rt/syslog/simpleConfig.py,0
 
-rt/bad_runuuid/simpleConfig.py,0
-
-rt/json/tryThis.json,0
+rt/dup_runuuid/simpleConfig.py,0
 
 my_docs/15/xsede15/xalt_xsede15.tex,0
 

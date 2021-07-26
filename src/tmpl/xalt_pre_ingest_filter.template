@@ -1,0 +1,39 @@
+/* -*- c -*- */
+%{
+#include <string.h>
+#include <stdio.h>
+static char * strbuf   = NULL;
+static unsigned int sz = 0;
+%}
+
+%%
+@pre_ingest_patterns@
+%%
+
+int yywrap()
+{
+   return 1;
+}
+
+double pre_ingest_filter(const char * path)
+{
+  unsigned int len = strlen(path);
+  if (sz < len+2)
+    {
+      if (strbuf)
+	free(strbuf);
+      sz = len+2;
+      strbuf = (char *) malloc(sz);
+    }
+
+  memcpy(&strbuf[0], path, len);
+  strbuf[len]   = '\0';
+  strbuf[len+1] = '\0';
+
+  YY_BUFFER_STATE buffer = yy_scan_buffer(strbuf, len+2);
+  double token = yylex();
+  yy_delete_buffer(buffer);
+
+  return token;
+}
+

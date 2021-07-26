@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include "xalt_config.h"
 #include "xalt_c_utils.h"
-#include "xalt_base_types.h"
+#include "xalt_debug_macros.h"
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
   
   if (strcasecmp(log_url,"") == 0)
     {
-      DEBUG0(stderr,"  Logging URL should be provided!\n");
+      DEBUG(stderr,"  Logging URL should be provided!\n");
       asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
       openlog(logNm, LOG_PID, LOG_USER);
       syslog(LOG_INFO, "Logging URL should be provided");
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
       if(res != CURLE_OK)
 	{
 	  // Log error to syslog
-	  DEBUG1(stderr,"  curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
+	  DEBUG(stderr,"  curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
           asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
           openlog(logNm, LOG_PID, LOG_USER);
           syslog(LOG_INFO, "curl_easy_perform() failed: %s",curl_easy_strerror(res));
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 	    }
           if ((strcmp(status, "200") != 0) && (strcmp(status, "201") != 0))
 	    {
-	      DEBUG2(stderr,"   HTTP status code %s received from %s\n",status, log_url);
+	      DEBUG(stderr,"   HTTP status code %s received from %s\n",status, log_url);
 	      asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
 	      openlog(logNm, LOG_PID, LOG_USER);
 	      syslog(LOG_INFO, "HTTP status code %s received from %s",status, log_url);

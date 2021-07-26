@@ -61,7 +61,7 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
     else:
       for entry in replaceA:
         regexp = entry[1]
-        value  = entry[0]
+        value  = str(entry[0])
         line   = regexp + "  { return " + value + "; }\n"
         outA.append(line)
 

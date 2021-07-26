@@ -329,9 +329,12 @@ tags:  build_tags
 	$(RM) file_list.*
 
 build_tags:
-	find . \( -regex '.*~$$\|.*/\.git\|.*/\.git/' -prune \)  \
-               -o -type f > file_list.1
-	sed -e 's|.*/.git.*||g'                                  \
+	$(RM) file_list.*
+	cd $(srcdir); find . \( -regex '.*~$$\|.*/\.git\|.*/\.git/' -prune \)  \
+               -o -type f > ./my_build/file_list.1
+	sed                                                      \
+	    -e 's|./my_build/.*||g'                              \
+            -e 's|.*/.git.*||g'                                  \
             -e 's|.*/rt/.*/t1/.*||g'                             \
             -e 's|./TAGS||g'                                     \
             -e 's|.*/epydoc/.*$$||g'                             \
@@ -383,6 +386,7 @@ build_tags:
             -e 's|.*/build_uuid_64/.*$$||g'                      \
 	    -e 's|.*\/\.libs/.*$$||g'                            \
 	    -e 's|.*\/\.deps/.*$$||g'                            \
+            -e 's|./file_list\..*||g'                            \
             -e 's|.*\.o$$||g'                                    \
             -e 's|.*\.lo$$||g'                                   \
             -e 's|.*\.Plo$$||g'                                  \
@@ -396,10 +400,11 @@ build_tags:
 	    -e 's|.*/lex.*\.c||g'                                \
             -e 's|.*/config\.status$$||g'                        \
             -e 's|.*\~$$||g'                                     \
-            -e 's|./file_list\..*||g'                            \
             -e '/^\s*$$/d'                                       \
 	       < file_list.1 > file_list.2
-	etags  `cat file_list.2`
+	@wc -l file_list.1
+	@wc -l file_list.2
+	cd $(srcdir); etags -o TAGS `cat ./my_build/file_list.2`
 
 dist:
 	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \

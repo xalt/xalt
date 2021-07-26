@@ -286,9 +286,10 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
   @param runFnA:      An array of run file names
 
   """
-  dupCnt = 0
-  num    = 0
-  query  = ""
+  num     = 0
+  dupCnt  = 0
+  skipCnt = 0
+  query   = ""
   try:
     for fn in runFnA:
       XALT_Stack.push("fn: "+fn)
@@ -325,7 +326,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
       
       if (debug):
         sys.stdout.write("  --> Sending record to xalt.run_to_db()\n")
-      stored, dups = xalt.run_to_db(debug, reverseMapT, u2acctT, runT, timeRecord)
+      status = xalt.run_to_db(debug, reverseMapT, u2acctT, runT, timeRecord)
 
       try:
         if (deleteFlg):
@@ -335,10 +336,12 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
       if (active):
         countT['any'] += 1
         if (not debug): pbar.update(countT['any'])
-      if (stored):
+      if (status == XALTdb.STORE):
         num += 1
-      if (dups):
+      if (status == XALTdb.DUP):
         dupCnt += 1
+      if (status == XALTdb.SKIP):
+        skipCnt += 1
         
       v = XALT_Stack.pop()  
       carp("fn",v)
@@ -349,7 +352,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
     print ("run_json_to_db(): Error:",e)
     print(traceback.format_exc())
     sys.exit (1)
-  return num, dupCnt
+  return num, dupCnt, skipCnt
 
 def passwd_generator():
   """
@@ -430,10 +433,11 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
     runFnA.sort();
     runCnt         = len(runFnA)
     if (args.debug): sys.stdout.write("  --> Found "+str(runCnt)+" run.*.json files\n\n")
-    num, dups      = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
+    num, dups, skp = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
                                     countT, active, pbar, timeRecord)
-    countT['run']  += num
-    countT['dup']  += dups
+    countT['run'] += num
+    countT['dup'] += dups
+    countT['skp'] += skp
     XALT_Stack.pop()
   XALT_Stack.pop()
 
@@ -562,6 +566,7 @@ def main():
   countT['dup'] = 0
   countT['pkg'] = 0
   countT['any'] = 0
+  countT['skp'] = 0
 
   if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
@@ -576,7 +581,7 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'] )
+  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'] )
   timeRecord.print()
   
 
