@@ -242,3 +242,43 @@ information can get quite large so it is important that you limit the
 size of the environment that you record.  It is recommended that you
 store no more that 10 environment variables per job on average.  So
 only pick important variables.
+
+Pre-ingestion Filtering
+^^^^^^^^^^^^^^^^^^^^^^^
+
+XALT version 2.10.25+ now support pre-ingestion filtering.  What this
+means that if your site has a large number of json records and wants
+to reduce the number of entries in the database, then your site's
+Config.py file has another array to be filled out.  Below shows an
+example filtering::
+
+pre_ingest_patterns = [
+#   percent   path pattern
+    [0.0,     r'.*\/foobar'],
+    [0.01,    r'.*\/BAZ'],
+]
+
+Each row provides a number and a pattern.  Just like all the previous
+patterns, if a pattern matches then it is used and no subsequent
+patterns are used. The number is a value between 0 and 1.  A value of
+0 states that there is zero percent chance of storing that pattern in
+the database and 1 represents a 100 % chance of being recorded in the
+database. A value of 0.01 as show for an executable named BAZ will
+have a 1 % chance of being stored in the database.
+
+There is already a default pattern automatically given last as which
+states that::
+
+    [1.0,    r'.*']
+
+Namely that all remaining executables will be ingested into the
+database.
+
+The patterns are converted into a lex file which is converted into a C
+routine which is then compiled into a shared library. This library is
+used by the **xalt_file_to_db.py** and **xalt_syslog_to_db.py**
+programs to control which json records are ingested into the database.
+This means that any changes to **pre_ingest_patterns** must be
+compiled and install on the VM or wherever your sites ingests json
+records into the MySQL database.  It doesn't require re-installing
+XALT on the compute nodes on your cluster.

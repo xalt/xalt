@@ -99,7 +99,6 @@ XALT 2.10+
               * Now require python module colorama. (must do a pip install for python2)
 	      * Report warning if --reverseMapD option is used but no reverseMap files found.
     (2.10.24) * Switch from using colorama to using ansi.py from colorama package.
-W.I.P.:
     (2.10.25) * Support for pre-ingestion filtering for XALTdb.py
               * Use asprintf directly instead of using __asprintf_chk etc by setting
 	        -D_FORTIFY_SOURCE=0 when building.  This allows XALT to work with alpine
@@ -109,3 +108,4 @@ W.I.P.:
 	      * Added XALT_MPI_ALWAYS_RECORD, XALT_MPI_TRACKING, XALT_SCALAR_TRACKING and XALT_SAMPLING
 	        values to XALT_qaT table in *.json records.
 	      * Report number of json records that have been skipped by pre-ingestion filtering.
+	      * Added pre-ingest filtering documentation.
