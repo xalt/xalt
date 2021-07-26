@@ -281,6 +281,7 @@ __installMe:
         done
 
 world_update:
+        @cd $(srcdir)                                                                         ; \
 	@git status -s > /tmp/git_st_$$$$                                     		      ; \
         if [ -s /tmp/git_st_$$$$ ]; then                                      		        \
             echo "All files not checked in => try again"                      		      ; \
