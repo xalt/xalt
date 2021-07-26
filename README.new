@@ -109,3 +109,6 @@ XALT 2.10+
 	        values to XALT_qaT table in *.json records.
 	      * Report number of json records that have been skipped by pre-ingestion filtering.
 	      * Added pre-ingest filtering documentation.
+    (2.10.26) * The same as 2.10.25, just resolving correctly setting the tags.
+    
+     

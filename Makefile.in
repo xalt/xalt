@@ -49,6 +49,7 @@ SITE_CONTROLLED_PREFIX  := @SITE_CONTROLLED_PREFIX@
 ETC_DIR              	:= @ETC_DIR@
 prefix               	:= @prefix@
 XALT_V               	:= src/util/xalt_version.h
+DOT_V               	:= .version
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_LIBUUID            := @HAVE_WORKING_LIBUUID@
@@ -70,11 +71,11 @@ XALT_PRIME_FMT     	:= @XALT_PRIME_FMT@
 XALT_FUNCTION_TRACKING  := @XALT_FUNCTION_TRACKING@
 ENABLE_BACKGROUNDING 	:= @ENABLE_BACKGROUNDING@
 XALT_CONFIG_PY       	:= @XALT_CONFIG_PY@
-XALT_SPEC               := $(srcdir)/xalt.spec
-XALT_SPEC_PATTERN       := $(srcdir)/proj_mgmt/xalt_spec_patternA.lua
-CONF_PY                 := $(srcdir)/docs/source/conf.py
-CONF_PY_PATTERN         := $(srcdir)/proj_mgmt/conf_py_update_patternA.lua
-UPDATE_VERSION          := $(srcdir)/proj_mgmt/updateVersion
+XALT_SPEC               := xalt.spec
+XALT_SPEC_PATTERN       := proj_mgmt/xalt_spec_patternA.lua
+CONF_PY                 := docs/source/conf.py
+CONF_PY_PATTERN         := proj_mgmt/conf_py_update_patternA.lua
+UPDATE_VERSION          := proj_mgmt/updateVersion
 
 
 GIT_PROG             	:= @PATH_TO_GIT@
@@ -295,6 +296,7 @@ world_update:
 
 gittag:
         ifneq ($(TAG),)
+	  @cd $(srcdir)                                                             ; \
 	  @git status -s > /tmp/git_st_$$$$                                         ; \
 	  my_tag=`expr substr $(TAG) 1 5`                                           ; \
 	  if [ -s /tmp/git_st_$$$$ ]; then         	                              \
@@ -308,12 +310,12 @@ gittag:
 	  else                                                             	      \
             vtag=$(TAG)                                                             ; \
             vtag="$${vtag#xalt-}"                                                   ; \
-	    echo "#define XALT_VERSION_STR \"XALT $$vtag $(VDATE)\"" >  $(XALT_V)   ; \
-	    echo "$$vtag"                                            >  .version    ; \
+	    echo "#define XALT_VERSION_STR \"XALT $$vtag $(VDATE)\"" > $(XALT_V)    ; \
+	    echo "$$vtag"                                            > $(DOT_V)     ; \
             $(UPDATE_VERSION) -p $(CONF_PY_PATTERN)   --version $$vtag $(CONF_PY)   ; \
             $(UPDATE_VERSION) -p $(XALT_SPEC_PATTERN) --version $$vtag $(XALT_SPEC) ; \
             git commit -m "moving to TAG_VERSION $(TAG)" $(XALT_SPEC)  $(CONF_PY)     \
-                                                         $(XALT_V)     .version     ; \
+                                                         $(XALT_V)     $(DOT_V)     ; \
             git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                    ; \
 	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`       ; \
             git push        origin $$branchName                                     ; \
