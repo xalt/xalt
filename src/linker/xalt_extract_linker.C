@@ -22,8 +22,9 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
                               "x86_64-linux-gnu-ld.gold" };
   int         ignorePrgSz  = sizeof(ignorePrgA)/sizeof(ignorePrgA[0]);
 
-  compiler     = "unknown";
-  compilerPath = "unknown";
+  compiler               = "unknown";
+  compilerPath           = "unknown";
+  std::string parentProg = "unknown";
   process_t proc;
 
   pid_t my_pid = getppid();  // start with parent!
@@ -55,6 +56,13 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
       compiler     = name;
       compilerPath = utstring_body(proc.m_exe);
       proc_cmdline(&proc, linklineA);
+
+      my_pid = proc.m_parent;
+      build_proc(&proc, my_pid);
+
+      parentProg = utstring_body(proc.m_name);
+      if (parentProg == "rustc")
+        compilerPath = utstring_body(proc.m_exe);
       break;
     }
   free_proc(&proc);
