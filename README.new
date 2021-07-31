@@ -115,6 +115,4 @@ W.I.P.:
                 rustc instead.
 	      * Compute parent processes as part json string. It is now written to COMP_T
 	        (xalt_extract_linker.C).
-		
-    
-     
+	      * Now print Build_compiler when xalt_tracing is on.

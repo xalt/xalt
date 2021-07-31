@@ -74,7 +74,6 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   t1 = epoch();
   buildXALTRecordT(watermark, &recordT);
   insert_key_double(&measureT, "05_Build_RecordT_", epoch() - t1);
-  DEBUG(my_stderr,"    Extracted recordT from watermark\n");
 
   //*********************************************************************
   // Build userT, userDT
@@ -83,10 +82,27 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   S2S_t* e;
   if (recordT)
     {
+      char* compiler;
+
       HASH_FIND_STR(recordT, "Build_Epoch", e);
       if (e)
         insert_key_double(&userDT, "Build_Epoch",  strtod(utstring_body(e->value), (char**) NULL));
+      
+      if (xalt_tracing)
+        {
+          HASH_FIND_STR(recordT, "", e);
+          HASH_FIND_STR(recordT, "Build_compiler", e);
+          if (e)
+            compiler = strdup(utstring_body(e->value));
+          else
+            compiler = strdup("UNKNOWN");
+          DEBUG(my_stderr,"    Extracted recordT from watermark. Compiler: %s\n",compiler);
+          my_free(compiler,strlen(compiler));
+        }
     }
+  else
+    DEBUG(my_stderr,"    No watermark found -> recordT is empty\n");
+    
           
   char* exec_pathQ = strdup(xalt_quotestring(exec_path));
   xalt_quotestring_free();
