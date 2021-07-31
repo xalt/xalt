@@ -62,7 +62,10 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
 
       parentProg = utstring_body(proc.m_name);
       if (parentProg == "rustc")
-        compilerPath = utstring_body(proc.m_exe);
+        {
+          compilerPath = utstring_body(proc.m_exe);
+          compiler     = parentProg;
+        }
       break;
     }
   free_proc(&proc);
