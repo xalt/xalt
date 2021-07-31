@@ -115,4 +115,6 @@ W.I.P.:
                 rustc instead.
 	      * Compute parent processes as part json string. It is now written to COMP_T
 	        (xalt_extract_linker.C).
-	      * Now print Build_compiler when xalt_tracing is on.
+	      * Now print Build_compiler and executable's xalt_version when xalt_tracing is on.
+	      * Change xalt_extract_record to find the .note.xalt.info section of the executable instead of
+	        .xalt (now: "objdump -s -j .note.xalt.info" instead of "objdump -s -j .xalt")

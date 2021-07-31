@@ -83,6 +83,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   if (recordT)
     {
       char* compiler;
+      char* xalt_version;
 
       HASH_FIND_STR(recordT, "Build_Epoch", e);
       if (e)
@@ -90,14 +91,20 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
       
       if (xalt_tracing)
         {
-          HASH_FIND_STR(recordT, "", e);
           HASH_FIND_STR(recordT, "Build_compiler", e);
           if (e)
             compiler = strdup(utstring_body(e->value));
           else
             compiler = strdup("UNKNOWN");
-          DEBUG(my_stderr,"    Extracted recordT from watermark. Compiler: %s\n",compiler);
+          HASH_FIND_STR(recordT, "XALT_Version", e);
+          if (e)
+            xalt_version = strdup(utstring_body(e->value));
+          else
+            xalt_version = strdup("UNKNOWN");
+          DEBUG(my_stderr,"    Extracted recordT from watermark. Compiler: %s, XALT_Version: %s\n",
+                compiler,xalt_version);
           my_free(compiler,strlen(compiler));
+          my_free(xalt_version,strlen(xalt_version));
         }
     }
   else
