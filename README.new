@@ -113,6 +113,8 @@ XALT 2.10+
 W.I.P.:
     (2.10.27) * When extracting linker program, look for rustc as the parent program. If so return
                 rustc instead.
-
+	      * Compute parent processes as part json string. It is now written to COMP_T
+	        (xalt_extract_linker.C).
+		
     
      

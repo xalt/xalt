@@ -121,7 +121,7 @@ void processValue(const char* name, const char* js, int& i, int ntokens, jsmntok
 
 
 void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& compiler, std::string& compilerPath,
-                       UT_array** linklineA)
+                       UT_array** linklineA, UT_array** parentProcA)
 {
   jsmn_parser parser;
   jsmntok_t*  tokens;
@@ -172,6 +172,8 @@ void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& comp
         processValue(name,js, i, ntokens, tokens, compilerPath);
       else if (mapName == "link_line")
         processArray(name,js, i, ntokens, tokens, linklineA);
+      else if (mapName == "parentProcs")
+        processArray(name,js, i, ntokens, tokens, parentProcA);
     }
   memset(tokens, 0, sizeof(jsmntok_t)*maxTokens);
   free(tokens);

@@ -43,8 +43,10 @@ int main(int argc, char* argv[])
   std::string compiler;
   std::string compilerPath;
   UT_array*   linklineA;
-  utarray_new(linklineA, &ut_str_icd);
-  parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, &linklineA);
+  UT_array*   parentProcA;
+  utarray_new(linklineA,   &ut_str_icd);
+  utarray_new(parentProcA, &ut_str_icd);
+  parseCompTJsonStr("COMP_T", jsonStr, compiler, compilerPath, &linklineA, &parentProcA);
   
   //--------------------------------------------------
   // Build user, osName, cwd and system;
