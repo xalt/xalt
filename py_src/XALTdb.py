@@ -523,6 +523,9 @@ class XALTdb(object):
         container     = userT.get('container')
         exec_type     = userT.get('exec_type')
         
+        prob_factor   = exec_prob * probability
+
+
         if ( type(container) != type(None)):
           container = container[:32]
         if ( account == "unknown"):
@@ -533,7 +536,7 @@ class XALTdb(object):
         cursor.execute(query, (job_id,                   run_uuid,                     dateTimeStr,
                                syshost,                  uuid,                         hash_id,
                                account,                  exec_type,                    startTimeStr,
-                               endTimeStr,               runTimeStr,                   probability,
+                               endTimeStr,               runTimeStr,                   prob_factor,
                                num_cores,                num_nodes,                    num_threads,
                                num_gpus,                 queue,                        sum_runs,
                                sum_times,                user,                         exec_path,
