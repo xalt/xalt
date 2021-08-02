@@ -118,3 +118,5 @@ W.I.P.:
 	      * Now print Build_compiler and executable's xalt_version when xalt_tracing is on.
 	      * Change xalt_extract_record to find the .note.xalt.info section of the executable instead of
 	        .xalt (now: "objdump -s -j .note.xalt.info" instead of "objdump -s -j .xalt")
+	      * Multiply the preIngest probabilty with sampling probability as the stored probability in
+                xalt run record.
