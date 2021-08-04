@@ -111,8 +111,8 @@ XALT 2.10+
 	      * Added pre-ingest filtering documentation.
     (2.10.26) * The same as 2.10.25, just resolving correctly setting the tags.
 W.I.P.:
-    (2.10.27) * When extracting linker program, look for rustc as the parent program. If so return
-                rustc instead.
+    (2.10.27) * When extracting linker program, look for {"rustc", "nim" or "chpl"} if any of them 
+                are parent processes.
 	      * Compute parent processes as part json string. It is now written to COMP_T
 	        (xalt_extract_linker.C).
 	      * Now print Build_compiler and executable's xalt_version when xalt_tracing is on.
