@@ -110,7 +110,6 @@ XALT 2.10+
 	      * Report number of json records that have been skipped by pre-ingestion filtering.
 	      * Added pre-ingest filtering documentation.
     (2.10.26) * The same as 2.10.25, just resolving correctly setting the tags.
-W.I.P.:
     (2.10.27) * When extracting linker program, look for {"rustc", "nim" or "chpl"} if any of them 
                 are parent processes.
 	      * Compute parent processes as part json string. It is now written to COMP_T
