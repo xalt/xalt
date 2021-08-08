@@ -600,9 +600,10 @@ def main():
   rt = t2 - t1
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
+  mb_processed = "%.3gMB" % (count['fSZ']/1024.0*1024.0)
   print("Ingestion stats:",args.syshost+":","total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
         ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
-        ", leftovers: ",parseSyslog.num_leftover(),", total GB processed:",fileSzSum/1024.0*1024.0*1024.0)
+        ", leftovers: ",parseSyslog.num_leftover(),", total MB processed:",mb_processed)
   timeRecord.print()
         
   

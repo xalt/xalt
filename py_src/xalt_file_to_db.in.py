@@ -588,8 +588,8 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
   mb_processed = "%.3gMB" % (count['fSZ']/1024.0*1024.0)
-  print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'], ",
-  total MB processed: ", mb_processed)
+  print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'],
+        ", total MB processed: ", mb_processed)
   timeRecord.print()
   
 
