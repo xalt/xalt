@@ -508,6 +508,7 @@ def main():
       continue
     fnSz  += os.path.getsize(fn)
     
+  fileSzSum   = 0
   badsyslog   = 0
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
@@ -524,6 +525,7 @@ def main():
     # See https://stackoverflow.com/questions/47452824 for reasons.
 
     with open(fn, 'rb') as f:
+      fileSzSum += os.path.getsize(f.name)
       for bline in f:
         try:
           line = bline.decode()
@@ -600,7 +602,7 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   print("Ingestion stats:",args.syshost+":","total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
         ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
-        ", leftovers: ",parseSyslog.num_leftover())
+        ", leftovers: ",parseSyslog.num_leftover(),", total GB processed:",fileSzSum/1024.0*1024.0*1024.0)
   timeRecord.print()
         
   

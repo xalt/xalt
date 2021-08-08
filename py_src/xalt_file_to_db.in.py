@@ -157,7 +157,8 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
         sys.stdout.write(fn+"\n")
         sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
-  
+      
+      count['fSZ'] += os.path.getsize(f.name)
       if (listFn or debug):
         sys.stdout.write(fn+"\n")
         if (debug): sys.stdout.write("  --> Trying to open file\n")
@@ -233,6 +234,7 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
       except:
         continue
   
+      count['fSZ'] += os.path.getsize(f.name)
       s = None
       try:
         s    = f.read().rstrip()
@@ -300,6 +302,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
         sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
+      count['fSZ'] += os.path.getsize(f.name)
       if (listFn or debug):
         sys.stdout.write(fn+"\n")
         if (debug): sys.stdout.write("  --> Trying to open file\n")
@@ -407,9 +410,10 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
     active = False
   
 
-  linkCnt = 0
-  runCnt  = 0
-  pkgCnt  = 0
+  fileSzSum = 0
+  linkCnt   = 0
+  runCnt    = 0
+  pkgCnt    = 0
   XALT_Stack.push("Directory: " + xaltDir)
 
   xaltDir = build_resultDir(homeDir, transmission, "link")
@@ -433,7 +437,7 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
     runFnA.sort();
     runCnt         = len(runFnA)
     if (args.debug): sys.stdout.write("  --> Found "+str(runCnt)+" run.*.json files\n\n")
-    num, dups, skp = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA, 
+    num, dups, skp = run_json_to_db(xalt, args.debug, args.listFn, rmapT, u2acctT, args.delete, runFnA,
                                     countT, active, pbar, timeRecord)
     countT['run'] += num
     countT['dup'] += dups
@@ -568,6 +572,7 @@ def main():
   countT['pkg'] = 0
   countT['any'] = 0
   countT['skp'] = 0
+  countT['fSZ'] = 0
 
   if (xalt_file_prefix == "USE_HOME"):
     for user, homeDir in passwd_generator():
@@ -582,7 +587,9 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'] )
+  mb_processed = "%.3gMB" % (count['fSZ']/1024.0*1024.0)
+  print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'], ",
+  total MB processed: ", mb_processed)
   timeRecord.print()
   
 
