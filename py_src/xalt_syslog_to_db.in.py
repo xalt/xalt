@@ -601,7 +601,11 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
   mb_processed = "%.3g MB" % (fileSzSum/(1024.0*1024.0))
-  print("Ingestion stats:",args.syshost+":","total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
+  lead_txt = ""
+  if (args.syshost != ".*"):
+    lead_txt = arg.syshost + ":"
+
+  print("Ingestion stats:",lead_txt,"total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
         ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
         ", leftovers: ",parseSyslog.num_leftover(),", total MB processed:",mb_processed)
   timeRecord.print()

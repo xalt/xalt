@@ -508,7 +508,7 @@ def main():
   extra_txt = ""
   if (args.syshost != "*"):
     extra_txt = " for "+args.syshost
-    lead_txt  = args.syshost
+    lead_txt  = args.syshost + ":"
   num  = 0
   szS = ""
   if (xalt_file_prefix == "USE_HOME"):
@@ -588,7 +588,7 @@ def main():
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
   mb_processed = "%.3g MB" % (countT['fSZ']/(1024.0*1024.0))
-  print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'],
+  print("Ingestion stats:",lead_txt,"num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'],
         ", total MB processed: ", mb_processed)
   timeRecord.print()
   
