@@ -598,7 +598,7 @@ def main():
   rt = t2 - t1
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
-  print("total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
+  print("Ingestion stats:",args.syshost+":","total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
         ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
         ", leftovers: ",parseSyslog.num_leftover())
   timeRecord.print()

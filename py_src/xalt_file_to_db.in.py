@@ -500,10 +500,11 @@ def main():
 
   args      = CmdLineOptions().execute()
   xalt      = XALTdb(args.confFn)
+  lead_txt  = ""
   extra_txt = ""
   if (args.syshost != "*"):
     extra_txt = " for "+args.syshost
-
+    lead_txt  = args.syshost
   num  = 0
   szS = ""
   if (xalt_file_prefix == "USE_HOME"):
@@ -581,7 +582,7 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  print("num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'] )
+  print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'] )
   timeRecord.print()
   
 
