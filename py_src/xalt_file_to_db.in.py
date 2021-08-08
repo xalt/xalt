@@ -158,7 +158,7 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
         sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
-      count['fSZ'] += os.path.getsize(f.name)
+      countT['fSZ'] += os.path.getsize(f.name)
       if (listFn or debug):
         sys.stdout.write(fn+"\n")
         if (debug): sys.stdout.write("  --> Trying to open file\n")
@@ -234,7 +234,7 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
       except:
         continue
   
-      count['fSZ'] += os.path.getsize(f.name)
+      countT['fSZ'] += os.path.getsize(f.name)
       s = None
       try:
         s    = f.read().rstrip()
@@ -302,7 +302,7 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
         sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
-      count['fSZ'] += os.path.getsize(f.name)
+      countT['fSZ'] += os.path.getsize(f.name)
       if (listFn or debug):
         sys.stdout.write(fn+"\n")
         if (debug): sys.stdout.write("  --> Trying to open file\n")
@@ -587,7 +587,7 @@ def main():
   if (args.timer):
     print("Time: ", time.strftime("%T", time.gmtime(rt)))
 
-  mb_processed = "%.3gMB" % (count['fSZ']/1024.0*1024.0)
+  mb_processed = "%.3gMB" % (countT['fSZ']/1024.0*1024.0)
   print("Ingestion stats:",args.syshost+":","num links: ", countT['lnk'], ", num pkgs: ", countT['pkg'], ", num runs: ", countT['run'],", dups: ",countT['dup'], "preIngestFiltered: ",countT['skp'],
         ", total MB processed: ", mb_processed)
   timeRecord.print()
