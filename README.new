@@ -119,3 +119,6 @@ XALT 2.10+
 	        .xalt (now: "objdump -s -j .note.xalt.info" instead of "objdump -s -j .xalt")
 	      * Multiply the preIngest probabilty with sampling probability as the stored probability in
                 xalt run record.
+    (2.10.28) * The programs xalt_*_to_db.in.py now include the string "Ingestion stats: <syshost>:" for better
+                greping the output for how the ingestion process went.
+              * The ingestion stats include the number of megabytes ingested
