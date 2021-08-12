@@ -605,7 +605,7 @@ def main():
   if (args.syshost != ".*"):
     lead_txt = args.syshost + ":"
 
-  print("Ingestion stats:",lead_txt,"total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
+  print("Ingestion stats:",lead_txt,"total processed: ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
         ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
         ", leftovers: ",parseSyslog.num_leftover(),", total MB processed:",mb_processed)
   timeRecord.print()

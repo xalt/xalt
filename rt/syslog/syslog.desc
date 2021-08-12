@@ -68,9 +68,12 @@ test_descript = {
      unset LD_LIBRARY_PATH
      unset LD_PRELOAD
 
+     SYSHOST=`xalt_syshost`
+     displayThis "SYSHOST: $SYSHOST"
+
      rm $outputDir/reverseMapD/xalt_rmapT.json
      displayThis  "xalt_syslog_to_db.py"
-     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log                       --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
+     xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog syslog.log --syshost $SYSHOST    --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
 
      displayThis  "xalt_syslog_to_db.py V:2"
      xalt_syslog_to_db.py  --confFn $DB_CONF_FN --syslog $testDir/V2_syslog.log           --reverseMapD $outputDir/reverseMapD --u2acct u2acct.json
