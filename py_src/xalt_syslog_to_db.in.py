@@ -603,7 +603,7 @@ def main():
   mb_processed = "%.3g MB" % (fileSzSum/(1024.0*1024.0))
   lead_txt = ""
   if (args.syshost != ".*"):
-    lead_txt = arg.syshost + ":"
+    lead_txt = args.syshost + ":"
 
   print("Ingestion stats:",lead_txt,"total processed : ", count, ", num links: ", lnkCnt, ", num runs: ", runCnt,
         ", pkgCnt: ", pkgCnt, ", badCnt: ", badCnt, ", badsyslog: ",badsyslog, ", dups: ",dupCnt,", preIngestFiltered: ",skpCnt,
