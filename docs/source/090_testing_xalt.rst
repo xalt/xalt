@@ -86,7 +86,7 @@ You should see something like the following::
 
 If you want to see this output written to a file instead try this::
 
-   $ XALT_TRACING=file:$HOME/linker.log gcc -o try try.c
+   $ XALT_TRACING=link:$HOME/linker.log gcc -o try try.c
 
 and the tracing output will be written to $HOME/linker.log instead.
 

@@ -40,7 +40,7 @@ request_tracing()
 {
   if [ "${XALT_TRACING:-}" = "yes" -o  "${XALT_TRACING:-}" = "link" ]; then
     export XALT_TRACING=yes
-  elif [[ "${XALT_TRACING:-}" =~ file: ]]; then
+  elif [[ "${XALT_TRACING:-}" =~ link: ]]; then
     __XALT_TRACING_FILE__=${XALT_TRACING#*:}
     export __XALT_TRACING_FILE__
     rm -f $__XALT_TRACING_FILE__
@@ -70,7 +70,7 @@ tracing_msg()
     builtin echo ""   1>&2
     builtin echo `date "+%H:%M:%S"` "$@" 1>&2
   fi
-  if [[ "${XALT_TRACING:-}" =~ file: ]]; then
+  if [[ "${XALT_TRACING:-}" =~ link: ]]; then
     builtin echo ""                      >> $__XALT_TRACING_FILE__
     builtin echo `date "+%H:%M:%S"` "$@" >> $__XALT_TRACING_FILE__
   fi

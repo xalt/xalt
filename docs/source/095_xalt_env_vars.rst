@@ -43,10 +43,11 @@ Debugging variables for XALT
 
 This variable can take several values:
 
-*link* : This will tracing the linking steps
+*link* : This will tracing the linking steps and write the results to stderr.
 
-*file:<file>* : This will write the XALT link tracking to <file>.
-   (e.g. **file\:linker.log** will write to the file **linker.log**)
+*link:<file>* : This will write the XALT link tracing to <file>.
+   (e.g. **link\:linker.log** will write the tracing to the file
+   **linker.log** instead of stderr)
 
 
 *yes* : This will tracing the execution of a program under XALT. This
