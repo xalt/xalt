@@ -113,37 +113,41 @@ def main():
   # Read and process site configuration file.
 
   namespace = {}
-  exec(open(args.confFn).read(),      namespace)
-  hostStrA   = convert_pattern(        namespace.get('hostname_patterns',   []))
-  pathStrA   = convert_pattern(        namespace.get('path_patterns',       []))
-  envStrA    = convert_pattern(        namespace.get('env_patterns',        []))
-  pyPkgStrA  = convert_py_pkg_pattern( namespace.get('python_pkg_patterns', []))
-  ingestStrA = convert_ingest_pattern( namespace.get('pre_ingest_patterns', []))
+  exec(open(args.confFn).read(),        namespace)
+  hostStrA    = convert_pattern(        namespace.get('hostname_patterns',   []))
+  pathStrA    = convert_pattern(        namespace.get('path_patterns',       []))
+  envStrA     = convert_pattern(        namespace.get('env_patterns',        []))
+  pyPkgStrA   = convert_py_pkg_pattern( namespace.get('python_pkg_patterns', []))
+  ingestStrA  = convert_ingest_pattern( namespace.get('pre_ingest_patterns', []))
   
   # Read and process the XALT configuration file that provides the defaults.
-
   hostStrA.append(   '"===="' )
   pathStrA.append(   '"===="' )
   envStrA.append(    '"===="' )
   pyPkgStrA.append(  '"===="' )
   ingestStrA.append( '"===="' )
 
+  hd_pathStrA = []
+  hd_pathStrA.append('"===="')
+
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
     pattDefDir = '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'
-    pathStrA.extend(convert_pattern([ ['SKIP', pattDefDir] ]))
+    hd_pathStrA.extend(convert_pattern([ ['SKIP', pattDefDir] ]))
 
   namespace = {}
   exec(open(args.xaltCFG).read(),            namespace)
   hostStrA.extend(   convert_pattern(        namespace.get('hostname_patterns',   [])))
   pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
+  hd_pathStrA.extend(convert_pattern(        namespace.get('head_path_patterns',  [])))
   envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
   pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
   ingestStrA.extend( convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
-
+  hd_pathStrA.append('"----"' )
   pattA = [
     ['@hostname_patterns@',        ",".join(hostStrA)],
     ['@path_patterns@',            ",".join(pathStrA)],
+    ['@head_path_patterns@',       ",".join(hd_pathStrA)],
     ['@env_patterns@',             ",".join(envStrA)],
     ['@python_pkg_patterns@',      ",".join(pyPkgStrA)],
     ['@pre_ingest_patterns@',      ",".join(ingestStrA)],

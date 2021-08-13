@@ -15,6 +15,7 @@ enum {
 %}
 
 %%
+@head_path_patterns@
 @path_patterns@
 %%
 

@@ -24,7 +24,7 @@ hostname_patterns = [
 
 # Note that the XALT install directory is automatically added 
 
-path_patterns = [
+head_path_patterns = [
   ['SKIP',  r'.*\/bin\/my_uuidgen'],
   ['SKIP',  r'.*\/logger'],
   ['SKIP',  r'.*\/xalt_print_os'],
@@ -33,6 +33,10 @@ path_patterns = [
   ['SKIP',  r'.*\/xalt_configuration_report.x'],
   ['SKIP',  r'.*\/xalt_syshost'],
   ['SKIP',  r'.*\/xalt_record_pkg'],
+  ]
+
+
+path_patterns = [
   ['KEEP',  r'.*']
   ]
     

@@ -43,7 +43,7 @@ hostname_patterns = [
 path_patterns = [
     ['PKGS',  r'.*\/python[0-9][^/][^/]*'],
     ['PKGS',  r'.*\/R'],
-    ['PKGS',  r'.*\/test_record_pkg'],
+    ['PKGS',  r'.*\/test_record_pkg_[0-9][0-9]*'],
     ['PKGS',  r'.*\/get_XALT_env'],
     ['KEEP',  r'^\/usr\/bin\/ddt'],
     ['SKIP',  r'^\/usr\/.*'],

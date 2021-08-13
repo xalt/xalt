@@ -56,8 +56,9 @@ test_descript = {
      XALT_TRACING=yes ./hello\ .mpi 
      
      displayThis "test_record_pkg"
-     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg
-
+     cp $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg test_record_pkg_00
+     ./test_record_pkg_00
+   
      unset LD_PRELOAD
 
      SYSHOST=`xalt_syshost`

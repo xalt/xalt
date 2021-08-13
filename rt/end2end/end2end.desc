@@ -155,7 +155,9 @@ test_descript = {
      gcc -O2 -flto -o my_flto main.o foo.o bar.o 
 
      displayThis "test_record_pkg --seq 15"
-     $(outputDir)/XALT/$VERSION/libexec/test_record_pkg --seq 15
+     cp $(outputDir)/XALT/$VERSION/libexec/test_record_pkg test_record_pkg_15
+
+     ./test_record_pkg_15  --seq 15
 
      export XALT_SIGNAL_HANDLER=yes
      displayThis "build and run segv program (seq 16)"

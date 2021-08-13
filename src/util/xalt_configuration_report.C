@@ -27,7 +27,7 @@ static const char* blank0      = "";
 static const char* comma       = ",";
 const int dateSZ=100;
 
-void displayArray(const char *name, int n, const char **A)
+void displayArray(const char* config_py_fn, const char *name, int n, const char **A)
 {
   std::cout << "*----------------------*\n";
   std::cout << " Array: " << name << "\n";
@@ -38,6 +38,8 @@ void displayArray(const char *name, int n, const char **A)
     {
       if (strncmp(A[i],"====",4) == 0)
         std::cout << "================== src/tmpl/xalt_config.py ==================\n";
+      else if (strncmp(A[i],"----",4) == 0)
+        std::cout << "================== "<< config_py_fn << " ==================\n";
       else
         std::cout << std::setw(4) << j++ << ": " << A[i] << "\n";
     }
@@ -344,12 +346,12 @@ int main(int argc, char* argv[])
             << "      file and the pattens below come from the src/tmpl/xalt_config.py file\n"
             << "*------------------------------------------------------------------------------*\n\n";
 
-  displayArray("hostnameA",      hostnameSz,      hostnameA);
+  displayArray(XALT_CONFIG_PY, "hostnameA",      hostnameSz,      hostnameA);
   std::cout << "\nRemember that \"PKGS\" means a program that can also track internal packages\n";
-  displayArray("pathPatternA",   pathPatternSz,   pathPatternA);
-  displayArray("envPatternA",    envPatternSz,    envPatternA);
-  displayArray("pyPkgPatternA",  pyPkgPatternSz,  pyPkgPatternA);
-  displayArray("ingestPatternA", ingestPatternSz, ingestPatternA);
+  displayArray(XALT_CONFIG_PY, "pathPatternA",   pathPatternSz,   pathPatternA);
+  displayArray(XALT_CONFIG_PY, "envPatternA",    envPatternSz,    envPatternA);
+  displayArray(XALT_CONFIG_PY, "pyPkgPatternA",  pyPkgPatternSz,  pyPkgPatternA);
+  displayArray(XALT_CONFIG_PY, "ingestPatternA", ingestPatternSz, ingestPatternA);
 
   std::cout << "*-------------------------------*\n";
   std::cout << " Array: Non-MPI (scalar) interval\n";

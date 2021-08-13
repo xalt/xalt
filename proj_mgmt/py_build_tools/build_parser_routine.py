@@ -38,14 +38,13 @@ class CmdLineOptions(object):
     parser.add_argument("--default_dir", dest='defaultDir', action="store", help="xalt default dir", )
     parser.add_argument("--confFn",      dest='confFn',     action="store", help="python config file")
     parser.add_argument("--xalt_cfg",    dest='xaltCFG',    action="store", help="XALT std config")
-    parser.add_argument("--pattern",     dest='pattern',    action="store", help="name of pattern")
     parser.add_argument("--input",       dest='input',      action="store", help="input template file")
     parser.add_argument("--output",      dest='output',     action="store", help="output file")
     args = parser.parse_args()
     
     return args
 
-def convert_template(pattern, replaceA  ,inputFn, outputFn):
+def convert_template(pattA, inputFn, outputFn):
   try:
     f = open(inputFn,"r")
   except IOError as e:
@@ -55,15 +54,21 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
   
   outA = []
   for line in f:
-    idx = line.find(pattern)
-    if (idx == -1):
+    found = False
+    for pair in pattA:
+      pattern  = pair[0]
+      idx      = line.find(pattern)
+      if (idx != -1):
+        replaceA = pair[1]
+        for entry in replaceA:
+          regexp = entry[1]
+          value  = str(entry[0])
+          line   = regexp + "  { return " + value + "; }\n"
+          outA.append(line)
+          found = True
+        break
+    if (not found):
       outA.append(line)
-    else:
-      for entry in replaceA:
-        regexp = entry[1]
-        value  = str(entry[0])
-        line   = regexp + "  { return " + value + "; }\n"
-        outA.append(line)
 
   f.close()
   
@@ -72,7 +77,7 @@ def convert_template(pattern, replaceA  ,inputFn, outputFn):
   except IOError as e:
     print("Unable to open \"%s\", aborting!" % (outputFn))
     sys.exit(-1)
-        
+
   of.write("".join(outA))
   of.close()
 
@@ -80,18 +85,42 @@ def main():
 
   args = CmdLineOptions().execute()
   namespace = {}
-  exec(open(args.confFn).read(), namespace)
-  replaceA   = namespace.get(args.pattern, [])
 
-  # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
-  if (args.defaultDir):
-    replaceA.append(['SKIP', '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'])
-
+  # Read and process site configuration file.
 
   namespace = {}
-  exec(open(args.xaltCFG).read(), namespace)
-  replaceA.extend(namespace.get(args.pattern, []))
+  exec(open(args.confFn).read(),        namespace)
+  hostStrA    = namespace.get('hostname_patterns',   [])
+  pathStrA    = namespace.get('path_patterns',       [])
+  envStrA     = namespace.get('env_patterns',        [])
+  pyPkgStrA   = namespace.get('python_pkg_patterns', [])
+  ingestStrA  = namespace.get('pre_ingest_patterns', [])
+  
 
-  convert_template("@" + args.pattern + "@", replaceA, args.input, args.output)
+  hd_pathStrA = []
+
+  namespace = {}
+  exec(open(args.xaltCFG).read(),             namespace)
+  hostStrA.extend(    namespace.get('hostname_patterns',   []))
+  pathStrA.extend(    namespace.get('path_patterns',       []))
+  hd_pathStrA.extend( namespace.get('head_path_patterns',  []))
+  envStrA.extend(     namespace.get('env_patterns',        []))
+  pyPkgStrA.extend(   namespace.get('python_pkg_patterns', []))
+  ingestStrA.extend(  namespace.get('pre_ingest_patterns', []))
+  # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
+  if (args.defaultDir):
+    pattDefDir = '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'
+    hd_pathStrA.extend([ ['SKIP', pattDefDir] ])
+
+  pattA = [
+    ['@hostname_patterns@',        hostStrA],
+    ['@path_patterns@',            pathStrA],
+    ['@head_path_patterns@',       hd_pathStrA],
+    ['@env_patterns@',             envStrA],
+    ['@python_pkg_patterns@',      pyPkgStrA],
+    ['@pre_ingest_patterns@',      ingestStrA],
+  ]
+  convert_template(pattA, args.input, args.output)
+
 
 if ( __name__ == '__main__'): main()

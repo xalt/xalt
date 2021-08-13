@@ -56,7 +56,8 @@ test_descript = {
      mpirun -n 1 ./hello.x "a';'d" --seq 03
      
      displayThis "test_record_pkg --seq 04"
-     $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg --seq 04
+     cp $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg test_record_pkg_04
+     test_record_pkg_04 --seq 04
 
      displayThis "Test python3 package recording (seq 05)"
      OLD_PY_PATH=$PYTHONPATH
