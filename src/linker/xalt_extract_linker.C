@@ -22,7 +22,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
   std::string ignorePrgA[] = {"ld", "ld.gold", "collect2","bash","Python", "python", "sh",
                               "x86_64-linux-gn", "x86_64-linux-gnu-ld", "x86_64-linux-gnu-ld.bfd",
                               "x86_64-linux-gnu-ld.gold" };
-  std::string otherCmplrA[] = { "rustc", "chpl", "nim" };
+  std::string otherCmplrA[] = { "rustc", "chpl", "nim", "ghc" };
 
   int         ignorePrgSz  = sizeof(ignorePrgA)/sizeof(ignorePrgA[0]);
   int         otherCmplrSz = sizeof(otherCmplrA)/sizeof(otherCmplrA[0]);

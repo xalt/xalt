@@ -39,12 +39,15 @@ XALT to work correctly.
 Debugging variables for XALT
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**XALT_TRACING** : This variable allows for debugging the actions of
-   XALT.
+**XALT_TRACING** : This variable allows for debugging the actions of XALT.
 
 This variable can take several values:
 
 *link* : This will tracing the linking steps
+
+*file:<file>* : This will write the XALT link tracking to <file>.
+   (e.g. **file\:linker.log** will write to the file **linker.log**)
+
 
 *yes* : This will tracing the execution of a program under XALT. This
    gives the most information.  This option will report whether an

@@ -84,6 +84,13 @@ You should see something like the following::
      Wrote json link file : /home/user/.xalt.d/link.stampede2.2019_05_08_16_37_15_3155.08c8ba01-689e-456e-b6e9-e618c594c327.json
 
 
+If you want to see this output written to a file instead try this::
+
+   $ XALT_TRACING=file:$HOME/linker.log gcc -o try try.c
+
+and the tracing output will be written to $HOME/linker.log instead.
+
+
 You should also try running the link without XALT tracing::
 
    $ gcc -o try try.c
