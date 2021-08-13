@@ -109,8 +109,14 @@ def main():
   ingestStrA.extend(  namespace.get('pre_ingest_patterns', []))
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
+    found = False
     pattDefDir = '^'+args.defaultDir.replace('/',r'\/')+r'\/.*'
-    hd_pathStrA.extend([ ['SKIP', pattDefDir] ])
+    for pair in hd_pathStrA:
+      if (pair[1] == "XALT_INSTALL_DIR"):
+        pair[1] = pattDefDir
+        found= True
+    if (not found):
+      hd_pathStrA.extend(convert_pattern([ ['SKIP', pattDefDir] ]))
 
   pattA = [
     ['@hostname_patterns@',        hostStrA],

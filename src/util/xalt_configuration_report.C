@@ -342,8 +342,8 @@ int main(int argc, char* argv[])
 
 
   std::cout << "*------------------------------------------------------------------------------*\n"
-            << "Note: The patterns above the equal signs in each array come from XALT_CONFIG_PY\n"
-            << "      file and the pattens below come from the src/tmpl/xalt_config.py file\n"
+            << "Note: The matching patterns are from either your site's config.py file or\n"
+            << "      from the src/tmpl/xalt_config.py file as marked below\n"
             << "*------------------------------------------------------------------------------*\n\n";
 
   displayArray(XALT_CONFIG_PY, "hostnameA",      hostnameSz,      hostnameA);

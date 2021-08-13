@@ -22,7 +22,8 @@ hostname_patterns = [
 # These executables are the XALT executables that must NEVER
 # be tracked.
 
-# Note that the XALT install directory is automatically added 
+# Note that XALT_INSTALL_DIR is replaced with the XALT 
+# installation directory
 
 head_path_patterns = [
   ['SKIP',  r'.*\/bin\/my_uuidgen'],
@@ -33,6 +34,7 @@ head_path_patterns = [
   ['SKIP',  r'.*\/xalt_configuration_report.x'],
   ['SKIP',  r'.*\/xalt_syshost'],
   ['SKIP',  r'.*\/xalt_record_pkg'],
+  ['SKIP',  "XALT_INSTALL_DIR" ],
   ]
 
 
