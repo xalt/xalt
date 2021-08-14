@@ -128,6 +128,6 @@ W.I.P:
                 to be marked as "SKIP" no matter what a site does.
 	      * Put the string XALT_INSTALL_DIR into src/tmpl/xalt_config.py and have the build
 	        python scripts replace that string with the actual install directory.
-              * Now captures the ocaml and haskell compiler: ghc when linking
+              * Now captures the ocaml and haskell compiler(ghc) when linking
 	      * Now supports XALT_TRACING option link:<file>  (e.g. link:$HOME/t/linker.log)
 	        to capture XALT_TRACING during linking.
