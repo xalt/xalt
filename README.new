@@ -131,3 +131,4 @@ W.I.P:
               * Now captures the ocaml and haskell compiler(ghc) when linking
 	      * Now supports XALT_TRACING option link:<file>  (e.g. link:$HOME/t/linker.log)
 	        to capture XALT_TRACING during linking.
+              * Report mpi compiler with real compiler. For example:  mpicc(icc) instead of just icc.

@@ -19,13 +19,17 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
   //--------------------------------------------------
   // Walk process tree to find compiler name and path
 
-  std::string ignorePrgA[] = {"ld", "ld.gold", "collect2","bash","Python", "python", "sh",
-                              "x86_64-linux-gn", "x86_64-linux-gnu-ld", "x86_64-linux-gnu-ld.bfd",
-                              "x86_64-linux-gnu-ld.gold" };
+  std::string ignorePrgA[]  = {"ld", "ld.gold", "collect2","bash","Python", "python", "sh",
+                               "x86_64-linux-gn", "x86_64-linux-gnu-ld", "x86_64-linux-gnu-ld.bfd",
+                               "x86_64-linux-gnu-ld.gold" };
+  std::string mpiCmplrA[]   = {"mpicc", "mpicxx","mpif77","mpif90","mpifc", "mpigcc", "mpigxx","mpiicc",
+                               "mpiicpc","mpiifort"};
+
   std::string otherCmplrA[] = { "rustc", "chpl", "nim", "ghc" };
 
-  int         ignorePrgSz  = sizeof(ignorePrgA)/sizeof(ignorePrgA[0]);
+  int         ignorePrgSz  = sizeof(ignorePrgA )/sizeof(ignorePrgA[0]);
   int         otherCmplrSz = sizeof(otherCmplrA)/sizeof(otherCmplrA[0]);
+  int         mpiCmplrSz   = sizeof(mpiCmplrA  )/sizeof(mpiCmplrA[0]);
 
   compiler               = "unknown";
   compilerPath           = "unknown";
@@ -77,6 +81,21 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
             {
               compilerPath = utstring_body(proc.m_exe);
               compiler     = name;
+            }
+        }
+      for (int i = 0; i < mpiCmplrSz; ++i)
+        {
+          if (name == mpiCmplrA[i])
+            {
+              std::string p = compiler; 
+              p.append(":");
+              p.append(compilerPath);
+              compilerPath = p;
+              std::string n = name;
+              n.append("(");
+              n.append(compiler);
+              n.append(")");
+              compiler = n;
             }
         }
       name.append(":");
