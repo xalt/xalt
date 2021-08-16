@@ -22,8 +22,8 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
   std::string ignorePrgA[]  = {"ld", "ld.gold", "collect2","bash","Python", "python", "sh",
                                "x86_64-linux-gn", "x86_64-linux-gnu-ld", "x86_64-linux-gnu-ld.bfd",
                                "x86_64-linux-gnu-ld.gold" };
-  std::string mpiCmplrA[]   = {"mpiCC",     "mpic++",   "mpicc",   "mpicxx", 
-                               "mpif77",    "mpif90",   "mpifc",   "mpifort",
+  std::string mpiCmplrA[]   = {"mpiCC",     "mpic++",   "mpicc",     "mpicxx", 
+                               "mpif77",    "mpif90",   "mpifc",     "mpifort",
                                "mpigcc",    "mpigxx",   "mpig++",
                                "mpiicc",    "mpiicpc",  "mpiifort",
                                "mpipgic++", "mpipgicc", "mpipgifort",
