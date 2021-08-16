@@ -683,6 +683,24 @@ def main():
   print("\nTop",args.num, "Modules used sorted by Core-hours \n")
   print(bt.build_tbl())
 
+  ############################################################
+  # Report on Compiler (linker) usage by Count
+  linkA = CompilerUsageByCount(cursor)
+  linkA.build(args, start_date, end_date)
+  resultA = linkA.report_by(args, "count")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
+  print("\nCompiler usage by Count\n")
+  print(bt.build_tbl())
+  
+  ############################################################
+  # Report on Compiler (linker) usage by Core Hours
+  linkA = CompilerUsageByCoreHours(cursor)
+  linkA.build(args, start_date, end_date)
+  resultA = linkA.report_by(args, "corehours")
+  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
+  print("\nCompiler usage by Corehours\n")
+  print(bt.build_tbl())
+
   return
 
 
@@ -742,23 +760,6 @@ def main():
     print(bt.build_tbl())
 
   
-  ############################################################
-  # Report on Compiler (linker) usage by Count
-  linkA = CompilerUsageByCount(cursor)
-  linkA.build(args, start_date, end_date)
-  resultA = linkA.report_by(args, "count")
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rl")
-  print("\nCompiler usage by Count\n")
-  print(bt.build_tbl())
-  
-  ############################################################
-  # Report on Compiler (linker) usage by Core Hours
-  linkA = CompilerUsageByCoreHours(cursor)
-  linkA.build(args, start_date, end_date)
-  resultA = linkA.report_by(args, "corehours")
-  bt      = BeautifulTbl(tbl=resultA, gap = 2, justify = "rrrl")
-  print("\nCompiler usage by Corehours\n")
-  print(bt.build_tbl())
   
   ############################################################
   #  Report of Library by short module name usage by Core Hours.
