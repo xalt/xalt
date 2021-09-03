@@ -123,7 +123,6 @@ XALT 2.10+
                 greping the output for how the ingestion process went.
               * The ingestion stats include the number of megabytes ingested
     (2.10.29) * Fix typo in xalt_syslog_to_db.in.py.
-W.I.P:
     (2.10.30) * Add head_path_patterns in src/tmpl/xalt_config.py to force XALT binaries
                 to be marked as "SKIP" no matter what a site does.
 	      * Put the string XALT_INSTALL_DIR into src/tmpl/xalt_config.py and have the build
