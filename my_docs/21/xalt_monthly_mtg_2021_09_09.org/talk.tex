@@ -1,0 +1,485 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data. 
+
+
+\begin{document}
+\title[XALT]{XALT: Job-Level Usage Data on Today's Supercomputers.}
+\author{Robert McLay} 
+\date{January 27, 2021} 
+
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item What is XALT and what it is not?
+    \item How it works: Three Parts
+    \item Memory allocation issues
+    \item Container issues
+    \item Conclusions
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Understanding what your users are doing}
+  \begin{itemize}
+    \item What programs, libraries are your users using?
+    \item What imports from R, MATLAB, Python?
+    \item What are the top programs by core-hours? by counts? by users?
+    \item System, User or Built by Other executables?
+    \item Are Executables implemented in C/C++/Fortran?
+    \item Track MPI task and/or Threading (\$OMP\_NUMTHREADS)
+    \item Function Tracking
+    \item Census Taker, Not a performance tool!
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{Brief History}
+  \begin{itemize}
+    \item XALT was an U.S. NSF funded project (M. Fahey \& R. McLay)
+    \item Work continued at TACC: too useful
+    \item Originally only tracked MPI execution.
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{Design Goals}
+  \begin{itemize}
+    \item Be extremely light-weight
+    \item How many use a library or application?
+    \item What functions are users calling in system modules
+    \item Collect Data into a Database for analysis.
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{How does XALT work?}
+  \begin{itemize}
+    \item LD Wrapper
+    \item ELF Trick to track execution
+    \item Generate Json records
+    \item Transport to DB
+    \item Analyze database.
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{Design: LD Wrapper}
+  \begin{itemize}
+    \item XALT wraps the linker to enable tracking of exec's
+    \item The linker (ld) wrapper intercepts the user link line.
+    \item Generate assembly code: key-value pairs
+    \item Capture tracemap output from ld
+    \item Transmit collected data in *.json format
+    \item Optionally add codes that executes before main() and after
+      main() completes for static builds.
+    \item Having the LD Wrapper is helpful but not required.
+  \end{itemize}
+\end{frame}
+
+
+% page 8
+\begin{frame}{Elf Trick (I)}
+  \begin{itemize}
+    \item ELF is the binary format for Linux
+    \item ELF has many hooks
+    \item XALT uses two hooks to run before/after main()
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{ELF Trick (II)}
+ {\small
+    \begin{semiverbatim}
+{\color{blue}hello.c}:
+#include <stdio.h>
+int main() \{ printf("Hello World!\\n"): return 0; \}
+
+{\color{blue}xalt.c}:
+#include <stdio.h>
+void myinit(int argc, char **argv)
+\{ fprintf(stderr, "This is run before main()\textbackslash{}n"); \}
+void myfini()
+\{ fprintf(stderr,"This is run after main()\textbackslash{}n");\}
+static \_\_attribute\_\_((section(".init_array")))
+     typeof(myinit) *\_\_init = myinit;
+static \_\_attribute\_\_((section(".fini_array")))
+     typeof(myfini) *\_\_fini = myfini;
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 10
+\begin{frame}[fragile]
+    \frametitle{ELF Trick (III)}
+ {\small
+    \begin{semiverbatim}
+{\color{red}\texttt{\% ./hello}}
+Hello World!
+
+{\color{red}\texttt{\% gcc -c -fPIC xalt.c;}}
+{\color{red}\texttt{\% gcc -o libxalt.so -fPIC -shared xalt.o}}
+{\color{red}\texttt{\% LD\_PRELOAD=./libxalt.so ./hello}}
+This is run before main()
+Hello World!
+This is run after main()
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 11
+\begin{frame}{Transmission to DB}
+  \begin{itemize}
+    \item File: collect nightly/hourly/...
+    \item Syslog: Use Syslog filtering (or ELK)
+    \item Curl: send directly 
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}{Lmod to XALT connection (I)}
+  \begin{itemize}
+    \item Optional support to connect paths to modules
+    \item Lmod spider walks entire module tree.
+    \item Can build a reverse map from paths to modules
+    \item Can map program \& libraries to modules.
+    \item /opt/apps/i15/mv2\_2\_1/phdf5/1.8.14/lib/libhdf5.so.9
+      $\Rightarrow$ phdf5/1.8.14(intel/15.02:mvapich2/2.1)
+    \item Tmod Sites can still use Lmod to build the reverse map.
+  \end{itemize}
+\end{frame}
+
+% page 13
+\begin{frame}{Installing XALT}
+  \begin{itemize}
+    \item Easy: \texttt{./configure ...; make install}
+    \item Harder: Reverse Map from Lmod?
+    \item Harder: Site config.py file
+    \item Harder: Setup Transport Json records
+    \item Harder: Setup VM to hold database
+    \item Or: Setup your own way to handle the data
+  \end{itemize}
+\end{frame}
+
+% page 14
+\begin{frame}{Site config.py (I)}
+  \begin{itemize}
+    \item Each site must configure to match their setup
+    \item Compute node names?
+    \item What executables to track or ignore?
+    \item What python packages to track or ignore?
+    \item What sampling rules to use?
+  \end{itemize}
+\end{frame}
+
+% page 15
+\begin{frame}{Site config.py (II)}
+  \begin{itemize}
+    \item XALT use config.py to create *.h, *.lex *.py files during build.
+    \item Provides xalt\_configuration\_report C++ program to know how configured.
+    \item Config.py file only used when building XALT.
+    \item Any changes to Config.py require a re-install of XALT.
+  \end{itemize}
+\end{frame}
+
+% page 16
+\begin{frame}{Hostname, Path and Env Filtering}
+  \begin{itemize}
+    \item Uses FLEX to compile in patterns
+    \item Use regex expression to control what to keep and ignore.
+    \item These Flex $\Rightarrow$ C routine provide fast regex parsing.
+  \end{itemize}
+\end{frame}
+
+% page 17
+\begin{frame}[fragile]
+    \frametitle{TACC\_config.py}
+ {\small
+    \begin{semiverbatim}
+hostname\_patterns = [
+  ['KEEP', '^c[0-9][0-9][0-9]-[0-9][0-9][0-9]\textbackslash{}..*']
+  ['KEEP', '^nid[0-9][0-9][0-9][0-9][0-9].*']
+]
+path\_patterns = [
+  ['PKGS',  r'.*\textbackslash{}/python[0-9.]*'],
+  ['PKGS',  r'.*\textbackslash{}/R'],
+  ['KEEP',  r'^/\textbackslash{}usr\textbackslash{}/bin\textbackslash{}/ddt'],
+  ['SKIP',  r'^\textbackslash{}/bin\textbackslash{}/.*'],
+]
+env\_patterns = [
+  [ 'SKIP', r'^MKLROOT=.*' ],
+  [ 'SKIP', r'^MKL\_DIR=.*' ],
+  [ 'KEEP', r'^I\_MPI\_INFO\_NUMA\_NODE\_NUM=.*'],
+]
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 18
+\begin{frame}{How sampling works}
+  \begin{itemize}
+    \item Changed design to deal with the overload of XALT data
+    \item Only generate records if plan to save.
+    \item All Non-mpi executions only produce end records.
+    \item Small MPI execution sample, Large MPI executions record.
+  \end{itemize}
+\end{frame}
+
+% page 19
+\begin{frame}{Sampling Non-MPI programs}
+  \begin{itemize}
+    \item XALT has sampling rules (site configurable!)
+    \item TACC rules are:
+    \item 0 mins $<$ 30 mins $\Rightarrow$ 0.01\% recorded  
+    \item 30 mins $<$ 120 mins $\Rightarrow$ 1\% recorded  
+    \item 120 mins $<  \infty \Rightarrow$ 100\% recorded
+    \item Can now track/sample perl, awk, sed, gzip etc
+  \end{itemize}
+\end{frame}
+
+% page 20
+\begin{frame}{Sampling MPI programs}
+  \begin{itemize}
+    \item Some users are using many short MPI programs to train Deep
+      Learning engine
+    \item TACC rules are:
+    \item Task counts $<$ 128 tasks are sampled
+      \begin{itemize}
+        \item 0 mins $<$ 15 mins $\Rightarrow$ 0.01\% recorded  
+        \item 15 mins $<$ 30 mins $\Rightarrow$ 1\% recorded  
+        \item 30 mins $<  \infty \Rightarrow$ 100\% recorded
+      \end{itemize}
+    \item Task counts $>=$ 128 task are always recorded independent of runtime.
+    \item Need to Capture long running MPI progs that never end.
+  \end{itemize}
+\end{frame}
+
+% page 21
+\begin{frame}{XALT is now linking with everything!}
+  \begin{itemize}
+    \item I feel like a developer on every team.
+    \item XALT shares name space -> obfuscation
+    \item XALT shares memory allocation
+    \item Containers: XALT cannot depend on all system libs.
+  \end{itemize}
+\end{frame}
+
+% page 22
+\begin{frame}{Memory Collusion w/ user code (I)}
+  \begin{itemize}
+    \item User serial code creates a link list
+    \item Their program failed to NULL end of list.
+    \item All memory is zeroed before program start.
+    \item User works w/o XALT! Fails with!
+    \item Result 1: Modified user code
+    \item Result 2: Any memory freed by XALT is zeroed.
+  \end{itemize}
+\end{frame}
+
+% page 23
+\begin{frame}{Memory Collusion w/ user code (II)}
+  \begin{itemize}
+    \item Not all user programs allocate and free memory correctly (Surprise!)
+    \item XALT would sometimes fail when freeing memory after main()
+    \item Result: XALT allocates but doesn't free memory after main()
+  \end{itemize}
+\end{frame}
+
+% page 24
+\begin{frame}{Containers}
+  \begin{itemize}
+    \item XALT requires libuuid.so on host
+    \item Not on Containers
+    \item XALT has to use dlopen()/dlsym() to use libuuid.so
+  \end{itemize}
+\end{frame}
+
+% page 25
+\begin{frame}{Containers (II)}
+  \begin{itemize}
+    \item XALT copies system libuuid.so to XALT install dir.
+    \item XALT does: \texttt{dlopen("XALT\_INSTALL\_DIR/lib64/libuuid.so")}
+    \item XALT then uses dlsym() to connect to libuuid routines
+  \end{itemize}
+\end{frame}
+
+% page 26
+\begin{frame}{Using XALT Data}
+  \begin{itemize}
+    \item Targeted Outreach: Who will be affected
+    \item Largemem Queue Overuse
+    \item XALT and TACC-Stats
+    \item Who is running NWChem or ...?
+  \end{itemize}
+\end{frame}
+
+% page 27
+\begin{frame}{Tracking R packages}
+  \begin{itemize}
+    \item XALT can now track R package usage
+    \item James McComb \& Michael Scott from IU developed the R part
+    \item They do this by intercepting the ``imports''
+  \end{itemize}
+\end{frame}
+
+% page 28
+\begin{frame}{Tracking Python packages}
+  \begin{itemize}
+    \item Help from Riccardo Murri
+    \item sitecustomize.py
+    \item It is run by any Python if found.
+    \item All Pythons uses sys.meta\_path to locate files to import
+    \item Can register object to capture imports.
+    \item Just add location to PYTHONPATH
+  \end{itemize}
+\end{frame}
+
+% page 29
+\begin{frame}[fragile]
+    \frametitle{Filtering python packages}
+ {\small
+    \begin{semiverbatim}
+\{ 'k\_s':'SKIP','kind':'path','patt': r"^[^/]" \},
+\{ 'k\_s':'SKIP','kind':'name','patt': r"^_"    \},
+\{ 'k\_s':'SKIP','kind':'name','patt': r".*\textbackslash." \},
+\{ 'k\_s':'KEEP','kind':'path','patt': r".*/.local/" \},
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 30
+\begin{frame}{New program: xalt\_extract\_record}
+  \begin{itemize}
+    \item This program reads the watermark.
+    \item Find out who built this program on what machine
+    \item Find out what modules where used.
+    \item Where was it build. 
+  \end{itemize}
+\end{frame}
+
+% page 31
+\begin{frame}[fragile]
+    \frametitle{Example of xalt\_extract\_record output}
+ {\small
+    \begin{semiverbatim}
+****************************************
+XALT Watermark: hello
+****************************************
+Build\_CWD            /home/user/t/hello
+Build\_Epoch          1510257139.4624
+Build\_LMFILES        /apps/mfiles/intel/17.0.4.lua:...
+Build\_LOADEDMODULES  intel/18.0.4:impi/18.0.3:TACC:...
+Build\_OS             Linux 3.10.0-514.26.2.el7.x86_64
+Build\_Syshost        stampede2
+Build\_UUID           586d5943-67eb-480b-a2fe-35e87a1f22c7
+Build\_User           mclay
+Build\_compiler       icc
+Build\_date           Fri Jun 09 13:52:19 2019
+Build\_host           c455-011.stampede2.tacc.utexas.edu
+XALT\_Version         2.7
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 32
+\begin{frame}{New Feature: Track GPU usage}
+  \begin{itemize}
+    \item Optionally, XALT can know if a GPU was used.
+    \item XALT will only know if one or more GPU's were accessed
+    \item No performance data
+    \item Thanks to Scott McMillan from NVIDIA for the contribution.
+  \end{itemize}
+\end{frame}
+
+% page 33
+\begin{frame}{New Feature: Track Singularity Container Usage}
+  \begin{itemize}
+    \item Sites can configure their Singularity script to include XALT
+    \item It works well with syslog, file  or curl transfer of data
+    \item Thanks to Scott McMillan from NVIDIA for the contribution.
+  \end{itemize}
+\end{frame}
+
+% page 34
+\begin{frame}[fragile]
+    \frametitle{Debugging XALT}
+ {\tiny
+    \begin{semiverbatim}
+\$ XALT\_TRACING=yes XALT\_SAMPLING=no ./hello
+
+myinit(0/1,LD_PRELOAD,/path/to/hello)\{
+    -> Setting up signals
+    -> Leaving myinit
+\}
+
+Hello World!
+
+myfini(0/1,LD_PRELOAD,/path/to/hello)\{
+    -> XALT_SAMPLING = "no" All programs tracked!
+  Recording State at end of scalar user program:
+    XALT_EXECUTABLE_TRACKING=no /path/to/xalt_run_submission ...
+
+  xalt_run_submission(.zzz) \{
+    building UUID: ...
+    Extracted recordT from executable
+    Built userT, userDT, scheduler: SLURM
+    Using XALT_TRANSMISSION_STYLE: file
+    cmdlineA: ["./hello"]
+    Built json string
+  \}
+    -> leaving myfini
+\}
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 35
+\begin{frame}[fragile]
+    \frametitle{XALT Doc usage by City}
+    \center{\includegraphics[width=.9\textwidth]{XALT_usage_by_city}}
+\end{frame}
+
+% page 36
+\begin{frame}{Conclusion}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item Lmod:
+      \begin{itemize}
+        \item Source: github.com/TACC/lmod.git, lmod.sf.net
+        \item Documentation: lmod.readthedocs.org
+      \end{itemize}
+    \item XALT:
+      \begin{itemize}
+        \item Source: github.com/xalt/xalt.git, xalt.sf.net
+        \item Documentation: XALT 2 $\Rightarrow$ xalt.readthedocs.org
+        \item Join mailing list: https://sourceforge.net/projects/xalt/lists/xalt-users
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}
