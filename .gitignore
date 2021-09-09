@@ -60,3 +60,5 @@ module.mk
 *.d32.[0-9][0-9]*
 *.o32
 my_build
+*.log
+
