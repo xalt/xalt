@@ -22,9 +22,9 @@
 
 
 \begin{document}
-\title[XALT]{XALT Monthly Meeting: Controlling Executables Tracked}
+\title[XALT]{XALT Monthly Meeting: Building a Reverse Map Paths $\Rightarrow$ Module Names}
 \author{Robert McLay} 
-\date{Sept.  9, 2021} 
+\date{Oct. 14, 2021} 
 
 % page 1
 \frame{\titlepage} 
@@ -33,180 +33,91 @@
 \begin{frame}{XALT: Outline}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
-    \item XALT's DB can easily get overwhelmed
-    \item Three ways to control what gets recorded
-    \item TACC's goals are to track science
-    \item Config/TACC\_config.py discussion
-    \item Sampling
+    \item Setting up modulefiles to build a Reverse Map
+    \item The Reverse Map connects full paths to module names
+    \item It is not required but useful.
+    \item This works even if your site uses Tmod.
+    \item Just use Lmod to build the reverse Map.
   \end{itemize}
 \end{frame}
 
 % page 3
-\begin{frame}{Preventing XALT's DB getting overwhelmed}
+\begin{frame}{Goal: Map full paths to module names}
   \begin{itemize}
-    \item Must do something to prevent too much data
-    \item Want to understand what is run on your system w/o tracking everything
-    \item Tales of Woe:
-      \begin{itemize}
-        \item One 2 hour job ran over 2M times $\Rightarrow$ 4.5 days
-          of data
-        \item One user used a 4 core MPI program to train a neural network
-      \end{itemize}
-    \item XALT supports sampling for both MPI and Non-MPI programs 
+    \item \texttt{\$LMOD\_DIR/spider -o xalt\_rmapT \$MODULEPATH $>$ xalt\_rmapT.json}
+    \item TACC builds this file on cluster and transfers it to VM.
   \end{itemize}
 \end{frame}
 
 % page 4
-\begin{frame}{Three ways to control the amount of recorded data}
-  \begin{itemize}
-    \item Use path\_patterns to ignore many executables based on path.
-    \item Sampling to reduce the amount of executables tracked based
-      on runtime.
-    \item Pre-ingest filtering to sample data already tracked.
-      (only works w/ storing data in the MySQL DB)
-  \end{itemize}
+\begin{frame}[fragile]
+    \frametitle{xalt\_rmapT.json}
+ {\tiny
+    \begin{semiverbatim}
+\{
+ "reverseMapT": \{
+     "/apps/cmake/3.16.1": "cmake/3.16.1",
+     "/apps/cmake/3.16.1/bin": "cmake/3.16.1",
+     "/apps/gcc/9.1.0": "gcc/9.1.0",
+     "/apps/gcc/9.1.0/bin": "gcc/9.1.0",
+     "/apps/gcc/9.1.0/lib": "gcc/9.1.0",
+     "/apps/gcc/9.1.0/lib64": "gcc/9.1.0",
+     "/apps/intel18/impi18_0/phdf5/1.10": "phdf5/1.10.4(intel/18.0:impi/18.0.0)",
+     "/apps/intel18/impi18_0/phdf5/1.10/bin": "phdf5/1.10.4(intel/18.0:impi/18.0.0)",
+     "/apps/intel18/impi18_0/phdf5/1.10/lib": "phdf5/1.10.4(intel/18.0:impi/18.0.0)",
+     ...
+   \}
+ \}
+    \end{semiverbatim}
+}
 \end{frame}
 
 % page 5
-\begin{frame}{Tracking Science}
+\begin{frame}{Lmod configuration}
   \begin{itemize}
-    \item We want to know what science is being done
-    \item What apps are run and build by users or in /opt/apps
-    \item Sample apps like cp, perl, awk, and sed
-    \item Sites are free to configure XALT as they see fit.
+    \item Lmod uses LMOD\_SITE\_NAME to know what the name of your cluster
+    \item For example we use TACC as our site name.  
+    \item But lets assume that your site is BLUE.
   \end{itemize}
 \end{frame}
 
 % page 6
-\begin{frame}{Config.py $\Rightarrow$ generated code}
+\begin{frame}{Full paths are remembered from 3 Env. Vars.}
   \begin{itemize}
-    \item For speed reasons, the patterns are converted to a lex program
-    \item This lex program is converted into executable code
-    \item These patterns are then directly callable from the XALT
-      shared library.
-    \item This pattern matching is very fast.
-    \item Downside: Any changes in path\_patterns must be rebuilt.
+    \item Changes to PATH
+    \item Changes to LD\_LIBRARY\_PATH
+    \item Setting $<$SITE$>$\_$<$PKGName$>$\_DIR
+    \item This last one is very important.
   \end{itemize}
 \end{frame}
 
 % page 7
-\begin{frame}{Config/TACC\_config.py}
+\begin{frame}{$<$SITE$>$\_$<$PKGName$>$\_DIR}
   \begin{itemize}
-    \item This file is what TACC uses.
-    \item Note that the first match found is used.
-    \item Mark R, MATLAB and Python as PKGS that track imports
-    \item Keep cp, sed, awk, perl and similar from /bin or /usr/bin
-    \item Ignore anything else in /usr/bin or /bin
-    \item Ignore compilers, mpi wrappers, shell scripts (/bin/bash is
-      ignored)
-    \item Ignore test programs from Cmake and autoconf's config
+    \item Let's assume that your site name is BLUE.
+    \item Each modulefile should have:
+      \texttt{setenv("BLUE\_$<$PKGName$>$\_DIR", "/path/to/package"}
+    \item PHDF5:     \texttt{setenv("BLUE\_HDF5\_DIR", "/apps/intel19/impi19/phdf5/1.10")}
+
   \end{itemize}
 \end{frame}
 
 % page 8
-\begin{frame}[fragile]
-    \frametitle{Sampling}
- {\small
-    \begin{semiverbatim}
-interval\_array = [
-    [    0.0,              0.0001 ],
-    [ 1800.0,              0.01   ],
-    [ 7200.0,              1.0    ],
-    [ sys.float\_info.max,  1.0    ]
-]
-mpi\_interval\_array = [
-    [    0.0,              0.0001 ],
-    [  900.0,              0.01   ],
-    [ 1800.0,              1.0    ],
-    [ sys.float\_info.max,  1.0    ]
-]
-    \end{semiverbatim}
-}
-\end{frame}
-
-% page 9
-\begin{frame}[fragile]
-    \frametitle{path\_patterns}
- {\tiny
-    \begin{semiverbatim}
-path_patterns = [
-    ['PKGS',  r'.*\\/python[0-9.]*'],
-    ['KEEP',  r'^\\/bin\\/gawk'],
-    ['KEEP',  r'^\\/bin\\/sed'],
-    ['KEEP',  r'^\\/bin\\/perl'],
-    ['SKIP',  r'^\\/bin\\/.*'],
-    ['SKIP',  r'^\\/opt\\/intel\\/.*'],
-    ['SKIP',  r'^\\/opt\\/apps\\/git\\/.*'],
-    ['SKIP',  r'^\\/opt\\/apps\\/cmake\\/.*'],
-    ['SKIP',  r'^\\/opt\\/apps\\/autotools\\/.*'],
-    ['SKIP',  r'^\\/opt\\/apps\\/intel[0-9][0-9\\_]*\\/impi\\/.*'],
-    ['SKIP',  r'^\\/opt\\/apps\\/gcc[0-9][0-9\\_]*\\/mvapich2\\/.*'],
-    ['SKIP',  r'^\\/home1\\/apps\\/intel\\/.*'],
-    ['SKIP',  r'.*\\/mpicc'],
-    ['SKIP',  r'.*\\/mpicxx'],
-    ['SKIP',  r'.*\\/mpif90'],
-    ['SKIP',  r'.*\\/conftest'],
-    ['SKIP',  r'.*\\/CMakeTmp\\/cmTryCompileExec[0-9][0-9]*'],
-    ['SKIP',  r'.*\\/CMakeTmp\\/cmTC_[a-f0-9][a-f0-9]*'],
-  ]
-    \end{semiverbatim}
-}
-\end{frame}
-
-% page 10
-\begin{frame}[fragile]
-    \frametitle{Before XALT-2.10.30}
-A site did something like this:
- {\small
-    \begin{semiverbatim}
-path_patterns = [
-    ['KEEP',  r'^\\/opt\\/apps\\/.*'],
-    ['SKIP',  r'.*'],
-  ]
-    \end{semiverbatim}
-}
-Where XALT was installed /opt/apps/xalt
-\end{frame}
-
-% page 11
-\begin{frame}{The Config file $\Rightarrow$ compiled code}
+\begin{frame}{Converting a PATH to a Module Name}
   \begin{itemize}
-    \item XALT uses python scripts to generate *.lex code for regex processing
-    \item It also takes the same files to generate *.h file for
-      reporting configuration.
-    \item xalt\_configuration\_report is there for users/admins to know
-      how XALT is installed.
+    \item Full paths are supplied by XALT records
+    \item XALT uses xalt\_rmapT.json file to map paths to names
+    \item It uses the three paths described before.
+    \item Given a full path \texttt{/apps/intel19/impi19/phdf5/1.10/bin/h5dump}
+    \item XALT removes one directory at a time to get an exact match
+    \item Thus mapping path to module phdf5/1.10
+    \item If no match is found then \texttt{module\_name} is NULL
+    \item Mapping is done at ingestion by xalt\_file\_to\_db.py or xalt\_syslog\_to\_db.py
   \end{itemize}
 \end{frame}
 
-% page 12
-\begin{frame}[fragile]
-    \frametitle{xalt\_configuration\_report (XALT-2.10.30) and later} 
- {\tiny
-    \begin{semiverbatim}
-*----------------------*
- Array: pathPatternA
-*----------------------*
-================== src/tmpl/xalt_config.py ==================
-   0: SKIP => .*\\/bin\\/my\\_uuidgen
-   1: SKIP => .*\\/logger
-   2: SKIP => .*\\/xalt\\_print\\_os
-   3: SKIP => .*\\/xalt\\_syslog\\_to\\_db
-   4: SKIP => .*\\/xalt\\_extract\\_record.x
-   5: SKIP => .*\\/xalt\\_configuration\\_report.x
-   6: SKIP => .*\\/xalt\\_syshost
-   7: SKIP => .*\\/xalt\\_record\\_pkg
-   8: SKIP => ^\\/opt\\/apps\\/xalt\\/xalt\\/.*
-================== /opt/apps/xalt/Config/simpleConfig.py ==================
-   9: KEEP => ^\\/opt\\/apps\\/.*
-  10  SKIP => .*
-================== src/tmpl/xalt\\_config.py ==================
-  11: KEEP => .*
-    \end{semiverbatim}
-}
-\end{frame}
 
-% page 13
+% page 9
 \begin{frame}{Conclusions}
   \begin{itemize}
     \item Thanks for listening
