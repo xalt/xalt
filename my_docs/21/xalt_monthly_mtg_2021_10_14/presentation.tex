@@ -1,0 +1,219 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data. 
+
+
+\begin{document}
+\title[XALT]{XALT Monthly Meeting: Controlling Executables Tracked}
+\author{Robert McLay} 
+\date{Sept.  9, 2021} 
+
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item XALT's DB can easily get overwhelmed
+    \item Three ways to control what gets recorded
+    \item TACC's goals are to track science
+    \item Config/TACC\_config.py discussion
+    \item Sampling
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Preventing XALT's DB getting overwhelmed}
+  \begin{itemize}
+    \item Must do something to prevent too much data
+    \item Want to understand what is run on your system w/o tracking everything
+    \item Tales of Woe:
+      \begin{itemize}
+        \item One 2 hour job ran over 2M times $\Rightarrow$ 4.5 days
+          of data
+        \item One user used a 4 core MPI program to train a neural network
+      \end{itemize}
+    \item XALT supports sampling for both MPI and Non-MPI programs 
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{Three ways to control the amount of recorded data}
+  \begin{itemize}
+    \item Use path\_patterns to ignore many executables based on path.
+    \item Sampling to reduce the amount of executables tracked based
+      on runtime.
+    \item Pre-ingest filtering to sample data already tracked.
+      (only works w/ storing data in the MySQL DB)
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{Tracking Science}
+  \begin{itemize}
+    \item We want to know what science is being done
+    \item What apps are run and build by users or in /opt/apps
+    \item Sample apps like cp, perl, awk, and sed
+    \item Sites are free to configure XALT as they see fit.
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{Config.py $\Rightarrow$ generated code}
+  \begin{itemize}
+    \item For speed reasons, the patterns are converted to a lex program
+    \item This lex program is converted into executable code
+    \item These patterns are then directly callable from the XALT
+      shared library.
+    \item This pattern matching is very fast.
+    \item Downside: Any changes in path\_patterns must be rebuilt.
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{Config/TACC\_config.py}
+  \begin{itemize}
+    \item This file is what TACC uses.
+    \item Note that the first match found is used.
+    \item Mark R, MATLAB and Python as PKGS that track imports
+    \item Keep cp, sed, awk, perl and similar from /bin or /usr/bin
+    \item Ignore anything else in /usr/bin or /bin
+    \item Ignore compilers, mpi wrappers, shell scripts (/bin/bash is
+      ignored)
+    \item Ignore test programs from Cmake and autoconf's config
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}[fragile]
+    \frametitle{Sampling}
+ {\small
+    \begin{semiverbatim}
+interval\_array = [
+    [    0.0,              0.0001 ],
+    [ 1800.0,              0.01   ],
+    [ 7200.0,              1.0    ],
+    [ sys.float\_info.max,  1.0    ]
+]
+mpi\_interval\_array = [
+    [    0.0,              0.0001 ],
+    [  900.0,              0.01   ],
+    [ 1800.0,              1.0    ],
+    [ sys.float\_info.max,  1.0    ]
+]
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{path\_patterns}
+ {\tiny
+    \begin{semiverbatim}
+path_patterns = [
+    ['PKGS',  r'.*\\/python[0-9.]*'],
+    ['KEEP',  r'^\\/bin\\/gawk'],
+    ['KEEP',  r'^\\/bin\\/sed'],
+    ['KEEP',  r'^\\/bin\\/perl'],
+    ['SKIP',  r'^\\/bin\\/.*'],
+    ['SKIP',  r'^\\/opt\\/intel\\/.*'],
+    ['SKIP',  r'^\\/opt\\/apps\\/git\\/.*'],
+    ['SKIP',  r'^\\/opt\\/apps\\/cmake\\/.*'],
+    ['SKIP',  r'^\\/opt\\/apps\\/autotools\\/.*'],
+    ['SKIP',  r'^\\/opt\\/apps\\/intel[0-9][0-9\\_]*\\/impi\\/.*'],
+    ['SKIP',  r'^\\/opt\\/apps\\/gcc[0-9][0-9\\_]*\\/mvapich2\\/.*'],
+    ['SKIP',  r'^\\/home1\\/apps\\/intel\\/.*'],
+    ['SKIP',  r'.*\\/mpicc'],
+    ['SKIP',  r'.*\\/mpicxx'],
+    ['SKIP',  r'.*\\/mpif90'],
+    ['SKIP',  r'.*\\/conftest'],
+    ['SKIP',  r'.*\\/CMakeTmp\\/cmTryCompileExec[0-9][0-9]*'],
+    ['SKIP',  r'.*\\/CMakeTmp\\/cmTC_[a-f0-9][a-f0-9]*'],
+  ]
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 10
+\begin{frame}[fragile]
+    \frametitle{Before XALT-2.10.30}
+A site did something like this:
+ {\small
+    \begin{semiverbatim}
+path_patterns = [
+    ['KEEP',  r'^\\/opt\\/apps\\/.*'],
+    ['SKIP',  r'.*'],
+  ]
+    \end{semiverbatim}
+}
+Where XALT was installed /opt/apps/xalt
+\end{frame}
+
+% page 11
+\begin{frame}{The Config file $\Rightarrow$ compiled code}
+  \begin{itemize}
+    \item XALT uses python scripts to generate *.lex code for regex processing
+    \item It also takes the same files to generate *.h file for
+      reporting configuration.
+    \item xalt\_configuration\_report is there for users/admins to know
+      how XALT is installed.
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}[fragile]
+    \frametitle{xalt\_configuration\_report (XALT-2.10.30) and later} 
+ {\tiny
+    \begin{semiverbatim}
+*----------------------*
+ Array: pathPatternA
+*----------------------*
+================== src/tmpl/xalt_config.py ==================
+   0: SKIP => .*\\/bin\\/my\\_uuidgen
+   1: SKIP => .*\\/logger
+   2: SKIP => .*\\/xalt\\_print\\_os
+   3: SKIP => .*\\/xalt\\_syslog\\_to\\_db
+   4: SKIP => .*\\/xalt\\_extract\\_record.x
+   5: SKIP => .*\\/xalt\\_configuration\\_report.x
+   6: SKIP => .*\\/xalt\\_syshost
+   7: SKIP => .*\\/xalt\\_record\\_pkg
+   8: SKIP => ^\\/opt\\/apps\\/xalt\\/xalt\\/.*
+================== /opt/apps/xalt/Config/simpleConfig.py ==================
+   9: KEEP => ^\\/opt\\/apps\\/.*
+  10  SKIP => .*
+================== src/tmpl/xalt\\_config.py ==================
+  11: KEEP => .*
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 13
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item Thanks for listening
+    \item Questions?
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}

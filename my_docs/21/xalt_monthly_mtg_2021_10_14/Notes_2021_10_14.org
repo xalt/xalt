@@ -1,0 +1,43 @@
+Notes for presentation for Oct. 14:
+
+* The goal here is to map directories to modules
+** the spider command creates the reverse map by reading each modulefile;
+*** It looks for changes to PATH, LD_LIBRARY_PATH.
+*** It also looks for an env. var. of the form <SITE>_<PkgName>_DIR
+** Changes to Lmod:
+*** Define LMOD_SITE_NAME to be your site name.  
+     So if your site is BLUE then set LMOD_SITE_NAME to BLUE
+** Changes to every modulefile:
+*** add setenv("BLUE_<PKGName>_DIR", "/apps/<pkg>/<version>") to each modulefile
+*** for example phdf5/1.12.1 would be:
+
+    setenv("BLUE_HDF5_DIR", "/apps/intel19/impi19_0/phdf5/1.10.4")
+
+    to each modulefile
+
+** XALT knows the full path of executables 
+    and compares it to the paths known in the reverse map.  So if a
+    user runs:
+
+    /opt/apps/intel19/impi19_0/phdf5/1.10.4/x86_64/bin/h5dump
+
+    it will search directories in the reverse map find the longest
+    path that it can match there.  It does this by removing one
+    directory at a time to find an exact match.
+** This is mapping is done at ingestion time by the programs 
+   xalt_file_to_db.py or xalt_syslog_to_db.py
+** If your site is not using MySQL and those program then you can 
+   use the reverseMap to do the same thing.
+
+* Note that your site does not have to use Lmod for users, 
+  it can just use Lmod to produce the reverse map.
+
+
+* Tracking Python, R and MATLAB package imports. Steps:
+** Must mark Python, R and MATLAB executables as packages in your Site's Config file:
+
+   path_patterns = [
+       ['PKGS',  r'.*\/R'],
+       ['PKGS',  r'.*\/MATLAB'],
+       ['PKGS',  r'.*\/python[0-9.]*'],
+** 
