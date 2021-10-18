@@ -220,18 +220,6 @@ AC_ARG_WITH(syslogMsgSz,
     SYSLOG_MSG_SZ="$withval"
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
 
-AC_SUBST(CXX_LD_LIBRARY_PATH)
-AC_ARG_WITH(cxxLDLibraryPath,
-    AC_HELP_STRING([--with-cxxLDLibraryPath=ans],[LD_LIBRARY_PATH for c++ programs[[]]]),
-    CXX_LD_LIBRARY_PATH="$withval"
-    AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath])
-    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$with_cxxLDLibraryPath")dnl
-    ,
-    withval=""
-    AC_MSG_RESULT([CXX_LD_LIBRARY_PATH=$withval])
-    CXX_LD_LIBRARY_PATH="$withval"
-    AC_DEFINE_UNQUOTED(CXX_LD_LIBRARY_PATH, "$withval",[LD_LIBRARY_PATH for c++ programs]))dnl
-
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
     AC_HELP_STRING([--with-syshostConfig=ans],[How to determine syshost[[no default]]]),
@@ -556,12 +544,7 @@ else
   XALT_DEFAULT_DIR=$prefix
 fi
 
-if test x$CXX_LD_LIBRARY_PATH = "x"; then
-  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
-else
-  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64:CXX_LD_LIBRARY_PATH
-fi
-
+XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then

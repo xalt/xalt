@@ -43,6 +43,7 @@ def hardcode(name,output):
   sA = []
   sA.append("#include <stdio.h>")
   sA.append("#include <string.h>")
+  sA.append("#include <stdlib.h>")
   sA.append("#include \"xalt_obfuscate.h\"")
   sA.append("char * xalt_syshost() {")
   sA.append("  return strdup(\"" + name + "\");")

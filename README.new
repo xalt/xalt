@@ -133,3 +133,6 @@ XALT 2.10+
               * Report mpi compiler with real compiler. For example:  mpicc(icc) instead of just icc.
               * Add the string LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH before invoking
                 xalt_rmap_exists in sh_src/ld.in
+    (2.10.31) * Removed --with-cxxLDLibaryPath configuration options
+    
+       

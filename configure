@@ -661,7 +661,6 @@ PRELOAD_ONLY
 STATIC_LIBS
 MY_HOSTNAME_PARSER
 SYSHOST_CONFIG
-CXX_LD_LIBRARY_PATH
 SYSLOG_MSG_SZ
 SYSTEM_PATH
 MYSQLDB
@@ -741,7 +740,6 @@ with_config
 with_MySQL
 with_systemPath
 with_syslogMsgSz
-with_cxxLDLibraryPath
 with_syshostConfig
 with_hostnameParser
 with_staticLibs
@@ -1404,8 +1402,6 @@ Optional Packages:
   --with-MySQL=ans        Require the mysqlclient/MySQL-python module [[yes]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
-  --with-cxxLDLibraryPath=ans
-                          LD_LIBRARY_PATH for c++ programs[[]]
   --with-syshostConfig=ans
                           How to determine syshost[[no default]]
   --with-hostnameParser=ans
@@ -3401,29 +3397,6 @@ fi
 
 
 
-# Check whether --with-cxxLDLibraryPath was given.
-if test "${with_cxxLDLibraryPath+set}" = set; then :
-  withval=$with_cxxLDLibraryPath; CXX_LD_LIBRARY_PATH="$withval"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&5
-$as_echo "CXX_LD_LIBRARY_PATH=$with_cxxLDLibraryPath" >&6; }
-    cat >>confdefs.h <<_ACEOF
-#define CXX_LD_LIBRARY_PATH "$with_cxxLDLibraryPath"
-_ACEOF
-
-else
-  withval=""
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: CXX_LD_LIBRARY_PATH=$withval" >&5
-$as_echo "CXX_LD_LIBRARY_PATH=$withval" >&6; }
-    CXX_LD_LIBRARY_PATH="$withval"
-
-cat >>confdefs.h <<_ACEOF
-#define CXX_LD_LIBRARY_PATH "$withval"
-_ACEOF
-
-fi
-
-
-
 # Check whether --with-syshostConfig was given.
 if test "${with_syshostConfig+set}" = set; then :
   withval=$with_syshostConfig; SYSHOST_CONFIG="$withval"
@@ -5106,12 +5079,7 @@ else
   XALT_DEFAULT_DIR=$prefix
 fi
 
-if test x$CXX_LD_LIBRARY_PATH = "x"; then
-  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
-else
-  XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64:CXX_LD_LIBRARY_PATH
-fi
-
+XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
 
 echo "VERSION=$VERSION"
 if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
