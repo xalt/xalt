@@ -134,5 +134,4 @@ XALT 2.10+
               * Add the string LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH before invoking
                 xalt_rmap_exists in sh_src/ld.in
     (2.10.31) * Removed --with-cxxLDLibaryPath configuration options
-    
-       
+    (2.10.32) * Converted TACC/contrib/*.in python files to use python2/3 startup
