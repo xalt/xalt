@@ -72,6 +72,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
       break;
     }
 
+  bool found = false;
   while(1)
     {
       build_proc(&proc, my_pid);
@@ -87,6 +88,9 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
               compiler     = name;
             }
         }
+
+      if (found) break;
+
       for (int i = 0; i < mpiCmplrSz; ++i)
         {
           if (name == mpiCmplrA[i])
@@ -100,6 +104,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
               n.append(compiler);
               n.append(")");
               compiler = n;
+	      found = true;
               break;
             }
         }
