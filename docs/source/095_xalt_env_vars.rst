@@ -71,6 +71,9 @@ Special Debugging variables for XALT
    the runtime for the executable instead of the real
    runtime. Obviously this is useful when testing the sampling rules.
 
+**XALT_COMM_WORLD_SIZE** : If this variable is set, XALT will use this
+   value as the number of MPI tasks.  Note that it won't affect the
+   number of real MPI tasks.
 
 **XALT_MPI_ALWAYS_RECORD** : XALT will use this env. variable instead
    of the configured value.
