@@ -100,6 +100,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
               n.append(compiler);
               n.append(")");
               compiler = n;
+              break;
             }
         }
       name.append(":");

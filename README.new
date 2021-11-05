@@ -135,3 +135,5 @@ XALT 2.10+
                 xalt_rmap_exists in sh_src/ld.in
     (2.10.31) * Removed --with-cxxLDLibaryPath configuration options
     (2.10.32) * Converted TACC/contrib/*.in python files to use python2/3 startup
+    (2.10.33) * Add support for XALT_COMM_WORLD_SIZE to override real number of mpi tasks
+              * Fix bug with mpicc(mpiicc(icc)) to be mpicc(icc)
