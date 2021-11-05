@@ -1,0 +1,294 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data. 
+
+
+\begin{document}
+\title[XALT]{XALT Monthly Meeting: Using \$XALT\_TRACING to track XALT Behavior }
+\author{Robert McLay} 
+\date{Nov. 11, 2021} 
+
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item XALT provides a way to debug its behavior
+    \item XALT\_TRACING=link  icc -o try try.c
+    \item XALT\_TRACING=run ./user\_program ...
+    \item It shows what decision XALT is making.
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}[fragile]
+    \frametitle{Linking w/ XALT}
+ {\tiny
+    \begin{semiverbatim}
+\$ XALT_TRACING=link gcc -o hello hello.c
+
+14:57:32 XALT Tracing Activated for version: xalt-2.10.31
+
+14:57:32 Starting ld
+
+14:57:32 find_real_command: Searching for the real: ld
+
+14:57:32 find_real_command: found /opt/apps/gcc/8.3.0/bin/ld
+
+14:57:32 COMP_T: {"compiler":"gcc","compilerPath":"/opt/apps/gcc/8.3.0/bin/gcc","link_line":["gcc","-o","hello","hello.c"],"parentProcs":["zsh:/usr/bin/zsh","sshd:","sshd:","sshd:"]}
+
+14:57:32 SYSHOST: frontera
+
+14:57:32 WRKDIR: /tmp/user_dd798a17-2dda-411f-8029-077bf67ad3a4_FChre5
+
+14:57:32 EPOCH 1636142252.7051
+
+14:57:32 Using ld to find functions:  /opt/apps/gcc/8.3.0/bin/ld ...
+
+14:57:32 Not adding XALT initialize routines to user code
+
+14:57:32 /opt/apps/gcc/8.3.0/bin/ld ...
+
+14:57:32 XALT_TRANSMISSION_STYLE file
+    Using USE_HOME method to store json file
+    Wrote json link file : 
+   \end{semiverbatim}
+}
+\end{frame}
+
+% page 4
+\begin{frame}[fragile]
+    \frametitle{Tracing on login node}
+ {\tiny
+    \begin{semiverbatim}
+staff.fta(3013)% XALT\_TRACING=run ./hello                                                    
+---------------------------------------------
+ Date:          Fri Nov  5 13:16:26 2021
+ XALT Version:  xalt-2.10.31
+ Nodename:      staff.frontera.tacc.utexas.edu
+ System:        Linux
+ Release:       3.10.0-1160.45.1.el7.x86_64
+ O.S. Version:  #1 SMP Wed Oct 13 17:20:51 UTC 2021
+ Machine:       x86_64
+---------------------------------------------
+
+myinit(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
+  Test for \_\_XALT\_INITIAL\_STATE\_\_: "(NULL)", STATE: "LD_PRELOAD"
+  Test for XALT\_EXECUTABLE\_TRACKING: yes
+  Test for rank == 0, rank: 0
+    hostname: "staff.frontera.tacc.utexas.edu" is rejected -> exiting
+\}
+
+Hello World!
+
+myfini(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
+  -> exiting because reject is set to: XALT has found the host does
+  not match hostname pattern. If this is unexpected check your
+  config.py file: Config/TACC\_config.py for program: /home/user/t/xalt/hello
+\}
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 5
+\begin{frame}[fragile]
+    \frametitle{Tracing on compute node}
+ {\tiny
+    \begin{semiverbatim}
+c202-001.fta[clx](3017)% XALT\_TRACING=run ./hello
+
+myinit(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
+  Test for \_\_XALT\_INITIAL\_STATE\_\_: "LD\_PRELOAD", STATE: "LD\_PRELOAD"
+  Test for XALT\_EXECUTABLE\_TRACKING: yes
+  Test for rank == 0, rank: 0
+  GPU tracing is turned off. This directory "/sys/module/nvidia" does not exist!
+  No GPU tracking
+    -> Found watermark via vendor note: true
+    -> MPI\_SIZE: 1 < MPI\_ALWAYS\_RECORD: 128, XALT is build to track
+       all programs, Current program is a scalar
+       program -> Not producing a start record
+    -> Signals capturing disabled
+    -> Leaving myinit
+\}
+
+Hello World!
+
+myfini(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
+    -> exiting because sampling. run\_time: 0.000298977, (my\_rand:
+    0.943536 > prob: 0.0001) 
+    for program: /home/user/t/xalt/hello
+\}
+   \end{semiverbatim}
+}
+\end{frame}
+
+% page 6
+\begin{frame}[fragile]
+    \frametitle{Tracing on compute node, sampling off}
+ {\tiny
+    \begin{semiverbatim}
+c202-001.fta[clx](3017)% XALT\_TRACING=run XALT\_SAMPLING=no ./hello
+
+myinit(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
+  ...
+\}
+
+Hello World!
+
+myfini(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
+    -> XALT\_SAMPLING = "no" All programs tracked!
+  Recording State at end of scalar user program
+
+  run\_submission(.zzz) \{
+    Built processTree table
+    Built envT
+    Extracted recordT from watermark. Compiler: icc, XALT\_Version: 2.10.31
+    Built userT, userDT, scheduler: SLURM
+    Compute sha1 (...) of exec: /home/user/t/xalt/hello
+    Parsed ProcMaps
+    Using XALT\_TRANSMISSION\_STYLE: file
+    Built json string
+    Transmitting jsonStr
+    Using USE\_HOME method to store json file
+    Wrote json run file : ...
+    Done transmitting jsonStr
+  \}
+
+    -> leaving myfini
+\}
+   \end{semiverbatim}
+}
+\end{frame}
+
+% page 7
+\begin{frame}[fragile]
+    \frametitle{Tracing MPI program (I)}
+ {\tiny
+    \begin{semiverbatim}
+\$ cat run_me.sh
+XALT_MPI_ALWAYS_RECORD=2 XALT_TRACING=run XALT_SAMPLING=no ./mpi_hello
+    \end{semiverbatim}
+  }
+\end{frame}
+
+% page 8
+\begin{frame}[fragile]
+    \frametitle{Tracing MPI program (II)}
+ {\tiny
+    \begin{semiverbatim}
+\$ ibrun -np 2 ./run\_me.sh
+myinit(0/2,LD\_PRELOAD,/home/user/t/xalt/mpi\_hello)\{
+  ...
+    -> Found watermark via vendor note: true
+    -> MPI\_SIZE: 2 >= MPI\_ALWAYS\_RECORD: 2 => recording start record!
+  Recording state at beginning of MPI user program:
+    /home/user/t/xalt/mpi\_hello
+
+  run\_submission(.aaa) \{
+    Built processTree table
+    Built envT
+    Extracted recordT from watermark. Compiler: mpicc(icc), XALT\_Version: 2.10.31
+    Built userT, userDT, scheduler: SLURM
+    Compute sha1 (...) of exec: /home/user/t/xalt/mpi\_hello
+    Parsed ProcMaps
+    Using XALT\_TRANSMISSION\_STYLE: file
+    Built json string
+    Transmitting jsonStr
+    Using USE\_HOME method to store json file
+    Wrote json run file : ...
+    Done transmitting jsonStr
+  \}
+    -> uuid: b2f87517-8878-4449-bc93-5d899456b3c2
+    -> Signals capturing disabled
+    -> Leaving myinit
+\}
+Hello World from proc: 0 out of 2 !
+...
+   \end{semiverbatim}
+}
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{Tracing MPI program (III)}
+ {\tiny
+    \begin{semiverbatim}
+\$ ibrun -np 2 ./run\_me.sh
+...
+Hello World from proc: 0 out of 2 !
+
+myfini(0/2,LD\_PRELOAD,/home/user/t/xalt/mpi\_hello){
+  Recording State at end of MPI user program
+
+  run\_submission(.zzz) {
+    Built processTree table
+    Built envT
+    Extracted recordT from watermark. Compiler: mpicc(icc), XALT\_Version: 2.10.31
+    Built userT, userDT, scheduler: SLURM
+    Reuse   sha1 (...) of exec: /home/user/t/xalt/mpi\_hello
+    Parsed ProcMaps
+    Using XALT\_TRANSMISSION\_STYLE: file
+    Built json string
+    Transmitting jsonStr
+    Using USE\_HOME method to store json file
+    Wrote json run file : ...
+    Done transmitting jsonStr
+  }
+
+    -> leaving myfini
+}
+
+TACC:  Shutdown complete. Exiting. 
+\end{semiverbatim}
+}
+\end{frame}
+
+
+% page 10
+\begin{frame}{XALT Env. Vars for Tracing}
+  \begin{itemize}
+    \item XALT\_TRACING=run for execution
+    \item XALT\_TRACING=link for linking
+    \item XALT\_SAMPLING=no to turn off sampling
+    \item XALT\_TESTING\_RUNTIME=3600 to override real runtime
+    \item XALT\_MPI\_ALWAYS\_RECORD=2 to force start and end record generation.
+    \item XALT\_COMM\_WORLD\_SIZE=256 to override number of real mpi tasks
+      (XALT-2.10.32+)
+  \end{itemize}
+\end{frame}
+
+%
+%% page 6
+%\begin{frame}{Full paths are remembered from 3 Env. Vars.}
+%  \begin{itemize}
+%    \item Changes to PATH
+%    \item Changes to LD\\_LIBRARY\\_PATH
+%    \item Setting $<$SITE$>$\\_$<$PKGName$>$\\_DIR
+%    \item This last one is very important.
+%  \end{itemize}
+%\end{frame}
+%
+
+%\input{./themes/license}
+
+\end{document}
