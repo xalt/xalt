@@ -22,7 +22,7 @@
 
 
 \begin{document}
-\title[XALT]{XALT Monthly Meeting: Using \$XALT\_TRACING to track XALT Behavior }
+\title[XALT]{XALT Monthly Meeting: Using \$XALT\_TRACING to Debug XALT}
 \author{Robert McLay} 
 \date{Nov. 11, 2021} 
 
@@ -34,13 +34,41 @@
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
     \item XALT provides a way to debug its behavior
+    \item xalt\_extract\_record ./user\_program: XALT watermark
     \item XALT\_TRACING=link  icc -o try try.c
     \item XALT\_TRACING=run ./user\_program ...
-    \item It shows what decision XALT is making.
+    \item It shows what decisions XALT is making.
   \end{itemize}
 \end{frame}
 
 % page 3
+\begin{frame}[fragile]
+    \frametitle{XALT Watermark: xalt\_extract\_record mpi\_hello}
+ {\tiny
+    \begin{semiverbatim}
+\$ xalt_extract_record ./mpi_hello 
+****************************************
+XALT Watermark: ./mpi_hello
+****************************************
+Build_CWD                /home/user/t
+Build_Epoch              1636147194.4143
+Build_LMFILES            ...
+Build_LOADEDMODULES      intel/19.1.1:impi/19.0.9:...:xalt/2.10.33
+Build_OS                 Linux 3.10.0-1160.45.1.el7.x86_64
+Build_Syshost            frontera
+Build_UUID               70611e21-bea5-465f-bf12-9537dc565240
+Build_User               joe_user
+Build_Year               2021
+Build_compiler           mpiicc(icc)
+Build_compilerPath       icc:/opt/intel/compilers_and_libraries_2020.1.217/...
+Build_date               Fri Nov 05 16:19:54 2021
+Build_host               staff.frontera.tacc.utexas.edu
+XALT_Version             2.10.34
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 4
 \begin{frame}[fragile]
     \frametitle{Linking w/ XALT}
  {\tiny
@@ -76,7 +104,16 @@
 }
 \end{frame}
 
-% page 4
+% page 5
+\begin{frame}{Source Code} 
+  \begin{itemize}
+    \item The first set of tests come from
+      src/libxalt/xalt\_initialize.c
+    \item The second test of test come from src/libxalt/run\_submission.c
+  \end{itemize}
+\end{frame}
+
+% page 6
 \begin{frame}[fragile]
     \frametitle{Tracing on login node}
  {\tiny
@@ -110,7 +147,7 @@ myfini(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
 }
 \end{frame}
 
-% page 5
+% page 8
 \begin{frame}[fragile]
     \frametitle{Tracing on compute node}
  {\tiny
@@ -142,7 +179,7 @@ myfini(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
 }
 \end{frame}
 
-% page 6
+% page 8
 \begin{frame}[fragile]
     \frametitle{Tracing on compute node, sampling off}
  {\tiny
@@ -180,7 +217,7 @@ myfini(0/1,LD\_PRELOAD,/home/user/t/xalt/hello)\{
 }
 \end{frame}
 
-% page 7
+% page 9
 \begin{frame}[fragile]
     \frametitle{Tracing MPI program (I)}
  {\tiny
@@ -191,7 +228,7 @@ XALT_MPI_ALWAYS_RECORD=2 XALT_TRACING=run XALT_SAMPLING=no ./mpi_hello
   }
 \end{frame}
 
-% page 8
+% page 10
 \begin{frame}[fragile]
     \frametitle{Tracing MPI program (II)}
  {\tiny
@@ -228,7 +265,7 @@ Hello World from proc: 0 out of 2 !
 }
 \end{frame}
 
-% page 9
+% page 11
 \begin{frame}[fragile]
     \frametitle{Tracing MPI program (III)}
  {\tiny
@@ -264,29 +301,29 @@ TACC:  Shutdown complete. Exiting.
 \end{frame}
 
 
-% page 10
+% page 12
 \begin{frame}{XALT Env. Vars for Tracing}
   \begin{itemize}
+    \item xalt\_extract\_record user\_program to see the XALT Watermark
     \item XALT\_TRACING=run for execution
     \item XALT\_TRACING=link for linking
     \item XALT\_SAMPLING=no to turn off sampling
     \item XALT\_TESTING\_RUNTIME=3600 to override real runtime
     \item XALT\_MPI\_ALWAYS\_RECORD=2 to force start and end record generation.
     \item XALT\_COMM\_WORLD\_SIZE=256 to override number of real mpi tasks
-      (XALT-2.10.33+)
+      (XALT-2.10.34+)
   \end{itemize}
 \end{frame}
 
-%
-%% page 6
-%\begin{frame}{Full paths are remembered from 3 Env. Vars.}
-%  \begin{itemize}
-%    \item Changes to PATH
-%    \item Changes to LD\\_LIBRARY\\_PATH
-%    \item Setting $<$SITE$>$\\_$<$PKGName$>$\\_DIR
-%    \item This last one is very important.
-%  \end{itemize}
-%\end{frame}
+
+% page 13
+\begin{frame}{Future Topics?} 
+  \begin{itemize}
+    \item Python package tracking
+    \item R package tracking
+    \item MATLAB package tracking
+  \end{itemize}
+\end{frame}
 %
 
 %\input{./themes/license}
