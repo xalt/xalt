@@ -68,6 +68,22 @@ XALT_Version             2.10.34
 }
 \end{frame}
 
+% page 3.1
+\begin{frame}[fragile]
+    \frametitle{XALT Watermark checks} 
+  \begin{itemize}
+    \item Set \$COMPILER\_PATH to /path/to/xalt/xalt/bin
+    \item Use priority path in XALT Module
+  \end{itemize}
+ {\small
+    \begin{semiverbatim}
+local base  = "/path/to/xalt/xalt"  --> Change to match 
+local bin   = pathJoin(base,"bin")
+prepend_path{"PATH",  bin, priority="100"}
+    \end{semiverbatim}
+}
+\end{frame}
+
 % page 4
 \begin{frame}[fragile]
     \frametitle{Linking w/ XALT}
