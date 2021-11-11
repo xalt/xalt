@@ -172,15 +172,12 @@ case $SYSHOST in
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     ;;
 
-  ls5 )
-    echo "Building ls5"
+  ls6)
+    echo "Building ls6"
     base="$HOME/l/pkg"
     EXTRA=""
-    if [ "$USER" = swtools ]; then
-      EXTRA="--with-xaltFilePrefix=/scratch/projects/XALT"
-    fi
     ETC_DIR="/tmp/moduleData"
-    SYSHOST_CONF="hardcode:ls5"
+    SYSHOST_CONF="hardcode:ls6"
     CONFIG="../Config/TACC_config.py"
     TRANSMISSION="file"
     TRACK_GPU="no"
