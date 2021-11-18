@@ -187,7 +187,6 @@ case $SYSHOST in
     SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
-
   *)
     echo "default"
     base="$HOME/l/pkg"

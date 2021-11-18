@@ -340,7 +340,7 @@ class ParseSyslog(object):
     # or just add the block to the current record.
     key  = t['crcStr'] + "_" + t['key'] 
     
-    print 
+    #print 
     r    = recordT.get(key, None)
     if (r):
       r.addBlk(t)
@@ -351,11 +351,16 @@ class ParseSyslog(object):
     # If the block is completed then grap the value, remove the entry from *recordT*
     # and return a completed table.
     if (r.completed()):
-      vv   = r.value()
+      vv     = r.value()
+      status = True
       if (level == 2):
-        b64v = base64.b64decode(vv)
-        vv   = zlib.decompress(b64v).decode("utf-8")
-      t['value'] = vv
+        try:
+          b64v = base64.b64decode(vv)
+          vv   = zlib.decompress(b64v).decode("utf-8")
+        except:
+          vv = ""
+          status = False
+        t['value'] = vv
 
       try:
         del recordT[key]
@@ -363,7 +368,7 @@ class ParseSyslog(object):
         print("Unable to remove recordT["+key+"]")
         print(traceback.format_exc())
 
-      return t, True
+      return t, status
 
     # Entry is not complete.
     return t, False
