@@ -360,7 +360,7 @@ class ParseSyslog(object):
         except:
           vv = ""
           status = False
-        t['value'] = vv
+      t['value'] = vv
 
       try:
         del recordT[key]
