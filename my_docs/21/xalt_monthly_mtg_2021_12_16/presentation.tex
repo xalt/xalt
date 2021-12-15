@@ -46,7 +46,7 @@
 \begin{frame}{Testing w/ File transport}
   \begin{itemize}
     \item Easiest way to test
-    \item \texttt{export XALT_TRANSMISSION_STYLE=file}
+    \item \texttt{export XALT\_TRANSMISSION\_STYLE=file}
     \item Write results to \texttt{\$HOME/.xalt.d}
     \item Count *.json files
   \end{itemize}
@@ -58,8 +58,8 @@
     \item Linking $\Rightarrow$ link.*.json files 
     \item Package $\Rightarrow$ pkg.*.json files 
     \item Running $\Rightarrow$ run.*.json files 
-    \item Start Records:$\Rightarrow$ run.*.aaa.*.json files (MPI Only)
-    \item End Records:$\Rightarrow$ run.*.zzz.*.json files 
+    \item Start Records $\Rightarrow$ run.*.aaa.*.json files (MPI Only)
+    \item End Records $\Rightarrow$ run.*.zzz.*.json files 
   \end{itemize}
 \end{frame}
 
@@ -68,9 +68,9 @@
   \begin{itemize}
     \item Build simple program (hello)
     \item Set \$HOME to anywhere you need.
-    \item export XALT_EXECUTABLE_TRACKING=yes
-    \item Run Scalar ( XALT_SAMPLING=no ./hello)
-    \item Run MPI (XALT_COMM_WORLD_SIZE=129 ./hello)
+    \item export XALT\_EXECUTABLE\_TRACKING=yes
+    \item Run Scalar ( XALT\_SAMPLING=no ./hello)
+    \item Run MPI (XALT\_COMM\_WORLD\_SIZE=129 ./hello)
     \item Count link files
     \item Count start records
     \item Count end records
@@ -81,7 +81,7 @@
 \begin{frame}{Testing with syslog transport}
   \begin{itemize}
     \item Probably do not want to use syslog for testing
-    \item export XALT_EXECUTABLE_TRACKING=logger
+    \item export XALT\_EXECUTABLE\_TRACKING=logger
     \item Fake syslog with a personal logger program
     \item Grep syslog.log for counts
   \end{itemize}
@@ -110,8 +110,8 @@
     \item Records are split into blocks
     \item First record is always idx:01
     \item Link records have kind:link
-    \item Start records have key:run_strt
-    \item End records have key:run_fini
+    \item Start records have key:run\_strt
+    \item End records have key:run\_fini
     \item Use grep to count matching patterns
   \end{itemize}
 \end{frame}
@@ -121,7 +121,7 @@
   \begin{itemize}
     \item It is what I use to test XALT
     \item It tests various options
-    \item It writes *.json file into a test DB in MySQL
+    \item It writes *.json files or syslog records into a test DB in MySQL
     \item Test do check for the number of records by type
     \item Testing is good/quick but not as exhaustive as Lmod.
   \end{itemize}
