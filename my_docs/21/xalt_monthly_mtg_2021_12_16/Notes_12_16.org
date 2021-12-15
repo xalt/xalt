@@ -1,0 +1,46 @@
+Ideas for testing XALT at your site.
+
+* Ideas:
+** Test 1: File Transport
+    export XALT_TRANSMISSION_STYLE=file
+    
+    build simple program -> link record
+    Use XALT_COMM_WORLD_SIZE=# to control number of MPI Tasks
+    Use XALT_TESTING_RUNTIME=# to control run time
+
+    Count number of files in ~/.xalt.d by type
+    Count number of links:
+    Count number of run.*.zzz.* files (end records)
+    Count number of run.*.aaa.* files (start records)
+** Test 2: syslog style test
+
+   Can't use syslog directly so use logger instead
+   
+    export XALT_TRANSMISSION_STYLE=logger
+
+    Create a logger program:
+        #!/bin/bash
+        # -*- shell-script -*-
+
+        shift
+        TAG=$1
+        shift
+
+        echo $TAG "$@" >> syslog.log
+    
+    Grep syslog.log for number of idx=1 records
+
+** Can use XALT Testing system
+   Requirements:
+   * Themis from git repo
+   * local MySQL server running
+   * db: testxalt; user: xaltTest
+   * gcc and mpich installed
+   * module system with gcc and mpich modules
+   * mpirun program works
+          
+    
+* Side Note: I want to use github actions to automatically test XALT
+  But I have not figured out how to setup mysql inside the test.
+  (HELP?)
+  

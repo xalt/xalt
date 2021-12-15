@@ -1,0 +1,177 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data. 
+
+
+\begin{document}
+\title[XALT]{XALT Monthly Meeting: Testing XALT at your site}
+\author{Robert McLay} 
+\date{Nov. 11, 2021} 
+
+% page 1
+\frame{\titlepage} 
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item Testing XALT installation at your site.
+    \item Use xalt\_extract\_record 
+    \item Testing File Transport
+    \item Testing syslog style transport
+    \item Possibly using XALT tests at your site
+    \item Integrate XALT tests into github actions
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Testing w/ File transport}
+  \begin{itemize}
+    \item Easiest way to test
+    \item \texttt{export XALT_TRANSMISSION_STYLE=file}
+    \item Write results to \texttt{\$HOME/.xalt.d}
+    \item Count *.json files
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{Testing w/ File transport (II)}
+  \begin{itemize}
+    \item Linking $\Rightarrow$ link.*.json files 
+    \item Package $\Rightarrow$ pkg.*.json files 
+    \item Running $\Rightarrow$ run.*.json files 
+    \item Start Records:$\Rightarrow$ run.*.aaa.*.json files (MPI Only)
+    \item End Records:$\Rightarrow$ run.*.zzz.*.json files 
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{Possible tests (file)}
+  \begin{itemize}
+    \item Build simple program (hello)
+    \item Set \$HOME to anywhere you need.
+    \item export XALT_EXECUTABLE_TRACKING=yes
+    \item Run Scalar ( XALT_SAMPLING=no ./hello)
+    \item Run MPI (XALT_COMM_WORLD_SIZE=129 ./hello)
+    \item Count link files
+    \item Count start records
+    \item Count end records
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{Testing with syslog transport}
+  \begin{itemize}
+    \item Probably do not want to use syslog for testing
+    \item export XALT_EXECUTABLE_TRACKING=logger
+    \item Fake syslog with a personal logger program
+    \item Grep syslog.log for counts
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}[fragile]
+    \frametitle{Create a logger program}
+ {\small
+    \begin{semiverbatim}
+        #!/bin/bash
+        # -*- shell-script -*-
+
+        shift
+        TAG=$1
+        shift
+
+        echo $TAG "$@" >> syslog.log
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 8
+\begin{frame}{Interpreting results from syslog.log}
+  \begin{itemize}
+    \item Records are split into blocks
+    \item First record is always idx:01
+    \item Link records have kind:link
+    \item Start records have key:run_strt
+    \item End records have key:run_fini
+    \item Use grep to count matching patterns
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{Using XALT Testing system}
+  \begin{itemize}
+    \item It is what I use to test XALT
+    \item It tests various options
+    \item It writes *.json file into a test DB in MySQL
+    \item Test do check for the number of records by type
+    \item Testing is good/quick but not as exhaustive as Lmod.
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{XALT Testing System Requirements}
+  \begin{itemize}
+    \item Themis: https://github.com/TACC/themis
+    \item A Local MySQL server running
+    \item db: testxalt; user xaltTest
+    \item gcc and mpich installed
+    \item Module system with gcc, mpich moduless 
+    \item mpirun program works
+    \item 1 Node. (MPI programs use 2-4 tasks)
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Side Note: Integrating XALT testing into github}
+  \begin{itemize}
+    \item I would like to use github actions
+    \item Have not figured out how to setup mysql inside container
+  \end{itemize}
+\end{frame}
+
+
+% page 12
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item xalt\_extract\_record user\_program to see the XALT
+      Watermark
+    \item Use file transport to check *.json
+    \item Use logger transport to check syslog tracking
+    \item Possibly use xalt testing locally.
+    \item Willing to work with anyone who tries to do it.
+  \end{itemize}
+\end{frame}
+
+
+% page 13
+\begin{frame}{Future Topics?} 
+  \begin{itemize}
+    \item Package tracking
+    \item Extracting results from the DB.
+    \item Others?
+  \end{itemize}
+\end{frame}
+%
+
+%\input{./themes/license}
+
+\end{document}
