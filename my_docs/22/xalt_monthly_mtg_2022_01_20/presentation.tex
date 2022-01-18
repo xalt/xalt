@@ -36,7 +36,7 @@
     \item XALT Parts: Generating and Storing
     \item Quick Discussion about what is stored
     \item Caveats about XALT Records
-    \item xalt_usage_report.py
+    \item xalt\_usage\_report.py
     \item Kinds of reports available
     \item What kinds of reports would sites like?
     \item Future Topics for XALT zoom mtg.
@@ -70,7 +70,7 @@
 % page 5
 \begin{frame}{XALT time records won't match Accounting}
   \begin{itemize}
-    \item XALT will filter out or sample program
+    \item XALT will filter out or sample programs
     \item It won't catch them all.
     \item XALT can double count (rarely)
     \item If user forks off another prgm $\Rightarrow$ double counting
@@ -121,7 +121,7 @@
 % page 9
 \begin{frame}[fragile]
     \frametitle{xalt\_name\_mapping.py}
- {\tiny
+ {\small
     \begin{semiverbatim}
 equiv_patternA = [
     [ r'^pmemd'               , 'Amber*'      ],
@@ -130,11 +130,12 @@ equiv_patternA = [
     [ r'^absorption\.cplx\.x' , 'BerkeleyGW*' ],
     [ r'^kernel\.real\.x'     , 'BerkeleyGW*' ],
     \end{semiverbatim}
+}
   \begin{itemize}
     \item Map prgms to projects.
     \item Sites may need to modify to match their site.
   \end{itemize}
-}
+
 \end{frame}
 
 
