@@ -464,8 +464,6 @@ def kinds_of_jobs(cursor, args, start_date, end_date):
 
   execKindA = [ ["sys",        "binary", "and module_name is not NULL"],
                 ["usr"  ,      "binary", "and module_name is NULL"    ],
-                ["sys-script", "script", "and module_name is not NULL"],
-                ["usr-script", "script", "and module_name is NULL"    ]
               ]
 
   resultT = {}
@@ -631,8 +629,6 @@ def main():
   print("\n")
   print("Where        usr: executables built by user")
   print("             sys: executables managed by system-level modulefiles")
-  print("      usr-script: shell scripts in a user's account")
-  print("      sys-script: shell scripts managed by system-level modulefiles")
   
   ############################################################
   #  Self-build vs. BuildU != RunU

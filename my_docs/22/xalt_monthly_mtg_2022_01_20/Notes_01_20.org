@@ -1,0 +1,69 @@
+Notes for getting results from XALT DB
+
+* XALT comes in two parts
+** All programs on system have XALT library via LD_PRELOAD -> Some generate *.json records
+** Those *.json records can be written to XALT supplied MySQL DB
+** Those *.json records are deleted
+
+* This talk will be about what kinds of information you can extract from MySQL
+** Some results are relatively quick to extract.  
+*** xalt_run table contains executable name, start, end time, number of tasks, num_threads, user, date, etc
+*** 1 to N relationship with shared libraries, functions, packages
+*** Upshot is that tracking library usage is slower because a SQL join is required.
+*** Typically at TACC there can be millions of records.
+
+* Caveats about XALT records
+** Core-Hours NOT Node-Hours
+   XALT knows how many tasks, threads 
+   XALT cannot know if a node is shared.
+   A user might be running multiple single core program on a node
+   Or a user might be running a single core program on 1 or more nodes
+** Since XALT can be setup to ignore some programs: (Filtering path, sampling)
+   You cannot trust that XALT record time == accounting records
+** XALT uses realtime not cputime to record time usage
+** XALT can double count
+   If a user program forks off another executable => double count
+   If a user runs multiple execs on same core
+
+* XALT supplies a python program named xalt_usage_report.py
+** It is an attempt to be system agnostic but it might not be
+** It can report many things that we at TACC have found useful   
+
+* Overall Job counts
+** Core Hours for programs in user accounts or system accounts:
+** We see about 5% for system programs: LAMMPS, CESM etc
+** 95% for user codes
+** System programs have an system module associated with it. User codes don't
+
+* Self Build vs. Not
+** If an executable is linked under XALT, it knows the build user,
+** Also knows the run user.
+** Report 2-4 % different users
+
+* xalt_name_mapping.py -> Group different programs from one project
+** For example both charmrun and namd2 are part of NAMD.  We report the sum of both as NAMD*
+** Sites may need to modify this mapping to match their site
+
+* By default xalt_usage_report.py assumes top 20 but sites can change this.
+
+* XALT report top execs (ALL) in three tables: Core-Hours, #Runs, #Distinct Users
+
+* XALT report top execs (MPI) in three tables: Core-Hours, #Runs, #Distinct Users
+
+* XALT report top execs (Scalar) in three tables: Core-Hours, #Runs, #Distinct Users
+** num_tasks == 1, num_threds anything
+
+* Top Module usage
+
+* Compiler usage by count: (link records)
+
+* Computer usage by Core-Hours
+** XALT guesses compiler(linker) by looking at process tree during linking 
+** Fortran between 33 and 50 %
+** C and C++ split evenly, C++ core hours going up over time.
+
+* Library usage from modules familes
+** grouped by sn: all phdf5 modules are grouped.
+** Double counting is a problem.
+
+* Library usage from modules
