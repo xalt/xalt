@@ -30,7 +30,7 @@ int hostname_parser(const char * hostname)
       if (strbuf)
 	my_free(strbuf,sz);
       sz = len+2;
-      strbuf = (char *) malloc(sz);
+      strbuf = (char *) XMALLOC(sz);
     }
 
   memcpy(&strbuf[0], hostname, len);

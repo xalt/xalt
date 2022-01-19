@@ -49,7 +49,7 @@ void json_fini(Json_t* json, char** p_result)
   while( (p = (char **)utarray_next(json->m_s, p)) != NULL)
     sz += strlen(*p);
 
-  char* result = (char*) malloc(sizeof(char)*(sz+1));
+  char* result = (char*) XMALLOC(sizeof(char)*(sz+1));
   p = NULL;
   char* q = result;
   while( (p = (char **)utarray_next(json->m_s, p)) != NULL)

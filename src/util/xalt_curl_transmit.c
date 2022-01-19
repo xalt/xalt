@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     }
       
   slist = curl_slist_append(slist, "content-type: application/json");
-  chunk.memory = malloc(1);
+  chunk.memory = XMALLOC(1);
   chunk.size = 0;
   
   hnd = curl_easy_init();

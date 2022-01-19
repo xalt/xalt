@@ -508,7 +508,7 @@ void myinit(int argc, char **argv)
 
   sz = sz*3 + argc*3 + 3;
 
-  usr_cmdline = (char *) malloc(sz);
+  usr_cmdline = (char *) XMALLOC(sz);
   p           = &usr_cmdline[0];
   *p++        = '[';
   for (i = 0; i < argc; ++i)
@@ -996,7 +996,7 @@ void myfini()
                 }
 
               /* Allocate space for the accounting data */
-              pids = (unsigned int *)malloc(sizeof(unsigned int)*max_pid_count);
+              pids = (unsigned int *)XMALLOC(sizeof(unsigned int)*max_pid_count);
               memset(pids, 0, sizeof(unsigned int)*max_pid_count);
 
               /* Get PID accounting data */

@@ -22,7 +22,7 @@ void buildXALTRecordT(const char* watermark, S2S_t** recordT)
       char *s1 = p;
       char *s2 = strstr(p,">%%");
 
-      S2S_t* entry = (S2S_t *) malloc(sizeof(S2S_t));
+      S2S_t* entry = (S2S_t *) XMALLOC(sizeof(S2S_t));
 
       utstring_new(entry->key);
       utstring_bincpy(entry->key, s1, s2-s1);
@@ -92,7 +92,7 @@ bool extractXALTRecordString(const char* exec_path, char** watermark)
   // Convert exec_path to execQ where '"' are backslash quoted.
 
   int   len      = strlen(exec_path);
-  char* execQ    = (char *)malloc(len*3*sizeof(char));
+  char* execQ    = (char *)XMALLOC(len*3*sizeof(char));
   char* q        = execQ;
   char  Q        = '"';
   const char* p  = exec_path;

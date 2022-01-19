@@ -39,7 +39,7 @@ void buildRmapT(std::string& rmapD, S2S_t** rmapT, UT_array** xlibmapA)
   jsmntok_t*  tokens;
   int maxTokens = 1000;
 
-  tokens = (jsmntok_t *) malloc(sizeof(jsmntok_t)*maxTokens);
+  tokens = (jsmntok_t *) XMALLOC(sizeof(jsmntok_t)*maxTokens);
 
   jsmn_init(&parser);
 

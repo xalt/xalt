@@ -179,7 +179,7 @@ def nth_name(nth,output):
   sA.append("    }")
   sA.append("")
   sA.append("  int    len = p - start;")
-  sA.append("  char * w   = (char *) malloc(len+1);")
+  sA.append("  char * w   = (char *) XMALLOC(len+1);")
   sA.append("  memcpy(w,start,len);")
   sA.append("  w[len] = '\\0';")
   sA.append("  my_free(my_hostname, strlen(my_hostname));")

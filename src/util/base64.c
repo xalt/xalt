@@ -81,7 +81,7 @@ char* base64_encode( const void* binaryData, int len, int *flen )
   int pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
   
   *flen = 4*(len + pad)/3 ;
-  res = (char*) malloc( *flen + 1 ) ; // and one for the null
+  res = (char*) XMALLOC( *flen + 1 ) ; // and one for the null
   if( !res )
   {
     puts( "ERROR: base64 could not allocate enough memory." ) ;
@@ -137,7 +137,7 @@ unsigned char* base64_decode( const char* ascii, int len, int *flen )
   if( safeAsciiPtr[ len-2 ]=='=' )  ++pad ;
   
   *flen = 3*len/4 - pad + 1;
-  bin = (unsigned char*)malloc( *flen ) ;
+  bin = (unsigned char*)XMALLOC( *flen ) ;
   if( !bin )
   {
     puts( "ERROR: unbase64 could not allocate enough memory." ) ;

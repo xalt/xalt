@@ -28,7 +28,7 @@ char* uncompress_string(const char* str, int len)
   int   totalSz = 4*len;
   int   szOut   = 0;
   char* prev;
-  char* out     = (char *) malloc(totalSz+1);
+  char* out     = (char *) XMALLOC(totalSz+1);
 
   do
     {
@@ -44,7 +44,7 @@ char* uncompress_string(const char* str, int len)
 	{
 	  totalSz = MAX(2*totalSz,2*szOut);
 	  prev = out;
-	  out  = (char *) malloc(totalSz+1);
+	  out  = (char *) XMALLOC(totalSz+1);
 	  memcpy(out, prev, oldSz);
 	  my_free(prev, strlen(prev));
 	}

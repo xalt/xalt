@@ -127,7 +127,7 @@ void parseCompTJsonStr(const char* name, std::string& jsonStr, std::string& comp
   jsmntok_t*  tokens;
   int         maxTokens = 1000;
 
-  tokens = (jsmntok_t *) malloc(sizeof(jsmntok_t)*maxTokens);
+  tokens = (jsmntok_t *) XMALLOC(sizeof(jsmntok_t)*maxTokens);
 
   jsmn_init(&parser);
 

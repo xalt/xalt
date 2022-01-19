@@ -38,7 +38,7 @@ const char* xalt_quotestring(const char* input)
       sz    = currSz;
       if (buff)
 	my_free(buff,oldSz);
-      buff = (char *) malloc(sz);
+      buff = (char *) XMALLOC(sz);
     }
   s = buff;
 
@@ -109,7 +109,7 @@ const char * xalt_unquotestring(const char * input, int len)
       sz    = currSz;
       if (buff)
 	my_free(buff, oldSz);
-      buff = (char *) malloc(sz);
+      buff = (char *) XMALLOC(sz);
     }
   s = buff;
 

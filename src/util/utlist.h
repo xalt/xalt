@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UTLIST_VERSION 2.1.0
 
 #include <assert.h>
+#include <xalt_c_utils.h> /* XMALLOC */
 
 /*
  * This file contains macros to manipulate singly and doubly-linked lists.

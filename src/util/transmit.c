@@ -139,7 +139,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       int  len_lpath    = strlen(ld_lib_path);
       int  len_l64dir   = strlen(lib64_dir);
       int  len          = len_l64dir + len_lpath + 2;
-      char *value       = (char *) malloc(len*sizeof(char));
+      char *value       = (char *) XMALLOC(len*sizeof(char));
 
       i = 0;
       memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
@@ -224,7 +224,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       int istrt      = 0;
       int iend       = blkSz;
       int  nvalueStr = syslog_msg_sz + 7;
-      char *valueStr = (char *) malloc(nvalueStr);
+      char *valueStr = (char *) XMALLOC(nvalueStr);
 
       myargs[ 0] = (char *) prgm;
       myargs[ 1] = "-t";

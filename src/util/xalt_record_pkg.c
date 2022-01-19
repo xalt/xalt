@@ -9,6 +9,7 @@
 #include "transmit.h"
 #include "xalt_quotestring.h"
 #include "xalt_config.h"
+#include "xalt_c_utils.h"
 #include "build_uuid.h"
 #include "xalt_tmpdir.h"
 #include "xalt_debug_macros.h"
@@ -42,7 +43,7 @@ int main(int argc, char* argv[])
 	{
 	case 'u':
 	  len      = strlen(optarg);
-	  run_uuid = (char *) malloc(len+1);
+	  run_uuid = (char *) XMALLOC(len+1);
 	  memcpy(run_uuid, optarg, len+1);
 	  break;
 	}
@@ -68,7 +69,7 @@ int main(int argc, char* argv[])
   for (i = optind; i < argc; ++i)
     sz += 3*strlen(argv[i]) + 3;
 
-  char* json_str = (char *)malloc(sz+1);
+  char* json_str = (char *)XMALLOC(sz+1);
 
   if ((argc - optind) % 2 == 1)
     {

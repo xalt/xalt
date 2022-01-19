@@ -35,7 +35,7 @@ GEN_WTRMK_X       := $(DESTDIR)$(LIBEXEC)/xalt_generate_watermark
 GEN_WTRMK_CXX     := xalt_generate_watermark.C parseJsonStr.C
 GEN_WTRMK_CXX     := $(addprefix $(local_dir)/, $(GEN_WTRMK_CXX))
 GEN_WTRMK_C       := linker/jsmn.c util/epoch.c util/xalt_vendor_note.c util/xalt_quotestring.c \
-                     util/insert.c  util/xalt_c_utils.c
+                     util/insert.c  util/xalt_c_utils.c 
 GEN_WTRMK_OBJ     := $(patsubst %.C, %.o, $(GEN_WTRMK_CXX)) \
                      $(patsubst %.c, %.o, $(GEN_WTRMK_C))
 

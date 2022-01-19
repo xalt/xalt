@@ -98,7 +98,7 @@ void parseProcMaps(pid_t my_pid, SET_t** libT)
       HASH_FIND_STR(*libT, p, entry);
       if (!entry)
 	{
-	  entry = (SET_t *) malloc(sizeof(SET_t));
+	  entry = (SET_t *) XMALLOC(sizeof(SET_t));
 	  utstring_new(   entry->key);
 	  int keylen = strlen(p);
 	  utstring_bincpy(entry->key, p, keylen);

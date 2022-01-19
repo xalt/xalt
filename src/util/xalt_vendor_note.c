@@ -7,6 +7,7 @@
 #include <link.h>
 #include <gelf.h>
 #include "xalt_config.h"
+#include "xalt_c_utils.h"
 #include "xalt_vendor_note.h"
 #include "xalt_debug_macros.h"
 
@@ -64,7 +65,7 @@ static int read_watermark(const void *note, char **ret_watermark)
       if (xalt_note->version == XALT_STAMP_SUPPORTED_VERSION)
         {
           int    len;
-          char * watermark = (char *) malloc(sizeof(char)*elf_note->desc_size);
+          char * watermark = (char *) XMALLOC(sizeof(char)*elf_note->desc_size);
           const char * p   = &xalt_note->note[0];
           char * q         = watermark;
       

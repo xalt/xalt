@@ -2,7 +2,7 @@
 
 void insert_key_double(S2D_t** userDT, const char* name, double value)
 {
-  S2D_t* entry = (S2D_t *) malloc(sizeof(S2D_t));
+  S2D_t* entry = (S2D_t *) XMALLOC(sizeof(S2D_t));
   utstring_new(entry->key);
   utstring_bincpy(entry->key, name, strlen(name));
 
@@ -13,7 +13,7 @@ void insert_key_double(S2D_t** userDT, const char* name, double value)
 
 void insert_key_string(S2S_t** userT, const char* name, const char* value)
 {
-  S2S_t* entry = (S2S_t *) malloc(sizeof(S2S_t));
+  S2S_t* entry = (S2S_t *) XMALLOC(sizeof(S2S_t));
   utstring_new(entry->key);
   utstring_bincpy(entry->key, name, strlen(name));
 
@@ -25,7 +25,7 @@ void insert_key_string(S2S_t** userT, const char* name, const char* value)
 
 void insert_key_SET(SET_t** libT, const char* name)
 {
-  SET_t* entry = (SET_t *) malloc(sizeof(SET_t));
+  SET_t* entry = (SET_t *) XMALLOC(sizeof(SET_t));
   utstring_new(entry->key);
   utstring_bincpy(entry->key, name, strlen(name));
 

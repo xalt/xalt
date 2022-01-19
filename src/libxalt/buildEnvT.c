@@ -20,7 +20,7 @@ void buildEnvT(char* env[], S2S_t ** envT)
       
       if (p && keep_env_name(w))
 	{
-	  S2S_t* e = (S2S_t *) malloc(sizeof(S2S_t));
+	  S2S_t* e = (S2S_t *) XMALLOC(sizeof(S2S_t));
 	  utstring_new(e->key);
 	  utstring_bincpy(e->key, w, p-w);
 

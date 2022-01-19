@@ -99,6 +99,16 @@ void set_end_record()
 {
   s_start_record = false;
 }
+void* xmalloc(size_t size, const char* fn, int lineNo)
+{
+  void* result = malloc(size);
+  if (result != NULL)
+    return result;
+  // If here then malloc returned a NULL;
+  fprintf(stdout, "xmalloc return a null called from %s:%d\n",fn,lineNo);
+  exit(1);
+}
+      
 void my_free(void *ptr,int sz)
 {
   if (s_start_record && ptr != NULL)

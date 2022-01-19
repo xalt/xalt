@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <xalt_c_utils.h> /* XMALLOC */
 
 #ifdef __GNUC__
 #define UTSTRING_UNUSED __attribute__((__unused__))
@@ -88,7 +89,7 @@ do {                                                       \
 
 #define utstring_new(s)                                    \
 do {                                                       \
-  (s) = (UT_string*)malloc(sizeof(UT_string));             \
+  (s) = (UT_string*)XMALLOC(sizeof(UT_string));             \
   if (!(s)) {                                              \
     utstring_oom();                                        \
   }                                                        \
@@ -337,7 +338,7 @@ UTSTRING_UNUSED static long utstring_find(
     V_HaystackLen = s->i - V_StartPosition;
     if ( (V_HaystackLen >= (long) P_NeedleLen) && (P_NeedleLen > 0) )
     {
-        V_KMP_Table = (long *)malloc(sizeof(long) * (P_NeedleLen + 1));
+        V_KMP_Table = (long *)XMALLOC(sizeof(long) * (P_NeedleLen + 1));
         if (V_KMP_Table != NULL)
         {
             _utstring_BuildTable(P_Needle, P_NeedleLen, V_KMP_Table);
@@ -383,7 +384,7 @@ UTSTRING_UNUSED static long utstring_findR(
     V_HaystackLen = V_StartPosition + 1;
     if ( (V_HaystackLen >= (long) P_NeedleLen) && (P_NeedleLen > 0) )
     {
-        V_KMP_Table = (long *)malloc(sizeof(long) * (P_NeedleLen + 1));
+        V_KMP_Table = (long *)XMALLOC(sizeof(long) * (P_NeedleLen + 1));
         if (V_KMP_Table != NULL)
         {
             _utstring_BuildTableR(P_Needle, P_NeedleLen, V_KMP_Table);

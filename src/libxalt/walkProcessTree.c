@@ -21,7 +21,7 @@ void walkProcessTree(pid_t ppid, processTree_t** ptA)
       if (proc.m_parent < 2)
         break;
 
-      entry = (processTree_t *) malloc(sizeof(processTree_t));
+      entry = (processTree_t *) XMALLOC(sizeof(processTree_t));
       if (! entry )
         exit(-1);
 

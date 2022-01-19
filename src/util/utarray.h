@@ -31,6 +31,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stddef.h>  /* size_t */
 #include <string.h>  /* memset, etc */
 #include <stdlib.h>  /* exit */
+#include <xalt_c_utils.h> /* XMALLOC */
+
 
 #ifdef __GNUC__
 #define UTARRAY_UNUSED __attribute__((__unused__))
@@ -82,7 +84,7 @@ typedef struct {
 } while(0)
 
 #define utarray_new(a,_icd) do {                                              \
-  (a) = (UT_array*)malloc(sizeof(UT_array));                                  \
+  (a) = (UT_array*)XMALLOC(sizeof(UT_array));                                  \
   if ((a) == NULL) {                                                          \
     utarray_oom();                                                            \
   }                                                                           \

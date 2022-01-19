@@ -28,7 +28,7 @@ char* compress_string(const char* str, int* lenOut)
   int  szOut   = 0;
   int  totalSz = zs.avail_in/2;
   char *prev;
-  char *out    = (char *) malloc(totalSz+1);
+  char *out    = (char *) XMALLOC(totalSz+1);
 
   do
     {
@@ -44,7 +44,7 @@ char* compress_string(const char* str, int* lenOut)
 	{
 	  totalSz = MAX(2*totalSz, 2*szOut);
 	  prev    = out;
-	  out     = (char *)malloc(totalSz+1);
+	  out     = (char *)XMALLOC(totalSz+1);
 	  memcpy(out, prev, oldSz);
 	  my_free(prev,oldSz);
 	}
