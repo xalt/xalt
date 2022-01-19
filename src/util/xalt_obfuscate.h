@@ -92,6 +92,7 @@
 #define xalt_syshost                  PASTE2(__XALT_syshost,                    HIDE)
 #define xalt_unquotestring            PASTE2(__XALT_unquotestring,              HIDE)
 #define xalt_vendor_note              PASTE2(__XALT_vendor_note,                HIDE)
+#define xmalloc                       PASTE2(__XALT_xmalloc,                    HIDE)
 
 
 #endif //XALT_OBFUSCATE
