@@ -132,10 +132,86 @@ equiv_patternA = [
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item Map prgms to projects.
-    \item Sites may need to modify to match their site.
+    \item Map prgms to projects
+    \item Sites may need to modify to match their site
+    \item Names get a \* when mapped
+    \item Nothing stops a user naming Hello $\Rightarrow$ pmemd
   \end{itemize}
 
+\end{frame}
+
+% page 10
+\begin{frame}[fragile]
+    \frametitle{Typical Reports: Top Execs Core-Hours}
+ {\small
+    \begin{semiverbatim}
+    CoreHrs   # Runs  # Users  # Accts  Exec
+    -------   ------  -------  -------  ----
+289,924,113      710       13        7  CESM*
+ 68,162,422  174,594        8        4  Chroma*
+ 51,135,767  102,957        5        3  gene_frontera
+ 39,173,897   22,666       44       32  LAMMPS*
+ 38,714,742   75,751       50       39  NAMD*
+ 35,858,260  254,470       55       37  VASP*
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 11
+\begin{frame}[fragile]
+    \frametitle{Typical Reports: Top Execs Runs}
+ {\small
+    \begin{semiverbatim}
+   CoreHrs   # Runs  # Users  # Accts  Exec
+   -------   ------  -------  -------  ----
+ 2,391,403  815,586        1        2  Rosetta*
+     2,402  583,091      136       97  mv
+     7,068  515,852      373      211  grep
+11,942,647  499,463      391      218  Python*
+    24,176  414,788        1        2  MOPAC2016.exe
+ 2,852,787  303,295        4        2  rockstar-galaxies
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 12
+\begin{frame}[fragile]
+    \frametitle{Typical Reports: Top Execs Users}
+ {\small
+    \begin{semiverbatim}
+   CoreHrs   # Runs  # Users  # Accts  Exec
+   -------   ------  -------  -------  ----
+11,942,647  499,463      391      218  Python*
+     7,068  515,852      373      211  grep
+     1,330   67,595      335      197  sed
+    12,779  121,983      322      182  gawk
+     2,402  583,091      136       97  mv
+    16,366  131,215      132       94  cp
+   137,580   21,731      103       62  perl
+    \end{semiverbatim}
+}
+\end{frame}
+
+
+% page 11
+\begin{frame}{Side Note: Integrating XALT testing into github}
+  \begin{itemize}
+    \item I would like to use github actions
+    \item Have not figured out how to setup mysql inside container
+  \end{itemize}
+\end{frame}
+
+
+% page 12
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item xalt\_extract\_record user\_program to see the XALT
+      Watermark
+    \item Use file transport to check *.json
+    \item Use logger transport to check syslog tracking
+    \item Possibly use xalt testing locally.
+    \item Willing to work with anyone who tries any system.
+  \end{itemize}
 \end{frame}
 
 
