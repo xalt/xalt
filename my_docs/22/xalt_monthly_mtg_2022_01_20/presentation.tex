@@ -60,7 +60,7 @@
     \item XALT knows about mpi tasks and threads
     \item It doesn't know if a node is shared.
     \item User might run multiple single core prgms on a node
-    \item User might run ingle core prgms on one or more nodes
+    \item User might run single core prgms on one or more nodes
     \item XALT runs inside each program.
     \item It is blind to what happens outside of user prgm.
     \item It would require a daemon on each node to know.
@@ -92,7 +92,7 @@
           Number of users for All, MPI Only, Scalar
         \item Top Module usage
         \item Compiler usage
-        \item Library Usage
+        \item Libraries from modules Usage
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -282,7 +282,6 @@ equiv_patternA = [
    23,224  gfortran
     9,250  mpiicc(icc)
     7,377  mpiifort(ifort)
-    5,625  mpif90(ifort)
     4,398  grim
     \end{semiverbatim}
 }
@@ -348,6 +347,8 @@ equiv_patternA = [
     \frametitle{Typical Reports: Core-Hours Libraries modules}
  {\tiny
   \begin{semiverbatim}
+      CoreHrs  # Users  # Accts     # Runs  # Jobs   Library Module
+      -------  -------  -------     ------  ------   --------------
 1,183,467,488    1,064      651  3,544,533  281,720  gcc
 1,140,838,707      984      624  1,062,676  235,540  impi
   629,361,768      581      377    670,258  142,934  impi/19.0.9
@@ -355,9 +356,7 @@ equiv_patternA = [
   556,355,447      643      392  1,484,379  176,090  gcc/8.3.0
   511,432,610      105       76    208,669  20,324   phdf5/1.10.4
   475,379,381      253      132    298,122  66,894   impi/19.0.7
-  441,465,631      550      372  1,269,790  121,421  intel
   395,220,235      459      310  1,012,327  103,776  intel/19.1.1
-  388,703,536      492      336    959,936  143,712  mkl
   364,394,100      411      281    917,239  131,431  mkl/19.1.1
   \end{semiverbatim}
 }
