@@ -1,0 +1,8 @@
+Ideas for 2/17 Talk
+
+* Package tracking and how it can be used
+** Find all the conda users and send them "howlers"
+
+* Containers and apline fix
+
+* 

@@ -1,0 +1,36 @@
+I may reuse eb_user_21 talk.  But is there anything new to report?
+
+
+* New this year?
+** Current Version is 2.10.34
+** Last year was 2.10.2
+** Will be moving to 3+ but there is no major change between XALT 2.*+ and 3.0
+
+* Internal changes
+** Use of crc to prevent dups
+** Issue with uuid
+   Seems that older systems have problems with dup uuid
+   Added crc check to prevent collisions
+** Better debugging report for both XALT runs on cluster
+   and ingestion of data into db
+** pre-ingestion filter
+   For sites that need to avoid overloading the VM db
+** Adding better compiler detection
+   rustc, nim, chpl, ocaml, haskell(ghc)
+** Better mpi compiler reporting
+   mpiicc(icc) etc.
+
+* Talk about $XALT_TRACING?
+
+* Do I want to talk about XALT bug reports stories?
+
+* Better container support
+** Working with Charlie Cloud so that XALT with work with CC
+
+* XALT Monthly Zoom Meetings
+** Topics
+*** Controlling which executable get tracked
+*** Using Lmod to build the reverse map from directories to modules
+*** Using $XALT_TRACING to debug XALT
+*** How to test XALT at your site
+*** Examples of what data a site can report on from the XALT DB.
