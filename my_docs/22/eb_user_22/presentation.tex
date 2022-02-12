@@ -49,10 +49,56 @@
     \item What imports from R, MATLAB, Python?
     \item What are the top programs by core-hours? by counts? by users?
     \item System, User or Built by Other executables?
-    \item Are Executables implemented in C/C++/Fortran?
+    \item Are Executables implemented in C/C++/Fortran/Others?
     \item Track MPI task and/or Threading (\$OMP\_NUMTHREADS)
     \item Function Tracking
     \item Census Taker, Not a performance tool!
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{How do TACC and other sites use XALT data?}
+  \begin{itemize}
+    \item Some sites feed XALT data into an ELK stack to visualize data
+    \item We use a MySQL db to store  the data and analyze weekly.
+    \item Sites could do both ELK and MySQL DB (or some other DB)
+    \item TACC generates a weekly report on usage (last 30, last 365) days
+    \item We design our benchmark codes on actual usage not guesses
+    \item Usage of gromacs, amber, ...?
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{xalt\_usage\_report.py}
+  \begin{itemize}
+    \item Overall Job counts: system (5\%) user (95\%)
+    \item It reports Top Execs by Core-Hours, Number of Runs,
+      Number of users for All, MPI Only, Scalar
+    \item Top Module usage
+    \item Compiler usage
+    \item Libraries from modules Usage
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{XALT Monthly Zoom Mtg}
+  \begin{itemize}
+    \item Previous Topics:
+      \begin{itemize}
+        \item Controlling which executable get tracked
+        \item Using Lmod to build the reverse map from directories to modules
+        \item Using \$XALT\_TRACING to debug XALT
+        \item How to test XALT at your site
+        \item Examples of what data a site can report on from the XALT DB.
+      \end{itemize}
+    \item Future Topics:
+      \begin{itemize}
+        \item Tracking Packages: Python, R, MATLAB
+      \end{itemize}
+    \item Zoom Mtg Usually 3rd Thurday at 15:30 UTC (9:30 US Central)
+    \item See Mailing list or https://github.com/xalt/xalt/wiki for
+      details
+    \item Next Meeting Feb 17 at 16:00 UTC (10:00 US Central)
   \end{itemize}
 \end{frame}
 
@@ -87,7 +133,8 @@
     \item Transmit collected data in *.json format
     \item Optionally add codes that executes before main() and after
       main() completes for static builds.
-    \item Having the LD Wrapper is helpful but not required.
+    \item Having the LD Wrapper is helpful but not required for XALT
+      to work.
   \end{itemize}
 \end{frame}
 
@@ -344,7 +391,7 @@ env\_patterns = [
 % page 31
 \begin{frame}[fragile]
     \frametitle{Example of xalt\_extract\_record output}
- {\small
+ {\tiny
     \begin{semiverbatim}
 ****************************************
 XALT Watermark: hello
@@ -418,12 +465,6 @@ myfini(0/1,LD_PRELOAD,/path/to/hello)\{
   \end{itemize}
 \end{frame}
 
-
-% page 35
-\begin{frame}[fragile]
-    \frametitle{XALT Doc usage by City}
-    \center{\includegraphics[width=.9\textwidth]{XALT_usage_by_city}}
-\end{frame}
 
 % page 36
 \begin{frame}{Conclusion}

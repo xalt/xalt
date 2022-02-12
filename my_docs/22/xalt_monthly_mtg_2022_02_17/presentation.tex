@@ -33,7 +33,94 @@
 \begin{frame}{XALT: Outline}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
-    \item 
+    \item XALT can track executable that are run
+    \item Also the shared libraries
+    \item Can we track imports for Python and R?
+    \item How could we do it?
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{How can we track imported packages?}
+  \begin{itemize}
+    \item It will require special code unique for each tool
+    \item Somehow we have to ``insert'' code into the import process
+    \item This is typically accomplished by using some Hook provide by
+      the tools' developers
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Tracking imports of packages for R}
+  \begin{itemize}
+    \item It started with R.
+    \item James McComb \& Michael Scott from IU developed the R part
+    \item They wrote code that intercepts the import action.
+    \item XALT provides a program to take that data: xalt\_record\_pkg
+    \item All packages tracker use this program to collect the data.
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{XALT Prerequisites}
+  \begin{itemize}
+    \item A \texttt{path\_pattern} in a sites' Config.py.
+    \item \texttt{ ['PKGS',  r'.*\/R'],}
+    \item \texttt{ ['PKGS',  r'.*\/python[0-9.]*'],}
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{XALT Env. Vars for PKGS}
+  \begin{itemize}
+    \item Since the execution is happenning during XALT Tracking
+    \item The following environment variables are defined
+      \begin{itemize}
+        \item XALT\_DIR: The root directory of where xalt\_record\_pkg
+        \item XALT\_RUN\_UUID: The run uuid for the current R or
+          Python program running
+      \end{itemize}
+    \item The R and Python Import hooks only collect data if
+      XALT\_RUN\_UUID is defined
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{\texttt{xalt\_record\_pkg} usage}
+  \begin{itemize}
+    \item The hook routine does the following
+    \item Gets XALT\_DIR and XALT\_RUN\_UUID from env.
+    \item Builds command path to \texttt{xalt\_record\_pkg} using
+      XALT\_DIR
+    \item The rest of the command line is:
+      \begin{itemize}
+        \item -u $<$run\_uuid$>$
+        \item program $<$name$>$
+        \item xalt_run_uuid $<$run\_uuid$>$
+        \item package\_name $<$pkg_name$>$
+        \item package\_version $<$pkg_version$>$
+        \item package\_path $<$pkg_path$>$
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{\texttt{xalt\_record\_pkg} execution}
+  \begin{itemize}
+    \item \texttt{xalt\_record\_pkg} builds a json string w/ data
+    \item Every import will generate a record
+    \item Writes data to tmp dir under /dev/shm
+    \item Why?
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{Why write package import data to /dev/shm?}
+  \begin{itemize}
+    \item Speed
+    \item Python and R can be sampled
+    \item Data is only sent on the ``wire'' at end of program if sampled
+    \item Delete data otherwise.
   \end{itemize}
 \end{frame}
 
