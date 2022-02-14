@@ -18,16 +18,37 @@
 % how users are using your system. This session will explore the
 % benefits of detailed application workload profiling and how the XALT
 % tool has helped leading supercomputing sites unlock the power of their
-% application usage data. 
+% application usage data.
+
+%% page
+%\begin{frame}{}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%\end{frame}
+
+%% page
+%\begin{frame}[fragile]
+%    \frametitle{}
+% {\tiny
+%    \begin{semiverbatim}
+%    \end{semiverbatim}
+%}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%
+%\end{frame}
+
 
 
 \begin{document}
 \title[XALT]{Tracking imports for Python, R}
-\author{Robert McLay} 
-\date{Feb. 17, 2022} 
+\author{Robert McLay}
+\date{Feb. 17, 2022}
 
 % page 1
-\frame{\titlepage} 
+\frame{\titlepage}
 
 % page 2
 \begin{frame}{XALT: Outline}
@@ -96,10 +117,10 @@
       \begin{itemize}
         \item -u $<$run\_uuid$>$
         \item program $<$name$>$
-        \item xalt_run_uuid $<$run\_uuid$>$
-        \item package\_name $<$pkg_name$>$
-        \item package\_version $<$pkg_version$>$
-        \item package\_path $<$pkg_path$>$
+        \item xalt\_run\_uuid $<$run\_uuid$>$
+        \item package\_name $<$pkg\_name$>$
+        \item package\_version $<$pkg\_version$>$
+        \item package\_path $<$pkg\_path$>$
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -109,18 +130,61 @@
   \begin{itemize}
     \item \texttt{xalt\_record\_pkg} builds a json string w/ data
     \item Every import will generate a record
-    \item Writes data to tmp dir under /dev/shm
     \item Why?
   \end{itemize}
 \end{frame}
 
 % page 8
+\begin{frame}{\texttt{xalt\_record\_pkg} execution (II)}
+  \begin{itemize}
+    \item The hook code in R, Python is called dynamically
+    \item There is nothing recording that can be called at the end.
+    \item Originally XALT was going to make PKGS not be sampled,
+    \item Also generate a start record
+    \item This way import records would have something to connnect
+      with.
+    \item However this is a bad idea!
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{\texttt{xalt\_record\_pkg} execution (III)}
+  \begin{itemize}
+    \item XALT needs an execution record stored to save import data
+    \item But there is too much Python runs to store every one
+    \item Instead XALT uses /dev/shm in a unique directory (UUID)
+    \item This avoids overlap with other executions
+    \item But why?
+  \end{itemize}
+\end{frame}
+
+% page 10
 \begin{frame}{Why write package import data to /dev/shm?}
   \begin{itemize}
     \item Speed
     \item Python and R can be sampled
     \item Data is only sent on the ``wire'' at end of program if sampled
     \item Delete data otherwise.
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Sent on the ``wire''?}
+  \begin{itemize}
+    \item Import records are saved on /dev/shm
+    \item This is independent of \$XALT\_TRANSMISSION\_STYLE
+    \item At the end of the execution the end record and import
+      records are sent via \$XALT\_TRANSMISSION\_STYLE
+    \item This is only if sampled.
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}{What to do with this data?}
+  \begin{itemize}
+    \item Find the list of heavily imported packages
+    \item Find who is using conda python
+    \item XALT won't know if something is imported but not used
   \end{itemize}
 \end{frame}
 
@@ -137,9 +201,8 @@
 
 
 % page 21
-\begin{frame}{Future Topics?} 
+\begin{frame}{Future Topics?}
   \begin{itemize}
-    \item Package tracking
     \item Others?
   \end{itemize}
 \end{frame}
