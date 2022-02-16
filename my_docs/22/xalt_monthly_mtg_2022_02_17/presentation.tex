@@ -151,7 +151,7 @@
 \begin{frame}{\texttt{xalt\_record\_pkg} execution (III)}
   \begin{itemize}
     \item XALT needs an execution record stored to save import data
-    \item But there is too much Python runs to store every one
+    \item But there are too much Python runs to store every one
     \item Instead XALT uses /dev/shm in a unique directory (UUID)
     \item This avoids overlap with other executions
     \item But why?
@@ -185,17 +185,43 @@
     \item Find the list of heavily imported packages
     \item Find who is using conda python
     \item XALT won't know if something is imported but not used
+    \item Track down heavily used packages and try to speed them up.
   \end{itemize}
 \end{frame}
 
+% page 13
+\begin{frame}{Python hook: py\_src/xalt\_sitecustomize.py $\Rightarrow$ sitecustomize.py}
+  \begin{itemize}
+    \item Python 2 and 3 both look for  sitecustomize.py when starting
+    \item Help from Riccardo Murri
+    \item All Pythons uses sys.meta\_path to locate files to import
+    \item Can register object to capture imports.
+    \item Just add XALT's location of sitecustomize.py to PYTHONPATH
+  \end{itemize}
+\end{frame}
+
+% page 14
+\begin{frame}[fragile]
+    \frametitle{Filtering python packages via site's Config.py}
+ {\small
+    \begin{semiverbatim}
+python\_pkg\_patterns = [
+\{ 'k\_s':'SKIP','kind':'path','patt': r"^[^/]" \},
+\{ 'k\_s':'SKIP','kind':'name','patt': r"^_"    \},
+\{ 'k\_s':'SKIP','kind':'name','patt': r".*\textbackslash." \},
+\{ 'k\_s':'KEEP','kind':'path','patt': r".*/.local/" \},
+]
+    \end{semiverbatim}
+}
+\end{frame}
 
 % page 20
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item We can extract useful data from XALT
-    \item It is not quick on a VM.
-    \item Would love to have the DB on SSD
-    \item We use data to know what codes add to next benchmark.
+    \item We have a way to track imports from R and Python
+    \item It works well but there are a few conflicts with
+      sitecustomize.py
+    \item We have yet more data to try to figure out what to do with.
   \end{itemize}
 \end{frame}
 
