@@ -20,14 +20,14 @@
 % tool has helped leading supercomputing sites unlock the power of their
 % application usage data.
 
-%% page
+%% page 
 %\begin{frame}{}
 %  \begin{itemize}
 %    \item
 %  \end{itemize}
 %\end{frame}
 %
-%% page
+%% page 
 %\begin{frame}[fragile]
 %    \frametitle{}
 % {\tiny
@@ -65,7 +65,7 @@
 \begin{frame}{Three examples of protection}
   \begin{itemize}
     \item User's Expecting allocated memory to be zero'd
-    \item User's mixing Fortran routine with C library routines
+    \item User's mixing Fortran routine with C library routines badly
     \item XALT expecting well managed memory heap.
   \end{itemize}
 \end{frame}
@@ -78,27 +78,30 @@
     \begin{semiverbatim}
 #include <stdio.h>
 void myinit(int argc, char **argv)
-\{ printf("This is run before main()\n"); \}
+\{ printf("This is run before main()\textbackslash{}n"); \}
 void myfini()
-\{ printf("This is run after main()\n"); \}
+\{ printf("This is run after main()\textbackslash{}n"); \}
 
 __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
 __attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
     \end{semiverbatim}
 }
+  \begin{itemize}
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex1
+  \end{itemize}
 \end{frame}
 
 % page 5
 \begin{frame}[fragile]
     \frametitle{How XALT works (II)}
- {\tiny
+ {\small
     \begin{semiverbatim}
 #include <stdio.h>
 int main()
-{
-  printf("Hello World!\n");
+\{
+  printf("Hello World!\textbackslash{}n");
   return 0;
-}
+\}
 
     \end{semiverbatim}
 }
@@ -107,165 +110,296 @@ int main()
 
 % page 6
 \begin{frame}[fragile]
-    \frametitle{How XALT works (II)}}
- {\tiny
+    \frametitle{How XALT works (III)}
+ {\small
     \begin{semiverbatim}
-\$ ./try; echo
+\$ ./try
 
 Hello World!
 
-\$ LD_PRELOAD=./libxalt.so  ./try  ; echo
+\$ LD\_PRELOAD=./libxalt.so  ./try
 This is run before main()
 Hello World!
 This is run after main()
     \end{semiverbatim}
 }
-\end{frame}
-
-
-% page 4
-\begin{frame}{How XALT works }
   \begin{itemize}
-    \item It started with R.
-    \item James McComb \& Michael Scott from IU developed the R part
-    \item They wrote code that intercepts the import action.
-    \item XALT provides a program to take that data: xalt\_record\_pkg
-    \item All packages tracker use this program to collect the data.
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex1
   \end{itemize}
-\end{frame}
 
-% page 4
-\begin{frame}{XALT Prerequisites}
-  \begin{itemize}
-    \item A \texttt{path\_pattern} in a sites' Config.py.
-    \item \texttt{ ['PKGS',  r'.*\/R'],}
-    \item \texttt{ ['PKGS',  r'.*\/python[0-9.]*'],}
-  \end{itemize}
-\end{frame}
-
-% page 5
-\begin{frame}{XALT Env. Vars for PKGS}
-  \begin{itemize}
-    \item Since the execution is happenning during XALT Tracking
-    \item The following environment variables are defined
-      \begin{itemize}
-        \item XALT\_DIR: The root directory of where xalt\_record\_pkg
-        \item XALT\_RUN\_UUID: The run uuid for the current R or
-          Python program running
-      \end{itemize}
-    \item The R and Python Import hooks only collect data if
-      XALT\_RUN\_UUID is defined
-  \end{itemize}
-\end{frame}
-
-% page 6
-\begin{frame}{\texttt{xalt\_record\_pkg} usage}
-  \begin{itemize}
-    \item The hook routine does the following
-    \item Gets XALT\_DIR and XALT\_RUN\_UUID from env.
-    \item Builds command path to \texttt{xalt\_record\_pkg} using
-      XALT\_DIR
-    \item The rest of the command line is:
-      \begin{itemize}
-        \item -u $<$run\_uuid$>$
-        \item program $<$name$>$
-        \item xalt\_run\_uuid $<$run\_uuid$>$
-        \item package\_name $<$pkg\_name$>$
-        \item package\_version $<$pkg\_version$>$
-        \item package\_path $<$pkg\_path$>$
-      \end{itemize}
-  \end{itemize}
 \end{frame}
 
 % page 7
-\begin{frame}{\texttt{xalt\_record\_pkg} execution}
+\begin{frame}{User's expecting memory to be zero'd when malloc() }
   \begin{itemize}
-    \item \texttt{xalt\_record\_pkg} builds a json string w/ data
-    \item Every import will generate a record
-    \item Why?
+    \item Initially all memory is zero'd before program starts
+    \item Note that pointer zero, integer zero and float zero are all zeros
+    \item Link lists require a NULL pointer at end of list.
+    \item Used memory is {\color{red} \emph{NOT}} zero'd for you in C.
+    \item User programmed work w/o XALT, Failed with XALT.
   \end{itemize}
 \end{frame}
 
 % page 8
-\begin{frame}{\texttt{xalt\_record\_pkg} execution (II)}
+\begin{frame}[fragile]
+    \frametitle{Example code clean/used memory}
+ {\tiny
+    \begin{semiverbatim}
+\% cat try.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#define SZ 1000
+int main()
+\{
+  int *a = (int *) malloc(SZ*sizeof(int));
+  printf("Hello World! a:%d\textbackslash{}n",a[0]);
+  return 0;
+\}
+
+\% cat xalt.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define SZ 1000
+void myinit(int argc, char **argv)
+\{
+  int i;
+  int *a = (int*) malloc(SZ*sizeof(int));
+  for (i = 0; i < SZ; ++i) a[i] = 15; 
+  free(a);
+  printf("This is run before main()\textbackslash{}n");
+\}
+__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
+    \end{semiverbatim}
+}
+
   \begin{itemize}
-    \item The hook code in R, Python is called dynamically
-    \item There is nothing recording that can be called at the end.
-    \item Originally XALT was going to make PKGS not be sampled,
-    \item Also generate a start record
-    \item This way import records would have something to connnect
-      with.
-    \item However this is a bad idea!
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex2
   \end{itemize}
 \end{frame}
 
 % page 9
-\begin{frame}{\texttt{xalt\_record\_pkg} execution (III)}
+\begin{frame}[fragile]
+    \frametitle{Example code clean/used memory(II)}
+ {\small
+   \begin{semiverbatim}
+\% ./try
+
+Hello World! {\color{blue} a:0}
+
+\% LD_PRELOAD=./libxalt.so  ./try  ; echo
+This is run before main()
+Hello World! {\color{red} a:15}
+This is run after main()
+    \end{semiverbatim}
+}
   \begin{itemize}
-    \item XALT needs an execution record stored to save import data
-    \item But there are too much Python runs to store every one
-    \item Instead XALT uses /dev/shm in a unique directory (UUID)
-    \item This avoids overlap with other executions
-    \item But why?
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex2
   \end{itemize}
 \end{frame}
 
 % page 10
-\begin{frame}{Why write package import data to /dev/shm?}
+\begin{frame}{XALT Fix: zero memory before free()}
   \begin{itemize}
-    \item Speed
-    \item Python and R can be sampled
-    \item Data is only sent on the ``wire'' at end of program if sampled
-    \item Delete data otherwise.
+    \item To protect XALT from broken user code
+    \item XALT in myinit() zero's memory before free
+    \item Note that non-MPI tracking does little allocation
+    \item MPI tasks $>$ 127 init record $\Rightarrow$ much allocation
   \end{itemize}
 \end{frame}
 
+
+
 % page 11
-\begin{frame}{Sent on the ``wire''?}
+\begin{frame}[fragile]
+    \frametitle{XALT Fix: zero memory before free()}
+ {\tiny
+    \begin{semiverbatim}
+\% cat try.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#define SZ 1000
+int main()
+\{
+  int *a = (int *) malloc(SZ*sizeof(int));
+  printf("Hello World! a:%d\textbackslash{}n",a[0]);
+  return 0;
+\}
+
+\% cat xalt.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define SZ 1000
+void myinit(int argc, char **argv)
+\{
+  int i;
+  int *a = (int*) malloc(SZ*sizeof(int));
+  for (i = 0; i < SZ; ++i) a[i] = 15; 
+  {\color{blue}{}memset((void *) a, 0, SZ*sizeof(int))};
+  free(a);
+  printf("This is run before main()\textbackslash{}n");
+\}
+__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
+    \end{semiverbatim}
+}
+
   \begin{itemize}
-    \item Import records are saved on /dev/shm
-    \item This is independent of \$XALT\_TRANSMISSION\_STYLE
-    \item At the end of the execution the end record and import
-      records are sent via \$XALT\_TRANSMISSION\_STYLE
-    \item This is only if sampled.
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex3
   \end{itemize}
 \end{frame}
 
 % page 12
-\begin{frame}{What to do with this data?}
+\begin{frame}[fragile]
+    \frametitle{XALT Fix: zero memory before free() (II)}
+ {\small
+   \begin{semiverbatim}
+\% ./try
+
+Hello World! {\color{blue} a:0}
+
+\% LD_PRELOAD=./libxalt.so  ./try  ; echo
+This is run before main()
+Hello World! {\color{blue} a:0}
+This is run after main()
+    \end{semiverbatim}
+}
   \begin{itemize}
-    \item Find the list of heavily imported packages
-    \item Find who is using conda python
-    \item XALT won't know if something is imported but not used
-    \item Track down heavily used packages and try to speed them up.
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex3
   \end{itemize}
 \end{frame}
 
+
 % page 13
-\begin{frame}{Python hook: py\_src/xalt\_sitecustomize.py $\Rightarrow$ sitecustomize.py}
+\begin{frame}[fragile]
+    \frametitle{Protecting XALT from Fortran mixed with C programs badly}
+ {\tiny
+    \begin{semiverbatim}
+\% cat msg.f90
+subroutine msg
+   print *, "Hello World!"
+end subroutine msg
+
+\% nm try | grep msg
+00000000000011c7 T msg_
+    \end{semiverbatim}
+}
   \begin{itemize}
-    \item Python 2 and 3 both look for  sitecustomize.py when starting
-    \item Help from Riccardo Murri
-    \item All Pythons uses sys.meta\_path to locate files to import
-    \item Can register object to capture imports.
-    \item Just add XALT's location of sitecustomize.py to PYTHONPATH
+    \item Normally fortran routines get a trailing underscore
+      when compiled
+    \item gfortran: -fno-underscoring
+    \item ifort:    -assume nounderscore
+    \item Will remove the trailing underscore
+    \item Can make mixing C/Fortran easier
+    \item Also make collisions with C library easier
   \end{itemize}
 \end{frame}
 
 % page 14
+\begin{frame}{XALT uses libuuid}
+  \begin{itemize}
+    \item libuuid.so is used to get a unique identifier
+    \item It uses libc's random()
+    \item You only get one name per program
+    \item Can't have two routines named random() 
+    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/random/ex3
+
+
+  \end{itemize}
+\end{frame}
+
+% page 15
 \begin{frame}[fragile]
-    \frametitle{Filtering python packages via site's Config.py}
- {\small
+    \frametitle{Collision over random() routine}
+ {\tiny
     \begin{semiverbatim}
-python\_pkg\_patterns = [
-\{ 'k\_s':'SKIP','kind':'path','patt': r"^[^/]" \},
-\{ 'k\_s':'SKIP','kind':'name','patt': r"^_"    \},
-\{ 'k\_s':'SKIP','kind':'name','patt': r".*\textbackslash." \},
-\{ 'k\_s':'KEEP','kind':'path','patt': r".*/.local/" \},
-]
-    \end{semiverbatim}
+\% cat try.f90
+
+program tryMe
+   implicit none 
+   real*8 d, random
+   print *, "Hello World!"
+   d = {\color{blue}{}random(1.0, 2.0. 3.0)}
+   print *, "d: ",d
+end program tryMe
+
+\% cat random.f90
+
+real*8 function {\color{blue}{}random(a, b, c)}
+   implicit none
+   real*8 a, b, c
+   print *, "In random(a, b, c)"
+   random = a*b + c
+end function random
+
+\% cat xalt.c
+#include <stdio.h>
+#include <stdlib.h>
+void myinit(int argc, char **argv)
+\{
+  long int a;
+  printf("This is run before main()\textbackslash{}n");
+  a = {\color{red}{}random()};
+  printf("called random(): a: %ld\textbackslash{}n",a);
+\}
+__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
+
+\end{semiverbatim}
 }
 \end{frame}
+
+% page 16
+\begin{frame}[fragile]
+    \frametitle{Collision over random() routine (II)}
+ {\tiny
+    \begin{semiverbatim}
+\% ./try
+
+ Hello World!
+ In random(a, b, c)
+ d:    5.0000000000000000     
+
+\% LD_PRELOAD=./libxalt.so  ./try  ; echo
+This is run before main()
+ In random(a, b, c)
+Segmentation fault
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item The linker choses the user's fortran random() instead of the C lib
+      random()
+    \item The segfault happens because the fortan random() expects 3
+      arguments
+    \item xalt.c passes none.
+  \end{itemize}
+
+\end{frame}
+
+% page 17
+\begin{frame}{How to fix this issue}
+  \begin{itemize}
+    \item Other fortron program might do the same thing
+    \item Trick: Use dlopen()/dlsym() to dynamicly link in libuuid.so
+    \item At this point libuuid.so can ``see'' the fortran random()
+      routine
+    \item This trick solves many problems with libuuid
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
 
 % page 20
 \begin{frame}{Conclusions}
