@@ -382,9 +382,9 @@ Segmentation fault
 % page 17
 \begin{frame}{How to fix this issue}
   \begin{itemize}
-    \item Other fortron program might do the same thing
+    \item Other fortran program might do the same thing
     \item Trick: Use dlopen()/dlsym() to dynamicly link in libuuid.so
-    \item At this point libuuid.so can ``see'' the fortran random()
+    \item At this point libuuid.so can't ``see'' the fortran random()
       routine
     \item This trick solves many problems with libuuid
   \end{itemize}
