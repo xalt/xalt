@@ -14,4 +14,4 @@ Notes for 3/17 talk
      3) Zero memory before returning through free() 
 * Show random linkage
 * Show what XALT does about this
-  
+* Bad memory discipline in user code
