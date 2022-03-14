@@ -1,0 +1,17 @@
+Notes for 3/17 talk
+
+* Remind everyone how XALT works
+* Bad memory foo
+** Show examples how memory is zero'ed before you get it   
+** Show example of dirty memory issue
+* Show what XALT does about this
+** XALT doesn't normally do any memory allocation for Non-MPI program  
+** For MPI program memory is allocated and freed.
+   But memory is zeroed before freeing
+   Check code:
+     1) mininal allocation for non-MPI. Right?
+     2) MPI does alot of allocations and freeing
+     3) Zero memory before returning through free() 
+* Show random linkage
+* Show what XALT does about this
+  
