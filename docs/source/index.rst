@@ -119,6 +119,7 @@ Advanced Topics
 .. toctree::
    :maxdepth: 1
 
+   091_using_clang
    095_xalt_env_vars
    100_execstack
    110_db
