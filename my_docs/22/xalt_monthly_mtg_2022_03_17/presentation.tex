@@ -55,7 +55,7 @@
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
     \item XALT is linking with every program that runs on the system
-    \item Users make mistakes
+    \item Users will occasionly make mistakes
     \item Need to protect XALT from user mistakes
     \item Show three protection examples 
   \end{itemize}
@@ -64,7 +64,7 @@
 % page 3
 \begin{frame}{Three examples of protection}
   \begin{itemize}
-    \item User's Expecting allocated memory to be zero'd
+    \item User's bug hidden by zero'd memory initially
     \item User's mixing Fortran routine with C library routines badly
     \item XALT expecting well managed memory heap.
   \end{itemize}
@@ -96,6 +96,8 @@ __attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
     \frametitle{How XALT works (II)}
  {\small
     \begin{semiverbatim}
+\% cat try.c
+
 #include <stdio.h>
 int main()
 \{
@@ -130,13 +132,14 @@ This is run after main()
 \end{frame}
 
 % page 7
-\begin{frame}{User's expecting memory to be zero'd when malloc() }
+\begin{frame}{User's bug hidden by initially zero'd memory}
   \begin{itemize}
     \item Initially all memory is zero'd before program starts
-    \item Note that pointer zero, integer zero and float zero are all zeros
+    \item Note that pointer zero, integer zero and float zero are all
+      zero bits
     \item Link lists require a NULL pointer at end of list.
     \item Used memory is {\color{red} \emph{NOT}} zero'd for you in C.
-    \item User programmed work w/o XALT, Failed with XALT.
+    \item User's program work w/o XALT, Failed with XALT.
   \end{itemize}
 \end{frame}
 
@@ -291,9 +294,9 @@ end subroutine msg
   \begin{itemize}
     \item Normally fortran routines get a trailing underscore
       when compiled
+    \item This can be disabled:
     \item gfortran: -fno-underscoring
     \item ifort:    -assume nounderscore
-    \item Will remove the trailing underscore
     \item Can make mixing C/Fortran easier
     \item Also make collisions with C library easier
   \end{itemize}
@@ -304,7 +307,6 @@ end subroutine msg
   \begin{itemize}
     \item libuuid.so is used to get a unique identifier
     \item It uses libc's random()
-    \item You only get one name per program
     \item Can't have two routines named random() 
     \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/random/ex3
 
@@ -374,7 +376,7 @@ Segmentation fault
       random()
     \item The segfault happens because the fortan random() expects 3
       arguments
-    \item xalt.c passes none.
+    \item the random() call in xalt.c passes none.
   \end{itemize}
 
 \end{frame}
@@ -390,24 +392,47 @@ Segmentation fault
   \end{itemize}
 \end{frame}
 
+% page 18
+\begin{frame}{XALT is still suspectable to similar issues}
+  \begin{itemize}
+    \item XALT is now protected from a user's random() function
+    \item But XALT is vulnerable some fortran code replacing a c
+      library routine
+    \item We will just have to fix them as they come up
+  \end{itemize}
+\end{frame}
 
 
-
-
-
-
-
-
-
-
+% page 19
+\begin{frame}[fragile]
+    \frametitle{Protecting XALT from badly managed memory heap}
+ {\small
+    \begin{semiverbatim}
+void my\_free(void *ptr,int sz)
+\{
+  if (s\_start\_record \&\& ptr != NULL)
+    \{
+      memset(ptr, '\textbackslash{}0', sz);
+      free(ptr);
+    \}
+\}
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Reporting an end record in myfini() requires memory
+      allocations
+    \item However some user programs can leave the heap broken
+    \item XALT replaces free() with my\_free()
+    \item Memory is only free'd for a start record.
+  \end{itemize}
+\end{frame}
 
 % page 20
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item We have a way to track imports from R and Python
-    \item It works well but there are a few conflicts with
-      sitecustomize.py
-    \item We have yet more data to try to figure out what to do with.
+    \item XALT has matured greatly from working with user programs
+    \item Since the XALT library is in the same namespace as the user code 
+    \item There is always a risk of routine collision.
   \end{itemize}
 \end{frame}
 
@@ -415,6 +440,8 @@ Segmentation fault
 % page 21
 \begin{frame}{Future Topics?}
   \begin{itemize}
+    \item Other protection of XALT from users
+    \item Recent changes to importing json records
     \item Others?
   \end{itemize}
 \end{frame}
