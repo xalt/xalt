@@ -12,36 +12,37 @@ that is to compile and link a simple c program:
     $ clang -v -o hello hello.c
 
 If you look at the output you'll see the link line that clang uses.
-It should be /usr/bin/ld.  
+Wherever that is you'll need to remember the path to that command
 
+Please do the following steps:
 
-   **NOTE:** If it is not then note that XALT's ld.in
-   will need to be modified because it expect that the real linker
-   will be called /usr/bin/ld.x after completing the steps below.
-   Please report this to the xalt mailing list if clang is using
-   something else.
+#. Remember the directory that is contain the ld that clang is using::
 
-Assuing that clang is using /usr/bin/ld to link.  Then do the following steps:
+      $ LD_PATH="..."
 
-#. Typically /usr/bin/ld is a symlink so::
+   In other words if the path is /usr/bin/ld then set LD_PATH to
+   "/usr/bin". Change LD_PATH to suit your site.
 
-      $ cd /usr/bin/
+#. Typically $LD_PATH/ld is a symlink so::
+
+      $ cd $LD_PATH
       $ ln -s $(readlink ld) ld.x
 
-#. If /usr/bin/ld is a file rather than a symlink then do::
+#. If $LD_PATH/ld is a file rather than a symlink then do::
 
-      $ cd /usr/bin/
+      $ cd $LD_PATH
       $ cp ld ld.x
      
-#. Replace /usr/bin/ld with the file found in the XALT installed
+#. Replace $LD_PATH/ld with the file found in the XALT installed
    directory called: ld.xalt.  In other words if XALT is installed in
    **/opt/apps/xalt/xalt** then do the following::
 
-      $ cd /usr/bin
+      $ cd $LD_PATH
+      $ XALT_DIR=/opt/apps/xalt/xalt
       $ rm ld;
-      $ cp /opt/apps/xalt/xalt/bin/ld.xalt ld
+      $ cp $XALT_DIR/bin/ld.xalt ld
 
-   **NOTE**: Replace **/opt/apps/xalt/xalt** with wherever you have
+   **NOTE**: Replace **XALT_DIR=/opt/apps/xalt/xalt** with wherever you have
    installed XALT.
 
 #. Test clang linkage with::
