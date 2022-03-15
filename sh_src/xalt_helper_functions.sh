@@ -177,4 +177,5 @@ find_real_command()
   fi
   MY_CMD=$my_cmd  
   tracing_msg "find_real_command: found $MY_CMD"
+  echo $MY_CMD
 }
