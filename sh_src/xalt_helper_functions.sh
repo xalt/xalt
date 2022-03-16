@@ -77,6 +77,44 @@ tracing_msg()
 
 }
 
+locate_command ()
+{
+  local my_name=$1
+  local my_cmd="unknown"
+
+  if [ -n "${BASH_VERSION:-}" ]; then
+    # If this is a bash script (and not a bash script in sh mode) then
+    # use type to list all possible "ld" 
+
+    for exe in $(type -p -a $my_name); do
+      # Now check to see if this choice has the magic string in the first 5 lines.
+      # Only if it doesn't contain the magic string then $exe is MY_CMD.
+      if ! PATH=@xalt_system_path@ head -n 5 $exe | PATH=@xalt_system_path@ grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+        my_cmd=$exe
+	break
+      fi
+    done
+  else
+    ###################################################################
+    # If this script is not treated as a bash script then do this the
+    # old fashion way. Otherwise the logic is the same as bash version.
+    OLD_IFS=$IFS
+    IFS=:
+    for dir in $PATH; do
+      exe="$dir/$my_name"
+      if [ -x $exe ]; then
+	if ! PATH=@xalt_system_path@ head -n 5 $exe | PATH=@xalt_system_path@ grep -q "MAGIC_STRING__XALT__XALT__MAGIC_STRING"; then
+          my_cmd=$exe
+	  break
+        fi
+      fi
+    done
+    IFS=$OLD_IFS
+  fi
+  echo $my_cmd
+}
+
+
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 # We use "type -p -a" instead of searching the path.  Since bash should
@@ -139,4 +177,5 @@ find_real_command()
   fi
   MY_CMD=$my_cmd  
   tracing_msg "find_real_command: found $MY_CMD"
+  echo $MY_CMD
 }

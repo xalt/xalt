@@ -138,6 +138,6 @@ XALT 2.10+
     (2.10.33) * Add support for XALT_COMM_WORLD_SIZE to override real number of mpi tasks
               * Fix bug with mpicc(mpiicc(icc)) to be mpicc(icc)
     (2.10.34) * Really fix bug with mpicc(mpiicc(icc)) to be mpiicc(icc)
-W.I.P:
     (2.10.35) * Use XMALLOC/xmalloc() macro and routine to catch malloc returning NULL.
-    
+    (2.10.36) * Add instructions for supporting clang compilers.
+              * Allow ld.x to be anywhere in $PATH not just /usr/bin/ld.x

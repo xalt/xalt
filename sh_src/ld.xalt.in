@@ -1,0 +1,10 @@
+#!/bin/bash
+# -*- shell-script -*-
+XALT_DIR=@xalt_dir@
+XALT_BIN=$XALT_DIR/bin
+
+if [ "${XALT_EXECUTABLE_TRACKING}" = yes ]; then
+    $XALT_BIN/ld "$@"
+else
+    /usr/bin/ld.x "$@"
+fi
