@@ -68,3 +68,11 @@ pre_ingest_patterns = [
 #   precent   path pattern 
     [1.0,     r'.*']                    # accept all remaining executables.
 ]
+
+#------------------------------------------------------------
+# XALT package filter
+# 
+pkg_patterns = [
+#              pattern 
+    ['KEEP',   r'.*']                    # accept all remaining executables.
+]

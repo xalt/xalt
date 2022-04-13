@@ -94,6 +94,7 @@ def main():
   pathStrA    = namespace.get('path_patterns',       [])
   envStrA     = namespace.get('env_patterns',        [])
   pyPkgStrA   = namespace.get('python_pkg_patterns', [])
+  pkgStrA     = namespace.get('pkg_patterns',        [])
   ingestStrA  = namespace.get('pre_ingest_patterns', [])
   
 
@@ -106,6 +107,7 @@ def main():
   hd_pathStrA.extend( namespace.get('head_path_patterns',  []))
   envStrA.extend(     namespace.get('env_patterns',        []))
   pyPkgStrA.extend(   namespace.get('python_pkg_patterns', []))
+  pkgStrA.extend(     namespace.get('pkg_patterns',        []))
   ingestStrA.extend(  namespace.get('pre_ingest_patterns', []))
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
   if (args.defaultDir):
@@ -124,6 +126,7 @@ def main():
     ['@head_path_patterns@',       hd_pathStrA],
     ['@env_patterns@',             envStrA],
     ['@python_pkg_patterns@',      pyPkgStrA],
+    ['@pkg_patterns@',             pkgStrA],
     ['@pre_ingest_patterns@',      ingestStrA],
   ]
   convert_template(pattA, args.input, args.output)

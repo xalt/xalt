@@ -1,0 +1,51 @@
+/* -*- c -*- */
+%{
+#include <string.h>
+#include "xalt_obfuscate.h"
+#include "xalt_c_utils.h"
+
+static char * strbuf   = NULL;
+static unsigned int sz = 0;
+enum {
+  KEEP = 2,
+  SKIP = 3
+};
+%}
+
+%%
+@pkg_patterns@
+%%
+
+int yywrap()
+{
+   return 1;
+}
+
+int keep_pkg(const char * pkg_value)
+{
+  unsigned int len = strlen(pkg_value);
+  if (sz < len+2)
+    {
+      if (strbuf)
+	my_free(strbuf,sz);
+      sz = len+2;
+      strbuf = (char *) XMALLOC(sz);
+    }
+
+  memcpy(&strbuf[0], pkg_value, len);
+  strbuf[len]   = '\0';
+  strbuf[len+1] = '\0';
+
+  YY_BUFFER_STATE buffer = yy_scan_buffer(strbuf, len+2);
+  int token = yylex();
+  yy_delete_buffer(buffer);
+
+  return token;
+}
+
+void pkg_parser_cleanup()
+{
+  my_free(strbuf,sz);
+  strbuf = NULL;
+  sz     = 0;
+}

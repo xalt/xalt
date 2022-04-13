@@ -246,3 +246,19 @@ pre_ingest_patterns = [
     [0.0,     r'.*\/foobar'],
     [0.01,    r'.*\/BAZ'],
 ]
+
+#------------------------------------------------------------
+# XALT will allow the filtering of all package collection
+# You can SKIP (or KEEP) package based on the name or path.
+# Note that you can use pkg_patterns for all patterns including python patterns
+# You must match the case of the program (R, python, MATLAB) and the kind (name, path).
+# Note that these patterns are flex regex patterns and not python regex patterns.
+
+pkg_patterns = [
+  ["SKIP",  r'^R:name:stats'],         # SKIP the R pkg named stats
+  ["SKIP",  r'^R:name:base'],          # SKIP the R pkg named base
+  ["SKIP",  r'^R:name:methods'],       # SKIP the R pkg named methods
+  ["SKIP",  r'^python:name:_.*'],      # SKIP all python name that start with an underscore
+  ["SKIP",  r'^python:path:[^/].*'],   # SKIP all python built-in packages
+  ["SKIP",  r'^python:path:\/home'],   # SKIP all python package in user locations
+]

@@ -67,13 +67,15 @@ CRC_FAST_LIB     := $(DESTDIR)$(LIB64)/libcrcFast.so
 
 PRE_INGEST_LIB   := $(DESTDIR)$(LIB64)/libpreIngest.so
 
+PKG_FILTER_LIB   := $(DESTDIR)$(LIB64)/libpkgFilter.so
+
 
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
 cxx_sources   	 += $(local_cxx_src)
 programs      	 += $(EXTR_REC_X) $(EPOCH_X) $(CFG_RPT_X) $(REC_PKG_X) \
                     $(TST_REC_PKG_X) $(SYSHOST_X) $(CURL_TRANS_X)
-libraries        += $(PRE_INGEST_LIB) # $(CRC_FAST_LIB) 
+libraries        += $(PRE_INGEST_LIB) $(PKG_FILTER_LIB) 
 #=====================================================================#
 
 $(EPOCH_X) : $(EPOCH_OBJ)
@@ -85,8 +87,8 @@ $(EXTR_REC_X) : $(EXTR_REC_OBJ)
 $(CFG_RPT_X): $(CFG_RPT_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
-$(REC_PKG_X): $(REC_PKG_OBJ)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl
+$(REC_PKG_X): $(REC_PKG_OBJ) $(PKG_FILTER_LIB)
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl -L$(DESTDIR)$(LIB64) -lpkgFilter
 
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
@@ -105,9 +107,15 @@ $(CRC_FAST_LIB): crcFast.c
 
 $(CURDIR)/__build__/xalt_pre_ingest_filter.c: $(CURDIR)/__build__/xalt_pre_ingest_filter.lex
 	flex -P xalt_pre_ingest -o $@ $^
-
 $(CURDIR)/__build__/xalt_pre_ingest_filter.o: $(CURDIR)/__build__/xalt_pre_ingest_filter.c
 	$(COMPILE.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -Wno-unused-function -o $@ $^
-
 $(PRE_INGEST_LIB): $(CURDIR)/__build__/xalt_pre_ingest_filter.o 
+	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
+
+
+$(CURDIR)/__build__/xalt_pkg_filter.c: $(CURDIR)/__build__/xalt_pkg_filter.lex
+	flex -P xalt_pkg_filter -o $@ $^
+$(CURDIR)/__build__/xalt_pkg_filter.o: $(CURDIR)/__build__/xalt_pkg_filter.c
+	$(COMPILE.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -Wno-unused-function -o $@ $^
+$(PKG_FILTER_LIB): $(CURDIR)/__build__/xalt_pkg_filter.o 
 	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
