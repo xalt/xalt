@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
   buf[idx] = '\0';
   xalt_parser name_status = keep_pkg(buf);
 
-  if (name_status == KEEP || path_status == KEEP) 
+  if (name_status != SKIP && path_status != SKIP) 
     transmit("file", json_str, "pkg", key, crcStr, my_host, xalt_tmpdir, resultFn, stderr);
   fflush(stderr);
 

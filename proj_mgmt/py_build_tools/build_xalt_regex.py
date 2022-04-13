@@ -117,12 +117,14 @@ def main():
   hostStrA    = [ '"----"']
   pathStrA    = [ '"----"']
   envStrA     = [ '"----"']
+  pkgStrA     = [ '"----"']
   pyPkgStrA   = [ '"----"']
   ingestStrA  = [ '"----"']
 
   hostStrA.extend(   convert_pattern(        namespace.get('hostname_patterns',   [])))
   pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
   envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
+  pkgStrA.extend(    convert_pattern(        namespace.get('pkg_patterns',        [])))
   pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
   ingestStrA.extend( convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
   
@@ -130,6 +132,7 @@ def main():
   hostStrA.append(   '"===="' )
   pathStrA.append(   '"===="' )
   envStrA.append(    '"===="' )
+  pkgStrA.append(    '"===="' )
   pyPkgStrA.append(  '"===="' )
   ingestStrA.append( '"===="' )
 
@@ -152,6 +155,7 @@ def main():
   hostStrA.extend(   convert_pattern(        namespace.get('hostname_patterns',   [])))
   pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
   envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
+  pkgStrA.extend(    convert_pattern(        namespace.get('pkg_patterns',        [])))
   pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
   ingestStrA.extend( convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
@@ -161,6 +165,7 @@ def main():
     ['@path_patterns@',            ",".join(pathStrA)],
     ['@head_path_patterns@',       ",".join(hd_pathStrA)],
     ['@env_patterns@',             ",".join(envStrA)],
+    ['@pkg_patterns@',             ",".join(pkgStrA)],
     ['@python_pkg_patterns@',      ",".join(pyPkgStrA)],
     ['@pre_ingest_patterns@',      ",".join(ingestStrA)],
   ]

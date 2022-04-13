@@ -58,6 +58,10 @@ int main(int argc, char* argv[])
   cmd.append(" package_version 3.0");
   cmd.append(" package_path /opt/apps/intel18/R/3.5/bar/3.0");
 
+  fprintf(stderr,"%s\n",cmd.c_str());
+    
+  system(cmd.c_str());
+
   cmd.assign("XALT_EXECUTABLE_TRACKING=yes ");
   cmd.append(xaltDir);
   cmd.append("/libexec/xalt_record_pkg -u ");

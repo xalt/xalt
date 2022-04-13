@@ -282,3 +282,25 @@ This means that any changes to **pre_ingest_patterns** must be
 compiled and install on the VM or wherever your sites ingests json
 records into the MySQL database.  It doesn't require re-installing
 XALT on the compute nodes on your cluster.
+
+Package Filtering
+^^^^^^^^^^^^^^^^^
+
+XALT version 2.10.37+ now support package filtering.  A package is
+known by its name and path.  You can filter on both.  If either is
+marked as a SKIP then the package is ignored.  The patterns are of the
+form shown below::
+
+   pkg_patterns = [
+        ["SKIP",  r'^R:name:stats'],         # SKIP the R pkg named stats
+        ["SKIP",  r'^R:name:base'],          # SKIP the R pkg named base
+        ["SKIP",  r'^R:name:methods'],       # SKIP the R pkg named methods
+        ["SKIP",  r'^python:name:_.*'],      # SKIP all python name that start with an underscore
+        ["SKIP",  r'^python:path:[^/].*'],   # SKIP all python built-in packages
+        ["SKIP",  r'^python:path:\/home'],   # SKIP all python package in user locations
+   ]
+
+Namely the package name (R, python or MATLAB), colon, the string of
+*name* or *path* follow by the regex.  Note that these regexs are for
+flex.
+
