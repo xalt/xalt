@@ -350,6 +350,7 @@ int main(int argc, char* argv[])
   std::cout << "\nRemember that \"PKGS\" means a program that can also track internal packages\n";
   displayArray(XALT_CONFIG_PY, "pathPatternA",   pathPatternSz,   pathPatternA);
   displayArray(XALT_CONFIG_PY, "envPatternA",    envPatternSz,    envPatternA);
+  displayArray(XALT_CONFIG_PY, "pkgPatternA",    pkgPatternSz,    pkgPatternA);
   displayArray(XALT_CONFIG_PY, "pyPkgPatternA",  pyPkgPatternSz,  pyPkgPatternA);
   displayArray(XALT_CONFIG_PY, "ingestPatternA", ingestPatternSz, ingestPatternA);
 
