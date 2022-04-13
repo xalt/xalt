@@ -55,7 +55,7 @@
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
     \item XALT is linking with every program that runs on the system
-    \item Users make mistakes
+    \item Users will occasionally make mistakes
     \item Need to protect XALT from user mistakes
     \item Show three protection examples 
   \end{itemize}
@@ -64,7 +64,7 @@
 % page 3
 \begin{frame}{Three examples of protection}
   \begin{itemize}
-    \item User's Expecting allocated memory to be zero'd
+    \item User's bug hidden by zeroed memory initially
     \item User's mixing Fortran routine with C library routines badly
     \item XALT expecting well managed memory heap.
   \end{itemize}
@@ -96,6 +96,8 @@ __attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
     \frametitle{How XALT works (II)}
  {\small
     \begin{semiverbatim}
+\% cat try.c
+
 #include <stdio.h>
 int main()
 \{
@@ -130,17 +132,49 @@ This is run after main()
 \end{frame}
 
 % page 7
-\begin{frame}{User's expecting memory to be zero'd when malloc() }
+\begin{frame}{How XALT works (IV)}
   \begin{itemize}
-    \item Initially all memory is zero'd before program starts
-    \item Note that pointer zero, integer zero and float zero are all zeros
-    \item Link lists require a NULL pointer at end of list.
-    \item Used memory is {\color{red} \emph{NOT}} zero'd for you in C.
-    \item User programmed work w/o XALT, Failed with XALT.
+    \item The xalt runtime library attaches to every program run on
+      your system!
+    \item I sometimes feel like I'm a developer on every program team.
+    \item XALT programs are in the same namespace as the user's
+      program (UGH!)
   \end{itemize}
 \end{frame}
 
+
+
 % page 8
+\begin{frame}[fragile]
+    \frametitle{Hiding XALT routine names from users}
+ {\tiny
+    \begin{semiverbatim}
+\% nm \$LD\_PRELOAD| grep \_\_XALT\_build
+0000000000009e80 T \_\_XALT\_buildEnvT\_xalt\_1\_5
+000000000000a840 T \_\_XALT\_buildUserT\_xalt\_1\_5
+00000000000163a0 T \_\_XALT\_buildXALTRecordT\_xalt\_1\_5
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item XALT routine names are hidden by macros supplied in xalt\_obfuscate.h
+  \end{itemize}
+
+\end{frame}
+
+
+% page 9
+\begin{frame}{User's bug hidden by initially zeroed memory}
+  \begin{itemize}
+    \item Initially all memory is zeroed before program starts
+    \item Note that pointer zero, integer zero and float zero are all
+      zero bits
+    \item Link lists require a NULL pointer at end of list.
+    \item Used memory is {\color{red} \emph{NOT}} zeroed for you in C.
+    \item User's program work w/o XALT, Failed with XALT.
+  \end{itemize}
+\end{frame}
+
+% page 10
 \begin{frame}[fragile]
     \frametitle{Example code clean/used memory}
  {\tiny
@@ -171,7 +205,7 @@ void myinit(int argc, char **argv)
   free(a);
   printf("This is run before main()\textbackslash{}n");
 \}
-__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
+\_\_attribute\_\_((section(".init\_array"))) \_\_typeof\_\_(myinit) *\_\_init = myinit;
     \end{semiverbatim}
 }
 
@@ -180,7 +214,7 @@ __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
   \end{itemize}
 \end{frame}
 
-% page 9
+% page 11
 \begin{frame}[fragile]
     \frametitle{Example code clean/used memory(II)}
  {\small
@@ -189,7 +223,7 @@ __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
 
 Hello World! {\color{blue} a:0}
 
-\% LD_PRELOAD=./libxalt.so  ./try  ; echo
+\% LD\_PRELOAD=./libxalt.so  ./try  ; echo
 This is run before main()
 Hello World! {\color{red} a:15}
 This is run after main()
@@ -200,7 +234,7 @@ This is run after main()
   \end{itemize}
 \end{frame}
 
-% page 10
+% page 12
 \begin{frame}{XALT Fix: zero memory before free()}
   \begin{itemize}
     \item To protect XALT from broken user code
@@ -212,7 +246,7 @@ This is run after main()
 
 
 
-% page 11
+% page 13
 \begin{frame}[fragile]
     \frametitle{XALT Fix: zero memory before free()}
  {\tiny
@@ -244,7 +278,7 @@ void myinit(int argc, char **argv)
   free(a);
   printf("This is run before main()\textbackslash{}n");
 \}
-__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
+\_\_attribute\_\_((section(".init\_array"))) \_\_typeof\_\_(myinit) *\_\_init = myinit;
     \end{semiverbatim}
 }
 
@@ -253,7 +287,7 @@ __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
   \end{itemize}
 \end{frame}
 
-% page 12
+% page 14
 \begin{frame}[fragile]
     \frametitle{XALT Fix: zero memory before free() (II)}
  {\small
@@ -274,7 +308,7 @@ This is run after main()
 \end{frame}
 
 
-% page 13
+% page 15
 \begin{frame}[fragile]
     \frametitle{Protecting XALT from Fortran mixed with C programs badly}
  {\tiny
@@ -289,22 +323,21 @@ end subroutine msg
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item Normally fortran routines get a trailing underscore
+    \item Normally Fortran routines get a trailing underscore
       when compiled
-    \item gfortran: -fno-underscoring
+    \item This can be disabled:
+    \item Fortran: -fno-underscoring
     \item ifort:    -assume nounderscore
-    \item Will remove the trailing underscore
     \item Can make mixing C/Fortran easier
     \item Also make collisions with C library easier
   \end{itemize}
 \end{frame}
 
-% page 14
+% page 16
 \begin{frame}{XALT uses libuuid}
   \begin{itemize}
     \item libuuid.so is used to get a unique identifier
     \item It uses libc's random()
-    \item You only get one name per program
     \item Can't have two routines named random() 
     \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/random/ex3
 
@@ -312,7 +345,7 @@ end subroutine msg
   \end{itemize}
 \end{frame}
 
-% page 15
+% page 17
 \begin{frame}[fragile]
     \frametitle{Collision over random() routine}
  {\tiny
@@ -352,7 +385,7 @@ __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
 }
 \end{frame}
 
-% page 16
+% page 18
 \begin{frame}[fragile]
     \frametitle{Collision over random() routine (II)}
  {\tiny
@@ -370,51 +403,76 @@ Segmentation fault
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item The linker choses the user's fortran random() instead of the C lib
+    \item The linker chooses the user's Fortran random() instead of the C lib
       random()
-    \item The segfault happens because the fortan random() expects 3
+    \item The segfault happens because the Fortran random() expects 3
       arguments
-    \item xalt.c passes none.
+    \item the random() call in xalt.c passes none.
   \end{itemize}
 
 \end{frame}
 
-% page 17
+% page 19
 \begin{frame}{How to fix this issue}
   \begin{itemize}
-    \item Other fortran program might do the same thing
-    \item Trick: Use dlopen()/dlsym() to dynamicly link in libuuid.so
-    \item At this point libuuid.so can't ``see'' the fortran random()
+    \item Other Fortran program might do the same thing
+    \item Trick: Use dlopen()/dlsym() to dynamically link in libuuid.so
+    \item At this point libuuid.so can't ``see'' the Fortran random()
       routine
     \item This trick solves many problems with libuuid
   \end{itemize}
 \end{frame}
 
-
-
-
-
-
-
-
-
-
-
-
 % page 20
-\begin{frame}{Conclusions}
+\begin{frame}{XALT is still susceptible to similar issues}
   \begin{itemize}
-    \item We have a way to track imports from R and Python
-    \item It works well but there are a few conflicts with
-      sitecustomize.py
-    \item We have yet more data to try to figure out what to do with.
+    \item XALT is now protected from a user's random() function
+    \item But XALT is vulnerable some Fortran code replacing a c
+      library routine
+    \item We will just have to fix them as they come up
   \end{itemize}
 \end{frame}
 
 
 % page 21
+\begin{frame}[fragile]
+    \frametitle{Protecting XALT from badly managed memory heap}
+ {\small
+    \begin{semiverbatim}
+void my\_free(void *ptr,int sz)
+\{
+  if (s\_start\_record \&\& ptr != NULL)
+    \{
+      memset(ptr, '\textbackslash{}0', sz);
+      free(ptr);
+    \}
+\}
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Reporting an end record in myfini() requires memory
+      allocations
+    \item However some user programs can leave the heap broken
+    \item XALT replaces free() with my\_free()
+    \item Memory is only freed for a start record.
+  \end{itemize}
+\end{frame}
+
+% page 22
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item XALT has matured greatly from working with user programs
+    \item Since the XALT library is in the same namespace as the user code 
+    \item There is always a risk of routine collision.
+  \end{itemize}
+\end{frame}
+
+
+% page 23
 \begin{frame}{Future Topics?}
   \begin{itemize}
+    \item Other protection of XALT from users
+    \item Recent changes to importing json records
     \item Others?
   \end{itemize}
 \end{frame}

@@ -76,8 +76,8 @@ tracing_msg "Starting ld"
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 
-EXEC_X=/usr/bin/${MY_NAME}.x
-find_real_command $0 $EXEC_X # this command sets $MY_CMD
+EXEC_X=$(locate_command ${MY_NAME}.x)
+MY_CMD=$(find_real_command $0 $EXEC_X)
 
 
 ########################################################################

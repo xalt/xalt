@@ -1,0 +1,17 @@
+#!/bin/bash
+# -*- shell-script -*-
+XALT_DIR=@xalt_dir@
+XALT_BIN=$XALT_DIR/bin
+
+if [ "${XALT_EXECUTABLE_TRACKING}" = yes ]; then
+  if [ -x $XALT_BIN/ld ]; then
+    $XALT_BIN/ld "$@"
+    status=$?
+    exit $?
+  else
+    echo "$XALT_BIN/ld does not exist.  Reverting to ld.x"
+  fi
+fi
+
+ld.x "$@"
+
