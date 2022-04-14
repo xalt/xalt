@@ -88,7 +88,7 @@ $(CFG_RPT_X): $(CFG_RPT_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(REC_PKG_X): $(REC_PKG_OBJ) $(PKG_FILTER_LIB)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl -L$(DESTDIR)$(LIB64) -lpkgFilter
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl -Wl,-rpath,$(LIB64) -L$(DESTDIR)$(LIB64) -lpkgFilter
 
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
