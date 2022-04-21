@@ -519,7 +519,7 @@ class XALTdb(object):
         hash_id       = runT.get('hash_id')
         syshost       = userT.get('syshost')
         user          = userT.get('user')
-        queue         = userT.get('queue')
+        queue         = userT.get('queue')[:64]
         container     = userT.get('container')
         exec_type     = userT.get('exec_type')
         

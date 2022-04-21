@@ -142,3 +142,5 @@ XALT 2.10+
     (2.10.36) * Add instructions for supporting clang compilers.
               * Allow ld.x to be anywhere in $PATH not just /usr/bin/ld.x
     (2.10.37) * Adding package filtering through xalt_record_pkg.c and xalt_pkg_filter.template
+    (2.10.38) * Change queue length to 64 and limit queue string in python to 64 chars.
+    
