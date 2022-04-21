@@ -519,7 +519,9 @@ class XALTdb(object):
         hash_id       = runT.get('hash_id')
         syshost       = userT.get('syshost')
         user          = userT.get('user')
-        queue         = userT.get('queue')[:64]
+
+        # Queue name could have a comma list.  Pick 1st one and limit it to 64 chars.
+        queue         = userT.get('queue').split(',')[0][:64]
         container     = userT.get('container')
         exec_type     = userT.get('exec_type')
         
