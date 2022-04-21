@@ -248,7 +248,7 @@ pre_ingest_patterns = [
 ]
 
 #------------------------------------------------------------
-# XALT will allow the filtering of all package collection
+# XALT will allow the filtering of all packages.
 # You can SKIP (or KEEP) package based on the name or path.
 # Note that you can use pkg_patterns for all patterns including python patterns
 # You must match the case of the program (R, python, MATLAB) and the kind (name, path).
