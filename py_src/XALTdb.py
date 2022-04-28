@@ -47,6 +47,13 @@ pre_ingest_filter = libpreIngest.pre_ingest_filter
 pre_ingest_filter.argtypes = [c_char_p]
 pre_ingest_filter.restype  = c_double
 
+libpkgFilter = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libpkgFilter.so")))
+pkgFilter = libpkgFilter.keep_pkg
+pkgFilter.argtypes = [c_char_p]
+pkgFilter.restype  = c_int
+
+
+
 warnings.filterwarnings("ignore", "Unknown table.*")
 
 ########################################################################
@@ -611,6 +618,22 @@ class XALTdb(object):
 
   def pkg_to_db(self, debug, syshost, pkgT):
 
+    keep        = 2
+    skip        = 3
+    program     = pkgT.get('program')[:12]
+    pkg_name    = pkgT.get('package_name')[:64]
+    pkg_version = pkgT.get('package_version')[:32]
+    pkg_path    = pkgT.get('package_path')[:1024]
+    prgmPkg     = program + ":" + pkg_name
+    patternStr  = program + ":name:" + pkg_name
+    name_status = pkgFilter(patternStr.encode())
+
+    patternStr  = program + ":path:" + pkg_path
+    path_status = pkgFilter(patternStr.encode())
+    if (name_status == skip or path_status == skip):
+      if (debug): sys.stdout.write("  --> failed to record: pkgFilter blocks recording of \""+prgmPkg+"\"\n")
+      return
+
     try:
       conn   = self.connect()
       cursor = conn.cursor()
@@ -631,17 +654,12 @@ class XALTdb(object):
       if (cursor.rowcount > 0):
         row         = cursor.fetchone()
         run_id      = int(row[0])
-        program     = pkgT.get('program')[:12]
-        pkg_name    = pkgT.get('package_name')[:64]
-        pkg_version = pkgT.get('package_version')[:32]
-        pkg_path    = pkgT.get('package_path')[:1024]
-        
-        query  = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
+        query       = "INSERT into xalt_pkg VALUES(NULL,%s,%s,%s,%s,%s)"
         cursor.execute(query,(run_id, program, pkg_name, pkg_version, pkg_path))
-        query  = ""
-        if (debug): sys.stdout.write("  --> Success: pkg entry stored\n")
+        query       = ""
+        if (debug): sys.stdout.write("  --> Success: pkg entry \""+prgmPkg+"\" stored\n")
       else:
-        if (debug): sys.stdout.write("  --> failed to record: No run_uuid to connect packages to\n")
+        if (debug): sys.stdout.write("  --> failed to record: No run_uuid to connect packages to for \""+prgmPkg+"\"\n")
         
       v = XALT_Stack.pop()
       carp("SYSHOST",v)

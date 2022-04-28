@@ -177,6 +177,7 @@ int main(int argc, char* argv[])
     transmit("file", json_str, "pkg", key, crcStr, my_host, xalt_tmpdir, resultFn, stderr);
   fflush(stderr);
 
+  pkg_parser_cleanup();
   free(xalt_tmpdir);
   free(resultFn);
   free(key);

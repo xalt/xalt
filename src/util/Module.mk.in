@@ -117,5 +117,5 @@ $(CURDIR)/__build__/xalt_pkg_filter.c: $(CURDIR)/__build__/xalt_pkg_filter.lex
 	flex -P xalt_pkg_filter -o $@ $^
 $(CURDIR)/__build__/xalt_pkg_filter.o: $(CURDIR)/__build__/xalt_pkg_filter.c
 	$(COMPILE.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -Wno-unused-function -o $@ $^
-$(PKG_FILTER_LIB): $(CURDIR)/__build__/xalt_pkg_filter.o 
+$(PKG_FILTER_LIB): $(CURDIR)/__build__/xalt_pkg_filter.o util/xalt_c_utils.o
 	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
