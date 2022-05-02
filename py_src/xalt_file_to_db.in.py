@@ -178,11 +178,6 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
 
       f.close()
 
-      #if (debug):   sys.stdout.write("  --> Checking CRC\n")
-      #if (not check_string_w_crc(s, linkT.get('crc'), debug) ):
-      #  if (debug): sys.stdout.write("  --> failed to record: CRC did not match\n")
-      #  continue;
-
       if (debug):
         sys.stdout.write("  --> Sending record to xalt.link_to_db()\n")
       xalt.link_to_db(debug, reverseMapT, linkT)
