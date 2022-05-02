@@ -12,7 +12,7 @@ initialize()
   numStep=0
   COUNT=0
 
-  module unload xalt
+  module --quiet unload xalt
 
   rm -f  _stderr.* _stdout.* out.* err.* leftover.* \#* .\#*
   rm -rf .xalt.d syslog.*
