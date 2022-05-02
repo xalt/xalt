@@ -517,6 +517,7 @@ def main():
   badsyslog   = 0
   count       = 0
   parseSyslog = ParseSyslog(args.leftover)
+  debug       = args.debug
   pbar        = ProgressBar(maxVal=max(fnSz,1),fd=sys.stdout)
   random.seed()
 
@@ -537,7 +538,7 @@ def main():
         except UnicodeDecodeError as e:
           continue
         count += len(line)
-        pbar.update(count)
+        if (not debug): pbar.update(count)
         if (not ("XALT_LOGGING" in line)):
           continue
         try:
@@ -599,7 +600,7 @@ def main():
           print(traceback.format_exc())
           badCnt += 1
 
-  pbar.fini()
+  if (not debug): pbar.fini()
 
   t2 = time.time()
   rt = t2 - t1
