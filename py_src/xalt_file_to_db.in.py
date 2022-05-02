@@ -154,13 +154,13 @@ def link_json_to_db(xalt, debug, listFn, reverseMapT, deleteFlg, linkFnA, countT
       try:
         f     = open(fn,"r")
       except:
-        sys.stdout.write(fn+"\n")
+        sys.stdout.write("link(0): "+fn+"\n")
         sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
       countT['fSZ'] += os.path.getsize(f.name)
       if (listFn or debug):
-        sys.stdout.write(fn+"\n")
+        sys.stdout.write("link: "+fn+"\n")
         if (debug): sys.stdout.write("  --> Trying to open file\n")
         if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None
@@ -225,8 +225,6 @@ def pkg_json_to_db(xalt, debug, listFn, syshost, deleteFlg, pkgFnA, countT, acti
 
   try:
     for fn in pkgFnA:
-      if (listFn or debug):
-        sys.stderr.write(fn+"\n")
       XALT_Stack.push("fn: "+fn)   # push fn
 
       try:
@@ -298,13 +296,13 @@ def run_json_to_db(xalt, debug, listFn, reverseMapT, u2acctT, deleteFlg, runFnA,
       try:
         f      = open(fn,"r")
       except:
-        sys.stdout.write(fn+"\n")
+        sys.stdout.write("run(0): "+fn+"\n")
         sys.stdout.write("  --> failed to record: Unable to open\n")
         continue
       
       countT['fSZ'] += os.path.getsize(f.name)
       if (listFn or debug):
-        sys.stdout.write(fn+"\n")
+        sys.stdout.write("run: "+fn+"\n")
         if (debug): sys.stdout.write("  --> Trying to open file\n")
         if (debug): sys.stdout.write("  --> Trying to load json\n")
       s = None

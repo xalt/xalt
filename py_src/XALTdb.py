@@ -511,6 +511,7 @@ class XALTdb(object):
         carp("SUBMIT_HOST",v)
 
         if (debug): sys.stdout.write("  --> Success: updated run_time\n")
+        if (debug): sys.stdout.write("  --> Done\n\n")
         return XALTdb.STORE
       else:
         #print("not found")
