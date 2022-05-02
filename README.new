@@ -145,3 +145,5 @@ XALT 2.10+
               * Change queue length to 64 and limit queue string in python to 64 chars.
               * Now support package filtering during ingestion as well (same filtering routine as
 	        with xalt_record_pkg.c). This uses tmpl/xalt_pkg_filter.template.
+	      * link xalt_record_pkg executable with xalt_pkg_filter.o instead of libpkgFilter.so
+	        (solving rpm build problem)

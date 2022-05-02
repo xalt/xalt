@@ -41,7 +41,7 @@ CFG_RPT_X        := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
 CFG_RPT_CXX      := xalt_configuration_report.C
 CFG_RPT_CXX      := $(addprefix $(local_dir)/, $(CFG_RPT_CXX))
 CFG_RPT_C        := epoch.c capture.c xalt_dir.c buildJson.c xalt_quotestring.c xalt_c_utils.c
-CFG_RPT_C        := $(addprefix $(local_dir)/, $(CFG_RPT_C)) __build__/xalt_syshost.c linker/xalt_utils.C
+CFG_RPT_C        := $(addprefix $(local_dir)/, $(CFG_RPT_C)) $(CURDIR)/__build__/xalt_syshost.c linker/xalt_utils.C
 CFG_RPT_OBJ      := $(patsubst %.C, %.o, $(CFG_RPT_CXX)) \
                     $(patsubst %.c, %.o, $(CFG_RPT_C))
 
@@ -53,7 +53,7 @@ TST_REC_PKG_OBJ  := $(patsubst %.C, %.o, $(TST_REC_PKG_CXX))
 REC_PKG_X        := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
 REC_PKG_C        := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
                     xalt_fgets_alloc.c xalt_tmpdir.c xalt_dir.c crcFast.c
-REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) __build__/xalt_syshost.c
+REC_PKG_C        := $(addprefix $(local_dir)/, $(REC_PKG_C)) $(CURDIR)/__build__/xalt_syshost.c $(CURDIR)/__build__/xalt_pkg_filter.c
 REC_PKG_OBJ      := $(patsubst %.c, %.o, $(REC_PKG_C))
 
 CURL_TRANS_X     := $(DESTDIR)$(LIBEXEC)/xalt_curl_transmit
@@ -88,15 +88,15 @@ $(CFG_RPT_X): $(CFG_RPT_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
 $(REC_PKG_X): $(REC_PKG_OBJ) $(PKG_FILTER_LIB)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl -Wl,-rpath,$(DESTDIR)$(LIB64) -L$(DESTDIR)$(LIB64) -lpkgFilter
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl 
 
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
-$(SYSHOST_X): __build__/xalt_syshost_main.o util/xalt_fgets_alloc.o util/xalt_c_utils.o
+$(SYSHOST_X): $(CURDIR)/__build__/xalt_syshost_main.o util/xalt_fgets_alloc.o util/xalt_c_utils.o
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lm
 
-__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fgets_alloc.h util/xalt_c_utils.h
+$(CURDIR)/__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fgets_alloc.h util/xalt_c_utils.h
 	$(COMPILE.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) $(LDFLAGS) -o $@ $< 
 
 $(CURL_TRANS_X): $(CURL_TRANS_OBJ)
