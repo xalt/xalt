@@ -87,7 +87,7 @@ $(EXTR_REC_X) : $(EXTR_REC_OBJ)
 $(CFG_RPT_X): $(CFG_RPT_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
 
-$(REC_PKG_X): $(REC_PKG_OBJ) $(PKG_FILTER_LIB)
+$(REC_PKG_X): $(REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl 
 
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
