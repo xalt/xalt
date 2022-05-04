@@ -2,10 +2,44 @@ Notes for Json ingestion talk.
 
 Topics to discuss
 
+* How sites install XALT on login and compute nodes?
+** Distributed install of XALT on all nodes/?
+   This is the way that TACC does it
+** Single Global location accessible for all nodes?
+*
+
+* How to sites install XALT for ingestion?
+** TACC uses a VM to store using syslog  transport style
+** A single login node used to copy file based transport   
+** This talk will assume TACC style layout but it might
+   be different at your site.
+* At some sites it is more work to re-install XALT
+  on eompute and login nodes
+** TACC requires a maintenance to install on compute nodes
+   This may change in future where they might split the compute nodes
+   into block where they can pause a block at a time and install
+* Making changes to the ingestion install is easy (at least for TACC)
+** Is it different at your site?  
 * executable filtering during ingestion
 ** Some sites would like to be able to control ingestion and not modify their install of XALT 
 ** There is a block in your Site Config.py file
-*** This file is converted to a flex routine to provide fast regex parsing.
+*** This block of python code is converted to a flex routine to provide fast regex parsing.
+pre_ingest_patterns = [
+#   percent   path pattern
+    [0.0,     r'.*\/foobar'],
+    [0.01,    r'.*\/BAZ'],
+]
+*** This pattern in your sites config is combined with the xalt system config file:
+    As shown via the xalt_configuration_report program:
+*----------------------*
+ Array: ingestPatternA
+*----------------------*
+================== /path/to/site/config.py ==================
+   0: 0.0000 => .*\/foobar
+   1: 0.0100 => .*\/BAZ
+================== src/tmpl/xalt_config.py ==================
+   2: 1.0000 => .*
+
 *** This parsing is converted to a C then shared library (libpreIngest.so).
 *** This C library is connected to the python ingestion programs via the ctypes
 from   ctypes import *   # used to interact with C shared libraries
@@ -15,21 +49,22 @@ libpreIngest = CDLL(libpath)
 pre_ingest_filter = libpreIngest.pre_ingest_filter
 pre_ingest_filter.argtypes = [c_char_p]
 pre_ingest_filter.restype  = c_double
-    
+...
+exec_prob = pre_ingest_filter(exec_path.encode())
 
-pre_ingest_patterns = [
-#   percent   path pattern
-    [0.0,     r'.*\/foobar'],
-    [0.01,    r'.*\/BAZ'],
-]
+
    
-
 * New pkg filter added to ingestion
 ** It is the same pkg filter added to xalt_record_pkg
 ** This just means that you can remove packages during ingestion phase
 *** This means you can prevent packages from being added to the DB
     in two places: Either at creation phase (but have to reinstall
-    XALT everywhere
-*** Do sites use one global location for XALT or distributed like TACC does?
-*** How to sites do ingestion?
-    TACC has a VM
+    XALT everywhere)
+** This means if you find a package you want to ignore
+   You can do at the ingestion install of XALT and not wait for a
+   maintenance
+   
+* Debugging json ingestion
+** A user on the XALT mailing list was asking for help
+** It wasn't clear why their *.json files where not being ingested.
+* The --debug (-D) option to xalt_file_to_db.py and xalt_syslog_to_db.py was born
