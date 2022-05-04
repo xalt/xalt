@@ -1,0 +1,35 @@
+Notes for Json ingestion talk.
+
+Topics to discuss
+
+* executable filtering during ingestion
+** Some sites would like to be able to control ingestion and not modify their install of XALT 
+** There is a block in your Site Config.py file
+*** This file is converted to a flex routine to provide fast regex parsing.
+*** This parsing is converted to a C then shared library (libpreIngest.so).
+*** This C library is connected to the python ingestion programs via the ctypes
+from   ctypes import *   # used to interact with C shared libraries
+
+libpath      = os.path.join(dirNm, "../lib64/libpreIngest.so")
+libpreIngest = CDLL(libpath)
+pre_ingest_filter = libpreIngest.pre_ingest_filter
+pre_ingest_filter.argtypes = [c_char_p]
+pre_ingest_filter.restype  = c_double
+    
+
+pre_ingest_patterns = [
+#   percent   path pattern
+    [0.0,     r'.*\/foobar'],
+    [0.01,    r'.*\/BAZ'],
+]
+   
+
+* New pkg filter added to ingestion
+** It is the same pkg filter added to xalt_record_pkg
+** This just means that you can remove packages during ingestion phase
+*** This means you can prevent packages from being added to the DB
+    in two places: Either at creation phase (but have to reinstall
+    XALT everywhere
+*** Do sites use one global location for XALT or distributed like TACC does?
+*** How to sites do ingestion?
+    TACC has a VM
