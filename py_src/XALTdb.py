@@ -632,7 +632,7 @@ class XALTdb(object):
     patternStr  = program + ":path:" + pkg_path
     path_status = pkgFilter(patternStr.encode())
     if (name_status == skip or path_status == skip):
-      if (debug): sys.stdout.write("  --> failed to record: pkgFilter blocks recording of \""+prgmPkg+"\"\n")
+      if (debug): sys.stdout.write("  --> Failed to record: pkgFilter blocks recording of \""+prgmPkg+"\"\n")
       return
 
     try:
@@ -660,7 +660,7 @@ class XALTdb(object):
         query       = ""
         if (debug): sys.stdout.write("  --> Success: pkg entry \""+prgmPkg+"\" stored\n")
       else:
-        if (debug): sys.stdout.write("  --> failed to record: No run_uuid to connect packages to for \""+prgmPkg+"\"\n")
+        if (debug): sys.stdout.write("  --> Failed to record: No run_uuid to connect packages to for \""+prgmPkg+"\"\n")
         
       v = XALT_Stack.pop()
       carp("SYSHOST",v)
