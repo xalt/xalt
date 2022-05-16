@@ -267,39 +267,137 @@ path_patterns = [
     \item It wasn't clear where the slowdown was happening 
     \item xalt\_file\_to\_db.py and xalt\_syslog\_to\_db.py got the -D
       option 
-    \item Debug printing for the internal steps
+    \item This adds debug printing for the internal steps
   \end{itemize}
 \end{frame}
 
 % page 16
 \begin{frame}[fragile]
-    \frametitle{}
+    \frametitle{XALT searches first for link.*.json files}
  {\tiny
     \begin{semiverbatim}
+link: /home/user/.xalt.d/link.rios.*.json
+  --> Trying to open file
+  --> Trying to load json
+  --> Sending record to xalt.link_to_db()
+  --> Trying to connect to database
+  --> Starting TRANSACTION
+  --> Searching for build_uuid in db
+  --> Trying to insert link record into db
+  --> Success: link recorded
+  --> Trying to insert objects into db
+  --> Trying to insert functions into db
+  --> Done
+    \end{semiverbatim}
+}
+\end{frame}
+
+
+% page 17
+\begin{frame}[fragile]
+    \frametitle{XALT searches for run.*.json files next}
+ {\tiny
+    \begin{semiverbatim}
+run: /home/user/.xalt.d/run.rios.*.json
+  --> Trying to open file
+  --> Trying to load json
+  --> Sending record to xalt.run_to_db()
+  --> Trying to connect to database
+  --> Starting TRANSACTION
+  --> Searching for run_uuid in db
+  --> Trying to insert run record into db
+  --> Success: stored full xalt_run record
+  --> Trying to insert objects into db
+  --> Trying to insert env vars into db
+  --> Done
+    \end{semiverbatim}
+}
+
+\end{frame}
+
+% page 18
+\begin{frame}[fragile]
+    \frametitle{Finally XALT searches for pkg.*.json}
+ {\tiny
+    \begin{semiverbatim}
+  --> Found 10 pkg.*.json files
+
+  --> Success: pkg entry "R:bar" stored
+  --> Success: pkg entry "R:foo" stored
+  --> Success: pkg entry "R:acme" stored
+  --> Failed to record: pkgFilter blocks "R:base" 
+  --> Success: pkg entry "python:json" stored
+  --> Success: pkg entry "python:linecache" stored
+  --> Success: pkg entry "python:struct" stored
+  --> Success: pkg entry "python:base64" stored
+  --> Success: pkg entry "python:codecs" stored
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 19
+\begin{frame}{Debugging Results}
+  \begin{itemize}
+    \item Site used ~user/.xalt.d
+    \item BTW: This has a race condition 
+    \item The ~/.xalt.d directory has to exist first
+    \item Walking a parallel file system is slow when looking
+      ~/.xalt.d directories.
+    \item I encourage the site to switch to a global shared location
+  \end{itemize}
+\end{frame}
+
+% page 20
+\begin{frame}[fragile]
+    \frametitle{Similarly for xalt\_syslog\_to\_db.py}
+ {\tiny
+    \begin{semiverbatim}
+  --> Trying to connect to database
+  --> Starting TRANSACTION
+  --> Searching for build_uuid in db
+  --> Trying to insert link record into db
+  --> Success: link recorded
+  --> Trying to insert objects into db
+  --> Trying to insert functions into db
+  --> Done
+
+  --> Trying to connect to database
+  --> Starting TRANSACTION
+  --> Searching for run_uuid in db
+  --> Trying to insert run record into db
+  --> Success: stored full xalt_run record
+  --> Trying to insert objects into db
+  --> Trying to insert env vars into db
+  --> Done
+
+  --> Success: pkg entry "python:token" stored
+  --> Success: pkg entry "python:tokenize" stored
+  --> Success: pkg entry "python:linecache" stored
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item 
+    \item  But there there are no file names given and the link, run and pkg
+  records are mixed together
   \end{itemize}
 
 \end{frame}
 
 
-
-% page 33
+% page 21
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item XALT has matured greatly from working with user programs
-    \item Since the XALT library is in the same namespace as the user code 
-    \item There is always a risk of routine collision.
+    \item Debugging ingestion is not practical for thousands for
+      records.
+    \item But it is useful.
+    \item Next Meeting June 16 10:00am U.S. Central (15:00 UTC)
   \end{itemize}
 \end{frame}
 
 
-% page 34
+% page 22
 \begin{frame}{Future Topics?}
   \begin{itemize}
-    \item Recent changes to importing json records
+    \item ???
     \item Others?
   \end{itemize}
 \end{frame}
