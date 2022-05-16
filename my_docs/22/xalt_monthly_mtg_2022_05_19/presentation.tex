@@ -43,9 +43,9 @@
 
 
 \begin{document}
-\title[XALT]{Protecting XALT from Users}
+\title[XALT]{Json ingestion improvements}
 \author{Robert McLay}
-\date{April 21, 2022}
+\date{May 19, 2022}
 
 % page 1
 \frame{\titlepage}
@@ -54,559 +54,237 @@
 \begin{frame}{XALT: Outline}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
-    \item XALT is linking with every program that runs on the system
-    \item Users will occasionally make mistakes
-    \item Need to protect XALT from user mistakes
-    \item Show more ways that XALT protects itself and users.
+    \item Ingestion Definition
+    \item Questions about how site install XALT and Ingestion
+    \item Execution Filtering
+    \item New Package Filtering
+    \item Debugging *.json file ingestion
+    \item Tracking Down when Json Ingestion is slow
+    \item Debugging *.json syslog ingestion
   \end{itemize}
 \end{frame}
 
 % page 3
-\begin{frame}{Three examples of protection}
+\begin{frame}{Ingestion Definition}
   \begin{itemize}
-    \item User's bug hidden by zeroed memory initially
-    \item User's mixing Fortran routine with C library routines badly
-    \item XALT expecting well managed memory heap.
+    \item XALT generates Json records (either file or syslog or ...)
+    \item Ingestion is the phase where Json records are added to the
+      MySQL DB.
   \end{itemize}
 \end{frame}
 
-
 % page 4
-\begin{frame}[fragile]
-    \frametitle{How XALT works}
- {\tiny
-    \begin{semiverbatim}
-#include <stdio.h>
-void myinit(int argc, char **argv)
-\{ printf("This is run before main()\textbackslash{}n"); \}
-void myfini()
-\{ printf("This is run after main()\textbackslash{}n"); \}
-
-__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
-__attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
-    \end{semiverbatim}
-}
+\begin{frame}{How sites install XALT for users?}
   \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex1
+    \item XALT is installed locally on each node? (TACC does this)
+    \item XALT is in a shared global location?
+    \item Other ways?
   \end{itemize}
 \end{frame}
 
 % page 5
-\begin{frame}[fragile]
-    \frametitle{How XALT works (II)}
- {\small
-    \begin{semiverbatim}
-\% cat try.c
-
-#include <stdio.h>
-int main()
-\{
-  printf("Hello World!\textbackslash{}n");
-  return 0;
-\}
-
-    \end{semiverbatim}
-}
+\begin{frame}{How sites install XALT for Ingestion?}
+  \begin{itemize}
+    \item TACC uses a VM to store the syslog transmission style
+    \item We have also used a shared global file location to ingest
+      json records
+    \item Other ways?
+  \end{itemize}
 \end{frame}
 
 
 % page 6
-\begin{frame}[fragile]
-    \frametitle{How XALT works (III)}
- {\small
-    \begin{semiverbatim}
-\$ ./try
-
-Hello World!
-
-\$ LD\_PRELOAD=./libxalt.so  ./try
-This is run before main()
-Hello World!
-This is run after main()
-    \end{semiverbatim}
-}
+\begin{frame}{Dealing with different types of XALT installation}
   \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex1
+    \item This talk assumes that installing XALT users is more
+      difficult
+    \item At TACC, XALT can only be updated on Maintenance Days 
+    \item This may get easier in the future at TACC with rolling instations
+    \item Whereas changes to ingestion are easy.
+    \item We only change the XALT installation on the VM.
+    \item Is this different for your site?
   \end{itemize}
-
 \end{frame}
 
 % page 7
-\begin{frame}{How XALT works (IV)}
+\begin{frame}{Executable Pre-ingestion filtering}
   \begin{itemize}
-    \item The xalt runtime library attaches to every program run on
-      your system!
-    \item I sometimes feel like I'm a developer on every program team.
-    \item XALT programs are in the same namespace as the user's
-      program (UGH!)
+    \item Because some sites have trouble updating XALT for users
+    \item There was a request to allow filtering of *.json records 
+    \item These are transmitted records but not yet ingested
   \end{itemize}
 \end{frame}
-
-
 
 % page 8
 \begin{frame}[fragile]
-    \frametitle{Hiding XALT routine names from users}
+    \frametitle{A new python array to filter executables}
+ {\small
+    \begin{semiverbatim}
+pre_ingest_patterns = [
+#   percent   path pattern
+    [0.0,     r'.*\/foobar'],
+    [0.01,    r'.*\/BAZ'],
+]
+    \end{semiverbatim}
+ }
+  \begin{itemize}
+    \item This python array is converted to a flex routine
+    \item This flex code is converted to C code and compiled into a
+      shared library (libpreIngest.so)
+    \item Python allows for standard libraries be connected to python programs
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{How filtering is shown in xalt\_configuration\_report}
  {\tiny
     \begin{semiverbatim}
-\% nm \$LD\_PRELOAD| grep \_\_XALT\_build
-0000000000009e80 T \_\_XALT\_buildEnvT\_xalt\_1\_5
-000000000000a840 T \_\_XALT\_buildUserT\_xalt\_1\_5
-00000000000163a0 T \_\_XALT\_buildXALTRecordT\_xalt\_1\_5
+\% xalt\_configuration\_report
+...        
+*----------------------*
+ Array: ingestPatternA
+*----------------------*
+================== /path/to/site/config.py ==================
+   0: 0.0000 => .*\/foobar
+   1: 0.0100 => .*\/BAZ
+================== src/tmpl/xalt\_config.py ==================
+   2: 1.0000 => .*
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item XALT routine names are hidden by macros supplied in xalt\_obfuscate.h
+    \item Note that src/tmpl/xalt\_config.py  provides the default
+      patterns.
+    \item So you don't have to.
   \end{itemize}
 
-\end{frame}
-
-
-% page 9
-\begin{frame}{User's bug hidden by initially zeroed memory}
-  \begin{itemize}
-    \item Initially all memory is zeroed before program starts
-    \item Note that pointer zero, integer zero and float zero are all
-      zero bits
-    \item Link lists require a NULL pointer at end of list.
-    \item Used memory is {\color{red} \emph{NOT}} zeroed for you in C.
-    \item User's program work w/o XALT, Failed with XALT.
-  \end{itemize}
 \end{frame}
 
 % page 10
 \begin{frame}[fragile]
-    \frametitle{Example code clean/used memory}
+    \frametitle{Connecting C shared libraries w/ Python}
  {\tiny
     \begin{semiverbatim}
-\% cat try.c
+from   ctypes import *   # used to interact with C shared libraries
 
-#include <stdio.h>
-#include <stdlib.h>
-#define SZ 1000
-int main()
-\{
-  int *a = (int *) malloc(SZ*sizeof(int));
-  printf("Hello World! a:%d\textbackslash{}n",a[0]);
-  return 0;
-\}
+libpath      = os.path.join(dirNm, "../lib64/libpreIngest.so")
+libpreIngest = CDLL(libpath)
+pre\_ingest\_filter = libpreIngest.pre\_ingest\_filter
+pre\_ingest\_filter.argtypes = [c\_char\_p]
+pre\_ingest\_filter.restype  = c\_double
+...
+exec\_prob = pre\_ingest\_filter(exec\_path.encode())
+prob      = random.random() # 0 < prob <= 1.0
+if (prob <= exec\_prob):
+   # ingest
 
-\% cat xalt.c
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#define SZ 1000
-void myinit(int argc, char **argv)
-\{
-  int i;
-  int *a = (int*) malloc(SZ*sizeof(int));
-  for (i = 0; i < SZ; ++i) a[i] = 15; 
-  free(a);
-  printf("This is run before main()\textbackslash{}n");
-\}
-\_\_attribute\_\_((section(".init\_array"))) \_\_typeof\_\_(myinit) *\_\_init = myinit;
     \end{semiverbatim}
 }
-
   \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex2
+    \item The ctypes python package provide the magic.
+    \item Once the boilerplate code is provided, it is just one line
+      to find the probability to keep or not.
+    \item This is very fast filtering 
   \end{itemize}
 \end{frame}
 
 % page 11
 \begin{frame}[fragile]
-    \frametitle{Example code clean/used memory(II)}
- {\small
-   \begin{semiverbatim}
-\% ./try
-
-Hello World! {\color{blue} a:0}
-
-\% LD\_PRELOAD=./libxalt.so  ./try  ; echo
-This is run before main()
-Hello World! {\color{red} a:15}
-This is run after main()
-    \end{semiverbatim}
-}
+    \frametitle{Pkg Filtering added to Ingestion}
   \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex2
+    \item XALT 2.10.37 added Pkg filtering to xalt\_record\_pkg prgm
+    \item It also added the same filtering to Ingestion 
+    \item It uses the same ctypes package to integrate it with python.
+    \item This means that you can filter package w/o re-installing
+      XALT everywhere.
   \end{itemize}
 \end{frame}
 
 % page 12
-\begin{frame}{XALT Fix: zero memory before free()}
+\begin{frame}[fragile]
+    \frametitle{Protecting XALT against endless loops from site
+      Config.py files}
+ {\tiny
+    \begin{semiverbatim}
+# A site had in their site Config.py: 
+path_patterns = [
+  ['KEEP',  r'\/opt\/envHPC\/.*'],
+  [ 'SKIP',  r'.*'],
+  ]
+    \end{semiverbatim}
+}
   \begin{itemize}
-    \item To protect XALT from broken user code
-    \item XALT in myinit() zero's memory before free
-    \item Note that non-MPI tracking does little allocation
-    \item MPI tasks $>$ 127 init record $\Rightarrow$ much allocation
+    \item where XALT was stored in /opt/envHPC/xalt/...
+    \item XALT must protect sites from tracking all xalt programs
+    \item Otherwise you can get an endless loop.
   \end{itemize}
 \end{frame}
 
-
-
 % page 13
 \begin{frame}[fragile]
-    \frametitle{XALT Fix: zero memory before free()}
- {\tiny
-    \begin{semiverbatim}
-\% cat try.c
-
-#include <stdio.h>
-#include <stdlib.h>
-#define SZ 1000
-int main()
-\{
-  int *a = (int *) malloc(SZ*sizeof(int));
-  printf("Hello World! a:%d\textbackslash{}n",a[0]);
-  return 0;
-\}
-
-\% cat xalt.c
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#define SZ 1000
-void myinit(int argc, char **argv)
-\{
-  int i;
-  int *a = (int*) malloc(SZ*sizeof(int));
-  for (i = 0; i < SZ; ++i) a[i] = 15; 
-  {\color{blue}{}memset((void *) a, 0, SZ*sizeof(int))};
-  free(a);
-  printf("This is run before main()\textbackslash{}n");
-\}
-\_\_attribute\_\_((section(".init\_array"))) \_\_typeof\_\_(myinit) *\_\_init = myinit;
-    \end{semiverbatim}
-}
-
+    \frametitle{Preventing Endless XALT loops}
   \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex3
+    \item XALT has a system config file: src/tmpl/xalt\_config.py
+    \item Site has a Config.py file
+    \item This files control how XALT filters
+    \item The system file has head\_path\_patterns
+    \item This forces XALT to skip all XALT executabls
+    \item Also skip the unix system logger command which write to
+      syslog.
+    \item XALT uses logger in testing.
   \end{itemize}
 \end{frame}
 
 % page 14
 \begin{frame}[fragile]
-    \frametitle{XALT Fix: zero memory before free() (II)}
- {\small
-   \begin{semiverbatim}
-\% ./try
+    \frametitle{Configuration Report}
+ {\tiny
+    \begin{semiverbatim}
+*----------------------*
+ Array: pathPatternA
+*----------------------*
+====== src/tmpl/xalt\_config.py =====
+   1: SKIP => .*\/logger
+   6: SKIP => .*\/xalt\_syshost
+   7: SKIP => .*\/xalt\_record\_pkg
+======= Config.py ============
+...
+====== src/tmpl/xalt\_config.py =====
+  21: KEEP => .*
 
-Hello World! {\color{blue} a:0}
-
-\% LD_PRELOAD=./libxalt.so  ./try  ; echo
-This is run before main()
-Hello World! {\color{blue} a:0}
-This is run after main()
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex3
+    \item Abbreviated patterns from xalt\_configuration\_report
   \end{itemize}
 \end{frame}
 
-
 % page 15
-\begin{frame}[fragile]
-    \frametitle{Protecting XALT from Fortran mixed with C programs badly}
- {\tiny
-    \begin{semiverbatim}
-\% cat msg.f90
-subroutine msg
-   print *, "Hello World!"
-end subroutine msg
-
-\% nm try | grep msg
-00000000000011c7 T msg_
-    \end{semiverbatim}
-}
+\begin{frame}{Debugging Json ingestion}
   \begin{itemize}
-    \item Normally Fortran routines get a trailing underscore
-      when compiled
-    \item This can be disabled:
-    \item Fortran: -fno-underscoring
-    \item ifort:    -assume nounderscore
-    \item Can make mixing C/Fortran easier
-    \item Also make collisions with C library easier
+    \item Issue #46 shows a detailed discussion where a site had
+      trouble ingesting.
+    \item It wasn't clear where the slowdown was happening 
+    \item xalt\_file\_to\_db.py and xalt\_syslog\_to\_db.py got the -D
+      option 
+    \item Debug printing for the internal steps
   \end{itemize}
 \end{frame}
 
 % page 16
-\begin{frame}{XALT uses libuuid}
-  \begin{itemize}
-    \item libuuid.so is used to get a unique identifier
-    \item It uses libc's random()
-    \item Can't have two routines named random() 
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/random/ex3
-
-
-  \end{itemize}
-\end{frame}
-
-% page 17
 \begin{frame}[fragile]
-    \frametitle{Collision over random() routine}
+    \frametitle{}
  {\tiny
     \begin{semiverbatim}
-\% cat try.f90
-
-program tryMe
-   implicit none 
-   real*8 d, random
-   print *, "Hello World!"
-   d = {\color{blue}{}random(1.0, 2.0. 3.0)}
-   print *, "d: ",d
-end program tryMe
-
-\% cat random.f90
-
-real*8 function {\color{blue}{}random(a, b, c)}
-   implicit none
-   real*8 a, b, c
-   print *, "In random(a, b, c)"
-   random = a*b + c
-end function random
-
-\% cat xalt.c
-#include <stdio.h>
-#include <stdlib.h>
-void myinit(int argc, char **argv)
-\{
-  long int a;
-  printf("This is run before main()\textbackslash{}n");
-  a = {\color{red}{}random()};
-  printf("called random(): a: %ld\textbackslash{}n",a);
-\}
-__attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
-
-\end{semiverbatim}
-}
-\end{frame}
-
-% page 18
-\begin{frame}[fragile]
-    \frametitle{Collision over random() routine (II)}
- {\tiny
-    \begin{semiverbatim}
-\% ./try
-
- Hello World!
- In random(a, b, c)
- d:    5.0000000000000000     
-
-\% LD_PRELOAD=./libxalt.so  ./try  ; echo
-This is run before main()
- In random(a, b, c)
-Segmentation fault
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item The linker chooses the user's Fortran random() instead of the C lib
-      random()
-    \item The segfault happens because the Fortran random() expects 3
-      arguments
-    \item the random() call in xalt.c passes none.
+    \item 
   \end{itemize}
 
 \end{frame}
 
-% page 19
-\begin{frame}{How to fix this issue}
-  \begin{itemize}
-    \item Other Fortran program might do the same thing
-    \item Trick: Use dlopen()/dlsym() to dynamically link in libuuid.so
-    \item At this point libuuid.so can't ``see'' the Fortran random()
-      routine
-    \item This trick solves many problems with libuuid
-  \end{itemize}
-\end{frame}
 
-% page 20
-\begin{frame}{XALT is still susceptible to similar issues}
-  \begin{itemize}
-    \item XALT is now protected from a user's random() function
-    \item But XALT is vulnerable some Fortran code replacing a c
-      library routine
-    \item We will just have to fix them as they come up
-  \end{itemize}
-\end{frame}
-
-
-% page 21
-\begin{frame}[fragile]
-    \frametitle{Protecting XALT from badly managed memory heap}
- {\small
-    \begin{semiverbatim}
-void my\_free(void *ptr,int sz)
-\{
-  if (s\_start\_record \&\& ptr != NULL)
-    \{
-      memset(ptr, '\textbackslash{}0', sz);
-      free(ptr);
-    \}
-\}
-    \end{semiverbatim}
-}
-  \begin{itemize}
-    \item Reporting an end record in myfini() requires memory
-      allocations
-    \item However some user programs can leave the heap broken
-    \item XALT replaces free() with my\_free()
-    \item Memory is only freed for a start record.
-  \end{itemize}
-\end{frame}
-
-% page 22
-\begin{frame}{Containers}
-  \begin{itemize}
-    \item Containers are chrooted environments
-    \item They can have minimum setup and libraries
-    \item Typically only what the user needs
-    \item But not always what XALT needs.
-    \item The xalt library needs many libraries libcrypto, libuuid,
-      libcurl, etc.
-  \end{itemize}
-\end{frame}
-
-% page 23
-\begin{frame}{Containers (II)}
-  \begin{itemize}
-    \item For XALT to work at all in a container. LD\_PRELOAD must be
-      set.
-    \item And add XALT\_INSTALL\_DIR to container's available paths.
-    \item So XALT during installation copies system libraries to the
-      XALT\_INSTALL\_DIR
-    \item XALT does a ldd on executables and libraries to find all the
-      system libraries that need to be copied.
-    \item This allows XALT to dlopen()/dlsym() libuuid.so to solve the
-      problems mentioned before.
-  \end{itemize}
-\end{frame}
-
-
-% page 24
-\begin{frame}{MPI libraries disallow system() after main() returns}
-  \begin{itemize}
-    \item One of the version of IMPI, stopped supporting system()
-      being called after main() finishes
-    \item This was a disaster for collecting data from MPI programs.
-    \item It even prevented collecting data from one task mpi programs
-    \item This was a problem because XALT used C++ programs to collect data.
-  \end{itemize}
-\end{frame}
-
-% page 25
-\begin{frame}{Disallowed system() after main()}
-  \begin{itemize}
-    \item XALT needs Hash Table (AKA Dictionaries) to store many
-      key-value pairs.
-    \item C++ has built-in hash tables via the STL (unordered-maps)
-    \item C does not.
-    \item The XALT library (libxalt\_initialize.so) is written in C
-    \item It would be a bad idea to have written the library in C++
-  \end{itemize}
-\end{frame}
-
-% page 26
-\begin{frame}{Solution}
-  \begin{itemize}
-    \item Re-write the XALT submission programs into C
-    \item And include them in libxalt\_initialize.so
-    \item Where to find a hash table implementation
-    \item uthash
-  \end{itemize}
-\end{frame}
-
-% page 27
-\begin{frame}{UTHASH and friends}
-  \begin{itemize}
-    \item UTHASH: github: https://github.com/troydhanson/uthash
-    \item UTHASH: Docs:
-      https://troydhanson.github.io/uthash/userguide.html
-    \item uthash is written in C via uthash.h (no library!)
-  \end{itemize}
-\end{frame}
-
-% page 28
-\begin{frame}[fragile]
-    \frametitle{UTHASH}
- {\tiny
-    \begin{semiverbatim}
-// One C++ stmt:
-userDT["start\_time"] = start\_time;
-
-// Becomes several C stmts:
-insert_key_double(&userDT, "start_time",  start_time);
-// -->
-void insert\_key\_double(S2D\_t** userDT, const char* name, double value)
-{
-  S2D\_t* entry = (S2D\_t *) XMALLOC(sizeof(S2D\_t));
-  utstring\_new(entry->key);
-  utstring\_bincpy(entry->key, name, strlen(name));
-
-  entry->value = value;
-
-  HASH\_ADD\_KEYPTR(hh, *userDT, utstring\_body(entry->key),
-                    utstring\_len(entry->key), entry);
-}
-    \end{semiverbatim}
-}
-\end{frame}
-
-% page 29
-\begin{frame}{UTHASH rewrite}
-  \begin{itemize}
-    \item It took a couple weeks to rewrite the submission programs
-      into routines
-    \item The only system calls that still exist are the curl calls
-      for transport.
-  \end{itemize}
-\end{frame}
-
-% page 30
-\begin{frame}{Support for filtering of packages}
-  \begin{itemize}
-    \item Python packages could be directly filtered through the
-      sitecustomize.py file
-    \item But not R or MATLAB packages
-    \item All packages collection goes through the xalt\_record\_pkg
-      program
-  \end{itemize}
-\end{frame}
-
-% page 31
-\begin{frame}[fragile]
-    \frametitle{All package filtering}
-  \begin{itemize}
-    \item New pkg\_pattern array available in XALT 2.10.37+
-    \item This goes in your site Config.py
-    \item The pattern looks like this:
-    \item Program:kind:pattern
-  \end{itemize}
- {\tiny
-    \begin{semiverbatim}
-pkg_patterns = [
-  ["SKIP",  r'^R:name:stats'],         # SKIP the R pkg named stats
-  ["SKIP",  r'^R:name:base'],          # SKIP the R pkg named base
-  ["SKIP",  r'^R:name:methods'],       # SKIP the R pkg named methods
-  ["SKIP",  r'^python:name:\_.*'],      # SKIP all python name that start with an '\_'
-  ["SKIP",  r'^python:path:[^/].*'],   # SKIP all python built-in packages
-  ["SKIP",  r'^python:path:\textbackslash{}/home'],   # SKIP all python package in user locations
-]
-    \end{semiverbatim}
-}
-
-\end{frame}
-
-% page 32
-\begin{frame}{This package filtering could be added to ingestion}
-  \begin{itemize}
-    \item The same routine could be added to ingestion.
-    \item If wanted it could be added in late May 2022.
-  \end{itemize}
-\end{frame}
 
 % page 33
 \begin{frame}{Conclusions}

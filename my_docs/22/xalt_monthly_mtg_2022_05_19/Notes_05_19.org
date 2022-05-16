@@ -6,7 +6,6 @@ Topics to discuss
 ** Distributed install of XALT on all nodes/?
    This is the way that TACC does it
 ** Single Global location accessible for all nodes?
-*
 
 * How to sites install XALT for ingestion?
 ** TACC uses a VM to store using syslog  transport style
@@ -67,7 +66,7 @@ exec_prob = pre_ingest_filter(exec_path.encode())
 * Debugging json ingestion
 ** A user on the XALT mailing list was asking for help
 ** It wasn't clear why their *.json files where not being ingested.
-* The --debug (-D) option to xalt_file_to_db.py and xalt_syslog_to_db.py was born
+* The -D option to xalt_file_to_db.py and xalt_syslog_to_db.py was born
 * Issue #46 shows a detailed discussion of a particular site having issues.
 * This issue pointed out another way that XALT had to protect itself from site installations
 ** I have to guarantee that no XALT program would be traced. 
