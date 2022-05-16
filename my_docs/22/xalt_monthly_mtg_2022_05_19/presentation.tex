@@ -96,11 +96,11 @@
 % page 6
 \begin{frame}{Dealing with different types of XALT installation}
   \begin{itemize}
-    \item This talk assumes that installing XALT users is more
+    \item This talk assumes that installing XALT for users is more
       difficult
-    \item At TACC, XALT can only be updated on Maintenance Days 
+    \item At TACC, XALT for users can only be updated on maintenance days 
     \item This may get easier in the future at TACC with rolling instations
-    \item Whereas changes to ingestion are easy.
+    \item Where as changes to ingestion are easy.
     \item We only change the XALT installation on the VM.
     \item Is this different for your site?
   \end{itemize}
@@ -122,8 +122,8 @@
     \begin{semiverbatim}
 pre_ingest_patterns = [
 #   percent   path pattern
-    [0.0,     r'.*\/foobar'],
-    [0.01,    r'.*\/BAZ'],
+    [0.0,     r'.*\textbackslash{}/foobar'],
+    [0.01,    r'.*\textbackslash{}/BAZ'],
 ]
     \end{semiverbatim}
  }
@@ -146,8 +146,8 @@ pre_ingest_patterns = [
  Array: ingestPatternA
 *----------------------*
 ================== /path/to/site/config.py ==================
-   0: 0.0000 => .*\/foobar
-   1: 0.0100 => .*\/BAZ
+   0: 0.0000 => .*\textbackslash{}/foobar
+   1: 0.0100 => .*\textbackslash{}/BAZ
 ================== src/tmpl/xalt\_config.py ==================
    2: 1.0000 => .*
     \end{semiverbatim}
@@ -208,7 +208,7 @@ if (prob <= exec\_prob):
     \begin{semiverbatim}
 # A site had in their site Config.py: 
 path_patterns = [
-  ['KEEP',  r'\/opt\/envHPC\/.*'],
+  ['KEEP',  r'\textbackslash{}/opt\textbackslash{}/envHPC\textbackslash{}/.*'],
   [ 'SKIP',  r'.*'],
   ]
     \end{semiverbatim}
@@ -244,9 +244,9 @@ path_patterns = [
  Array: pathPatternA
 *----------------------*
 ====== src/tmpl/xalt\_config.py =====
-   1: SKIP => .*\/logger
-   6: SKIP => .*\/xalt\_syshost
-   7: SKIP => .*\/xalt\_record\_pkg
+   1: SKIP => .*\textbackslash{}/logger
+   6: SKIP => .*\textbackslash{}/xalt\_syshost
+   7: SKIP => .*\textbackslash{}/xalt\_record\_pkg
 ======= Config.py ============
 ...
 ====== src/tmpl/xalt\_config.py =====
