@@ -262,7 +262,7 @@ path_patterns = [
 % page 15
 \begin{frame}{Debugging Json ingestion}
   \begin{itemize}
-    \item Issue #46 shows a detailed discussion where a site had
+    \item Issue \#46 shows a detailed discussion where a site had
       trouble ingesting.
     \item It wasn't clear where the slowdown was happening 
     \item xalt\_file\_to\_db.py and xalt\_syslog\_to\_db.py got the -D
@@ -338,11 +338,11 @@ run: /home/user/.xalt.d/run.rios.*.json
 % page 19
 \begin{frame}{Debugging Results}
   \begin{itemize}
-    \item Site used ~user/.xalt.d
+    \item Site used $\sim$user/.xalt.d
     \item BTW: This has a race condition 
-    \item The ~/.xalt.d directory has to exist first
+    \item The $\sim$/.xalt.d directory has to exist first
     \item Walking a parallel file system is slow when looking
-      ~/.xalt.d directories.
+      $\sim$/.xalt.d directories.
     \item I encourage the site to switch to a global shared location
   \end{itemize}
 \end{frame}
