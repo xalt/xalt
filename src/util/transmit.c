@@ -77,8 +77,11 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       asprintf(&fn, "%s%s",resultDir, resultFn);
 
       FILE* fp = fopen(tmpFn,"w");
-      if (fp == NULL && xalt_tracing)
-        fprintf(my_stderr,"    Unable to open: %s -> No XALT output\n", fn);
+      if (fp == NULL)
+        {
+          if (xalt_tracing)
+            fprintf(my_stderr,"    Unable to open: %s -> No XALT output\n", fn);
+        }
       else
         {
           fprintf(fp, "%s\n", jsonStr);
