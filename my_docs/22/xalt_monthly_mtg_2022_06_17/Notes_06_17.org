@@ -1,0 +1,76 @@
+Notes for 06/17 XALT talk:
+
+The idea for this talk is to discuss the changes that XALT made to
+support execution sampling and my failed attempt to use signals to
+save me.
+
+Topics to discuss:
+
+* XALT 1 only supported tracking MPI programs.
+** It did this by modifying a sites' mpirun shell script.
+* XALT 2 tracks can track all programs => filtering
+** XALT 2 uses the libelf trick of inserting code before and after main() through $LD_PRELOAD
+** See xalt.readthedocs.io title page for example of why this works
+** First line of defense to avoid being overloaded is path-filtering to ignore most programs in /bin or /usr/bin.
+
+* But that is not sufficient
+* A two hour run on a couple nodes generated over 4 million json run records
+** The job was image processing millions of files 
+** It took over 4 days to process this one day's results.
+*** Obviously this is not sustainable
+** Path filtering won't work in this case.
+** HPC systems do a lot of through-put calculations
+
+* Execution samplimg was born.
+
+* Originally XALT generated a start record and an end record (if the program finished normally)
+** But I don't want any start records for executions I don't want to keep.
+** I mean I get a start record on the "wire" and later decide I don't want to keep it.
+** This is too complicated.
+
+* XALT stopped producing start records for non-parallel executions (That is MPI tasks == 1)
+** One node OpenMP or any other threaded execution is a "scalar" => No start record.
+** This means that any scalar execution that fails in anyway will not be counted.
+** More on trying to capture failed scalar jobs later (signals...)
+
+* Sampling rules are based on how long the job ran for.
+** The longer the job took the more likely that it will be tracked.
+** Conversely short executions will more likely be skipped.
+   
+* Initially, only Scalar executions were sampled.
+** But then came somebody using many many short 4-task MPI executions to train their neutral network.
+** So MPI executions needed to be Sampled.
+** This means no start record for MPI programs as well.
+
+* Problem: Some Large MPI execution never terminate
+** Long running simulations like Weather or other calculations run 
+   how many timesteps as they can in 24 or 48 hours
+** These long running MPI simulations should be tracked by XALT.
+
+* So Large MPI programs produce a start record.
+** If they never terminate, XALT will still have a record.
+*** Sites can use the endtime of the "SLURM" job to mark the end time of the simulation if none exists.
+
+* Signal provide a possible way to handle this better    
+** Signals could provide a way to capture failed scalar program.
+** XALT has support for this
+** But it doesn't always work correctly
+
+* Some program set their own signal handler
+** And XALT's signal handler sometimes interfere with this.
+** For scalar program, I'm not as concerned with capturing failed program runs   
+** I have to sample anyway.
+
+
+* However, I had hoped to use signals to not have a start record for all MPI executions
+** There is suppose to be a signal that is sent to the program telling it that it is about to be timed-out
+** This is sent to scalar programs.  
+** But it doesn't seem to sent to actual program that MPI is running.
+
+* I have with Amit Ruhela help tried to get Intel MPI and Mvapich2 to support this but to no avail
+
+* So Large MPI executions (MPI_Tasks > 127 typically) are not sampled.  All other executions are sampled.
+
+* Future Topics
+** How XALT "hijacks" the link process to watermark program binaries 
+** Next Meeting will be July 22 at 10:00 am US Central (15:00 UTC)
