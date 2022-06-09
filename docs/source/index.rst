@@ -1,6 +1,19 @@
 XALT 2: Tracking user executables and library usage on your cluster
 ===================================================================
 
+Monthly Zoom Meeting
+====================
+
+      **NOTE**
+      XALT is holding Monthly Zoom meeting to discuss various topics.
+      Typically the third Thursday of the Month at 10:00am
+      U.S. Central (which is 15:00 UTC or 16:00 UTC in the winter
+      months). Beginners are welcome.  There is always a Q/A session at
+      the beginning. Topic announcements are sent to the XALT mailing list.
+
+      See: https://github.com/xalt/xalt/wiki for details.
+
+
 PURPOSE
 ^^^^^^^
 XALT 2 is a tool to allow a site to track user executables and library
