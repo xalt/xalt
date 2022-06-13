@@ -43,7 +43,8 @@
 
 
 \begin{document}
-\title[XALT]{Json ingestion improvements}
+\title[XALT]{XALT Changes to support Sampling and why Signaling didn't
+save me}
 \author{Robert McLay}
 \date{May 19, 2022}
 
@@ -54,342 +55,221 @@
 \begin{frame}{XALT: Outline}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
-    \item Ingestion Definition
-    \item Questions about how site install XALT and Ingestion
-    \item Execution Filtering
-    \item New Package Filtering
-    \item Debugging *.json file ingestion
-    \item Tracking Down when Json Ingestion is slow
-    \item Debugging *.json syslog ingestion
+    \item XALT 2 Can track everything 
+    \item This is bad unless you want to throw a Supercomputer to
+      collect data.
+    \item XALT has several tricks to manage the firehose of data
+    \item 1st Level Defense: Path Filtering
+    \item 2nd Level Defense: Sampling
+    \item 3rd Level Defense: Signals and why they don't work
   \end{itemize}
 \end{frame}
 
 % page 3
-\begin{frame}{Ingestion Definition}
+\begin{frame}{History}
   \begin{itemize}
-    \item XALT generates Json records (either file or syslog or ...)
-    \item Ingestion is the phase where Json records are added to the
-      MySQL DB.
+    \item XALT 1 only tracked MPI programs by modifying mpirun, ibrun etc.
+    \item XALT 2 can track everything via libelf trick
+    \item See xalt.readthedocs.io and libelf_trick in source repo on
+      how this works.
+    \item 1st line of defense: path filtering
   \end{itemize}
 \end{frame}
 
 % page 4
-\begin{frame}{How sites install XALT for users?}
+\begin{frame}[fragile]
+    \frametitle{Path Filtering}
   \begin{itemize}
-    \item XALT is installed locally on each node? (TACC does this)
-    \item XALT is in a shared global location?
-    \item Other ways?
+    \item XALT allows site to have paths to KEEP or SKIP
+    \item Your site \texttt{Config.py} has a section like this:
+    \item This allows sites to pick some program like \texttt{sed,
+        perl} to track and ignore others.
   \end{itemize}
+ {\small
+    \begin{semiverbatim}
+path\_patterns = [
+    ['PKGS',  r'.*\\/R'],
+    ['PKGS',  r'.*\\/MATLAB'],
+    ['PKGS',  r'.*\\/python[0-9.]*'],
+    ['KEEP',  r'^\\/usr\\/bin\\/sed'],
+    ['KEEP',  r'^\\/usr\\/bin\\/perl'],
+    ['SKIP',  r'^\\/usr\\/.*'],
+    ['SKIP',  r'^\\/sbin\\/.*'],
+    ['SKIP',  r'^\\/bin\\/.*'],
+    \end{semiverbatim}
+}
+
 \end{frame}
 
 % page 5
-\begin{frame}{How sites install XALT for Ingestion?}
-  \begin{itemize}
-    \item TACC uses a VM to store the syslog transmission style
-    \item We have also used a shared global file location to ingest
-      json records
-    \item Other ways?
-  \end{itemize}
+\begin{frame}{}
+    But that is not sufficient!!
 \end{frame}
-
 
 % page 6
-\begin{frame}{Dealing with different types of XALT installation}
+\begin{frame}{Not Sufficent!}
   \begin{itemize}
-    \item This talk assumes that installing XALT for users is more
-      difficult
-    \item At TACC, XALT for users can only be updated on maintenance days 
-    \item This may get easier in the future at TACC with rolling instations
-    \item Where as changes to ingestion are easy.
-    \item We only change the XALT installation on the VM.
-    \item Is this different for your site?
+    \item A two hour image processing generated millions of json records. 
+    \item It took over 4 days to process this one day's result.
+    \item Obviously, this is not sustainable.
   \end{itemize}
 \end{frame}
 
+
 % page 7
-\begin{frame}{Executable Pre-ingestion filtering}
+\begin{frame}{Not Sufficient, part 2}
   \begin{itemize}
-    \item Because some sites have trouble updating XALT for users
-    \item There was a request to allow filtering of *.json records 
-    \item These are transmitted records but not yet ingested
+    \item I thought that MPI programs were safe from thru-put
+      computing, But...
+    \item At least one group is using short time 4 task MPI prgms to
+      train a neural network.
+    \item So both MPI and NON-MPI executions must be sampled.
   \end{itemize}
 \end{frame}
 
 % page 8
 \begin{frame}[fragile]
-    \frametitle{A new python array to filter executables}
+    \frametitle{Non-MPI Programming Sampling}
+  \begin{itemize}
+    \item As I have mention before
+    \item Scalar (Non-MPI) execution can be configured to be sampled
+    \item TACC's Scalar rules are below.
+    \item Longer execution increases change of being tracked
+  \end{itemize}
  {\small
     \begin{semiverbatim}
-pre_ingest_patterns = [
-#   percent   path pattern
-    [0.0,     r'.*\textbackslash{}/foobar'],
-    [0.01,    r'.*\textbackslash{}/BAZ'],
+interval\_array = [
+    [    0.0,              0.0001 ],
+    [ 1800.0,              0.01   ],
+    [ 7200.0,              1.0    ],
+    [ sys.float\_info.max,  1.0    ]
 ]
     \end{semiverbatim}
- }
-  \begin{itemize}
-    \item This python array is converted to a flex routine
-    \item This flex code is converted to C code and compiled into a
-      shared library (libpreIngest.so)
-    \item Python allows for standard libraries be connected to python programs
-  \end{itemize}
+}
+
 \end{frame}
 
 % page 9
 \begin{frame}[fragile]
-    \frametitle{How filtering is shown in xalt\_configuration\_report}
- {\tiny
+    \frametitle{MPI Programming Sampling}
+  \begin{itemize}
+    \item TACC's MPI rules are below.
+    \item Longer execution increases change of being tracked
+  \end{itemize}
+ {\small
     \begin{semiverbatim}
-\% xalt\_configuration\_report
-...        
-*----------------------*
- Array: ingestPatternA
-*----------------------*
-================== /path/to/site/config.py ==================
-   0: 0.0000 => .*\textbackslash{}/foobar
-   1: 0.0100 => .*\textbackslash{}/BAZ
-================== src/tmpl/xalt\_config.py ==================
-   2: 1.0000 => .*
+mpi\_interval\_array = [
+    [    0.0,              0.0001 ],
+    [  900.0,              0.01   ],
+    [ 1800.0,              1.0    ],
+    [ sys.float\_info.max,  1.0    ]
+]
     \end{semiverbatim}
 }
-  \begin{itemize}
-    \item Note that src/tmpl/xalt\_config.py  provides the default
-      patterns.
-    \item So you don't have to.
-  \end{itemize}
-
 \end{frame}
 
 % page 10
-\begin{frame}[fragile]
-    \frametitle{Connecting C shared libraries w/ Python}
- {\tiny
-    \begin{semiverbatim}
-from   ctypes import *   # used to interact with C shared libraries
-
-libpath      = os.path.join(dirNm, "../lib64/libpreIngest.so")
-libpreIngest = CDLL(libpath)
-pre\_ingest\_filter = libpreIngest.pre\_ingest\_filter
-pre\_ingest\_filter.argtypes = [c\_char\_p]
-pre\_ingest\_filter.restype  = c\_double
-...
-exec\_prob = pre\_ingest\_filter(exec\_path.encode())
-prob      = random.random() # 0 < prob <= 1.0
-if (prob <= exec\_prob):
-   # ingest
-
-    \end{semiverbatim}
-}
+\begin{frame}{Consequences of Sampling}
   \begin{itemize}
-    \item The ctypes python package provide the magic.
-    \item Once the boilerplate code is provided, it is just one line
-      to find the probability to keep or not.
-    \item This is very fast filtering 
+    \item Before Sampling XALT generated both a start and end json
+      record.
+    \item XALT only produces records on the ``wire'' that are meant to
+      be saved.
+    \item $\Rightarrow$ no start record for sampled data
+    \item Can't know how long something will run at the beginning
+    \item So only an end record is produced
+    \item But this means that the program must end normally.
+    \item Means that segfault etc runs will be ignored
   \end{itemize}
 \end{frame}
 
 % page 11
-\begin{frame}[fragile]
-    \frametitle{Pkg Filtering added to Ingestion}
+\begin{frame}{Consequences of Sampling: Package Records}
   \begin{itemize}
-    \item XALT 2.10.37 added Pkg filtering to xalt\_record\_pkg prgm
-    \item It also added the same filtering to Ingestion 
-    \item It uses the same ctypes package to integrate it with python.
-    \item This means that you can filter package w/o re-installing
-      XALT everywhere.
+    \item A package record can be generated for python, R, MATLAB at
+      anytime.
+    \item A package record needs an execution record to ``hang-on''
+      to.
+    \item Instead of forcing all python and R execution to produce a
+      start record.
+    \item ALL package json records are written to /dev/shm
+    \item If chosen then json records are copied to ``wire''
+    \item If not then deleted at end of execution 
+    \item Or left to hang if python job doesn't complete.
   \end{itemize}
 \end{frame}
 
 % page 12
-\begin{frame}[fragile]
-    \frametitle{Protecting XALT against endless loops from site
-      Config.py files}
- {\tiny
-    \begin{semiverbatim}
-# A site had in their site Config.py: 
-path_patterns = [
-  ['KEEP',  r'\textbackslash{}/opt\textbackslash{}/envHPC\textbackslash{}/.*'],
-  [ 'SKIP',  r'.*'],
-  ]
-    \end{semiverbatim}
-}
+\begin{frame}{What about long running MPI simulations?}
   \begin{itemize}
-    \item where XALT was stored in /opt/envHPC/xalt/...
-    \item XALT must protect sites from tracking all xalt programs
-    \item Otherwise you can get an endless loop.
+    \item Some Large MPI execution never terminate
+    \item Long running simulations like Weather or other calculations 
+    \item These run as many timesteps as they can in 24 or 48 hours
+      job window.
+    \item They restart from the last timestep or similar results file.
   \end{itemize}
 \end{frame}
 
 % page 13
-\begin{frame}[fragile]
-    \frametitle{Preventing Endless XALT loops}
+\begin{frame}{Long running MPI Simulations (II)}
   \begin{itemize}
-    \item XALT has a system config file: src/tmpl/xalt\_config.py
-    \item Site has a Config.py file
-    \item This files control how XALT filters
-    \item The system file has head\_path\_patterns
-    \item This forces XALT to skip all XALT executabls
-    \item Also skip the unix system logger command which write to
-      syslog.
-    \item XALT uses logger in testing.
+    \item XALT has a configuration option \texttt{MPI\_ALWAYS\_RECORD} 
+    \item Typically set to 128 MPI Tasks (Site configurable)
+    \item Hopefully no-one is training Neural Networks with 128 or
+      more Tasks.
+    \item This means that XALT does NOT sample any executions 128
+      tasks or more.
+    \item Sites can use the endtime from ``SLURM'' accounting to set
+      the endtime that doesn't exist. 
   \end{itemize}
 \end{frame}
 
 % page 14
-\begin{frame}[fragile]
-    \frametitle{Configuration Report}
- {\tiny
-    \begin{semiverbatim}
-*----------------------*
- Array: pathPatternA
-*----------------------*
-====== src/tmpl/xalt\_config.py =====
-   1: SKIP => .*\textbackslash{}/logger
-   6: SKIP => .*\textbackslash{}/xalt\_syshost
-   7: SKIP => .*\textbackslash{}/xalt\_record\_pkg
-======= Config.py ============
-...
-====== src/tmpl/xalt\_config.py =====
-  21: KEEP => .*
-
-    \end{semiverbatim}
-}
+\begin{frame}{What about using Signals to capture scalar execution?}
   \begin{itemize}
-    \item Abbreviated patterns from xalt\_configuration\_report
+    \item XALT has support for capturing end records for segfault etc
+      jobs.
+    \item It is off by default now.
+    \item This works well for almost all executions
+    \item But occasionally it doesn't with some python programs
+    \item And I don't understand why.
+    \item XALT sets the signal handler first
+    \item This allows a user program to overwrite XALT's handler
+    \item But this sometime causes problems.
+    \item But since XALT has to sample scalar jobs anyway 
+    \item This is not problem worth solving
   \end{itemize}
 \end{frame}
 
 % page 15
-\begin{frame}{Debugging Json ingestion}
+\begin{frame}{What about using Signals to capture Long running MPI execution?}
   \begin{itemize}
-    \item Issue \#46 shows a detailed discussion where a site had
-      trouble ingesting.
-    \item It wasn't clear where the slowdown was happening 
-    \item xalt\_file\_to\_db.py and xalt\_syslog\_to\_db.py got the -D
-      option 
-    \item This adds debug printing for the internal steps
+    \item SLURM sends a signal to a job that it is about to timeout.
+    \item This works with scalar executions
+    \item This could be used by XALT to write the end json record
+    \item If this worked, XALT could stop writing start json records 
+    \item But it doesn't
   \end{itemize}
 \end{frame}
 
 % page 16
-\begin{frame}[fragile]
-    \frametitle{XALT searches first for link.*.json files}
- {\tiny
-    \begin{semiverbatim}
-link: /home/user/.xalt.d/link.rios.*.json
-  --> Trying to open file
-  --> Trying to load json
-  --> Sending record to xalt.link_to_db()
-  --> Trying to connect to database
-  --> Starting TRANSACTION
-  --> Searching for build_uuid in db
-  --> Trying to insert link record into db
-  --> Success: link recorded
-  --> Trying to insert objects into db
-  --> Trying to insert functions into db
-  --> Done
-    \end{semiverbatim}
-}
+\begin{frame}{Signals and MPI executions (II)}
+  \begin{itemize}
+    \item However the controlling MPI executable doesn't pass this
+      signal on to the user program.
+    \item Our resident MPI expert Amit Ruhela tried to get this to
+      work with Intel MPI and Mvapich2 but couldn't
+    \item This means that large MPI execution $>$ 127 tasks are not sampled.
+  \end{itemize}
 \end{frame}
 
 
 % page 17
-\begin{frame}[fragile]
-    \frametitle{XALT searches for run.*.json files next}
- {\tiny
-    \begin{semiverbatim}
-run: /home/user/.xalt.d/run.rios.*.json
-  --> Trying to open file
-  --> Trying to load json
-  --> Sending record to xalt.run_to_db()
-  --> Trying to connect to database
-  --> Starting TRANSACTION
-  --> Searching for run_uuid in db
-  --> Trying to insert run record into db
-  --> Success: stored full xalt_run record
-  --> Trying to insert objects into db
-  --> Trying to insert env vars into db
-  --> Done
-    \end{semiverbatim}
-}
-
-\end{frame}
-
-% page 18
-\begin{frame}[fragile]
-    \frametitle{Finally XALT searches for pkg.*.json}
- {\tiny
-    \begin{semiverbatim}
-  --> Found 10 pkg.*.json files
-
-  --> Success: pkg entry "R:bar" stored
-  --> Success: pkg entry "R:foo" stored
-  --> Success: pkg entry "R:acme" stored
-  --> Failed to record: pkgFilter blocks "R:base" 
-  --> Success: pkg entry "python:json" stored
-  --> Success: pkg entry "python:linecache" stored
-  --> Success: pkg entry "python:struct" stored
-  --> Success: pkg entry "python:base64" stored
-  --> Success: pkg entry "python:codecs" stored
-    \end{semiverbatim}
-}
-\end{frame}
-
-% page 19
-\begin{frame}{Debugging Results}
-  \begin{itemize}
-    \item Site used $\sim$user/.xalt.d
-    \item BTW: This has a race condition 
-    \item The $\sim$/.xalt.d directory has to exist first
-    \item Walking a parallel file system is slow when looking
-      $\sim$/.xalt.d directories.
-    \item I encourage the site to switch to a global shared location
-  \end{itemize}
-\end{frame}
-
-% page 20
-\begin{frame}[fragile]
-    \frametitle{Similarly for xalt\_syslog\_to\_db.py}
- {\tiny
-    \begin{semiverbatim}
-  --> Trying to connect to database
-  --> Starting TRANSACTION
-  --> Searching for build_uuid in db
-  --> Trying to insert link record into db
-  --> Success: link recorded
-  --> Trying to insert objects into db
-  --> Trying to insert functions into db
-  --> Done
-
-  --> Trying to connect to database
-  --> Starting TRANSACTION
-  --> Searching for run_uuid in db
-  --> Trying to insert run record into db
-  --> Success: stored full xalt_run record
-  --> Trying to insert objects into db
-  --> Trying to insert env vars into db
-  --> Done
-
-  --> Success: pkg entry "python:token" stored
-  --> Success: pkg entry "python:tokenize" stored
-  --> Success: pkg entry "python:linecache" stored
-    \end{semiverbatim}
-}
-  \begin{itemize}
-    \item  But there there are no file names given and the link, run and pkg
-  records are mixed together
-  \end{itemize}
-
-\end{frame}
-
-
-% page 21
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item Debugging ingestion is not practical for thousands for
-      records.
-    \item But it is useful.
-    \item Next Meeting June 16 10:00am U.S. Central (15:00 UTC)
+    \item Sampling saved XALT from the firehose of data from thru-put computing
+    \item Sampling works for Scalar and Small MPI executions
+    \item Signals won't save us.
   \end{itemize}
 \end{frame}
 
@@ -397,8 +277,12 @@ run: /home/user/.xalt.d/run.rios.*.json
 % page 22
 \begin{frame}{Future Topics?}
   \begin{itemize}
-    \item ???
-    \item Others?
+    \item How XALT ``hijack'' the link process to watermark user
+      programs.
+    \item This hijacking is not required for execution tracking
+    \item Next Meeting will be on July 22, 2022 at 10:00 am
+      U.S. Central (15:00 UTC)
+    \item This talk will be given by my Colleague Amit Ruhela.
   \end{itemize}
 \end{frame}
 %
