@@ -44,7 +44,7 @@
 
 \begin{document}
 \title[XALT]{XALT Changes to support Sampling and why Signaling didn't
-save me}
+save us}
 \author{Robert McLay}
 \date{May 19, 2022}
 
@@ -70,7 +70,7 @@ save me}
   \begin{itemize}
     \item XALT 1 only tracked MPI programs by modifying mpirun, ibrun etc.
     \item XALT 2 can track everything via libelf trick
-    \item See xalt.readthedocs.io and libelf_trick in source repo on
+    \item See xalt.readthedocs.io and libelf\_trick in source repo on
       how this works.
     \item 1st line of defense: path filtering
   \end{itemize}
@@ -248,7 +248,7 @@ mpi\_interval\_array = [
     \item This works with scalar executions
     \item This could be used by XALT to write the end json record
     \item If this worked, XALT could stop writing start json records 
-    \item But it doesn't
+    \item But it doesn't work the way I want it to.
   \end{itemize}
 \end{frame}
 
@@ -263,8 +263,17 @@ mpi\_interval\_array = [
   \end{itemize}
 \end{frame}
 
-
 % page 17
+\begin{frame}{Signals and MPI executions (III)}
+  \begin{itemize}
+    \item I not sure that this would always work anyway
+    \item The timeout signal would have to be captured by task 0.
+    \item Remember XALT does nothing on all other tasks.
+  \end{itemize}
+\end{frame}
+
+
+% page 18
 \begin{frame}{Conclusions}
   \begin{itemize}
     \item Sampling saved XALT from the firehose of data from thru-put computing
@@ -274,7 +283,7 @@ mpi\_interval\_array = [
 \end{frame}
 
 
-% page 22
+% page 19
 \begin{frame}{Future Topics?}
   \begin{itemize}
     \item How XALT ``hijack'' the link process to watermark user
@@ -282,7 +291,7 @@ mpi\_interval\_array = [
     \item This hijacking is not required for execution tracking
     \item Next Meeting will be on July 22, 2022 at 10:00 am
       U.S. Central (15:00 UTC)
-    \item This talk will be given by my Colleague Amit Ruhela.
+    \item This talk will be given by my colleague: Amit Ruhela.
   \end{itemize}
 \end{frame}
 %
