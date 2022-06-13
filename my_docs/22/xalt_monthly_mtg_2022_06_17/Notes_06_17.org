@@ -72,5 +72,5 @@ Topics to discuss:
 * So Large MPI executions (MPI_Tasks > 127 typically) are not sampled.  All other executions are sampled.
 
 * Future Topics
-** How XALT "hijacks" the link process to watermark program binaries 
+** How XALT "hijacks" the link process to watermark program binaries (not required for XALT to track) 
 ** Next Meeting will be July 22 at 10:00 am US Central (15:00 UTC)
