@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Notes**
-Please note that we do not provide patches to older versions of XALT, So please test your bug against the latest version of XALT.  
+Please note that we do not provide patches to older versions of XALT.  To speed up fixing your issue please test your bug against the latest version of XALT.  
 
 **Describe the bug**
 A clear and concise description of what the bug is.  Please state what version of Lmod you are using.
