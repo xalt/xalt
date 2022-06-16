@@ -147,3 +147,4 @@ XALT 2.10+
 	        with xalt_record_pkg.c). This uses tmpl/xalt_pkg_filter.template.
 	      * link xalt_record_pkg executable with xalt_pkg_filter.o instead of libpkgFilter.so
 	        (solving rpm build problem)
+    (2.10.38) * Allow sites to not require curl-devel.

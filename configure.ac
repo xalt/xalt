@@ -131,7 +131,7 @@ AC_ARG_WITH(trackScalarPrgms,
 
 AC_SUBST(XALT_SUPPORT_CURL)
 AC_ARG_WITH(supportCURL,
-    AC_HELP_STRING([--with-supportCURL],[Support CURL transmission style [[yes]]])
+    AC_HELP_STRING([--with-supportCURL],[Support CURL transmission style [[yes]]]),
     XALT_SUPPORT_CURL="$withval"
     XALT_SUPPORT_CURL=`echo $XALT_SUPPORT_CURL | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_SUPPORT_CURL "--with-supportCURL=ans: ans must be yes or no"
@@ -428,7 +428,6 @@ AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
                 [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
-echo XALT_SUPPORT_CURL: $XALT_SUPPORT_CURL
 if test $XALT_SUPPORT_CURL = yes ; then
   AC_CHECK_HEADER(curl/curl.h,
                   [AC_DEFINE([HAVE_CURL_CURL_H], 1,
@@ -652,7 +651,11 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
 fi
 
 AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
-AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XALT without libcurl])])
+
+echo 
+if test $XALT_SUPPORT_CURL = yes; then
+  AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XALT without libcurl])])
+fi
 
 MY_TMPDIR=`mktemp -d`
 
@@ -660,12 +663,15 @@ AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
 AC_SUBST(CURL_STR)
-for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
-  CURL_STR=`$LOCATE_SO libcurl.so$i`
-  if test "$?" -eq 0; then
-    break;
-  fi
-done
+CURL_STR=
+if test $XALT_SUPPORT_CURL = yes; then
+  for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
+    CURL_STR=`$LOCATE_SO libcurl.so$i`
+    if test "$?" -eq 0; then
+      break;
+    fi
+  done
+fi
 
 AC_SUBST(UUID_STR)
 for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
