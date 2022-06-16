@@ -668,6 +668,7 @@ XALT_CONFIG_PY
 ETC_DIR
 COMPUTE_SHA1SUM
 XALT_CMDLINE_RECORD
+XALT_SUPPORT_CURL
 XALT_SCALAR_TRACKING
 XALT_MPI_TRACKING
 XALT_GPU_TRACKING
@@ -733,6 +734,7 @@ with_xaltFilePrefix
 with_trackGPU
 with_trackMPI
 with_trackScalarPrgms
+with_supportCURL
 with_cmdlineRecord
 with_computeSHA1
 with_etcDir
@@ -1392,6 +1394,17 @@ Optional Packages:
   --with-trackMPI=ans     Track MPI executables, [[yes]]
   --with-trackScalarPrgms=ans
                           Track non-mpi executables[[yes]]
+  --with-supportCURL      Support CURL transmission style [[yes]]
+    XALT_SUPPORT_CURL="$withval"
+    XALT_SUPPORT_CURL=`echo $XALT_SUPPORT_CURL | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_SUPPORT_CURL "--with-supportCURL=ans: ans must be yes or no"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SUPPORT_CURL=$with_supportCURL" >&5
+$as_echo "XALT_SUPPORT_CURL=$with_supportCURL" >&6; }
+
+cat >>confdefs.h <<_ACEOF
+#define XALT_SUPPORT_CURL "$with_supportCURL"
+_ACEOF
+
   --with-cmdlineRecord=ans
                           Record the program's execution command line[[yes]]
   --with-computeSHA1=ans  compute SHA1 sums on libraries, [[no]]
@@ -3225,6 +3238,21 @@ fi
 
 
 
+# Check whether --with-supportCURL was given.
+if test "${with_supportCURL+set}" = set; then :
+  withval=$with_supportCURL; withval="yes"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: XALT_SUPPORT_CURL=$withval" >&5
+$as_echo "XALT_SUPPORT_CURL=$withval" >&6; }
+    XALT_SUPPORT_CURL="$withval"
+
+cat >>confdefs.h <<_ACEOF
+#define XALT_SUPPORT_CURL "$withval"
+_ACEOF
+
+fi
+
+
+
 
 # Check whether --with-cmdlineRecord was given.
 if test "${with_cmdlineRecord+set}" = set; then :
@@ -4673,16 +4701,19 @@ else
 fi
 
 
-ac_fn_c_check_header_mongrel "$LINENO" "curl/curl.h" "ac_cv_header_curl_curl_h" "$ac_includes_default"
+echo XALT_SUPPORT_CURL: $XALT_SUPPORT_CURL
+if test $XALT_SUPPORT_CURL = yes ; then
+  ac_fn_c_check_header_mongrel "$LINENO" "curl/curl.h" "ac_cv_header_curl_curl_h" "$ac_includes_default"
 if test "x$ac_cv_header_curl_curl_h" = xyes; then :
 
 $as_echo "#define HAVE_CURL_CURL_H 1" >>confdefs.h
 
 else
-  as_fn_error $? "Unable to build XALT without curl/curl.h" "$LINENO" 5
+  as_fn_error $? "Configure with --supportCURL=no if you don't want support for curl transmission style" "$LINENO" 5
 fi
 
 
+fi
 ac_fn_c_check_header_mongrel "$LINENO" "openssl/sha.h" "ac_cv_header_openssl_sha_h" "$ac_includes_default"
 if test "x$ac_cv_header_openssl_sha_h" = xyes; then :
 
@@ -6722,6 +6753,7 @@ echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRAC
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
+echo "XALT_SUPPORT_CURL...................................." : $XALT_SUPPORT_CURL
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
 echo "XALT Using DCGM......................................" : $HAVE_DCGM

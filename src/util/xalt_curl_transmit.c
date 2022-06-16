@@ -1,5 +1,7 @@
 #define  _GNU_SOURCE
-#include <curl/curl.h>
+#ifdef HAVE_CURL_CURL_H
+#   include <curl/curl.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +20,12 @@ struct response {
   size_t size;
 };
 
+#ifndef HAVE_CURL_CURL_H
+int main(int argc, char* argv[])
+{
+  return 0;
+}
+#else    
 /* Callback to handle the HTTP response */
 static size_t _write_callback(void *contents, size_t size, size_t nmemb, void *userp)
 {
@@ -122,3 +130,4 @@ int main(int argc, char* argv[])
   curl_slist_free_all(slist);
   return 0;
 }
+#endif

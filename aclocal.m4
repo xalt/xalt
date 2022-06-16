@@ -90,6 +90,7 @@ echo "XALT_SCALAR_TRACKING................................." : $XALT_SCALAR_TRAC
 echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKING
 echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
+echo "XALT_SUPPORT_CURL...................................." : $XALT_SUPPORT_CURL
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
 echo "XALT Using DCGM......................................" : $HAVE_DCGM

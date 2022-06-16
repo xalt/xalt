@@ -129,6 +129,20 @@ AC_ARG_WITH(trackScalarPrgms,
     XALT_SCALAR_TRACKING="$withval"
     AC_DEFINE_UNQUOTED(XALT_SCALAR_TRACKING, "$withval",[Track non-mpi executables]))dnl
 
+AC_SUBST(XALT_SUPPORT_CURL)
+AC_ARG_WITH(supportCURL,
+    AC_HELP_STRING([--with-supportCURL],[Support CURL transmission style [[yes]]])
+    XALT_SUPPORT_CURL="$withval"
+    XALT_SUPPORT_CURL=`echo $XALT_SUPPORT_CURL | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_SUPPORT_CURL "--with-supportCURL=ans: ans must be yes or no"
+    AC_MSG_RESULT([XALT_SUPPORT_CURL=$with_supportCURL])
+    AC_DEFINE_UNQUOTED(XALT_SUPPORT_CURL, "$with_supportCURL",[Track non-mpi executables])dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_SUPPORT_CURL=$withval])
+    XALT_SUPPORT_CURL="$withval"
+    AC_DEFINE_UNQUOTED(XALT_SUPPORT_CURL, "$withval",[Track non-mpi executables]))dnl
+
 
 AC_SUBST(XALT_CMDLINE_RECORD)
 AC_ARG_WITH(cmdlineRecord,
@@ -414,10 +428,13 @@ AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
                 [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
-AC_CHECK_HEADER(curl/curl.h,
-                [AC_DEFINE([HAVE_CURL_CURL_H], 1,
-                   [Define to 1 if you have <curl/curl.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without curl/curl.h])])
+echo XALT_SUPPORT_CURL: $XALT_SUPPORT_CURL
+if test $XALT_SUPPORT_CURL = yes ; then
+  AC_CHECK_HEADER(curl/curl.h,
+                  [AC_DEFINE([HAVE_CURL_CURL_H], 1,
+                     [Define to 1 if you have <curl/curl.h>.])],
+                  [AC_MSG_ERROR([Configure with --supportCURL=no if you don't want support for curl transmission style])])
+fi
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
