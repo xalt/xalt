@@ -121,7 +121,7 @@ case $SYSHOST in
     TRANSMISSION="file"
     TRACK_GPU="nvml"
     MYSQL="no"
-    SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
+    SETUP_CMD="module -q load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     CONF_OPTS='-with-MySQL=no CPPFLAGS=-I$TACC_CUDA_INC'
     ;;
@@ -137,7 +137,7 @@ case $SYSHOST in
     MYSQL="no"
     CONF_OPTS=''
     MAKE_OPTS=''
-    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
+    SETUP_CMD="module -q unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
   frontera)
@@ -151,7 +151,7 @@ case $SYSHOST in
     MYSQL="no"
     CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC'
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
-    SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
+    SETUP_CMD="module -q load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
     ;;
 
   longhorn)
@@ -167,7 +167,7 @@ case $SYSHOST in
     TRANSMISSION="file"
     TRACK_GPU="nvml"
     MYSQL="no"
-    SETUP_CMD="module load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
+    SETUP_CMD="module -q load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
     CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC $EXTRA'
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     ;;
@@ -184,7 +184,7 @@ case $SYSHOST in
     MYSQL="no"
     CONF_OPTS="$EXTRA"
     MAKE_OPTS=''
-    SETUP_CMD="module unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
+    SETUP_CMD="module -q unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER xalt"
     ;;
 
   *)
@@ -204,6 +204,7 @@ BASE_DIR=$base
 
 pkgName=xalt
 PKG=$BASE_DIR
+GIT_VERSION=$(git describe --always)
 
 $SUDO rm -rf $PKG/xalt/$PKG_VERSION
 
@@ -219,8 +220,8 @@ unload_xalt ()
 {
    type module > /dev/null 2>&1
    if [ "$?" = 0 ]; then
-      echo "module unload xalt"
-      module unload xalt
+      echo "module -q unload xalt"
+            module -q unload xalt
    fi
 }
 
@@ -230,9 +231,9 @@ lazy_eval ()
   eval "MAKE_OPTS=\"$MAKE_OPTS\""
 }
 
-find_git_version ()
+report_git_version ()
 {
-   GIT_VERSION=$(git describe --always)
+   echo GIT_VERSION=$GIT_VERSION
 }
 
 cmdA=("unload_xalt"
@@ -240,7 +241,7 @@ cmdA=("unload_xalt"
       "-rm -rf $PKG/xalt/$PKG_VERSION ./my_build"
       "-rm -f src/*.o src/*.d libuuid/src/*.o"
       "$SETUP_CMD"
-      "find_git_version"
+      "report_git_version"
       "lazy_eval"
       "mkdir ./my_build"
       "cd ./my_build"
