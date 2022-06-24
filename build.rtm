@@ -230,17 +230,23 @@ lazy_eval ()
   eval "MAKE_OPTS=\"$MAKE_OPTS\""
 }
 
+find_git_version ()
+{
+   GIT_VERSION=$(git describe --always)
+}
+
 cmdA=("unload_xalt"
       "-$MAKE distclean"
       "-rm -rf $PKG/xalt/$PKG_VERSION ./my_build"
       "-rm -f src/*.o src/*.d libuuid/src/*.o"
       "$SETUP_CMD"
+      "find_git_version"
       "lazy_eval"
       "mkdir ./my_build"
       "cd ./my_build"
       "../configure --prefix=$PKG --with-etcDir=$ETC_DIR --with-syshostConfig=$SYSHOST_CONF --with-config=$CONFIG --with-transmission=$TRANSMISSION --with-MySQL=$MYSQL --with-trackGPU=$TRACK_GPU $CONF_OPTS"
-      "$SUDO $MAKE -j4 $MAKE_OPTS install"
-      "$SUDO $MAKE $MAKE_OPTS Inst_TACC"
+      "$SUDO $MAKE -j4 $MAKE_OPTS GIT_VERSION=$GIT_VERSION install"
+      "$SUDO $MAKE     $MAKE_OPTS GIT_VERSION=$GIT_VERSION Inst_TACC"
       "rm -f config.log"
       )
 
