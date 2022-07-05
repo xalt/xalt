@@ -148,6 +148,8 @@ XALT 2.10+
 	      * link xalt_record_pkg executable with xalt_pkg_filter.o instead of libpkgFilter.so
 	        (solving rpm build problem)
     (2.10.38) * Allow sites to not require curl-devel.
-W.I.P.:
     (2.10.39) * Change the way that GIT_VERSION is found when installing
-    
+              * Make --with-supportCURL=no remove the -lcurl requirement
+              * Hide GNUmakefile in proj_mgmt/developer/top_level_makefile
+                and require developer to make symlink to GNUmakefile
+                
