@@ -69,6 +69,12 @@ PRE_INGEST_LIB   := $(DESTDIR)$(LIB64)/libpreIngest.so
 
 PKG_FILTER_LIB   := $(DESTDIR)$(LIB64)/libpkgFilter.so
 
+XALT_SUPPORT_CURL := @XALT_SUPPORT_CURL@
+
+ifeq ($(XALT_SUPPORT_CURL),yes)
+   LIBCURL := -lcurl
+endif
+
 
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
@@ -100,7 +106,7 @@ $(CURDIR)/__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c uti
 	$(COMPILE.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) $(LDFLAGS) -o $@ $< 
 
 $(CURL_TRANS_X): $(CURL_TRANS_OBJ)
-	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -Wl,-rpath,$(LIB64) -L$(LIB64)  -lm -lcurl
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -Wl,-rpath,$(LIB64) -L$(LIB64)  -lm $(LIBCURL)
 
 $(CRC_FAST_LIB): crcFast.c
 	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
