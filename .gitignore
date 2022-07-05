@@ -61,4 +61,4 @@ module.mk
 *.o32
 my_build
 *.log
-GNUmakefile
+./GNUmakefile
