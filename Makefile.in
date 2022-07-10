@@ -80,7 +80,7 @@ UPDATE_VERSION          := proj_mgmt/updateVersion
 
 GIT_PROG             	:= @PATH_TO_GIT@
 ifeq ($(GIT_VERSION),)
-  GIT_VERSION          	:= $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "XALT $(VERSION)"; fi)
+  GIT_VERSION          	:= $(shell if [ -n "$(GIT_PROG)" -a -d $(srcdir)/.git ]; then xaltV=`(cd $(srcdir); git describe --always)`; echo "$$xaltV"; else echo "xalt-$(VERSION)"; fi)
 endif
 VDATE		     	:= $(shell date +'%F %H:%M')
 
