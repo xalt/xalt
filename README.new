@@ -152,4 +152,4 @@ XALT 2.10+
               * Make --with-supportCURL=no remove the -lcurl requirement
               * Hide GNUmakefile in proj_mgmt/developer/top_level_makefile
                 and require developer to make symlink to GNUmakefile
-                
+    (2.10.40) * Fix bug with generating GIT_VERSION when not inside a git repo
