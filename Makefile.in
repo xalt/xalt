@@ -212,19 +212,19 @@ Inst_site_py: $(DESTDIR)$(SITE_PKG_DIR)
 	cp $(SITE_PKG) $(DESTDIR)$(SITE_PKG_DIR)/sitecustomize.py
 
 Inst_libexec: $(LIBEXEC_PKG) $(DESTDIR)$(LIBEXEC)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(LIBEXEC_PKG)" DIRLOC=$(DESTDIR)$(LIBEXEC) GIT_VERSION=$(GIT_VERSION) __installMe
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(LIBEXEC_PKG)" DIRLOC=$(DESTDIR)$(LIBEXEC) GIT_VERSION="$(GIT_VERSION)" __installMe
 
 Inst_sbin: $(SBIN_PKG) $(DESTDIR)$(SBIN)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(SBIN_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    GIT_VERSION=$(GIT_VERSION) __installMe
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(SBIN_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    GIT_VERSION="$(GIT_VERSION)" __installMe
 
 Inst_bin: $(BIN_PKG) $(DESTDIR)$(BIN)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(BIN_PKG)"     DIRLOC=$(DESTDIR)$(BIN)     GIT_VERSION=$(GIT_VERSION) __installMe
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(BIN_PKG)"     DIRLOC=$(DESTDIR)$(BIN)     GIT_VERSION="$(GIT_VERSION)" __installMe
 
 Inst_TACC: $(TACC_PKG) $(DESTDIR)$(SBIN)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(TACC_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    GIT_VERSION=$(GIT_VERSION) __installMe
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(TACC_PKG)"    DIRLOC=$(DESTDIR)$(SBIN)    GIT_VERSION="$(GIT_VERSION)" __installMe
 
 Inst_RT: $(RT_PKG) $(DESTDIR)$(SBIN)
-	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(RT_PKG)"      DIRLOC=$(DESTDIR)$(SBIN)    GIT_VERSION=$(GIT_VERSION) __installMe
+	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(RT_PKG)"      DIRLOC=$(DESTDIR)$(SBIN)    GIT_VERSION="$(GIT_VERSION)" __installMe
 
 
 Use_getent_yes:
@@ -236,7 +236,7 @@ Use_getent_yes:
 Use_argparse_no:
 
 Use_argparse_yes: $(srcdir)/contrib/argparse/argparse.py
-	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) GIT_VERSION=$(GIT_VERSION) __installMe
+	$(MAKE) $(MAKEFLAGS) -f $(CURRENT_MK) FILELIST="$^" DIRLOC=$(DESTDIR)$(LIBEXEC) GIT_VERSION="$(GIT_VERSION)" __installMe
 
 __installMe:
 	-for i in $(FILELIST); do                                     	   	  \
