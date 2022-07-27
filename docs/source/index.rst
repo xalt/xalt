@@ -87,9 +87,6 @@ executable file.  This can get more complicated.  Example code is
 included in the source.  See ./libelf_trick and type **make test** to
 see this in action.
 
-
-
-
 The actual shared library that XALT builds generates a \*.json file
 that contains the run-time, the number of task and other information
 like the shared libraries linked in with each executable that is tracked.
@@ -103,6 +100,14 @@ and Fortran programs as well.  It works with any ELF binary that is
 dynamically linked. It does not work with a static binary. XALT can
 track static binaries as long as they are linked with XALT's **ld**.
 
+
+Speed of XALT
+^^^^^^^^^^^^^
+
+XALT is designed to be as fast as possible. While the XALT library is
+attached to every program is run, it quickly decides if a run is going
+to be recorded. For those executions that are recorded.  it takes less
+than 0.01 seconds on current hardware.
 
 Installing XALT2
 ^^^^^^^^^^^^^^^^
