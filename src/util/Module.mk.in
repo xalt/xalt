@@ -86,30 +86,39 @@ libraries        += $(PRE_INGEST_LIB) $(PKG_FILTER_LIB)
 
 $(EPOCH_X) : $(EPOCH_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(EXTR_REC_X) : $(EXTR_REC_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -lm
+	chmod $(MODE_X) $@
 
 $(CFG_RPT_X): $(CFG_RPT_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(REC_PKG_X): $(REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl 
+	chmod $(MODE_X) $@
 
 $(TST_REC_PKG_X): $(TST_REC_PKG_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(SYSHOST_X): $(CURDIR)/__build__/xalt_syshost_main.o util/xalt_fgets_alloc.o util/xalt_c_utils.o
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -lm
+	chmod $(MODE_X) $@
 
 $(CURDIR)/__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c util/xalt_fgets_alloc.h util/xalt_c_utils.h
 	$(COMPILE.c) -I$(THIS_DIR) -c -DHAVE_MAIN $(OPTLVL)  $(WARN_FLAGS) $(LDFLAGS) -o $@ $< 
+	chmod $(MODE_R) $@
 
 $(CURL_TRANS_X): $(CURL_TRANS_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -Wl,-rpath,$(LIB64) -L$(LIB64)  -lm $(LIBCURL)
+	chmod $(MODE_X) $@
 
 $(CRC_FAST_LIB): crcFast.c
 	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(CURDIR)/__build__/xalt_pre_ingest_filter.c: $(CURDIR)/__build__/xalt_pre_ingest_filter.lex
 	flex -P xalt_pre_ingest -o $@ $^
@@ -117,6 +126,7 @@ $(CURDIR)/__build__/xalt_pre_ingest_filter.o: $(CURDIR)/__build__/xalt_pre_inges
 	$(COMPILE.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -Wno-unused-function -o $@ $^
 $(PRE_INGEST_LIB): $(CURDIR)/__build__/xalt_pre_ingest_filter.o 
 	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
+	chmod $(MODE_X) $@
 
 
 $(CURDIR)/__build__/xalt_pkg_filter.c: $(CURDIR)/__build__/xalt_pkg_filter.lex
@@ -125,3 +135,4 @@ $(CURDIR)/__build__/xalt_pkg_filter.o: $(CURDIR)/__build__/xalt_pkg_filter.c
 	$(COMPILE.c) -I$(THIS_DIR) $(OPTLVL) $(WARN_FLAGS) -Wno-unused-function -o $@ $^
 $(PKG_FILTER_LIB): $(CURDIR)/__build__/xalt_pkg_filter.o util/xalt_c_utils.o
 	$(LINK.c) $(CF_FLAGS) $(LIB_OPTIONS) -o $@ $^
+	chmod $(MODE_X) $@

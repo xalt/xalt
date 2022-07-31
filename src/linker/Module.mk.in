@@ -74,23 +74,30 @@ programs      	  += $(UUID_GEN_X) $(EXTR_LNKR_X) $(GEN_WTRMK_X)      \
 
 $(REALPATH_X) : $(REALPATH_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(UUID_GEN_X) : $(UUID_GEN_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl -lm
+	chmod $(MODE_X) $@
 
 $(EXTR_LNKR_X) : $(EXTR_LNKR_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(GEN_WTRMK_X) : $(GEN_WTRMK_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(LNKDATA_X) : $(LNKDATA_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -L$(LIB64) -ldl 
+	chmod $(MODE_X) $@
 
 $(RMAP_EXISTS_X) : $(RMAP_EXISTS_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 $(STRIP_LNKLIB_X) : $(STRIP_LNKLIB_OBJ)
 	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	chmod $(MODE_X) $@
 
 

@@ -97,14 +97,19 @@ __build__/lex.__XALT_host.o: __build__/lex.__XALT_host.c xalt_obfuscate.h
 
 $(LIBXALT_INIT_64): $(LIBXALT_OBJ_64)
 	$(LINK.c) $(CFLAGS) $(CF_INIT) $(LIB_OPTIONS) $(LDFLAGS) -L$(DESTDIR)$(LIB64) -o $@  $^ $(LIBDCGM) $(LIBNVML) -ldl -lm 
+	chmod $(MODE_X) $@
 
 libxalt/xalt_initialize_preload.o: libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=LD_PRELOAD -DIDX=0 -o $@ -c $<
+	chmod $(MODE_X) $@
 
 $(XALT_INIT_REGULAR): libxalt/xalt_initialize.c $(XALT_INIT_D)
 	$(COMPILE.c) $(CPPFLAGS) $(CF_INIT) -Wno-unused-variable -DSTATE=REGULAR -DIDX=1 -o $@ -c $<
+	chmod $(MODE_R) $@
+
 $(RUN_SUBMISSION_LIB): $(RUN_SUBMISSION_OBJ)
 	$(AR) $(ARFLAGS) $@ $^
+	chmod $(MODE_R) $@
 
 #----------------------------------------------------------------------
 #  32 bit 

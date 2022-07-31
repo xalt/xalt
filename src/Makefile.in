@@ -11,6 +11,8 @@ CF_INIT     	  := -I. -fPIC $(EXTRA_FLAGS)
 COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT)
 CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
 CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+MODE_X            := @MODE_X@
+MODE_R            := @MODE_R@
 
 ifeq ($(HAVE_DCGM),yes)
   LIBDCGM:=-ldl
@@ -106,7 +108,7 @@ COPY_ALL_LIBS: build_all
 	for i in $$REQ_LIBS; do                                        \
           baseNM="$${i##*/}";                                          \
 	  if [ ! -f $(DESTDIR)$(LIB64)/$$baseNM ]; then                \
-            cp $$i $(DESTDIR)$(LIB64);                                 \
+            install -m $(MODE_X) $$i $(DESTDIR)$(LIB64);               \
           fi;                                                          \
         done
 	STATUS="";                                                     \
@@ -115,7 +117,8 @@ COPY_ALL_LIBS: build_all
           realNM="$${i##*:}";                                          \
 	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64) --verbose    \
                                --base $$baseNM                         \
-                               --real $$realNM;                        \
+                               --real $$realNM                         \
+                               --mode $(MODE_X);                       \
 	  if [ $$? != 0 ]; then STATUS=FAILURE; break; fi              \
         done;                                                          \
         if [ -n "$$STATUS" ]; then                                     \
@@ -170,10 +173,10 @@ clobber:
 
 
 $(DESTDIR)$(SITE_PKG_DIR)/xalt_python_pkg_filter.py: __build__/xalt_python_pkg_filter.py
-	cp $^ $@
+	install -m $(MODE_R) $^ $@
 
 my_hostname_parser_target: 
-	cp $(MY_HOSTNAME_PARSER_LIBRARY)   $(DESTDIR)$(LIB64)/my_hostname_parser.a
+	install -m $(MODE_R) $(MY_HOSTNAME_PARSER_LIBRARY)   $(DESTDIR)$(LIB64)/my_hostname_parser.a
 
 my_hostname_parser_target_32: 
-	cp $(MY_HOSTNAME_PARSER_LIB32)     $(DESTDIR)$(LIB)/my_hostname_parser_32.a
+	install -m $(MODE_R) $(MY_HOSTNAME_PARSER_LIB32)     $(DESTDIR)$(LIB)/my_hostname_parser_32.a
