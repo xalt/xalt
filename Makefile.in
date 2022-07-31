@@ -76,7 +76,8 @@ XALT_SPEC_PATTERN       := proj_mgmt/xalt_spec_patternA.lua
 CONF_PY                 := docs/source/conf.py
 CONF_PY_PATTERN         := proj_mgmt/conf_py_update_patternA.lua
 UPDATE_VERSION          := proj_mgmt/updateVersion
-
+MODE_X                  := @MODE_X@
+MODE_R                  := @MODE_R@
 
 GIT_PROG             	:= @PATH_TO_GIT@
 ifeq ($(GIT_VERSION),)
@@ -188,7 +189,7 @@ build_compiled:
                 all
 
 inst_obfuscate:
-	cp $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)
+	install -m $(MODE_R) $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)
 
 
 echo:
@@ -200,7 +201,7 @@ echo:
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
 
 $(DIRLIST) :
-	mkdir -p $@
+	install -D -m $(MODE_X) $@
 
 LINKS: $(DIRLIST)
 	cd $(DESTDIR)$(LIB);                        \
@@ -209,7 +210,7 @@ LINKS: $(DIRLIST)
         ln -s . i386-linux-gnu
 
 Inst_site_py: $(DESTDIR)$(SITE_PKG_DIR)
-	cp $(SITE_PKG) $(DESTDIR)$(SITE_PKG_DIR)/sitecustomize.py
+	install -m $(MODE_R) $(SITE_PKG) $(DESTDIR)$(SITE_PKG_DIR)/sitecustomize.py
 
 Inst_libexec: $(LIBEXEC_PKG) $(DESTDIR)$(LIBEXEC)
 	$(MAKE) -f $(CURRENT_MK) $(MAKEFLAGS) FILELIST="$(LIBEXEC_PKG)" DIRLOC=$(DESTDIR)$(LIBEXEC) GIT_VERSION="$(GIT_VERSION)" __installMe
@@ -228,9 +229,9 @@ Inst_RT: $(RT_PKG) $(DESTDIR)$(SBIN)
 
 
 Use_getent_yes:
-	cd $(srcdir)/contrib;                                           \
-        mkdir -p  $(DESTDIR)$(PKGV)/libexec/getent;                     \
-        cp getent/*.py $(DESTDIR)$(PKGV)/libexec/getent
+	cd $(srcdir)/contrib;                                             \
+        install -m $(MODE_X) -d  $(DESTDIR)$(PKGV)/libexec/getent;        \
+        install -m $(MODE_R) getent/*.py $(DESTDIR)$(PKGV)/libexec/getent
 
 
 Use_argparse_no:
@@ -277,8 +278,9 @@ __installMe:
 	        -e 's|@xalt_prime_fmt@|$(XALT_PRIME_FMT)|g'             	  \
 	        -e 's|@xalt_enable_backgrounding@|$(ENABLE_BACKGROUNDING)|g'      \
                            < $$i > $(DIRLOC)/$$fn$$oext;                   	  \
+	        chmod $(MODE_R)     $(DIRLOC)/$$fn$$oext;                         \
             [ "$$ext" = "in" -o "$$ext" = "in.py" ] &&                            \
-               chmod +x $(DIRLOC)/$$fn$$oext;                              	  \
+               chmod $(MODE_X) $(DIRLOC)/$$fn$$oext;                          	  \
 	    true;                                                          	  \
         done
 
