@@ -395,11 +395,13 @@ if test $MODE = "user_default" ; then
    fi
    MODE_X=$(( ( ~ $umask ) & 0777 ))
    MODE_X=$(echo "ibase=10; obase=8; $MODE_X" | bc )
+   MODE_X=0$MODE_X
 else
    MODE_X=0$MODE
-fi   
+fi
 MODE_R=$(( 0666 & $MODE_X ))
 MODE_R=$(echo "ibase=10; obase=8; $MODE_R" | bc )
+MODE_R=0$MODE_R
 echo MODE_X: $MODE_X
 echo MODE_R: $MODE_R
 
