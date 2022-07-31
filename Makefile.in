@@ -201,7 +201,7 @@ echo:
 	@echo MAKEFILE_LIST: $(MAKEFILE_LIST)
 
 $(DIRLIST) :
-	install -D -m $(MODE_X) $@
+	install -d -m $(MODE_X) $@
 
 LINKS: $(DIRLIST)
 	cd $(DESTDIR)$(LIB);                        \

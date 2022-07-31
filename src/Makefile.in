@@ -117,8 +117,7 @@ COPY_ALL_LIBS: build_all
           realNM="$${i##*:}";                                          \
 	  $(COPY_LIBS_TO_XALT) --lib64 $(DESTDIR)$(LIB64) --verbose    \
                                --base $$baseNM                         \
-                               --real $$realNM                         \
-                               --mode $(MODE_X);                       \
+                               --real $$realNM;                        \
 	  if [ $$? != 0 ]; then STATUS=FAILURE; break; fi              \
         done;                                                          \
         if [ -n "$$STATUS" ]; then                                     \
