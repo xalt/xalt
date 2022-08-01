@@ -153,3 +153,6 @@ XALT 2.10+
               * Hide GNUmakefile in proj_mgmt/developer/top_level_makefile
                 and require developer to make symlink to GNUmakefile
     (2.10.40) * Fix bug with generating GIT_VERSION when not inside a git repo
+    (2.10.41) * Install permission default to umask value unless `id -u` is less than 500 where
+                umask is set to 022. Sites can override permissions with --with-mode=750 etc.
+                

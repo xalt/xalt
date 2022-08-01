@@ -246,6 +246,19 @@ phase, it will be copied to XALT's $(LIB64) directory.  This means
 that containers run on a node that has access to a GPU will be able to
 track GPU usage.
 
+Controlling the installed permissions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+XALT sets the installed permissions by the users umask unless the
+user's id (id -u) is less than 500.  In that case the umask will
+be 022.  Sites can override this choice with the configuration
+option::
+
+   --with-mode=MODE
+
+The MODE should set the executable bit for files.  In other words
+setting MODE to 755 or 750 is acceptable.  Setting modes to 644 or 640
+is not.   
 
 
 Note
