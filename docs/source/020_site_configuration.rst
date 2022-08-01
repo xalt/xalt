@@ -258,7 +258,11 @@ option::
 
 The MODE should set the executable bit for files.  In other words
 setting MODE to 755 or 750 is acceptable.  Setting modes to 644 or 640
-is not.   
+is not.  The build system knows which files need to be executable or
+not. The executable MODE is converted to a non-executable MODE by
+anding the MODE with 0666.
+
+
 
 
 Note
