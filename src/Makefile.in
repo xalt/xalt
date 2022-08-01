@@ -11,8 +11,6 @@ CF_INIT     	  := -I. -fPIC $(EXTRA_FLAGS)
 COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT)
 CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
 CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
-MODE_X            := @MODE_X@
-MODE_R            := @MODE_R@
 
 ifeq ($(HAVE_DCGM),yes)
   LIBDCGM:=-ldl

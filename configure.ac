@@ -384,26 +384,19 @@ AC_SUBST(PATH_TO_PSTREE)
 AC_SUBST(PATH_TO_UUIDGEN)
 
 AC_SUBST(USE_CONTRIB_ARGPARSE)
-AC_SUBST(MODE_X)
-AC_SUBST(MODE_R)
 
-if test $MODE = "user_default" ; then
-   uid=$(id -u)
-   umask=$(umask)
-   if test $uid -lt 500; then
-     umask=022
-   fi
-   MODE_X=$(( ( ~ $umask ) & 0777 ))
-   MODE_X=$(echo "ibase=10; obase=8; $MODE_X" | bc )
-   MODE_X=0$MODE_X
-else
-   MODE_X=0$MODE
+if test $MODE != "user_default" ; then
+  mode=0$MODE
+  EXEC_BITS=$(( 0111 & $mode ));
+  if test $EXEC_BITS = 0; then
+     echo
+     echo "MODE must have at least one executable bit set (Not MODE=$MODE)"
+     echo "Please try setting mode to 755 or 750 or 700 or similar."
+     echo
+     rm -f makefile
+     exit 1
+  fi
 fi
-MODE_R=$(( 0666 & $MODE_X ))
-MODE_R=$(echo "ibase=10; obase=8; $MODE_R" | bc )
-MODE_R=0$MODE_R
-echo MODE_X: $MODE_X
-echo MODE_R: $MODE_R
 
 
 AC_PATH_PROG(PATH_TO_GIT,git, [])

@@ -76,8 +76,10 @@ XALT_SPEC_PATTERN       := proj_mgmt/xalt_spec_patternA.lua
 CONF_PY                 := docs/source/conf.py
 CONF_PY_PATTERN         := proj_mgmt/conf_py_update_patternA.lua
 UPDATE_VERSION          := proj_mgmt/updateVersion
-MODE_X                  := @MODE_X@
-MODE_R                  := @MODE_R@
+MODE                    := @MODE@
+
+MODE_X := $(shell $(srcdir)/proj_mgmt/convert_mode.sh -x $(MODE))
+MODE_R := $(shell $(srcdir)/proj_mgmt/convert_mode.sh -r $(MODE))
 
 GIT_PROG             	:= @PATH_TO_GIT@
 ifeq ($(GIT_VERSION),)
@@ -185,7 +187,7 @@ build_compiled:
                 CRYPTO_STR=$(CRYPTO_STR) UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR)                 \
                 XALT_LOGGING_URL=$(XALT_LOGGING_URL) SITE_PKG_DIR=$(SITE_PKG_DIR)                  \
                 GPU_STR=$(GPU_STR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools           \
-	        EXTRA_FLAGS=$(EXTRA_FLAGS)                                                         \
+	        EXTRA_FLAGS=$(EXTRA_FLAGS) MODE_X=$(MODE_X) MODE_R=$(MODE_R)                       \
                 all
 
 inst_obfuscate:
