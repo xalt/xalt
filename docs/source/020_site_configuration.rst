@@ -262,9 +262,6 @@ is not.  The build system knows which files need to be executable or
 not. The executable MODE is converted to a non-executable MODE by
 anding the MODE with 0666.
 
-
-
-
 Note
 ~~~~
 
