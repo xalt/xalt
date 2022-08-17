@@ -109,6 +109,17 @@ attached to every program is run, it quickly decides if a run is going
 to be recorded. For those executions that are recorded.  it takes less
 than 0.01 seconds on current hardware.
 
+What is new in XALT
+^^^^^^^^^^^^^^^^^^^
+
+New features of XALT are described here.
+
+.. toctree::
+   :maxdepth: 1
+
+   005_whats_new
+
+
 Installing XALT2
 ^^^^^^^^^^^^^^^^
 
