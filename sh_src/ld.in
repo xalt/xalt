@@ -222,8 +222,8 @@ UUID=$(XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $UUIDGE
 WRKDIR=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
-ARGSRC=$WRKDIR/xalt.s
-ARGOBJ=$WRKDIR/xalt.o
+WATERMARK_S=$WRKDIR/xalt.s
+WATERMARK_O=$WRKDIR/xalt.o
 FUNCRAW=$WRKDIR/funcraw.txt
 FUNCLIST=$WRKDIR/funclist.txt
 
@@ -243,16 +243,16 @@ tracing_msg "COMP_T:" $COMP_T
 tracing_msg "SYSHOST:" $SYSHOST
 tracing_msg "WRKDIR:" $WRKDIR
 
-EPOCH=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$ARGSRC" "$COMP_T")
+EPOCH=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$WATERMARK_S" "$COMP_T")
 tracing_msg EPOCH "$EPOCH"
 
-# If the $ARGSRC exists then build it
+# If watermark assembly src, $WATERMARK_S, exists then build it
 # otherwise don't try to link with it.
-OBJ=$ARGOBJ
-if [ -f "$ARGSRC" ]; then
-  as $ARGSRC $BIT32FLAG -o $OBJ
+WATERMARK_OBJ=$WATERMARK_O
+if [ -f "$WATERMARK_S" ]; then
+  as $WATERMARK_S $BIT32FLAG -o $WATERMARK_OBJ
 else
-  OBJ=""
+  WATERMARK_OBJ=""
 fi
 
 trap "{ PATH=@xalt_system_path@ rm -rf $WRKDIR; }" EXIT SIGINT SIGTERM
@@ -307,8 +307,8 @@ if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
 fi
 
 
-tracing_msg "$MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1"
-             $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1
+tracing_msg "$MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1"
+             $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
@@ -322,13 +322,11 @@ EXEC=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ $REALPATH "$EXEC")
 
 
 if [ -n "$USER_TRACE" ]; then
-  PATH=@xalt_system_path@ cat $LINKLINE_OUT | PATH=@xalt_system_path@ grep -v $ARGOBJ 
+  PATH=@xalt_system_path@ cat $LINKLINE_OUT | PATH=@xalt_system_path@ grep -v $WATERMARK_O 
 fi
 
 # Get the sha1sum for the executable because it might move or disappear!
 SHA1SUM_EXEC=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ sha1sum "$EXEC")
-
-wait #-- wait for subshell to finish
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
@@ -336,6 +334,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 # Generate link data.  
 SHA1=$(echo $SHA1SUM_EXEC | sed -e 's|  */.*||')
 
-XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$ARGOBJ" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
+XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$WATERMARK_O" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
 
 exit $status
