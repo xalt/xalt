@@ -158,7 +158,6 @@ XALT 2.10+
               * Remove wait from ld.in. It is not needed anymore
               * Change names $ARGSRC and $ARGOBJ to be $WATERMARK_S and $WATERMARK_O to better
                 describe the watermark process.
-W.I.P.:
     (2.10.42) * Fix typo in ld.in about $WATERMARK_S and $WATERMARK_O.
               * Remove export LD_PRELOAD= from top of ld.in and put LD_PRELOAD= in front of
                 all XALT programs run inside ld.in
