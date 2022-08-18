@@ -312,8 +312,8 @@ status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    tracing_msg "Bad status when capturing tracing link output"
-   tracing_msg $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
-               $MY_CMD "${argA[@]}" $OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
+   tracing_msg $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
+               $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
    exit $status
 fi
 
