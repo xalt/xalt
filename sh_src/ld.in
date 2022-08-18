@@ -35,14 +35,13 @@
 ##########################################################################
 
 
-unset LD_PRELOAD
 XALT_LD_LIBRARY_PATH=@xalt_ld_library_path@
 XALT_DIR=@xalt_dir@
 XALT_BIN=$XALT_DIR/bin
 XALT_ETC_DIR=@etc_dir@
 HAVE_DCGM=@have_dcgm@
-MY_NAME=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ basename $0)
-MY_DIR=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ dirname $(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ readlink -f $0))
+MY_NAME=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ basename $0)
+MY_DIR=$( XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ dirname  $(readlink -f $0))
 
 declare -l XALT_TRANSMISSION_STYLE
 
@@ -76,8 +75,8 @@ tracing_msg "Starting ld"
 ########################################################################
 # Search for the command  and make sure that you don't find this one.
 
-EXEC_X=$(locate_command ${MY_NAME}.x)
-MY_CMD=$(find_real_command $0 $EXEC_X)
+EXEC_X=$(LD_PRELOAD= locate_command    ${MY_NAME}.x)
+MY_CMD=$(LD_PRELOAD= find_real_command $0 $EXEC_X)
 
 
 ########################################################################
@@ -214,12 +213,12 @@ STRIP_LINKLIB=$XALT_LIBEXEC_DIR/xalt_strip_linklib
 EXTRACT_LINKER=$XALT_LIBEXEC_DIR/xalt_extract_linker
 SYS_HOST_CMD=$XALT_BIN/xalt_syshost
 REALPATH=$XALT_LIBEXEC_DIR/xalt_realpath
-SYSHOST=$(XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $SYS_HOST_CMD)
+SYSHOST=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $SYS_HOST_CMD)
 UUIDGEN=$XALT_LIBEXEC_DIR/my_uuidgen
 XALT_RMAP_EXISTS=$XALT_LIBEXEC_DIR/xalt_rmap_exists
 
-UUID=$(XALT_EXECUTABLE_TRACKING=no LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $UUIDGEN)
-WRKDIR=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
+UUID=$(  XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $UUIDGEN)
+WRKDIR=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ mktemp -d "${USER}_${UUID}_XXXXXX" -p /tmp)
 LINKLINE_OUT=$WRKDIR/link.txt
 LINKLINE_ERR=$WRKDIR/link.err
 WATERMARK_S=$WRKDIR/xalt.s
@@ -238,12 +237,12 @@ SYSLIBS="-ldl -lz -lm -lc"
 XALT_INIT_ROUTINE_OBJ="$XLD/xalt_initialize_regular.$XALT_OBJ_TYPE $XLD/librun_submission.a $SYSLIBS"
   
 # Get the compiler information
-COMP_T=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $EXTRACT_LINKER)
+COMP_T=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $EXTRACT_LINKER)
 tracing_msg "COMP_T:" $COMP_T 
 tracing_msg "SYSHOST:" $SYSHOST
 tracing_msg "WRKDIR:" $WRKDIR
 
-EPOCH=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$WATERMARK_S" "$COMP_T")
+EPOCH=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_WATERMARK "$UUID" "$SYSHOST" "$WATERMARK_S" "$COMP_T")
 tracing_msg EPOCH "$EPOCH"
 
 # If watermark assembly src, $WATERMARK_S, exists then build it
@@ -264,9 +263,9 @@ function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
      if LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $XALT_RMAP_EXISTS ; then
-     	StripA=( $(LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     	StripA=( $(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= D_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
      	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
-     	XALT_EXECUTABLE_TRACKING=no $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+     	XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
      else
         touch $FUNCRAW
         tracing_msg "Function Tracking is disabled: no reserveMap files"
@@ -318,7 +317,7 @@ if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    exit $status
 fi
 
-EXEC=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ $REALPATH "$EXEC")
+EXEC=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ $REALPATH "$EXEC")
 
 
 if [ -n "$USER_TRACE" ]; then
@@ -326,7 +325,7 @@ if [ -n "$USER_TRACE" ]; then
 fi
 
 # Get the sha1sum for the executable because it might move or disappear!
-SHA1SUM_EXEC=$(XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ sha1sum "$EXEC")
+SHA1SUM_EXEC=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ sha1sum "$EXEC")
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
@@ -334,6 +333,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 # Generate link data.  
 SHA1=$(echo $SHA1SUM_EXEC | sed -e 's|  */.*||')
 
-XALT_EXECUTABLE_TRACKING=no PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$WATERMARK_O" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
+XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$WATERMARK_O" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
 
 exit $status
