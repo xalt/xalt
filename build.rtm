@@ -85,8 +85,8 @@ case $SYSHOST in
     MAKE_OPTS=""
     ;;
 
-   vmijo)
-    echo "Building on vmijo"
+   vmijo | test-vmijo )
+    echo "Building on $SYSHOST"
     SUDO="sudo"
     base="/opt/apps"
     ETC_DIR="/opt/moduleData"
