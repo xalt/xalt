@@ -3,7 +3,7 @@ import sys, os, subprocess
 
 from xalt_python_pkg_filter import keep_pkg
 
-if sys.version_info[0] == 3
+if sys.version_info[0] >= 3:
   string_types = str,
 else:
   string_types = basestring,
