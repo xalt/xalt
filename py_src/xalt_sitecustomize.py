@@ -33,7 +33,14 @@ class RecorderRTM(object):
     return True
 
   def __report(self, fullname, path):
-    if (not (isinstance(fullname,string_types) and isinstance(path,string_types))):
+    nonStrCount = 0
+    if (not isinstance(fullname,string_types)):
+      fullname = "<unknown>"
+      nonStrCount = nonStrCount+1
+    if (not isinstance(path,string_types)):
+      path = "<unknown>"
+      nonStrCount = nonStrCount+1
+    if (nonStrCount >= 2):
       return
     os.environ['LD_PRELOAD'] = ""
     cmd = self._cmd + " package_name " + fullname + " package_path " + path
