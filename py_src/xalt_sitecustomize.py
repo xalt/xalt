@@ -3,6 +3,11 @@ import sys, os, subprocess
 
 from xalt_python_pkg_filter import keep_pkg
 
+if sys.version_info[0] == 3
+  string_types = str,
+else:
+  string_types = basestring,
+
 class RecorderRTM(object):
   """
   Record all requests to load a module by name.
@@ -28,6 +33,8 @@ class RecorderRTM(object):
     return True
 
   def __report(self, fullname, path):
+    if (not (isinstance(fullname,string_types) and isinstance(path,string_types))):
+      return
     os.environ['LD_PRELOAD'] = ""
     cmd = self._cmd + " package_name " + fullname + " package_path " + path
     subprocess.call(cmd, shell=True)
