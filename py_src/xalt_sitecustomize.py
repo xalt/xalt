@@ -16,10 +16,12 @@ class RecorderRTM(object):
 
 
   def __init__(self, uuid, version_str):
+    self._cmd     = False
     self._keepT   = {}
-    self._cmd     = "XALT_EXECUTABLE_TRACKING=no " + os.path.join(os.environ.get("XALT_DIR","/unknown"),"libexec/xalt_record_pkg") + \
-                    " -u " + uuid + " program python xalt_run_uuid " + uuid + " package_version " + version_str
-    
+    xaltDir       = os.environ.get("XALT_DIR")
+    if (xaltDir):
+      self._cmd     = "XALT_EXECUTABLE_TRACKING=no " + os.path.join(xaltDir,"libexec/xalt_record_pkg") + \
+                      " -u " + uuid + " program python xalt_run_uuid " + uuid + " package_version " + version_str
     
   def __keep(self, fullname, path):
     keepT              = self._keepT
@@ -33,12 +35,14 @@ class RecorderRTM(object):
     return True
 
   def __report(self, fullname, path):
+    if (not self._cmd):
+      return
     nonStrCount = 0
     if (not isinstance(fullname,string_types)):
-      fullname = "<unknown>"
+      fullname = "'<unknown>'"
       nonStrCount = nonStrCount+1
     if (not isinstance(path,string_types)):
-      path = "<unknown>"
+      path = "'<unknown>'"
       nonStrCount = nonStrCount+1
     if (nonStrCount >= 2):
       return
