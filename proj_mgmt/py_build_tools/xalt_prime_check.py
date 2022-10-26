@@ -21,7 +21,11 @@ def isPrime(n):
   return True
             
 def main():
-  i = int(sys.argv[1])
+  try:
+    i = int(sys.argv[1])
+  except:
+    print("Prime number value must be a number not:", sys.argv[1])
+    sys.exit(1)
   if (i < 3):
     sys.exit(-1)
   

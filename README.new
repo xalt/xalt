@@ -163,7 +163,11 @@ XALT 2.10+
                 all XALT programs run inside ld.in
               * If /etc/login.defs exists then use UID_MIN as the diff between system users
                 and regular users
-W.I.P:
     (2.10.43) * Change UID_MIN default to 1000 since XALT only works on Linux based computers.
+              * Check if either fullname or path is not a string when using xalt_sitepackage.py
+    (2.10.44) * Add a try block around parsing Site's config.py file.  Report error in config.py
+                if found.
+	       
     
+
 

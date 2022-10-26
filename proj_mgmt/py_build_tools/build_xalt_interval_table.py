@@ -23,7 +23,7 @@
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, sys, re, argparse
+import os, sys, re, argparse, traceback
 
 class CmdLineOptions(object):
   """ Command line Options class """
@@ -109,8 +109,14 @@ def main():
   args = CmdLineOptions().execute()
 
   namespace = {}
-  exec(open(args.confFn).read(), namespace)
-
+  try:
+    exec(open(args.confFn).read(), namespace)
+  except:
+    print("\nUnable to parse python config file: ",args.confFn,"-> see below:\n")
+    print(traceback.format_exc())
+    print("\nExiting!\n")
+    sys.exit(1)
+    
   intervalA         = namespace.get('interval_array',      {})
   mpi_always_record = namespace.get('MPI_ALWAYS_RECORD',    2)
 
