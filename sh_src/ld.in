@@ -263,7 +263,7 @@ function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
      if LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH LD_PRELOAD= $XALT_RMAP_EXISTS ; then
-     	StripA=( $(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= D_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     	StripA=( $(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
      	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
      	XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
      else
