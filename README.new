@@ -167,7 +167,5 @@ XALT 2.10+
               * Check if either fullname or path is not a string when using xalt_sitepackage.py
     (2.10.44) * Add a try block around parsing Site's config.py file.  Report error in config.py
                 if found.
-	       
+    (2.10.45) * Fix typo in ld.in which prevented xalt_strip_linklib's from working.
     
-
-
