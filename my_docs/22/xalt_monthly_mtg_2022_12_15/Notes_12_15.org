@@ -1,0 +1,8 @@
+Notes for 12/15 XALT Meeting Presentation: Package tracking:
+
+R tracking is done by including R package tracking (better name)
+
+Python tracking is done by putting xalt's sitecustomize.py in
+$PYTHONPATH
+
+Rule:

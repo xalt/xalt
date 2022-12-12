@@ -1,0 +1,300 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data.
+
+%% page 
+%\begin{frame}{}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%\end{frame}
+%
+%% page 
+%\begin{frame}[fragile]
+%    \frametitle{}
+% {\tiny
+%    \begin{semiverbatim}
+%    \end{semiverbatim}
+%}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%
+%\end{frame}
+
+
+
+\begin{document}
+\title[XALT]{XALT Changes to support Sampling and why Signaling didn't
+save us}
+\author{Robert McLay}
+\date{June 16, 2022}
+
+% page 1
+\frame{\titlepage}
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item XALT 2 Can track everything 
+    \item This is bad unless you want to throw a Supercomputer to
+      collect data.
+    \item XALT has several tricks to manage the firehose of data
+    \item 1st Level Defense: Path Filtering
+    \item 2nd Level Defense: Sampling
+    \item 3rd Level Defense: Signals and why they don't work
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{History}
+  \begin{itemize}
+    \item XALT 1 only tracked MPI programs by modifying mpirun, ibrun etc.
+    \item XALT 2 can track everything via libelf trick
+    \item See xalt.readthedocs.io and libelf\_trick in source repo on
+      how this works.
+    \item 1st line of defense: path filtering
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}[fragile]
+    \frametitle{Path Filtering}
+  \begin{itemize}
+    \item XALT allows site to have paths to KEEP or SKIP
+    \item Your site \texttt{Config.py} has a section like this:
+    \item This allows sites to pick some program like \texttt{sed,
+        perl} to track and ignore others.
+  \end{itemize}
+ {\small
+    \begin{semiverbatim}
+path\_patterns = [
+    ['PKGS',  r'.*\\/R'],
+    ['PKGS',  r'.*\\/MATLAB'],
+    ['PKGS',  r'.*\\/python[0-9.]*'],
+    ['KEEP',  r'^\\/usr\\/bin\\/sed'],
+    ['KEEP',  r'^\\/usr\\/bin\\/perl'],
+    ['SKIP',  r'^\\/usr\\/.*'],
+    ['SKIP',  r'^\\/sbin\\/.*'],
+    ['SKIP',  r'^\\/bin\\/.*'],
+    \end{semiverbatim}
+}
+
+\end{frame}
+
+% page 5
+\begin{frame}{}
+    But that is not sufficient!!
+\end{frame}
+
+% page 6
+\begin{frame}{Not Sufficent!}
+  \begin{itemize}
+    \item A two hour image processing generated millions of json records. 
+    \item It took over 4 days to process this one day's result.
+    \item Obviously, this is not sustainable.
+  \end{itemize}
+\end{frame}
+
+
+% page 7
+\begin{frame}{Not Sufficient, part 2}
+  \begin{itemize}
+    \item I thought that MPI programs were safe from thru-put
+      computing, But...
+    \item At least one group is using short time 4 task MPI prgms to
+      train a neural network.
+    \item So both MPI and NON-MPI executions must be sampled.
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}[fragile]
+    \frametitle{Non-MPI Programming Sampling}
+  \begin{itemize}
+    \item As I have mention before
+    \item Scalar (Non-MPI) execution can be configured to be sampled
+    \item TACC's Scalar rules are below.
+    \item Longer execution increases change of being tracked
+  \end{itemize}
+ {\small
+    \begin{semiverbatim}
+interval\_array = [
+    [    0.0,              0.0001 ],
+    [ 1800.0,              0.01   ],
+    [ 7200.0,              1.0    ],
+    [ sys.float\_info.max,  1.0    ]
+]
+    \end{semiverbatim}
+}
+
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{MPI Programming Sampling}
+  \begin{itemize}
+    \item TACC's MPI rules are below.
+    \item Longer execution increases change of being tracked
+  \end{itemize}
+ {\small
+    \begin{semiverbatim}
+mpi\_interval\_array = [
+    [    0.0,              0.0001 ],
+    [  900.0,              0.01   ],
+    [ 1800.0,              1.0    ],
+    [ sys.float\_info.max,  1.0    ]
+]
+    \end{semiverbatim}
+}
+\end{frame}
+
+% page 10
+\begin{frame}{Consequences of Sampling}
+  \begin{itemize}
+    \item Before Sampling XALT generated both a start and end json
+      record.
+    \item XALT only produces records on the ``wire'' that are meant to
+      be saved.
+    \item $\Rightarrow$ no start record for sampled data
+    \item Can't know how long something will run at the beginning
+    \item So only an end record is produced
+    \item But this means that the program must end normally.
+    \item Means that segfault etc runs will be ignored
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Consequences of Sampling: Package Records}
+  \begin{itemize}
+    \item A package record can be generated for python, R, MATLAB at
+      anytime.
+    \item A package record needs an execution record to ``hang-on''
+      to.
+    \item Instead of forcing all python and R execution to produce a
+      start record.
+    \item ALL package json records are written to /dev/shm
+    \item If chosen then json records are copied to ``wire''
+    \item If not then deleted at end of execution 
+    \item Or left to hang if python job doesn't complete.
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}{What about long running MPI simulations?}
+  \begin{itemize}
+    \item Some Large MPI execution never terminate
+    \item Long running simulations like Weather or other calculations 
+    \item These run as many timesteps as they can in 24 or 48 hours
+      job window.
+    \item They restart from the last timestep or similar results file.
+  \end{itemize}
+\end{frame}
+
+% page 13
+\begin{frame}{Long running MPI Simulations (II)}
+  \begin{itemize}
+    \item XALT has a configuration option \texttt{MPI\_ALWAYS\_RECORD} 
+    \item Typically set to 128 MPI Tasks (Site configurable)
+    \item Hopefully no-one is training Neural Networks with 128 or
+      more Tasks.
+    \item This means that XALT does NOT sample any executions 128
+      tasks or more.
+    \item Sites can use the endtime from ``SLURM'' accounting to set
+      the endtime that doesn't exist. 
+  \end{itemize}
+\end{frame}
+
+% page 14
+\begin{frame}{What about using Signals to capture scalar execution?}
+  \begin{itemize}
+    \item XALT has support for capturing end records for segfault etc
+      jobs.
+    \item It is off by default now.
+    \item This works well for almost all executions
+    \item But occasionally it doesn't with some python programs
+    \item And I don't understand why.
+    \item XALT sets the signal handler first
+    \item This allows a user program to overwrite XALT's handler
+    \item But this sometime causes problems.
+    \item But since XALT has to sample scalar jobs anyway 
+    \item This is not problem worth solving
+  \end{itemize}
+\end{frame}
+
+% page 15
+\begin{frame}{What about using Signals to capture Long running MPI execution?}
+  \begin{itemize}
+    \item SLURM sends a signal to a job that it is about to timeout.
+    \item This works with scalar executions
+    \item This could be used by XALT to write the end json record
+    \item If this worked, XALT could stop writing start json records 
+    \item But it doesn't work the way I want it to.
+  \end{itemize}
+\end{frame}
+
+% page 16
+\begin{frame}{Signals and MPI executions (II)}
+  \begin{itemize}
+    \item However the controlling MPI executable doesn't pass this
+      signal on to the user program.
+    \item Our resident MPI expert Amit Ruhela tried to get this to
+      work with Intel MPI and Mvapich2 but couldn't
+    \item This means that large MPI execution $>$ 127 tasks are not sampled.
+  \end{itemize}
+\end{frame}
+
+% page 17
+\begin{frame}{Signals and MPI executions (III)}
+  \begin{itemize}
+    \item I not sure that this would always work anyway
+    \item The timeout signal would have to be captured by task 0.
+    \item Remember XALT does nothing on all other tasks.
+  \end{itemize}
+\end{frame}
+
+
+% page 18
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item Sampling saved XALT from the firehose of data from thru-put computing
+    \item Sampling works for Scalar and Small MPI executions
+    \item Signals won't save us.
+  \end{itemize}
+\end{frame}
+
+
+% page 19
+\begin{frame}{Future Topics?}
+  \begin{itemize}
+    \item How XALT ``hijack'' the link process to watermark user
+      programs.
+    \item This hijacking is not required for execution tracking
+    \item Next Meeting will be on July 22, 2022 at 10:00 am
+      U.S. Central (15:00 UTC)
+    \item This talk will be given by my colleague: Amit Ruhela.
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}
