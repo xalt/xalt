@@ -12,3 +12,23 @@ Don't send anything on the "wire" that you don't have to.
 ** That is when the import statement is run.
 ** XALT code captures that and generates a package record.
 ** There is special code that written for R and another for Python
+** This special code executes $XALT_DIR/libexec/xalt_record_pkg like this:
+
+$XALT_DIR/libexec/xalt_record_pkg program          <PROGRAM> \
+                                  xalt_run_uuid    <UUID>    \
+                                  package_name     <NAME>    \
+                                  package_version  <VERSION> \
+                                  package_path     <PATH>
+
+
+In Python <NAME> or <PATH> might be marked as the string '<unknown>'.
+But if both would be "<unknown>" then no record is produced.
+
+* How XALT handles these records
+** XALT writes all package records temporarily to /dev/shmem (if it exists or /tmp otherwise) for all package records. 
+** If this particular run is NOT sampled then at the end the records are removed from /dev/shmem
+** If this particular run is sampled then at the end the records are put on the "wire"
+
+* This way no package records are written on the "wire" if the python or R execution is not being sampled.
+
+
