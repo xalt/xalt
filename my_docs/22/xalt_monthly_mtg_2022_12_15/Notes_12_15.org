@@ -31,4 +31,32 @@ But if both would be "<unknown>" then no record is produced.
 
 * This way no package records are written on the "wire" if the python or R execution is not being sampled.
 
+* Do we wish to record every python/R package?
+** Probably not
 
+* Python Filtering:
+** This filtering is done by xalt_sitecustomize.py -> installed as...
+Here are some of the rules we use:
+  path : r"^[^/]"       # SKIP all built-in packages
+  name : r"^_"          # SKIP names that start with a underscore
+  name : r".*\."        # SKIP all names that are divided with periods: a.b.c
+  path :  r".*/.local/" # KEEP all packages installed by users
+** None of the records that match are even written to /dev/shmem
+
+* Total Filtering:
+** Filtering can by XALTdb.py (when loading into DB).  It uses a flex routine to filter both Python and R programs
+pkg_patterns = [
+  ["SKIP",  r'^R:name:stats'],         # SKIP the R pkg named stats
+  ["SKIP",  r'^R:name:base'],          # SKIP the R pkg named base
+  ["SKIP",  r'^R:name:methods'],       # SKIP the R pkg named methods
+  ["SKIP",  r'^python:name:_.*'],      # SKIP all python name that start with an underscore
+  ["SKIP",  r'^python:path:[^/].*'],   # SKIP all python built-in packages
+  ["SKIP",  r'^python:path:\/home'],   # SKIP all python package in user locations
+]
+
+* Improvement:
+** do the same filtering before shipping Json python records over "wire"
+
+* There is an opportunity to filter pkg records between end of job and writting on the wire.
+Maybe knowing all the records could afford better filtering.
+Need suggestions.
