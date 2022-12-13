@@ -11,3 +11,4 @@ Don't send anything on the "wire" that you don't have to.
 * The way that R packages and Python packages are tracked are by an import hook
 ** That is when the import statement is run.
 ** XALT code captures that and generates a package record.
+** There is special code that written for R and another for Python
