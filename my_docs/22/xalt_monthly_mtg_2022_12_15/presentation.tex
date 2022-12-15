@@ -64,7 +64,7 @@
 \begin{frame}{R tracking requires a special package to turn on tracking}
   \begin{itemize}
     \item Package developed at IU by James McCombs and Michael Scott
-    \item I need to get one of them on documentation on how to install it.
+    \item I need to get one of them for docs on how to install it.
   \end{itemize}
 \end{frame}
 
@@ -76,7 +76,7 @@
       Kenneth Hoste!)
     \item To track python imports add \$XALT\_DIR/site\_packages to
       \$PYTHONPATH
-    \item This puts XALT's sitecustomize.py which is ALWAYS read by
+    \item This puts XALT's sitecustomize.py to ALWAYS read by
       every python execution
   \end{itemize}
 \end{frame}
@@ -88,6 +88,9 @@
     \item All package tracking ``hooks'' calls the program
       xalt\_record\_pkg to interface with XALT
     \item It can be found in \$XALT\_DIR/libexec
+    \item In Python <NAME> or <PATH> might be marked as the string
+      '<unknown>'.
+    \item No tracking if both are unknown.
   \end{itemize}
  {\small
     \begin{semiverbatim}
@@ -100,16 +103,116 @@
 }
 \end{frame}
 
+% page 6
+\begin{frame}{How XALT handles package records}
+  \begin{itemize}
+    \item Since XALT won't know if the PKG prog will be tracked.
+    \item All PKG programs will produce records but!
+    \item All pkg records written to /dev/shmem or /tmp
+    \item Non sampled runs remove records at end
+    \item Sampled are send on ``wire'' (i.e. saved to db) via your
+      transport method
+    \item This way pkg records are written on the ``wire'' only when 
+      necessary
+  \end{itemize}
+\end{frame}
 
-% page 19
+% page 7
+\begin{frame}{Save every python/R package?}
+  \begin{itemize}
+    \item Probably not
+    \item There are two kinds of optional filtering
+    \item Python only (part of xalt\_sitecustomize.py)
+    \item All package filtering, available when accepting records to
+      write to DB
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}[fragile]
+    \frametitle{The block python\_pkg\_pattern}
+ {\tiny
+    \begin{semiverbatim}
+python_pkg_patterns = [
+  { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r"^[^/]"      },
+  { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r"^_"         },
+]
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item A full example can be found in Config/rtm\_config.py
+  \end{itemize}
+
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{Here are some of the rules we use}
+ {\tiny
+    \begin{semiverbatim}
+  path : r"^[^/]"       # SKIP all built-in packages
+  name : r"^_"          # SKIP names that start with a underscore
+  name : r".*\textbackslash."        # SKIP all names that are divided with periods: a.b
+  path :  r".*/.local/" # KEEP all packages installed by users
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Since this is part of sitecustomize.py
+    \item No records are even written to /dev/shmem
+  \end{itemize}
+\end{frame}
+
+
+% page 10
+\begin{frame}[fragile]
+    \frametitle{All Package Filtering}
+  \begin{itemize}
+    \item Filtering can by XALTdb.py (when loading into DB).  
+    \item It uses a flex routine to filter both Python and R programs
+    \item This block of code goes in your Config.py
+    \item I should have just provided this version first but ...
+  \end{itemize}
+ {\tiny
+    \begin{semiverbatim}
+pkg_patterns = [
+  ["SKIP",  r'^R:name:stats'],         # SKIP the R pkg named stats
+  ["SKIP",  r'^R:name:base'],          # SKIP the R pkg named base
+  ["SKIP",  r'^R:name:methods'],       # SKIP the R pkg named methods
+  ["SKIP",  r'^python:name:_.*'],      # SKIP all python name that start with an underscore
+  ["SKIP",  r'^python:path:[^/].*'],   # SKIP all python built-in packages
+  ["SKIP",  r'^python:path:\/home'],   # SKIP all python package in user locations
+]
+    \end{semiverbatim}
+}
+
+\end{frame}
+
+% page 10
+\begin{frame}{Suggested Rules for using either or both filter systems}
+  \begin{itemize}
+    \item Use the Python only filtering for a few rules
+    \item As this filtering happens for every import
+    \item Save complicated filtering for the total filtering system
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Filtering opportunity}
+  \begin{itemize}
+    \item Currently all filtering is one path or name at a time
+    \item Since all pkgs for are a single job are available at end
+    \item It could be possible to provide an array of records before
+      transmitting
+    \item I'm looking for feedback. 
+  \end{itemize}
+\end{frame}
+
+% page 12
 \begin{frame}{Future Topics?}
   \begin{itemize}
-    \item How XALT ``hijack'' the link process to watermark user
-      programs.
-    \item This hijacking is not required for execution tracking
-    \item Next Meeting will be on July 22, 2022 at 10:00 am
-      U.S. Central (15:00 UTC)
-    \item This talk will be given by my colleague: Amit Ruhela.
+    \item I'm looking for Topics.
+    \item Next Meeting will be on Jan. 19, 2023 at 10:00 am
+      U.S. Central (16:00 UTC)
   \end{itemize}
 \end{frame}
 
