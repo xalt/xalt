@@ -58,6 +58,16 @@ several bugs.  This was quite instrumental in helping make sure XALT was
 more production ready.
 
 
+James McCombs and Michael Scott, Indiana University
+    They created a R package that allows for package imports that are
+    done by R.
+
+Riccardo Murri:
+     Riccardo was kind enough to explain how python import hooks work
+     so that XALT can now track the import of python packages.
+   
+
+
 There have been many others that have provided feedback during our BoFs
 and we wish to thank them for their suggestions.  We apologize that we
 don't know everyone's name.
