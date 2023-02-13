@@ -10,7 +10,6 @@ WARN_FLAGS  	  := -Wall -Wno-unused-result -Wno-unused-value -U_FORTIFY_SOURCE -
 CF_INIT     	  := -I. -fPIC $(EXTRA_FLAGS)
 COMMON_FLGS 	  := $(OPTLVL) $(WARN_FLAGS)  $(CF_INIT)
 CXXFLAGS    	  := $(COMMON_FLGS) -std=c++11
-CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 ifeq ($(HAVE_DCGM),yes)
   LIBDCGM:=-ldl
@@ -38,6 +37,8 @@ ifneq ($(MY_HOSTNAME_PARSER),no)
       MY_HOSTNAME_PARSER_OBJ_32  := $(DESTDIR)$(LIB)/my_hostname_parser_32.a
    endif
 endif
+
+CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 # Collect information from each module in these four variables.
 # Initialize them here as simple variables.
