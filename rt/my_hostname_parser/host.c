@@ -4,7 +4,7 @@ int return_keep();
 
 int my_hostname_parser(const char *hostname)
 {
-  fprintf(stderr,"In my_hostname_parser\n");
+  /* fprintf(stderr,"In my_hostname_parser\n"); */
   return return_keep();
 }
 
