@@ -1,0 +1,20 @@
+Notes for Feb 23 XALT Zoom Mtg
+
+* Talk about how to filter based on arguments
+* In all cases the path to the program must pass the normal filtering
+  In other words, if one is filtering python arguments, then the
+  program python must pass as well.
+* One approach: Provide a interface for a C routine/C library to handle the arguments
+  This is similar to the host name filtering provided
+* Second approach provide a Flex interface for arguments
+** Take the command line and skip all arguments that start with "-"
+** Take all other arguments, try abspath conversion then hand them off to a flex pattern matching
+
+* Issues:
+** command line parsing is a PITA.  
+** Sure it is possible to do it once but keeping it up-to-date is tough!!!
+** My reading of python command line arguments are
+   That all command arguments are only flags
+   The options do not take a value.
+* Path foo will be required
+  ./try.py doesn't always expand to /full/path/try.py
