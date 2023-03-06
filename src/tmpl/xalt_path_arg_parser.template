@@ -1,0 +1,88 @@
+/* -*- c -*- */
+%{
+#include <string.h>
+#include <linux/limits.h>
+#include "xalt_obfuscate.h"
+#include "xalt_c_utils.h"
+#include "xalt_parser.h"
+#include "xalt_path_parser.h"
+%}
+
+%%
+@path_arg_patterns@
+%%
+
+int yywrap()
+{
+   return 1;
+}
+
+xalt_parser track_executable(const char * path, int argc, char* argv[])
+{
+  xalt_parser status;
+
+  status = keep_path(path);
+  path_parser_cleanup();
+  if (status != CUSTOM)
+    return status;
+
+  unsigned int sz       = 2048;
+  unsigned int path_len = strlen(path);
+  xalt_parser token;
+  int i;
+  char * pattern        = (char *) XMALLOC(sz);
+  char abspath[PATH_MAX];
+  unsigned int j;
+  
+  for (i = 1; i < argc; ++i)
+    {
+      j = 0;
+      // Ignore any arguments that start w a minus.
+      if (argv[i][0] == '-')
+        continue;
+
+      // Ignore any arguments that do not exist.
+      realpath(argv[i], abspath);
+      if (access(abspath) != F_OK)
+        continue;
+
+      unsigned int arg_len = strlen(abspath);
+      unsigned int len     = path_len + arg_len + 3;
+      if (len > sz)
+        { 
+          my_free(pattern, sz);
+          sz = len;
+          pattern = (char *) XMALLOC(sz);
+        }
+      memcpy(&pattern[j], path,    path_len); j += path_len;
+      pattern[j++] = ';';
+      memcpy(&pattern[j], abspath, arg_len ); j += arg_len;
+      pattern[j++] = '\0';
+      pattern[j++] = '\0';
+
+      YY_BUFFER_STATE buffer = yy_scan_buffer(pattern, j);
+      token = yylex();
+      yy_delete_buffer(buffer);
+
+      if (token != CONTINUE)
+        {
+          my_free(pattern, sz);
+          return token;
+        }
+    }
+
+  // If here then no pattern match found
+  // Now test path no arguments
+  j = 0;
+  memcpy(&pattern[j], path,    path_len); j += path_len;
+  pattern[j++] = ';';
+  pattern[j++] = '\0';
+  pattern[j++] = '\0';
+  YY_BUFFER_STATE buffer = yy_scan_buffer(pattern, j);
+  token = yylex();
+  yy_delete_buffer(buffer);
+  my_free(pattern, sz);
+  if (token == CONTINUE)
+    token = SKIP;
+  return token;
+}

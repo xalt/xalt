@@ -762,6 +762,12 @@ if test "$?" != 0; then
    exit 1
 fi	
 
+$PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_path_arg_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_path_arg_parser.lex
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi	
+
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex 
 if test "$?" != 0; then
    rm -f makefile

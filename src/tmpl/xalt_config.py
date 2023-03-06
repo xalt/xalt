@@ -42,6 +42,12 @@ path_patterns = [
   ['KEEP',  r'.*']
   ]
     
+path_arg_patterns = [
+  ['CONTINUE',  r'.*']
+  ]
+  
+
+
 #------------------------------------------------------------
 # XALT filter environment variables.  By default XALT will not
 # record any env. vars in the xalt_env table.

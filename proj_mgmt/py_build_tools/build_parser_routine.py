@@ -99,6 +99,7 @@ def main():
 
   hostStrA    = namespace.get('hostname_patterns',   [])
   pathStrA    = namespace.get('path_patterns',       [])
+  pathArgStrA = namespace.get('path_arg_patterns',   [])
   envStrA     = namespace.get('env_patterns',        [])
   pyPkgStrA   = namespace.get('python_pkg_patterns', [])
   pkgStrA     = namespace.get('pkg_patterns',        [])
@@ -111,6 +112,7 @@ def main():
   exec(open(args.xaltCFG).read(),             namespace)
   hostStrA.extend(    namespace.get('hostname_patterns',   []))
   pathStrA.extend(    namespace.get('path_patterns',       []))
+  pathArgStrA.extend( namespace.get('path_arg_patterns',   []))
   hd_pathStrA.extend( namespace.get('head_path_patterns',  []))
   envStrA.extend(     namespace.get('env_patterns',        []))
   pyPkgStrA.extend(   namespace.get('python_pkg_patterns', []))
@@ -130,6 +132,7 @@ def main():
   pattA = [
     ['@hostname_patterns@',        hostStrA],
     ['@path_patterns@',            pathStrA],
+    ['@path_arg_patterns@',        pathArgStrA],
     ['@head_path_patterns@',       hd_pathStrA],
     ['@env_patterns@',             envStrA],
     ['@python_pkg_patterns@',      pyPkgStrA],
