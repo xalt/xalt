@@ -20,6 +20,7 @@ RUN_SUBMISSION_O  := libxalt/run_submission.o            \
                      libxalt/walkProcessTree.o           \
                      __build__/lex.__XALT_host.o         \
                      __build__/lex.__XALT_path.o         \
+                     __build__/lex.__XALT_path_arg.o     \
                      __build__/lex.xalt_env.o            \
                      __build__/xalt_syshost.o            \
 		     util/crcFast.o                      \
@@ -84,10 +85,14 @@ __build__/lex.xalt_env.c: $(CURDIR)/__build__/xalt_env_parser.lex
 	flex -P xalt_env -o $@ $^
 __build__/lex.__XALT_path.c: $(CURDIR)/__build__/xalt_path_parser.lex
 	flex -P __XALT_path -o $@ $^
+__build__/lex.__XALT_path_arg.c: $(CURDIR)/__build__/xalt_path_arg_parser.lex
+	flex -P __XALT_path -o $@ $^
 __build__/lex.__XALT_host.c: $(CURDIR)/__build__/xalt_hostname_parser.lex
 	flex -P __XALT_host -o $@ $^
 
 __build__/lex.__XALT_path.o: __build__/lex.__XALT_path.c xalt_obfuscate.h
+	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -o $@ -c $<
+__build__/lex.__XALT_path_arg.o: __build__/lex.__XALT_path_arg.c xalt_obfuscate.h xalt_c_utils.h xalt_parser.h xalt_track_executable.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -o $@ -c $<
 __build__/lex.xalt_env.o: __build__/lex.xalt_env.c
 	$(COMPILE.c) -Wno-unused-function  -o $@ $^

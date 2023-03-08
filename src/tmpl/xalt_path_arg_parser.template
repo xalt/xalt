@@ -5,7 +5,7 @@
 #include "xalt_obfuscate.h"
 #include "xalt_c_utils.h"
 #include "xalt_parser.h"
-#include "xalt_path_parser.h"
+#include "xalt_track_executable.h"
 %}
 
 %%
