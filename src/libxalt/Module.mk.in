@@ -12,35 +12,35 @@ local_c_src   	  :=                      \
 local_c_src   	  := $(addprefix $(local_dir)/, $(local_c_src))
 
 LIBXALT_INIT_64   := $(DESTDIR)$(LIB64)/libxalt_init.so
-RUN_SUBMISSION_O  := libxalt/run_submission.o            \
-                     libxalt/buildEnvT.o                 \
-                     libxalt/buildUserT.o                \
-                     libxalt/parseProcMaps.o             \
-                     libxalt/translate.o                 \
-                     libxalt/walkProcessTree.o           \
-                     __build__/lex.__XALT_host.o         \
-                     __build__/lex.__XALT_path.o         \
-                     __build__/lex.__XALT_path_arg.o     \
-                     __build__/lex.xalt_env.o            \
-                     __build__/xalt_syshost.o            \
-		     util/crcFast.o                      \
-		     util/capture.o                   	 \
-		     util/compute_sha1.o                 \
-	             util/buildJson.o                    \
-	             util/buildXALTRecordT.o             \
-	             util/build_uuid.o                   \
-	             util/epoch.o                        \
-	             util/insert.o                       \
-	             util/process.o                      \
-                     util/transmit.o                     \
-                     util/xalt_c_utils.o                 \
-                     util/xalt_dir.o                   	 \
-                     util/xalt_fgets_alloc.o             \
-                     util/xalt_tmpdir.o                	 \
-                     util/xalt_vendor_note.o           	 \
+RUN_SUBMISSION_O  := libxalt/run_submission.o                 \
+                     libxalt/buildEnvT.o                      \
+                     libxalt/buildUserT.o                     \
+                     libxalt/parseProcMaps.o                  \
+                     libxalt/translate.o                      \
+                     libxalt/walkProcessTree.o                \
+                     __build__/lex.__XALT_host.o              \
+                     __build__/lex.__XALT_path.o              \
+                     __build__/lex.__XALT_track_executable.o  \
+                     __build__/lex.xalt_env.o                 \
+                     __build__/xalt_syshost.o                 \
+		     util/crcFast.o                           \
+		     util/capture.o                   	      \
+		     util/compute_sha1.o                      \
+	             util/buildJson.o                         \
+	             util/buildXALTRecordT.o                  \
+	             util/build_uuid.o                        \
+	             util/epoch.o                             \
+	             util/insert.o                            \
+	             util/process.o                           \
+                     util/transmit.o                          \
+                     util/xalt_c_utils.o                      \
+                     util/xalt_dir.o                   	      \
+                     util/xalt_fgets_alloc.o                  \
+                     util/xalt_tmpdir.o                	      \
+                     util/xalt_vendor_note.o                  \
                      util/xalt_quotestring.o
 
-RUN_SUBMISSION_OBJ:= $(RUN_SUBMISSION_O)                 \
+RUN_SUBMISSION_OBJ:= $(RUN_SUBMISSION_O)                      \
                      $(MY_HOSTNAME_PARSER_OBJ)
 
 LIBXALT_INIT_32   := $(DESTDIR)$(LIB)/libxalt_init.so
@@ -85,14 +85,14 @@ __build__/lex.xalt_env.c: $(CURDIR)/__build__/xalt_env_parser.lex
 	flex -P xalt_env -o $@ $^
 __build__/lex.__XALT_path.c: $(CURDIR)/__build__/xalt_path_parser.lex
 	flex -P __XALT_path -o $@ $^
-__build__/lex.__XALT_path_arg.c: $(CURDIR)/__build__/xalt_path_arg_parser.lex
-	flex -P __XALT_path -o $@ $^
+__build__/lex.__XALT_track_executable.c: $(CURDIR)/__build__/xalt_track_executable_parser.lex
+	flex -P __XALT_path_arg -o $@ $^
 __build__/lex.__XALT_host.c: $(CURDIR)/__build__/xalt_hostname_parser.lex
 	flex -P __XALT_host -o $@ $^
 
-__build__/lex.__XALT_path.o: __build__/lex.__XALT_path.c xalt_obfuscate.h
+__build__/lex.__XALT_path.o: __build__/lex.__XALT_path.c xalt_obfuscate.h xalt_c_utils.h xalt_parser.h xalt_path_parser.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -o $@ -c $<
-__build__/lex.__XALT_path_arg.o: __build__/lex.__XALT_path_arg.c xalt_obfuscate.h xalt_c_utils.h xalt_parser.h xalt_track_executable.h
+__build__/lex.__XALT_track_executable.o: __build__/lex.__XALT_track_executable.c xalt_obfuscate.h xalt_c_utils.h xalt_parser.h xalt_track_executable.h xalt_path_parser.h
 	$(COMPILE.c)  -Wno-unused-function $(CF_INIT) -o $@ -c $<
 __build__/lex.xalt_env.o: __build__/lex.xalt_env.c
 	$(COMPILE.c) -Wno-unused-function  -o $@ $^
