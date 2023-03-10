@@ -1,4 +1,5 @@
-AC_INIT(Makefile.in)
+AC_INIT
+AC_CONFIG_SRCDIR([Makefile.in])
 AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/util/xalt_header.h.in)
 AC_PROG_CC
 AC_PREFIX_DEFAULT(/usr/local)
@@ -29,7 +30,7 @@ VALID_YN ()
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AC_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
+    AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
     AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs,curl)])dnl
@@ -41,7 +42,7 @@ AC_ARG_WITH(transmission,
 
 AC_SUBST(XALT_LOGGING_URL)
 AC_ARG_WITH(xaltLoggingUrl,
-    AC_HELP_STRING([--with-xaltLoggingUrl=ans],[Logging URL for transmission [[]]]),
+    AS_HELP_STRING([--with-xaltLoggingUrl=ans],[Logging URL for transmission [[]]]),
     XALT_LOGGING_URL="$withval"
     AC_MSG_RESULT([XALT_LOGGING_URL=$with_xaltLoggingUrl])
     AC_DEFINE_UNQUOTED(XALT_LOGGING_URL, "$with_xaltLoggingUrl",[Logging URL for transmission])dnl
@@ -53,7 +54,7 @@ AC_ARG_WITH(xaltLoggingUrl,
 
 AC_SUBST(XALT_FUNCTION_TRACKING)
 AC_ARG_WITH(functionTracking,
-    AC_HELP_STRING([--with-functionTracking=ans],[Track functions from modules [[yes]]]),
+    AS_HELP_STRING([--with-functionTracking=ans],[Track functions from modules [[yes]]]),
     XALT_FUNCTION_TRACKING="$withval"
     XALT_FUNCTION_TRACKING=`echo $XALT_FUNCTION_TRACKING | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_FUNCTION_TRACKING "--with-functionTracking=ans: ans must be yes or no"
@@ -67,7 +68,7 @@ AC_ARG_WITH(functionTracking,
 
 AC_SUBST(XALT_FILE_PREFIX)
 AC_ARG_WITH(xaltFilePrefix,
-    AC_HELP_STRING([--with-xaltFilePrefix=ans],[Prefix where the json files are written [[$HOME]]]),
+    AS_HELP_STRING([--with-xaltFilePrefix=ans],[Prefix where the json files are written [[$HOME]]]),
     XALT_FILE_PREFIX="$withval"
     AC_MSG_RESULT([XALT_FILE_PREFIX=$with_xaltFilePrefix])
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$with_xaltFilePrefix",[Prefix where the json files are written])dnl
@@ -79,7 +80,7 @@ AC_ARG_WITH(xaltFilePrefix,
 
 AC_SUBST(XALT_GPU_TRACKING_STYLE)
 AC_ARG_WITH(trackGPU,
-    AC_HELP_STRING([--with-trackGPU=ans],[Track GPU executables {yes(nvml),no,dcgm,nvml}, [[no]]]),
+    AS_HELP_STRING([--with-trackGPU=ans],[Track GPU executables {yes(nvml),no,dcgm,nvml}, [[no]]]),
     XALT_GPU_TRACKING_STYLE="$withval"
     XALT_GPU_TRACKING_STYLE=`echo $XALT_GPU_TRACKING_STYLE | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     if test $XALT_GPU_TRACKING_STYLE = yes; then
@@ -116,7 +117,7 @@ fi
 
 AC_SUBST(XALT_MPI_TRACKING)
 AC_ARG_WITH(trackMPI,
-    AC_HELP_STRING([--with-trackMPI=ans],[Track MPI executables, [[yes]]]),
+    AS_HELP_STRING([--with-trackMPI=ans],[Track MPI executables, [[yes]]]),
     XALT_MPI_TRACKING="$withval"
     XALT_MPI_TRACKING=`echo $XALT_MPI_TRACKING | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_MPI_TRACKING "--with-trackMPI=ans: ans must be yes or no"
@@ -130,7 +131,7 @@ AC_ARG_WITH(trackMPI,
 
 AC_SUBST(XALT_SCALAR_TRACKING)
 AC_ARG_WITH(trackScalarPrgms,
-    AC_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi executables[[yes]]]),
+    AS_HELP_STRING([--with-trackScalarPrgms=ans],[Track non-mpi executables[[yes]]]),
     XALT_SCALAR_TRACKING="$withval"
     XALT_SCALAR_TRACKING=`echo $XALT_SCALAR_TRACKING | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_SCALAR_TRACKING "--with-trackScalarPrgms=ans: ans must be yes or no"
@@ -144,7 +145,7 @@ AC_ARG_WITH(trackScalarPrgms,
 
 AC_SUBST(XALT_SUPPORT_CURL)
 AC_ARG_WITH(supportCURL,
-    AC_HELP_STRING([--with-supportCURL],[Support CURL transmission style [[yes]]]),
+    AS_HELP_STRING([--with-supportCURL],[Support CURL transmission style [[yes]]]),
     XALT_SUPPORT_CURL="$withval"
     XALT_SUPPORT_CURL=`echo $XALT_SUPPORT_CURL | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_SUPPORT_CURL "--with-supportCURL=ans: ans must be yes or no"
@@ -159,7 +160,7 @@ AC_ARG_WITH(supportCURL,
 
 AC_SUBST(XALT_CMDLINE_RECORD)
 AC_ARG_WITH(cmdlineRecord,
-    AC_HELP_STRING([--with-cmdlineRecord=ans],[Record the program's execution command line[[yes]]]),
+    AS_HELP_STRING([--with-cmdlineRecord=ans],[Record the program's execution command line[[yes]]]),
     XALT_CMDLINE_RECORD="$withval"
     XALT_CMDLINE_RECORD=`echo $XALT_CMDLINE_RECORD | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_CMDLINE_RECORD "--with-cmdlineRecord=ans: ans must be yes or no"
@@ -173,7 +174,7 @@ AC_ARG_WITH(cmdlineRecord,
 
 AC_SUBST(COMPUTE_SHA1SUM)
 AC_ARG_WITH(computeSHA1,
-    AC_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sums on libraries, [[no]]]),
+    AS_HELP_STRING([--with-computeSHA1=ans],[compute SHA1 sums on libraries, [[no]]]),
     COMPUTE_SHA1SUM="$withval"
     COMPUTE_SHA1SUM=`echo $COMPUTE_SHA1SUM | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $COMPUTE_SHA1SUM "--with-computeSHA1=ans: ans must be yes or no"
@@ -187,7 +188,7 @@ AC_ARG_WITH(computeSHA1,
 
 AC_SUBST(ETC_DIR)
 AC_ARG_WITH(etcDir,
-    AC_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
+    AS_HELP_STRING([--with-etcDir=ans],[Directory where xalt_db.conf and reverseMapD can be found [[.]]]),
     ETC_DIR="$withval"
     AC_MSG_RESULT([ETC_DIR=$with_etcDir])
     AC_DEFINE_UNQUOTED(ETC_DIR, "$with_etcDir",[Directory where xalt_db.conf and reverseMapD can be found])dnl
@@ -199,7 +200,7 @@ AC_ARG_WITH(etcDir,
 
 AC_SUBST(XALT_CONFIG_PY)
 AC_ARG_WITH(config,
-    AC_HELP_STRING([--with-config=ans],[A python file defining the accept, ignore, hostname pattern lists [[NO DEFAULT]]]),
+    AS_HELP_STRING([--with-config=ans],[A python file defining the accept, ignore, hostname pattern lists [[NO DEFAULT]]]),
     XALT_CONFIG_PY="$withval"
     AC_MSG_RESULT([XALT_CONFIG_PY=$with_config])
     AC_DEFINE_UNQUOTED(XALT_CONFIG_PY, "$with_config",[A python file defining the site configuration])dnl
@@ -211,7 +212,7 @@ AC_ARG_WITH(config,
 
 AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
-    AC_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient/MySQL-python module [[yes]]]),
+    AS_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient/MySQL-python module [[yes]]]),
     MYSQLDB="$withval"
     MYSQLDB=`echo $MYSQLDB | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $MYSQLDB "--with-MySQL=ans: ans must be yes or no"
@@ -225,7 +226,7 @@ AC_ARG_WITH(MySQL,
 
 AC_SUBST(SYSTEM_PATH)
 AC_ARG_WITH(systemPath,
-    AC_HELP_STRING([--with-systemPath=[ans]],[]),
+    AS_HELP_STRING([--with-systemPath=[ans]],[]),
     SYSTEM_PATH="$withval"
     AC_MSG_RESULT([SYSTEM_PATH=$with_systemPath])
     AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$with_systemPath",[The system path that XALT will use (typically /usr/bin:/bin)])dnl
@@ -237,7 +238,7 @@ AC_ARG_WITH(systemPath,
 
 AC_SUBST(SYSLOG_MSG_SZ)
 AC_ARG_WITH(syslogMsgSz,
-    AC_HELP_STRING([--with-syslogMsgSz=ans],[]),
+    AS_HELP_STRING([--with-syslogMsgSz=ans],[]),
     SYSLOG_MSG_SZ="$withval"
     AC_MSG_RESULT([SYSLOG_MSG_SZ=$with_syslogMsgSz])
     AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$with_syslogMsgSz")dnl
@@ -249,7 +250,7 @@ AC_ARG_WITH(syslogMsgSz,
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
-    AC_HELP_STRING([--with-syshostConfig=ans],[How to determine syshost[[no default]]]),
+    AS_HELP_STRING([--with-syshostConfig=ans],[How to determine syshost[[no default]]]),
     SYSHOST_CONFIG="$withval"
     AC_MSG_RESULT([SYSHOST_CONFIG=$with_syshostConfig])
     AC_DEFINE_UNQUOTED(SYSHOST_CONFIG, "$with_syshostConfig",[How to determine syshost])dnl
@@ -261,7 +262,7 @@ AC_ARG_WITH(syshostConfig,
 
 AC_SUBST(MY_HOSTNAME_PARSER)
 AC_ARG_WITH(hostnameParser,
-    AC_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser c_file:file.c or library:file_64.a or library:file_64.a:file_32.a [[no]]]),
+    AS_HELP_STRING([--with-hostnameParser=ans],[Replace built-in lex based hostname parser c_file:file.c or library:file_64.a or library:file_64.a:file_32.a [[no]]]),
     MY_HOSTNAME_PARSER="$withval"
     AC_MSG_RESULT([MY_HOSTNAME_PARSER=$with_hostnameParser])
     AC_DEFINE_UNQUOTED(MY_HOSTNAME_PARSER, "$with_hostnameParser",[Replace built-in lex based hostname parser])dnl
@@ -273,7 +274,7 @@ AC_ARG_WITH(hostnameParser,
 
 AC_SUBST(STATIC_LIBS)
 AC_ARG_WITH(staticLibs,
-    AC_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only dcgm) [[no]]]),
+    AS_HELP_STRING([--with-staticLibs=ans],[Link with static libraries (currently only dcgm) [[no]]]),
     STATIC_LIBS="$withval"
     STATIC_LIBS=`echo $STATIC_LIBS | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $STATIC_LIBS "--with-staticLibs=ans: ans must be yes or no"
@@ -287,7 +288,7 @@ AC_ARG_WITH(staticLibs,
 
 AC_SUBST(PRELOAD_ONLY)
 AC_ARG_WITH(preloadOnly,
-    AC_HELP_STRING([--with-preloadOnly=ans],[Only use XALT in preload only mode[[yes]]]),
+    AS_HELP_STRING([--with-preloadOnly=ans],[Only use XALT in preload only mode[[yes]]]),
     PRELOAD_ONLY="$withval"
     PRELOAD_ONLY=`echo $PRELOAD_ONLY | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $PRELOAD_ONLY "--with-preloadOnly=ans: ans must be yes or no"
@@ -301,7 +302,7 @@ AC_ARG_WITH(preloadOnly,
 
 AC_SUBST(SITE_CONTROLLED_PREFIX)
 AC_ARG_WITH(siteControlledPrefix,
-    AC_HELP_STRING([--with-siteControlledPrefix=ans],[A site controlled prefix, [[no]]]),
+    AS_HELP_STRING([--with-siteControlledPrefix=ans],[A site controlled prefix, [[no]]]),
     SITE_CONTROLLED_PREFIX="$withval"
     SITE_CONTROLLED_PREFIX=`echo $SITE_CONTROLLED_PREFIX | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $SITE_CONTROLLED_PREFIX "--with-siteControlledPrefix=ans: ans must be yes or no"
@@ -315,7 +316,7 @@ AC_ARG_WITH(siteControlledPrefix,
 
 AC_SUBST(BIT32)
 AC_ARG_WITH(32bit,
-    AC_HELP_STRING([--with-32bit=ans],[Allow for 32 bits executables[[yes]]]),
+    AS_HELP_STRING([--with-32bit=ans],[Allow for 32 bits executables[[yes]]]),
     BIT32="$withval"
     BIT32=`echo $BIT32 | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $BIT32 "--with-32bit=ans: ans must be yes or no"
@@ -329,7 +330,7 @@ AC_ARG_WITH(32bit,
 
 AC_SUBST(XALT_TMPDIR)
 AC_ARG_WITH(tmpdir,
-    AC_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/dev/shm]]]),
+    AS_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/dev/shm]]]),
     XALT_TMPDIR="$withval"
     AC_MSG_RESULT([XALT_TMPDIR=$with-tmpdir])
     AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$with-tmpdir")dnl
@@ -341,7 +342,7 @@ AC_ARG_WITH(tmpdir,
 
 AC_SUBST(XALT_PRIME_NUMBER)
 AC_ARG_WITH(primeNumber,
-    AC_HELP_STRING([--with-primeNumber=ans],[The prime number of directories when using XALT_FILE_PREFIX, [[997]]]),
+    AS_HELP_STRING([--with-primeNumber=ans],[The prime number of directories when using XALT_FILE_PREFIX, [[997]]]),
     XALT_PRIME_NUMBER="$withval"
     AC_MSG_RESULT([XALT_PRIME_NUMBER=$with-primeNumber])
     AC_DEFINE_UNQUOTED(XALT_PRIME_NUMBER, "$with-primeNumber")dnl
@@ -353,7 +354,7 @@ AC_ARG_WITH(primeNumber,
 
 AC_SUBST(XALT_SIGNAL_HANDLER)
 AC_ARG_WITH(signalHandler,
-    AC_HELP_STRING([--with-signalHandler=ans],[Have XALT capture executions that fail with a signal: [[no]]]),
+    AS_HELP_STRING([--with-signalHandler=ans],[Have XALT capture executions that fail with a signal: [[no]]]),
     XALT_SIGNAL_HANDLER="$withval"
     AC_MSG_RESULT([XALT_SIGNAL_HANDLER=$with-signalHandler])
     AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$with-signalHandler")dnl
@@ -814,11 +815,12 @@ fi
 
   
 
-AC_OUTPUT(makefile:Makefile.in                                       \
+AC_CONFIG_FILES([makefile:Makefile.in                                       \
           src/__build__/xalt_config.h:src/util/xalt_config.h.in      \
           src/makefile:src/Makefile.in                               \
           src/libxalt/module.mk:src/libxalt/Module.mk.in             \
           src/linker/module.mk:src/linker/Module.mk.in               \
-          src/util/module.mk:src/util/Module.mk.in)
+          src/util/module.mk:src/util/Module.mk.in])
+AC_OUTPUT
 
 AX_SUMMARIZE_CONFIG

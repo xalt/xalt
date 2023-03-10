@@ -2,6 +2,7 @@
 %{
 #include <string.h>
 #include "xalt_obfuscate.h"
+#include "xalt_c_utils.h"
 #include "xalt_path_parser.h"
 
 static char * strbuf   = NULL;

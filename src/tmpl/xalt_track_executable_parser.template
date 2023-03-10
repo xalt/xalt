@@ -44,7 +44,7 @@ xalt_parser track_executable(const char * path, int argc, char* argv[])
 
       // Ignore any arguments that do not exist.
       realpath(argv[i], abspath);
-      if (access(abspath) != F_OK)
+      if (access(abspath, F_OK) != -1)
         continue;
 
       unsigned int arg_len = strlen(abspath);
