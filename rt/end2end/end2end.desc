@@ -192,6 +192,12 @@ test_descript = {
      displayThis "Test python2 package recording (seq 22)"
      python2 $(testDir)/pkg_tracking.py --seq 22
 
+     displayThis "Test python3 path arg parsing (seq 23)"
+     python3 ../../data/hello_world.py  --seq 23
+
+     displayThis "Test python3 path arg parsing (seq 24)"
+     python3 ../../share/hello_world.py --seq 24
+
      PYTHONPATH=$OLD_PY_PATH
 
 
@@ -221,7 +227,7 @@ test_descript = {
 
 
      displayThis "check_entries_db.py"
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 18 --runs 23 --pkgs 13 --uuid 16
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 18 --runs 24 --pkgs 13 --uuid 16
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

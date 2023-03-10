@@ -1,12 +1,14 @@
 /* -*- c -*- */
 %{
 #include <string.h>
+#include <stdio.h>
 #include <linux/limits.h>
 #include "xalt_obfuscate.h"
 #include "xalt_c_utils.h"
 #include "xalt_parser.h"
 #include "xalt_track_executable.h"
 #include "xalt_path_parser.h"
+#include "xalt_debug_macros.h"
 %}
 
 %%
@@ -18,33 +20,34 @@ int yywrap()
    return 1;
 }
 
-xalt_parser track_executable(const char * path, int argc, char* argv[])
+xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char* argv[])
 {
-  xalt_parser status;
-
+  xalt_parser  token;
   status = keep_path(path);
   path_parser_cleanup();
-  if (status != CUSTOM)
-    return status;
+  if (token != CUSTOM)
+    return token;
 
   unsigned int sz       = 2048;
   unsigned int path_len = strlen(path);
-  xalt_parser token;
   int i;
   char * pattern        = (char *) XMALLOC(sz);
   char abspath[PATH_MAX];
   unsigned int j;
   
+  DEBUG(stderr,"    track_executable():\n");
   for (i = 1; i < argc; ++i)
     {
+      DEBUG(stderr,"    -> arg: %d: value: \"%s\"\n", i, argv[i]);
       j = 0;
       // Ignore any arguments that start w a minus.
       if (argv[i][0] == '-')
         continue;
 
-      // Ignore any arguments that do not exist.
+      // Ignore any "file" arguments that do not exist.
       realpath(argv[i], abspath);
-      if (access(abspath, F_OK) != -1)
+
+      if (! (access(abspath, F_OK) != -1))
         continue;
 
       unsigned int arg_len = strlen(abspath);
@@ -65,6 +68,7 @@ xalt_parser track_executable(const char * path, int argc, char* argv[])
       token = yylex();
       yy_delete_buffer(buffer);
 
+      DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %d\n", pattern, token);
       if (token != CONTINUE)
         {
           my_free(pattern, sz);

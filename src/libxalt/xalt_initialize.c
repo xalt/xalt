@@ -256,12 +256,13 @@ extern char **environ;
 void myinit(int argc, char **argv)
 {
   int    i;
-  int    produce_strt_rec = 0;
   char * p;
   char * p_dbg;
-  char * cmdline         = NULL;
-  char * ld_preload_strp = NULL;
-  char * pid_str         = NULL;
+  int    produce_strt_rec = 0;
+  int    debugMe          = 0;
+  char * cmdline          = NULL;
+  char * ld_preload_strp  = NULL;
+  char * pid_str          = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[FULLDATESZ];
   const char * v;
@@ -298,8 +299,9 @@ void myinit(int argc, char **argv)
 
   if (xalt_run_tracing && my_rank == 0)
     {
+      debugMe = 1;
       get_abspath(exec_path,sizeof(exec_path));
-      path_results = track_executable(exec_path, argc, argv);
+      path_results = track_executable(debugMe, exec_path, argc, argv);
       xalt_tracing = (path_results != SKIP);
     }
 
@@ -443,7 +445,8 @@ void myinit(int argc, char **argv)
 
   /* Get full absolute path to executable */
   get_abspath(exec_path, sizeof(exec_path));
-  path_results = track_executable(exec_path, argc, argv);
+  debugMe = 0;
+  path_results = track_executable(debugMe, exec_path, argc, argv);
 
   if (path_results == SKIP)
     {
