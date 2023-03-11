@@ -1,0 +1,54 @@
+Notes for 3/16 XALT zoom mtg
+
+* In the XALT testing branch is the new feature of testing
+
+* It supports "Approach 2" Namely it provides a built-in way to filter on the path and arguments
+* It works like this:
+** Modify your site config file to have a "CUSTOM" tag for particular executables:
+path_patterns = [
+    ['CUSTOM,  r'.*\/python[0-9][^/][^/]*'],
+    ...
+]
+** Add new group of patterns:
+path_arg_patterns = [
+  ['SKIP', r'.*\/python[0-9][^/;][^/;]*;.*\/share\/.*'],
+  ['PKGS', r'.*\/python[0-9][^/;][^/;]*;.*\/data\/.*'],
+  ['PKGS', r'.*\/python[0-9][^/;][^/;]*;'],
+]
+
+The patterns are executable path ";" arg path
+
+Note the change in the way that the executable path is handled
+
+- 1st: skip any python scripts that have /share/ as part of the path
+- 2nd: keep any python scripts that have /data/  as part of the path
+- 3rd: keep any python scripts that have neither of the above
+
+* Rules:
+** Only executable that Have "CUSTOM" as the tag will get filtered
+** Can have more that one exectable path that has "CUSTOM"
+** For custom tags XALT loops over each argument
+*** argument with a leading "-" are ignored
+*** argument are then converted to abspath and checked for existance
+    non-existance paths are ignored!
+** Finally if no matches have been made:
+   The pattern with no arguments is tested.
+   If this pattern does not exist then the default is SKIP
+
+* False matching
+
+Suspose you have the following command line:
+
+   $ python -z /my/path/share/foo /my/path/data/hello.py
+
+Note that python does NOT currently have arguments that take values,
+but it could in the future
+
+But other programs that you wish to filter on argument might
+
+In the following case XALT will skip even though the python script you
+would "KEEP"
+
+* Site testing
+
+$ XALT_TRACING=run python /my/path/data/hello.py
