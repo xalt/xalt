@@ -97,6 +97,7 @@ xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char
   token = yylex();
   yy_delete_buffer(buffer);
   my_free(pattern, sz);
+  DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %d: %s\n", pattern, token, xalt_parserA[token]);
   if (token == CONTINUE)
     token = SKIP;
   return token;
