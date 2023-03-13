@@ -16,7 +16,7 @@ static const char * xalt_parserA[] = {
   "SKIP",
   "CUSTOM",
   "CONTINUE"
-}
+};
     
 %}
 
