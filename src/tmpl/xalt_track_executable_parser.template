@@ -11,6 +11,7 @@
 #include "xalt_debug_macros.h"
 
 static const char * xalt_parserA[] = {
+  "ILLEGAL",
   "PKGS",
   "KEEP",
   "SKIP",
