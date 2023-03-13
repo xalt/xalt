@@ -51,4 +51,9 @@ would "KEEP"
 
 * Site testing
 
-$ XALT_TRACING=run python /my/path/data/hello.py
+$ XALT_TRACING=run python /my/path/data/hello_world.py
+
+    track_executable():
+    -> arg: 1: value: "../../share/hello_world.py"
+    -> pattern: "/usr/bin/python3.10;/home/mclay/w/xalt/testing/rt/end2end/share/hello_world.py", track_executable token: 3: SKIP
+share/hello_world.py: Hello World! from  3.10.6 
