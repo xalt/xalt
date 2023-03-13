@@ -23,7 +23,7 @@ int yywrap()
 xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char* argv[])
 {
   xalt_parser  token;
-  status = keep_path(path);
+  token = keep_path(path);
   path_parser_cleanup();
   if (token != CUSTOM)
     return token;
