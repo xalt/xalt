@@ -59,6 +59,7 @@
     \item Namely a built-in pattern matching
     \item It is not perfect
     \item But it will work well with python
+    \item It is currently available under the testing branch
   \end{itemize}
 \end{frame}
 
@@ -70,7 +71,7 @@
     \item This includes python
     \item Below is a list of \emph{some} of them (via zsh tab completion)
     \item Python: no options with values
-    \item But may programs take options with values
+    \item But some programs may take options with values
   \end{itemize}
  {\tiny
     \begin{semiverbatim}
@@ -150,7 +151,7 @@ path_arg_patterns = [
     \item For ``CUSTOM'' tags the arguments are each processed
     \item Arguments that start with minus [-] are ignored
     \item All other arguments would be abspath and checked for existance
-      before being run through path\_cmd\_patterns
+      before being run through path\_arg\_patterns
     \item Not perfect but reasonably safe
   \end{itemize}
 \end{frame}
@@ -240,9 +241,9 @@ or
     -> pattern: "/usr/bin/python3.10;/my/path/data/hello\_world.py",
     track_executable token: 1: PKGS
 
-myinit(0/1,LD\_PRELOAD,/usr/bin/python3.10){
+myinit(0/1,LD\_PRELOAD,/usr/bin/python3.10)\{
 ...
-}
+\}
     \end{semiverbatim}
 }
   \begin{itemize}
@@ -258,7 +259,7 @@ myinit(0/1,LD\_PRELOAD,/usr/bin/python3.10){
     \frametitle{Final pattern}
  {\tiny
     \begin{semiverbatim}
-\$ XALT\_TRACING=run python /my/path/pkg\_tracking.py --seq 22
+\$ XALT\_TRACING=run python2 /my/path/pkg\_tracking.py --seq 22
 
    track_executable():
     -> arg: 1: value: "/my/path/pkg\_tracking.py"
@@ -268,9 +269,9 @@ myinit(0/1,LD\_PRELOAD,/usr/bin/python3.10){
     -> arg: 3: value: "22"
     -> pattern: "/usr/bin/python2.7;", track_executable token: 1: PKGS
 
-myinit(0/1,LD_PRELOAD,/usr/bin/python2.7){
+myinit(0/1,LD_PRELOAD,/usr/bin/python2.7)\{
   ...
-}
+\}
     \end{semiverbatim}
 }
   \begin{itemize}
@@ -282,9 +283,16 @@ myinit(0/1,LD_PRELOAD,/usr/bin/python2.7){
 
 \end{frame}
 
+% page 14
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item Available now in the testing branch of XALT
+    \item It works with the cases I have tested with
+    \item Please test it out.
+  \end{itemize}
+\end{frame}
 
-
-% page 8
+% page 15
 \begin{frame}{Future Topics?}
   \begin{itemize}
     \item No Meeting in April.  I'll be out of town.
