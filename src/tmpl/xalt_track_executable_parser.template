@@ -5,20 +5,13 @@
 #include <linux/limits.h>
 #include "xalt_obfuscate.h"
 #include "xalt_c_utils.h"
+#define   ALLOCATE
 #include "xalt_parser.h"
+#undef    ALLOCATE
 #include "xalt_track_executable.h"
 #include "xalt_path_parser.h"
 #include "xalt_debug_macros.h"
 
-static const char * xalt_parserA[] = {
-  "ILLEGAL",
-  "PKGS",
-  "KEEP",
-  "SKIP",
-  "CUSTOM",
-  "CONTINUE"
-};
-    
 %}
 
 %%
@@ -41,26 +34,36 @@ xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char
   unsigned int sz       = 2048;
   unsigned int path_len = strlen(path);
   int i;
+  char * cmdArg;
   char * pattern        = (char *) XMALLOC(sz);
   char abspath[PATH_MAX];
   unsigned int j;
   
   DEBUG(stderr,"    track_executable():\n");
-  for (i = 1; i < argc; ++i)
+  i = 1;
+  while(i < argc)
     {
       DEBUG(stderr,"    -> arg: %d: value: \"%s\"\n", i, argv[i]);
       j = 0;
-      // Ignore any arguments that start w a minus.
+
+      // Do not change any args that start with a '-'
       if (argv[i][0] == '-')
-        continue;
+        cmdArg = argv[i];
+      else
+        {
+          // get absolute path to the argument
+          realpath(argv[i], abspath);
 
-      // Ignore any "file" arguments that do not exist.
-      realpath(argv[i], abspath);
+          // Ignore any "file" arguments that do not exist.
+          if (! (access(abspath, F_OK) != -1))
+            {
+              i++;
+              continue;
+            }
+          cmdArg = abspath;
+        }
 
-      if (! (access(abspath, F_OK) != -1))
-        continue;
-
-      unsigned int arg_len = strlen(abspath);
+      unsigned int arg_len = strlen(cmdArg);
       unsigned int len     = path_len + arg_len + 3;
       if (len > sz)
         { 
@@ -68,9 +71,9 @@ xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char
           sz = len;
           pattern = (char *) XMALLOC(sz);
         }
-      memcpy(&pattern[j], path,    path_len); j += path_len;
+      memcpy(&pattern[j], path,   path_len); j += path_len;
       pattern[j++] = ';';
-      memcpy(&pattern[j], abspath, arg_len ); j += arg_len;
+      memcpy(&pattern[j], cmdArg, arg_len ); j += arg_len;
       pattern[j++] = '\0';
       pattern[j++] = '\0';
 
@@ -79,10 +82,24 @@ xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char
       yy_delete_buffer(buffer);
 
       DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %d: %s\n", pattern, token, xalt_parserA[token]);
-      if (token != CONTINUE)
+      switch (token)
         {
+        case PKGS: /* fallthru */
+        case KEEP: /* fallthru */
+        case SKIP:
           my_free(pattern, sz);
           return token;
+          break;
+        case CUSTOM:
+        case CONTINUE:
+          i++;
+          break;
+        case JUMP_1: /* fallthru */
+        case JUMP_2: /* fallthru */
+        case JUMP_3: /* fallthru */
+        case JUMP_4:
+          i += jumpArgA[token];
+          break;
         }
     }
 

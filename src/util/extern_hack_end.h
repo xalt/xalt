@@ -1,0 +1,2 @@
+#undef EXTERN
+#undef INIT

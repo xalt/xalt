@@ -96,5 +96,9 @@
 #define xalt_vendor_note              PASTE2(__XALT_vendor_note,                HIDE)
 #define xmalloc                       PASTE2(__XALT_xmalloc,                    HIDE)
 
+#define xalt_parserA                  PASTE2(__XALT_parserA,                    HIDE)
+#define jumpArgA                      PASTE2(__XALT_jumpArgA,                   HIDE)
+
+
 
 #endif //XALT_OBFUSCATE

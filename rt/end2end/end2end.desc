@@ -183,20 +183,24 @@ test_descript = {
      gcc -o segv.20 $(testDir)/segv.c
      ./segv.20 --seq 20
 
-     displayThis "Test python3 package recording (seq 21)"
+     displayThis "build and run fakePrgm program (seq 21)"
+     gcc -o fakePrgm $(testDir)/fakePrgm.c
+     ./fakePrgm --seq 21 --opt ../../share/file.txt ../../data/file.txt
+
+     displayThis "Test python3 package recording (seq 22)"
      OLD_PY_PATH=$PYTHONPATH
      PYTHONPATH=$XALT_DIR/site_packages:$PYTHONPATH
      export PYTHONPATH=${PYTHONPATH%:}
-     python3 $(testDir)/pkg_tracking.py --seq 21
+     python3 $(testDir)/pkg_tracking.py --seq 22
    
-     displayThis "Test python2 package recording (seq 22)"
-     python2 $(testDir)/pkg_tracking.py --seq 22
+     displayThis "Test python2 package recording (seq 23)"
+     python2 $(testDir)/pkg_tracking.py --seq 23
 
-     displayThis "Test python3 path arg parsing (seq 23)"
-     python3 ../../data/hello_world.py  --seq 23
+     displayThis "Test python3 path arg parsing (seq 24"
+     python3 ../../data/hello_world.py  --seq 24
 
-     displayThis "Test python3 path arg parsing (seq 24)"
-     python3 ../../share/hello_world.py --seq 24
+     displayThis "Test python3 path arg parsing (seq 25)"
+     python3 ../../share/hello_world.py --seq 25
 
      PYTHONPATH=$OLD_PY_PATH
 
@@ -227,7 +231,7 @@ test_descript = {
 
 
      displayThis "check_entries_db.py"
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 18 --runs 24 --pkgs 13 --uuid 16
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 19 --runs 25 --pkgs 13 --uuid 16
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

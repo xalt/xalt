@@ -42,6 +42,7 @@ hostname_patterns = [
 
 path_patterns = [
     ['CUSTOM', r'.*\/python[0-9][^/][^/]*'],
+    ['CUSTOM', r'.*\/fakePrgm'],
     ['PKGS',   r'.*\/R'],
     ['PKGS',   r'.*\/test_record_pkg_[0-9][0-9]*'],
     ['PKGS',   r'.*\/get_XALT_env'],
@@ -87,9 +88,14 @@ path_patterns = [
 ]
 
 path_arg_patterns = [
-  ['SKIP', r'.*\/python[0-9][^/;][^/;]*;.*\/share\/.*'],
-  ['PKGS', r'.*\/python[0-9][^/;][^/;]*;.*\/data\/.*'],
-  ['PKGS', r'.*\/python[0-9][^/;][^/;]*;'],
+  ['SKIP',     r'.*\/python[0-9][^/;][^/;]*;.*\/share\/.*'],
+  ['PKGS',     r'.*\/python[0-9][^/;][^/;]*;.*\/data\/.*'],
+  ['PKGS',     r'.*\/python[0-9][^/;][^/;]*;'],
+  ['SKIP',     r'.*\/fakePrgm;.*\/share\/.*'],
+  ['KEEP',     r'.*\/fakePrgm;.*\/data\/.*'],
+  ['JUMP_1',   r'.*\/fakePrgm;--opt'],
+  ['CONTINUE', r'.*\/fakePrgm;--opt=.*'],
+  ['KEEP',     r'.*\/fakePrgm;'],
 ]
   
 
