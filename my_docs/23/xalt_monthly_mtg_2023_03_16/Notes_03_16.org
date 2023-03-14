@@ -66,7 +66,7 @@ share/hello_world.py: Hello World! from  3.10.6
 myinit(0/1,LD_PRELOAD,/usr/bin/python3.10){
 ...
 }
-* last pattern:
+** last pattern:
    track_executable():
     -> arg: 1: value: "/home/mclay/w/xalt/testing/rt/end2end/pkg_tracking.py"
     -> pattern: "/usr/bin/python2.7;/home/mclay/w/xalt/testing/rt/end2end/pkg_tracking.py", track_executable token: 5: CONTINUE

@@ -127,13 +127,14 @@ path_arg_patterns = [
     \end{semiverbatim}
 }
   \begin{itemize}
-    \item The pattern is path + ``;'' arg
+    \item The pattern is path + ``;'' + arg as shown above
       \begin{enumerate}
         \item SKIP any python scripts that have /share/ as part of the
           path
         \item KEEP any python scripts that have /data/ as part of the
         \item KEEP any python scripts that have neither of the above
       \end{enumerate}
+    \item Note the change in how the executable pattern is written!
   \end{itemize}
 
 \end{frame}
@@ -147,21 +148,147 @@ path_arg_patterns = [
 }
   \begin{itemize}
     \item For ``CUSTOM'' tags the arguments are each processed
-    \item 
-      minus [-]
-    \item All arguments would be abspath and checked for existance
+    \item Arguments that start with minus [-] are ignored
+    \item All other arguments would be abspath and checked for existance
       before being run through path\_cmd\_patterns
     \item Not perfect but reasonably safe
-    \item Comments?
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}[fragile]
+    \frametitle{Could filter on option arguments}
+ {\tiny
+    \begin{semiverbatim}
+  ['CONTINUE, r'.*\\/python[0-9][^/;][^/;]*;-.*'],
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Ignoring options could be under Site control
+    \item With the pattern above.
+    \item I don't this supporting this would be useful.
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}[fragile]
+    \frametitle{Final patterns}
+ {\tiny
+    \begin{semiverbatim}
+  ['PKGS', r'.*\\/python[0-9][^/;][^/;]*;'],
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item This pattern is there to handle when things do not match
+    \item If this pattern is not provided then the default final
+      pattern is a SKIP
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}[fragile]
+    \frametitle{False matching}
+ {\tiny
+    \begin{semiverbatim}
+\$ python -z /my/path/share/foo /my/path/data/hello.py
+
+or
+
+\$ python -z /my/path/data/foo /my/path/share/hello.py
+
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Suppose you have either of the above command lines
+    \item The first one would be SKIP'ed
+    \item The second one would be KEEP'ed
+    \item I see no general way to get this to work perfectly
+    \item \emph{This is NOT a current issue with python}
   \end{itemize}
 
 \end{frame}
 
+% page 11
+\begin{frame}[fragile]
+    \frametitle{a SKIP match}
+ {\tiny
+    \begin{semiverbatim}
+\$ XALT\_TRACING=run python /my/path/share/hello\_world.py
+
+    track_executable():
+    -> arg: 1: value: "../../share/hello\_world.py"
+    -> pattern: "/usr/bin/python3.10;/my/path/share/hello\_world.py",
+       track_executable token: 3: SKIP
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item This is what happens when a pattern matches a SKIP
+    \item This can be shown when XALT\_TRACING=run
+  \end{itemize}
+
+\end{frame}
+
+% page 12
+\begin{frame}[fragile]
+    \frametitle{a PKGS match}
+ {\tiny
+    \begin{semiverbatim}
+\$ XALT\_TRACING=run python /my/path/data/hello_world.py
+
+    track\_executable():
+    -> arg: 1: value: "../../data/hello\_world.py"
+    -> pattern: "/usr/bin/python3.10;/my/path/data/hello\_world.py",
+    track_executable token: 1: PKGS
+
+myinit(0/1,LD\_PRELOAD,/usr/bin/python3.10){
+...
+}
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item This is what happens when a pattern matches a PKGS
+    \item This can be shown when XALT\_TRACING=run
+    \item This tag causes the execution to be TRACKED
+  \end{itemize}
+
+\end{frame}
+
+% page 13
+\begin{frame}[fragile]
+    \frametitle{Final pattern}
+ {\tiny
+    \begin{semiverbatim}
+\$ XALT\_TRACING=run python /my/path/pkg\_tracking.py --seq 22
+
+   track_executable():
+    -> arg: 1: value: "/my/path/pkg\_tracking.py"
+    -> pattern: "/usr/bin/python2.7;/my/path/pkg\_tracking.py",
+       track_executable token: 5: CONTINUE
+    -> arg: 2: value: "--seq"
+    -> arg: 3: value: "22"
+    -> pattern: "/usr/bin/python2.7;", track_executable token: 1: PKGS
+
+myinit(0/1,LD_PRELOAD,/usr/bin/python2.7){
+  ...
+}
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item This last pattern is called after the command line has been
+      processed
+    \item In this case the tag is PKGS
+    \item Without this pattern it is SKIP
+  \end{itemize}
+
+\end{frame}
+
+
+
 % page 8
 \begin{frame}{Future Topics?}
   \begin{itemize}
-    \item I'm looking for Topics.
-    \item Next Meeting will be on March 16, 2023 at 10:00 am
+    \item No Meeting in April.  I'll be out of town.
+    \item Next Meeting will be on May 18, 2023 at 10:00 am
       U.S. Central (15:00 UTC)
   \end{itemize}
 \end{frame}
