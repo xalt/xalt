@@ -1,3 +1,35 @@
+#==========================================================#
+  build and run fakePrgm program (seq 21)
+  (11.1643)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "--seq"
+    -> pattern: "/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm;--seq", track_executable token: 5: CONTINUE
+    -> arg: 2: value: "21"
+    -> arg: 3: value: "--opt"
+    -> pattern: "/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm;--opt", track_executable token: 6: JUMP_1
+    -> arg: 5: value: "../../data/file.txt"
+    -> pattern: "/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm;/home/mclay/w/xalt/testing/rt/end2end/data/file.txt", track_executable token: 2: KEEP
+---------------------------------------------
+ Date:          Tue Mar 14 16:08:01 2023
+ XALT Version:  @git@
+ Nodename:      jedrik
+ System:        Linux
+ Release:       5.15.0-67-generic
+ O.S. Version:  #74-Ubuntu SMP Wed Feb 22 14:14:39 UTC 2023
+ Machine:       x86_64
+---------------------------------------------
+
+myinit(0/1,LD_PRELOAD,/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm){
+  Test for __XALT_INITIAL_STATE__: "(NULL)", STATE: "LD_PRELOAD"
+  Test for XALT_EXECUTABLE_TRACKING: yes
+  Test for rank == 0, rank: 0
+  No GPU tracking
+    -> Found watermark via vendor note: true
+    -> MPI_SIZE: 1 < MPI_ALWAYS_RECORD: 2, XALT is build to track all programs, Current program is a scalar program -> Not producing a start record
+    -> Setting up signals
+    -> Leaving myinit
+}
 
 #==========================================================#
   Test python2 package recording (seq 22)

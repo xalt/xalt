@@ -205,6 +205,7 @@ or
     \item The second one would be KEEP'ed
     \item I see no general way to get this to work perfectly
     \item \emph{This is NOT a current issue with python}
+    \item See ``feature'' described later
   \end{itemize}
 
 \end{frame}
@@ -284,6 +285,57 @@ myinit(0/1,LD_PRELOAD,/usr/bin/python2.7)\{
 \end{frame}
 
 % page 14
+\begin{frame}[fragile]
+    \frametitle{Partial support for arguments w/ values}
+ {\tiny
+    \begin{semiverbatim}
+path_patterns = [
+    ['CUSTOM', r'.*\/fakePrgm'],
+
+path_arg_patterns = [
+  ['SKIP',     r'.*\/fakePrgm;.*\/share\/.*'],
+  ['KEEP',     r'.*\/fakePrgm;.*\/data\/.*'],
+  ['JUMP_1',   r'.*\/fakePrgm;--opt'],
+  ['CONTINUE', r'.*\/fakePrgm;--opt=.*'],
+  ['KEEP',     r'.*\/fakePrgm;'],
+]
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Suppose fakePrgm is some python like program
+    \item Want to KEEP /data/; SKIP /share/ like before
+    \item Want to jump over fakePrgm --opt /share/... by using JUMP\_1 tag
+  \end{itemize}
+\end{frame}
+
+% page 15
+\begin{frame}[fragile]
+    \frametitle{Partial support for arguments w/ values (II)}
+ {\tiny
+    \begin{semiverbatim}
+\$ fakePrgm --seq 21 --opt ../share/ ../../data/file.txt
+    track_executable():
+    -> arg: 1: value: "--seq"
+    -> pattern: "/my/path/fakePrgm;--seq", track_executable token: 5: CONTINUE
+    -> arg: 2: value: "21"
+    -> arg: 3: value: "--opt"
+    -> pattern: "/my/path/fakePrgm;--opt", track_executable token: 6: JUMP_1
+    -> arg: 5: value: "../../data/file.txt"
+    -> pattern: "/my/path/fakePrgm;/my/path/data/file.txt", track_executable token: 2: KEEP
+
+myinit(0/1,LD_PRELOAD,/my/path/fakePrgm)\{
+ ...
+\}
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Suppose fakePrgm is some python like program
+    \item Want to KEEP /data/; SKIP /share/ like before
+    \item Want to jump over fakePrgm --opt /share/... by using JUMP\_1 tag
+  \end{itemize}
+\end{frame}
+
+% page 16
 \begin{frame}{Show this in action}
   \begin{itemize}
     \item xalt\_configuration\_report output
@@ -291,16 +343,17 @@ myinit(0/1,LD_PRELOAD,/usr/bin/python2.7)\{
   \end{itemize}
 \end{frame}
 
-% page 15
+% page 17
 \begin{frame}{Conclusions}
   \begin{itemize}
     \item Available now in the testing branch of XALT
     \item It works with the cases I have tested with
+    \item Some support for skipping over arguments.
     \item Please test it out.
   \end{itemize}
 \end{frame}
 
-% page 16
+% page 18
 \begin{frame}{Future Topics?}
   \begin{itemize}
     \item No Meeting in April.  I'll be out of town.
