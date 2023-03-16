@@ -81,7 +81,7 @@ xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char
       token = yylex();
       yy_delete_buffer(buffer);
 
-      DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %d: %s\n", pattern, token, xalt_parserA[token]);
+      DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %s\n", pattern, xalt_parserA[token]);
       switch (token)
         {
         case PKGS: /* fallthru */
@@ -112,7 +112,7 @@ xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char
   pattern[j++] = '\0';
   YY_BUFFER_STATE buffer = yy_scan_buffer(pattern, j);
   token = yylex();
-  DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %d: %s\n", pattern, token, xalt_parserA[token]);
+  DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %s\n", pattern, xalt_parserA[token]);
   yy_delete_buffer(buffer);
   my_free(pattern, sz);
   if (token == CONTINUE)
