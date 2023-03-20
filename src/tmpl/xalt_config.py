@@ -43,6 +43,7 @@ path_patterns = [
   ]
     
 path_arg_patterns = [
+  ['CONTINUE',  r'[^;]*;-.*']
   ['CONTINUE',  r'.*']
   ]
   
