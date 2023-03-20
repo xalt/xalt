@@ -1,0 +1,143 @@
+#==========================================================#
+  build and run fakePrgm program (seq 21)
+  (11.1643)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "--seq"
+    -> pattern: "/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm;--seq", track_executable token: 5: CONTINUE
+    -> arg: 2: value: "21"
+    -> arg: 3: value: "--opt"
+    -> pattern: "/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm;--opt", track_executable token: 6: JUMP_1
+    -> arg: 5: value: "../../data/file.txt"
+    -> pattern: "/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm;/home/mclay/w/xalt/testing/rt/end2end/data/file.txt", track_executable token: 2: KEEP
+---------------------------------------------
+ Date:          Tue Mar 14 16:08:01 2023
+ XALT Version:  @git@
+ Nodename:      jedrik
+ System:        Linux
+ Release:       5.15.0-67-generic
+ O.S. Version:  #74-Ubuntu SMP Wed Feb 22 14:14:39 UTC 2023
+ Machine:       x86_64
+---------------------------------------------
+
+myinit(0/1,LD_PRELOAD,/home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_14_16_03_01-Linux-x86_64-end2end/fakePrgm){
+  Test for __XALT_INITIAL_STATE__: "(NULL)", STATE: "LD_PRELOAD"
+  Test for XALT_EXECUTABLE_TRACKING: yes
+  Test for rank == 0, rank: 0
+  No GPU tracking
+    -> Found watermark via vendor note: true
+    -> MPI_SIZE: 1 < MPI_ALWAYS_RECORD: 2, XALT is build to track all programs, Current program is a scalar program -> Not producing a start record
+    -> Setting up signals
+    -> Leaving myinit
+}
+
+#==========================================================#
+  Test python2 package recording (seq 22)
+  (11.1496)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "/home/mclay/w/xalt/testing/rt/end2end/pkg_tracking.py"
+    -> pattern: "/usr/bin/python2.7;/home/mclay/w/xalt/testing/rt/end2end/pkg_tracking.py", track_executable token: 5: CONTINUE
+    -> arg: 2: value: "--seq"
+    -> arg: 3: value: "22"
+    -> pattern: "/usr/bin/python2.7;", track_executable token: 1: PKGS
+---------------------------------------------
+ Date:          Mon Mar 13 12:57:36 2023
+ XALT Version:  @git@
+ Nodename:      jedrik
+ System:        Linux
+ Release:       5.15.0-67-generic
+ O.S. Version:  #74-Ubuntu SMP Wed Feb 22 14:14:39 UTC 2023
+ Machine:       x86_64
+---------------------------------------------
+
+myinit(0/1,LD_PRELOAD,/usr/bin/python2.7){
+  Test for __XALT_INITIAL_STATE__: "(NULL)", STATE: "LD_PRELOAD"
+  Test for XALT_EXECUTABLE_TRACKING: yes
+  Test for rank == 0, rank: 0
+  No GPU tracking
+    -> Setting XALT_RUN_UUID: ebc4e569-54e1-483f-9733-b78757843c9a
+    -> Found watermark via vendor note: false
+    -> MPI_SIZE: 1 < MPI_ALWAYS_RECORD: 2, XALT is build to track all programs, Current program is a scalar program -> Not producing a start record
+    -> Setting up signals
+    -> Leaving myinit
+}
+
+Hello World! from  2.7.18 (default, Jul  1 2022, 10:30:50) 
+
+myfini(0/1,LD_PRELOAD,/usr/bin/python2.7){
+    -> XALT_SAMPLING = "no" All programs tracked!
+  Recording State at end of scalar user program
+
+  run_submission(.zzz) {
+  }
+
+    -> leaving myfini
+}
+
+
+#==========================================================#
+  Test python3 path arg parsing (seq 23)
+  (11.1891)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "../../data/hello_world.py"
+    -> pattern: "/usr/bin/python3.10;/home/mclay/w/xalt/testing/rt/end2end/data/hello_world.py", track_executable token: 1: PKGS
+---------------------------------------------
+ Date:          Mon Mar 13 12:57:36 2023
+ XALT Version:  @git@
+ Nodename:      jedrik
+ System:        Linux
+ Release:       5.15.0-67-generic
+ O.S. Version:  #74-Ubuntu SMP Wed Feb 22 14:14:39 UTC 2023
+ Machine:       x86_64
+---------------------------------------------
+
+myinit(0/1,LD_PRELOAD,/usr/bin/python3.10){
+  Test for __XALT_INITIAL_STATE__: "(NULL)", STATE: "LD_PRELOAD"
+  Test for XALT_EXECUTABLE_TRACKING: yes
+  Test for rank == 0, rank: 0
+  No GPU tracking
+    -> Setting XALT_RUN_UUID: 1d61d5cf-44d5-410f-98f6-51bcb518eb3a
+    -> Found watermark via vendor note: false
+    -> MPI_SIZE: 1 < MPI_ALWAYS_RECORD: 2, XALT is build to track all programs, Current program is a scalar program -> Not producing a start record
+    -> Setting up signals
+    -> Leaving myinit
+}
+
+data/hello_world.py: Hello World! from  3.10.6 (main, Nov 14 2022, 16:10:14) [GCC 11.3.0]
+
+myfini(0/1,LD_PRELOAD,/usr/bin/python3.10){
+    -> XALT_SAMPLING = "no" All programs tracked!
+  Recording State at end of scalar user program
+
+  run_submission(.zzz) {
+    Built processTree table
+    Built envT
+    No watermark found -> recordT is empty
+    Built userT, userDT, scheduler: SLURM
+    Compute sha1 (c9c227a3868f48b3321eab76485654d73cb721ce) of exec: /usr/bin/python3.10
+    Parsed ProcMaps
+    Using XALT_TRANSMISSION_STYLE: file_separate_dirs
+    Built json string
+    Transmitting jsonStr
+    Using USE_HOME method to store json file
+    Wrote json run file : /home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_03_11_09_08_19-Linux-x86_64-end2end/.xalt.d/run/run.jedrik.2023_03_13_12_57_36_3138.mclay.zzz.1d61d5cf-44d5-410f-98f6-51bcb518eb3a.json
+    Done transmitting jsonStr
+    Transmitting pkg records
+    Done transmitting pkg records
+  }
+
+    -> leaving myfini
+}
+
+
+#==========================================================#
+  Test python3 path arg parsing (seq 24)
+  (11.2247)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "../../share/hello_world.py"
+    -> pattern: "/usr/bin/python3.10;/home/mclay/w/xalt/testing/rt/end2end/share/hello_world.py", track_executable token: 3: SKIP
+share/hello_world.py: Hello World! from  3.10.6 (main, Nov 14 2022, 16:10:14) [GCC 11.3.0]
+
