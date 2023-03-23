@@ -1,4 +1,4 @@
-![Lmod Logo](https://github.com/xalt/xalt/raw/master/logos/XALT_Sticker.png)
+![XALT Logo](https://github.com/xalt/xalt/raw/main/logos/XALT_Sticker.png)
 
 [![Documentation Status](https://readthedocs.org/projects/xalt/badge/?version=latest)](https://xalt.readthedocs.io/en/latest/?badge=latest)
 ## Synopsis
