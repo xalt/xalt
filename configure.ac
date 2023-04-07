@@ -684,8 +684,6 @@ if test $XALT_SUPPORT_CURL = yes; then
   AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XALT without libcurl])])
 fi
 
-MY_TMPDIR=`mktemp -d`
-
 AC_SUBST(CRYPTO_STR)
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
@@ -805,6 +803,8 @@ IFS=$ORIG_SEP
 if test -n "$NOT_FOUND"; then
   AC_MSG_ERROR([Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND])
 fi  
+
+rm -rf $MY_TMPDIR
 
   
 

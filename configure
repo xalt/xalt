@@ -5740,8 +5740,6 @@ fi
 
 fi
 
-MY_TMPDIR=`mktemp -d`
-
 
 CRYPTO_STR=`$LOCATE_SO libcrypto.so`
 
@@ -5861,6 +5859,8 @@ IFS=$ORIG_SEP
 if test -n "$NOT_FOUND"; then
   as_fn_error $? "Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND" "$LINENO" 5
 fi
+
+rm -rf $MY_TMPDIR
 
 
 
