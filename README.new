@@ -175,3 +175,7 @@ W.I.P:
 	        the start of the line.  It also uses .string instead of .asciz to store
 		strings
               * xalt_record_pkg.c: getopt() returns an int not char!!
+              * Removed illegal instruction test as it is no portable from end2end test
+	      * Fixed bug where test_record_pkg was not run in syslog test
+	      * Now ignore arm programs like as and ld.bfd in syslog test
+	      
