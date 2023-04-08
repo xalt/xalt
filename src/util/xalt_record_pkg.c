@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
   int         xalt_tracing = 0;
   int         len;
   char*       p_dbg;
-  char        c;
+  int         c;
 
   if (!user)
     user = "UNKNOWN";
@@ -90,7 +90,6 @@ int main(int argc, char* argv[])
       DEBUG(stderr,"Odd number of parameter passed to %s => quiting!\n",argv[0]);
       exit(0);
     }
-
 
   const char *qs;
   strcpy(&json_str[0],"{\"crc\":\"0xFFFF\",");
