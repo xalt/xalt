@@ -13,11 +13,13 @@ path_patterns = [
   ['SKIP', r'.*\/cc1'],
   ['SKIP', r'.*\/bash'],
   ['SKIP', r'.*\/dash'],
+  ['SKIP', r'.*\/cp'],
   ['SKIP', r'.*\/cat'],
   ['SKIP', r'.*\/chmod'],
   ['SKIP', r'.*\/collect2'],
   ['SKIP', r'.*\/mpich/.*'],
   ['SKIP', r'.*\/x86_64-linux-gnu.*'],
+  ['SKIP', r'.*\/aarch64-linux-gnu.*'],
 ]
 
 python_pkg_patterns = [

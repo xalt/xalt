@@ -40,7 +40,12 @@ test_descript = {
      export COMPILER_PATH=$XALT_BIN
      export XALT_EXECUTABLE_TRACKING=yes
      export XALT_TRANSMISSION_STYLE=logger
-     export LD_PRELOAD="$outputDir"'/XALT/xalt/xalt/$LIB/libxalt_init.so'
+     my_arch=`arch`
+     if [ $my_arch = x86_64 ]; then
+       export LD_PRELOAD="$outputDir"'/XALT/xalt/xalt/$LIB/libxalt_init.so'
+     else
+       export LD_PRELOAD="$outputDir"'/XALT/xalt/xalt/lib64/libxalt_init.so'
+     fi
      
      displayThis  "mpicc -o hello $(projectDir)/rt/mpi_hello_world.c"
      mpicc -o hello $(projectDir)/rt/mpi_hello_world.c
@@ -57,7 +62,7 @@ test_descript = {
      
      displayThis "test_record_pkg --seq 04"
      cp $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg test_record_pkg_04
-     test_record_pkg_04 --seq 04
+     ./test_record_pkg_04 --seq 04
 
      displayThis "Test python3 package recording (seq 05)"
      OLD_PY_PATH=$PYTHONPATH

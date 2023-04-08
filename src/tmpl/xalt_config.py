@@ -39,12 +39,12 @@ head_path_patterns = [
 
 
 path_patterns = [
-  ['KEEP',  r'.*']
+  ['KEEP',  r'.*'],
   ]
     
 path_arg_patterns = [
-  ['CONTINUE',  r'[^;]*;-.*']
-  ['CONTINUE',  r'.*']
+  ['CONTINUE',  r'[^;]*;-.*'],
+  ['CONTINUE',  r'.*'],
   ]
   
 
