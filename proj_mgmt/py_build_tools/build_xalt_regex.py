@@ -149,7 +149,13 @@ def main():
   hd_pathStrA = ['"===="']
 
   namespace = {}
-  exec(open(args.xaltCFG).read(),            namespace)
+  try:
+    exec(open(args.xaltCFG).read(),            namespace)
+  except:
+    print("\nUnable to parse python config file: ",args.xaltCFG,"-> see below:\n")
+    print(traceback.format_exc())
+    print("\nExiting!\n")
+    sys.exit(1)
   hd_pathA = namespace.get('head_path_patterns',  [])
   if (args.defaultDir):
     found = False
