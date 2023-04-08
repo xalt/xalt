@@ -170,6 +170,12 @@ XALT 2.10+
     (2.10.45) * Fix typo in ld.in which prevented xalt_strip_linklib's from working.
 W.I.P:
     (2.10.46) * Fix bug so that my_hostname_parser config option works
-    
-
-    
+              * Remove /tmp/tmp.* directories after configure is done with them.
+	      * xalt_generate_watermark.c now uses C style comments instead of '#' at
+	        the start of the line.  It also uses .string instead of .asciz to store
+		strings
+              * xalt_record_pkg.c: getopt() returns an int not char!!
+              * Removed illegal instruction test as it is no portable from end2end test
+	      * Fixed bug where test_record_pkg was not run in syslog test
+	      * Now ignore arm programs like as and ld.bfd in syslog test
+	      

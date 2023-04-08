@@ -1,3 +1,4 @@
+#include <ctime>
 #include <sys/time.h>
 #include <string>
 #include <stdio.h>
@@ -99,63 +100,63 @@ int main(int argc, char* argv[])
 
   //--------------------------------------------------
   // Write assembly code
-  fprintf(fp,"# This generated assembly code (%s) is free and unencumbered software released into the public domain\n",fn);
-  fprintf(fp,"# Anyone is free to copy, modify, publish, use, compile, sell, or\n");
-  fprintf(fp,"# distribute this software, either in source code form or as a compiled\n");
-  fprintf(fp,"# binary, for any purpose, commercial or non-commercial, and by any\n");
-  fprintf(fp,"# means.\n");
+  fprintf(fp,"/* This generated assembly code (%s) is free and unencumbered software released into the public domain */\n",fn);
+  fprintf(fp,"/* Anyone is free to copy, modify, publish, use, compile, sell, or */\n");
+  fprintf(fp,"/* distribute this software, either in source code form or as a compiled */\n");
+  fprintf(fp,"/* binary, for any purpose, commercial or non-commercial, and by any */\n");
+  fprintf(fp,"/* means. */\n");
   fprintf(fp,"\n");
-  fprintf(fp,"# In jurisdictions that recognize copyright laws, the author or authors\n");
-  fprintf(fp,"# of this software dedicate any and all copyright interest in the\n");
-  fprintf(fp,"# software to the public domain. We make this dedication for the benefit\n");
-  fprintf(fp,"# of the public at large and to the detriment of our heirs and\n");
-  fprintf(fp,"# successors. We intend this dedication to be an overt act of\n");
-  fprintf(fp,"# relinquishment in perpetuity of all present and future rights to this\n");
-  fprintf(fp,"# software under copyright law.\n");
+  fprintf(fp,"/* In jurisdictions that recognize copyright laws, the author or authors */\n");
+  fprintf(fp,"/* of this software dedicate any and all copyright interest in the */\n");
+  fprintf(fp,"/* software to the public domain. We make this dedication for the benefit */\n");
+  fprintf(fp,"/* of the public at large and to the detriment of our heirs and */\n");
+  fprintf(fp,"/* successors. We intend this dedication to be an overt act of */\n");
+  fprintf(fp,"/* relinquishment in perpetuity of all present and future rights to this */\n");
+  fprintf(fp,"/* software under copyright law. */\n");
   fprintf(fp,"\n");
-  fprintf(fp,"# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\n");
-  fprintf(fp,"# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\n");
-  fprintf(fp,"# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\n");
-  fprintf(fp,"# IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR\n");
-  fprintf(fp,"# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,\n");
-  fprintf(fp,"# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\n");
-  fprintf(fp,"# OTHER DEALINGS IN THE SOFTWARE.\n");
+  fprintf(fp,"/* THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, */\n");
+  fprintf(fp,"/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF */\n");
+  fprintf(fp,"/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */\n");
+  fprintf(fp,"/* IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR */\n");
+  fprintf(fp,"/* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, */\n");
+  fprintf(fp,"/* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR */\n");
+  fprintf(fp,"/* OTHER DEALINGS IN THE SOFTWARE. */\n");
   fprintf(fp,"\n");
   fprintf(fp,"\t.file    \"xalt.s\"\n");
   fprintf(fp,"\t.section .note.GNU-stack,\"\",@progbits\n");
   fprintf(fp,"\t.section .xalt\n");
 
-  fprintf(fp,"\t.asciz \"XALT_Link_Info\"\n"); //this is how to find the section in the exec
+  fprintf(fp,"\t.string \"XALT_Link_Info\"\n"); //this is how to find the section in the exec
 
   // Print cushion
   fprintf(fp,"\n\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
   for (int j = 0; j < n; ++j)
-    fprintf(fp,"\t.asciz \"%s%%%%%s%%%%\"\n",array[j][0].c_str(), array[j][1].c_str());
+    fprintf(fp,"\t.string \"%s%%%%%s%%%%\"\n",array[j][0].c_str(), array[j][1].c_str());
 
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
-  fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
+  fprintf(fp,"\t.string \"XALT_Link_Info_End\"\n");
 
   //------------------------------------------------------
   // Write 2nd block that can be read by a vendor note
   // See xalt_vendor_note.c for details
 
   fprintf(fp,"\n");
-  fprintf(fp,"# This block is readable by a vendor note.\n");
+  fprintf(fp,"/* This block is readable by a vendor note. */\n");
   fprintf(fp,"\n");
   fprintf(fp,"\t.section .note.GNU-stack,\"\",@progbits\n");
   fprintf(fp,"\t.section .note.xalt.info,\"a\"\n");
   fprintf(fp,"\t.p2align 2\n");
-  fprintf(fp,"\t.long 1f - 0f # name size (not including padding\n");
-  fprintf(fp,"\t.long 3f - 2f # desc size (not including padding\n");
+  fprintf(fp,"\t.long 1f - 0f /* name size (not including padding */\n");
+  fprintf(fp,"\t.long 3f - 2f /* desc size (not including padding */\n");
   fprintf(fp,"\t.long 0x%x\n",XALT_ELF_NOTE_TYPE);
-  fprintf(fp,"0:\t.asciz \"XALT\"\n");
+  fprintf(fp,"0:\t.string \"XALT\"\n");
   fprintf(fp,"1:\t.p2align 2\n");
   fprintf(fp,"2:\t.byte 0x%02x\n",XALT_STAMP_SUPPORTED_VERSION);
-  fprintf(fp,"\t.asciz \"XALT_Link_Info\"\n"); //this is how to find the section in the exec
+  fprintf(fp,"\t.string \"XALT_Link_Info\"\n"); //this is how to find the section in the exec
   for (int j = 0; j < n; ++j)
-    fprintf(fp,"\t.asciz \"%s%%%%%s%%%%\"\n",array[j][0].c_str(), array[j][1].c_str());
+    fprintf(fp,"\t.string \"%s%%%%%s%%%%\"\n",array[j][0].c_str(), array[j][1].c_str());
   fprintf(fp,"\t.byte 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00\n");
-  fprintf(fp,"\t.asciz \"XALT_Link_Info_End\"\n");
+  fprintf(fp,"\t.string \"XALT_Link_Info_End\"\n");
   fprintf(fp,"3:\t.p2align 2\n");
   
   fclose(fp);
