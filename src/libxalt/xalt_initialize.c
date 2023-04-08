@@ -799,7 +799,7 @@ void myinit(int argc, char **argv)
   /************************************************************
    * Register a signal handler wrapper_for_myfini for all the
    * important signals. This way a program terminated by
-   * SIGFPE, SIGSEGV, etc will produce an end record.
+   * SIGFPE, SIGTERM, etc will produce an end record.
    *********************************************************/
   v = getenv("XALT_SIGNAL_HANDLER");
   if (!v)

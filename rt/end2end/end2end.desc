@@ -222,7 +222,7 @@ test_descript = {
 
 
      displayThis "check_entries_db.py"
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 17 --runs 23 --pkgs 13 --uuid 15
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 17 --runs 24 --pkgs 15 --uuid 15
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 
