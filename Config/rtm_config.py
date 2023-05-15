@@ -88,6 +88,8 @@ path_patterns = [
 ]
 
 path_arg_patterns = [
+  ['JUMP_1',   r'.*\/python[0-9][^/;][^/;]*;-m'],
+  ['SKIP',     r'.*\/python[0-9][^/;][^/;]*;-c'],
   ['SKIP',     r'.*\/python[0-9][^/;][^/;]*;.*\/share\/.*'],
   ['PKGS',     r'.*\/python[0-9][^/;][^/;]*;.*\/data\/.*'],
   ['PKGS',     r'.*\/python[0-9][^/;][^/;]*;'],
