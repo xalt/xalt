@@ -1,0 +1,70 @@
+$ python3 -m json.tool ../../data/run.json > pretty_run.json
+
+#==========================================================#
+  Test python3 path arg parsing -m json.tool (seq 24)
+  (10.8638)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "-m"
+    -> pattern: "/usr/bin/python3.10;-m", track_executable token: JUMP_1
+    -> arg: 3: value: "../../data/run.json"
+    -> pattern: "/usr/bin/python3.10;/home/mclay/w/xalt/testing/rt/end2end/data/run.json", track_executable token: PKGS
+---------------------------------------------
+ Date:          Mon May 15 11:01:40 2023
+ XALT Version:  @git@
+ Nodename:      jedrik
+ System:        Linux
+ Release:       5.15.0-71-generic
+ O.S. Version:  #78-Ubuntu SMP Tue Apr 18 09:00:29 UTC 2023
+ Machine:       x86_64
+---------------------------------------------
+
+myinit(0/1,LD_PRELOAD,/usr/bin/python3.10){
+  Test for __XALT_INITIAL_STATE__: "(NULL)", STATE: "LD_PRELOAD"
+  Test for XALT_EXECUTABLE_TRACKING: yes
+  Test for rank == 0, rank: 0
+  No GPU tracking
+    -> Setting XALT_RUN_UUID: 931faeb1-b41a-4e1b-9c6c-705997d1bdd6
+    -> Found watermark via vendor note: false
+    -> MPI_SIZE: 1 < MPI_ALWAYS_RECORD: 2, XALT is build to track all programs, Current program is a scalar program -> Not producing a start record
+    -> Setting up signals
+    -> Leaving myinit
+}
+
+
+myfini(0/1,LD_PRELOAD,/usr/bin/python3.10){
+    -> XALT_SAMPLING = "no" All programs tracked!
+  Recording State at end of scalar user program
+
+  run_submission(.zzz) {
+    Built processTree table
+    Built envT
+    No watermark found -> recordT is empty
+    Built userT, userDT, scheduler: SLURM
+    Compute sha1 (29840d0647e6e27675c9c4b96271951dd2f6eca0) of exec: /usr/bin/python3.10
+    Parsed ProcMaps
+    Using XALT_TRANSMISSION_STYLE: file_separate_dirs
+    Built json string
+    Transmitting jsonStr
+    Using USE_HOME method to store json file
+    Wrote json run file : /home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_05_15_10_26_00-Linux-x86_64-end2end/.xalt.d/run/run.jedrik.2023_05_15_11_01_40_8638.mclay.zzz.931faeb1-b41a-4e1b-9c6c-705997d1bdd6.json
+    Done transmitting jsonStr
+    Transmitting pkg records
+  }
+
+    -> leaving myfini
+}
+
+
+$ python3 -c 'print("seq 25")'
+
+
+#==========================================================#
+  Test python3 path arg parsing -c (seq 25)
+  (10.9381)
+#==========================================================#
+    track_executable():
+    -> arg: 1: value: "-c"
+    -> pattern: "/usr/bin/python3.10;-c", track_executable token: SKIP
+seq 25
+

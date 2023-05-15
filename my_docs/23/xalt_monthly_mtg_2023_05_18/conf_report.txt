@@ -1,0 +1,236 @@
+*------------------------------------------------------------------------------*
+                      XALT Configuration Report
+*------------------------------------------------------------------------------*
+
+Today's DATE:                    Mon May 15 11:06:09 2023
+XALT_VERSION:                    2.10.45
+XALT_GIT_VERSION:                @git@
+XALT_VERSION_STR:                XALT 2.10.45 2022-12-01 12:01
+*------------------------------------------------------------------------------*
+XALT_EXECUTABLE_TRACKING:        yes
+XALT_FUNCTION_TRACKING:          yes
+XALT_SYSHOST:                    jedrik
+XALT_CMDLINE_RECORD:             yes
+XALT_FILE_PREFIX:                USE_HOME
+XALT_PRIME_NUMBER:               997
+XALT_INTERFACE_VERSION:          5
+XALT_TRANSMISSION_STYLE:         file
+XALT_COMPUTE_SHA1 on libraries:  no
+XALT_ETC_DIR:                    /home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_05_15_10_26_00-Linux-x86_64-end2end
+XALT_DIR:                        /home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_05_15_10_26_00-Linux-x86_64-end2end/XALT/2.10.45
+SITE_CONTROLLED_PREFIX:          yes
+XALT_CONFIG_PY:                  /home/mclay/w/xalt/testing/Config/rtm_config.py
+XALT_MPI_TRACKING:               yes
+XALT_GPU_TRACKING:               no
+XALT_SCALAR_TRACKING:            yes
+XALT_SAMPLING:                   no
+MPI_ALWAYS_RECORD:               2
+XALT_SIGNAL_HANDLER:             no
+XALT_SYSTEM_PATH:                /usr/bin:/bin
+XALT_SYSHOST_CONFIG:             nth_name:2
+XALT_SYSLOG_MSG_SZ:              512
+CXX_LD_LIBRARY_PATH:             @CXX_LD_LIBRARY_PATH@
+XALT_LD_LIBRARY_PATH:            /home/mclay/w/xalt/testing/rt/end2end/t1/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_05_15_10_26_00-Linux-x86_64-end2end/XALT/2.10.45/lib64
+XALT_INSTALL_OS:                 Ubuntu 22.04.2 LTS
+CURRENT_OS:                      Ubuntu 22.04.2 LTS
+
+XALT_PRELOAD_ONLY:               yes
+HAVE_32BIT:                      yes
+MY_HOSTNAME_PARSER:              no
+CRYPTO_STR:                      /lib/x86_64-linux-gnu/libcrypto.so:/usr/lib/x86_64-linux-gnu/libcrypto.so.3
+UUID_STR:                        /lib/x86_64-linux-gnu/libuuid.so:/usr/lib/x86_64-linux-gnu/libuuid.so.1.3.0
+CURL_STR:                        /lib/x86_64-linux-gnu/libcurl.so:/usr/lib/x86_64-linux-gnu/libcurl.so.4.7.0
+GPU_STR:                         
+Built with DCGM:                 no
+Found xalt_rmapT.json:           true
+*------------------------------------------------------------------------------*
+
+*------------------------------------------------------------------------------*
+Note: The matching patterns are from either your site's config.py file or
+      from the src/tmpl/xalt_config.py file as marked below
+*------------------------------------------------------------------------------*
+
+*----------------------*
+ Array: hostnameA
+*----------------------*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   0: KEEP => .*
+================== src/tmpl/xalt_config.py ==================
+   1: SKIP => .*
+
+
+Remember that "PKGS" means a program that can also track internal packages
+*----------------------*
+ Array: pathPatternA
+*----------------------*
+================== src/tmpl/xalt_config.py ==================
+   0: SKIP => .*\/bin\/my_uuidgen
+   1: SKIP => .*\/logger
+   2: SKIP => .*\/xalt_print_os
+   3: SKIP => .*\/xalt_syslog_to_db
+   4: SKIP => .*\/xalt_extract_record.x
+   5: SKIP => .*\/xalt_configuration_report.x
+   6: SKIP => .*\/xalt_syshost
+   7: SKIP => .*\/xalt_record_pkg
+   8: SKIP => ^\/home\/mclay\/w\/xalt\/testing\/rt\/end2end\/t1\/x86_64_06_avx2_dbg_gcc-11.2.0_mpich-4.0.2-2023_05_15_10_26_00-Linux-x86_64-end2end\/XALT\/2.10.45\/.*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   9: CUSTOM => .*\/python[0-9][^/][^/]*
+  10: CUSTOM => .*\/fakePrgm
+  11: PKGS => .*\/R
+  12: PKGS => .*\/test_record_pkg_[0-9][0-9]*
+  13: PKGS => .*\/get_XALT_env
+  14: KEEP => ^\/usr\/bin\/ddt
+  15: SKIP => ^\/usr\/.*
+  16: SKIP => ^\/sbin\/.*
+  17: SKIP => ^\/bin\/.*
+  18: SKIP => ^\/etc\/.*
+  19: SKIP => ^\/root\/.*
+  20: SKIP => .*\/gcc
+  21: SKIP => .*\/g\+\+
+  22: SKIP => .*\/cc1plus
+  23: SKIP => .*\/cc1
+  24: SKIP => .*\/collect2
+  25: SKIP => .*\/f951
+  26: SKIP => .*\/gfortran
+  27: SKIP => .*\/git
+  28: SKIP => .*\/icc
+  29: SKIP => .*\/icpc
+  30: SKIP => .*\/ifort
+  31: SKIP => .*\/lua
+  32: SKIP => .*\/mpiCC
+  33: SKIP => .*\/mpicc
+  34: SKIP => .*\/mpicxx
+  35: SKIP => .*\/mpif77
+  36: SKIP => .*\/mpif90
+  37: SKIP => .*\/mpifort
+  38: SKIP => .*\/mpifc
+  39: SKIP => .*\/mpigcc
+  40: SKIP => .*\/mpigxx
+  41: SKIP => .*\/mpiicc
+  42: SKIP => .*\/mpiicpc
+  43: SKIP => .*\/mpiifort
+  44: SKIP => .*\/mpiexec.hydra
+  45: SKIP => .*\/hydra_pmi_proxy
+  46: SKIP => .*\/ompi_info
+  47: SKIP => .*\/opal_wrapper
+  48: SKIP => .*\/orterun
+  49: SKIP => .*\/vtwrapper
+  50: SKIP => .*\/conftest
+  51: SKIP => .*\/CMakeTmp\/cmTryCompileExec[0-9][0-9]*
+  52: SKIP => .*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*
+================== src/tmpl/xalt_config.py ==================
+  53: KEEP => .*
+
+*----------------------*
+ Array: pathArgPatternA
+*----------------------*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   0: JUMP_1 => .*\/python[0-9][^/;][^/;]*;-m
+   1: SKIP => .*\/python[0-9][^/;][^/;]*;-c
+   2: SKIP => .*\/python[0-9][^/;][^/;]*;.*\/share\/.*
+   3: PKGS => .*\/python[0-9][^/;][^/;]*;.*\/data\/.*
+   4: PKGS => .*\/python[0-9][^/;][^/;]*;
+   5: SKIP => .*\/fakePrgm;.*\/share\/.*
+   6: KEEP => .*\/fakePrgm;.*\/data\/.*
+   7: JUMP_1 => .*\/fakePrgm;--opt
+   8: CONTINUE => .*\/fakePrgm;--opt=.*
+   9: KEEP => .*\/fakePrgm;
+================== src/tmpl/xalt_config.py ==================
+  10: CONTINUE => [^;]*;-.*
+  11: CONTINUE => .*
+
+*----------------------*
+ Array: envPatternA
+*----------------------*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   0: SKIP => ^MKLROOT=.*
+   1: SKIP => ^MKL_DIR=.*
+   2: SKIP => ^MKL_INCLUDE=.*
+   3: SKIP => ^MKL_LIB=.*
+   4: SKIP => ^MPICH_HOME=.*
+   5: SKIP => ^MV2_COMM_WORLD=.*
+   6: SKIP => ^MV2_CPU_BINDING_POLICY=.*
+   7: SKIP => ^MV2_DEFAULT_TIME_OUT=.*
+   8: SKIP => ^MV2_HOMOGENEOUS_CLUSTER=.*
+   9: SKIP => ^MV2_HYBRID_BINDING_POLICY=.*
+  10: SKIP => ^MV2_IBA_HCA=.*
+  11: SKIP => ^MV2_NODE_ID=.*
+  12: SKIP => ^MV2_NUM_NODES_IN_JOB=.*
+  13: SKIP => ^MV2_THREADS_PER_PROCESS=.*
+  14: SKIP => ^MV2_USE_HUGEPAGES=.*
+  15: SKIP => ^MV2_USE_OLD_BCAST=.*
+  16: SKIP => ^MV2_USE_RING_STARTUP=.*
+  17: SKIP => ^MV2_USE_UD_HYBRID=.*
+  18: SKIP => ^OMP_NUM_THREADS=.*
+  19: SKIP => ^__.*
+  20: KEEP => ^I_MPI_INFO_NUMA_NODE_MAP=.*
+  21: KEEP => ^I_MPI_INFO_NUMA_NODE_NUM=.*
+  22: KEEP => ^I_MPI_PIN_INFO=.*
+  23: KEEP => ^I_MPI_PIN_MAPPING=.*
+  24: KEEP => ^I_MPI_THREAD_LEVEL=.*
+  25: KEEP => ^I_MPI_TMI_PROVIDER=.*
+  26: KEEP => ^LAUNCHER_JID=.*
+  27: KEEP => ^LD=.*
+  28: KEEP => ^LD_LIBRARY_PATH=.*
+  29: KEEP => ^LOADEDMODULES=.*
+  30: KEEP => ^MODULEPATH=.*
+  31: KEEP => ^MKL.*
+  32: KEEP => ^MV2_.*
+  33: KEEP => ^OFFLOAD.*
+  34: KEEP => ^OMP.*
+  35: KEEP => ^PATH=.*
+  36: KEEP => ^PYTHON.*
+  37: KEEP => ^R_.*
+  38: KEEP => ^TACC_AFFINITY_ENABLED=.*
+  39: KEEP => ^_LMFILES_=.*
+================== src/tmpl/xalt_config.py ==================
+  40: SKIP => .*
+
+*----------------------*
+ Array: pkgPatternA
+*----------------------*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   0: SKIP => ^R:name:stats
+   1: SKIP => ^R:name:base
+   2: SKIP => ^R:name:methods
+   3: SKIP => ^python:name:_.*
+   4: SKIP => ^python:path:[^/].*
+   5: SKIP => ^python:path:\/home
+================== src/tmpl/xalt_config.py ==================
+   6: KEEP => .*
+
+*----------------------*
+ Array: pyPkgPatternA
+*----------------------*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   0: { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r'^[^/]'},
+   1: { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r'^_'},
+   2: { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r'.*\.'},
+   3: { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r'.*/.local/'},
+   4: { 'k_s' : 'SKIP', 'kind' : 'path', 'patt' : r'/home'},
+================== src/tmpl/xalt_config.py ==================
+   5: { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r'^os$'},
+   6: { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r'^re$'},
+   7: { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r'^sys$'},
+   8: { 'k_s' : 'SKIP', 'kind' : 'name', 'patt' : r'^subprocess$'},
+   9: { 'k_s' : 'KEEP', 'kind' : 'path', 'patt' : r'.*'},
+
+*----------------------*
+ Array: ingestPatternA
+*----------------------*
+================== /home/mclay/w/xalt/testing/Config/rtm_config.py ==================
+   0: 0.0000 => .*\/foobar
+   1: 0.0100 => .*\/BAZ
+================== src/tmpl/xalt_config.py ==================
+   2: 1.0000 => .*
+
+*-------------------------------*
+ Array: Non-MPI (scalar) interval
+*-------------------------------*
+Time Range(seconds): [0, 1.79769e+308]: probability: 1
+
+*----------------------*
+ Array: MPI interval
+*----------------------*
+Time Range(seconds): [0, 1.79769e+308]: probability: 1
+
