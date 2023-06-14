@@ -1,0 +1,119 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data.
+
+%% page 
+%\begin{frame}{}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%\end{frame}
+%
+%% page 
+%\begin{frame}[fragile]
+%    \frametitle{}
+% {\tiny
+%    \begin{semiverbatim}
+%    \end{semiverbatim}
+%}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%
+%\end{frame}
+
+
+
+\begin{document}
+\title[XALT]{XALT 3.0: What Got Us Here}
+\author{Robert McLay}
+\date{June 15, 2023}
+
+% page 1
+\frame{\titlepage}
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item Releasing XALT 3.0 today
+    \item Why change from XALT 2.10.*?
+    \item What is new here XALT 3.0?
+    \item A summary of XALT 2.0 and now
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{XALT 3.0 release}
+  \begin{itemize}
+    \item I have been waiting for a good reason to bump XALT to 3.0
+    \item It has been a long trip from the first release of XALT 2.0
+    \item First xalt check-in was in 2014.
+    \item The first release of XALT 2.0.0-devel was in April 17, 2018.
+    \item XALT 3.0 is a evolution, not the revolution that 2.0 was.
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{XALT 1.0 $\Rightfooter$ XALT 2.0}
+  \begin{itemize}
+    \item XALT 1.0 use mpirun/ibrun to capture runtime and info about
+      mpi executions (Only MPI executions tracked)
+    \item XALT 2.0 introduced the ELF trick to attach to \emph{every}
+      execution to track all programs executions
+    \item The journey to XALT 3.0 is how to deal with this fire hose of
+      data
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{Major changes to XALT since 2.0}
+  \begin{itemize}
+    \item Improved transport methods: SYSLOG, File, Curl
+    \item Better debugging of XALT operations
+    \item Filtering
+    \item Improved Performance
+    \item Better Container Support.
+    \item Support when UUID aren't
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item Available now in the testing branch of XALT
+    \item It works with the cases I have tested with
+    \item Some support for skipping over arguments.
+    \item Please test it out.
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Future Topics?}
+  \begin{itemize}
+    \item Next Meeting will be on June15, 2023 at 10:00 am
+      U.S. Central (15:00 UTC)
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}

@@ -1,0 +1,58 @@
+Notes for June 15th meeting:
+
+Announcing XALT 3.0 Release:
+
+All the important changes from XALT 2.0
+
+* XALT 2.0 release:
+** Switched from using mpirun/ibrun etc to track only mpi executions
+** To using ELF trick to track all executions
+* Major changes from XALT 2.0 to 3.0
+** Support for curl transport
+** Use of SYSLOG transfer
+** Support for writing to a global shared location with hashing directories: 000 to 997
+*** Avoids race condition when writing to $HOME/.xalt.d
+** Support for XALT_TRACING to debug XALT operations
+** Allow sites track or ignore command line
+** Support for Tracking whether NVIDIA GPU are used or not.
+
+* Filtering
+** Usually to much data from short scalar (non-MPI) executions -> must filter.
+** Some users are using short small MPI executions to train Neural nets -> must filter MPI programs
+** Must handle long running/non-terminating MPI programs 
+** Sampling allows for tracking programs like sed, perl, cp and awk
+
+* Improved Performance
+** Stop taking SHA1 of libraries
+** Json record from job execution tracking includes timing record
+** Full Tracking is less than 0.01 seconds in my tests. 
+
+* Better container support
+** copy required libraries (libcrypto, libuuid, libdcgm,  etc) to XALT install directory
+** Use dlopen to link to required libraries
+** Support for container built with ALPINE ( Non glibc container)
+
+* Better instrumentation for reading in json records with either file or syslog records
+
+* Two useful programs:
+** xalt_configuration_report: Report on how XALT is configured for your site
+** xalt_extract_record: How and Who and when an execution was built.
+
+* Some UUID implementation can give duplicates
+** XALT uses CRC to keep only one of the dups
+
+
+* XALT used to call a C++ program to generate the json execution record
+** A version of MPI prevented any program execution after MPI_Finalize was called.
+** This prevented any mpi execution from being tracked.
+** Found a C hash table implementation (uthash etc)
+*** Not connected to Univ. of Texas!
+** Rewrote all the C++ function in C so that there is (almost) no execution called after MPI_Finalize
+*** the curl program is the only exception
+
+
+* I tried to get to XALT to trap signal -> a discussion for later.
+
+* Support for package filtering based on command line arguments
+
+* Support for ARM based linux computers.  Tested on ARM Macs and ARM Nvidia computers.
