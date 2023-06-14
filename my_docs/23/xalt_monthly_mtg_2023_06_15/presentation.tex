@@ -89,12 +89,55 @@
   \begin{itemize}
     \item Improved transport methods: SYSLOG, File, Curl
     \item Better debugging of XALT operations
-    \item Filtering
+    \item Filtering and Sampling
     \item Improved Performance
     \item Better Container Support.
     \item Support when UUID aren't
   \end{itemize}
 \end{frame}
+
+% page 6
+\begin{frame}{Better Debugging of XALT Operations}
+  \begin{itemize}
+    \item Track what XALT does during execution
+    \item XALT_TRACING=run try.exe
+    \item Track what XALT does during Linking:
+    \item XALT_TRACING=link gcc -o try.exe try.c
+    \item Track what XALT does during ingestion:
+    \item xalt_file_to_db.py -D ...
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{XALT Filtering and Sampling}
+  \begin{itemize}
+    \item XALT generates a fire hose worth of data.
+    \item Choice 1: Use big computer(s)  to collect the data
+    \item Choice 2: Filter and Sample
+    \item XALT can filter based on path
+    \item (NEW) filtering based on command line arguments
+    \item XALT does both filtering and sampling (Site configurable)
+   \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{XALT Sampling}
+  \begin{itemize}
+    \item Sampling based on execution time
+    \item Different sampling rules possible for MPI and NON-MPI
+      executions
+    \item Next meeting: Design changes for Sampling and Signal
+      handling support and failure
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{Improved Performance}
+  \begin{itemize}
+    \item
+  \end{itemize}
+\end{frame}
+
 
 % page 10
 \begin{frame}{Conclusions}
