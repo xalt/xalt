@@ -57,23 +57,23 @@
     \item Releasing XALT 3.0 today
     \item Why change from XALT 2.10.*?
     \item What is new here XALT 3.0?
-    \item A summary of XALT 2.0 and now
+    \item A summary of changes from XALT 2.0 to now
   \end{itemize}
 \end{frame}
 
 % page 3
 \begin{frame}{XALT 3.0 release}
   \begin{itemize}
-    \item I have been waiting for a good reason to bump XALT to 3.0
     \item It has been a long trip from the first release of XALT 2.0
     \item First xalt check-in was in 2014.
     \item The first release of XALT 2.0.0-devel was in April 17, 2018.
-    \item XALT 3.0 is a evolution, not the revolution that 2.0 was.
+    \item XALT 2.0 to 3.0 is a evolution, not the revolution that 1.0
+      to 2.0 was.
   \end{itemize}
 \end{frame}
 
 % page 4
-\begin{frame}{XALT 1.0 $\Rightfooter$ XALT 2.0}
+\begin{frame}{XALT 1.0 $\Rightarrow$ XALT 2.0}
   \begin{itemize}
     \item XALT 1.0 use mpirun/ibrun to capture runtime and info about
       mpi executions (Only MPI executions tracked)
@@ -100,11 +100,11 @@
 \begin{frame}{Better Debugging of XALT Operations}
   \begin{itemize}
     \item Track what XALT does during execution
-    \item XALT_TRACING=run try.exe
+    \item XALT\_TRACING=run try.exe
     \item Track what XALT does during Linking:
-    \item XALT_TRACING=link gcc -o try.exe try.c
+    \item XALT\_TRACING=link gcc -o try.exe try.c
     \item Track what XALT does during ingestion:
-    \item xalt_file_to_db.py -D ...
+    \item xalt\_file\_to\_db.py -D ...
   \end{itemize}
 \end{frame}
 
@@ -134,26 +134,93 @@
 % page 9
 \begin{frame}{Improved Performance}
   \begin{itemize}
-    \item
+    \item Stopped taking SHA1 of shared libraries
+    \item Full Tracking takes less than 0.01 seconds in my tests
+    \item Timing are included in run.*.json files in the Q/A table.
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Better Container support}
+  \begin{itemize}
+    \item This has been the biggest area of change.
+    \item All required libraries for XALT are copied to XALT
+      installation directories.
+    \item XALT uses dlopen to dynamically link in libuuid etc.
+    \item There is support for Alpine containers (non-glibc based)
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Two support programs}
+  \begin{itemize}
+    \item \texttt{xalt\_configuration\_report}: How XALT is configured
+      at your site
+    \item \texttt{xalt\_extract\_record}: How, who and when an
+      executable file was built.
+  \end{itemize}
+\end{frame}
+
+% page 12
+\begin{frame}{Protecing XALT from bad user programs}
+  \begin{itemize}
+    \item Better protection of malloc use in XALT
+    \item XALT doesn't free memory to avoid user memory errors
   \end{itemize}
 \end{frame}
 
 
-% page 10
+% page 13
+\begin{frame}{Some UUID implementations aren't }
+  \begin{itemize}
+    \item Older version of libuuid can produce duplicates
+    \item XALT depends on UUID
+    \item XALT now adds a CRC to the record to avoid issues when using
+      Syslog transmission
+  \end{itemize}
+\end{frame}
+
+% page 14
+\begin{frame}{Separate C++ programs replaced for Run record}
+  \begin{itemize}
+    \item XALT used C based *.so to attach to each executable
+    \item It used C++ programs to build json record (Hash Tables!!!)
+    \item A version of MPI libraries prevented any execution after
+      MPI\_finalize.
+    \item This caused a re-write build the json run record in C (Not
+      C++)
+    \item I found a hash table implementation in C (uthash etc) (Not
+      connnected to U Texas)
+  \end{itemize}
+\end{frame}
+
+% page 15
+\begin{frame}{Last Changes}
+  \begin{itemize}
+    \item Support for package filtering based on command line
+      arguments
+    \item Support for ARM based linux computers
+    \item There is one piece of assembly code (the watermark!)
+    \item Fortunately the gnu assembler is the same for X86 and ARM.
+    \item This is in terms of how strings are stored.
+  \end{itemize}
+\end{frame}
+
+% page 16
 \begin{frame}{Conclusions}
   \begin{itemize}
-    \item Available now in the testing branch of XALT
-    \item It works with the cases I have tested with
-    \item Some support for skipping over arguments.
-    \item Please test it out.
+    \item Many changes between XALT 2.0 and 3.0
+    \item Very few bug reports in the last year.
   \end{itemize}
 \end{frame}
 
 % page 11
 \begin{frame}{Future Topics?}
   \begin{itemize}
-    \item Next Meeting will be on June15, 2023 at 10:00 am
+    \item Next Meeting will be on July 20, 2023 at 10:00 am
       U.S. Central (15:00 UTC)
+    \item We will be discussing the design changes to support sampling
+      and why signal won't save us.
   \end{itemize}
 \end{frame}
 
