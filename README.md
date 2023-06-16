@@ -37,6 +37,22 @@ See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercompu
 
 ## ChangeLog
 
+### XALT 3.0
+
+Features/Bug Fixes:
+
+   1. Better support for containers including containers based on Alpine.
+
+   2. Use of CRC to protect when UUID are not unique.
+
+   3. Pre-ingestion filtering added.
+
+   $. Compiler support for rust, nim, and chapel
+
+   6. Support for ARM processors running Linux.
+
+   7. Filtering based on command line arguments.
+   
 ### XALT 2.10:
 
 Features/Bug:

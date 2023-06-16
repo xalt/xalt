@@ -1,3 +1,156 @@
+XALT 2.0+
+   (2.0.1-devel) Now TACC systems will track /bin/cp, /usr/bin/perl, etc with sampling
+   (2.0.2-devel) Support for SPSR sampling added
+   (2.0.3-devel) Now using XALT_SPSR_SAMPLING_RATE env var to override config'ed SPSR
+                 sampling rate
+   (2.0.4-devel) close stderr file and only dup(stderr) when XALT_TRACING is "yes" or "run"
+   (2.0.5-devel) Change xalt_usage_report to use node hours instead of core hours,
+                 ld.in now does not try to add xalt_initialize.so etc when building *.so
+   (2.0.6-devel) Support x86_64-gnu-linux-ld as yet another linker.
+   (2.0.7-devel) Now check status of fopen when opening files in /proc/*
+   (2.0.8-devel) Fix issue #25: Fix bug with my_hostname_processor and 32bit
+                 Force users to install XALT correctly.
+   (2.0.9-devel) Check that XALT_DIR/libexec/xalt_run_submission exists before running it.
+                 Report XALT_DIR and BAD_INSTALL with xalt_configuration_report
+XALT 2.1+
+   (2.1)   Moved devel branch to master branch. xalt_usage_report.py now report usage in
+           core-hours and not node-hours.  Direct2db option support removed. Added cwd
+	   field to xalt_link in db.
+   (2.1.1) Truncate non-numeric characters for PBS job_id.
+   (2.1.2) Fix of issue #29: updated contrib scripts,
+           Fix of issue #30: protecting from divide by zero errors.
+   (2.1.3) XALT registers a signal handler so that programs that seg-faults, fpe
+           and other signals will generate an end record.
+           XALT nolonger frees any malloc'ed memory in myfini().
+
+                 
+GPU Branch
+   (2.1.2-gpu) Support for using the DCGM library to record gpu info.
+               Correct support for defining the USE_DCGM macro.
+	       Updated DCGM messages.
+	       Wrap dcgmStartEmbedded() call to send stderr to /dev/null temporarily.
+	       Allow xalt_run_submission to write to stderr when it is called from my_fini().
+	       Add null termination for generated decoded c string in base64_decode().
+	       
+XALT 2.3+
+   (2.3.1)  Turn off DCGM library in 32 bit mode.
+   (2.3.2)  Fix bug in base64_decode string was off by one.
+   (2.3.3)  Support XALT_TRANSMISSION_STYLE=file_separate_dirs
+   (2.3.4)  Testing for 32 bit uuid library when BIT_32=yes   
+            Fix problem with tracking GPU and not running
+            nv-hostengine as root.
+   (2.3.5)  Test for 32 bit uuid library before testing dcgm.
+   (2.3.6)  Remove old x86_64-linux-gnu and i386-linux-gnu links
+            before creating them.
+   (2.3.7)  Fixed bugs in py_build_src/build_syshost_routine.py
+            w.r.t. strip_nodename_numbers()	    
+   (2.3.8)  Added note about needing to turn on accounting on GPU
+            issue #38: use mktemp instead of mkdir
+   (2.3.9)  issue #39: convert smart quotes in to regular quotes.
+   (2.3.10) Look for OMPI vars before PMI vars.
+   (2.3.11) Improved documentation for the config.py file
+            Point sys-admins to the config.py when hostname and
+	    executable path reject.
+   (2.3.12) Removing some extra debugging code that leaked from
+            trey_dbg branch 
+
+XALT 2.4+
+   (2.4.2) Added a static version of libuuid.a to built as part of XALT.
+                     
+XALT 2.5+
+   Because of @git@ bug in Makefile.in that only shows up in the dist target.  The fix required
+   that XALT move directly to 2.6
+   
+XALT 2.6+
+    (2.6.1)  * Fix quote bug in configure.ac/configure.
+    (2.6.2)  * Fix bug in configure.ac/configure/aclocal.m4 that tests for a valid MySQLdb python module.
+    (2.6.3)  * Fix bug when requiring python scripts like xalt_syslog_to_db.py to be required to run python3.
+             * Fix bug with the storing of cwd in xalt_link.
+    (2.6.4)  * Fix bug with SYSHOST and errors in xalt_build_descriptA table.
+    (2.6.5)  * Fix bug in xalt_transmission_factory.py
+    (2.6.6)  * Fix bug in ld.in where the path was restricted for commands like as and ld that must have
+               the user's Path.
+    (2.6.7)  * Now support reading /proc/$PID/maps instead of parsing the output of ldd
+    (2.6.8)  * Now supporting using the vendor note to hold the XALT watermark.
+    (2.6.9)  * issue #4: Add default signal handler when re-raising the signal after my_fini() is fixed
+    (2.6.10) * issue #4: Remove SIGINT from the list of signals that XALT tries to capture.
+    (2.6.11) * Add XALT_RANDOM_NUMBER to the environment of the programs running under XALT.
+    (2.6.12) * issue #6: added xalt.spec
+             * issue #7: xalt_file_to_db.py must filter on syshost
+             * using the update_version program xalt.spec and docs/source/conf.py are updated with the new version.
+    (2.6.13) * issue #9: Handle spaces and double quotes in executable filenames.
+    (2.6.14) * Make sure that all capture calls and system calls in xalt_initialize.c are protected against
+               spaces in paths.  Changed end2end test to include a directory in $PATH that has a space in it.
+             * Adding CWD to watermark.
+	     * Make explicit in xalt_configuration_report and in the docs that $HOME and $USER must be defined.
+    (2.6.15) * Added a debug message that reports that the "directdb" method is NOT supported.
+
+
+XALT 2.7+
+    (2.7.1)  * Added contrib/TACC/build_default_2_account_str.in to build a json table that
+               maps users to default charge string.
+	     * xalt_syslog_to_db.in.py and xalt_file_to_db.in.py support --u2acct that allows sites
+	       to specify a default charge account string when it is not specify in the job script.
+	     * xalt_usage_report.in.py support --queue to only report from a particular queue.
+	     * PKG intermediate results are now written to /dev/shm/XALT_... instead of /tmp/XALT_...
+	       by default.
+    (2.7.2)  * Support for env var XALT_FILE_PREFIX.
+             * Make job_id filtering optional.
+    (2.7.3)  * Use uuid hash value to chose the 000 to 996 directory when using XALT_FILE_PREFIX.
+    (2.7.4)  * Sample all executables (MPI included) with MPI tasks counts < MPI_ALWAYS_RECORD
+    (2.7.5)  * Update xalt_configuration_report about XALT_SAMPLING and MPI_ALWAYS_RECORD
+    (2.7.6)  * Fix bugs introduced in version 2.7.5 about XALT_SAMPLING.
+             * Better reporting of when myinit() and myfini() have completed their work.
+             * Move uuid generation from libxalt_init.so to xalt_run_submission
+    (2.7.7)  * Use dlopen/dlsym to dynamically link-in the uuid and crypto libraries.
+               This allows XALT to be used with containers where libuuid.so and libcrypto.so
+               might not be in the container.
+    (2.7.8)  * Remember to use xalt-2.7.8 as tag not 2.7.8
+    (2.7.9)  * Fix bug introduced when adding --version to xalt_configuration_report.C
+    (2.7.10) * Stopping building libuuid. Instead copy libuuid.so from system to XALT's lib64 directory.
+    (2.7.11) * Allow yes0 and run0 as values for XALT_TRACING to only track proc=0.
+             * for TACC_config.py make 0 < t < 30 mins be 0.01% and 30mins < t < 120mins be 1%
+    (2.7.12) * Remove trailing newline from the shared libraries captured from /proc/$PID/maps.
+             * Ignore any trailing newlines and spaces in shared libraries when ingesting into DB.
+    (2.7.13) * Issue #19: To avoid a name collision between ambertools having their own function
+               named connect and libc's connect, XALT moved the call to xalt_syshost() from
+	       xalt_initialize.c to the xalt_run_submission executable.
+    (2.7.14) * Fix bug that was created with 2.7.11. Now XALT_TRACING=yes works with all mpi tasks and
+               XALT_TRACING=yes0 just traces from mpi task 0.
+    (2.7.15) * Switch XALTdb.py and Rmap_XALT.py to use xalt_rmapT.json instead of jsonReverseMapT.json
+             * Update documentation to explain reverseMap file and function tracking
+	     * ld.in only does function tracking if reverseMap file exists.
+             * use xalt_rmap_exists command to determine if reverseMap file exists.
+    (2.7.16) * To protect sites that use jsonReverseMapT.json for directory to module name mapping, I have
+               modified Rmap_XALT.py to look first for xalt_rmapT.json.  If not found then search for
+	       jsonReverseMapT.json and convert it to xalt_rmapT style.
+    (2.7.17) * Issue #20: Added a configure/Env. Var to control whether the complete command line
+               will be recorded.
+    (2.7.18) * Issue #21: README.md doc patch.
+    (2.7.19) * Fix bug with reporting GPU tracking when HAVE_DCGM=no and HAVE_NVML=yes in
+               xalt_configuration_report
+    (2.7.20) * Issue #22: Allow for the curl transmission style. Copy system libcurl into XALT
+               lib64 install directory and Rpath that directory into xalt_run_submission etc.
+             * Issue #23: Running XALT's "ld" alone now produces an error: No input files just
+               like the real ld.
+    (2.7.21) * Allow XALT to have separate sampling intervals for scalar or mpi programs.
+    (2.7.22) * Correctly handle the case where a static parent program is XALT tracking and 
+               this parent program fork-exec's a non-static child program also under XALT
+	       tracking.
+    (2.7.23) * Set the pid_str variable as late as possible.
+    (2.7.24) * Add nodename to pid_str. Free pid_str after use.
+    (2.7.25) * Zero memory locations before freeing data. Try not to put non-zero memory that
+               user code will find with malloc().
+	     * issue #24: check that /sys/module/nvidia exists before trying to track the GPU's
+	     * try to dlopen("libnvidia-ml.so.1") if libnvidia-ml.so cannot be found.
+    (2.7.26) * Have myfini() force xalt_run_submission to return the uuid to make sure that
+               xalt_run_submission finishes before the myfini() routine completes.
+    (2.7.27) * Support new table xalt_field_of_science which connects account string to
+               NSF's field_of_science and NSF Directorate
+    (2.7.28) * Adding SIG_USR2 to list of captured signals
+             * Correctly always return the UUID from myfini() in xalt_initialize.c
+
+             
 XALT 2.8+
     (2.8.1)   * progressBar.py: handle the case where pbar.update(i) where i could be greater than the max value
               * xalt_file_to_db.in.py: Cleaned-up all file not found exceptions
@@ -168,7 +321,6 @@ XALT 2.10+
     (2.10.44) * Add a try block around parsing Site's config.py file.  Report error in config.py
                 if found.
     (2.10.45) * Fix typo in ld.in which prevented xalt_strip_linklib's from working.
-W.I.P:
     (2.10.46) * Fix bug so that my_hostname_parser config option works
               * Remove /tmp/tmp.* directories after configure is done with them.
 	      * xalt_generate_watermark.c now uses C style comments instead of '#' at
@@ -178,4 +330,5 @@ W.I.P:
               * Removed illegal instruction test as it is no portable from end2end test
 	      * Fixed bug where test_record_pkg was not run in syslog test
 	      * Now ignore arm programs like as and ld.bfd in syslog test
-	      
+              * Support for command line filtering
+              
