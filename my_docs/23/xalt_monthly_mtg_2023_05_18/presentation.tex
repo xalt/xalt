@@ -1,0 +1,186 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data.
+
+%% page 
+%\begin{frame}{}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%\end{frame}
+%
+%% page 
+%\begin{frame}[fragile]
+%    \frametitle{}
+% {\tiny
+%    \begin{semiverbatim}
+%    \end{semiverbatim}
+%}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%
+%\end{frame}
+
+
+
+\begin{document}
+\title[XALT]{Path arg updates}
+\author{Robert McLay}
+\date{May 18, 2023}
+
+% page 1
+\frame{\titlepage}
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item This is an update from the last meeting in March.
+    \item Wrong before: Python3 has two options that take arguments
+    \item \texttt{python3 -c "print(3.0/2)"}
+    \item \texttt{python3 -m "json.tool" run.json}
+    \item It is currently available under the testing branch
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Reminder: XALT does the filtering for you}
+  \begin{itemize}
+    \item This consists of two parts in your site Config.py file
+    \item Changes to path\_patterns
+    \item Add in a new group of patterns: path\_arg\_patterns
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}[fragile]
+    \frametitle{Adding the CUSTOM tag to path\_patterns}
+ {\tiny
+    \begin{semiverbatim}
+path_patterns = [
+    ['CUSTOM',  r'.*\\/python[0-9][^/][^/]*'],
+    ...
+]
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item Only paths that have the ``CUSTOM'' tag will get further filtering
+    \item A site can have as many ``CUSTOM'' tags as they like
+  \end{itemize}
+
+\end{frame}
+
+% page 5
+\begin{frame}[fragile]
+    \frametitle{The new \texttt{path\_arg\_pattern}}
+ {\tiny
+    \begin{semiverbatim}
+path_arg_patterns = [
+  ['JUMP_1',r'.*\\/python[0-9][^/;][^/;]*;-m'],
+  ['SKIP',  r'.*\/python[0-9][^/;][^/;]*;-c'],
+  ['SKIP',  r'.*\\/python[0-9][^/;][^/;]*;.*\\/share\\/.*'],
+  ['PKGS',  r'.*\\/python[0-9][^/;][^/;]*;.*\\/data\\/.*'],
+  ['PKGS',  r'.*\/python[0-9][^/;][^/;]*;'],
+]
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item The pattern is path + ``;'' + arg as shown above
+      \begin{enumerate}
+        \item SKIP any python scripts that have /share/ as part of the
+          path
+        \item KEEP any python scripts that have /data/ as part of the
+        \item KEEP any python scripts that have neither of the above
+      \end{enumerate}
+    \item Note the change in how the executable pattern is written!
+    \item The first python line skips over -m option and continues parsing
+    \item The second python line with -c says to ignore this command.
+  \end{itemize}
+
+\end{frame}
+
+% page 6
+\begin{frame}[fragile]
+    \frametitle{Rules}
+ {\tiny
+    \begin{semiverbatim}
+    \end{semiverbatim}
+}
+  \begin{itemize}
+    \item For ``CUSTOM'' tags the arguments are each processed
+    \item Arguments that start with minus [-] are ignored
+    \item All other arguments would be abspath and checked for existance
+      before being run through path\_arg\_patterns
+    \item Not perfect but reasonably safe
+  \end{itemize}
+\end{frame}
+
+
+% page 7
+\begin{frame}{Show this in action}
+  \begin{itemize}
+    \item xalt\_configuration\_report output
+    \item example\_run.txt
+  \end{itemize}
+\end{frame}
+
+% page 8
+\begin{frame}{Other news}
+  \begin{itemize}
+    \item Testing XALT on M1 Mac with UTM running linux
+    \item Problem was that XALT writes an assembly watermark
+    \item Converted \# comments to /* comments */
+    \item This updated xalt.s now builds on Arm based linux
+    \item I will test XALT on other ARM platforms in the next month
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{Other news (II)}
+  \begin{itemize}
+    \item Once path arg testing is complete
+    \item And XALT now runs on several ARM platforms
+    \item The next version of XALT will be 3.0
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item Available now in the testing branch of XALT
+    \item It works with the cases I have tested with
+    \item Some support for skipping over arguments.
+    \item Please test it out.
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Future Topics?}
+  \begin{itemize}
+    \item Next Meeting will be on June15, 2023 at 10:00 am
+      U.S. Central (15:00 UTC)
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}
