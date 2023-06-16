@@ -55,7 +55,6 @@
 #include "xalt_header.h"
 #include "xalt_config.h"
 #include "xalt_dir.h"
-#include "xalt_path_parser.h"
 #include "xalt_hostname_parser.h"
 #include "xalt_tmpdir.h"
 #include "xalt_vendor_note.h"
@@ -63,6 +62,7 @@
 #include "build_uuid.h"
 #include "xalt_c_utils.h"
 #include "run_submission.h"
+#include "xalt_track_executable.h"
 
 #if USE_DCGM && USE_NVML
 #error "Both DCGM and NVML enabled.  This is not allowed."
@@ -95,7 +95,6 @@
 #define N_ELEMENTS(a) (sizeof(a)/sizeof((a)[0]))
 
 typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
-typedef enum { PKGS=1, KEEP=2, SKIP=3} xalt_parser;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
@@ -257,12 +256,13 @@ extern char **environ;
 void myinit(int argc, char **argv)
 {
   int    i;
-  int    produce_strt_rec = 0;
   char * p;
   char * p_dbg;
-  char * cmdline         = NULL;
-  char * ld_preload_strp = NULL;
-  char * pid_str         = NULL;
+  int    produce_strt_rec = 0;
+  int    debugMe          = 0;
+  char * cmdline          = NULL;
+  char * ld_preload_strp  = NULL;
+  char * pid_str          = NULL;
   char   dateStr[DATESZ];
   char   fullDateStr[FULLDATESZ];
   const char * v;
@@ -299,9 +299,9 @@ void myinit(int argc, char **argv)
 
   if (xalt_run_tracing && my_rank == 0)
     {
+      debugMe = 1;
       get_abspath(exec_path,sizeof(exec_path));
-      path_results = keep_path(exec_path);
-      path_parser_cleanup();
+      path_results = track_executable(debugMe, exec_path, argc, argv);
       xalt_tracing = (path_results != SKIP);
     }
 
@@ -444,9 +444,9 @@ void myinit(int argc, char **argv)
 
 
   /* Get full absolute path to executable */
-  get_abspath(exec_path,sizeof(exec_path));
-  path_results = keep_path(exec_path);
-  path_parser_cleanup();
+  get_abspath(exec_path, sizeof(exec_path));
+  debugMe = 0;
+  path_results = track_executable(debugMe, exec_path, argc, argv);
 
   if (path_results == SKIP)
     {
@@ -799,7 +799,7 @@ void myinit(int argc, char **argv)
   /************************************************************
    * Register a signal handler wrapper_for_myfini for all the
    * important signals. This way a program terminated by
-   * SIGFPE, SIGSEGV, etc will produce an end record.
+   * SIGFPE, SIGTERM, etc will produce an end record.
    *********************************************************/
   v = getenv("XALT_SIGNAL_HANDLER");
   if (!v)
@@ -1312,6 +1312,9 @@ static  double prgm_sample_probability(int ntasks, double runtime)
     }
   return prob;
 }
+
+
+
 
 
 #ifndef XALT_MEMORY_TEST

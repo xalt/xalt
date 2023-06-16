@@ -109,7 +109,7 @@ void* xmalloc(size_t size, const char* fn, int lineNo)
   exit(1);
 }
       
-void my_free(void *ptr,int sz)
+void my_free(void *ptr, int sz)
 {
   if (s_start_record && ptr != NULL)
     {
