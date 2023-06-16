@@ -123,30 +123,39 @@ def main():
 
   hostStrA    = [ '"----"']
   pathStrA    = [ '"----"']
+  pathArgStrA = [ '"----"']
   envStrA     = [ '"----"']
   pkgStrA     = [ '"----"']
   pyPkgStrA   = [ '"----"']
   ingestStrA  = [ '"----"']
 
-  hostStrA.extend(   convert_pattern(        namespace.get('hostname_patterns',   [])))
-  pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
-  envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
-  pkgStrA.extend(    convert_pattern(        namespace.get('pkg_patterns',        [])))
-  pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
-  ingestStrA.extend( convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
+  hostStrA.extend(    convert_pattern(        namespace.get('hostname_patterns',   [])))
+  pathStrA.extend(    convert_pattern(        namespace.get('path_patterns',       [])))
+  pathArgStrA.extend( convert_pattern(        namespace.get('path_arg_patterns',   [])))
+  envStrA.extend(     convert_pattern(        namespace.get('env_patterns',        [])))
+  pkgStrA.extend(     convert_pattern(        namespace.get('pkg_patterns',        [])))
+  pyPkgStrA.extend(   convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
+  ingestStrA.extend(  convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
   
   # Read and process the XALT configuration file that provides the defaults.
-  hostStrA.append(   '"===="' )
-  pathStrA.append(   '"===="' )
-  envStrA.append(    '"===="' )
-  pkgStrA.append(    '"===="' )
-  pyPkgStrA.append(  '"===="' )
-  ingestStrA.append( '"===="' )
+  hostStrA.append(    '"===="' )
+  pathStrA.append(    '"===="' )
+  pathArgStrA.append( '"===="' )
+  envStrA.append(     '"===="' )
+  pkgStrA.append(     '"===="' )
+  pyPkgStrA.append(   '"===="' )
+  ingestStrA.append(  '"===="' )
 
   hd_pathStrA = ['"===="']
 
   namespace = {}
-  exec(open(args.xaltCFG).read(),            namespace)
+  try:
+    exec(open(args.xaltCFG).read(),            namespace)
+  except:
+    print("\nUnable to parse python config file: ",args.xaltCFG,"-> see below:\n")
+    print(traceback.format_exc())
+    print("\nExiting!\n")
+    sys.exit(1)
   hd_pathA = namespace.get('head_path_patterns',  [])
   if (args.defaultDir):
     found = False
@@ -159,17 +168,19 @@ def main():
       hd_pathStrA.extend(convert_pattern([ ['SKIP', pattDefDir] ]))
   hd_pathStrA.extend(convert_pattern(        hd_pathA))
 
-  hostStrA.extend(   convert_pattern(        namespace.get('hostname_patterns',   [])))
-  pathStrA.extend(   convert_pattern(        namespace.get('path_patterns',       [])))
-  envStrA.extend(    convert_pattern(        namespace.get('env_patterns',        [])))
-  pkgStrA.extend(    convert_pattern(        namespace.get('pkg_patterns',        [])))
-  pyPkgStrA.extend(  convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
-  ingestStrA.extend( convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
+  hostStrA.extend(    convert_pattern(        namespace.get('hostname_patterns',   [])))
+  pathStrA.extend(    convert_pattern(        namespace.get('path_patterns',       [])))
+  pathArgStrA.extend( convert_pattern(        namespace.get('path_arg_patterns',   [])))
+  envStrA.extend(     convert_pattern(        namespace.get('env_patterns',        [])))
+  pkgStrA.extend(     convert_pattern(        namespace.get('pkg_patterns',        [])))
+  pyPkgStrA.extend(   convert_py_pkg_pattern( namespace.get('python_pkg_patterns', [])))
+  ingestStrA.extend(  convert_ingest_pattern( namespace.get('pre_ingest_patterns', [])))
   # If the --default_dir option is given then add XALT_DEFAULT_DIR to the list of paths to ignore.
       
   pattA = [
     ['@hostname_patterns@',        ",".join(hostStrA)],
     ['@path_patterns@',            ",".join(pathStrA)],
+    ['@path_arg_patterns@',        ",".join(pathArgStrA)],
     ['@head_path_patterns@',       ",".join(hd_pathStrA)],
     ['@env_patterns@',             ",".join(envStrA)],
     ['@pkg_patterns@',             ",".join(pkgStrA)],

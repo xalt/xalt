@@ -269,9 +269,13 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
       json_add_char_str(&json, my_sep,   "FOUND_RmapT",              rmapT_str);
 
-      json_add_array(&json, my_sep,   "hostnameA",    hostnameSz,      hostnameA);
-      json_add_array(&json, my_sep,   "pathPatternA", pathPatternSz,   pathPatternA);
-      json_add_array(&json, my_sep,   "envPatternA",  envPatternSz,    envPatternA);
+      json_add_array(&json, my_sep,   "hostnameA",       hostnameSz,       hostnameA);
+      json_add_array(&json, my_sep,   "pathPatternA",    pathPatternSz,    pathPatternA);
+      json_add_array(&json, my_sep,   "pathArgPatternA", pathArgPatternSz, pathArgPatternA);
+      json_add_array(&json, my_sep,   "envPatternA",     envPatternSz,     envPatternA);
+      json_add_array(&json, my_sep,   "pkgPatternA",     pkgPatternSz,     pkgPatternA);
+      json_add_array(&json, my_sep,   "pyPkgPatternA",   pyPkgPatternSz,   pyPkgPatternA);
+      json_add_array(&json, my_sep,   "ingestPatternA",  ingestPatternSz,  ingestPatternA);
       json_fini(&json, &jsonStr);
 
       std::cout << jsonStr << std::endl;
@@ -346,13 +350,14 @@ int main(int argc, char* argv[])
             << "      from the src/tmpl/xalt_config.py file as marked below\n"
             << "*------------------------------------------------------------------------------*\n\n";
 
-  displayArray(XALT_CONFIG_PY, "hostnameA",      hostnameSz,      hostnameA);
+  displayArray(XALT_CONFIG_PY, "hostnameA",       hostnameSz,       hostnameA);
   std::cout << "\nRemember that \"PKGS\" means a program that can also track internal packages\n";
-  displayArray(XALT_CONFIG_PY, "pathPatternA",   pathPatternSz,   pathPatternA);
-  displayArray(XALT_CONFIG_PY, "envPatternA",    envPatternSz,    envPatternA);
-  displayArray(XALT_CONFIG_PY, "pkgPatternA",    pkgPatternSz,    pkgPatternA);
-  displayArray(XALT_CONFIG_PY, "pyPkgPatternA",  pyPkgPatternSz,  pyPkgPatternA);
-  displayArray(XALT_CONFIG_PY, "ingestPatternA", ingestPatternSz, ingestPatternA);
+  displayArray(XALT_CONFIG_PY, "pathPatternA",    pathPatternSz,    pathPatternA);
+  displayArray(XALT_CONFIG_PY, "pathArgPatternA", pathArgPatternSz, pathArgPatternA);
+  displayArray(XALT_CONFIG_PY, "envPatternA",     envPatternSz,     envPatternA);
+  displayArray(XALT_CONFIG_PY, "pkgPatternA",     pkgPatternSz,     pkgPatternA);
+  displayArray(XALT_CONFIG_PY, "pyPkgPatternA",   pyPkgPatternSz,   pyPkgPatternA);
+  displayArray(XALT_CONFIG_PY, "ingestPatternA",  ingestPatternSz,  ingestPatternA);
 
   std::cout << "*-------------------------------*\n";
   std::cout << " Array: Non-MPI (scalar) interval\n";

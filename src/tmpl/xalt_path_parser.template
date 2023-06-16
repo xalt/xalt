@@ -3,15 +3,10 @@
 #include <string.h>
 #include "xalt_obfuscate.h"
 #include "xalt_c_utils.h"
+#include "xalt_path_parser.h"
 
 static char * strbuf   = NULL;
 static unsigned int sz = 0;
-enum {
-  SPSR = 1,
-  PKGS = 1,
-  KEEP = 2,
-  SKIP = 3
-};
 %}
 
 %%
@@ -24,7 +19,7 @@ int yywrap()
    return 1;
 }
 
-int keep_path(const char * path)
+xalt_parser keep_path(const char * path)
 {
   unsigned int len = strlen(path);
   if (sz < len+2)
@@ -40,7 +35,7 @@ int keep_path(const char * path)
   strbuf[len+1] = '\0';
 
   YY_BUFFER_STATE buffer = yy_scan_buffer(strbuf, len+2);
-  int token = yylex();
+  xalt_parser token = yylex();
   yy_delete_buffer(buffer);
 
   return token;

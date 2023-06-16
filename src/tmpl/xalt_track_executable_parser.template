@@ -1,0 +1,121 @@
+/* -*- c -*- */
+%{
+#include <string.h>
+#include <stdio.h>
+#include <linux/limits.h>
+#include "xalt_obfuscate.h"
+#include "xalt_c_utils.h"
+#define   ALLOCATE
+#include "xalt_parser.h"
+#undef    ALLOCATE
+#include "xalt_track_executable.h"
+#include "xalt_path_parser.h"
+#include "xalt_debug_macros.h"
+
+%}
+
+%%
+@path_arg_patterns@
+%%
+
+int yywrap()
+{
+   return 1;
+}
+
+xalt_parser track_executable(int xalt_tracing, const char * path, int argc, char* argv[])
+{
+  xalt_parser  token;
+  token = keep_path(path);
+  path_parser_cleanup();
+  if (token != CUSTOM)
+    return token;
+
+  unsigned int sz       = 2048;
+  unsigned int path_len = strlen(path);
+  int i;
+  char * cmdArg;
+  char * pattern        = (char *) XMALLOC(sz);
+  char abspath[PATH_MAX];
+  unsigned int j;
+  
+  DEBUG(stderr,"    track_executable():\n");
+  i = 1;
+  while(i < argc)
+    {
+      DEBUG(stderr,"    -> arg: %d: value: \"%s\"\n", i, argv[i]);
+      j = 0;
+
+      // Do not change any args that start with a '-'
+      if (argv[i][0] == '-')
+        cmdArg = argv[i];
+      else
+        {
+          // get absolute path to the argument
+          realpath(argv[i], abspath);
+
+          // Ignore any "file" arguments that do not exist.
+          if (! (access(abspath, F_OK) != -1))
+            {
+              i++;
+              continue;
+            }
+          cmdArg = abspath;
+        }
+
+      unsigned int arg_len = strlen(cmdArg);
+      unsigned int len     = path_len + arg_len + 3;
+      if (len > sz)
+        { 
+          my_free(pattern, sz);
+          sz = len;
+          pattern = (char *) XMALLOC(sz);
+        }
+      memcpy(&pattern[j], path,   path_len); j += path_len;
+      pattern[j++] = ';';
+      memcpy(&pattern[j], cmdArg, arg_len ); j += arg_len;
+      pattern[j++] = '\0';
+      pattern[j++] = '\0';
+
+      YY_BUFFER_STATE buffer = yy_scan_buffer(pattern, j);
+      token = yylex();
+      yy_delete_buffer(buffer);
+
+      DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %s\n", pattern, xalt_parserA[token]);
+      switch (token)
+        {
+        case PKGS: /* fallthru */
+        case KEEP: /* fallthru */
+        case SKIP:
+          my_free(pattern, sz);
+          return token;
+          break;
+        case CUSTOM:
+        case CONTINUE:
+          i++;
+          break;
+        case JUMP_1: /* fallthru */
+        case JUMP_2: /* fallthru */
+        case JUMP_3: /* fallthru */
+        case JUMP_4:
+          i += jumpArgA[token];
+          break;
+        }
+    }
+
+  // If here then no pattern match found
+  // Now test path no arguments
+  j = 0;
+  memcpy(&pattern[j], path,    path_len); j += path_len;
+  pattern[j++] = ';';
+  pattern[j++] = '\0';
+  pattern[j++] = '\0';
+  YY_BUFFER_STATE buffer = yy_scan_buffer(pattern, j);
+  token = yylex();
+  DEBUG(stderr,"    -> pattern: \"%s\", track_executable token: %s\n", pattern, xalt_parserA[token]);
+  yy_delete_buffer(buffer);
+  my_free(pattern, sz);
+  if (token == CONTINUE)
+    token = SKIP;
+  return token;
+}

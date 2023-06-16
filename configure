@@ -2681,6 +2681,7 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+
 ac_config_headers="$ac_config_headers src/__build__/xalt_header.h:src/util/xalt_header.h.in"
 
 
@@ -5811,6 +5812,12 @@ if test "$?" != 0; then
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_path_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_path_parser.lex
+if test "$?" != 0; then
+   rm -f makefile
+   exit 1
+fi
+
+$PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_track_executable_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_track_executable_parser.lex
 if test "$?" != 0; then
    rm -f makefile
    exit 1
