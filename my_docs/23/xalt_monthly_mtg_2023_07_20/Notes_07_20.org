@@ -1,0 +1,57 @@
+Notes for XALT Zoom meeting for July 20, 2023
+
+This talk is about how Sampling changed XALT and why Signals won't save us.
+
+* Originally XALT generated a start and end record
+
+* Then XALT 2 added to support for NON-MPI programs
+
+* Ran across a program ran for two hours and generated over 2 million records
+
+* It took over 4.5 days to ingest all those records
+
+* Start records where there to capture long running program that use the scheduler (i.e. slurm) to terminate the program
+** Those jobs would not generate an end record.
+
+* Decided to support sampling.  XALT measure the runtime. Then generate a random number
+** Your site Config.py controls sampling:
+** TACC uses the following for NON-MPI executions
+
+   0      < t < 30 min -> 0.01% chance
+   30 min <= t < 2 hours -> 1% chance
+   2 hours <= t < infinity -> 100% chance 
+
+* Changed XALT to not generate a start record for NON-MPI executions
+** Do not have to figure out which start records to ignore
+** Because they aren't being generated.
+
+* Means that XALT does not know anything about scalar programs that do not terminate.
+
+* Early on there was no sampling of MPI executions
+
+* Then a user used small 4 node jobs to train a neural network.
+** MPI needed sampling as well.
+
+* XALT wants to track long running MPI jobs that use the scheduler to terminate.
+** No end record generated.
+
+* XALT allows site to generate a start record for "Large" MPI executions
+** TACC uses 128 tasks (so not very large)
+** No start record is generate for MPI executions less than 128 tasks or whatever
+    your large mpi task number is.
+
+* Maybe use of signals could get rid of the need to generate a start record for "large" MPI executions
+** Not having to generate a start record would simplify things
+** No need to fill in exexcution that have Zero runtime
+
+* Slurm at least sends a signal that the job is about to terminate.
+** XALT could use that generate an end record !!!
+** But All the MPI start program capture that signal
+** And do not pass it on!!!
+
+* Also even that signal was passed on.  There is **NO GUARANTEE** that task 0 would be the one to collect it.
+
+* So signal won't save us from having to generate a start record for "Large" MPI executions.
+
+
+
