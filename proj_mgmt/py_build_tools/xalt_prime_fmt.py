@@ -31,11 +31,14 @@ def main():
   except:
     print("Prime number value must be a number not:", sys.argv[1])
     sys.exit(1)
-  if (i < 3):
+  if (i < 0):
     print("bad number: ",i)
     sys.exit(-1)
 
-  nd = int(math.log10(i)) + 1
+  if(i==0):
+    nd = 1
+  else:
+    nd = int(math.log10(i)) + 1
   result = "%0" + str(nd) + "d"
   print(result)
 

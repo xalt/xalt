@@ -5,10 +5,10 @@ import os, sys, re, math
 
 def isPrime(n):
   # Corner cases
-  if (n <= 1):
-    return False
-  if (n <= 3):
+  if (n==0 or n == 2 or n==3):
     return True
+  elif (n <= 1):
+    return False
 
   if (n % 2 == 0 or n % 3 == 0):
     return False
@@ -26,7 +26,7 @@ def main():
   except:
     print("Prime number value must be a number not:", sys.argv[1])
     sys.exit(1)
-  if (i < 3):
+  if (i < 0):
     sys.exit(-1)
   
   if (not isPrime(i)):

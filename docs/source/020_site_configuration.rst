@@ -163,7 +163,12 @@ directories under */global/xalt/*. In particular, the program::
   /opt/apps/xalt/xalt/sbin/create_xalt_directories.sh
 
 is used to create a prime number of directories named 000 to 996
-(typically) where the json result files are written.
+(typically) where the json result files are written.  
+
+A user installing  XALT can turn off the creation of prime number subdirectories
+ by setting  --with-primeNumber=0 to create a flat file hierarchy during 
+ configure command. Note that this is not an optimal way to keep thousands of 
+ files in a single directory.
 
   **NOTE**: It is important that whatever directory your site uses for
   the xaltFilePrefix (e.g. */global/xalt*) be a global shared location

@@ -68,11 +68,21 @@ void build_resultDir(char **resultDir, const char* kind, const char* transmissio
     }
   else
     {
-      int hashV = (int) strtol(&uuid_str[29], 0, 16) % XALT_PRIME_NUMBER;
-      if (strcasecmp(transmission,"file_separate_dirs") == 0)
-	asprintf(resultDir, "%s/%s/" XALT_PRIME_FMT "/",xalt_file_prefix, kind, hashV);
-      else
-	asprintf(resultDir, "%s/" XALT_PRIME_FMT "/",xalt_file_prefix,hashV);
+        if (!XALT_PRIME_NUMBER)
+        {
+            if (strcasecmp(transmission,"file_separate_dirs") == 0)
+                asprintf(resultDir, "%s/%s/",xalt_file_prefix, kind);
+            else
+                asprintf(resultDir, "%s/", xalt_file_prefix);
+        }
+        else
+        {
+          int hashV = (int) strtol(&uuid_str[29], 0, 16) % XALT_PRIME_NUMBER;
+          if (strcasecmp(transmission,"file_separate_dirs") == 0)
+            asprintf(resultDir, "%s/%s/" XALT_PRIME_FMT "/",xalt_file_prefix, kind, hashV);
+          else
+            asprintf(resultDir, "%s/" XALT_PRIME_FMT "/",xalt_file_prefix,hashV);
+        }
     }
 }
 
