@@ -1,0 +1,162 @@
+\documentclass{beamer}
+
+% You can also use a 16:9 aspect ratio:
+%\documentclass[aspectratio=169]{beamer}
+\usetheme{TACC16}
+\usepackage{graphicx}
+
+% It's possible to move the footer to the right:
+%\usetheme[rightfooter]{TACC16}
+
+
+% Detailed knowledge of application workload characteristics can
+% optimize performance of current and future systems. This may sound
+% daunting, with many HPC data centers hosting over 2,000 users running
+% thousands of applications and millions of jobs per month.  XALT is an
+% open source tool developed at the Texas Advanced Computing Center
+% (TACC) that collects system usage information to quantitatively report
+% how users are using your system. This session will explore the
+% benefits of detailed application workload profiling and how the XALT
+% tool has helped leading supercomputing sites unlock the power of their
+% application usage data.
+
+%% page 
+%\begin{frame}{}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%\end{frame}
+%
+%% page 
+%\begin{frame}[fragile]
+%    \frametitle{}
+% {\tiny
+%    \begin{semiverbatim}
+%    \end{semiverbatim}
+%}
+%  \begin{itemize}
+%    \item
+%  \end{itemize}
+%
+%\end{frame}
+
+
+
+\begin{document}
+\title[XALT]{How Sampling changed XALT and why Signals won't save us}
+\author{Robert McLay}
+\date{July 20, 2023}
+
+% page 1
+\frame{\titlepage}
+
+% page 2
+\begin{frame}{XALT: Outline}
+  \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
+  \begin{itemize}
+    \item XALT 2 can collect every execution
+    \item This is too much data (at least for TACC)
+    \item XALT 2 supports sampling to reduce the firehose of data.
+    \item This brought many changes in the way XALT works
+    \item I had hoped that signalling would allow XALT to drop the
+      start record.  
+  \end{itemize}
+\end{frame}
+
+% page 3
+\begin{frame}{Too much data}
+  \begin{itemize}
+    \item One job used two nodes to generate 2 Million records
+    \item It took over 4 days to load the 2 million records
+    \item Then another job used small 2 node executions to train a
+      neural network.
+    \item We were drowning in data
+  \end{itemize}
+\end{frame}
+
+% page 4
+\begin{frame}{Too much data $\Rightarrow$ Sampling}
+  \begin{itemize}
+    \item Old XALT generated a start and end record for all executions
+    \item This way failed executions could be tracked
+    \item Site controlled sampling based on runtime.
+    \item The longer the execution the more likely it will be
+      ``tracked'' or recorded.
+  \end{itemize}
+\end{frame}
+
+% page 5
+\begin{frame}{Start Record?}
+  \begin{itemize}
+    \item XALT doesn't generate a start record for NON-MPI executions
+    \item Do not want a start record that has to be ignored
+    \item Problem: What about long running MPI programs that terminate
+      by Job Scheduler
+    \item No End Record
+    \item Want to track these executions
+  \end{itemize}
+\end{frame}
+
+% page 6
+\begin{frame}{``Large'' MPI programs special treatment}
+  \begin{itemize}
+    \item Any execution MPI\_Tasks $<$ MPI\_ALWAYS\_RECORD (128 at TACC)
+      will NOT generate a start record
+    \item MPI\_Tasks $\geq$ MPI\_ALWAYS\_RECORD will generate a start
+      record
+    \item This way ``Big'' executions will always be tracked.
+    \item If runtime $=$ zero then use job endtime to record runtime.
+    \item This is an extra steps that sites must do
+    \item This is outside of XALT data.
+  \end{itemize}
+\end{frame}
+
+% page 7
+\begin{frame}{Upshot of these rules}
+  \begin{itemize}
+    \item XALT knows nothing about non-MPI executions that fail
+    \item XALT knows nothing about ``small'' MPI executions that fail
+    \item XALT knows nothing about non-tracked execution
+  \end{itemize}
+\end{frame}
+
+% page 8 
+\begin{frame}{What about signals?}
+  \begin{itemize}
+    \item Use signals and get rid of the start record
+      for ``Large'' MPI executions?
+    \item SLURM sends a signal that a job is about to end.
+    \item Can we use that?
+  \end{itemize}
+\end{frame}
+
+% page 9
+\begin{frame}{What about signals? (II)}
+  \begin{itemize}
+    \item Well, none of the MPI libraries I tested passed that signal through
+      to the running program.
+    \item Even if it did, XALT would require the signal that was
+      raised on task zero.
+  \end{itemize}
+\end{frame}
+
+% page 10
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item Sampling helps deal with the firehose of data
+    \item But Signals won't save us from having to generate a start
+      record on ``Large'' MPI executions.
+  \end{itemize}
+\end{frame}
+
+% page 11
+\begin{frame}{Future Topics?}
+  \begin{itemize}
+    \item Next Meeting will be on August 17, 2023 at 10:00 am
+      U.S. Central (15:00 UTC)
+  \end{itemize}
+\end{frame}
+
+%\input{./themes/license}
+
+\end{document}
