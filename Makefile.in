@@ -75,7 +75,7 @@ XALT_SPEC               := $(abs_srcdir)/xalt.spec
 XALT_SPEC_PATTERN       := $(abs_srcdir)/proj_mgmt/xalt_spec_patternA.lua
 CONF_PY                 := $(abs_srcdir)/docs/source/conf.py
 CONF_PY_PATTERN         := $(abs_srcdir)/proj_mgmt/conf_py_update_patternA.lua
-UPDATE_VERSION          := LUA_PATH='$(abs_srcdir)/proj_mgmt/tools_for_lua/?.lua;$$LUA_PATH;;' $(abs_srcdir)/proj_mgmt/updateVersion
+UPDATE_VERSION          := LUA_PATH="$(abs_srcdir)/proj_mgmt/tools_for_lua/?.lua;$$LUA_PATH;;" $(abs_srcdir)/proj_mgmt/updateVersion
 MODE                    := @MODE@
 
 MODE_X := $(shell $(srcdir)/proj_mgmt/convert_mode.sh -x $(MODE))
