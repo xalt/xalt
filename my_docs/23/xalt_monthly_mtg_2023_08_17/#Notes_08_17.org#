@@ -1,0 +1,33 @@
+Random ideas for Final XALT talk
+
+Lessons Learned over 10 years of XALT
+
+* Much of this talk was covered by the XALT 3.0 announcement
+
+* Possible lessons learned
+** Remote debugging via XALT_TRACING env var.
+** Good enough documentation
+** xalt_configuration_report
+** xalt_extract_record
+** Sampling
+** UUID issues
+** Connection to Lmod
+** 
+
+* Porting to arm
+** "as" works the same on Linux ARM and Linux X86
+
+* UpdateVersion foo
+** I love make gittag TAG= foo
+
+
+* Connect path pattern and sampling?
+** Could extend KEEP, SKIP, CUSTOM
+   To include other keywords like
+*** ALWAYS: never sample
+*** Sample: Allow for sampling
+*** Other choices maybe
+
+* Database?
+* 
+
