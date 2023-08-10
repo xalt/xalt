@@ -28,5 +28,46 @@ Lessons Learned over 10 years of XALT
 *** Sample: Allow for sampling
 *** Other choices maybe
 
+* Database?
+*
+
+------------------------------------------------------------
+
+* History
+** John Cazes, My boss asked if TACC could track Executions on our systems
+** It added code around our ibrun (aka mpirun)
+** Lariat was born
+** It only tracked MPI executions
+
+* Mark Fahey (from NICS) had a tool called ALTD
+* We joined forces to create XALT funded in 2013
+** Great help from Doug James to come up with a successful proposal
+* XALT combined the best parts of both projects (ALTD and Lariat)
+* XALT is eXtented ALTd
+
+* XALT 1 only tracked MPI executions by modifying our ibrun script to get the start/stop times
+* A suggestion from a colleague to ask users to include start and stop programs before and after their job submission scripts
+** To track non-mpi execution
+
+* XALT 2
+** My friend and colleague, Bill Barth found this very cool ELF trick to use LD_PRELOAD attach to every program that runs
+** Show example
+
+* The good news is that XALT can track everything
+* The bad news is that XALT can track everything
+
+* Implications
+** It is like I am part of every development team for every program that is run on the system
+** The XALT library is in the same namespace
+** show xalt_obfuscate.h contents
+** This is necessary to avoid name collisions
+
+* Bad memory usage by users: Failing to null the tail pointer in a link list
+** Unknown fact: System zeros memory before execution (first time)
+** Your program is responsible clean up after yourself but not others
+
+* Name collision example:  One program used a routine called "random" which interfered with libuuid's random
+** libuuid is important to XALT
+
 * 
 
