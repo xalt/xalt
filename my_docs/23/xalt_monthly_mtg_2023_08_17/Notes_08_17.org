@@ -69,5 +69,25 @@ Lessons Learned over 10 years of XALT
 * Name collision example:  One program used a routine called "random" which interfered with libuuid's random
 ** libuuid is important to XALT
 
-* 
+* Interesting Topics
+** XALT has been a group effort
+*** Kenneth Hoste -> Riccardo Murri -> tracking python imports
+*** IU team -> Tracking R imports
+*** Bill Barth -> Tracking MATLAB
+*** NVIDIA help for tracking GPU usage
+*** ...
 
+** Containers
+** Using python config.py script to generate C header files
+*** Flexible
+*** Fast action
+*** Downside -> requires rebuild/re-install to support changes to config.py
+
+** Debugging XALT at your site
+*** Configuration report
+*** extract record
+** Reverse Map
+*** Leveraging Lmod to help with XALT
+
+* Doc
+** Doc usage
