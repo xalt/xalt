@@ -74,7 +74,7 @@ Lessons Learned over 10 years of XALT
 *** Kenneth Hoste -> Riccardo Murri -> tracking python imports
 *** IU team -> Tracking R imports
 *** Bill Barth -> Tracking MATLAB
-*** NVIDIA help for tracking GPU usage
+*** NVIDIA help for tracking GPU usage (Scott McMillion)
 *** ...
 
 ** Containers
