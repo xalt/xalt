@@ -38,8 +38,8 @@ test_descript = {
 
 
      displayThis "module commands"
-     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
+     module list
 
      export COMPILER_PATH=$XALT_BIN
      export SBATCH_ACCOUNT=rtm

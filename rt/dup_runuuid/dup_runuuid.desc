@@ -30,8 +30,8 @@ test_descript = {
      installDB
 
      displayThis "module commands"
-     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
+     module list
      XALT_BIN=$outputDir/XALT/xalt/xalt/bin
      PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
 

@@ -35,9 +35,9 @@ test_descript = {
      echo '{ "mclay": "A-xyzzy" }' > u2acct.json
 
      displayThis "module commands"
-     module --quiet rm $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
      module --quiet load gcc mpich
-
+     module list
+   
    
      export XALT_DIR=$(outputDir)/XALT/$VERSION 
      export COMPILER_PATH=$XALT_BIN

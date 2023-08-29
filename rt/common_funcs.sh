@@ -6,7 +6,7 @@ initialize()
   unset LD_PRELOAD
   unset XALT_TRANSMISSION_STYLE
   export XALT_EXECUTABLE_TRACKING=no
-
+  module --quiet unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
   numStep=0
