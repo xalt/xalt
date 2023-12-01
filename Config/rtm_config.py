@@ -80,6 +80,8 @@ path_patterns = [
     ['SKIP',   r'.*\/mpiicc'],
     ['SKIP',   r'.*\/mpiicpc'],
     ['SKIP',   r'.*\/mpiifort'],
+    ['SKIP',   r'.*\/mpiexec'],
+    ['SKIP',   r'.*\/mpirun'],
     ['SKIP',   r'.*\/mpiexec.hydra'],
     ['SKIP',   r'.*\/hydra_pmi_proxy'],
     ['SKIP',   r'.*\/ompi_info'],
