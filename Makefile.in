@@ -36,6 +36,7 @@ MY_HOSTNAME_PARSER   	:= @MY_HOSTNAME_PARSER@
 OPTLVL               	:= -g -O2 
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
+TAR_VERSION             := $(package)-$(package)-$(VERSION)
 CRYPTO_STR              := @CRYPTO_STR@
 UUID_STR                := @UUID_STR@
 CURL_STR                := @CURL_STR@
@@ -418,14 +419,14 @@ build_tags:
 dist:
 	cd $(srcdir)                                                                        ; \
 	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \
-	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > xalt-$(VERSION).tar            ; \
+	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > $(TAR_VERSION).tar             ; \
 	$(RM) -rf DIST                                                                      ; \
 	mkdir DIST                                                                          ; \
         cd DIST                                                                             ; \
-        tar xf ../xalt-$(VERSION).tar                                                       ; \
-	find xalt-$(VERSION) -type f -print0 | xargs -0 sed -i 's/\@git\@/$(GIT_VERSION)/g' ; \
-        $(RM) ../xalt-$(VERSION).tar                                                        ; \
-	tar cjf ../xalt-$(VERSION).tar.bz2   xalt-$(VERSION)                                ; \
+        tar xf ../$(TAR_VERSION).tar                                                        ; \
+	find $(TAR_VERSION) -type f -print0 | xargs -0 sed -i 's/\@git\@/$(GIT_VERSION)/g'  ; \
+        $(RM) ../$(TAR_VERSION).tar                                                         ; \
+	tar cjf ../$(TAR_VERSION).tar.bz2   $(TAR_VERSION)                                  ; \
 	cd ..                                                                               ; \
 	$(RM) -rf DIST                                                                      ; 
 
