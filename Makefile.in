@@ -419,7 +419,7 @@ build_tags:
 dist:
 	cd $(srcdir)                                                                        ; \
 	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \
-	git archive --prefix=xalt-$(VERSION)/ $$GIT_BRANCH > $(TAR_VERSION).tar             ; \
+	git archive --prefix=$(TAR_VERSION)/ $$GIT_BRANCH > $(TAR_VERSION).tar              ; \
 	$(RM) -rf DIST                                                                      ; \
 	mkdir DIST                                                                          ; \
         cd DIST                                                                             ; \

@@ -1,6 +1,9 @@
 install:
 	cd my_build; $(MAKE) install
 
+dist:
+	cd my_build; $(MAKE) dist
+
 gittag:
 	cd my_build; $(MAKE) gittag TAG=$(TAG)
 
