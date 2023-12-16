@@ -41,6 +41,7 @@
 %define _config %{?config}
 %define _syshost %{?syshost}%{?!syshost:hardcode:cluster}
 %define _transmission %{?transmission}%{?!transmission:syslog}
+%define _build_id_links none
 
 %bcond_with gpu
 %bcond_without mpi
