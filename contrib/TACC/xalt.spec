@@ -67,7 +67,7 @@ programs.
 
 %prep
 
-%setup -n %{PNAME}-%{version}
+%setup -n %{PNAME}-%{PNAME}-%{version}
 
 %build
 %install
