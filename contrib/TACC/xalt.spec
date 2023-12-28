@@ -44,6 +44,7 @@ Requires: openssl-libs
 # BASIC DEFINITIONS
 #------------------------------------------------
 %define debug_package %{nil}
+%define _build_id_links none
 %include rpm-dir.inc
 
 %define PNAME xalt
