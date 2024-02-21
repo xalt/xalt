@@ -1,7 +1,7 @@
 AC_INIT
 AC_CONFIG_SRCDIR([Makefile.in])
 AC_CONFIG_HEADERS(src/__build__/xalt_header.h:src/util/xalt_header.h.in)
-AC_PROG_CC
+AC_PROG_CC([[gcc cl cc]])
 AC_PREFIX_DEFAULT(/usr/local)
 dnl AC_CONFIG_SUBDIRS(libuuid/src)
 
