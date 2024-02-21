@@ -129,6 +129,11 @@ case $SYSHOST in
   frontera)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
+    if [ -x $HOME/.up/bin/arch.py ]; then
+      base="$base/$($HOME/.up/bin/arch.py)"
+    else
+      base="$base/$(uname -m)"
+    fi
     ETC_DIR="/tmp/moduleData"
     SYSHOST_CONF="nth_name:2"
     CONFIG="../Config/TACC_config.py"
