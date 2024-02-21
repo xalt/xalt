@@ -4,7 +4,7 @@
 KIND=$1
 MODE=$2
 
-if [ $MODE = "user_default" ]; then
+if [ $MODE = "user_default" -o $MODE = "@MODE@" ]; then
    uid=$(id -u)
    umask=$(umask)
    system=$(uname -s)
