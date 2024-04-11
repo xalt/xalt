@@ -174,6 +174,7 @@ static int          have_uuid             = 0;
 static long         always_record         = 0L;
 static double       probability           = 1.0;
 static double       testing_runtime       = -1.0;
+static int          orig_pid              = 0;
 static pid_t        ppid                  = 0;
 static pid_t        pid                   = 0;
 static int          errfd                 = -1;
@@ -279,6 +280,7 @@ void myinit(int argc, char **argv)
 
   struct utsname u;
 
+  orig_pid             = getpid();
   double t0            = epoch();
   xalt_timer.init      = 0.0;
   xalt_timer.fini      = 0.0;
@@ -876,9 +878,18 @@ void myfini()
       my_stderr = fdopen(errfd,"w");
     }
 
+
   set_end_record();  /* Mark my_free() to not free since we are on the way out */
 
   DEBUG(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
+  pid = getpid();
+  if (pid != orig_pid)
+    {
+      DEBUG(my_stderr,"    -> exiting because myfini() has been called more than once via forking\n}\n\n");
+      close_out(my_stderr, xalt_err);
+      return;
+    }
+    
   if (getenv("__XALT_FINAL_STATE__"))
     {
       DEBUG(my_stderr,"    -> exiting because myfini() has been called more than once\n}\n\n");
