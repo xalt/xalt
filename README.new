@@ -2,4 +2,5 @@ XALT 3.0+
     (3.0.1) * PR60: allow --with-primeNumber=0 to not generated numbered sub-directories
 W.I.P:
     (3.0.2) * Add icx, ifx and icpx to list of otherCmplrA[]
-    
+            * Avoid generating extra end records when a process forks.
+              Only generate an end record when the pid is the same as in myinit().
