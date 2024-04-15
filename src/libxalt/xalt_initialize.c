@@ -176,7 +176,6 @@ static double       probability           = 1.0;
 static double       testing_runtime       = -1.0;
 static int          orig_pid              = 0;
 static pid_t        ppid                  = 0;
-static pid_t        pid                   = 0;
 static int          errfd                 = -1;
 static double       my_rand               = 0.0;
 static double       start_time            = 0.0;
@@ -354,7 +353,7 @@ void myinit(int argc, char **argv)
           reject_flag = XALT_UNAME_FAILURE;
           return;
         }
-      asprintf(&pid_str,"%d:%s", getpid(), u.nodename);
+      asprintf(&pid_str,"%d:%s", orig_pid, u.nodename);
       char* env_pid = getenv("__XALT_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
         {
@@ -489,7 +488,7 @@ void myinit(int argc, char **argv)
     }
 
   if (pid_str == NULL)
-    asprintf(&pid_str,"%ld:%s",(long) getpid(), u.nodename);
+    asprintf(&pid_str,"%ld:%s",(long) orig_pid, u.nodename);
 
   setenv("__XALT_INITIAL_STATE__",    STR(STATE),1);
   setenv("__XALT_STATE_PID__",        pid_str,1);
@@ -701,7 +700,6 @@ void myinit(int argc, char **argv)
   setenv("XALT_DIR",my_xalt_dir,1);
   my_free(my_xalt_dir, strlen(my_xalt_dir));
 
-  pid  = getpid();
   ppid = getppid();
 
   // This routine returns either "FALSE" for nothing found or the watermark.
@@ -773,7 +771,7 @@ void myinit(int argc, char **argv)
                   xalt_run_short_descriptA[run_mask], exec_path);
         }
       
-      run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
+      run_submission(&xalt_timer, orig_pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
                      xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
                      always_record, stderr);
 
@@ -882,8 +880,7 @@ void myfini()
   set_end_record();  /* Mark my_free() to not free since we are on the way out */
 
   DEBUG(my_stderr,"\nmyfini(%ld/%d,%s,%s){\n", my_rank, num_tasks, STR(STATE), exec_path);
-  pid = getpid();
-  if (pid != orig_pid)
+  if (orig_pid != getpid())
     {
       DEBUG(my_stderr,"    -> exiting because myfini() has been called more than once via forking\n}\n\n");
       close_out(my_stderr, xalt_err);
@@ -1122,7 +1119,7 @@ void myfini()
   
   fflush(my_stderr);
   xalt_timer.fini = epoch() - t0;
-  run_submission(&xalt_timer, pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
+  run_submission(&xalt_timer, orig_pid, ppid, start_time, end_time, probability, exec_path, num_tasks,
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
                  usr_cmdline, xalt_tracing, always_record, my_stderr);
   DEBUG(my_stderr,"    -> leaving myfini\n}\n\n");
