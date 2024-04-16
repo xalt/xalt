@@ -49,6 +49,13 @@ import os, sys, json
 
 from xalt_global import *
 
+py_script = sys.argv[0]
+tail      = py_script[-6:]
+if (tail == ".in.py"):
+  print("Please do not execute this version")
+  print("Use the installed version instead")
+  sys.exit(-1)
+
 RMapD   = os.path.join(XALT_ETC_DIR,"reverseMapD")
 
 rmapA   = RMapD.split(':')

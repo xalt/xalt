@@ -63,6 +63,13 @@ class MY_FILEH(object):
 
 
 def main():
+  py_script = sys.argv[0]
+  tail      = py_script[-6:]
+  if (tail == ".in.py"):
+    print("Please do not execute this version")
+    print("Use the installed version instead")
+    sys.exit(-1)
+
   fileName       = sys.argv[1]
   fileH          = MY_FILEH(fileName)
   syshostPattern = re.compile(r'syshost:([^ ]*) ')

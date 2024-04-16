@@ -465,6 +465,13 @@ def main():
   link and run files.
   """
 
+  py_script = sys.argv[0]
+  tail      = py_script[-6:]
+  if (tail == ".in.py"):
+    print("Please do not execute this version")
+    print("Use the installed version instead")
+    sys.exit(-1)
+
   # Using home directories or a global location.
   xalt_file_prefix = os.environ.get("XALT_FILE_PREFIX","@xalt_file_prefix@")
   

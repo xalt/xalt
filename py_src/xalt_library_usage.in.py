@@ -200,6 +200,13 @@ def percent_str(entry, total):
 
 
 def main():
+  py_script = sys.argv[0]
+  tail      = py_script[-6:]
+  if (tail == ".in.py"):
+    print("Please do not execute this version")
+    print("Use the installed version instead")
+    sys.exit(-1)
+
   XALT_ETC_DIR = os.environ.get("XALT_ETC_DIR","./")
   args         = CmdLineOptions().execute()
   config       = configparser.ConfigParser()     

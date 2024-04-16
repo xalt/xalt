@@ -441,6 +441,13 @@ def main():
   read from syslog file into XALT db.
   """
 
+  py_script = sys.argv[0]
+  tail      = py_script[-6:]
+  if (tail == ".in.py"):
+    print("Please do not execute this version")
+    print("Use the installed version instead")
+    sys.exit(-1)
+
   sA = []
   sA.append("CommandLine:")
   for v in sys.argv:

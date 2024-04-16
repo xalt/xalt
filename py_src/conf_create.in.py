@@ -103,6 +103,13 @@ class CreateConf(object):
 
 
 def main():
+  py_script = sys.argv[0]
+  tail      = py_script[-6:]
+  if (tail == ".in.py"):
+    print("Please do not execute this version")
+    print("Use the installed version instead")
+    sys.exit(-1)
+
   args = CmdLineOptions().execute()
   createConf = CreateConf(args)
   createConf.create()

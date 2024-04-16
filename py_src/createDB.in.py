@@ -104,6 +104,13 @@ def main():
   This program creates the Database used by XALT.
   """
 
+  py_script = sys.argv[0]
+  tail      = py_script[-6:]
+  if (tail == ".in.py"):
+    print("Please do not execute this version")
+    print("Use the installed version instead")
+    sys.exit(-1)
+
   args     = CmdLineOptions().execute()
   configFn = dbConfigFn(args.dbname)
   if (args.confFn):
