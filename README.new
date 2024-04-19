@@ -4,3 +4,7 @@ W.I.P:
     (3.0.2) * Add icx, ifx and icpx to list of otherCmplrA[]
             * Avoid generating extra end records when a process forks.
               Only generate an end record when the pid is the same as in myinit().
+	    * Issue #63: Wrap the pre_ingest_filter and pkgFilter libraries in XALTdb.py
+	    * Issue #63: Test that the pre_ingest_filter and pkgFilter libraries as late as possible
+	    * Issue #63: Make *.in.py files produce a msg that they should not be run.  Instead
+	      run the installed version.

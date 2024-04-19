@@ -41,17 +41,22 @@ try:
 except:
   pass
 
-#libcrc = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libcrcFast.so")))
-libpreIngest = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libpreIngest.so")))
-pre_ingest_filter = libpreIngest.pre_ingest_filter
-pre_ingest_filter.argtypes = [c_char_p]
-pre_ingest_filter.restype  = c_double
 
-libpkgFilter = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libpkgFilter.so")))
-pkgFilter = libpkgFilter.keep_pkg
-pkgFilter.argtypes = [c_char_p]
-pkgFilter.restype  = c_int
+pre_ingest_filter = False
+preIngestPath = os.path.join(dirNm, "../lib64/libpreIngest.so")
+if (os.path.exists(preIngestPath)): 
+  libpreIngest = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libpreIngest.so")))
+  pre_ingest_filter = libpreIngest.pre_ingest_filter
+  pre_ingest_filter.argtypes = [c_char_p]
+  pre_ingest_filter.restype  = c_double
 
+pkgFilter     = False
+pkgFilterPath = os.path.join(dirNm, "../lib64/libpkgFilter.so")
+if (os.path.exists(pkgFilterPath)): 
+  libpkgFilter = CDLL(os.path.realpath(os.path.join(dirNm, "../lib64/libpkgFilter.so")))
+  pkgFilter = libpkgFilter.keep_pkg
+  pkgFilter.argtypes = [c_char_p]
+  pkgFilter.restype  = c_int
 
 
 warnings.filterwarnings("ignore", "Unknown table.*")
@@ -415,6 +420,11 @@ class XALTdb(object):
     if (not exec_path):
       if (debug): sys.stdout.write("  --> failed to record: No exec_path found --> FAILURE\n\n")
       return XALTdb.FAIL
+
+    if (not pre_ingest_filter):
+      print ("failed to find: ",preIngestPath,"Exiting")
+      sys.exit(1)
+      
     exec_prob = pre_ingest_filter(exec_path.encode())
     prob      = random.random()
     if (prob > exec_prob):
@@ -618,6 +628,11 @@ class XALTdb(object):
     return XALTdb.STORE
 
   def pkg_to_db(self, debug, syshost, pkgT):
+
+    if (not pkgFilter):
+      print("Failed to find: ", pkgFilterPath, "-> Exiting")
+      sys.exit(1)
+
 
     keep        = 2
     skip        = 3
