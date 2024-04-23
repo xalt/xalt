@@ -50,7 +50,7 @@
 
 Summary: The XALT software usage tracking tool
 Name: xalt
-Version: 3.0.1
+Version: 3.0.2
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Base
@@ -178,6 +178,7 @@ EOF
 
 * Mon Apr 1 2019 Scott McMillan <smcmillan@nvidia.com>
 - Initial spec file
+
 
 
 
