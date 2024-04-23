@@ -97,7 +97,7 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
   local bin   = pathJoin(base,"bin")
 
   prepend_path{"PATH",          bin, priority="100"}
-  prepend_path("XALT_DIR"       base)
+  prepend_path("XALT_DIR",      base)
   prepend_path("LD_PRELOAD",    pathJoin(base,"$LIB/libxalt_init.so"))
   prepend_path("COMPILER_PATH", bin)
 

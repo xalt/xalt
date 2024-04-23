@@ -1,0 +1,20 @@
+# .readthedocs.yml
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+# version of configuration file (required)
+version: 2
+
+# Set the OS, Python version and other tools you might need
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.12"
+
+# Build from the docs/ directory with Sphinx
+sphinx:
+  configuration: docs/source/conf.py
+
+# also build docs in PDF format
+formats: [pdf]
+

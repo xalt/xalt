@@ -71,7 +71,7 @@ SETUP_CMD=
 echo SYSHOST: $SYSHOST
 
 case $SYSHOST in
-  rios | jedrik | lmod-test | xalt-lmod)
+  vato | rios | jedrik | lmod-test | xalt-lmod)
     echo "Building on $SYSHOST using rios rules"
     SUDO="sudo"
     base="/opt/apps"
@@ -112,22 +112,8 @@ case $SYSHOST in
     MAKE_OPTS=""
     ;;
 
-  maverick2)
-    echo "Building maverick2"
-    base="$HOME/l/pkg"
-    ETC_DIR="/tmp/moduleData"
-    SYSHOST_CONF="nth_name:2"
-    CONFIG="../Config/TACC_config.py"
-    TRANSMISSION="file"
-    TRACK_GPU="nvml"
-    MYSQL="no"
-    SETUP_CMD="module -q load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
-    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
-    CONF_OPTS='-with-MySQL=no CPPFLAGS=-I$TACC_CUDA_INC'
-    ;;
-
-  stampede2)
-    echo "Building s2"
+  stampede2 | stampede3)
+    echo "Building $SYSHOST"
     base="$HOME/l/pkg"
     ETC_DIR="/tmp/moduleData"
     SYSHOST_CONF="nth_name:2"
@@ -143,6 +129,11 @@ case $SYSHOST in
   frontera)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
+    if [ -x $HOME/.up/bin/arch.py ]; then
+      base="$base/$($HOME/.up/bin/arch.py)"
+    else
+      base="$base/$(uname -m)"
+    fi
     ETC_DIR="/tmp/moduleData"
     SYSHOST_CONF="nth_name:2"
     CONFIG="../Config/TACC_config.py"
