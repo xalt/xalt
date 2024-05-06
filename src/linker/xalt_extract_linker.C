@@ -29,7 +29,7 @@ void extract_linker(std::string& compiler, std::string& compilerPath, UT_array**
                                "mpipgic++", "mpipgicc", "mpipgifort",
                                "mpixlC",    "mpixlc",   "mpixlf"};
 
-  std::string otherCmplrA[] = { "rustc", "chpl", "nim", "ghc", "icx", "ifx", "icpx" };
+  std::string otherCmplrA[] = { "rustc", "chpl", "nim", "ghc", "icx", "ifx", "icpx", "nvcc" };
 
   int         ignorePrgSz  = sizeof(ignorePrgA )/sizeof(ignorePrgA[0]);
   int         otherCmplrSz = sizeof(otherCmplrA)/sizeof(otherCmplrA[0]);
