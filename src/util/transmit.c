@@ -66,7 +66,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           if (xalt_tracing)
             {
               perror("Error: ");
-              fprintf(my_stderr,"    unable to mkpath(%s) -> No XALT output\n", resultDir);
+              DEBUG(my_stderr,"    unable to mkpath(%s) -> No XALT output\n", resultDir);
             }
           return;
         }
@@ -79,19 +79,14 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       FILE* fp = fopen(tmpFn,"w");
       if (fp == NULL)
         {
-          if (xalt_tracing)
-            fprintf(my_stderr,"    Unable to open: %s -> No XALT output\n", fn);
+          DEBUG(my_stderr,"    Unable to open: %s -> No XALT output\n", fn);
         }
       else
         {
           fprintf(fp, "%s\n", jsonStr);
           fclose(fp);
           rename(tmpFn, fn);
-          if (xalt_tracing)
-            {
-              const char * method = xalt_file_transmission_method();
-              fprintf(my_stderr, "    Using %s method to store json file\n",method);
-            }
+          DEBUG(my_stderr,"    Using %s method to store json file\n",xalt_file_transmission_method());
           DEBUG(my_stderr,"    Wrote json %s file : %s\n",kind, fn);
         }
       my_free(tmpFn,strlen(tmpFn));

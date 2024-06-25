@@ -270,7 +270,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
 
   my_free(syshost, strlen(syshost));
   DEBUG(my_stderr,"  }\n\n");
-  if (xalt_tracing)
+  if (xalt_tracing && my_stderr)
     fflush(my_stderr);
 }
 
