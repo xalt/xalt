@@ -7,6 +7,9 @@ dist:
 gittag:
 	cd my_build; $(MAKE) gittag TAG=$(TAG)
 
+tags:
+	cd my_build; $(MAKE) tags
+
 world_update:
 	cd my_build; $(MAKE) world_update
 
