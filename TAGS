@@ -1543,17 +1543,17 @@ void myinit(256,10122
 void wrapper_for_myfini(839,29145
 static void close_out(851,29421
 void myfini(865,29605
-static int load_nvml(1145,39815
-static int load_dcgm(1196,41698
-static long compute_value(1240,43325
-static void get_abspath(1258,43686
-static volatile double epoch(1273,44030
-static unsigned int mix(1280,44151
-static  double prgm_sample_probability(1294,44534
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1335,45253
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1336,45373
-  __attribute__((section(".init_array"))) __typeof__(1338,45499
-  __attribute__((section(".fini_array"))) __typeof__(1339,45578
+static int load_nvml(1147,39867
+static int load_dcgm(1198,41750
+static long compute_value(1242,43377
+static void get_abspath(1260,43738
+static volatile double epoch(1275,44082
+static unsigned int mix(1282,44203
+static  double prgm_sample_probability(1296,44586
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1337,45305
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1338,45425
+  __attribute__((section(".init_array"))) __typeof__(1340,45551
+  __attribute__((section(".fini_array"))) __typeof__(1341,45630
 
 src/libxalt/parseProcMaps.c,52
 #define _GNU_SOURCE1,0
@@ -2390,7 +2390,7 @@ docs/source/005_whats_new.rst,25
 New Features in XALT1,0
 
 docs/source/index.rst,27
-function pointers 46,1818
+function pointers 53,2055
 
 docs/source/050_install_and_test.rst,59
 above XALT.  In other word,7,280
