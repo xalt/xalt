@@ -877,6 +877,8 @@ void myfini()
       close(STDERR_FILENO);
       dup2(errfd, STDERR_FILENO);
       my_stderr = fdopen(errfd,"w");
+      if ( !my_stderr )
+        my_stderr = stderr;
     }
 
 
