@@ -674,13 +674,13 @@ src/util/debug_macros.h,290
 #define STRINGIFY_base(4,45
 #define STRINGIFY(5,74
 #define HERE_fp(7,119
-#define HERE 8,223
-#define ARGS_FIRST(10,260
-#define ARGS_FIRST0(11,318
-#define ARGS_REST(13,352
-#define ARGS_REST0(14,408
-#define MAIN_DEBUG(16,450
-#define MAIN_DEBUG_base(18,573
+#define HERE 8,233
+#define ARGS_FIRST(10,270
+#define ARGS_FIRST0(11,328
+#define ARGS_REST(13,362
+#define ARGS_REST0(14,418
+#define MAIN_DEBUG(16,460
+#define MAIN_DEBUG_base(18,583
 
 src/util/xalt_vendor_note.h,108
 #define XALT_VENDOR_NOTE_H2,27
@@ -1542,18 +1542,18 @@ static dcgmHandle_t dcgm_handle 218,8313
 void myinit(256,10122
 void wrapper_for_myfini(839,29145
 static void close_out(851,29421
-void myfini(862,29580
-static int load_nvml(1140,39730
-static int load_dcgm(1191,41613
-static long compute_value(1235,43240
-static void get_abspath(1253,43601
-static volatile double epoch(1268,43945
-static unsigned int mix(1275,44066
-static  double prgm_sample_probability(1289,44449
-  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1330,45168
-  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1331,45288
-  __attribute__((section(".init_array"))) __typeof__(1333,45414
-  __attribute__((section(".fini_array"))) __typeof__(1334,45493
+void myfini(865,29605
+static int load_nvml(1147,39867
+static int load_dcgm(1198,41750
+static long compute_value(1242,43377
+static void get_abspath(1260,43738
+static volatile double epoch(1275,44082
+static unsigned int mix(1282,44203
+static  double prgm_sample_probability(1296,44586
+  __attribute__((section("__DATA,__mod_init_func"), used, aligned(sizeof(void*)))) __typeof__(1337,45305
+  __attribute__((section("__DATA,__mod_term_func"), used, aligned(sizeof(void*)))) __typeof__(1338,45425
+  __attribute__((section(".init_array"))) __typeof__(1340,45551
+  __attribute__((section(".fini_array"))) __typeof__(1341,45630
 
 src/libxalt/parseProcMaps.c,52
 #define _GNU_SOURCE1,0
@@ -1586,7 +1586,7 @@ static char        sha1buf[sha1buf32,737
 static char        buff[buff33,769
 static bool        need_sha1 34,798
 void run_submission(36,836
-void pkgRecordTransmit(277,9742
+void pkgRecordTransmit(277,9755
 
 src/libxalt/translate.c,285
 static const char * safe_get(7,112
@@ -2390,7 +2390,7 @@ docs/source/005_whats_new.rst,25
 New Features in XALT1,0
 
 docs/source/index.rst,27
-function pointers 46,1818
+function pointers 53,2055
 
 docs/source/050_install_and_test.rst,59
 above XALT.  In other word,7,280
@@ -2654,8 +2654,8 @@ function M.new(89,3873
 function M.new(new89,3873
 function M._build_tbl(120,4857
 function M._build_tbl(_build_tbl120,4857
-function M.build_tbl(184,6523
-function M.build_tbl(build_tbl184,6523
+function M.build_tbl(184,6533
+function M.build_tbl(build_tbl184,6533
 
 proj_mgmt/tools_for_lua/Optiks.lua,1391
 local function l_argsPack(33,1446
@@ -2697,6 +2697,9 @@ function M.parseEnvArg(380,11759
 function M.parseEnvArg(parseEnvArg380,11759
 function M.parse(435,13111
 function M.parse(parse435,13111
+
+proj_mgmt/tools_for_lua/.luatools_modules.list,12
+fileA=4,36
 
 proj_mgmt/locate_shared_library.c,40
 #define _GNU_SOURCE1,0

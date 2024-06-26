@@ -28,12 +28,17 @@ effective, and systematic way.
 
 ## Documentation
 
-Installation and Use of XALT is provided at https://xalt.readthedocs.io website.
+* Documentation:   https://xalt.readthedocs.org
+* GitHub:          https://github.com/xalt/xalt
 
-## Commercial Support
 
-Ellexus is providing commercial support.
-See https://www.ellexus.com/products/xalt-tracking-job-level-activity-supercomputers if interested.
+## Lmod Mailing list
+
+* mailto:xalt-users@lists.sourceforge.net.
+
+Please go to https://sourceforge.net/projects/xalt/lists/xalt-users to join.
+
+
 
 ## ChangeLog
 

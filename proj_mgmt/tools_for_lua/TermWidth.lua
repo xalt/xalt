@@ -75,7 +75,7 @@ function TermWidth()
    if (s_width) then
       return s_width
    end
-   local ltw = tonumber(getenv("LMOD_TERM_WIDTH"))
+   local ltw = tonumber(getenv("LMOD_TERM_WIDTH"))  -- Note tonumber(nil) is nil not zero
    if (ltw) then
       s_width = ltw
       return s_width

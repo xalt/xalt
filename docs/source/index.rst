@@ -33,6 +33,13 @@ XALT 2 could track every single program on your cluster, XALT 2 allows
 for site controllable filtering.  Otherwise an data collection scheme
 would get overwhelmed.
 
+XALT Sites
+~~~~~~~~~~
+
+    * Documentation:          https://xalt.readthedocs.io/en/latest/
+    * GitHub:                 https://github.com/xalt/xalt
+    * Join XALT Mailing list: https://sourceforge.net/projects/xalt/lists/xalt-users
+
 How XALT works
 ^^^^^^^^^^^^^^
 
