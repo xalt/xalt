@@ -32,7 +32,7 @@ effective, and systematic way.
 * GitHub:          https://github.com/xalt/xalt
 
 
-## Lmod Mailing list
+## XALT Mailing list
 
 * mailto:xalt-users@lists.sourceforge.net.
 
