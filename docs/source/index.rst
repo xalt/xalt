@@ -24,7 +24,7 @@ can also track package use by R, MATLAB or Python.  It tracks both MPI
 and non-MPI programs.  
 
 XALT Sites
-~~~~~~~~~~
+^^^^^^^^^^
 
     * Documentation:          https://xalt.readthedocs.io/en/latest/
     * GitHub:                 https://github.com/xalt/xalt
