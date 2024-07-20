@@ -52,6 +52,7 @@ path_patterns = [
     ['SKIP',   r'^\/bin\/.*'],
     ['SKIP',   r'^\/etc\/.*'],
     ['SKIP',   r'^\/root\/.*'],
+    ['SKIP',   r'.*\/.cargo\/bin\/.*'],
     ['SKIP',   r'.*\/gcc'],
     ['SKIP',   r'.*\/g\+\+'],
     ['SKIP',   r'.*\/as'],
