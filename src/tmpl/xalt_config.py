@@ -34,6 +34,15 @@ head_path_patterns = [
   ['SKIP',  r'.*\/xalt_configuration_report.x'],
   ['SKIP',  r'.*\/xalt_syshost'],
   ['SKIP',  r'.*\/xalt_record_pkg'],
+  ['SKIP',  r'.*\/sh'],
+  ['SKIP',  r'.*\/dash'],
+  ['SKIP',  r'.*\/bash'],
+  ['SKIP',  r'.*\/zsh'],
+  ['SKIP',  r'.*\/csh'],
+  ['SKIP',  r'.*\/tcsh'],
+  ['SKIP',  r'.*\/nu'],
+  ['SKIP',  r'.*\/fish'],
+  ['SKIP',  r'.*\/rc'],
   ['SKIP',  "XALT_INSTALL_DIR" ],
   ]
 
