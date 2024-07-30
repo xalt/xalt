@@ -28,6 +28,8 @@ VALID_YN ()
   esac
 }
 
+FOUND_ERROR=
+
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
@@ -423,7 +425,6 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
 
 
-FOUND_ERROR=
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   FOUND_ERROR=yes
   AC_MSG_NOTICE([Unable to build XALT without mktemp])
@@ -682,7 +683,6 @@ fi
 
 AC_SEARCH_LIBS([SHA1], [crypto], [], [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without libcrypto])])
 
-echo 
 if test $XALT_SUPPORT_CURL = yes; then
   AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without libcurl])])
 fi
