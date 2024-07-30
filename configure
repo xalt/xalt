@@ -4445,7 +4445,7 @@ if test $MODE != "user_default" ; then
      echo "Please try setting mode to 755 or 750 or 700 or similar."
      echo
      rm -f makefile
-     exit 1
+     FOUND_ERROR=yes;
   fi
 fi
 
@@ -4688,7 +4688,7 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    echo "======================================================="
    echo
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 
@@ -4700,8 +4700,11 @@ printf "%s\n" "#define XALT_INSTALL_OS \"$XALT_INSTALL_OS\"" >>confdefs.h
 
 
 
+FOUND_ERROR=
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
-  as_fn_error $? "Unable to build XALT without mktemp" "$LINENO" 5
+  FOUND_ERROR=yes
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without mktemp" >&5
+printf "%s\n" "$as_me: Unable to build XALT without mktemp" >&6;}
 fi
 
 
@@ -4723,7 +4726,7 @@ if test found = no; then
    echo "======================================================="
    echo
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 
@@ -4785,7 +4788,8 @@ then :
 printf "%s\n" "#define HAVE_UUID_UUID_H 1" >>confdefs.h
 
 else $as_nop
-  as_fn_error $? "Unable to build XALT without uuid/uuid.h" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without uuid/uuid.h" >&5
+printf "%s\n" "$as_me: Unable to build XALT without uuid/uuid.h" >&6;}
 fi
 
 if test $XALT_SUPPORT_CURL = yes ; then
@@ -4796,7 +4800,8 @@ then :
 printf "%s\n" "#define HAVE_CURL_CURL_H 1" >>confdefs.h
 
 else $as_nop
-  as_fn_error $? "Configure with --supportCURL=no if you don't want support for curl transmission style" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Configure with --supportCURL=no if you don't want support for curl transmission style" >&5
+printf "%s\n" "$as_me: Configure with --supportCURL=no if you don't want support for curl transmission style" >&6;}
 fi
 
 fi
@@ -4807,7 +4812,8 @@ then :
 printf "%s\n" "#define HAVE_OPENSSL_SHA_H 1" >>confdefs.h
 
 else $as_nop
-  as_fn_error $? "Unable to build XALT without openssl/sha.h" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without openssl/sha.h" >&5
+printf "%s\n" "$as_me: Unable to build XALT without openssl/sha.h" >&6;}
 fi
 
 
@@ -4816,7 +4822,8 @@ if test "x$ac_cv_header_gelf_h" = xyes
 then :
 
 else $as_nop
-  as_fn_error $? "Unable to build XALT without gelf.h. Please install the libelf development package" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without gelf.h. Please install the libelf development package" >&5
+printf "%s\n" "$as_me: Unable to build XALT without gelf.h. Please install the libelf development package" >&6;}
 fi
 
 ac_fn_c_check_header_compile "$LINENO" "syslog.h" "ac_cv_header_syslog_h" "$ac_includes_default"
@@ -4824,7 +4831,8 @@ if test "x$ac_cv_header_syslog_h" = xyes
 then :
 
 else $as_nop
-  as_fn_error $? "Unable to build XALT without syslog.h. Please install the glibc headers package" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without syslog.h. Please install the glibc headers package" >&5
+printf "%s\n" "$as_me: Unable to build XALT without syslog.h. Please install the glibc headers package" >&6;}
 fi
 
 
@@ -4903,7 +4911,7 @@ if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    echo "See the manual for details"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 
@@ -4914,7 +4922,7 @@ if test -z "$PATH_TO_FLEX" ; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 MY_TMPDIR=`mktemp -d`
@@ -4936,7 +4944,8 @@ then :
 printf "%s\n" "#define HAVE_DCGM_AGENT_H 1" >>confdefs.h
 
 else $as_nop
-  as_fn_error $? "Unable to include GPU tracking without DCGM" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to include GPU tracking without DCGM" >&5
+printf "%s\n" "$as_me: Unable to include GPU tracking without DCGM" >&6;}
 fi
 
   if test "$STATIC_LIBS" = yes; then
@@ -5000,7 +5009,8 @@ then :
 printf "%s\n" "#define USE_DCGM 1" >>confdefs.h
  HAVE_DCGM=yes
 else $as_nop
-  as_fn_error $? "Unable to include GPU tracking without DCGM" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to include GPU tracking without DCGM" >&5
+printf "%s\n" "$as_me: Unable to include GPU tracking without DCGM" >&6;}
 fi
 
   else
@@ -5064,7 +5074,8 @@ then :
 printf "%s\n" "#define USE_DCGM 1" >>confdefs.h
  HAVE_DCGM=yes
 else $as_nop
-  as_fn_error $? "Unable to include GPU tracking without DCGM" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to include GPU tracking without DCGM" >&5
+printf "%s\n" "$as_me: Unable to include GPU tracking without DCGM" >&6;}
 fi
 
   fi
@@ -5082,7 +5093,8 @@ then :
 printf "%s\n" "#define HAVE_NVML_H 1" >>confdefs.h
 
 else $as_nop
-  as_fn_error $? "Unable to include GPU tracking without NVML" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to include GPU tracking without NVML" >&5
+printf "%s\n" "$as_me: Unable to include GPU tracking without NVML" >&6;}
 fi
 
   ac_fn_c_check_header_compile "$LINENO" "dlfcn.h" "ac_cv_header_dlfcn_h" "$ac_includes_default"
@@ -5092,7 +5104,8 @@ then :
 printf "%s\n" "#define HAVE_DCFCN_H 1" >>confdefs.h
 
 else $as_nop
-  as_fn_error $? "Unable to include GPU tracking without dlfcn.h" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to include GPU tracking without dlfcn.h" >&5
+printf "%s\n" "$as_me: Unable to include GPU tracking without dlfcn.h" >&6;}
 fi
 
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
@@ -5159,7 +5172,8 @@ printf "%s\n" "#define USE_NVML 1" >>confdefs.h
 
                   HAVE_NVML=yes
 else $as_nop
-  as_fn_error $? "Unable to find dlopen" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to find dlopen" >&5
+printf "%s\n" "$as_me: Unable to find dlopen" >&6;}
 fi
 
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
@@ -5200,7 +5214,7 @@ if test $SITE_CONTROLLED_PREFIX != yes; then
       echo "===================================================="
       echo
       rm -f makefile
-      exit 1
+      FOUND_ERROR=yes;
    fi
 
 else
@@ -5225,7 +5239,7 @@ if test "$HAVE_CXX11" = no; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 if test "$XALT_CONFIG_PY" = no; then
@@ -5235,7 +5249,7 @@ if test "$XALT_CONFIG_PY" = no; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 if ! test -f $XALT_CONFIG_PY; then
@@ -5245,7 +5259,7 @@ if ! test -f $XALT_CONFIG_PY; then
    echo "quitting!"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 if test "$MYSQLDB" = yes; then
@@ -5257,7 +5271,7 @@ if test "$MYSQLDB" = yes; then
       echo "To install for python2 do: pip  install MySQL-python"
       echo "======================================================="
       rm -f makefile
-      exit 1
+      FOUND_ERROR=yes;
    fi
 fi
 
@@ -5270,7 +5284,7 @@ if test "$SYSHOST_CONFIG" = no; then
    echo "See the xalt.readthedocs.io for details."
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 
@@ -5356,7 +5370,8 @@ then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
 
 else $as_nop
-  as_fn_error $? "Unable to build XALT without libcrypto" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without libcrypto" >&5
+printf "%s\n" "$as_me: Unable to build XALT without libcrypto" >&6;}
 fi
 
 
@@ -5420,7 +5435,8 @@ then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
 
 else $as_nop
-  as_fn_error $? "Unable to build XALT without libcurl" "$LINENO" 5
+  FOUND_ERROR=yes; { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without libcurl" >&5
+printf "%s\n" "$as_me: Unable to build XALT without libcurl" >&6;}
 fi
 
 fi
@@ -5456,73 +5472,73 @@ if test "$?" != 0; then
    echo "See the xalt.readthedocs.io for details."
    echo "======================================================="
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 XALT_PRIME_FMT=$($PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_fmt.py $XALT_PRIME_NUMBER)
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_regex.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_pre_ingest_filter.template --output src/__build__/xalt_pre_ingest_filter.lex
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_path_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_track_executable_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_track_executable_parser.lex
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_python_filter_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_python_pkg_filter.template --output src/__build__/xalt_python_pkg_filter.py
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_pkg_filter.template --output src/__build__/xalt_pkg_filter.lex
 if test "$?" != 0; then
    rm -f makefile
-   exit 1
+   FOUND_ERROR=yes;
 fi
 
 
@@ -5548,8 +5564,20 @@ done
 IFS=$ORIG_SEP
 
 if test -n "$NOT_FOUND"; then
-  as_fn_error $? "Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND" "$LINENO" 5
+  FOUND_ERROR=yes
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND" >&5
+printf "%s\n" "$as_me: Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND" >&6;}
 fi
+
+
+if test $FOUND_ERROR = yes; then
+  echo
+  echo One or more errors found -> Quiting!
+  echo
+  rm -f makefile
+  exit 1;
+fi
+
 
 rm -rf $MY_TMPDIR
 

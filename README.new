@@ -7,3 +7,5 @@ XALT 3.0+
 	    * Issue #63: Test that the pre_ingest_filter and pkgFilter libraries as late as possible
 	    * Issue #63: Make *.in.py files produce a msg that they should not be run.  Instead
 	      run the installed version.
+    (3.0.3) * Force shells like bash, csh, etc be ignored
+            * Change configure.ac to run all tests before erroring out
