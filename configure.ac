@@ -28,8 +28,6 @@ VALID_YN ()
   esac
 }
 
-FOUND_ERROR=
-
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
@@ -397,7 +395,7 @@ if test $MODE != "user_default" ; then
      echo "Please try setting mode to 755 or 750 or 700 or similar."
      echo
      rm -f makefile
-     FOUND_ERROR=yes; 
+     exit 1
   fi
 fi
 
@@ -415,7 +413,7 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    echo "======================================================="
    echo
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 AC_SUBST(XALT_LD_LIBRARY_PATH)
@@ -426,8 +424,7 @@ AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that insta
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
-  FOUND_ERROR=yes
-  AC_MSG_NOTICE([Unable to build XALT without mktemp])
+  AC_MSG_ERROR([Unable to build XALT without mktemp])
 fi
 
 
@@ -449,7 +446,7 @@ if test found = no; then
    echo "======================================================="
    echo
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
@@ -458,22 +455,22 @@ AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
-                [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without uuid/uuid.h])])
+                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
 if test $XALT_SUPPORT_CURL = yes ; then
   AC_CHECK_HEADER(curl/curl.h,
                   [AC_DEFINE([HAVE_CURL_CURL_H], 1,
                      [Define to 1 if you have <curl/curl.h>.])],
-                  [FOUND_ERROR=yes; AC_MSG_NOTICE([Configure with --supportCURL=no if you don't want support for curl transmission style])])
+                  [AC_MSG_ERROR([Configure with --supportCURL=no if you don't want support for curl transmission style])])
 fi
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
-                [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without openssl/sha.h])])
+                [AC_MSG_ERROR([Unable to build XALT without openssl/sha.h])])
 
 AC_CHECK_HEADER(gelf.h, [],
-                [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without gelf.h. Please install the libelf development package])])
+                [AC_MSG_ERROR([Unable to build XALT without gelf.h. Please install the libelf development package])])
 AC_CHECK_HEADER(syslog.h, [],
-                [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without syslog.h. Please install the glibc headers package])])
+                [AC_MSG_ERROR([Unable to build XALT without syslog.h. Please install the glibc headers package])])
 
 
 AC_SUBST(HAVE_WORKING_LIBUUID)
@@ -490,7 +487,7 @@ if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
    echo "See the manual for details"
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes;
+   exit 1
 fi
 
 
@@ -501,7 +498,7 @@ if test -z "$PATH_TO_FLEX" ; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 MY_TMPDIR=`mktemp -d`
@@ -519,11 +516,11 @@ if test $XALT_GPU_TRACKING_STYLE = "dcgm" ; then
   AC_CHECK_HEADER(dcgm_agent.h,
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
-                  [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to include GPU tracking without DCGM])])
+                  [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   if test "$STATIC_LIBS" = yes; then
-    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to include GPU tracking without DCGM])], [-ldl])
+    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])], [-ldl])
   else
-    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to include GPU tracking without DCGM])])
+    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
   fi
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     GPU_STR=`$LOCATE_SO libdcgm.so$i`
@@ -535,16 +532,16 @@ elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
   AC_CHECK_HEADER(nvml.h,
                   [AC_DEFINE([HAVE_NVML_H], 1,
                      [Define to 1 if you have NVML.])],
-                  [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to include GPU tracking without NVML])])
+                  [AC_MSG_ERROR([Unable to include GPU tracking without NVML])])
   AC_CHECK_HEADER(dlfcn.h,
                   [AC_DEFINE([HAVE_DCFCN_H], 1,
                      [Define to 1 if you have dlfcn.h.])],
-                  [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to include GPU tracking without dlfcn.h])])
+                  [AC_MSG_ERROR([Unable to include GPU tracking without dlfcn.h])])
   AC_SEARCH_LIBS([dlopen], [dl dld],
                  [AC_DEFINE([HAVE_DLOPEN], [1],[Using dlopen library])
                   AC_DEFINE([USE_NVML], [1],[Using NVML library])
                   HAVE_NVML=yes],
-                 [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to find dlopen])])
+                 [AC_MSG_ERROR([Unable to find dlopen])])
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     GPU_STR=`$LOCATE_SO libnvidia-ml.so$i`
     if test "$?" -eq 0; then
@@ -583,7 +580,7 @@ if test $SITE_CONTROLLED_PREFIX != yes; then
       echo "===================================================="
       echo
       rm -f makefile
-      FOUND_ERROR=yes; 
+      exit 1
    fi
    
 else
@@ -608,7 +605,7 @@ if test "$HAVE_CXX11" = no; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 if test "$XALT_CONFIG_PY" = no; then
@@ -618,7 +615,7 @@ if test "$XALT_CONFIG_PY" = no; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 if ! test -f $XALT_CONFIG_PY; then
@@ -628,7 +625,7 @@ if ! test -f $XALT_CONFIG_PY; then
    echo "quitting!"
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 if test "$MYSQLDB" = yes; then
@@ -640,7 +637,7 @@ if test "$MYSQLDB" = yes; then
       echo "To install for python2 do: pip  install MySQL-python"
       echo "======================================================="
       rm -f makefile
-      FOUND_ERROR=yes; 
+      exit 1
    fi
 fi
 
@@ -653,7 +650,7 @@ if test "$SYSHOST_CONFIG" = no; then
    echo "See the xalt.readthedocs.io for details."
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 
@@ -681,10 +678,11 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-AC_SEARCH_LIBS([SHA1], [crypto], [], [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without libcrypto])])
+AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
 
+echo 
 if test $XALT_SUPPORT_CURL = yes; then
-  AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [FOUND_ERROR=yes; AC_MSG_NOTICE([Unable to build XALT without libcurl])])
+  AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XALT without libcurl])])
 fi
 
 AC_SUBST(CRYPTO_STR)
@@ -718,73 +716,73 @@ if test "$?" != 0; then
    echo "See the xalt.readthedocs.io for details."
    echo "======================================================="
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
    
 XALT_PRIME_FMT=$($PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_fmt.py $XALT_PRIME_NUMBER)
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_xalt_interval_table.py --confFn $XALT_CONFIG_PY --input $ac_confdir/src/tmpl/xalt_interval.template --output src/__build__/xalt_interval.h 
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_xalt_regex.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_regex.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_regex.h
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c 
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_env_parser.template --output src/__build__/xalt_env_parser.lex 
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_pre_ingest_filter.template --output src/__build__/xalt_pre_ingest_filter.lex
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_path_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_path_parser.lex
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_track_executable_parser.template --default_dir $XALT_DEFAULT_DIR --output src/__build__/xalt_track_executable_parser.lex
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_hostname_parser.template --output src/__build__/xalt_hostname_parser.lex 
 if test "$?" != 0; then
    rm -f makefile
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_python_filter_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_python_pkg_filter.template --output src/__build__/xalt_python_pkg_filter.py
 if test "$?" != 0; then
    rm -f makefile			
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_parser_routine.py --confFn $XALT_CONFIG_PY --xalt_cfg $ac_confdir/src/tmpl/xalt_config.py --input $ac_confdir/src/tmpl/xalt_pkg_filter.template --output src/__build__/xalt_pkg_filter.lex
 if test "$?" != 0; then
    rm -f makefile			
-   FOUND_ERROR=yes; 
+   exit 1
 fi	
 
 
@@ -810,19 +808,8 @@ done
 IFS=$ORIG_SEP
 
 if test -n "$NOT_FOUND"; then
-  FOUND_ERROR=yes
-  AC_MSG_NOTICE([Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND])
+  AC_MSG_ERROR([Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND])
 fi  
-
-
-if test $FOUND_ERROR = yes; then
-  echo
-  echo One or more errors found -> Quiting!
-  echo
-  rm -f makefile
-  exit 1;
-fi      
-
 
 rm -rf $MY_TMPDIR
 
