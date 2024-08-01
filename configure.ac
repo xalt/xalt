@@ -661,8 +661,8 @@ if test "$MYSQLDB" = yes; then
       echo
       echo "======================================================="
       echo "Unable to install XALT without the python module: MySQLdb"
+      echo "Install a system package (debian based linux: python3-mysqldb) "
       echo "To install for python3 do: pip3 install mysqlclient"
-      echo "To install for python2 do: pip  install MySQL-python"
       echo "======================================================="
       rm -f makefile
       exit 1
