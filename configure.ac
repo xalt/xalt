@@ -574,7 +574,7 @@ elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
     fi
   done
 fi
-p
+
 AC_SUBST(PKGV)
 AC_SUBST(XALT_DEFAULT_DIR)
 AC_SUBST(VERSION)
