@@ -71,7 +71,7 @@ SETUP_CMD=
 echo SYSHOST: $SYSHOST
 
 case $SYSHOST in
-  vato | rios | jedrik | lmod-test | xalt-lmod)
+  vato | rios | jedrik | lmod-test | xalt-lmod | bt | bt2)
     echo "Building on $SYSHOST using rios rules"
     SUDO="sudo"
     base="/opt/apps"
