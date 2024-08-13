@@ -100,10 +100,10 @@ AC_ARG_WITH(mode,
     MODE="$withval"
     MODE=`echo $MODE | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     AC_MSG_RESULT([MODE=$with_mode])
-    AC_DEFINE_UNQUOTED(MODE, "$with_mode")dnl
+    AC_DEFINE_UNQUOTED(MODE, "$with_mode",[Override executable install mode])dnl
     ,
     withval="user_default"
-    AC_MSG_RESULT([MODE=$withval])
+    AC_MSG_RESULT([MODE=$withval],[Override executable install mode])
     MODE="$withval"
     AC_DEFINE_UNQUOTED(MODE, "$withval"))dnl
 
@@ -240,13 +240,11 @@ AC_SUBST(SYSLOG_MSG_SZ)
 AC_ARG_WITH(syslogMsgSz,
     AS_HELP_STRING([--with-syslogMsgSz=ans],[]),
     SYSLOG_MSG_SZ="$withval"
-    AC_MSG_RESULT([SYSLOG_MSG_SZ=$with_syslogMsgSz])
-    AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$with_syslogMsgSz")dnl
+    AC_MSG_RESULT([SYSLOG_MSG_SZ=$with_syslogMsgSz])dnl
     ,
     withval="512"
     AC_MSG_RESULT([SYSLOG_MSG_SZ=$withval])
-    SYSLOG_MSG_SZ="$withval"
-    AC_DEFINE_UNQUOTED(SYSLOG_MSG_SZ, "$withval"))dnl
+    SYSLOG_MSG_SZ="$withval")dnl
 
 AC_SUBST(SYSHOST_CONFIG)
 AC_ARG_WITH(syshostConfig,
@@ -333,36 +331,34 @@ AC_ARG_WITH(tmpdir,
     AS_HELP_STRING([--with-tmpdir=ans],[The tmp directory to use with package records [[/dev/shm]]]),
     XALT_TMPDIR="$withval"
     AC_MSG_RESULT([XALT_TMPDIR=$with-tmpdir])
-    AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$with-tmpdir")dnl
+    AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$with-tmpdir",[Allow xalt to write to /dev/shm])dnl
     ,
     withval="/dev/shm"
     AC_MSG_RESULT([XALT_TMPDIR=$withval])
     XALT_TMPDIR="$withval"
-    AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_TMPDIR, "$withval"),[Allow xalt to write to /dev/shm])dnl
 
 AC_SUBST(XALT_PRIME_NUMBER)
 AC_ARG_WITH(primeNumber,
     AS_HELP_STRING([--with-primeNumber=ans],[The prime number of directories when using XALT_FILE_PREFIX, [[997]]]),
     XALT_PRIME_NUMBER="$withval"
-    AC_MSG_RESULT([XALT_PRIME_NUMBER=$with-primeNumber])
-    AC_DEFINE_UNQUOTED(XALT_PRIME_NUMBER, "$with-primeNumber")dnl
+    AC_MSG_RESULT([XALT_PRIME_NUMBER=$with-primeNumber])dnl
     ,
     withval="997"
     AC_MSG_RESULT([XALT_PRIME_NUMBER=$withval])
-    XALT_PRIME_NUMBER="$withval"
-    AC_DEFINE_UNQUOTED(XALT_PRIME_NUMBER, "$withval"))dnl
+    XALT_PRIME_NUMBER="$withval")dnl
 
 AC_SUBST(XALT_SIGNAL_HANDLER)
 AC_ARG_WITH(signalHandler,
     AS_HELP_STRING([--with-signalHandler=ans],[Have XALT capture executions that fail with a signal: [[no]]]),
     XALT_SIGNAL_HANDLER="$withval"
     AC_MSG_RESULT([XALT_SIGNAL_HANDLER=$with-signalHandler])
-    AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$with-signalHandler")dnl
+    AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$with-signalHandler",[Allow XALT to interact with Signals])dnl
     ,
     withval="no"
     AC_MSG_RESULT([XALT_SIGNAL_HANDLER=$withval])
     XALT_SIGNAL_HANDLER="$withval"
-    AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$withval"))dnl
+    AC_DEFINE_UNQUOTED(XALT_SIGNAL_HANDLER, "$withval",[Allow XALT to interact with Signals]))dnl
 
 AC_SUBST(XALT_PRIME_FMT)
 AC_SUBST(HAVE_32BIT)
@@ -449,7 +445,9 @@ if test found = no; then
    exit 1
 fi
 
-AC_CHECK_LIB([c], [getentropy], [AC_DEFINE([HAVE_FUNC_GETENTROPY], 1,
+XALT_UUID_V7=no
+AC_SUBST(XALT_UUID_V7)
+AC_CHECK_LIB([c], [getentropy], [XALT_UUID_V7=yes; AC_DEFINE([HAVE_FUNC_GETENTROPY],1,
                    [Define to 1 if you have getentropy in libc])],[])
 
 AC_SUBST(HAVE_PYMOD_MYSQLDB)

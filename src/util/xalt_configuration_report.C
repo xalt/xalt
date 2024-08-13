@@ -149,6 +149,8 @@ int main(int argc, char* argv[])
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
+  const char* xalt_uuid_v7 = XALT_UUID_V7;
+
   const char * rmapT_str = "false";
   bool found_rmapT = false;
   std::string rmapD = ""; // If this is an empty string then XALT_ETC_DIR is used to specify location of rmapD
@@ -248,6 +250,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "XALT_CONFIG_PY",           XALT_CONFIG_PY);
       json_add_char_str(&json, my_sep,   "XALT_CMDLINE_RECORD",      cmdline_record);
       json_add_char_str(&json, my_sep,   "XALT_SIGNAL_HANDLER",      xalt_signal_handler);
+      json_add_char_str(&json, my_sep,   "XALT_UUID_V7",             xalt_uuid_v7);
       json_add_char_str(&json, my_sep,   "XALT_SYSTEM_PATH",         XALT_SYSTEM_PATH);
       json_add_char_str(&json, my_sep,   "XALT_SYSHOST_CONFIG",      SYSHOST_CONFIG);
       json_add_char_str(&json, my_sep,   "XALT_MPI_TRACKING",        xalt_mpi_tracking);
@@ -313,6 +316,7 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SCALAR_TRACKING:            " << xalt_scalar_tracking           << "\n";
   std::cout << "XALT_SAMPLING:                   " << xalt_sampling                  << "\n";
   std::cout << "MPI_ALWAYS_RECORD:               " << always_record                  << "\n";
+  std::cout << "XALT_UUID_V7:                    " << xalt_uuid_v7                   << "\n";
   std::cout << "XALT_SIGNAL_HANDLER:             " << xalt_signal_handler            << "\n";
   std::cout << "XALT_SYSTEM_PATH:                " << XALT_SYSTEM_PATH               << "\n";
   std::cout << "XALT_SYSHOST_CONFIG:             " << SYSHOST_CONFIG                 << "\n";
