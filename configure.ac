@@ -449,6 +449,9 @@ if test found = no; then
    exit 1
 fi
 
+AC_CHECK_LIB([c], [getentropy], [AC_DEFINE([HAVE_FUNC_GETENTROPY], 1,
+                   [Define to 1 if you have getentropy in libc])],[])
+
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 
