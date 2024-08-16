@@ -15,7 +15,7 @@
 #include <uuid/uuid.h>
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 
-static void* handle                                  = NULL;
+static void* handle = NULL;
 
        
 #ifdef HAVE_FUNC_GETENTROPY
@@ -52,7 +52,7 @@ static void* handle                                  = NULL;
    void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
    {
      //01234567-0123-0123-0123-012345678901
-     //f9b8dd57-628d-41de-9e7b-2f1f893be268
+     //01915724-4c55-74cd-872a-bbb4d58bc892
      // 0 1 2 3  4 5  6 7  8 9  0 1 2 3 4 5
      //01234567-0123-0123-0123-012345678901
      //          1         2         3
