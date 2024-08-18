@@ -900,7 +900,7 @@ void myfini()
     }
 
   if (signal_hdlr_called)
-    DEBUG(my_stderr,"    -> my_fini() called via signal handler with signum: %d\n", signal_hdlr_called);
+    DEBUG(my_stderr,"    -> myfini() called via signal handler with signum: %d\n", signal_hdlr_called);
 
   /* Stop tracking if my mpi rank is not zero or the path was rejected. */
   if (reject_flag != XALT_SUCCESS)
