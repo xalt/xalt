@@ -400,12 +400,12 @@ AC_PATH_PROG(PATH_TO_GIT,git, [])
 AC_PATH_PROG(PATH_TO_FLEX,flex, [])
 AC_PATH_PROG(PATH_TO_LOGGER,logger, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
-AC_PATH_PROGS(PATH_TO_PYTHON, [python3] [python2] [python], [])
-
+AC_PATH_PROGS(PATH_TO_PYTHON, [python3] [python] [python2], [])
+AC_MSG_RESULT([PATH_TO_PYTHON: $PATH_TO_PYTHON])
 if test "x$PATH_TO_PYTHON" = "x"; then
    echo
    echo "======================================================="
-   echo "XALT 2 requires python3, python2 or python to run."
+   echo "XALT 2 requires python3, python or python3 to run."
    echo "======================================================="
    echo
    rm -f makefile
