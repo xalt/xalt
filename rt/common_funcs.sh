@@ -9,6 +9,8 @@ initialize()
   module --quiet unload $LMOD_FAMILY_MPI $LMOD_FAMILY_COMPILER
   ORIG_HOME=`(cd $HOME; /bin/pwd)`
   HOME=`/bin/pwd`
+  rm -rf $HOME/.local
+  ln -s $ORIG_HOME/.local $HOME
   numStep=0
   COUNT=0
 

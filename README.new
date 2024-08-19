@@ -8,6 +8,8 @@ XALT 3.0+
 	    * Issue #63: Make *.in.py files produce a msg that they should not be run.  Instead
 	      run the installed version.
     (3.0.3) * Force shells like bash, csh, etc be ignored
-W.I.P.:
     (3.0.4) * Change configure.ac to run all tests before erroring out
             * SKIP all shells in src/tmpl/xalt_config.py
+XALT 3.1+
+    (3.1)   * Using UUID Version 7 when the routine getentropy() is available.
+    

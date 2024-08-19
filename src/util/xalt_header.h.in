@@ -1,11 +1,10 @@
-/* src/xalt_header.h.in.  Generated from configure.ac by autoheader.  */
+/* src/util/xalt_header.h.in.  Generated from configure.ac by autoheader.  */
+
 
 /* Remember that AC_DEFINE() end up in xalt_header.h.in
  * AC_SUBST() end up in xalt_config.h.in
  */
 
-/* A site that insist to install XALT incorrectly */
-#undef SITE_CONTROLLED_PREFIX
 
 /* Build 32bit libraries as well */
 #undef BIT32
@@ -13,11 +12,11 @@
 /* Compute SHAs sums on libraries */
 #undef COMPUTE_SHA1SUM
 
-/* LD_LIBRARY_PATH for c++ programs */
-#undef CXX_LD_LIBRARY_PATH
-
 /* Directory where xalt_db.conf and reverseMapD can be found */
 #undef ETC_DIR
+
+/* Define to 1 if you have <curl/curl.h>. */
+#undef HAVE_CURL_CURL_H
 
 /* Define to 1 if you have dlfcn.h. */
 #undef HAVE_DCFCN_H
@@ -28,14 +27,14 @@
 /* Using dlopen library */
 #undef HAVE_DLOPEN
 
+/* Define to 1 if you have getentropy in libc */
+#undef HAVE_FUNC_GETENTROPY
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
 /* libuuid exist */
 #undef HAVE_LIBUUID
-
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
 
 /* Define to 1 if you have NVML. */
 #undef HAVE_NVML_H
@@ -45,6 +44,9 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
@@ -66,6 +68,9 @@
 
 /* Define to 1 if you have <uuid/uuid.h>. */
 #undef HAVE_UUID_UUID_H
+
+/* Override executable install mode */
+#undef MODE
 
 /* Require the mysqlclient/MySQL-python module */
 #undef MYSQLDB
@@ -94,10 +99,15 @@
 /* Only use XALT in preload only mode */
 #undef PRELOAD_ONLY
 
+/* A site that insist to install XALT incorrectly */
+#undef SITE_CONTROLLED_PREFIX
+
 /* Link with static libraries (currently only dcgm) */
 #undef STATIC_LIBS
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
 /* How to determine syshost */
@@ -115,6 +125,9 @@
 /* Using NVML library */
 #undef USE_NVML
 
+/* Record the program's execution command line */
+#undef XALT_CMDLINE_RECORD
+
 /* A python file defining the site configuration */
 #undef XALT_CONFIG_PY
 
@@ -125,7 +138,7 @@
 #undef XALT_FUNCTION_TRACKING
 
 /* Track GPU executables */
-#undef XALT_GPU_TRACKING
+#undef XALT_GPU_TRACKING_STYLE
 
 /* Name of the OS that installed XALT */
 #undef XALT_INSTALL_OS
@@ -138,3 +151,12 @@
 
 /* Track non-mpi executables */
 #undef XALT_SCALAR_TRACKING
+
+/* Allow XALT to interact with Signals */
+#undef XALT_SIGNAL_HANDLER
+
+/* Track non-mpi executables */
+#undef XALT_SUPPORT_CURL
+
+/* Allow xalt to write to /dev/shm */
+#undef XALT_TMPDIR

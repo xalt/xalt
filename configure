@@ -660,6 +660,7 @@ HAVE_NVML
 GPU_STR
 HAVE_WORKING_LIBUUID
 HAVE_PYMOD_MYSQLDB
+XALT_UUID_V7
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
 PATH_TO_PYTHON
@@ -1705,39 +1706,6 @@ fi
 
 } # ac_fn_cxx_try_run
 
-# ac_fn_c_check_header_compile LINENO HEADER VAR INCLUDES
-# -------------------------------------------------------
-# Tests whether HEADER exists and can be compiled using the include files in
-# INCLUDES, setting the cache variable VAR accordingly.
-ac_fn_c_check_header_compile ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-printf %s "checking for $2... " >&6; }
-if eval test \${$3+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-#include <$2>
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"
-then :
-  eval "$3=yes"
-else $as_nop
-  eval "$3=no"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-eval ac_res=\$$3
-	       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-printf "%s\n" "$ac_res" >&6; }
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-
-} # ac_fn_c_check_header_compile
-
 # ac_fn_c_try_link LINENO
 # -----------------------
 # Try to link conftest.$ac_ext, and return whether this succeeded.
@@ -1784,6 +1752,39 @@ fi
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_link
+
+# ac_fn_c_check_header_compile LINENO HEADER VAR INCLUDES
+# -------------------------------------------------------
+# Tests whether HEADER exists and can be compiled using the include files in
+# INCLUDES, setting the cache variable VAR accordingly.
+ac_fn_c_check_header_compile ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+printf %s "checking for $2... " >&6; }
+if eval test \${$3+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+#include <$2>
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  eval "$3=yes"
+else $as_nop
+  eval "$3=no"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+printf "%s\n" "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_header_compile
 ac_configure_args_raw=
 for ac_arg
 do
@@ -3506,7 +3507,8 @@ then :
     MODE=`echo $MODE | tr '[:upper:]' '[:lower:]'`
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: MODE=$with_mode" >&5
 printf "%s\n" "MODE=$with_mode" >&6; }
-    printf "%s\n" "#define MODE \"$with_mode\"" >>confdefs.h
+
+printf "%s\n" "#define MODE \"$with_mode\"" >>confdefs.h
 
 else $as_nop
   withval="user_default"
@@ -3734,15 +3736,11 @@ then :
   withval=$with_syslogMsgSz; SYSLOG_MSG_SZ="$withval"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$with_syslogMsgSz" >&5
 printf "%s\n" "SYSLOG_MSG_SZ=$with_syslogMsgSz" >&6; }
-    printf "%s\n" "#define SYSLOG_MSG_SZ \"$with_syslogMsgSz\"" >>confdefs.h
-
 else $as_nop
   withval="512"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: SYSLOG_MSG_SZ=$withval" >&5
 printf "%s\n" "SYSLOG_MSG_SZ=$withval" >&6; }
     SYSLOG_MSG_SZ="$withval"
-    printf "%s\n" "#define SYSLOG_MSG_SZ \"$withval\"" >>confdefs.h
-
 fi
 
 
@@ -3887,7 +3885,8 @@ then :
   withval=$with_tmpdir; XALT_TMPDIR="$withval"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_TMPDIR=$with-tmpdir" >&5
 printf "%s\n" "XALT_TMPDIR=$with-tmpdir" >&6; }
-    printf "%s\n" "#define XALT_TMPDIR \"$with-tmpdir\"" >>confdefs.h
+
+printf "%s\n" "#define XALT_TMPDIR \"$with-tmpdir\"" >>confdefs.h
 
 else $as_nop
   withval="/dev/shm"
@@ -3906,15 +3905,11 @@ then :
   withval=$with_primeNumber; XALT_PRIME_NUMBER="$withval"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_PRIME_NUMBER=$with-primeNumber" >&5
 printf "%s\n" "XALT_PRIME_NUMBER=$with-primeNumber" >&6; }
-    printf "%s\n" "#define XALT_PRIME_NUMBER \"$with-primeNumber\"" >>confdefs.h
-
 else $as_nop
   withval="997"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_PRIME_NUMBER=$withval" >&5
 printf "%s\n" "XALT_PRIME_NUMBER=$withval" >&6; }
     XALT_PRIME_NUMBER="$withval"
-    printf "%s\n" "#define XALT_PRIME_NUMBER \"$withval\"" >>confdefs.h
-
 fi
 
 
@@ -3925,14 +3920,16 @@ then :
   withval=$with_signalHandler; XALT_SIGNAL_HANDLER="$withval"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_SIGNAL_HANDLER=$with-signalHandler" >&5
 printf "%s\n" "XALT_SIGNAL_HANDLER=$with-signalHandler" >&6; }
-    printf "%s\n" "#define XALT_SIGNAL_HANDLER \"$with-signalHandler\"" >>confdefs.h
+
+printf "%s\n" "#define XALT_SIGNAL_HANDLER \"$with-signalHandler\"" >>confdefs.h
 
 else $as_nop
   withval="no"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_SIGNAL_HANDLER=$withval" >&5
 printf "%s\n" "XALT_SIGNAL_HANDLER=$withval" >&6; }
     XALT_SIGNAL_HANDLER="$withval"
-    printf "%s\n" "#define XALT_SIGNAL_HANDLER \"$withval\"" >>confdefs.h
+
+printf "%s\n" "#define XALT_SIGNAL_HANDLER \"$withval\"" >>confdefs.h
 
 fi
 
@@ -4634,7 +4631,7 @@ printf "%s\n" "no" >&6; }
 fi
 
 
-for ac_prog in python3 python2 python
+for ac_prog in python3 python python2
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -4684,7 +4681,8 @@ fi
   test -n "$PATH_TO_PYTHON" && break
 done
 
-
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: PATH_TO_PYTHON: $PATH_TO_PYTHON" >&5
+printf "%s\n" "PATH_TO_PYTHON: $PATH_TO_PYTHON" >&6; }
 if test "x$PATH_TO_PYTHON" = "x"; then
    MSG="Error: XALT requires python3, python2 or python to run."
    ERR_MSG="$ERR_MSG||$MSG"
@@ -4726,6 +4724,51 @@ if test found = no; then
    rm -f makefile
    exit 1
 fi
+
+XALT_UUID_V7=no
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for getentropy in -lc" >&5
+printf %s "checking for getentropy in -lc... " >&6; }
+if test ${ac_cv_lib_c_getentropy+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lc  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+char getentropy ();
+int
+main (void)
+{
+return getentropy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ac_cv_lib_c_getentropy=yes
+else $as_nop
+  ac_cv_lib_c_getentropy=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_c_getentropy" >&5
+printf "%s\n" "$ac_cv_lib_c_getentropy" >&6; }
+if test "x$ac_cv_lib_c_getentropy" = xyes
+then :
+  XALT_UUID_V7=yes;
+printf "%s\n" "#define HAVE_FUNC_GETENTROPY 1" >>confdefs.h
+
+fi
+
 
 
 
@@ -6933,6 +6976,7 @@ echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKIN
 echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT_SUPPORT_CURL...................................." : $XALT_SUPPORT_CURL
+echo "XALT UUID V7 Support................................." : $XALT_UUID_V7
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR
 echo "XALT Using DCGM......................................" : $HAVE_DCGM

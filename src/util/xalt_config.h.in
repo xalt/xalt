@@ -12,6 +12,7 @@
 #define GPU_STR                    "@GPU_STR@"
 #define HAVE_32BIT                 "@HAVE_32BIT@"
 #define HAVE_DCGM                  "@HAVE_DCGM@"
+#define XALT_UUID_V7               "@XALT_UUID_V7@"
 #define HAVE_NVML                  "@HAVE_NVML@"
 #define HAVE_WORKING_LIBUUID       "@HAVE_WORKING_LIBUUID@"
 #define MY_HOSTNAME_PARSER         "@MY_HOSTNAME_PARSER@"

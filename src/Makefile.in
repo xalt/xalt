@@ -38,7 +38,8 @@ ifneq ($(MY_HOSTNAME_PARSER),no)
    endif
 endif
 
-CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+#CFLAGS      	  := --std=gnu99 $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
+CFLAGS      	  :=             $(COMMON_FLGS) $(HAVE_EXTERNAL_HOSTNAME_PARSER)
 
 # Collect information from each module in these four variables.
 # Initialize them here as simple variables.

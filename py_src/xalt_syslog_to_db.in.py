@@ -220,7 +220,7 @@ class ParseSyslog(object):
   def __init__(self, leftoverFn):
     self.__recordT    = {}
     self.__leftoverFn = leftoverFn
-    self.__frntPatt   = re.compile("(^.* V:\d+ *)")
+    self.__frntPatt   = re.compile(r"(^.* V:\d+ *)")
 
   def num_leftover(self):
     return len(self.__recordT)
