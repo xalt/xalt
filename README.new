@@ -12,4 +12,6 @@ XALT 3.0+
             * SKIP all shells in src/tmpl/xalt_config.py
 XALT 3.1+
     (3.1)   * Using UUID Version 7 when the routine getentropy() is available.
+    (3.1.1) * Add support for TACC's vista compute node names. (i123-456)
+    
     
