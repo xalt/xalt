@@ -5300,6 +5300,9 @@ else
   xaltV="@git@"
 fi
 XALT_GIT_VERSION=$xaltV
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_GIT_VERSION=$XALT_GIT_VERSION" >&5
+printf "%s\n" "XALT_GIT_VERSION=$XALT_GIT_VERSION" >&6; }
+
 
 if test "$HAVE_CXX11" = no; then
    echo

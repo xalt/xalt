@@ -626,6 +626,8 @@ else
   xaltV="@git@"
 fi
 XALT_GIT_VERSION=$xaltV
+AC_MSG_RESULT([XALT_GIT_VERSION=$XALT_GIT_VERSION])
+
 
 if test "$HAVE_CXX11" = no; then
    echo
