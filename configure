@@ -5294,7 +5294,7 @@ fi
 XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
 
 echo "VERSION=$VERSION"
-if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
+if test -n "$PATH_TO_GIT" -a -e $srcdir/.git ; then
   xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`
 else
   xaltV="@git@"
