@@ -12,6 +12,3 @@ tags:
 
 world_update:
 	cd my_build; $(MAKE) world_update
-
-
-

@@ -71,7 +71,7 @@ SETUP_CMD=
 echo SYSHOST: $SYSHOST
 
 case $SYSHOST in
-  vato | rios | jedrik | lmod-test | xalt-lmod)
+  vato | rios | jedrik | lmod-test | xalt-lmod | bt | bt2)
     echo "Building on $SYSHOST using rios rules"
     SUDO="sudo"
     base="/opt/apps"
@@ -112,7 +112,7 @@ case $SYSHOST in
     MAKE_OPTS=""
     ;;
 
-  stampede2 | stampede3)
+  stampede3 | vista)
     echo "Building $SYSHOST"
     base="$HOME/l/pkg"
     ETC_DIR="/tmp/moduleData"
@@ -143,24 +143,6 @@ case $SYSHOST in
     CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC'
     MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     SETUP_CMD="module -q load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
-    ;;
-
-  longhorn)
-    echo "Building $SYSHOST"
-    base="$HOME/l/pkg"
-    EXTRA=""
-    if [ "$USER" = swtools ]; then
-      EXTRA="--with-xaltFilePrefix=/scratch/projects/XALT"
-    fi
-    ETC_DIR="/tmp/moduleData"
-    SYSHOST_CONF="nth_name:2"
-    CONFIG="../Config/TACC_config.py"
-    TRANSMISSION="file"
-    TRACK_GPU="nvml"
-    MYSQL="no"
-    SETUP_CMD="module -q load -$LMOD_FAMILY_MPI -$LMOD_FAMILY_COMPILER -xalt cuda"
-    CONF_OPTS='CPPFLAGS=-I$TACC_CUDA_INC $EXTRA'
-    MAKE_OPTS='EXTRA_FLAGS=-I$TACC_CUDA_INC'
     ;;
 
   ls6)

@@ -23,6 +23,13 @@ of times it is run.  XALT 2 also tracks library usage as well.  XALT 2
 can also track package use by R, MATLAB or Python.  It tracks both MPI
 and non-MPI programs.  
 
+XALT Sites
+^^^^^^^^^^
+
+    * Documentation:          https://xalt.readthedocs.io/en/latest/
+    * GitHub:                 https://github.com/xalt/xalt
+    * Join XALT Mailing list: https://sourceforge.net/projects/xalt/lists/xalt-users
+
 OVERVIEW
 ^^^^^^^^
 
@@ -33,12 +40,6 @@ XALT 2 could track every single program on your cluster, XALT 2 allows
 for site controllable filtering.  Otherwise an data collection scheme
 would get overwhelmed.
 
-XALT Sites
-~~~~~~~~~~
-
-    * Documentation:          https://xalt.readthedocs.io/en/latest/
-    * GitHub:                 https://github.com/xalt/xalt
-    * Join XALT Mailing list: https://sourceforge.net/projects/xalt/lists/xalt-users
 
 How XALT works
 ^^^^^^^^^^^^^^

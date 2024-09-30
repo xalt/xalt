@@ -28,6 +28,9 @@ VALID_YN ()
   esac
 }
 
+ERR_MSG=""
+FOUND_ERROR=
+
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
     AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
@@ -386,9 +389,10 @@ if test $MODE != "user_default" ; then
   mode=0$MODE
   EXEC_BITS=$(( 0111 & $mode ));
   if test $EXEC_BITS = 0; then
+     MSG="Error: MODE must have at least one executable bit set (Not MODE=$MODE)|Please try setting mode to 755 or 750 or 700 or similar."
+     ERR_MSG="$ERR_MSG||$MSG"
      echo
-     echo "MODE must have at least one executable bit set (Not MODE=$MODE)"
-     echo "Please try setting mode to 755 or 750 or 700 or similar."
+     echo $MSG
      echo
      rm -f makefile
      exit 1
@@ -403,11 +407,8 @@ AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
 AC_PATH_PROGS(PATH_TO_PYTHON, [python3] [python] [python2], [])
 AC_MSG_RESULT([PATH_TO_PYTHON: $PATH_TO_PYTHON])
 if test "x$PATH_TO_PYTHON" = "x"; then
-   echo
-   echo "======================================================="
-   echo "XALT 2 requires python3, python or python3 to run."
-   echo "======================================================="
-   echo
+   MSG="Error: XALT requires python3, python2 or python to run."
+   ERR_MSG="$ERR_MSG||$MSG"
    rm -f makefile
    exit 1
 fi
@@ -420,7 +421,10 @@ AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that insta
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
-  AC_MSG_ERROR([Unable to build XALT without mktemp])
+  MSG="Unable to build XALT without mktemp"
+  ERR_MSG="$ERR_MSG||$MSG"
+  FOUND_ERROR=yes
+  AC_MSG_NOTICE([$MSG])
 fi
 
 
@@ -435,12 +439,8 @@ for i in file file_separate_dirs syslog logger none; do
 done
 
 if test found = no; then
-   echo
-   echo "======================================================="
-   echo "XALT 2 does not support transmission style: $TRANSMISSION"
-   echo "See the xalt.readthedocs.io for supported methods"
-   echo "======================================================="
-   echo
+   MSG="XALT does not support transmission style: $TRANSMISSION|See the xalt.readthedocs.io for supported methods"
+   ERR_MSG="$ERR_MSG||$MSG"
    rm -f makefile
    exit 1
 fi
@@ -456,23 +456,39 @@ AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
                    [Define to 1 if you have <uuid/uuid.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without uuid/uuid.h])])
+                [FOUND_ERROR=yes;
+		 MSG="Unable to build XALT without uuid/uuid.h"
+		 ERR_MSG="$ERR_MSG||$MSG"
+		 AC_MSG_NOTICE([$MSG])])
+
 if test $XALT_SUPPORT_CURL = yes ; then
   AC_CHECK_HEADER(curl/curl.h,
                   [AC_DEFINE([HAVE_CURL_CURL_H], 1,
                      [Define to 1 if you have <curl/curl.h>.])],
-                  [AC_MSG_ERROR([Configure with --supportCURL=no if you don't want support for curl transmission style])])
+                  [FOUND_ERROR=yes;
+		  MSG="Configure with --supportCURL=no if you don't want support for curl transmission style"
+  		  ERR_MSG="$ERR_MSG||$MSG"
+		  AC_MSG_NOTICE([$MSG])])
 fi
+
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
-                [AC_MSG_ERROR([Unable to build XALT without openssl/sha.h])])
+                [FOUND_ERROR=yes;
+		MSG="Unable to build XALT without openssl/sha.h"
+                ERR_MSG="$ERR_MSG||$MSG"
+		AC_MSG_NOTICE([$MSG])])
 
 AC_CHECK_HEADER(gelf.h, [],
-                [AC_MSG_ERROR([Unable to build XALT without gelf.h. Please install the libelf development package])])
+                [FOUND_ERROR=yes;
+		MSG="Unable to build XALT without gelf.h. Please install the libelf development package"
+                ERR_MSG="$ERR_MSG||$MSG"
+		AC_MSG_NOTICE([$MSG])])
 AC_CHECK_HEADER(syslog.h, [],
-                [AC_MSG_ERROR([Unable to build XALT without syslog.h. Please install the glibc headers package])])
-
+                [FOUND_ERROR=yes;
+		MSG="Unable to build XALT without syslog.h. Please install the glibc headers package"
+                ERR_MSG="$ERR_MSG||$MSG"
+		AC_MSG_NOTICE([$MSG])])
 
 AC_SUBST(HAVE_WORKING_LIBUUID)
 HAVE_WORKING_LIBUUID=no
@@ -481,25 +497,18 @@ if test $ac_cv_header_uuid_uuid_h = yes; then
 fi
 
 if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without uuid and"
-   echo "without /proc/sys/kernel/random/uuid"
-   echo "See the manual for details"
-   echo "======================================================="
+   FOUND_ERROR=yes;
+   MSG="Unable to install XALT without uuid and without /proc/sys/kernel/random/uuid|See the manual for details"
+   ERR_MSG="$ERR_MSG||$MSG"
    rm -f makefile
-   exit 1
 fi
 
 
 if test -z "$PATH_TO_FLEX" ; then
-   echo
-   echo "======================================================="
-   echo "Unable to install XALT without flex"
-   echo "See the xalt.readthedocs.io for details"
-   echo "======================================================="
+   FOUND_ERROR=yes;
+   MSG="Unable to install XALT without flex|See the xalt.readthedocs.io for details"
+   ERR_MSG="$ERR_MSG||$MSG"
    rm -f makefile
-   exit 1
 fi
 
 MY_TMPDIR=`mktemp -d`
@@ -517,11 +526,20 @@ if test $XALT_GPU_TRACKING_STYLE = "dcgm" ; then
   AC_CHECK_HEADER(dcgm_agent.h,
                   [AC_DEFINE([HAVE_DCGM_AGENT_H], 1,
                      [Define to 1 if you have DCGM.])],
-                  [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+                  [FOUND_ERROR=yes; 
+		  MSG="Unable to include GPU tracking without DCGM"
+		  ERR_MSG="$ERR_MSG||$MSG"
+		  AC_MSG_NOTICE([$MSG])])
   if test "$STATIC_LIBS" = yes; then
-    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])], [-ldl])
+    AC_SEARCH_LIBS([dcgmInit], [dcgm_stub], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [FOUND_ERROR=yes;
+                                                                                                   MSG="Unable to include GPU tracking without DCGM"
+                                                                                                   ERR_MSG="$ERR_MSG||$MSG"												   
+    			                                                                           AC_MSG_NOTICE([$MSG])], [-ldl])
   else
-    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [AC_MSG_ERROR([Unable to include GPU tracking without DCGM])])
+    AC_SEARCH_LIBS([dcgmInit], [dcgm], [AC_DEFINE(USE_DCGM, [1],[Using DCGM]) HAVE_DCGM=yes], [FOUND_ERROR=yes;
+                                                                                              MSG="Unable to include GPU tracking without DCGM"
+                                                                                              ERR_MSG="$ERR_MSG||$MSG"												   
+                                                                                              AC_MSG_NOTICE([$MSG])])
   fi
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     GPU_STR=`$LOCATE_SO libdcgm.so$i`
@@ -533,16 +551,26 @@ elif test $XALT_GPU_TRACKING_STYLE = "nvml" ; then
   AC_CHECK_HEADER(nvml.h,
                   [AC_DEFINE([HAVE_NVML_H], 1,
                      [Define to 1 if you have NVML.])],
-                  [AC_MSG_ERROR([Unable to include GPU tracking without NVML])])
+                  [FOUND_ERROR=yes;
+		  MSG="Unable to include GPU tracking without NVML"
+		  ERR_MSG="$ERR_MSG||$MSG"
+ 		  AC_MSG_NOTICE([$MSG])])
   AC_CHECK_HEADER(dlfcn.h,
                   [AC_DEFINE([HAVE_DCFCN_H], 1,
                      [Define to 1 if you have dlfcn.h.])],
-                  [AC_MSG_ERROR([Unable to include GPU tracking without dlfcn.h])])
+                  [FOUND_ERROR=yes;
+		  MSG="Unable to include GPU tracking without dlfcn.h"
+		  ERR_MSG="$ERR_MSG||$MSG"
+		  AC_MSG_NOTICE([$MSG])])
   AC_SEARCH_LIBS([dlopen], [dl dld],
                  [AC_DEFINE([HAVE_DLOPEN], [1],[Using dlopen library])
                   AC_DEFINE([USE_NVML], [1],[Using NVML library])
                   HAVE_NVML=yes],
-                 [AC_MSG_ERROR([Unable to find dlopen])])
+                 [FOUND_ERROR=yes;
+		 MSG="Unable to find dlopen"
+		 ERR_MSG="$ERR_MSG||$MSG"
+		 AC_MSG_NOTICE([$MSG])])
+
   for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     GPU_STR=`$LOCATE_SO libnvidia-ml.so$i`
     if test "$?" -eq 0; then
@@ -592,12 +620,14 @@ fi
 XALT_LD_LIBRARY_PATH=$XALT_DEFAULT_DIR/lib64
 
 echo "VERSION=$VERSION"
-if test -n "$PATH_TO_GIT" -a -d $srcdir/.git ; then
+if test -n "$PATH_TO_GIT" -a -e $srcdir/.git ; then
   xaltV=`(cd $srcdir; $PATH_TO_GIT describe)`
 else
   xaltV="@git@"
 fi
 XALT_GIT_VERSION=$xaltV
+AC_MSG_RESULT([XALT_GIT_VERSION=$XALT_GIT_VERSION])
+
 
 if test "$HAVE_CXX11" = no; then
    echo
@@ -616,7 +646,7 @@ if test "$XALT_CONFIG_PY" = no; then
    echo "See the xalt.readthedocs.io for details"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   exit 1   
 fi
 
 if ! test -f $XALT_CONFIG_PY; then
@@ -626,7 +656,7 @@ if ! test -f $XALT_CONFIG_PY; then
    echo "quitting!"
    echo "======================================================="
    rm -f makefile
-   exit 1
+   exit 1   
 fi
 
 if test "$MYSQLDB" = yes; then
@@ -634,8 +664,8 @@ if test "$MYSQLDB" = yes; then
       echo
       echo "======================================================="
       echo "Unable to install XALT without the python module: MySQLdb"
+      echo "Install a system package (debian based linux: python3-mysqldb) "
       echo "To install for python3 do: pip3 install mysqlclient"
-      echo "To install for python2 do: pip  install MySQL-python"
       echo "======================================================="
       rm -f makefile
       exit 1
@@ -679,11 +709,17 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-AC_SEARCH_LIBS([SHA1], [crypto], [], [AC_MSG_ERROR([Unable to build XALT without libcrypto])])
+AC_SEARCH_LIBS([SHA1], [crypto], [],
+		       [FOUND_ERROR=yes; 
+		       MSG="Unable to build XALT without libcrypto"
+		       ERR_MSG="$ERR_MSG||$MSG"
+                       AC_MSG_NOTICE([$MSG])])
 
-echo 
 if test $XALT_SUPPORT_CURL = yes; then
-  AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [AC_MSG_ERROR([Unable to build XALT without libcurl])])
+  AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [FOUND_ERROR=yes;
+                                                 MSG="Unable to build XALT without libcurl"
+                                                 ERR_MSG="$ERR_MSG||$MSG"
+                                                 AC_MSG_NOTICE([$MSG])])
 fi
 
 AC_SUBST(CRYPTO_STR)
@@ -707,6 +743,7 @@ for i in ' ' .9 .8 .7 .6 .5 .4 .3 .2 .1; do
     break;
   fi
 done
+
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/xalt_prime_check.py $XALT_PRIME_NUMBER
 if test "$?" != 0; then
@@ -737,6 +774,7 @@ if test "$?" != 0; then
    rm -f makefile
    exit 1
 fi	
+
 
 $PATH_TO_PYTHON $ac_confdir/proj_mgmt/py_build_tools/build_syshost_routine.py --input $SYSHOST_CONFIG --output src/__build__/xalt_syshost.c 
 if test "$?" != 0; then
@@ -809,12 +847,29 @@ done
 IFS=$ORIG_SEP
 
 if test -n "$NOT_FOUND"; then
-  AC_MSG_ERROR([Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND])
+  FOUND_ERROR=yes
+  MSG="Unable to build XALT without SYSTEM_PATH=$SYSTEM_PATH including $NOT_FOUND"
+  ERR_MSG="$ERR_MSG||$MSG"
+  AC_MSG_NOTICE([$MSG])
 fi  
 
-rm -rf $MY_TMPDIR
 
+if test "$FOUND_ERROR" = yes; then
+  echo
+  echo One or more errors found:
+  echo
+  echo Error Messages:
+  echo "------------------------------------------------------------"
+  echo $ERR_MSG | tr '|' '\n' | while read item; do
+       echo $item
+  done   
+  echo "------------------------------------------------------------"
   
+  rm -f makefile
+  exit 1;
+fi      
+
+rm -rf $MY_TMPDIR
 
 AC_CONFIG_FILES([makefile:Makefile.in                                       \
           src/__build__/xalt_config.h:src/util/xalt_config.h.in      \
