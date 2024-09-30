@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <sys/stat.h>
+#include <sys/utsname.h>
 #include <sys/types.h>
 
 #include "crc.h"
@@ -39,7 +40,6 @@ int main(int argc, char* argv[])
   int         i           = 1;
   const char* uuid        = argv[i++];
   const char* wd          = argv[i++];
-  const char* host        = argv[i++];
   const char* syshost     = argv[i++];
   const char* execname    = argv[i++];
   const char* sha1sum     = argv[i++]; 
@@ -51,6 +51,9 @@ int main(int argc, char* argv[])
 
   if (compT.size() == 0)
     compT = "{}";
+
+  struct utsname u;
+  uname(&u);
 
   double start = convert_double("startTime",build_epoch);
 
@@ -86,7 +89,8 @@ int main(int argc, char* argv[])
   insert_key_string(&resultT, "hash_id",       sha1sum);
   insert_key_string(&resultT, "wd",            wd);
   insert_key_string(&resultT, "build_syshost", syshost);
-  insert_key_string(&resultT, "build_host",    host);
+  insert_key_string(&resultT, "build_host",    u.nodename);
+
 
   const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
