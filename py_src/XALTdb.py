@@ -25,7 +25,7 @@ dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../site")))
 
-import MySQLdb, getpass, time, random, ctypes
+import getpass, time, random, ctypes
 import warnings
 from   ctypes           import *   # used to interact with C shared libraries
 from   xalt_util        import *
@@ -36,6 +36,12 @@ try:
   import configparser
 except:
   import ConfigParser as configparser
+
+try:
+  import mysql.connector
+except:
+  import MySQLdb
+
 try:
   input = raw_input
 except:
@@ -218,22 +224,32 @@ class XALTdb(object):
       self.__readFromUser()
 
     try:
-      self.__conn = MySQLdb.connect \
-                      (self.__host,self.__user,self.__passwd, use_unicode=True, \
-                       charset="utf8", connect_timeout=120)
-      if (databaseName):
-        cursor = self.__conn.cursor()
+      self.__conn = mysql.connector.connect(
+        host     = self.__host,
+        user     = self.__user,
+        password = self.__passwd,
+        database = self.__db,
+        charset  ="utf8",
+        connect_timeout=120)
+    except:
+      try: 
+        self.__conn = MySQLdb.connect \
+          (self.__host,self.__user,self.__passwd, use_unicode=True, \
+           charset="utf8", connect_timeout=120)
+      except Exception as e:
+        print("Failed to open db with either mysql.connector or MySQLdb")
+        print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
+        print(traceback.format_exc())
+        raise
         
-        # If MySQL version < 4.1, comment out the line below
-        cursor.execute("SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"")
-        cursor.execute("USE "+xalt.db())
+    try:
+      cursor = self.__conn.cursor()
+      
+      cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
+      cursor.execute("SET CHARACTER SET utf8;") #same as above
+      cursor.execute("SET character_set_connection=utf8;") #same as above
 
-        self.__conn.set_character_set('utf8')
-        cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
-        cursor.execute("SET CHARACTER SET utf8;") #same as above
-        cursor.execute("SET character_set_connection=utf8;") #same as above
-
-    except MySQLdb.Error as e:
+    except Exception as e:
       print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
       print(traceback.format_exc())
       raise

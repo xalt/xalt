@@ -215,17 +215,17 @@ AC_ARG_WITH(config,
 
 AC_SUBST(MYSQLDB)
 AC_ARG_WITH(MySQL,
-    AS_HELP_STRING([--with-MySQL=ans],[Require the mysqlclient/MySQL-python module [[yes]]]),
+    AS_HELP_STRING([--with-MySQL=ans],[Require a mysql python client package [[yes]]]),
     MYSQLDB="$withval"
     MYSQLDB=`echo $MYSQLDB | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $MYSQLDB "--with-MySQL=ans: ans must be yes or no"
     AC_MSG_RESULT([MYSQLDB=$with_MySQL])
-    AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL",[Require the mysqlclient/MySQL-python module])dnl
+    AC_DEFINE_UNQUOTED(MYSQLDB, "$with_MySQL",[Require a mysql python client package])dnl
     ,
     withval="yes"
     AC_MSG_RESULT([MYSQLDB=$withval])
     MYSQLDB="$withval"
-    AC_DEFINE_UNQUOTED(MYSQLDB, "$withval",[Require the mysqlclient/MySQL-python module]))dnl
+    AC_DEFINE_UNQUOTED(MYSQLDB, "$withval",[Require a mysql python client package]))dnl
 
 AC_SUBST(SYSTEM_PATH)
 AC_ARG_WITH(systemPath,
@@ -450,6 +450,9 @@ AC_SUBST(XALT_UUID_V7)
 AC_CHECK_LIB([c], [getentropy], [XALT_UUID_V7=yes; AC_DEFINE([HAVE_FUNC_GETENTROPY],1,
                    [Define to 1 if you have getentropy in libc])],[])
 
+AC_SUBST(HAVE_PYMOD_MYSQL_CONNECTOR)
+AX_PYTHON_MODULE([$PATH_TO_PYTHON],[mysql.connector])
+
 AC_SUBST(HAVE_PYMOD_MYSQLDB)
 AX_PYTHON_MODULE([$PATH_TO_PYTHON],[MySQLdb])
 
@@ -659,18 +662,24 @@ if ! test -f $XALT_CONFIG_PY; then
    exit 1   
 fi
 
+AC_MSG_RESULT([HAVE_PYMOD_MYSQLDB:$HAVE_PYMOD_MYSQLDB])
+AC_MSG_RESULT([HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR])
 if test "$MYSQLDB" = yes; then
-   if test "$HAVE_PYMOD_MYSQLDB" = no; then
+   if test "$HAVE_PYMOD_MYSQLDB" = no -a "$HAVE_PYMOD_MYSQL_CONNECTOR" = no ; then
       echo
-      echo "======================================================="
-      echo "Unable to install XALT without the python module: MySQLdb"
-      echo "Install a system package (debian based linux: python3-mysqldb) "
-      echo "To install for python3 do: pip3 install mysqlclient"
-      echo "======================================================="
+      echo '======================================================================'
+      echo 'Unable to install XALT without the a python module to connect to MySQL'
+      echo 'Chose mysql.connector.python if available using pip3'
+      echo 'Otherwise install MySQLdb with:'
+      echo 'debian based linux: python3-mysqldb or with pip3 do:'
+      echo '% pip3 install mysqlclient'
+      echo '======================================================='
       rm -f makefile
       exit 1
    fi
 fi
+
+AC_MSG_RESULT([here])
 
 if test "$SYSHOST_CONFIG" = no; then
    echo

@@ -72,7 +72,7 @@
 /* Override executable install mode */
 #undef MODE
 
-/* Require the mysqlclient/MySQL-python module */
+/* Require a mysql python client package */
 #undef MYSQLDB
 
 /* Replace built-in lex based hostname parser */

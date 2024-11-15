@@ -2,14 +2,15 @@ dnl AX_PYTHON_MODULE(path_to_python, modname [, fatal ])
 
 AC_DEFUN([AX_PYTHON_MODULE],[
 	AC_MSG_CHECKING(python module: $2)
+	ac_python_pkg=`echo $2 | tr . _`
 	$1 -c "import $2" > /dev/null 2>&1
 	if test $? -eq 0;
 	then
 		AC_MSG_RESULT(yes)
-		eval AS_TR_CPP(HAVE_PYMOD_$2)=yes
+		eval AS_TR_CPP(HAVE_PYMOD_$ac_python_pkg)=yes
 	else
 		AC_MSG_RESULT(no)
-		eval AS_TR_CPP(HAVE_PYMOD_$2)=no
+		eval AS_TR_CPP(HAVE_PYMOD_$ac_python_pkg)=no
 		#
 		if test -n "$3"
 		then
