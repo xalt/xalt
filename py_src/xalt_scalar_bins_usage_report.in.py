@@ -592,7 +592,7 @@ def main():
          user     = config.get("MYSQL","USER"),
          password = base64.b64decode(config.get("MYSQL","PASSWD")).decode(), 
          database = config.get("MYSQL","DB"))
-  cursor = conn.cursor()
+  cursor = conn.cursor(buffered=True)
 
   end_date = time.strftime('%Y-%m-%d')
   if (args.endD is not None):
