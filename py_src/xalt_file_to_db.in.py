@@ -47,7 +47,7 @@ exit 2
 #
 
 from __future__  import print_function
-import os, sys, re, MySQLdb, json, time, argparse, time, traceback
+import os, sys, re, json, time, argparse, time, traceback
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))

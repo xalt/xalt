@@ -39,7 +39,7 @@ exit 2
 #-----------------------------------------------------------------------
 
 from __future__ import print_function
-import os, sys, re, MySQLdb, traceback
+import os, sys, re, traceback
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.append(os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -149,25 +149,10 @@ def main():
     cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_bin" % xalt.db())
     cursor.execute("USE "+xalt.db())
 
-    idx = 0
+    idx = 1
 
 
     print("start")
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS `tst_link` (
-          `link_id`          int(11)   unsigned NOT NULL auto_increment,
-
-          `uuid`             char(36)           NOT NULL,
-          `hash_id`          char(40)           NOT NULL,
-          `date`             DATETIME           NOT NULL,
-
-          PRIMARY KEY  (`link_id`),
-          INDEX  `index_date` (`date`),
-          UNIQUE  KEY  `uuid` (`uuid`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_bin AUTO_INCREMENT=1
-        """)
-    print("(%d) create tst_link table" % idx); idx += 1
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_link` (
@@ -416,7 +401,7 @@ def main():
     print("(%d) create xalt_field_of_science table" % idx); idx += 1
     
     cursor.close()
-  except  MySQLdb.Error as e:
+  except  Exception as e:
     print ("Error %d: %s" % (e.args[0], e.args[1]))
     sys.exit (1)
 

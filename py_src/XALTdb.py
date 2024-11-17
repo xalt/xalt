@@ -37,10 +37,7 @@ try:
 except:
   import ConfigParser as configparser
 
-try:
-  import mysql.connector
-except:
-  import MySQLdb
+import mysql.connector
 
 try:
   input = raw_input
@@ -231,16 +228,11 @@ class XALTdb(object):
         database = self.__db,
         charset  ="utf8",
         connect_timeout=120)
-    except:
-      try: 
-        self.__conn = MySQLdb.connect \
-          (self.__host,self.__user,self.__passwd, use_unicode=True, \
-           charset="utf8", connect_timeout=120)
-      except Exception as e:
-        print("Failed to open db with either mysql.connector or MySQLdb")
-        print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
-        print(traceback.format_exc())
-        raise
+    except Exception as e:
+      print("Failed to open db with either mysql.connector")
+      print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
+      print(traceback.format_exc())
+      raise
         
     try:
       cursor = self.__conn.cursor(buffered=True)
