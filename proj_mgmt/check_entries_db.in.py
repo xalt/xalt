@@ -76,13 +76,14 @@ def count_w_condition(conn, tableName, condition):
   if (condition):
     extra = " where " + condition
 
-  query  = "SELECT COUNT(*) FROM "+ tableName + extra
-  cursor = conn.cursor()
+  query   = "SELECT COUNT(*) FROM "+ tableName + extra
+  cursor  = conn.cursor()
   cursor.execute(query)
-  result = conn.store_result()
-  if (result.num_rows() > 0):
-    row   = result.fetch_row()
-    count = int(row[0][0])
+  resultA = cursor.fetchall()
+
+  if (len(resultA) > 0):
+    row   = resultA[0]
+    count = int(row[0])
   return count
   
 def eq(a,b):
