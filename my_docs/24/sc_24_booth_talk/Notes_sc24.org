@@ -1,0 +1,16 @@
+Here are some notes for SC24 talk
+
+* New this year?
+** New version:
+*** 3.2 is comming
+** New features
+*** UUID v7
+*** Switch from python MySQLdb interface to mysql.connector interface 
+    Uses mysql.connector.python python import.
+* Containers
+** XALT wants newer libc wants the getentropy function to support UUIDv7
+** Containers are build with older versions of libc
+** Don't know how to make this work
+* Monthly XALT Zoom Meetings
+
+

@@ -149,12 +149,26 @@ def main():
     cursor.execute("CREATE DATABASE IF NOT EXISTS %s DEFAULT CHARACTER SET utf8 COLLATE utf8_bin" % xalt.db())
     cursor.execute("USE "+xalt.db())
 
-    idx = 1
+    idx = 0
 
 
     print("start")
 
-    # 1
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS `tst_link` (
+          `link_id`          int(11)   unsigned NOT NULL auto_increment,
+
+          `uuid`             char(36)           NOT NULL,
+          `hash_id`          char(40)           NOT NULL,
+          `date`             DATETIME           NOT NULL,
+
+          PRIMARY KEY  (`link_id`),
+          INDEX  `index_date` (`date`),
+          UNIQUE  KEY  `uuid` (`uuid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_bin AUTO_INCREMENT=1
+        """)
+    print("(%d) create tst_link table" % idx); idx += 1
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS `xalt_link` (
           `link_id`          int(11)   unsigned NOT NULL auto_increment,
