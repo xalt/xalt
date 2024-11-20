@@ -43,9 +43,9 @@
 
 
 \begin{document}
-\title[XALT]{10 years of XALT: A Retrospective}
+\title[XALT]{XALT: Job-Level Usage Data on Today's Supercomputers}
 \author{Robert McLay}
-\date{August 17, 2023}
+\date{November 20, 2024}
 
 % page 1
 \frame{\titlepage}
@@ -54,66 +54,29 @@
 \begin{frame}{XALT: Outline}
   \center{\includegraphics[width=.9\textwidth]{XALT_Sticker.png}}
   \begin{itemize}
-    \item History: Lariat and ALTD
-    \item XALT 1 funded by NSF
-    \item XALT 2
-    \item Sharing Memory and Namespace with every program run on the
-      system
-    \item Lessons learn from running an Open Source Project
+    \item What is XALT and what it is not?
+    \item How it works.
+    \item Container issues
     \item Conclusions
   \end{itemize}
 \end{frame}
 
 %page 3
-\begin{frame}{History}
+\begin{frame}{Understanding what your users are doing}
   \begin{itemize}
-    \item My Boss, John Cazes, asked if I could track what MPI
-      executable ran on our system
-    \item I added code around our ibrun submission tool (AKA our mpirun/srun)
-    \item Could do some tracking but no database
-    \item Lariat was born (was LASSO but name conflict)
+    \item Current Version: XALT 3.1.1 (3.2 is coming)
+    \item What programs, libraries are your users using?
+    \item What imports from R, MATLAB, Python?
+    \item What are the top programs by core-hours? by counts? by users?
+    \item System, User or Built by Other executables?
+    \item Are Executables implemented in C/C++/Fortran/Others?
+    \item Track MPI task and/or Threading (\$OMP\_NUMTHREADS)
+    \item Function Tracking
+    \item Census Taker, Not a performance tool!
   \end{itemize}
 \end{frame}
 
 % page 4
-\begin{frame}{XALT History}
-  \begin{itemize}
-    \item Mark Fahey contacted us at TACC for a joint proposal
-    \item With an amazing amount of help from my colleague Doug James
-    \item Mark and I joined forces to submit a successful NSF proposal
-      in 2013.
-    \item XALT combined the best parts of both projects (ALTD and
-      Lariat)
-    \item The name XALT comes from eXtended ALTd (suggested by Doug
-      James)
-    \item Originally UTWrangler but name conflict again.
-  \end{itemize}
-\end{frame}
-
-% page 5
-\begin{frame}{XALT I}
-  \begin{itemize}
-    \item It only tracked MPI executions
-    \item It did have a database
-    \item It tracked Linking of executable
-    \item Used UUID (universal unique id) to connect links to execution
-    \item Rather than making calls to database like ALTD did
-    \item It mainly used Python to collect data (a bad idea)
-  \end{itemize}
-\end{frame}
-
-
-% page 6
-\begin{frame}{XALT 2}
-  \begin{itemize}
-    \item My friend and colleague, Bill Barth, found this ELF trick.
-    \item One could modify the execution of non-static execution.
-    \item By using LD\_PRELOAD and a shared library.
-    \item There are similar ways under macOS but ...
-  \end{itemize}
-\end{frame}
-
-% page 7
 \begin{frame}[fragile]
     \frametitle{How XALT 2 works}
  {\tiny
@@ -128,31 +91,10 @@ __attribute__((section(".init_array"))) __typeof__(myinit) *__init = myinit;
 __attribute__((section(".fini_array"))) __typeof__(myfini) *__fini = myfini;
     \end{semiverbatim}
 }
-  \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex1
   \end{itemize}
 \end{frame}
 
-% page 8
-\begin{frame}[fragile]
-    \frametitle{How XALT works (II)}
- {\small
-    \begin{semiverbatim}
-\% cat try.c
-
-#include <stdio.h>
-int main()
-\{
-  printf("Hello World!\textbackslash{}n");
-  return 0;
-\}
-
-    \end{semiverbatim}
-}
-\end{frame}
-
-
-% page 9
+% page 5
 \begin{frame}[fragile]
     \frametitle{How XALT works (III)}
  {\small
@@ -167,154 +109,72 @@ Hello World!
 This is run after main()
     \end{semiverbatim}
 }
-  \begin{itemize}
-    \item my\_docs/22/xalt\_monthly\_mtg\_2022\_03\_17/code/bad\_memory/ex1
-  \end{itemize}
-
 \end{frame}
 
-% page 10
-\begin{frame}{Hijacking the linker}
-  \begin{itemize}
-    \item XALT uses Lmod to put its ld early in the path
-    \item This doesn't work with llvm compilers
-    \item Sites have to move llvm's ld to ld.x and place XALT's ld in
-      the right place
-  \end{itemize}
-\end{frame}
-
-% page 11
+% page 6
 \begin{frame}{Implications of tracking everything}
   \begin{itemize}
     \item Too much data!! $\Rightarrow$ Sampling
     \item Being in the same namespace of your program
     \item Sharing memory allocation with your program.
     \item Feeling like I'm a developer on every program team.
+    \item Fixing these issues has been part of XALT becoming mature.
   \end{itemize}
 \end{frame}
 
-% page 12
-\begin{frame}{Sharing Namespace}
+% page 7
+\begin{frame}{Containers}
   \begin{itemize}
-    \item XALT uses xalt\_obfuscate.h to hide the xalt library
-      (libxalt\_init.so)
-    \item This sharing is common with all libraries
-    \item But usually it is opt-in.
-    \item But very few libraries are uses everywhere, except libc.so
+    \item XALT can track executions in Containers
+    \item But XALT depends on newer libc than container
+    \item When linking libxalt.so to container exec complains
+    \item Not sure how to solve this
   \end{itemize}
 \end{frame}
 
-% page 13
-\begin{frame}[fragile]
-    \frametitle{Hiding XALT routine names from users}
- {\tiny
-    \begin{semiverbatim}
-\% nm \$LD\_PRELOAD| grep \_\_XALT\_build
-0000000000009e80 T \_\_XALT\_buildEnvT\_xalt\_1\_5
-000000000000a840 T \_\_XALT\_buildUserT\_xalt\_1\_5
-00000000000163a0 T \_\_XALT\_buildXALTRecordT\_xalt\_1\_5
-    \end{semiverbatim}
-}
+% page 8
+\begin{frame}{UUID v7}
   \begin{itemize}
-    \item XALT routine names are hidden by macros supplied in xalt\_obfuscate.h
+    \item XALT uses UUIDs extensively (Univeral Unique ID)
+    \item It has used UUID v4 which isn't time sortable
+    \item Version 7 is new and \emph{IS} time sortable
+    \item This leads to faster indexing in a database
+    \item XALT 3.1.1+ now uses UUIDv7 on computers that support
+      getentropy function in libc
   \end{itemize}
-
 \end{frame}
 
-
-% page 14
-\begin{frame}{Cannot hide routines in system libraries like libuuid}
+% page 9
+\begin{frame}{Updating Python $<=>$ MySQL interface}
   \begin{itemize}
-    \item The routine ``\textbf{random}'' is used by libuuid.so
-    \item A user's program created their own random routine in fortran
-    \item The program crash when XALT was used.
-    \item Solution: use dynamic linking via libdl.so for libuuid.so
-      and others.
+    \item XALT has used MySQLdb as its interface.
+    \item This package is nolonger supported.
+    \item XALT is switching to mysql.connector.python 
   \end{itemize}
 \end{frame}
 
 
-% page 15
-\begin{frame}{User's bug hidden by initially zeroed memory}
-  \begin{itemize}
-    \item Initially all memory is zeroed before program starts
-    \item Note that pointer zero, integer zero and float zero are all
-      zero bits
-    \item Link lists require a NULL pointer at end of list.
-    \item Used memory is {\color{red} \emph{NOT}} zeroed for you in C.
-    \item User's program work w/o XALT, Failed with XALT.
-    \item XALT Fix was to zero memory before returning it
-    \item Also only return memory when necessary
-  \end{itemize}
-\end{frame}
 
-% page 16
-\begin{frame}{XALT has been a group effort}
-  \begin{itemize}
-    \item James McComb \& Michael Scott from IU $\Rightarrow$ Tracking R imports
-    \item Kenneth Hoste $\Rightarrow$ Riccardo Murri $\Rightarrow$
-      Tracking Python imports
-    \item Bill Barth $\Rightarrow$ Tracking MATLAB imports
-    \item NVIDIA's Scott McMillan $\Rightarrow$ Tracking NVIDIA GPU
-      usage
-    \item Bilel Hadri $\Rightarrow$ ALTD at NICS
-    \item Doug James wrote the NSF proposal with help from Mark and me
-    \item See ACKNOWLEDGMENTS.txt for a complete list
-  \end{itemize}
-\end{frame}
-
-% page 17
-\begin{frame}{Lessons Learned}
-  \begin{itemize}
-    \item Figuring out how to debug on a remote site via XALT\_TRACING=  
-    \item Reporting the XALT configuration
-    \item make gittag TAG=...; make world\_update
-    \item git worktrees
-    \item Exploiting Lmod to help XALT (reverse map: path
-      $\Rightarrow$ to module)
-    \item Using python config files to build C code.
-    \item Speed, Speed, Speed
-    \item Building trust with the user community
-  \end{itemize}
-\end{frame}
-
-% page 18
-\begin{frame}{Building trust with the user community}
-  \begin{itemize}
-    \item Making it reliable via Testing
-    \item Timely answering the email and github issues 
-    \item Book: Team Geek
-    \item Learning to be polite when answering and re-answering
-      questions
-    \item ``You might consider ...''
-    \item ``Please test XALT version ... when you get a chance to see
-      if it works for you''
-    \item Not getting upset when non-native English speakers sound
-      insulting
-  \end{itemize}
-\end{frame}
-
-% page 19
+% page 10
 \begin{frame}[fragile]
     \frametitle{XALT Doc usage by City}
     \center{\includegraphics[width=.9\textwidth]{XALT_doc_usage_by_city}}
 \end{frame}
 
-% page 20
-\begin{frame}{Conclusions}
+% page 11
+\begin{frame}{XALT Monthly Zoom Mtg}
   \begin{itemize}
-    \item It has been quite the learning experience
-    \item XALT is considerable better for being Open Source
+    \item Usually the 3rd Thursday of the Month at 10:00 am US Central
+    \item Feel free to attend when you have questions or concerns and
+      not when you don't.
   \end{itemize}
 \end{frame}
 
-% page 21
-\begin{frame}{Future Topics?}
+% page 11
+\begin{frame}{Conclusions}
   \begin{itemize}
-    \item Next Meeting will be on September 21, 2023 at 10:00 am
-      U.S. Central (15:00 UTC)
-    \item It will be a different Zoom link as Amit Ruhela will leading
-      the project with some help from me.
+    \item XALT is useful and low cost tool to know how your users run
+      on your system.
   \end{itemize}
 \end{frame}
 
