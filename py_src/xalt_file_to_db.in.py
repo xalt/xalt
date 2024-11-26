@@ -47,7 +47,7 @@ exit 2
 #
 
 from __future__  import print_function
-import os, sys, re, json, time, argparse, time, traceback
+import os, sys, re, json, time, argparse, time, traceback, signal
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))
 sys.path.insert(1,os.path.realpath(os.path.join(dirNm, "../libexec")))
@@ -100,6 +100,7 @@ class CmdLineOptions(object):
     parser.add_argument("--report_file", dest='listFn',  action="store_true", help="list file")
     parser.add_argument("--reverseMapD", dest='rmapD',   action="store",      help="Path to the directory containing the json reverseMap")
     parser.add_argument("--u2acct",      dest='u2acct',  action="store",      help="Path to the json file containing default charge account strings for users")
+    parser.add_argument("--timeout",     dest='timeout', action="store",      default=False,          help="Timeout time in seconds")
     parser.add_argument("--syshost",     dest='syshost', action="store",      default="*",            help="name of the cluster")
     parser.add_argument("--confFn",      dest='confFn',  action="store",      default="xalt_db.conf", help="Name of the database")
     args = parser.parse_args()
@@ -459,7 +460,31 @@ def store_json_files(username, homeDir, transmission, xalt, rmapT, u2acctT, args
       extra = " for user " + username
     print("Storing the following "+str(sum)+" json files (run: "+str(runCnt)+", link: "+str(linkCnt)+", pkg: "+str(pkgCnt)+")"+extra)
 
-def main():
+class TimeoutExpired(Exception):
+    pass
+
+def alarm_handler(signum, frame):
+    raise TimeoutExpired
+
+def overload():
+  args      = CmdLineOptions().execute()
+  if (not args.timeout):
+    main(args)
+  else:
+    timeout = int(args.timeout)
+    signal.signal(signal.SIGALRM, alarm_handler)
+    signal.alarm(timeout)  # Produce SIGALRM in `timeout` seconds
+    try:
+      main(args)
+    except TimeoutExpired:
+      print('Sorry, time is up')
+    finally:
+      signal.alarm(0)  # Cancel the alarm
+      
+  
+    
+
+def main(args):
   """
   Walks the list of users via the passwd_generator and load the
   link and run files.
@@ -502,7 +527,6 @@ def main():
     sA.append('"'+v+'"')
   XALT_Stack.push(" ".join(sA))
 
-  args      = CmdLineOptions().execute()
   xalt      = XALTdb(args.confFn)
   lead_txt  = ""
   extra_txt = ""
@@ -593,4 +617,4 @@ def main():
   timeRecord.print()
   
 
-if ( __name__ == '__main__'): main()
+if ( __name__ == '__main__'): overload()
