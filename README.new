@@ -17,6 +17,8 @@ XALT 3.1+
             * using -e flag to check for .git not -d
 W.I.P:
     (3.1.3) * Issue #68: Add --timeout option to xalt_file_to_db.in.py
+            * Bug Report fix: sometimes -x fails on command called unknown in xalt_helper_functions.sh
+    
     
 
 

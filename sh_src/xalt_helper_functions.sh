@@ -68,11 +68,11 @@ tracing_msg()
 {
   if [ "${XALT_TRACING:-}" = "yes" ]; then
     builtin echo ""   1>&2
-    builtin echo `date "+%H:%M:%S"` "$@" 1>&2
+    builtin echo `XALT_EXECUTABLE_TRACKING=no date "+%H:%M:%S"` "$@" 1>&2
   fi
   if [[ "${XALT_TRACING:-}" =~ link: ]]; then
     builtin echo ""                      >> $__XALT_TRACING_FILE__
-    builtin echo `date "+%H:%M:%S"` "$@" >> $__XALT_TRACING_FILE__
+    builtin echo `XALT_EXECUTABLE_TRACKING=no date "+%H:%M:%S"` "$@" >> $__XALT_TRACING_FILE__
   fi
 
 }
@@ -137,7 +137,7 @@ find_real_command()
 
   tracing_msg "find_real_command: Searching for the real: $my_name"
 
-  if [ -x "$exec_x" ]; then
+  if [ -e "${exec_x:-}" -a -x "${exec_x:-}" ]; then
     # if $exec_x is exists and is executable then use it
     # This is typically used by ld and when points /usr/bin/ld.x
     my_cmd=$exec_x
