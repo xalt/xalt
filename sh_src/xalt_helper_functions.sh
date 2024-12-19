@@ -68,11 +68,11 @@ tracing_msg()
 {
   if [ "${XALT_TRACING:-}" = "yes" ]; then
     builtin echo ""   1>&2
-    builtin echo `XALT_EXECUTABLE_TRACKING=no date "+%H:%M:%S"` "$@" 1>&2
+    builtin echo `XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no date "+%H:%M:%S"` "$@" 1>&2
   fi
   if [[ "${XALT_TRACING:-}" =~ link: ]]; then
     builtin echo ""                      >> $__XALT_TRACING_FILE__
-    builtin echo `XALT_EXECUTABLE_TRACKING=no date "+%H:%M:%S"` "$@" >> $__XALT_TRACING_FILE__
+    builtin echo `XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no date "+%H:%M:%S"` "$@" >> $__XALT_TRACING_FILE__
   fi
 
 }
@@ -80,7 +80,8 @@ tracing_msg()
 locate_command ()
 {
   local my_name=$1
-  local my_cmd="unknown"
+  local null="unknown///"
+  local my_cmd=$null
 
   if [ -n "${BASH_VERSION:-}" ]; then
     # If this is a bash script (and not a bash script in sh mode) then
@@ -111,6 +112,9 @@ locate_command ()
     done
     IFS=$OLD_IFS
   fi
+  if [ $my_cmd = $null ]; then
+    my_cmd=""
+  fi
   echo $my_cmd
 }
 
@@ -137,7 +141,7 @@ find_real_command()
 
   tracing_msg "find_real_command: Searching for the real: $my_name"
 
-  if [ -e "${exec_x:-}" -a -x "${exec_x:-}" ]; then
+  if [ -n "${exec_x:-}" -a -e "${exec_x:-}" -a -x "${exec_x:-}" ]; then
     # if $exec_x is exists and is executable then use it
     # This is typically used by ld and when points /usr/bin/ld.x
     my_cmd=$exec_x
