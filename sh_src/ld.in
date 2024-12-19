@@ -249,7 +249,7 @@ tracing_msg EPOCH "$EPOCH"
 # otherwise don't try to link with it.
 WATERMARK_OBJ=$WATERMARK_O
 if [ -f "$WATERMARK_S" ]; then
-  as $WATERMARK_S $BIT32FLAG -o $WATERMARK_OBJ
+  XALT_TRACING=no as $WATERMARK_S $BIT32FLAG -o $WATERMARK_OBJ
 else
   WATERMARK_OBJ=""
 fi
@@ -262,8 +262,8 @@ trap "{ PATH=@xalt_system_path@ LD_PRELOAD= rm -rf $WRKDIR; }" EXIT SIGINT SIGTE
 function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
-     if LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH LD_PRELOAD= $XALT_RMAP_EXISTS ; then
-     	StripA=( $(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     if XALT_TRACING=no LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH LD_PRELOAD= $XALT_RMAP_EXISTS ; then
+     	StripA=( $(XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
      	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
      	XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
      else
