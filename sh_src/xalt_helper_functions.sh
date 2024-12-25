@@ -144,11 +144,11 @@ find_real_command()
 
   # Make sure that $exec_x has the .x extenstion otherwise set it to be the empty string
   ext=${exec_x#*.}
-  if [ -z "${exec_x:-}" ] || [ -z "${ext:-}" ] || [ ${ext:-} = ${exec_x:-} ] || [ ${ext:-} != x ]; then
+  if [ -z "${ext:-}" ] || [ ${ext:-} = ${exec_x:-} ] || [ ${ext:-} != x ]; then
     exec_x=""
   fi
 
-  if [ -n "${exec_x:-}" -a -e "${exec_x:-}" -a -x "${exec_x:-}" ] && ; then
+  if [ -n "${exec_x:-}" -a -e "${exec_x:-}" -a -x "${exec_x:-}" ]; then
     # if $exec_x is exists and is executable then use it
     # This is typically used by ld and when points /usr/bin/ld.x
     my_cmd=$exec_x
