@@ -118,6 +118,7 @@ BIN_PKG              	:=                                                        
                            sh_src/ld.in                                                        \
                            sh_src/ld.xalt.in                                                   \
                            sh_src/ld.gold.in                                                   \
+                           sh_src/ld.bfd.in                                                    \
 	                   sh_src/x86_64-linux-gnu-ld.in                                       \
                            sh_src/xalt_helper_functions.sh                                     \
                            sh_src/xalt_extract_record.in                                       \
