@@ -56,7 +56,7 @@ just that the database won't know that a particular library or
 executable came from a particular module.
 
 If your site uses syslog to transfer the json records, then it is
-likely that the **xalt_rmapT.json** file will need to be transfered to
+likely that the **xalt_rmapT.json** file will need to be transferred to
 the VM that ingested these records (See
 :ref:`syslog_reverseMap-label`).
 

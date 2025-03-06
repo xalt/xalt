@@ -82,7 +82,7 @@ Segfaults due to name collision
 
 When XALT is being used,  the names used in the libxalt.so are in the
 same namespace as the original program.  In one particular case, a
-fortan program was build that provided its own *random()* routine
+fortran program was build that provided its own *random()* routine
 which was different from the *random()* routine provide by the c
 library. XALT requires a UUID library which needs to call the
 *random()* function.  The user's own *random()* was used by uuid

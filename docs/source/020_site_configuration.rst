@@ -56,7 +56,7 @@ cluster name from hostname by doing:
 
    --with-syshostConfig=nth_name:2
 
-which tells XALT to grap the second name from our hostname.
+which tells XALT to grab the second name from our hostname.
 
 Read a file
 ~~~~~~~~~~~

@@ -24,7 +24,7 @@ called "function". The function tracking options requires two link
 steps.  The extra link step tries to link the executable when the
 libraries associated with modules are removed.  If function tracking
 is turned on then this array contains the list of function names that
-were not satified when the "module" libraries were removed.
+were not satisfied when the "module" libraries were removed.
 
 For example this might look like for a simple mpi program::
 
