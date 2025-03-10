@@ -1,25 +1,33 @@
 #!/bin/bash
 # -*- shell-script -*-
 MCLAY=~mclay
-export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:/opt/rh/rh-python35/root/usr/bin:$PATH
-export LD_LIBRARY_PATH=/opt/rh/rh-python35/root/usr/lib64
-SYSHOSTS=( maverick2 frontera stampede2 ls6)
-WD=$MCLAY/process_xalt
+MY_PATH=""
+export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:$PATH
+WD=$MCLAY/process_xalt/
+M=$WD/m
+LOG_DIR=/var/log
+
+########################################################################
+# Build host list on this VM
+syshostA=()
+CWD=$PWD
+cd $M
+for i in *; do
+  syshostA+=($i)
+done
+cd $CWD
+
 SYSLOG_TO_DB=$MCLAY/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
 
 errMsg=""
 store_xalt_data ()
 {
     clusterName=$1
-    CN=$WD/$clusterName
-    for log in /data/log/xalt_${clusterName}.log-*; do
+    CN=$M/$clusterName
+    for log in $LOG_DIR/xalt_${clusterName}.log-*; do
         if [ -f $log ]; then
-           filter=""
-           if [ $clusterName = stampede2 ]; then
-              filter="--filter"
-           fi
-           echo python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $CN/reverseMapD --u2acct $CN/u2acct.json --leftover $CN/leftover.log --confFn $CN/xalt_${clusterName}_db.conf
-                python3 $SYSLOG_TO_DB $filter --syslog $log --syshost $clusterName --reverseMapD $CN/reverseMapD --u2acct $CN/u2acct.json --leftover $CN/leftover.log --confFn $CN/xalt_${clusterName}_db.conf
+           echo python3 $SYSLOG_TO_DB --syslog $log --syshost $clusterName --reverseMapD $CN/reverseMapD --u2acct $CN/u2acct.json --leftover $CN/leftover.log --confFn $CN/xalt_${clusterName}_db.conf
+                python3 $SYSLOG_TO_DB --syslog $log --syshost $clusterName --reverseMapD $CN/reverseMapD --u2acct $CN/u2acct.json --leftover $CN/leftover.log --confFn $CN/xalt_${clusterName}_db.conf
            status=$?
            echo ""
            echo "date: $(date)"
@@ -40,7 +48,7 @@ manager ()
 
    echo ""
    echo "Start Date: $(date)"
-   for i in "${SYSHOSTS[@]}" ; do
+   for i in "${syshostA[@]}" ; do
      store_xalt_data $i
    done
    echo "End Date: $(date)"
