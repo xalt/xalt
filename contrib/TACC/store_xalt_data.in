@@ -1,7 +1,6 @@
 #!/bin/bash
 # -*- shell-script -*-
 MCLAY=~mclay
-MY_PATH=""
 export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:$PATH
 WD=$MCLAY/process_xalt/
 M=$WD/m
@@ -70,7 +69,7 @@ if [ -n "$errMsg" ]; then
   echo -e "$errMsg\n" | mail -s "XALT VM: Problem with XALT ingestion" mclay@tacc.utexas.edu > /dev/null
 fi
 
-percentage=$(df /data | tail -n 1 | awk '{print $5}' | sed -e 's/%//')
+percentage=$(df $LOG_DIR | tail -n 1 | awk '{print $5}' | sed -e 's/%//')
 if [ "$percentage" -gt 90 ]; then
    mail -s '/data disk > 90% on xalt VM' mclay@tacc.utexas.edu < /dev/null > /dev/null
 fi
