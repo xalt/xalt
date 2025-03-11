@@ -71,6 +71,6 @@ fi
 
 percentage=$(df $LOG_DIR | tail -n 1 | awk '{print $5}' | sed -e 's/%//')
 if [ "$percentage" -gt 90 ]; then
-   mail -s '/data disk > 90% on xalt VM' mclay@tacc.utexas.edu < /dev/null > /dev/null
+   mail -s 'LOG disk > 90% on xalt VM' mclay@tacc.utexas.edu < /dev/null > /dev/null
 fi
 
