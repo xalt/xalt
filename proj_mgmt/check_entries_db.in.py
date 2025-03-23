@@ -76,12 +76,14 @@ def count_w_condition(conn, tableName, condition):
   if (condition):
     extra = " where " + condition
 
-  query  = "SELECT COUNT(*) FROM "+ tableName + extra
-  conn.query(query)
-  result = conn.store_result()
-  if (result.num_rows() > 0):
-    row   = result.fetch_row()
-    count = int(row[0][0])
+  query   = "SELECT COUNT(*) FROM "+ tableName + extra
+  cursor  = conn.cursor()
+  cursor.execute(query)
+  resultA = cursor.fetchall()
+
+  if (len(resultA) > 0):
+    row   = resultA[0]
+    count = int(row[0])
   return count
   
 def eq(a,b):
@@ -104,8 +106,10 @@ def main():
   xalt   = XALTdb(dbConfigFn(args.dbname))
 
   conn   = xalt.connect()
+  cursor = conn.cursor()
   query  = "USE "+xalt.db()
-  conn.query(query)
+  
+  cursor.execute(query)
 
   tableA = [ 'join_link_object', 'join_run_env', 'join_run_object', \
              'xalt_env_name', 'xalt_link', 'xalt_object',           \

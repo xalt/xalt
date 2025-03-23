@@ -1,3 +1,5 @@
+.. _llvm_ld_x-label
+
 Integrating XALT with clang compilers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

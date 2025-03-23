@@ -79,6 +79,20 @@ a prefix of **/opt/apps**.  Then you can run as root::
     $ /opt/apps/xalt/xalt/sbin/create_xalt_directories.sh
 
 
+Environment Variables Required
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Certain environment variables are required once XALT is installed.  In
+particular for gcc based compilers or similar compilers (e.g. intel),
+the COMPILER_PATH env var is required for the linker capturing to
+work.  Using the clang compiler or other llvm based compilers may
+require other steps.  See :ref:`llvm_ld_x-label` for details
+
+In order for executable tracking to work you will need to set
+LD_PRELOAD.  The next section shows how to have an XALT modulefile to
+provide these environment variables.
+
+
 .. _xalt_modulefile-label:
 
 XALT modulefile

@@ -249,7 +249,7 @@ tracing_msg EPOCH "$EPOCH"
 # otherwise don't try to link with it.
 WATERMARK_OBJ=$WATERMARK_O
 if [ -f "$WATERMARK_S" ]; then
-  as $WATERMARK_S $BIT32FLAG -o $WATERMARK_OBJ
+  XALT_TRACING=no as $WATERMARK_S $BIT32FLAG -o $WATERMARK_OBJ
 else
   WATERMARK_OBJ=""
 fi
@@ -262,16 +262,16 @@ trap "{ PATH=@xalt_system_path@ LD_PRELOAD= rm -rf $WRKDIR; }" EXIT SIGINT SIGTE
 function_tracking()
 {
   if [ "$XALT_FUNCTION_TRACKING" = "yes" ];  then
-     if LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH LD_PRELOAD= $XALT_RMAP_EXISTS ; then
-     	StripA=( $(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
+     if XALT_TRACING=no LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH LD_PRELOAD= $XALT_RMAP_EXISTS ; then
+     	StripA=( $(XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $STRIP_LINKLIB "${argA[@]}") )
      	tracing_msg "Using ld to find functions: " $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null
-     	XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
+     	XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= $MY_CMD "${StripA[@]}" --unresolved-symbols=report-all -o /dev/null > $FUNCRAW 2>&1
      else
-        touch $FUNCRAW
+        XALT_TRACING=no touch $FUNCRAW
         tracing_msg "Function Tracking is disabled: no reserveMap files"
      fi
   else
-     touch $FUNCRAW
+     XALT_TRACING=no touch $FUNCRAW
      tracing_msg "Function Tracking is disabled by configuration or env. vars."
   fi
 }
@@ -284,7 +284,7 @@ function_tracking
 
 if [ -n "$PrintOptions" ]; then
     tracing_msg "Having Printing Options:" $MY_CMD "${printOptA[@]}" "${argA[@]}"
-    $MY_CMD "${printOptA[@]}" "${argA[@]}"
+    XALT_TRACING=no $MY_CMD "${printOptA[@]}" "${argA[@]}"
 fi
 
 LIBDCGM=
@@ -306,14 +306,14 @@ if [ "$SHARED_LIB" = true -o "$XALT_PRELOAD_ONLY" = yes ]; then
 fi
 
 
-tracing_msg "$MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1"
-             $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1
+tracing_msg                 "$MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1"
+             XALT_TRACING=no $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM -t > $LINKLINE_OUT  2>&1
 status=$?
 
 if [ ! -f "$EXEC" -o $status -ne 0 ]; then
    tracing_msg "Bad status when capturing tracing link output"
-   tracing_msg $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
-               $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
+   tracing_msg     $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
+   XALT_TRACING=no $MY_CMD "${argA[@]}" $WATERMARK_OBJ $XALT_INIT_ROUTINE_OBJ $EXTRA_SYSLIB $LIBDCGM 
    exit $status
 fi
 
@@ -321,11 +321,11 @@ EXEC=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ $REALPATH
 
 
 if [ -n "$USER_TRACE" ]; then
-  PATH=@xalt_system_path@ cat $LINKLINE_OUT | PATH=@xalt_system_path@ grep -v $WATERMARK_O 
+  XALT_TRACING=no PATH=@xalt_system_path@ cat $LINKLINE_OUT | PATH=@xalt_system_path@ grep -v $WATERMARK_O 
 fi
 
 # Get the sha1sum for the executable because it might move or disappear!
-SHA1SUM_EXEC=$(XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ sha1sum "$EXEC")
+SHA1SUM_EXEC=$(XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ sha1sum "$EXEC")
 
 tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 
@@ -333,6 +333,6 @@ tracing_msg XALT_TRANSMISSION_STYLE $XALT_TRANSMISSION_STYLE
 # Generate link data.  
 SHA1=$(echo $SHA1SUM_EXEC | LD_PRELOAD= sed -e 's|  */.*||')
 
-XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$WATERMARK_O" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
+XALT_TRACING=no XALT_EXECUTABLE_TRACKING=no LD_PRELOAD= PATH=@xalt_system_path@ LD_LIBRARY_PATH=$XALT_LD_LIBRARY_PATH $GEN_LINKDATA "$UUID" "`pwd`" "$SYSHOST" "$EXEC" "$SHA1" "$WATERMARK_O" "$EPOCH" "$FUNCRAW" "$LINKLINE_OUT" "$COMP_T"
 
 exit $status

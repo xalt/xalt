@@ -217,7 +217,7 @@ test_descript = {
      displayThis "SYSHOST: $SYSHOST"
 
      displayThis "xalt_file_to_db.py "
-     xalt_file_to_db.py  --testing --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
+     xalt_file_to_db.py  --timeout 300 --testing --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
      displayThis "xalt_file_to_db.py -D"
      rm -rf $(outputDir)/.orig.xalt.d
@@ -229,7 +229,7 @@ test_descript = {
      cp $(testDir)/run.example_3.json $(outputDir)/.xalt.d/run/run.$SYSHOST.example_3.json
      cp $(testDir)/run.foobar_filtered.json $(outputDir)/.xalt.d/run/run.$SYSHOST.foobar_filtered.json
      cp $(testDir)/link.example.json $(outputDir)/.xalt.d/link/link.$SYSHOST.example.json
-     xalt_file_to_db.py  -D --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
+     xalt_file_to_db.py  --timeout 300 -D --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
 
 
      displayThis "check_entries_db.py"

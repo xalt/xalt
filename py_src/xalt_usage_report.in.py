@@ -42,8 +42,7 @@ exit 2
 
 from __future__ import print_function
 import os, sys, base64
-import MySQLdb, argparse
-import time, collections
+import time, collections, argparse
 from operator import itemgetter
 from datetime import datetime, timedelta
 try:
@@ -603,12 +602,12 @@ def main():
   if (syshost == '%') :
     syshost    = dbName[5:]  # strip off "xalt_"
 
-  conn = MySQLdb.connect              \
-         (config.get("MYSQL","HOST"), \
-          config.get("MYSQL","USER"), \
-          base64.b64decode(config.get("MYSQL","PASSWD")).decode(), \
-          dbName)
-  cursor = conn.cursor()
+  conn = mysql.connector.connect(        
+         host     = config.get("MYSQL","HOST"), 
+         user     = config.get("MYSQL","USER"),
+         password = base64.b64decode(config.get("MYSQL","PASSWD")).decode(), 
+         database = dbName)
+  cursor = conn.cursor(buffered=True)
 
   end_date = time.strftime('%Y-%m-%d')
   if (args.endD is not None):

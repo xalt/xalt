@@ -49,7 +49,7 @@ exit 2
 
 from __future__ import print_function
 from __future__ import division
-import os, sys, re, MySQLdb, json, time, argparse, base64, zlib, shlex, random, traceback
+import os, sys, re, json, time, argparse, base64, zlib, shlex, random, traceback
 
 
 dirNm, execName = os.path.split(os.path.realpath(sys.argv[0]))

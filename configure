@@ -659,7 +659,7 @@ HAVE_DCGM
 HAVE_NVML
 GPU_STR
 HAVE_WORKING_LIBUUID
-HAVE_PYMOD_MYSQLDB
+HAVE_PYMOD_MYSQL_CONNECTOR
 XALT_UUID_V7
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
@@ -1427,7 +1427,7 @@ Optional Packages:
                           found [[.]]
   --with-config=ans       A python file defining the accept, ignore, hostname
                           pattern lists [[NO DEFAULT]]
-  --with-MySQL=ans        Require the mysqlclient/MySQL-python module [[yes]]
+  --with-MySQL=ans        Require a mysql python client package [[yes]]
   --with-systemPath=ans
   --with-syslogMsgSz=ans
   --with-syshostConfig=ans
@@ -4772,27 +4772,6 @@ fi
 
 
 
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking python module: MySQLdb" >&5
-printf %s "checking python module: MySQLdb... " >&6; }
-	$PATH_TO_PYTHON -c "import MySQLdb" > /dev/null 2>&1
-	if test $? -eq 0;
-	then
-		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-printf "%s\n" "yes" >&6; }
-		eval HAVE_PYMOD_MYSQLDB=yes
-	else
-		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-		eval HAVE_PYMOD_MYSQLDB=no
-		#
-		if test -n ""
-		then
-			as_fn_error $? "failed to find required module MySQLdb" "$LINENO" 5
-			exit 1
-		fi
-	fi
-
-
 ac_header= ac_cache=
 for ac_item in $ac_header_c_list
 do
@@ -5335,17 +5314,43 @@ if ! test -f $XALT_CONFIG_PY; then
 fi
 
 if test "$MYSQLDB" = yes; then
-   if test "$HAVE_PYMOD_MYSQLDB" = no; then
+   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR" >&5
+printf "%s\n" "HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR" >&6; }
+
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking python module: mysql.connector" >&5
+printf %s "checking python module: mysql.connector... " >&6; }
+	ac_python_pkg=`echo mysql.connector | tr . _`
+	$PATH_TO_PYTHON -c "import mysql.connector" > /dev/null 2>&1
+	if test $? -eq 0;
+	then
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+		eval `printf "%s\n" "HAVE_PYMOD_$ac_python_pkg" | $as_tr_cpp`=yes
+	else
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+		eval `printf "%s\n" "HAVE_PYMOD_$ac_python_pkg" | $as_tr_cpp`=no
+		#
+		if test -n ""
+		then
+			as_fn_error $? "failed to find required module mysql.connector" "$LINENO" 5
+			exit 1
+		fi
+	fi
+
+   if test "$HAVE_PYMOD_MYSQL_CONNECTOR" = no ; then
       echo
-      echo "======================================================="
-      echo "Unable to install XALT without the python module: MySQLdb"
-      echo "Install a system package (debian based linux: python3-mysqldb) "
-      echo "To install for python3 do: pip3 install mysqlclient"
-      echo "======================================================="
+      echo '======================================================================'
+      echo 'Unable to install XALT without the a python module to connect to MySQL'
+      echo 'Install mysql.connector.python using pip3'
+      echo '======================================================='
       rm -f makefile
       exit 1
    fi
 fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: here" >&5
+printf "%s\n" "here" >&6; }
 
 if test "$SYSHOST_CONFIG" = no; then
    echo

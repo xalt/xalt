@@ -99,7 +99,7 @@ case $SYSHOST in
     MAKE_OPTS=""
     ;;
 
-  xalt)
+  xalt | xalt-00 | xalt-01 | xalt-02 )
     echo "Building xalt"
     base="$HOME/l/pkg"
     ETC_DIR="$HOME/l/moduleData"
