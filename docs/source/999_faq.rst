@@ -11,8 +11,38 @@ Building the Gnu Compiler gcc/g++ fails under XALT.
    watermark cause the two stages to be different.  Just remember to
    unload the XALT module before building gcc/g++.
 
+To use XALT, user must load the XALT module.  Is there a way to force
+users to load the XALT module?  Is there a way to prevent users from
+unloading the XALT module?
 
+   As the developer of Lmod, I can say that there is no way to force
+   users to load the XALT module or prevent them from unloading it.
+   Sites could use the startup scripts in /etc/profile.d to set
+   LD_PRELOAD as a readonly variable for bash users.  But that has
+   many problems.  What if users want to use other packages that use
+   LD_PRELOAD?
+
+   At TACC, we load a single module during startup which loads other
+   modules.  This includes the XALT module.  Users can unload the XALT
+   module in their startup scripts or interactively.
+
+   While every effort has been made to make XALT a safe shared
+   library, there have been a few issues that require a user to unload
+   XALT to allow their program to work.
+
+   Finally, a site may wish to track every execution.  However this
+   is extremely difficult to do.  A high throughput job can generate
+   millions of records from very short execution.  This can overwhelm
+   storing the records in the database.  It might be possible to
+   capture all executions but it would require a great deal of
+   hardware to collect and manage the database.  This is why XALT
+   provides the ability to sample executions, where short time
+   executions are tracked less then long running jobs.
+
+Are there any frontends to analyze the XALT data?
+
+   XALT does not provide any web based or GUI programs to analyze the
+   data. It is does provide python scripts to provide a tally of the
+   most frequent executions by time or count.
 
    
-
-    
