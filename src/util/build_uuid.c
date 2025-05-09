@@ -18,9 +18,7 @@
 #include "xalt_c_utils.h"
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 
-static void* handle = NULL;
 static int (*getentropy_ptr)(     void *buffer, size_t length) = NULL;
-static int (*have_getentropy_ptr)(void *buffer, size_t length) = NULL;
 
 /* Implementation of getentropy based on the getrandom system call.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
@@ -83,13 +81,6 @@ int simple_getentropy (void *buffer, size_t length)
 }
        
 
-int have_libc_getentropy_func()
-{
-  build_getentropy_ptr();
-  return getentropy_ptr != simple_getentropy;
-}
-
-
 void build_getentropy_ptr()
 {
   if (! getentropy_ptr) 
@@ -101,6 +92,13 @@ void build_getentropy_ptr()
         }
     }
 }
+
+int have_libc_getentropy_func()
+{
+  build_getentropy_ptr();
+  return getentropy_ptr != simple_getentropy;
+}
+
 
 int uuidv7(uint8_t *value)
 {
@@ -136,6 +134,8 @@ int uuidv7(uint8_t *value)
 
 void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
 {
+  int i;
+  int k;
   //01234567-0123-0123-0123-012345678901
   //01915724-4c55-74cd-872a-bbb4d58bc892
   // 0 1 2 3  4 5  6 7  8 9  0 1 2 3 4 5
@@ -144,11 +144,11 @@ void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
   //        8901234567890123456789012345
   int tbl[] = {0, 4, 6, 8, 10, 16};
   int j = 0; 
-  for (int k = 0; k < 5; ++k)
+  for (k = 0; k < 5; ++k)
     {
       int istart = tbl[k];
       int iend   = tbl[k+1];
-      for (int i = istart; i < iend; ++i)
+      for (i = istart; i < iend; ++i)
         {
           sprintf(&uuidStr[j], "%02x", u[i]);
           j += 2;
