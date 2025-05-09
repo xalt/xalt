@@ -9,6 +9,7 @@
 #include "xalt_version.h"
 #include "xalt_interval.h"
 #include "xalt_utils.h"
+#include "build_uuid.h"
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -220,6 +221,10 @@ int main(int argc, char* argv[])
   if (cxx_ld_library_path == "")
     cxx_ld_library_path = "<empty>";
 
+  const char* location_getentropy = have_libc_getentropy_func() ? 
+    "Using libc getentropy" :
+    "Using XALT's getentropy";
+
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
       char*       jsonStr;
@@ -271,6 +276,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
       json_add_char_str(&json, my_sep,   "FOUND_RmapT",              rmapT_str);
+      json_add_char_str(&json, my_sep,   "Location of getentropy",   location_getentropy);
 
       json_add_array(&json, my_sep,   "hostnameA",       hostnameSz,       hostnameA);
       json_add_array(&json, my_sep,   "pathPatternA",    pathPatternSz,    pathPatternA);
@@ -333,6 +339,7 @@ int main(int argc, char* argv[])
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
   std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
+  std::cout << "Location of getentropy:          " << location_getentropy            << "\n";
   if (found_rmapT)
     std::cout << "Found xalt_rmapT.json:           " << rmapT_str                    << "\n";
   else

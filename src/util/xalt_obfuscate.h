@@ -44,6 +44,7 @@
 #define free_S2S                      PASTE2(__XALT_free_S2S,                   HIDE)
 #define free_SET                      PASTE2(__XALT_free_SET,                   HIDE)
 #define free_proc                     PASTE2(__XALT_free_proc,                  HIDE)
+#define have_libc_getentropy_func     PASTE2(__XALT_have_libc_getentropy_func,  HIDE)
 #define hostname_parser               PASTE2(__XALT_hostname_parser,            HIDE)
 #define hostname_parser_cleanup       PASTE2(__XALT_hostname_parser_cleanup,    HIDE)
 #define init_proc                     PASTE2(__XALT_init_proc,                  HIDE)

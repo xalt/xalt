@@ -19,7 +19,8 @@
 #define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
 
 static void* handle = NULL;
-static int (*getentropy_ptr)(void *buffer, size_t length) = NULL;
+static int (*getentropy_ptr)(     void *buffer, size_t length) = NULL;
+static int (*have_getentropy_ptr)(void *buffer, size_t length) = NULL;
 
 /* Implementation of getentropy based on the getrandom system call.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
@@ -81,19 +82,29 @@ int simple_getentropy (void *buffer, size_t length)
   return 0;
 }
        
+
+int have_libc_getentropy_func()
+{
+  build_getentropy_ptr();
+  return getentropy_ptr != simple_getentropy;
+}
+
+
 void build_getentropy_ptr()
 {
-  getentropy_ptr = dlsym(RTLD_NEXT, "getentropy");
-  if (! getentropy_ptr)
+  if (! getentropy_ptr) 
     {
-      getentropy_ptr = simple_getentropy;
+      getentropy_ptr = dlsym(RTLD_NEXT, "getentropy");
+      if (! getentropy_ptr)
+        {
+          getentropy_ptr = simple_getentropy;
+        }
     }
 }
 
 int uuidv7(uint8_t *value)
 {
-  if (getentropy_ptr)
-    build_getentropy_ptr();
+  build_getentropy_ptr();
 
   // random bytes
   int err = getentropy_ptr(value, 16);
