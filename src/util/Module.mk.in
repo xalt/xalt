@@ -93,7 +93,7 @@ $(EXTR_REC_X) : $(EXTR_REC_OBJ)
 	chmod $(MODE_X) $@
 
 $(CFG_RPT_X): $(CFG_RPT_OBJ)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl
 	chmod $(MODE_X) $@
 
 $(REC_PKG_X): $(REC_PKG_OBJ)
