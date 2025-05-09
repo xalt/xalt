@@ -147,17 +147,17 @@ void uuid7_unparse_lower(uint8_t* u, char* uuidStr)
 }
 int charPAcmp(const void* x, const void* y)
 {
-  char** a = (char **) x;
-  char** b = (char **) y;
-  int    v = strcmp(*a,*b);
+  int    v = strcmp((const char *) x,(const char *)y);
   return v;
 }
 
 int main(int argc, char* argv[])
 {
-  const int sz = 10;
+  const int sz    = 10;
+  const int strSz = 37;
   uint8_t   uuidA[sz][16];
-  char      uuidStrA[sz][37];
+
+  char (*uuidStrA)[strSz] = malloc(sz * sizeof(*uuidStrA));
   
   build_getentropy_ptr();
 
@@ -170,15 +170,19 @@ int main(int argc, char* argv[])
   for (int j = 0; j < sz; ++j)
     printf("%s\n", &uuidStrA[j][0]);
 
-  qsort((void *) uuidStrA, sz, sizeof(char *), charPAcmp);
+  qsort((void *) uuidStrA, sz, strSz, charPAcmp);
 
+  int nDups = 0;
   for (int j = 1; j < sz; ++j)
     {
       if (strcmp(uuidStrA[j-1],uuidStrA[j]) == 0)
-        printf("found dup at %d\n", j-1);
+        {
+          nDups++;
+          printf("found dup at %d\n", j-1);
+        }
     }
 
-  printf("all done\n");
+  printf("all done with %d dups\n",nDups);
 
   return 0;
 }
