@@ -1119,8 +1119,15 @@ void myfini()
     }
 
   if (xalt_tracing || xalt_run_tracing )
-    DEBUG(my_stderr,"  Recording State at end of %s user program\n",
-          xalt_run_short_descriptA[run_mask]);
+    {
+      const char* location_getentropy = have_libc_getentropy_func() ? 
+        "Using libc getentropy" :
+        "Using XALT's getentropy";
+    
+      DEBUG(my_stderr,"    Run UUID: %s, %s \n", &uuid_str[0], location_getentropy);
+      DEBUG(my_stderr,"    Recording State at end of %s user program\n",
+            xalt_run_short_descriptA[run_mask]);
+    }
   
   if (my_stderr)
     fflush(my_stderr);
