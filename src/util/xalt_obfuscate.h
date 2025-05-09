@@ -28,7 +28,6 @@
 #define build_resultDir               PASTE2(__XALT_build_resultDir,            HIDE)
 #define build_resultFn                PASTE2(__XALT_build_resultFn,             HIDE)
 #define build_uuid                    PASTE2(__XALT_build_uuid,                 HIDE)
-#define build_uuid_cleanup            PASTE2(__XALT_build_uuid_cleanup,         HIDE)
 #define capture                       PASTE2(__XALT_capture,                    HIDE)
 #define compute_sha1                  PASTE2(__XALT_compute_sha1,               HIDE)
 #define compute_sha1_cleanup          PASTE2(__XALT_compute_sha1_cleanup,       HIDE)

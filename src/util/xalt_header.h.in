@@ -27,9 +27,6 @@
 /* Using dlopen library */
 #undef HAVE_DLOPEN
 
-/* Define to 1 if you have getentropy in libc */
-#undef HAVE_FUNC_GETENTROPY
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 

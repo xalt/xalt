@@ -1,25 +1,20 @@
 #define _GNU_SOURCE
-#define _DEFAULT_SOURCE
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
 #include <unistd.h>
+#include <string.h>
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <sys/syscall.h>
 #include <linux/random.h>
-#include "xalt_obfuscate.h"
-#include "build_uuid.h"
-#include "xalt_config.h"
-#include "xalt_header.h"
-#include "xalt_dir.h"
-#include "xalt_c_utils.h"
-#define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
+
 
 static void* handle = NULL;
 static int (*getentropy_ptr)(void *buffer, size_t length) = NULL;
+
 
 /* Implementation of getentropy based on the getrandom system call.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
@@ -80,21 +75,24 @@ int simple_getentropy (void *buffer, size_t length)
     }
   return 0;
 }
-       
+
+static char *s1 = "Using internal getentropy";
+static char *s2 = "Using libc getentropy";
+
 void build_getentropy_ptr()
 {
+  char *s = s2;
   getentropy_ptr = dlsym(RTLD_NEXT, "getentropy");
   if (! getentropy_ptr)
     {
       getentropy_ptr = simple_getentropy;
+      s = s1;
     }
+  printf("%s\n",s);
 }
 
 int uuidv7(uint8_t *value)
 {
-  if (getentropy_ptr)
-    build_getentropy_ptr();
-
   // random bytes
   int err = getentropy_ptr(value, 16);
   if (err != EXIT_SUCCESS) 
@@ -123,10 +121,11 @@ int uuidv7(uint8_t *value)
   return EXIT_SUCCESS;
 }
 
-void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
+
+void uuid7_unparse_lower(uint8_t* u, char* uuidStr)
 {
   //01234567-0123-0123-0123-012345678901
-  //01915724-4c55-74cd-872a-bbb4d58bc892
+  //f9b8dd57-628d-41de-9e7b-2f1f893be268
   // 0 1 2 3  4 5  6 7  8 9  0 1 2 3 4 5
   //01234567-0123-0123-0123-012345678901
   //          1         2         3
@@ -146,11 +145,40 @@ void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
     }
   uuidStr[36] = '\0';
 }
-
-void build_uuid(char * my_uuid_str)
+int charPAcmp(const void* x, const void* y)
 {
-  uint8_t my_uuid[16];
+  char** a = (char **) x;
+  char** b = (char **) y;
+  int    v = strcmp(*a,*b);
+  return v;
+}
 
-  uuidv7(&my_uuid[0]);
-  uuidv7_unparse_lower(&my_uuid[0], my_uuid_str);
-}   
+int main(int argc, char* argv[])
+{
+  const int sz = 10;
+  uint8_t   uuidA[sz][16];
+  char      uuidStrA[sz][37];
+  
+  build_getentropy_ptr();
+
+  for (int j = 0; j < sz; ++j)
+    uuidv7(&uuidA[j][0]);
+
+  for (int j = 0; j < sz; ++j)
+    uuid7_unparse_lower(&uuidA[j][0], &uuidStrA[j][0]);
+
+  for (int j = 0; j < sz; ++j)
+    printf("%s\n", &uuidStrA[j][0]);
+
+  qsort((void *) uuidStrA, sz, sizeof(char *), charPAcmp);
+
+  for (int j = 1; j < sz; ++j)
+    {
+      if (strcmp(uuidStrA[j-1],uuidStrA[j]) == 0)
+        printf("found dup at %d\n", j-1);
+    }
+
+  printf("all done\n");
+
+  return 0;
+}

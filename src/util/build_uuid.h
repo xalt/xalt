@@ -9,7 +9,6 @@ extern "C"
 #endif
 
   void build_uuid(char * my_uuid_str);
-  void build_uuid_cleanup();
 
 #ifdef __cplusplus
 }

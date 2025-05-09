@@ -445,10 +445,8 @@ if test found = no; then
    exit 1
 fi
 
-XALT_UUID_V7=no
+XALT_UUID_V7=yes
 AC_SUBST(XALT_UUID_V7)
-AC_CHECK_LIB([c], [getentropy], [XALT_UUID_V7=yes; AC_DEFINE([HAVE_FUNC_GETENTROPY],1,
-                   [Define to 1 if you have getentropy in libc])],[])
 
 AC_SUBST(HAVE_PYMOD_MYSQL_CONNECTOR)
 
