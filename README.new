@@ -25,4 +25,3 @@ W.I.P.:
             * simple_getentropy() depends on syscall(SYS_getrandom,...). If that fails then XALT 
               does not attempt to record data.  It also does not produce an error. Tracing will
               report that this happened.  It does this to support containers.
-              

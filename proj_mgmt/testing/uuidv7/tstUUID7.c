@@ -54,7 +54,8 @@ int simple_getentropy (void *buffer, size_t length)
   while (buffer < end)
     {
       /* NB: No cancellation point.  */
-      ssize_t bytes = syscall(SYS_getrandom, buffer, end - buffer, 0);
+      //ssize_t bytes = syscall(SYS_getrandom, buffer, end - buffer, 0);
+      ssize_t bytes = syscall(318, buffer, end - buffer, 0);
       if (bytes < 0)
         {
           if (errno == EINTR)
@@ -82,7 +83,7 @@ static char *s2 = "Using libc getentropy";
 void build_getentropy_ptr()
 {
   char *s = s2;
-  getentropy_ptr = dlsym(RTLD_NEXT, "getentropy");
+  getentropy_ptr = dlsym(RTLD_NEXT, "getentropyRTM");
   if (! getentropy_ptr)
     {
       getentropy_ptr = simple_getentropy;
@@ -100,11 +101,13 @@ int uuidv7(uint8_t *value)
 
   // current timestamp in seconds and nano-seconds
   struct timespec ts;
-  int ok = timespec_get(&ts, TIME_UTC);
-  if (ok == 0) 
+
+  int ok = clock_gettime(CLOCK_REALTIME, &ts);
+  if (ok != 0) 
     return EXIT_FAILURE;
 
   uint64_t timestamp = (uint64_t)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+  
 
   // timestamp
   value[0] = (timestamp >> 40) & 0xFF;
@@ -153,6 +156,7 @@ int charPAcmp(const void* x, const void* y)
 
 int main(int argc, char* argv[])
 {
+  int j;
   const int sz    = 10;
   const int strSz = 37;
   uint8_t   uuidA[sz][16];
@@ -161,19 +165,19 @@ int main(int argc, char* argv[])
   
   build_getentropy_ptr();
 
-  for (int j = 0; j < sz; ++j)
+  for (j = 0; j < sz; ++j)
     uuidv7(&uuidA[j][0]);
 
-  for (int j = 0; j < sz; ++j)
+  for (j = 0; j < sz; ++j)
     uuid7_unparse_lower(&uuidA[j][0], &uuidStrA[j][0]);
 
-  for (int j = 0; j < sz; ++j)
+  for (j = 0; j < sz; ++j)
     printf("%s\n", &uuidStrA[j][0]);
 
   qsort((void *) uuidStrA, sz, strSz, charPAcmp);
 
   int nDups = 0;
-  for (int j = 1; j < sz; ++j)
+  for (j = 1; j < sz; ++j)
     {
       if (strcmp(uuidStrA[j-1],uuidStrA[j]) == 0)
         {
