@@ -133,13 +133,14 @@ void uuid7_unparse_lower(uint8_t* u, char* uuidStr)
   //01234567-0123-0123-0123-012345678901
   //          1         2         3
   //        8901234567890123456789012345
+  int k, i;
   int tbl[] = {0, 4, 6, 8, 10, 16};
   int j = 0; 
-  for (int k = 0; k < 5; ++k)
+  for (k = 0; k < 5; ++k)
     {
       int istart = tbl[k];
       int iend   = tbl[k+1];
-      for (int i = istart; i < iend; ++i)
+      for (i = istart; i < iend; ++i)
         {
           sprintf(&uuidStr[j], "%02x", u[i]);
           j += 2;
