@@ -1151,6 +1151,7 @@ void myfini()
                  num_gpus, xalt_run_short_descriptA[xalt_kind], uuid_str, watermark,
                  usr_cmdline, xalt_tracing, always_record, my_stderr);
   DEBUG(my_stderr,"    -> leaving myfini\n}\n\n");
+  build_uuid_cleanup();
   if (my_stderr)
     fflush(my_stderr);
   my_free(watermark,strlen(watermark));

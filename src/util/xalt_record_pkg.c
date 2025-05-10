@@ -128,6 +128,7 @@ int main(int argc, char* argv[])
   
   char  uuid_str[37];
   build_uuid(uuid_str);
+  build_uuid_cleanup();
   //          1         2   |      3
   //0123456789 123456789 123456789 123456789 
   //3de2c9d8-e857-4482-9aa4-4979620380fc	  

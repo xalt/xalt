@@ -8,8 +8,9 @@ extern "C"
 {
 #endif
 
-  int build_uuid(char * my_uuid_str);
-  int have_libc_getentropy_func();
+  int  build_uuid(char * my_uuid_str);
+  void build_uuid_cleanup();
+  int  have_libc_getentropy_func();
 
 #ifdef __cplusplus
 }

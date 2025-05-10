@@ -445,7 +445,19 @@ if test found = no; then
    exit 1
 fi
 
-XALT_UUID_V7=yes
+
+
+XALT_UUID_V7=no
+AC_RUN_IFELSE([AC_LANG_PROGRAM([
+#include "sys/syscall.h"
+],[
+#ifndef SYS_getrandom
+exit(1);
+#endif
+])], 
+[XALT_UUID_V7=yes
+AC_DEFINE([HAVE_SYS_GETRANDOM],1, [The syscall SYS_getrandom exists])])
+
 AC_SUBST(XALT_UUID_V7)
 
 AC_SUBST(HAVE_PYMOD_MYSQL_CONNECTOR)
