@@ -98,19 +98,20 @@ typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
-               XALT_UNAME_FAILURE} xalt_status;
+               XALT_UNAME_FAILURE, XALT_NO_UUID}  xalt_status;
 
 static const char * xalt_reasonA[] = {
-  "Successful XALT tracking",
-  "XALT_EXECUTABLE_TRACKING is off",
-  "__XALT_INITIAL_STATE__ is different from STATE",
-  "XALT is trying to be twice in the same STATE",
-  "XALT only tracks rank 0, in mpi programs",
-  "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: "   XALT_CONFIG_PY ,
-  "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
-  "XALT has problem with a JSON string",
-  "XALT execute type does not match requested type",
-  "XALT Cannot find XALT_DIR/libexec/xalt_run_submission",
+  /*  0 */ "Successful XALT tracking",
+  /*  1 */ "XALT_EXECUTABLE_TRACKING is off",
+  /*  2 */ "__XALT_INITIAL_STATE__ is different from STATE",
+  /*  3 */ "XALT is trying to be twice in the same STATE",
+  /*  4 */ "XALT only tracks rank 0, in mpi programs",
+  /*  5 */ "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: "   XALT_CONFIG_PY ,
+  /*  6 */ "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
+  /*  7 */ "XALT has problem with a JSON string",
+  /*  8 */ "XALT execute type does not match requested type",
+  /*  9 */ "XALT Cannot find XALT_DIR/libexec/xalt_run_submission",
+  /* 10 */ "XALT Cannot produce Run UUID", 
 };
 
 
@@ -617,8 +618,8 @@ void myinit(int argc, char **argv)
 
           if ( ! have_uuid )
             {
-              build_uuid(&uuid_str[0]);
-              have_uuid = 1;
+              int status = build_uuid(&uuid_str[0]);
+              have_uuid = status == EXIT_SUCCESS;
             }
 
           result = _dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
@@ -683,8 +684,8 @@ void myinit(int argc, char **argv)
     {
       if ( ! have_uuid )
         {
-          build_uuid(&uuid_str[0]);
-          have_uuid = 1;
+          int status = build_uuid(&uuid_str[0]);
+          have_uuid = status == EXIT_SUCCESS;
         }
       setenv("XALT_RUN_UUID",uuid_str,1);
       DEBUG(stderr,"    -> Setting XALT_RUN_UUID: %s\n",uuid_str);
@@ -756,26 +757,33 @@ void myinit(int argc, char **argv)
   // or a PKG type
   if (num_tasks >= always_record )
     {
-      DEBUG(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
-             num_tasks, (int) always_record);
-
       if ( ! have_uuid )
         {
-          build_uuid(&uuid_str[0]);
-          have_uuid = 1;
+          int status = build_uuid(&uuid_str[0]);
+          have_uuid = status == EXIT_SUCCESS;
         }
 
-      if (xalt_tracing || xalt_run_tracing)
+      if (have_uuid)
         {
-          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
-                  xalt_run_short_descriptA[run_mask], exec_path);
-        }
-      
-      run_submission(&xalt_timer, orig_pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
-                     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
-                     always_record, stderr);
+          DEBUG(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
+                num_tasks, (int) always_record);
+          if (xalt_tracing || xalt_run_tracing)
+            fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
+                    xalt_run_short_descriptA[run_mask], exec_path);
 
-      DEBUG(stderr,"    -> uuid: %s\n", uuid_str);
+          run_submission(&xalt_timer, orig_pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
+                         xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
+                         always_record, stderr);
+          DEBUG(stderr,"    -> uuid: %s\n", uuid_str);
+        }
+      else
+        {
+          DEBUG(stderr,"    -> Unable to produce Run UUID -> exiting\n}\n\n");
+          reject_flag = XALT_NO_UUID;
+          return;
+        }
+
+
     }
   else
     {
@@ -1114,8 +1122,15 @@ void myfini()
 
   if (! have_uuid)
     {
-      build_uuid(&uuid_str[0]);
-      have_uuid = 1;
+      int status = build_uuid(&uuid_str[0]);
+      have_uuid  = status == EXIT_SUCCESS;
+    }
+
+  if (! have_uuid )
+    {
+      DEBUG(my_stderr,"    -> Unable to build Run UUID -> exiting\n}\n\n");
+      close_out(my_stderr, xalt_err);
+      return;
     }
 
   if (xalt_tracing || xalt_run_tracing )

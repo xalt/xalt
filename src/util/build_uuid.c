@@ -48,7 +48,7 @@ int simple_getentropy (void *buffer, size_t length)
   if (length > 256)
     {
       errno = EIO;
-      return -1;
+      return EXIT_FAILURE;
     }
 
   /* Try to fill the buffer completely.  Even with the 256 byte limit
@@ -65,19 +65,19 @@ int simple_getentropy (void *buffer, size_t length)
             /* Try again if interrupted by a signal.  */
             continue;
           else
-            return -1;
+            return EXIT_FAILURE;
         }
       if (bytes == 0)
         {
           /* No more bytes available.  This should not happen under
              normal circumstances.  */
           errno = EIO;
-          return -1;
+          return EXIT_FAILURE;
         }
       /* Try again in case of a short read.  */
       buffer += bytes;
     }
-  return 0;
+  return EXIT_SUCCESS;
 }
        
 
@@ -158,10 +158,12 @@ void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
   uuidStr[36] = '\0';
 }
 
-void build_uuid(char * my_uuid_str)
+int build_uuid(char * my_uuid_str)
 {
   uint8_t my_uuid[16];
 
-  uuidv7(&my_uuid[0]);
-  uuidv7_unparse_lower(&my_uuid[0], my_uuid_str);
+  int status = uuidv7(&my_uuid[0]);
+  if (status == EXIT_SUCCESS)
+    uuidv7_unparse_lower(&my_uuid[0], my_uuid_str);
+  return status;
 }   

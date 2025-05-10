@@ -21,4 +21,8 @@ XALT 3.1+
             * Bug Report fix: sometimes -x fails on command called unknown in xalt_helper_functions.sh
     (3.1.4) * Add ld.bfd support
 W.I.P.:
-    (3.1.5) * Using internal getentropy() function if libc version is not available.
+    (3.1.5) * Using internal simple_getentropy() function if libc version is not available.
+            * simple_getentropy() depends on syscall(SYS_getrandom,...). If that fails then XALT 
+              does not attempt to record data.  It also does not produce an error. Tracing will
+              report that this happened.  It does this to support containers.
+              
