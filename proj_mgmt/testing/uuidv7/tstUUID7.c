@@ -62,7 +62,7 @@ int simple_getentropy (void *buffer, size_t length)
             /* Try again if interrupted by a signal.  */
             continue;
           else
-            return -1;
+            fprintf(stderr,"syscall(SYS_getrandom,...) return bytes < 0\n");
         }
       if (bytes == 0)
         {
