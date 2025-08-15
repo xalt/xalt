@@ -90,6 +90,7 @@ path_patterns = [
     ['SKIP',   r'.*\/orterun'],
     ['SKIP',   r'.*\/vtwrapper'],
     ['SKIP',   r'.*\/conftest'],
+    ['SKIP',   r'.*\/apptainer'],
     ['SKIP',   r'.*\/CMakeTmp\/cmTryCompileExec[0-9][0-9]*'],
     ['SKIP',   r'.*\/CMakeTmp\/cmTC_[a-f0-9][a-f0-9]*'],
 ]
