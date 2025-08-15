@@ -1139,7 +1139,8 @@ void myfini()
         "Using libc getentropy" :
         "Using XALT's getentropy";
     
-      DEBUG(my_stderr,"    Run UUID: %s, %s \n", &uuid_str[0], location_getentropy);
+      DEBUG(my_stderr,"    Run UUID: %s, %s UUID V7: %s\n", &uuid_str[0], location_getentropy,
+            uuid_str[14] == '7' ? "yes" : "no");
       DEBUG(my_stderr,"    Recording State at end of %s user program\n",
             xalt_run_short_descriptA[run_mask]);
     }
