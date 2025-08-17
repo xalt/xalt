@@ -669,13 +669,13 @@ if ! test -f $XALT_CONFIG_PY; then
 fi
 
 if test "$MYSQLDB" = yes; then
-   AC_MSG_RESULT([HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR])
-   AX_PYTHON_MODULE([$PATH_TO_PYTHON],[mysql.connector])
-   if test "$HAVE_PYMOD_MYSQL_CONNECTOR" = no ; then
+   AC_MSG_RESULT([HAVE_PYMOD_PYMYSQL:$HAVE_PYMOD_PYMYSQL])
+   AX_PYTHON_MODULE([$PATH_TO_PYTHON],[pymysql])
+   if test "$HAVE_PYMOD_PYMYSQL" = no ; then
       echo
       echo '======================================================================'
-      echo 'Unable to install XALT without the a python module to connect to MySQL'
-      echo 'Install mysql.connector.python using pip3'
+      echo 'Unable to install XALT without the pymsyql python module to connect to MySQL'
+      echo 'Install pymysql using pip3'
       echo '======================================================='
       rm -f makefile
       exit 1

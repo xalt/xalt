@@ -54,7 +54,7 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* The syscall index SYS_getrandom exists */
+/* The syscall SYS_getrandom exists */
 #undef HAVE_SYS_GETRANDOM
 
 /* Define to 1 if you have the <sys/stat.h> header file. */

@@ -41,6 +41,8 @@ exit 2
 #----------------------------------------------------------------------------#
 
 from __future__ import print_function
+import pymysql
+  
 import os, sys, base64
 import time, collections, argparse
 from operator import itemgetter
@@ -602,7 +604,7 @@ def main():
   if (syshost == '%') :
     syshost    = dbName[5:]  # strip off "xalt_"
 
-  conn = mysql.connector.connect(        
+  conn = pymysql.connect(        
          host     = config.get("MYSQL","HOST"), 
          user     = config.get("MYSQL","USER"),
          password = base64.b64decode(config.get("MYSQL","PASSWD")).decode(), 

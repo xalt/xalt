@@ -46,14 +46,14 @@ test_descript = {
      export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
    
 
-     displayThis  "mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c"
-     mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c 
+     displayThis  "mpicc -o hello\\ .mpi $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello\\ .mpi $(projectDir)/rt/mpi_hello_world.c 
 
-     displayThis "mpirun -n 1 ./hello\ .mpi"
-     mpirun -n 1 ./hello\ .mpi 
+     displayThis "mpirun -n 1 ./hello\\ .mpi"
+     mpirun -n 1 ./hello\\ .mpi
      
-     displayThis "XALT_TRACING=yes ./hello\ .mpi"
-     XALT_TRACING=yes ./hello\ .mpi 
+     displayThis "XALT_TRACING=yes ./hello\\ .mpi"
+     XALT_TRACING=yes ./hello\\ .mpi
      
      displayThis "test_record_pkg"
      cp $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg test_record_pkg_00

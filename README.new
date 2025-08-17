@@ -25,3 +25,10 @@ W.I.P.:
             * simple_getentropy() depends on syscall(SYS_getrandom,...). If that fails then XALT 
               does not attempt to record data.  It also does not produce an error. Tracing will
               report that this happened.  It does this to support containers.
+	    * Support for python 3.12 added
+	    * Switching from mysql.connector to pymysql module as the former is not supported
+	      in python 3.12
+            * Change the name hello\ .mpi to hello\\ .mpi so that python 3.12 exec will be happy.
+            * Change sh_src/xalt_configuration_report.in and sh_script/xalt_extract_record.in
+              to use relative path based on script location.
+	      
