@@ -677,6 +677,7 @@ CXX
 HAVE_32BIT
 XALT_PRIME_FMT
 XALT_SIGNAL_HANDLER
+XALT_CONTAINER_SUPPORT
 XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
@@ -776,6 +777,7 @@ with_siteControlledPrefix
 with_32bit
 with_tmpdir
 with_primeNumber
+with_containerSupport
 with_signalHandler
 '
       ac_precious_vars='build_alias
@@ -1446,6 +1448,14 @@ Optional Packages:
                           [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
                           XALT_FILE_PREFIX, [[997]]
+  --with-containerSupport=ans
+                          Build XALT with container support yes/no [[unknown]]
+    ANS="$withval"
+    ANS=`echo $ANS | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $ANS "--with-containerSupport=ans: ans must be yes or no"
+    XALT_CONTAINER_SUPPORT="$ans"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$with-containerSupport" >&5
+printf "%s\n" "XALT_CONTAINER_SUPPORT=$with-containerSupport" >&6; }
   --with-signalHandler=ans
                           Have XALT capture executions that fail with a
                           signal: [[no]]
@@ -3914,6 +3924,17 @@ fi
 
 
 
+# Check whether --with-containerSupport was given.
+if test ${with_containerSupport+y}
+then :
+  withval=$with_containerSupport; withval="unknown"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$withval" >&5
+printf "%s\n" "XALT_CONTAINER_SUPPORT=$withval" >&6; }
+    XALT_CONTAINER_SUPPORT="$withval"
+fi
+
+
+
 # Check whether --with-signalHandler was given.
 if test ${with_signalHandler+y}
 then :
@@ -3932,6 +3953,8 @@ printf "%s\n" "XALT_SIGNAL_HANDLER=$withval" >&6; }
 printf "%s\n" "#define XALT_SIGNAL_HANDLER \"$withval\"" >>confdefs.h
 
 fi
+
+
 
 
 
@@ -4698,6 +4721,14 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 printf "%s\n" "#define XALT_INSTALL_OS \"$XALT_INSTALL_OS\"" >>confdefs.h
 
 
+
+if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
+  MSG="Unable to build XALT without knowing if you want container support or not"
+  ERR_MSG="$ERR_MSG||$MSG"
+  FOUND_ERROR=yes
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
+printf "%s\n" "$as_me: $MSG" >&6;}
+fi
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   MSG="Unable to build XALT without mktemp"
