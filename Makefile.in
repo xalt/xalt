@@ -51,6 +51,7 @@ ETC_DIR              	:= @ETC_DIR@
 prefix               	:= @prefix@
 XALT_V               	:= src/util/xalt_version.h
 DOT_V               	:= .version
+XALT_CONTAINER_SUPPORT  := @XALT_CONTAINER_SUPPORT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_LIBUUID            := @HAVE_WORKING_LIBUUID@

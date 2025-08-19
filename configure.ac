@@ -909,12 +909,13 @@ fi
 
 rm -rf $MY_TMPDIR
 
-AC_CONFIG_FILES([makefile:Makefile.in                                       \
+AC_CONFIG_FILES([makefile:Makefile.in                                \
           src/__build__/xalt_config.h:src/util/xalt_config.h.in      \
           src/makefile:src/Makefile.in                               \
           src/libxalt/module.mk:src/libxalt/Module.mk.in             \
           src/linker/module.mk:src/linker/Module.mk.in               \
-          src/util/module.mk:src/util/Module.mk.in])
+          src/util/module.mk:src/util/Module.mk.in                   \
+	  xalt_container.def:proj_mgmt/xalt_container.def.in])
 AC_OUTPUT
 
 AX_SUMMARIZE_CONFIG

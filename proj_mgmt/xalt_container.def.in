@@ -15,12 +15,12 @@ cd  xalt                                    && \
 git checkout testing                        && \
 mkdir ./my_build                            && \
 cd    ./my_build                            && \
-../configure --prefix=/opt --with-syshostConfig=nth_name:2 --with-config=../Config/TACC_config.py --with-transmission=syslog --with-MySQL=no && \
+../configure --prefix=/opt --with-syshostConfig=@SYSHOST_CONFIG@ --with-config=@XALT_CONFIG_PY@ --with-transmission=@TRANSMISSION@ --with-MySQL=no && \
 make GIT_VERSION=xalt-3.1.4 install
     
     
 %runscript
 mkdir -p /work
-cd /opt && tar czf /work/xalt.tgz xalt
+cd /opt/xalt/xalt && tar czf /work/xalt_libs.tgz lib lib64
 
 %startscript
