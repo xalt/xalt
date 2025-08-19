@@ -104,13 +104,15 @@ endif
 INC                  	:= $(PKGV)/include
 LIB                  	:= $(PKGV)/lib
 LIB64                	:= $(PKGV)/lib64
+XALT_CONTAINER_LIBS    	:= $(PKGV)/xalt_container_libs
 LIBEXEC              	:= $(PKGV)/libexec
 BIN                  	:= $(PKGV)/bin
 SBIN                 	:= $(PKGV)/sbin
 SITE_PKG_DIR            := $(PKGV)/site_packages
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
-                           $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)
+                           $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)                          \
+                           $(DESTDIR)$(XALT_CONTAINER_LIBS)
 
 SITE_PKG                := py_src/xalt_sitecustomize.py
 SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
@@ -166,7 +168,7 @@ all:
 	@echo done
 
 install: $(DIRLIST) LINKS Inst_site_py Inst_sbin Inst_bin Inst_libexec Use_getent_yes              \
-         Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate
+         Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate 
 	@if test "$(SITE_CONTROLLED_PREFIX)" = "no" ; then                                         \
 	  echo $(RM) $(DESTDIR)$(PKG);                                                             \
 	       $(RM) $(DESTDIR)$(PKG);                                                             \
@@ -192,10 +194,14 @@ build_compiled:
                 GPU_STR=$(GPU_STR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools           \
 	        EXTRA_FLAGS=$(EXTRA_FLAGS) MODE_X=$(MODE_X) MODE_R=$(MODE_R)                       \
                 all
+	if test $(XALT_CONTAINER_SUPPORT) = yes; then                                              \
+          sudo apptainer build xalt.sif xalt_container.def;                                        \
+          apptainer run -B .:/work xalt.sif;                                                       \
+          CWD=$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIBS); tar xf $(CWD)/xalt_libs.tgz;              \
+        fi
 
 inst_obfuscate:
 	install -m $(MODE_R) $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)
-
 
 echo:
 	@echo srcdir: $(srcdir)

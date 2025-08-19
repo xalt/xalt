@@ -437,14 +437,23 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
 
 
-echo XALT_CONTAINER_SUPPORT: $XALT_CONTAINER_SUPPORT
-
 if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
   MSG="Unable to build XALT without knowing if you want container support or not"
   ERR_MSG="$ERR_MSG||$MSG"
   FOUND_ERROR=yes
   AC_MSG_NOTICE([$MSG])
 fi
+
+if test "$XALT_CONTAINER_SUPPORT" = yes ; then
+  AC_PATH_PROGS(PATH_TO_APPTAINER, [apptainer], UNKNOWN_APPTAINER)
+  if test "$PATH_TO_APPTAINER" =  UNKNOWN_APPTAINER; then
+    MSG="Unable to build XALT without apptainer. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
+    ERR_MSG="$ERR_MSG||$MSG"
+    FOUND_ERROR=yes
+    AC_MSG_NOTICE([$MSG])
+  fi
+fi  
+
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   MSG="Unable to build XALT without mktemp"
