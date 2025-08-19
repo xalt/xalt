@@ -351,6 +351,19 @@ AC_ARG_WITH(primeNumber,
     AC_MSG_RESULT([XALT_PRIME_NUMBER=$withval])
     XALT_PRIME_NUMBER="$withval")dnl
 
+AC_SUBST(XALT_CONTAINER_SUPPORT)
+AC_ARG_WITH(containerSupport,
+    AS_HELP_STRING([--with-containerSupport=ans],[Build XALT with container support yes/no [[unknown]]])
+    ANS="$withval"
+    ANS=`echo $ANS | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $ANS "--with-containerSupport=ans: ans must be yes or no"
+    XALT_CONTAINER_SUPPORT="$ans"
+    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$with-containerSupport])dnl
+    ,
+    withval="unknown"
+    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$withval])
+    XALT_CONTAINER_SUPPORT="$withval")dnl
+
 AC_SUBST(XALT_SIGNAL_HANDLER)
 AC_ARG_WITH(signalHandler,
     AS_HELP_STRING([--with-signalHandler=ans],[Have XALT capture executions that fail with a signal: [[no]]]),
@@ -365,6 +378,8 @@ AC_ARG_WITH(signalHandler,
 
 AC_SUBST(XALT_PRIME_FMT)
 AC_SUBST(HAVE_32BIT)
+
+
 
 if test "$BIT32" = yes ; then
   AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
@@ -419,6 +434,13 @@ AC_SUBST(XALT_INSTALL_OS)
 XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
 
+
+if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
+  MSG="Unable to build XALT without knowing if you want container support or not"
+  ERR_MSG="$ERR_MSG||$MSG"
+  FOUND_ERROR=yes
+  AC_MSG_NOTICE([$MSG])
+fi
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   MSG="Unable to build XALT without mktemp"
