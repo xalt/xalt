@@ -354,16 +354,17 @@ AC_ARG_WITH(primeNumber,
 
 AC_SUBST(XALT_CONTAINER_SUPPORT)
 AC_ARG_WITH(containerSupport,
-    AS_HELP_STRING([--with-containerSupport=ans],[Build XALT with container support yes/no [[unknown]]])
-    ANS="$withval"
-    ANS=`echo $ANS | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
-    VALID_YN $ANS "--with-containerSupport=ans: ans must be yes or no"
-    XALT_CONTAINER_SUPPORT="$ANS"
-    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$with-containerSupport])dnl
+    AS_HELP_STRING([--with-containerSupport=ans],[Build XALT with container support yes/no, [[unknown]]]),
+    XALT_CONTAINER_SUPPORT="$withval"
+    XALT_CONTAINER_SUPPORT=`echo $XALT_CONTAINER_SUPPORT | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_CONTAINER_SUPPORT "--with-containerSupport=ans: ans must be yes or no"
+    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$with_containerSupport])
+    AC_DEFINE_UNQUOTED(XALT_CONTAINER_SUPPORT, "$with_containerSupport",[XALT Container Support])dnl
     ,
-    withval="unknown"
+    withval="yes"
     AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$withval])
-    XALT_CONTAINER_SUPPORT="$withval")dnl
+    XALT_CONTAINER_SUPPORT="$withval"
+    AC_DEFINE_UNQUOTED(XALT_CONTAINER_SUPPORT, "$withval",[Track MPI executables]))dnl
 
 AC_SUBST(XALT_SIGNAL_HANDLER)
 AC_ARG_WITH(signalHandler,
