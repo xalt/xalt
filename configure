@@ -1453,7 +1453,7 @@ Optional Packages:
     ANS="$withval"
     ANS=`echo $ANS | tr '[:upper:]' '[:lower:]'`
     VALID_YN $ANS "--with-containerSupport=ans: ans must be yes or no"
-    XALT_CONTAINER_SUPPORT="$ans"
+    XALT_CONTAINER_SUPPORT="$ANS"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$with-containerSupport" >&5
 printf "%s\n" "XALT_CONTAINER_SUPPORT=$with-containerSupport" >&6; }
   --with-signalHandler=ans
@@ -3396,6 +3396,7 @@ VALID_YN ()
 
 ERR_MSG=""
 FOUND_ERROR=
+XALT_CONTAINER_SUPPORT=unknown
 
 
 
@@ -4721,6 +4722,8 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 printf "%s\n" "#define XALT_INSTALL_OS \"$XALT_INSTALL_OS\"" >>confdefs.h
 
 
+
+echo XALT_CONTAINER_SUPPORT: $XALT_CONTAINER_SUPPORT
 
 if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
   MSG="Unable to build XALT without knowing if you want container support or not"
