@@ -81,7 +81,7 @@ case $SYSHOST in
     TRANSMISSION="file"
     TRACK_GPU="no"
     MYSQL="yes"
-    CONF_OPTS="--with-supportCURL=no --with-containerSupport=Hell_No"
+    CONF_OPTS="--with-supportCURL=no --with-containerSupport=yes"
     MAKE_OPTS=""
     ;;
 
