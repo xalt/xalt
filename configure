@@ -1449,13 +1449,8 @@ Optional Packages:
   --with-primeNumber=ans  The prime number of directories when using
                           XALT_FILE_PREFIX, [[997]]
   --with-containerSupport=ans
-                          Build XALT with container support yes/no [[unknown]]
-    ANS="$withval"
-    ANS=`echo $ANS | tr '[:upper:]' '[:lower:]'`
-    VALID_YN $ANS "--with-containerSupport=ans: ans must be yes or no"
-    XALT_CONTAINER_SUPPORT="$ANS"
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$with-containerSupport" >&5
-printf "%s\n" "XALT_CONTAINER_SUPPORT=$with-containerSupport" >&6; }
+                          Build XALT with container support yes/no,
+                          [[unknown]]
   --with-signalHandler=ans
                           Have XALT capture executions that fail with a
                           signal: [[no]]
@@ -3928,10 +3923,22 @@ fi
 # Check whether --with-containerSupport was given.
 if test ${with_containerSupport+y}
 then :
-  withval=$with_containerSupport; withval="unknown"
+  withval=$with_containerSupport; XALT_CONTAINER_SUPPORT="$withval"
+    XALT_CONTAINER_SUPPORT=`echo $XALT_CONTAINER_SUPPORT | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_CONTAINER_SUPPORT "--with-containerSupport=ans: ans must be yes or no"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$with_containerSupport" >&5
+printf "%s\n" "XALT_CONTAINER_SUPPORT=$with_containerSupport" >&6; }
+
+printf "%s\n" "#define XALT_CONTAINER_SUPPORT \"$with_containerSupport\"" >>confdefs.h
+
+else $as_nop
+  withval="yes"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$withval" >&5
 printf "%s\n" "XALT_CONTAINER_SUPPORT=$withval" >&6; }
     XALT_CONTAINER_SUPPORT="$withval"
+
+printf "%s\n" "#define XALT_CONTAINER_SUPPORT \"$withval\"" >>confdefs.h
+
 fi
 
 

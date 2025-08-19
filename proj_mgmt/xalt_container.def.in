@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: ubuntu:16.04
+Stage: spython-base
+
+%post
+
+mkdir -p /app
+cd /app
+
+apt-get update && \
+apt-get install -y git gcc build-essential flex bc libssl-dev python3  && \
+apt-get install -y libelf-dev uuid-dev libcurl4-openssl-dev            && \
+git clone https://github.com/xalt/xalt.git  && \
+cd  xalt                                    && \
+git checkout testing                        && \
+mkdir ./my_build                            && \
+cd    ./my_build                            && \
+../configure --prefix=/opt --with-syshostConfig=nth_name:2 --with-config=../Config/TACC_config.py --with-transmission=syslog --with-MySQL=no && \
+make GIT_VERSION=xalt-3.1.4 install
+    
+    
+%runscript
+mkdir -p /work
+cd /opt && tar czf /work/xalt.tgz xalt
+
+%startscript

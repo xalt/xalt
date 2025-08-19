@@ -131,6 +131,9 @@
 /* A python file defining the site configuration */
 #undef XALT_CONFIG_PY
 
+/* Track MPI executables */
+#undef XALT_CONTAINER_SUPPORT
+
 /* Prefix where the json files are written */
 #undef XALT_FILE_PREFIX
 
