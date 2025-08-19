@@ -358,7 +358,7 @@ AC_ARG_WITH(containerSupport,
     ANS="$withval"
     ANS=`echo $ANS | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $ANS "--with-containerSupport=ans: ans must be yes or no"
-    XALT_CONTAINER_SUPPORT="$ans"
+    XALT_CONTAINER_SUPPORT="$ANS"
     AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$with-containerSupport])dnl
     ,
     withval="unknown"
