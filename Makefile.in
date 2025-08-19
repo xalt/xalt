@@ -197,7 +197,7 @@ build_compiled:
 	if test $(XALT_CONTAINER_SUPPORT) = yes; then                                              \
           sudo apptainer build xalt.sif xalt_container.def;                                        \
           apptainer run -B .:/work xalt.sif;                                                       \
-          CWD=$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIBS); tar xf $$CWD/xalt_libs.tgz;              \
+          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIBS); tar xf $$CWD/xalt_libs.tgz;              \
         fi
 
 inst_obfuscate:
