@@ -436,6 +436,8 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
 
 
+echo XALT_CONTAINER_SUPPORT: $XALT_CONTAINER_SUPPORT
+
 if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
   MSG="Unable to build XALT without knowing if you want container support or not"
   ERR_MSG="$ERR_MSG||$MSG"
