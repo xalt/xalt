@@ -5710,7 +5710,7 @@ fi
 
 rm -rf $MY_TMPDIR
 
-ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/util/xalt_config.h.in src/makefile:src/Makefile.in src/libxalt/module.mk:src/libxalt/Module.mk.in src/linker/module.mk:src/linker/Module.mk.in src/util/module.mk:src/util/Module.mk.in"
+ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/util/xalt_config.h.in src/makefile:src/Makefile.in src/libxalt/module.mk:src/libxalt/Module.mk.in src/linker/module.mk:src/linker/Module.mk.in src/util/module.mk:src/util/Module.mk.in xalt_container.def:proj_mgmt/xalt_container.def.in"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6403,6 +6403,7 @@ do
     "src/libxalt/module.mk") CONFIG_FILES="$CONFIG_FILES src/libxalt/module.mk:src/libxalt/Module.mk.in" ;;
     "src/linker/module.mk") CONFIG_FILES="$CONFIG_FILES src/linker/module.mk:src/linker/Module.mk.in" ;;
     "src/util/module.mk") CONFIG_FILES="$CONFIG_FILES src/util/module.mk:src/util/Module.mk.in" ;;
+    "xalt_container.def") CONFIG_FILES="$CONFIG_FILES xalt_container.def:proj_mgmt/xalt_container.def.in" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
