@@ -6997,6 +6997,7 @@ echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
 echo "XALT Site Controlled Prefix.........................." : $SITE_CONTROLLED_PREFIX
 echo
+echo "XALT_CONTAINER_SUPPORT..............................." : $XALT_CONTAINER_SUPPORT
 echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
