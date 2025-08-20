@@ -661,6 +661,7 @@ GPU_STR
 HAVE_WORKING_LIBUUID
 HAVE_PYMOD_MYSQL_CONNECTOR
 XALT_UUID_V7
+PATH_TO_APPTAINER
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
 PATH_TO_PYTHON
@@ -4730,8 +4731,6 @@ printf "%s\n" "#define XALT_INSTALL_OS \"$XALT_INSTALL_OS\"" >>confdefs.h
 
 
 
-echo XALT_CONTAINER_SUPPORT: $XALT_CONTAINER_SUPPORT
-
 if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
   MSG="Unable to build XALT without knowing if you want container support or not"
   ERR_MSG="$ERR_MSG||$MSG"
@@ -4739,6 +4738,68 @@ if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
 printf "%s\n" "$as_me: $MSG" >&6;}
 fi
+
+if test "$XALT_CONTAINER_SUPPORT" = yes ; then
+  for ac_prog in apptainer
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_PATH_TO_APPTAINER+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $PATH_TO_APPTAINER in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PATH_TO_APPTAINER="$PATH_TO_APPTAINER" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_PATH_TO_APPTAINER="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PATH_TO_APPTAINER=$ac_cv_path_PATH_TO_APPTAINER
+if test -n "$PATH_TO_APPTAINER"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_APPTAINER" >&5
+printf "%s\n" "$PATH_TO_APPTAINER" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+  test -n "$PATH_TO_APPTAINER" && break
+done
+test -n "$PATH_TO_APPTAINER" || PATH_TO_APPTAINER="UNKNOWN_APPTAINER"
+
+  if test "$PATH_TO_APPTAINER" =  UNKNOWN_APPTAINER; then
+    MSG="Unable to build XALT without apptainer. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
+    ERR_MSG="$ERR_MSG||$MSG"
+    FOUND_ERROR=yes
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
+printf "%s\n" "$as_me: $MSG" >&6;}
+  fi
+fi
+
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
   MSG="Unable to build XALT without mktemp"

@@ -18,7 +18,8 @@ test_descript = {
 
      installXALT --with-syshostConfig=nth_name:2 --with-primeNumber=0 \
                  --with-transmission=$XALT_TRANSMISSION_STYLE         \
-                 --with-xaltFilePrefix=$XALT_FILE_PREFIX
+                 --with-xaltFilePrefix=$XALT_FILE_PREFIX              \
+                 --with-containerSupport=no   
      displayThis "buildRmapT"
      buildRmapT
 

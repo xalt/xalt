@@ -18,7 +18,7 @@ test_descript = {
 
      VERSION=`cat $(projectDir)/.version`
       
-     installXALT --with-syshostConfig=nth_name:2 --prefix=$(outputDir)/XALT/$VERSION --with-siteControlledPrefix=yes
+     installXALT --with-syshostConfig=nth_name:2 --prefix=$(outputDir)/XALT/$VERSION --with-siteControlledPrefix=yes --with-containerSupport=no
      displayThis "buildRmapT"
      buildRmapT
 

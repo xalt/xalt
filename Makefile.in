@@ -104,7 +104,7 @@ endif
 INC                  	:= $(PKGV)/include
 LIB                  	:= $(PKGV)/lib
 LIB64                	:= $(PKGV)/lib64
-XALT_CONTAINER_LIBS    	:= $(PKGV)/xalt_container_libs
+XALT_CONTAINER_LIB    	:= $(PKGV)/xalt_container_lib
 LIBEXEC              	:= $(PKGV)/libexec
 BIN                  	:= $(PKGV)/bin
 SBIN                 	:= $(PKGV)/sbin
@@ -112,7 +112,7 @@ SITE_PKG_DIR            := $(PKGV)/site_packages
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
                            $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)                          \
-                           $(DESTDIR)$(XALT_CONTAINER_LIBS)
+                           $(DESTDIR)$(XALT_CONTAINER_LIB)
 
 SITE_PKG                := py_src/xalt_sitecustomize.py
 SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
@@ -197,7 +197,7 @@ build_compiled:
 	if test $(XALT_CONTAINER_SUPPORT) = yes; then                                              \
           sudo apptainer build xalt.sif xalt_container.def;                                        \
           apptainer run -B .:/work xalt.sif;                                                       \
-          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIBS); tar xf $$CWD/xalt_libs.tgz;              \
+          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIB); tar xf $$CWD/xalt_libs.tgz;               \
         fi
 
 inst_obfuscate:
