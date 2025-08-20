@@ -31,7 +31,6 @@ VALID_YN ()
 ERR_MSG=""
 FOUND_ERROR=
 XALT_CONTAINER_SUPPORT=unknown
-GIT_BRANCH=unknown
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
@@ -419,6 +418,7 @@ fi
 
 
 AC_PATH_PROG(PATH_TO_GIT,git, [])
+AC_PATH_PROG(PATH_TO_GITT,gitt, [])
 AC_PATH_PROG(PATH_TO_FLEX,flex, [])
 AC_PATH_PROG(PATH_TO_LOGGER,logger, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
@@ -430,6 +430,11 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    rm -f makefile
    exit 1
 fi
+
+GIT_BRANCH=main
+AC_SUBST(GIT_BRANCH)
+echo "PATH_TO_GITT: $PATH_TO_GITT"
+
 
 AC_SUBST(XALT_LD_LIBRARY_PATH)
 
