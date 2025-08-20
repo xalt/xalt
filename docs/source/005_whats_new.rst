@@ -1,6 +1,12 @@
 New Features in XALT
 ====================
 
+**Support for tracking executables in apptainer containers
+    (xalt-3.2+): XALT now builds libraries safe to run in apptainer
+    containers. Use --with-containerSupport=yes and have apptainer in
+    path. Must use root to install (via
+    sudo). Use --with-containerSupport=no to disable. 
+
 **Changing UUID to use version 7**:
     (xalt-3.1.5+): XALT now uses version 7 of uuid.  This means that
     the generated uuid are now time ordered.
