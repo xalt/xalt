@@ -49,6 +49,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       (strcasecmp(transmission,"logger")    != 0 ) &&
       (strcasecmp(transmission,"none")      != 0 ) &&
       (strcasecmp(transmission,"syslogv1")  != 0 ) &&
+      (strcasecmp(transmission,"kafka")     != 0 ) &&
       (strcasecmp(transmission,"curl")      != 0 ))
     transmission = "file";
 
@@ -123,6 +124,58 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
         }
       closelog();
       my_free(logNm, strlen(logNm));
+    }
+  else if (strcasecmp(transmission, "kafka") == 0)
+    {
+      int pid, status, ret = 0;
+      char *myargs []   = { NULL, NULL, NULL, NULL};
+      char *myenv  []   = { NULL };
+
+      // Prepend $LIB64 to $LD_LIBRARY_PATH
+      int  i;
+      char *ld_lib_path = getenv("LD_LIBRARY_PATH");
+      char *lib64_dir   = xalt_dir("lib64");
+      int  len_lpath    = strlen(ld_lib_path);
+      int  len_l64dir   = strlen(lib64_dir);
+      int  len          = len_l64dir + len_lpath + 2;
+      char *value       = (char *) XMALLOC(len*sizeof(char));
+
+      i = 0;
+      memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
+      value[i] = ':';                             i += 1;
+      memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
+      value[i] = '\0';                            i += 1;
+      setenv("LD_LIBRARY_PATH", value, 1);
+      my_free(value,len);
+
+      // Define arguments to xalt_curl_transmit.c
+      char* prgm = getenv("XALT_KAFKA_EXE");
+      myargs[0]  = prgm;
+      myargs[1]  = (char *) syshost;
+      myargs[2]  = (char *) jsonStr;
+
+      // Call xalt_curl_transmit as a child process and wait for it to complete.
+      pid = fork();
+      if (pid == 0)
+        {
+          // Child process
+          execve(prgm, myargs, myenv);
+        }
+
+      // Parent: Wait for child to complete
+      if ((ret = waitpid (pid, &status, 0)) == -1)
+        {
+          DEBUG(my_stderr, "  waitpid() returned -1: error with xalt_kafka_transmit\n");
+          asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
+          openlog(logNm, LOG_PID, LOG_USER);
+          syslog(LOG_INFO, "waitpid() returned -1: error with xalt_kafka_transmit");
+          closelog();
+          my_free(logNm,strlen(logNm));
+          return;
+        }
+
+      // Free memory
+      my_free(prgm, strlen(prgm));
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
