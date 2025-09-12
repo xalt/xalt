@@ -664,6 +664,7 @@ XALT_UUID_V7
 PATH_TO_APPTAINER
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
+GIT_BRANCH
 PATH_TO_PYTHON
 PATH_TO_MKTEMP
 USE_CONTRIB_ARGPARSE
@@ -4721,6 +4722,18 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    rm -f makefile
    exit 1
 fi
+
+echo "PATH_TO_GIT: $PATH_TO_GIT"
+GIT_BRANCH=main
+if test $PATH_TO_GIT != "" ; then
+  if command $PATH_TO_GIT describe 2> /dev/null; then
+    GIT_BRANCH=`$PATH_TO_GIT branch --show-current`
+    if test -z "$GIT_BRANCH" ; then
+      GIT_BRANCH=main
+    fi
+  fi
+fi
+
 
 
 
