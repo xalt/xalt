@@ -1,5 +1,5 @@
-#include <glib.h>
 #include <librdkafka/rdkafka.h>
+#include "xalt_debug_macros.h"
 
 #define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) )
 
@@ -12,7 +12,7 @@ static void set_config(rd_kafka_conf_t *conf, char *key, char *value) {
 
     res = rd_kafka_conf_set(conf, key, value, errstr, sizeof(errstr));
     if (res != RD_KAFKA_CONF_OK) {
-        g_error("Unable to set config: %s", errstr);
+        DEBUG(stderr, "Unable to set config: %s", errstr);
         exit(1);
     }
 }
@@ -26,7 +26,7 @@ static void dr_msg_cb (rd_kafka_t *kafka_handle,
                        const rd_kafka_message_t *rkmessage,
                        void *opaque) {
     if (rkmessage->err) {
-        g_error("Message delivery failed: %s", rd_kafka_err2str(rkmessage->err));
+        DEBUG(stderr, "Message delivery failed: %s", rd_kafka_err2str(rkmessage->err));
     }
 }
 
@@ -77,7 +77,7 @@ int main (int argc, char **argv) {
     // Create the Producer instance.
     producer = rd_kafka_new(RD_KAFKA_PRODUCER, conf, errstr, sizeof(errstr));
     if (!producer) {
-        g_error("Failed to create new producer: %s", errstr);
+        DEBUG(stderr, "Failed to create new producer: %s", errstr);
         return 1;
     }
 
@@ -97,20 +97,17 @@ int main (int argc, char **argv) {
                             RD_KAFKA_V_END);
 
     if (err) {
-        g_error("Failed to produce to topic %s: %s", kafka_topic, rd_kafka_err2str(err));
+        DEBUG(stderr, "Failed to produce to topic %s: %s", kafka_topic, rd_kafka_err2str(err));
         return 1;
-    } else {
-        g_message("Produced event to topic %s: value = %50s", kafka_topic, json_payload);
     }
 
     // Block until the messages are all sent.
     rd_kafka_flush(producer, 10 * 1000);
 
     if (rd_kafka_outq_len(producer) > 0) {
-        g_error("message was not delivered");
+        DEBUG(stderr, "Message was not delivered.");
+        return 1;
     }
-
-    g_message("event was produced to topic %s.", kafka_topic);
 
     rd_kafka_destroy(producer);
 
