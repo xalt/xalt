@@ -418,7 +418,6 @@ fi
 
 
 AC_PATH_PROG(PATH_TO_GIT,git, [])
-AC_PATH_PROG(PATH_TO_GITT,gitt, [])
 AC_PATH_PROG(PATH_TO_FLEX,flex, [])
 AC_PATH_PROG(PATH_TO_LOGGER,logger, [])
 AC_PATH_PROG(PATH_TO_MKTEMP, mktemp, [])
@@ -431,10 +430,17 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
+echo "PATH_TO_GIT: $PATH_TO_GIT"
 GIT_BRANCH=main
+if test $PATH_TO_GIT != "" ; then
+  if command $PATH_TO_GIT describe 2> /dev/null; then
+    GIT_BRANCH=`$PATH_TO_GIT branch --show-current`
+    if test -z "$GIT_BRANCH" ; then
+      GIT_BRANCH=main
+    fi
+  fi
+fi
 AC_SUBST(GIT_BRANCH)
-echo "PATH_TO_GITT: $PATH_TO_GITT"
-
 
 AC_SUBST(XALT_LD_LIBRARY_PATH)
 

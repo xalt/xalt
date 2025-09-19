@@ -12,7 +12,7 @@ apt-get install -y git gcc build-essential flex bc libssl-dev python3  && \
 apt-get install -y libelf-dev uuid-dev libcurl4-openssl-dev            && \
 git clone https://github.com/xalt/xalt.git  && \
 cd  xalt                                    && \
-git checkout testing                        && \
+git checkout @GIT_BRANCH@                   && \
 mkdir ./my_build                            && \
 cd    ./my_build                            && \
 ../configure --prefix=/opt --with-syshostConfig=@SYSHOST_CONFIG@ --with-config=@XALT_CONFIG_PY@ --with-transmission=@TRANSMISSION@ --with-MySQL=no && \

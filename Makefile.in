@@ -303,7 +303,7 @@ world_update:
 	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then         		        \
             echo "configure is out of date => try again"                      		      ; \
         else                                                                  		        \
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` 		      ; \
+	    branchName=`git branch --show-current`
             git push        github     $$branchName                           		      ; \
             git push --tags github     $$branchName                           		      ; \
         fi                                                                    		      ; \
@@ -333,7 +333,7 @@ gittag:
             git commit -m "moving to TAG_VERSION $(TAG)" $(XALT_SPEC)  $(CONF_PY)     \
                                                          $(XALT_V)     $(DOT_V)     ; \
             git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                    ; \
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`       ; \
+	    branchName=`git branch --show-current`                                  ; \
             git push        origin $$branchName                                     ; \
 	    git push --tags origin $$branchName                                     ; \
           fi                                                                        ; \
@@ -426,7 +426,7 @@ build_tags:
 
 dist:
 	cd $(srcdir)                                                                        ; \
-	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \
+	GIT_BRANCH=`git branch --show-current`                                              ; \
 	git archive --prefix=$(TAR_VERSION)/ $$GIT_BRANCH > $(TAR_VERSION).tar              ; \
 	$(RM) -rf DIST                                                                      ; \
 	mkdir DIST                                                                          ; \
