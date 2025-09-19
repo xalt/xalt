@@ -160,7 +160,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   DEBUG(my_stderr,"    Parsed ProcMaps\n");
   insert_key_double(&measureT, "06_ParseProcMaps_", epoch() - t1);
 
-  const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
+  const char * transmission = xalt_getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
   
@@ -178,23 +178,23 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
 
   sprintf(&buff[0],"%ld",mpi_always_record);
   insert_key_string(&qaT,"XALT_MPI_ALWAYS_RECORD", buff);
-  const char* xalt_sampling = getenv("XALT_SAMPLING");
+  const char* xalt_sampling = xalt_getenv("XALT_SAMPLING");
 
-  const char* xalt_mpi_tracking = getenv("XALT_MPI_TRACKING");
+  const char* xalt_mpi_tracking = xalt_getenv("XALT_MPI_TRACKING");
   if (xalt_mpi_tracking == NULL)
     xalt_mpi_tracking = XALT_MPI_TRACKING;
   insert_key_string(&qaT,"XALT_MPI_TRACKING", xalt_mpi_tracking);
 
-  const char* xalt_scalar_tracking = getenv("XALT_SCALAR_TRACKING");
+  const char* xalt_scalar_tracking = xalt_getenv("XALT_SCALAR_TRACKING");
   if (xalt_scalar_tracking == NULL)
     xalt_scalar_tracking = XALT_SCALAR_TRACKING;
   insert_key_string(&qaT,"XALT_SCALAR_TRACKING", xalt_scalar_tracking);
 
   if (!xalt_sampling)
     {
-      xalt_sampling = getenv("XALT_SCALAR_SAMPLING");
+      xalt_sampling = xalt_getenv("XALT_SCALAR_SAMPLING");
       if (!xalt_sampling)
-        xalt_sampling = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+        xalt_sampling = xalt_getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
     }
   if (xalt_sampling == NULL || strcmp(xalt_sampling,"yes") != 0)
     xalt_sampling = "no";
@@ -284,8 +284,8 @@ void pkgRecordTransmit(const char* uuid_str, const char* syshost, const char* tr
       return;
     }
 
-  char* c_home = getenv("HOME");
-  char* c_user = getenv("USER");
+  char* c_home = xalt_getenv("HOME");
+  char* c_user = xalt_getenv("USER");
   if (c_home == NULL || c_user == NULL )
     return;
 

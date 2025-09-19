@@ -287,7 +287,7 @@ void myinit(int argc, char **argv)
   xalt_timer.gpu_setup = 0.0;
   my_rank = compute_value(rankA);
 
-  p_dbg = getenv("XALT_TRACING");
+  p_dbg = xalt_getenv("XALT_TRACING");
   if (p_dbg)
     {
       xalt_tracing     = (strcmp( p_dbg,"yes")   == 0);
@@ -343,7 +343,7 @@ void myinit(int argc, char **argv)
    * Is this is built-in or LD_PRELOAD version of this file?
    ***********************************************************/
 
-  v = getenv("__XALT_INITIAL_STATE__");
+  v = xalt_getenv("__XALT_INITIAL_STATE__");
   DEBUG(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if another myinit() routine has been called with my pid and hostname*/
   if (v && (strcmp(v,STR(STATE)) != 0))
@@ -355,7 +355,7 @@ void myinit(int argc, char **argv)
           return;
         }
       asprintf(&pid_str,"%d:%s", orig_pid, u.nodename);
-      char* env_pid = getenv("__XALT_STATE_PID__");
+      char* env_pid = xalt_getenv("__XALT_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
         {
           DEBUG(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, STR(STATE), env_pid);
@@ -382,7 +382,7 @@ void myinit(int argc, char **argv)
    ***********************************************************/
 
   /* Stop tracking if XALT is turned off */
-  v = getenv("XALT_EXECUTABLE_TRACKING");
+  v = xalt_getenv("XALT_EXECUTABLE_TRACKING");
   DEBUG(stderr,"  Test for XALT_EXECUTABLE_TRACKING: %s\n",(v != NULL) ? v : "(NULL)");
   if (!v || strcmp(v,"yes") != 0)
     {
@@ -432,13 +432,13 @@ void myinit(int argc, char **argv)
    ***********************************************************/
 
   int build_mask = 0;
-  v = getenv("XALT_SCALAR_TRACKING");
+  v = xalt_getenv("XALT_SCALAR_TRACKING");
   if (!v)
     v = XALT_SCALAR_TRACKING;
   if (strcasecmp(v,"yes") == 0)
     build_mask |= BIT_SCALAR;
 
-  v = getenv("XALT_MPI_TRACKING");
+  v = xalt_getenv("XALT_MPI_TRACKING");
   if (!v)
     v = XALT_MPI_TRACKING;
   if (strcasecmp(v,"yes") == 0)
@@ -540,7 +540,7 @@ void myinit(int argc, char **argv)
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
   double t_gpu = epoch();
-  v  = getenv("XALT_GPU_TRACKING");
+  v  = xalt_getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcasecmp(v,"yes") == 0);
@@ -668,7 +668,7 @@ void myinit(int argc, char **argv)
    * run_submission().
    *********************************************************/
 
-  p = getenv("LD_PRELOAD");
+  p = xalt_getenv("LD_PRELOAD");
   if (p)
     ld_preload_strp = strdup(p);
 
@@ -723,12 +723,12 @@ void myinit(int argc, char **argv)
    * not the start record.
    */
 
-  v = getenv("XALT_SAMPLING");
+  v = xalt_getenv("XALT_SAMPLING");
   if (!v)
     {
-      v = getenv("XALT_SCALAR_SAMPLING");
+      v = xalt_getenv("XALT_SCALAR_SAMPLING");
       if (!v)
-        v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+        v = xalt_getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
     }
 
   if (v && strcmp(v,"yes") == 0)
@@ -743,12 +743,12 @@ void myinit(int argc, char **argv)
       my_rand       = (double) rand()/(double) RAND_MAX;
     }
 
-  v = getenv("XALT_TESTING_RUNTIME");
+  v = xalt_getenv("XALT_TESTING_RUNTIME");
   if (v)
     testing_runtime = strtod(v,NULL);
 
   always_record = xalt_mpi_always_record;
-  v = getenv("XALT_MPI_ALWAYS_RECORD");
+  v = xalt_getenv("XALT_MPI_ALWAYS_RECORD");
   if (v)
     always_record = strtol(v,(char **) NULL, 10);
 
@@ -809,7 +809,7 @@ void myinit(int argc, char **argv)
    * important signals. This way a program terminated by
    * SIGFPE, SIGTERM, etc will produce an end record.
    *********************************************************/
-  v = getenv("XALT_SIGNAL_HANDLER");
+  v = xalt_getenv("XALT_SIGNAL_HANDLER");
   if (!v)
     v = XALT_SIGNAL_HANDLER;
   if (strcasecmp(v,"yes") == 0)
@@ -835,7 +835,7 @@ void myinit(int argc, char **argv)
   else
     DEBUG(stderr, "    -> Signals capturing disabled\n");
     
-  v = getenv("XALT_DUMP_ENV");
+  v = xalt_getenv("XALT_DUMP_ENV");
   if (v && strcmp(v, "yes") == 0)
     {
       int i;
@@ -900,7 +900,7 @@ void myfini()
       return;
     }
     
-  if (getenv("__XALT_FINAL_STATE__"))
+  if (xalt_getenv("__XALT_FINAL_STATE__"))
     {
       DEBUG(my_stderr,"    -> exiting because myfini() has been called more than once\n}\n\n");
       close_out(my_stderr, xalt_err);
@@ -1268,7 +1268,7 @@ static long compute_value(const char **envA)
   const char ** p;
   for (p = &envA[0]; *p; ++p)
     {
-      char *v = getenv(*p);
+      char *v = xalt_getenv(*p);
       if (v)
         {
           value += strtol(v, (char **) NULL, 10);

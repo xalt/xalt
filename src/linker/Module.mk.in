@@ -54,8 +54,10 @@ LNKDATA_OBJ       := $(patsubst %.C, %.o, $(LNKDATA_CXX)) \
 
 RMAP_EXISTS_X     := $(DESTDIR)$(LIBEXEC)/xalt_rmap_exists
 RMAP_EXISTS_CXX   := xalt_rmap_exists.C xalt_utils.C
+RMAP_EXISTS_C     := util/xalt_c_utils.c
 RMAP_EXISTS_CXX   := $(addprefix $(local_dir)/, $(RMAP_EXISTS_CXX))
-RMAP_EXISTS_OBJ   := $(patsubst %.C, %.o, $(RMAP_EXISTS_CXX))
+RMAP_EXISTS_OBJ   := $(patsubst %.C, %.o, $(RMAP_EXISTS_CXX)) \
+                     $(patsubst %.c, %.o, $(RMAP_EXISTS_C))
 
 STRIP_LNKLIB_X    := $(DESTDIR)$(LIBEXEC)/xalt_strip_linklib
 STRIP_LNKLIB_CXX  := xalt_strip_linklib.C parseJsonStr.C buildRmapT.C xalt_utils.C

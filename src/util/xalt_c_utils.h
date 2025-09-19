@@ -17,7 +17,7 @@ extern "C"
   void build_resultDir(char **resultDir, const char* kind, const char* transmission, const char* uuid_str);
   void build_resultFn( char** resultFn,  const char* kind, double start, const char* syshost, const char* uuid,
                       const char* suffix);
-
+  char* xalt_getenv(const char *name);
   const char* xalt_file_transmission_method();
   void set_end_record();
   void my_free(void* ptr,int sz);
