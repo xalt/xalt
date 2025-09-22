@@ -502,20 +502,14 @@ AC_RUN_IFELSE([AC_LANG_PROGRAM([
 exit(1);
 #endif
 ])], 
-[XALT_UUID_V7=yes
-AC_DEFINE([HAVE_SYS_GETRANDOM],1, [The syscall SYS_getrandom exists])])
+[XALT_UUID_V7=yes])
 
-AC_SUBST(XALT_UUID_V7)
-
-AC_SUBST(HAVE_PYMOD_MYSQL_CONNECTOR)
-
-AC_CHECK_HEADER(uuid/uuid.h,
-                [AC_DEFINE([HAVE_UUID_UUID_H], 1,
-                   [Define to 1 if you have <uuid/uuid.h>.])],
-                [FOUND_ERROR=yes;
-		 MSG="Unable to build XALT without uuid/uuid.h"
-		 ERR_MSG="$ERR_MSG||$MSG"
-		 AC_MSG_NOTICE([$MSG])])
+if test $XALT_UUID_V7 = no ; then
+   echo "This version of XALT requires support for the system call SYS_getrandom"
+   echo "XALT versions 3.1.4 and earlier do not require SYS_getrandom support"
+   rm -f makefile
+   exit 1
+fi    
 
 if test $XALT_SUPPORT_CURL = yes ; then
   AC_CHECK_HEADER(curl/curl.h,
@@ -545,19 +539,6 @@ AC_CHECK_HEADER(syslog.h, [],
 		MSG="Unable to build XALT without syslog.h. Please install the glibc headers package"
                 ERR_MSG="$ERR_MSG||$MSG"
 		AC_MSG_NOTICE([$MSG])])
-
-AC_SUBST(HAVE_WORKING_LIBUUID)
-HAVE_WORKING_LIBUUID=no
-if test $ac_cv_header_uuid_uuid_h = yes; then
-  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID,1, [libuuid exist]) HAVE_WORKING_LIBUUID=yes], [])
-fi
-
-if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   FOUND_ERROR=yes;
-   MSG="Unable to install XALT without uuid and without /proc/sys/kernel/random/uuid|See the manual for details"
-   ERR_MSG="$ERR_MSG||$MSG"
-   rm -f makefile
-fi
 
 
 if test -z "$PATH_TO_FLEX" ; then

@@ -31,4 +31,8 @@ W.I.P.:
             * Change the name hello\ .mpi to hello\\ .mpi so that python 3.12 exec will be happy.
             * Change sh_src/xalt_configuration_report.in and sh_script/xalt_extract_record.in
               to use relative path based on script location.
-	      
+            * Dropping support for libuuid.so.  Only UUID version 7 is supported.
+            * Using  branchName=`git branch --show-current` in Makefile.in instead of
+              branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`
+              
+            

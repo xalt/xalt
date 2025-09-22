@@ -658,9 +658,6 @@ PKGV
 HAVE_DCGM
 HAVE_NVML
 GPU_STR
-HAVE_WORKING_LIBUUID
-HAVE_PYMOD_MYSQL_CONNECTOR
-XALT_UUID_V7
 PATH_TO_APPTAINER
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
@@ -4870,20 +4867,21 @@ _ACEOF
 if ac_fn_c_try_run "$LINENO"
 then :
   XALT_UUID_V7=yes
-
-printf "%s\n" "#define HAVE_SYS_GETRANDOM 1" >>confdefs.h
-
 fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
 
+if test $XALT_UUID_V7 = no ; then
+   echo "This version of XALT requires support for the system call SYS_getrandom"
+   echo "XALT versions 3.1.4 and earlier do not require SYS_getrandom support"
+   rm -f makefile
+   exit 1
+fi
 
-
-
-
-ac_header= ac_cache=
+if test $XALT_SUPPORT_CURL = yes ; then
+  ac_header= ac_cache=
 for ac_item in $ac_header_c_list
 do
   if test $ac_cache; then
@@ -4912,23 +4910,7 @@ then :
 printf "%s\n" "#define STDC_HEADERS 1" >>confdefs.h
 
 fi
-ac_fn_c_check_header_compile "$LINENO" "uuid/uuid.h" "ac_cv_header_uuid_uuid_h" "$ac_includes_default"
-if test "x$ac_cv_header_uuid_uuid_h" = xyes
-then :
-
-printf "%s\n" "#define HAVE_UUID_UUID_H 1" >>confdefs.h
-
-else $as_nop
-  FOUND_ERROR=yes;
-		 MSG="Unable to build XALT without uuid/uuid.h"
-		 ERR_MSG="$ERR_MSG||$MSG"
-		 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
-printf "%s\n" "$as_me: $MSG" >&6;}
-fi
-
-
-if test $XALT_SUPPORT_CURL = yes ; then
-  ac_fn_c_check_header_compile "$LINENO" "curl/curl.h" "ac_cv_header_curl_curl_h" "$ac_includes_default"
+ac_fn_c_check_header_compile "$LINENO" "curl/curl.h" "ac_cv_header_curl_curl_h" "$ac_includes_default"
 if test "x$ac_cv_header_curl_curl_h" = xyes
 then :
 
@@ -4983,79 +4965,6 @@ else $as_nop
 printf "%s\n" "$as_me: $MSG" >&6;}
 fi
 
-
-
-HAVE_WORKING_LIBUUID=no
-if test $ac_cv_header_uuid_uuid_h = yes; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing uuid_generate" >&5
-printf %s "checking for library containing uuid_generate... " >&6; }
-if test ${ac_cv_search_uuid_generate+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char uuid_generate ();
-int
-main (void)
-{
-return uuid_generate ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' uuid
-do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_search_uuid_generate=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext
-  if test ${ac_cv_search_uuid_generate+y}
-then :
-  break
-fi
-done
-if test ${ac_cv_search_uuid_generate+y}
-then :
-
-else $as_nop
-  ac_cv_search_uuid_generate=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_uuid_generate" >&5
-printf "%s\n" "$ac_cv_search_uuid_generate" >&6; }
-ac_res=$ac_cv_search_uuid_generate
-if test "$ac_res" != no
-then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
-printf "%s\n" "#define HAVE_LIBUUID 1" >>confdefs.h
- HAVE_WORKING_LIBUUID=yes
-fi
-
-fi
-
-if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   FOUND_ERROR=yes;
-   MSG="Unable to install XALT without uuid and without /proc/sys/kernel/random/uuid|See the manual for details"
-   ERR_MSG="$ERR_MSG||$MSG"
-   rm -f makefile
-fi
 
 
 if test -z "$PATH_TO_FLEX" ; then

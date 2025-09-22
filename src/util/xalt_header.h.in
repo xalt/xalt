@@ -30,9 +30,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* libuuid exist */
-#undef HAVE_LIBUUID
-
 /* Define to 1 if you have NVML. */
 #undef HAVE_NVML_H
 
@@ -54,9 +51,6 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* The syscall SYS_getrandom exists */
-#undef HAVE_SYS_GETRANDOM
-
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 
@@ -65,9 +59,6 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
-
-/* Define to 1 if you have <uuid/uuid.h>. */
-#undef HAVE_UUID_UUID_H
 
 /* Override executable install mode */
 #undef MODE
