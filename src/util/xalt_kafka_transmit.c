@@ -1,9 +1,12 @@
+#ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
 #include <librdkafka/rdkafka.h>
+#endif
+#include <stdio.h>
 #include "xalt_debug_macros.h"
 
 #define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) )
 
-
+#ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
 /* Wrapper to set config values and error out if needed.
  */
 static void set_config(rd_kafka_conf_t *conf, char *key, char *value) {
@@ -29,7 +32,14 @@ static void dr_msg_cb (rd_kafka_t *kafka_handle,
         DEBUG(stderr, "Message delivery failed: %s", rd_kafka_err2str(rkmessage->err));
     }
 }
+#endif
 
+#ifndef HAVE_LIBRDKAFKA_RDKAFKA_H
+int main (int argc, char **argv) {
+    printf("KAFKA Testing...\n");
+    return 0;
+}
+#else
 int main (int argc, char **argv) {
     // CLI args
     char *syshost      = argv[1];
@@ -113,3 +123,4 @@ int main (int argc, char **argv) {
 
     return 0;
 }
+#endif
