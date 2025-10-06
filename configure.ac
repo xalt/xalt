@@ -450,7 +450,7 @@ AC_SUBST(XALT_UUID_V7)
 AC_CHECK_LIB([c], [getentropy], [XALT_UUID_V7=yes; AC_DEFINE([HAVE_FUNC_GETENTROPY],1,
                    [Define to 1 if you have getentropy in libc])],[])
 
-AC_SUBST(HAVE_PYMOD_MYSQL_CONNECTOR)
+AC_SUBST(HAVE_PYMOD_PYMYSQL)
 
 AC_CHECK_HEADER(uuid/uuid.h,
                 [AC_DEFINE([HAVE_UUID_UUID_H], 1,
@@ -659,13 +659,13 @@ if ! test -f $XALT_CONFIG_PY; then
 fi
 
 if test "$MYSQLDB" = yes; then
-   AC_MSG_RESULT([HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR])
-   AX_PYTHON_MODULE([$PATH_TO_PYTHON],[mysql.connector])
-   if test "$HAVE_PYMOD_MYSQL_CONNECTOR" = no ; then
+   AC_MSG_RESULT([HAVE_PYMOD_PYMYSQL:$HAVE_PYMOD_PYMYSQL])
+   AX_PYTHON_MODULE([$PATH_TO_PYTHON],[pymysql])
+   if test "$HAVE_PYMOD_PYMYSQL" = no ; then
       echo
       echo '======================================================================'
       echo 'Unable to install XALT without the a python module to connect to MySQL'
-      echo 'Install mysql.connector.python using pip3'
+      echo 'Install pymysql using pip3'
       echo '======================================================='
       rm -f makefile
       exit 1

@@ -41,8 +41,10 @@ exit 2
 #----------------------------------------------------------------------------#
 
 from __future__ import print_function
+import pymysql
+  
 import os, sys, base64
-import mysql.connector, argparse
+import argparse
 import time
 from operator import itemgetter
 from datetime import datetime, timedelta
@@ -587,7 +589,7 @@ def main():
   configFn     = os.path.join(XALT_ETC_DIR,args.confFn)
   config.read(configFn)
 
-  conn = mysql.connector.connect(        
+  conn = pymysql.connect(        
          host     = config.get("MYSQL","HOST"), 
          user     = config.get("MYSQL","USER"),
          password = base64.b64decode(config.get("MYSQL","PASSWD")).decode(), 
