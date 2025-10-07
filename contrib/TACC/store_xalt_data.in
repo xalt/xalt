@@ -1,8 +1,11 @@
 #!/bin/bash
 # -*- shell-script -*-
-USER=~mclay
-export PATH=$USER/l/pkg/xalt/xalt/bin:$USER/l/pkg/xalt/xalt/sbin:$PATH
-WD=$USER/process_xalt/
+
+USER=mclay
+USER_HOME=$(getent passwd "$USER" | cut -d: -f6)
+
+export PATH=$USER_HOME/l/pkg/xalt/xalt/bin:$USER_HOME/l/pkg/xalt/xalt/sbin:$PATH
+WD=$USER_HOME/process_xalt/
 M=$WD/m
 LOG_DIR=/var/log
 
@@ -16,7 +19,7 @@ for i in *; do
 done
 cd $CWD
 
-SYSLOG_TO_DB=$USER/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
+SYSLOG_TO_DB=$USER_HOME/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
 
 errMsg=""
 store_xalt_data ()
