@@ -20,7 +20,6 @@ XALT 3.1+
     (3.1.3) * Issue #68: Add --timeout option to xalt_file_to_db.in.py
             * Bug Report fix: sometimes -x fails on command called unknown in xalt_helper_functions.sh
     (3.1.4) * Add ld.bfd support
-W.I.P.:
     (3.1.5) * Using internal simple_getentropy() function if libc version is not available.
             * simple_getentropy() depends on syscall(SYS_getrandom,...). If that fails then XALT 
               does not attempt to record data.  It also does not produce an error. Tracing will
@@ -35,4 +34,5 @@ W.I.P.:
             * Using  branchName=`git branch --show-current` in Makefile.in instead of
               branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`
               
-            
+XALT 3.2+
+    (3.2)   * Now use podman to build the XALT libraries suitable for apptainer containers.
