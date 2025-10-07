@@ -1,8 +1,8 @@
 #!/bin/bash
 # -*- shell-script -*-
-MCLAY=~mclay
-export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:$PATH
-WD=$MCLAY/process_xalt/
+USER=~mclay
+export PATH=$USER/l/pkg/xalt/xalt/bin:$USER/l/pkg/xalt/xalt/sbin:$PATH
+WD=$USER/process_xalt/
 M=$WD/m
 LOG_DIR=/var/log
 
@@ -16,7 +16,7 @@ for i in *; do
 done
 cd $CWD
 
-SYSLOG_TO_DB=$MCLAY/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
+SYSLOG_TO_DB=$USER/l/pkg/xalt/xalt/sbin/xalt_syslog_to_db.py
 
 errMsg=""
 store_xalt_data ()
@@ -66,11 +66,11 @@ manager 2>&1 | tee $store_log
 find $WD -name 'Store.log-*' -ctime +30 -exec rm -f {} \;
 
 if [ -n "$errMsg" ]; then
-  echo -e "$errMsg\n" | mail -s "XALT VM: Problem with XALT ingestion" mclay@tacc.utexas.edu > /dev/null
+  echo -e "$errMsg\n" | mail -s "XALT VM: Problem with XALT ingestion" $USER@tacc.utexas.edu > /dev/null
 fi
 
 percentage=$(df $LOG_DIR | tail -n 1 | awk '{print $5}' | sed -e 's/%//')
 if [ "$percentage" -gt 90 ]; then
-   mail -s 'LOG disk > 90% on xalt VM' mclay@tacc.utexas.edu < /dev/null > /dev/null
+   mail -s 'LOG disk > 90% on xalt VM' $USER@tacc.utexas.edu < /dev/null > /dev/null
 fi
 
