@@ -457,9 +457,9 @@ if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
 fi
 
 if test "$XALT_CONTAINER_SUPPORT" = yes ; then
-  AC_PATH_PROGS(PATH_TO_APPTAINER, [apptainer], UNKNOWN_APPTAINER)
-  if test "$PATH_TO_APPTAINER" =  UNKNOWN_APPTAINER; then
-    MSG="Unable to build XALT without apptainer. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
+  AC_PATH_PROGS(PATH_TO_PODMAN, [podman], UNKNOWN_PODMAN)
+  if test "$PATH_TO_PODMAN" =  UNKNOWN_PODMAN; then
+    MSG="Unable to build XALT without podman. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
     ERR_MSG="$ERR_MSG||$MSG"
     FOUND_ERROR=yes
     AC_MSG_NOTICE([$MSG])
@@ -917,7 +917,7 @@ AC_CONFIG_FILES([makefile:Makefile.in                                \
           src/libxalt/module.mk:src/libxalt/Module.mk.in             \
           src/linker/module.mk:src/linker/Module.mk.in               \
           src/util/module.mk:src/util/Module.mk.in                   \
-	  xalt_container.def:proj_mgmt/xalt_container.def.in])
+	  Dockerfile:proj_mgmt/Dockerfile.in])
 AC_OUTPUT
 
 AX_SUMMARIZE_CONFIG

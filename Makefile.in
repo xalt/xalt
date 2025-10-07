@@ -195,9 +195,10 @@ build_compiled:
 	        EXTRA_FLAGS=$(EXTRA_FLAGS) MODE_X=$(MODE_X) MODE_R=$(MODE_R)                       \
                 all
 	if test $(XALT_CONTAINER_SUPPORT) = yes; then                                              \
-          sudo apptainer build xalt.sif xalt_container.def;                                        \
-          apptainer run -B .:/work xalt.sif;                                                       \
-          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIB); tar xf $$CWD/xalt_libs.tgz;               \
+          podman build -t xalt_image:latest .;                                                     \
+          podman run --rm -v .:/work -v $(srcdir)/proj_mgmt/xalt_extract_libs.sh:/tmp/extract.sh -it xalt_image:latest /bin/bash /tmp/extract.sh; \
+          podman rmi xalt_image:latest;                                                            \
+          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIB); tar xf $$CWD/xalt_libs.tar.gz;            \
         fi
 
 inst_obfuscate:
