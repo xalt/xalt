@@ -229,7 +229,7 @@ class XALTdb(object):
         charset  ="utf8",
         connect_timeout=120)
     except Exception as e:
-      print("Failed to open db with pymysql or mysql.connector")
+      print("Failed to open db with pymysql")
       print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
       print(traceback.format_exc())
       raise

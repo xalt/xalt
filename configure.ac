@@ -703,7 +703,7 @@ if test "$MYSQLDB" = yes; then
       echo
       echo '======================================================================'
       echo 'Unable to install XALT without the pymsyql python module to connect to MySQL'
-      echo 'Install pymysql using pip3'
+      echo 'Install pymysql using pip3 or your package manager'
       echo '======================================================='
       rm -f makefile
       exit 1

@@ -1,34 +1,35 @@
 #!/bin/bash
 # -*- shell-script -*-
 
-export PATH=$HOME/l/pkg/xalt/xalt/sbin:$PATH
+MCLAY=~mclay
+export PATH=$MCLAY/l/pkg/xalt/xalt/bin:$MCLAY/l/pkg/xalt/xalt/sbin:$PATH
+WD=$MCLAY/xalt_usage/
+M=$WD/m
+LOG_DIR=/var/log
 
-# setup gcc
-export PATH=/opt/apps/gcc/4.9.1/bin:$PATH
-export LD_LIBRARY_PATH=/opt/apps/gcc/4.9.1/lib64:/opt/apps/gcc/4.9.1/lib
-export GCC_LIB=/opt/apps/gcc/4.9.1/lib64
-
-# setup python
-export PATH=/opt/apps/gcc4_9/python/2.7.12/bin:$PATH
-export LD_LIBRARY_PATH=/opt/apps/gcc4_9/python/2.7.12/lib:/opt/apps/intel/15/composer_xe_2015.2.164/mkl/lib/intel64:/opt/apps/intel/15/composer_xe_2015.2.164/compiler/lib/intel64:$LD_LIBRARY_PATH
-
-
+########################################################################
+# Build host list on this VM and store startdate
 declare -A startDateT
-startDateT['stampede2']='2019-01-21'
-startDateT['frontera']='2019-10-01'
+syshostA=()
+CWD=$PWD
+cd $M
+for i in *; do
+  syshostA+=($i)
+  . $i/.startDate.sh
+  startDateT[$i]=$startDate
+done
+cd $CWD
 
 today=$(date +%F)
 last30=$(date -d "-30days" +%F)
-
-SYSHOSTS=( frontera stampede2 )
 
 if [ "$1" = "--mail" ]; then
    sendTo="$2"
 fi
 
-cd $HOME/xalt_usage
+cd $MCLAY/xalt_usage
 
-for i in "${SYSHOSTS[@]}"; do
+for i in "${syshostA[@]}"; do
    XALT_START_DATE="${startDateT[$i]}"
    xalt_start_s=$(date -d $XALT_START_DATE +%s)
 
@@ -43,15 +44,18 @@ for i in "${SYSHOSTS[@]}"; do
    fn30="XALT-Report-${i}-last30-$today.txt"
    fn365="XALT-Report-${i}-last365-$today.txt"
 
-   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --syshost $i --start $last30  --end $today > $i/last30/$fn30
-   python ./xalt_usage_report.py --confFn xalt_${i}_db.conf --syshost $i --start $last365 --end $today > $i/last365/$fn365
+   mkdir -p $i/last30
+   mkdir -p $i/last365
+
+   python ./xalt_usage_report.py --confFn m/$i/xalt_${i}_db.conf --syshost $i --start $last30  --end $today > $i/last30/$fn30
+   python ./xalt_usage_report.py --confFn m/$i/xalt_${i}_db.conf --syshost $i --start $last365 --end $today > $i/last365/$fn365
 
 done
 
 if [ -n "$sendTo" ]; then
    rm -rf ./xalt_rpts
    mkdir ./xalt_rpts
-   for i in "${SYSHOSTS[@]}"; do
+   for i in "${syshostA[@]}"; do
        fn30="XALT-Report-${i}-last30-$today.txt"
        fn365="XALT-Report-${i}-last365-$today.txt"
        for fn in $i/last30/$fn30 $i/last365/$fn365; do
