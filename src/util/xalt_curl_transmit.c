@@ -1,7 +1,4 @@
 #define  _GNU_SOURCE
-#ifdef HAVE_CURL_CURL_H
-#   include <curl/curl.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,6 +10,10 @@
 #include "xalt_header.h"
 #include "xalt_c_utils.h"
 #include "xalt_debug_macros.h"
+
+#ifdef HAVE_CURL_CURL_H
+#   include <curl/curl.h>
+#endif
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
