@@ -36,3 +36,6 @@ XALT 3.1+
               
 XALT 3.2+
     (3.2)   * Now use podman to build the XALT libraries suitable for apptainer containers.
+    (3.2.1) * Issue #69: correctly turn on curl operations when XALT is configured with:
+              --with-supportCURL=yes
+	      
