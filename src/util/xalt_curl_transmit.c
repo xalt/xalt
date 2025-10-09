@@ -10,6 +10,7 @@
 #include <syslog.h>
 #include <unistd.h>
 #include "xalt_config.h"
+#include "xalt_header.h"
 #include "xalt_c_utils.h"
 #include "xalt_debug_macros.h"
 
@@ -23,6 +24,7 @@ struct response {
 #ifndef HAVE_CURL_CURL_H
 int main(int argc, char* argv[])
 {
+  printf("Curl does not work!\n");
   return 0;
 }
 #else    
