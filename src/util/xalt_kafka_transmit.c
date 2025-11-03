@@ -1,8 +1,11 @@
+
+#include <stdio.h>
+#include "xalt_header.h"
+#include "xalt_debug_macros.h"
+
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
 #include <librdkafka/rdkafka.h>
 #endif
-#include <stdio.h>
-#include "xalt_debug_macros.h"
 
 #define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) )
 

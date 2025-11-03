@@ -14,6 +14,7 @@
 #include <time.h>
 
 #include "xalt_utils.h"
+#include "xalt_c_utils.h"
 #include "xalt_config.h"
 
 #define DATESZ 100
@@ -71,7 +72,7 @@ FILE* xalt_json_file_open(std::string& rmapD, const char* name)
 
   // Otherwise search directories in XALT_ETC_DIR
 
-  const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
+  const char* xalt_etc_dir = xalt_getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 

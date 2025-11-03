@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
   S2S_t* resultT  = NULL;
 
-  const char* user = getenv("USER");
+  const char* user = xalt_getenv("USER");
   if (user == NULL)
     user = "unknown";
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
   insert_key_string(&resultT, "build_host",    u.nodename);
 
 
-  const char * transmission = getenv("XALT_TRANSMISSION_STYLE");
+  const char * transmission = xalt_getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
 

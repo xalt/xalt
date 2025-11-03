@@ -20,7 +20,7 @@ test_descript = {
 
      initialize
      export MY_HOST=`uname -n`
-     installXALT --with-syshostConfig=env_var:MY_HOST --with-systemPath=$(testDir)/bin:/bin:/usr/bin --with-config=$(testDir)/simpleConfig.py
+     installXALT --with-syshostConfig=env_var:MY_HOST --with-systemPath=$(testDir)/bin:/bin:/usr/bin --with-config=$(testDir)/simpleConfig.py --with-containerSupport=no
      displayThis "buildRmapT"
      buildRmapT
 

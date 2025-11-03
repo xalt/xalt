@@ -98,19 +98,20 @@ typedef enum { BIT_SCALAR = 1, BIT_PKGS = 2, BIT_MPI = 4} xalt_tracking_flags;
 
 typedef enum { XALT_SUCCESS = 0, XALT_TRACKING_OFF, XALT_WRONG_STATE, XALT_RUN_TWICE,
                XALT_MPI_RANK, XALT_HOSTNAME, XALT_PATH, XALT_BAD_JSON_STR, XALT_NO_OVERLAP,
-               XALT_UNAME_FAILURE} xalt_status;
+               XALT_UNAME_FAILURE, XALT_NO_UUID}  xalt_status;
 
 static const char * xalt_reasonA[] = {
-  "Successful XALT tracking",
-  "XALT_EXECUTABLE_TRACKING is off",
-  "__XALT_INITIAL_STATE__ is different from STATE",
-  "XALT is trying to be twice in the same STATE",
-  "XALT only tracks rank 0, in mpi programs",
-  "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: "   XALT_CONFIG_PY ,
-  "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
-  "XALT has problem with a JSON string",
-  "XALT execute type does not match requested type",
-  "XALT Cannot find XALT_DIR/libexec/xalt_run_submission",
+  /*  0 */ "Successful XALT tracking",
+  /*  1 */ "XALT_EXECUTABLE_TRACKING is off",
+  /*  2 */ "__XALT_INITIAL_STATE__ is different from STATE",
+  /*  3 */ "XALT is trying to be twice in the same STATE",
+  /*  4 */ "XALT only tracks rank 0, in mpi programs",
+  /*  5 */ "XALT has found the host does not match hostname pattern. If this is unexpected check your config.py file: "   XALT_CONFIG_PY ,
+  /*  6 */ "XALT has found the executable does not match path pattern. If this is unexpected check your config.py file: " XALT_CONFIG_PY ,
+  /*  7 */ "XALT has problem with a JSON string",
+  /*  8 */ "XALT execute type does not match requested type",
+  /*  9 */ "XALT Cannot find XALT_DIR/libexec/xalt_run_submission",
+  /* 10 */ "XALT Cannot produce Run UUID", 
 };
 
 
@@ -286,7 +287,7 @@ void myinit(int argc, char **argv)
   xalt_timer.gpu_setup = 0.0;
   my_rank = compute_value(rankA);
 
-  p_dbg = getenv("XALT_TRACING");
+  p_dbg = xalt_getenv("XALT_TRACING");
   if (p_dbg)
     {
       xalt_tracing     = (strcmp( p_dbg,"yes")   == 0);
@@ -342,7 +343,7 @@ void myinit(int argc, char **argv)
    * Is this is built-in or LD_PRELOAD version of this file?
    ***********************************************************/
 
-  v = getenv("__XALT_INITIAL_STATE__");
+  v = xalt_getenv("__XALT_INITIAL_STATE__");
   DEBUG(stderr,"  Test for __XALT_INITIAL_STATE__: \"%s\", STATE: \"%s\"\n", (v != NULL) ? v : "(NULL)", STR(STATE));
   /* Stop tracking if another myinit() routine has been called with my pid and hostname*/
   if (v && (strcmp(v,STR(STATE)) != 0))
@@ -354,7 +355,7 @@ void myinit(int argc, char **argv)
           return;
         }
       asprintf(&pid_str,"%d:%s", orig_pid, u.nodename);
-      char* env_pid = getenv("__XALT_STATE_PID__");
+      char* env_pid = xalt_getenv("__XALT_STATE_PID__");
       if (env_pid && strcmp(env_pid,pid_str) == 0)
         {
           DEBUG(stderr,"    -> __XALT_INITIAL_STATE__ has a value: \"%s\" -> and it is different from STATE: \"%s\" and PID's match: %s -> exiting\n}\n\n",v, STR(STATE), env_pid);
@@ -381,7 +382,7 @@ void myinit(int argc, char **argv)
    ***********************************************************/
 
   /* Stop tracking if XALT is turned off */
-  v = getenv("XALT_EXECUTABLE_TRACKING");
+  v = xalt_getenv("XALT_EXECUTABLE_TRACKING");
   DEBUG(stderr,"  Test for XALT_EXECUTABLE_TRACKING: %s\n",(v != NULL) ? v : "(NULL)");
   if (!v || strcmp(v,"yes") != 0)
     {
@@ -431,13 +432,13 @@ void myinit(int argc, char **argv)
    ***********************************************************/
 
   int build_mask = 0;
-  v = getenv("XALT_SCALAR_TRACKING");
+  v = xalt_getenv("XALT_SCALAR_TRACKING");
   if (!v)
     v = XALT_SCALAR_TRACKING;
   if (strcasecmp(v,"yes") == 0)
     build_mask |= BIT_SCALAR;
 
-  v = getenv("XALT_MPI_TRACKING");
+  v = xalt_getenv("XALT_MPI_TRACKING");
   if (!v)
     v = XALT_MPI_TRACKING;
   if (strcasecmp(v,"yes") == 0)
@@ -539,7 +540,7 @@ void myinit(int argc, char **argv)
 #if USE_DCGM || USE_NVML
   /* This code will only ever be active in 64 bit mode and not 32 bit mode */
   double t_gpu = epoch();
-  v  = getenv("XALT_GPU_TRACKING");
+  v  = xalt_getenv("XALT_GPU_TRACKING");
   if (v == NULL)
     v = XALT_GPU_TRACKING;
   xalt_gpu_tracking = (strcasecmp(v,"yes") == 0);
@@ -617,8 +618,8 @@ void myinit(int argc, char **argv)
 
           if ( ! have_uuid )
             {
-              build_uuid(&uuid_str[0]);
-              have_uuid = 1;
+              int status = build_uuid(&uuid_str[0]);
+              have_uuid = status == EXIT_SUCCESS;
             }
 
           result = _dcgmJobStartStats(dcgm_handle, (dcgmGpuGrp_t)DCGM_GROUP_ALL_GPUS, uuid_str);
@@ -667,7 +668,7 @@ void myinit(int argc, char **argv)
    * run_submission().
    *********************************************************/
 
-  p = getenv("LD_PRELOAD");
+  p = xalt_getenv("LD_PRELOAD");
   if (p)
     ld_preload_strp = strdup(p);
 
@@ -683,8 +684,8 @@ void myinit(int argc, char **argv)
     {
       if ( ! have_uuid )
         {
-          build_uuid(&uuid_str[0]);
-          have_uuid = 1;
+          int status = build_uuid(&uuid_str[0]);
+          have_uuid = status == EXIT_SUCCESS;
         }
       setenv("XALT_RUN_UUID",uuid_str,1);
       DEBUG(stderr,"    -> Setting XALT_RUN_UUID: %s\n",uuid_str);
@@ -722,12 +723,12 @@ void myinit(int argc, char **argv)
    * not the start record.
    */
 
-  v = getenv("XALT_SAMPLING");
+  v = xalt_getenv("XALT_SAMPLING");
   if (!v)
     {
-      v = getenv("XALT_SCALAR_SAMPLING");
+      v = xalt_getenv("XALT_SCALAR_SAMPLING");
       if (!v)
-        v = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+        v = xalt_getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
     }
 
   if (v && strcmp(v,"yes") == 0)
@@ -742,12 +743,12 @@ void myinit(int argc, char **argv)
       my_rand       = (double) rand()/(double) RAND_MAX;
     }
 
-  v = getenv("XALT_TESTING_RUNTIME");
+  v = xalt_getenv("XALT_TESTING_RUNTIME");
   if (v)
     testing_runtime = strtod(v,NULL);
 
   always_record = xalt_mpi_always_record;
-  v = getenv("XALT_MPI_ALWAYS_RECORD");
+  v = xalt_getenv("XALT_MPI_ALWAYS_RECORD");
   if (v)
     always_record = strtol(v,(char **) NULL, 10);
 
@@ -756,26 +757,33 @@ void myinit(int argc, char **argv)
   // or a PKG type
   if (num_tasks >= always_record )
     {
-      DEBUG(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
-             num_tasks, (int) always_record);
-
       if ( ! have_uuid )
         {
-          build_uuid(&uuid_str[0]);
-          have_uuid = 1;
+          int status = build_uuid(&uuid_str[0]);
+          have_uuid = status == EXIT_SUCCESS;
         }
 
-      if (xalt_tracing || xalt_run_tracing)
+      if (have_uuid)
         {
-          fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
-                  xalt_run_short_descriptA[run_mask], exec_path);
-        }
-      
-      run_submission(&xalt_timer, orig_pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
-                     xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
-                     always_record, stderr);
+          DEBUG(stderr, "    -> MPI_SIZE: %d >= MPI_ALWAYS_RECORD: %d => recording start record!\n",
+                num_tasks, (int) always_record);
+          if (xalt_tracing || xalt_run_tracing)
+            fprintf(stderr, "  Recording state at beginning of %s user program:\n    %s\n",
+                    xalt_run_short_descriptA[run_mask], exec_path);
 
-      DEBUG(stderr,"    -> uuid: %s\n", uuid_str);
+          run_submission(&xalt_timer, orig_pid, ppid, start_time, end_time, probability, exec_path, num_tasks, num_gpus,
+                         xalt_run_short_descriptA[xalt_kind], uuid_str, watermark, usr_cmdline, xalt_tracing,
+                         always_record, stderr);
+          DEBUG(stderr,"    -> uuid: %s\n", uuid_str);
+        }
+      else
+        {
+          DEBUG(stderr,"    -> Unable to produce Run UUID -> exiting\n}\n\n");
+          reject_flag = XALT_NO_UUID;
+          return;
+        }
+
+
     }
   else
     {
@@ -801,7 +809,7 @@ void myinit(int argc, char **argv)
    * important signals. This way a program terminated by
    * SIGFPE, SIGTERM, etc will produce an end record.
    *********************************************************/
-  v = getenv("XALT_SIGNAL_HANDLER");
+  v = xalt_getenv("XALT_SIGNAL_HANDLER");
   if (!v)
     v = XALT_SIGNAL_HANDLER;
   if (strcasecmp(v,"yes") == 0)
@@ -827,7 +835,7 @@ void myinit(int argc, char **argv)
   else
     DEBUG(stderr, "    -> Signals capturing disabled\n");
     
-  v = getenv("XALT_DUMP_ENV");
+  v = xalt_getenv("XALT_DUMP_ENV");
   if (v && strcmp(v, "yes") == 0)
     {
       int i;
@@ -892,7 +900,7 @@ void myfini()
       return;
     }
     
-  if (getenv("__XALT_FINAL_STATE__"))
+  if (xalt_getenv("__XALT_FINAL_STATE__"))
     {
       DEBUG(my_stderr,"    -> exiting because myfini() has been called more than once\n}\n\n");
       close_out(my_stderr, xalt_err);
@@ -1114,13 +1122,28 @@ void myfini()
 
   if (! have_uuid)
     {
-      build_uuid(&uuid_str[0]);
-      have_uuid = 1;
+      int status = build_uuid(&uuid_str[0]);
+      have_uuid  = status == EXIT_SUCCESS;
+    }
+
+  if (! have_uuid )
+    {
+      DEBUG(my_stderr,"    -> Unable to build Run UUID -> exiting\n}\n\n");
+      close_out(my_stderr, xalt_err);
+      return;
     }
 
   if (xalt_tracing || xalt_run_tracing )
-    DEBUG(my_stderr,"  Recording State at end of %s user program\n",
-          xalt_run_short_descriptA[run_mask]);
+    {
+      const char* location_getentropy = have_libc_getentropy_func() ? 
+        "Using libc getentropy" :
+        "Using XALT's getentropy";
+    
+      DEBUG(my_stderr,"    Run UUID: %s, %s UUID V7: %s\n", &uuid_str[0], location_getentropy,
+            uuid_str[14] == '7' ? "yes" : "no");
+      DEBUG(my_stderr,"    Recording State at end of %s user program\n",
+            xalt_run_short_descriptA[run_mask]);
+    }
   
   if (my_stderr)
     fflush(my_stderr);
@@ -1245,7 +1268,7 @@ static long compute_value(const char **envA)
   const char ** p;
   for (p = &envA[0]; *p; ++p)
     {
-      char *v = getenv(*p);
+      char *v = xalt_getenv(*p);
       if (v)
         {
           value += strtol(v, (char **) NULL, 10);

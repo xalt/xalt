@@ -30,6 +30,7 @@ VALID_YN ()
 
 ERR_MSG=""
 FOUND_ERROR=
+XALT_CONTAINER_SUPPORT=unknown
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
@@ -365,6 +366,20 @@ AC_ARG_WITH(primeNumber,
     AC_MSG_RESULT([XALT_PRIME_NUMBER=$withval])
     XALT_PRIME_NUMBER="$withval")dnl
 
+AC_SUBST(XALT_CONTAINER_SUPPORT)
+AC_ARG_WITH(containerSupport,
+    AS_HELP_STRING([--with-containerSupport=ans],[Build XALT with container support yes/no, [[unknown]]]),
+    XALT_CONTAINER_SUPPORT="$withval"
+    XALT_CONTAINER_SUPPORT=`echo $XALT_CONTAINER_SUPPORT | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_CONTAINER_SUPPORT "--with-containerSupport=ans: ans must be yes or no"
+    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$with_containerSupport])
+    AC_DEFINE_UNQUOTED(XALT_CONTAINER_SUPPORT, "$with_containerSupport",[XALT Container Support])dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$withval])
+    XALT_CONTAINER_SUPPORT="$withval"
+    AC_DEFINE_UNQUOTED(XALT_CONTAINER_SUPPORT, "$withval",[Track MPI executables]))dnl
+
 AC_SUBST(XALT_SIGNAL_HANDLER)
 AC_ARG_WITH(signalHandler,
     AS_HELP_STRING([--with-signalHandler=ans],[Have XALT capture executions that fail with a signal: [[no]]]),
@@ -379,6 +394,8 @@ AC_ARG_WITH(signalHandler,
 
 AC_SUBST(XALT_PRIME_FMT)
 AC_SUBST(HAVE_32BIT)
+
+
 
 if test "$BIT32" = yes ; then
   AX_TEST_COMPILE_FLAG([-m32],[HAVE_32BIT=yes],[HAVE_32BIT=no])
@@ -427,11 +444,41 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
+echo "PATH_TO_GIT: $PATH_TO_GIT"
+GIT_BRANCH=main
+if test $PATH_TO_GIT != "" ; then
+  if command $PATH_TO_GIT describe 2> /dev/null; then
+    GIT_BRANCH=`$PATH_TO_GIT branch --show-current`
+    if test -z "$GIT_BRANCH" ; then
+      GIT_BRANCH=main
+    fi
+  fi
+fi
+AC_SUBST(GIT_BRANCH)
+
 AC_SUBST(XALT_LD_LIBRARY_PATH)
 
 AC_SUBST(XALT_INSTALL_OS)
 XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
+
+
+if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
+  MSG="Unable to build XALT without knowing if you want container support or not"
+  ERR_MSG="$ERR_MSG||$MSG"
+  FOUND_ERROR=yes
+  AC_MSG_NOTICE([$MSG])
+fi
+
+if test "$XALT_CONTAINER_SUPPORT" = yes ; then
+  AC_PATH_PROGS(PATH_TO_PODMAN, [podman], UNKNOWN_PODMAN)
+  if test "$PATH_TO_PODMAN" =  UNKNOWN_PODMAN; then
+    MSG="Unable to build XALT without podman. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
+    ERR_MSG="$ERR_MSG||$MSG"
+    FOUND_ERROR=yes
+    AC_MSG_NOTICE([$MSG])
+  fi
+fi  
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
@@ -459,20 +506,24 @@ if test found = no; then
    exit 1
 fi
 
+
+
 XALT_UUID_V7=no
-AC_SUBST(XALT_UUID_V7)
-AC_CHECK_LIB([c], [getentropy], [XALT_UUID_V7=yes; AC_DEFINE([HAVE_FUNC_GETENTROPY],1,
-                   [Define to 1 if you have getentropy in libc])],[])
+AC_RUN_IFELSE([AC_LANG_PROGRAM([
+#include "sys/syscall.h"
+],[
+#ifndef SYS_getrandom
+exit(1);
+#endif
+])], 
+[XALT_UUID_V7=yes])
 
-AC_SUBST(HAVE_PYMOD_MYSQL_CONNECTOR)
-
-AC_CHECK_HEADER(uuid/uuid.h,
-                [AC_DEFINE([HAVE_UUID_UUID_H], 1,
-                   [Define to 1 if you have <uuid/uuid.h>.])],
-                [FOUND_ERROR=yes;
-		 MSG="Unable to build XALT without uuid/uuid.h"
-		 ERR_MSG="$ERR_MSG||$MSG"
-		 AC_MSG_NOTICE([$MSG])])
+if test $XALT_UUID_V7 = no ; then
+   echo "This version of XALT requires support for the system call SYS_getrandom"
+   echo "XALT versions 3.1.4 and earlier do not require SYS_getrandom support"
+   rm -f makefile
+   exit 1
+fi    
 
 if test $XALT_SUPPORT_CURL = yes ; then
   AC_CHECK_HEADER(curl/curl.h,
@@ -512,19 +563,6 @@ AC_CHECK_HEADER(syslog.h, [],
 		MSG="Unable to build XALT without syslog.h. Please install the glibc headers package"
                 ERR_MSG="$ERR_MSG||$MSG"
 		AC_MSG_NOTICE([$MSG])])
-
-AC_SUBST(HAVE_WORKING_LIBUUID)
-HAVE_WORKING_LIBUUID=no
-if test $ac_cv_header_uuid_uuid_h = yes; then
-  AC_SEARCH_LIBS([uuid_generate],[uuid], [AC_DEFINE(HAVE_LIBUUID,1, [libuuid exist]) HAVE_WORKING_LIBUUID=yes], [])
-fi
-
-if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   FOUND_ERROR=yes;
-   MSG="Unable to install XALT without uuid and without /proc/sys/kernel/random/uuid|See the manual for details"
-   ERR_MSG="$ERR_MSG||$MSG"
-   rm -f makefile
-fi
 
 
 if test -z "$PATH_TO_FLEX" ; then
@@ -683,13 +721,13 @@ if ! test -f $XALT_CONFIG_PY; then
 fi
 
 if test "$MYSQLDB" = yes; then
-   AC_MSG_RESULT([HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR])
-   AX_PYTHON_MODULE([$PATH_TO_PYTHON],[mysql.connector])
-   if test "$HAVE_PYMOD_MYSQL_CONNECTOR" = no ; then
+   AC_MSG_RESULT([HAVE_PYMOD_PYMYSQL:$HAVE_PYMOD_PYMYSQL])
+   AX_PYTHON_MODULE([$PATH_TO_PYTHON],[pymysql])
+   if test "$HAVE_PYMOD_PYMYSQL" = no ; then
       echo
       echo '======================================================================'
-      echo 'Unable to install XALT without the a python module to connect to MySQL'
-      echo 'Install mysql.connector.python using pip3'
+      echo 'Unable to install XALT without the pymsyql python module to connect to MySQL'
+      echo 'Install pymysql using pip3 or your package manager'
       echo '======================================================='
       rm -f makefile
       exit 1
@@ -908,12 +946,13 @@ fi
 
 rm -rf $MY_TMPDIR
 
-AC_CONFIG_FILES([makefile:Makefile.in                                       \
+AC_CONFIG_FILES([makefile:Makefile.in                                \
           src/__build__/xalt_config.h:src/util/xalt_config.h.in      \
           src/makefile:src/Makefile.in                               \
           src/libxalt/module.mk:src/libxalt/Module.mk.in             \
           src/linker/module.mk:src/linker/Module.mk.in               \
-          src/util/module.mk:src/util/Module.mk.in])
+          src/util/module.mk:src/util/Module.mk.in                   \
+	  Dockerfile:proj_mgmt/Dockerfile.in])
 AC_OUTPUT
 
 AX_SUMMARIZE_CONFIG

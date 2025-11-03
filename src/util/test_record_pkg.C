@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include "xalt_c_utils.h"
 
 int main(int argc, char* argv[])
 {
-  char* run_uuid = getenv("XALT_RUN_UUID");
+  char* run_uuid = xalt_getenv("XALT_RUN_UUID");
   if (! run_uuid)
     {
       fprintf(stderr,"Leaving test_record_pkg because XALT_RUN_UUID is not set -> no records\n");
       exit(0);
     }
 
-  char* xaltDir = getenv("XALT_DIR");
+  char* xaltDir = xalt_getenv("XALT_DIR");
 
   std::string cmd;
 

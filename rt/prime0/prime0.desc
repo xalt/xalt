@@ -18,7 +18,8 @@ test_descript = {
 
      installXALT --with-syshostConfig=nth_name:2 --with-primeNumber=0 \
                  --with-transmission=$XALT_TRANSMISSION_STYLE         \
-                 --with-xaltFilePrefix=$XALT_FILE_PREFIX
+                 --with-xaltFilePrefix=$XALT_FILE_PREFIX              \
+                 --with-containerSupport=no   
      displayThis "buildRmapT"
      buildRmapT
 
@@ -46,14 +47,14 @@ test_descript = {
      export LD_PRELOAD=$outputDir/XALT/xalt/xalt/lib64/libxalt_init.so
    
 
-     displayThis  "mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c"
-     mpicc -o hello\ .mpi $(projectDir)/rt/mpi_hello_world.c 
+     displayThis  "mpicc -o hello\\ .mpi $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello\\ .mpi $(projectDir)/rt/mpi_hello_world.c 
 
-     displayThis "mpirun -n 1 ./hello\ .mpi"
-     mpirun -n 1 ./hello\ .mpi 
+     displayThis "mpirun -n 1 ./hello\\ .mpi"
+     mpirun -n 1 ./hello\\ .mpi
      
-     displayThis "XALT_TRACING=yes ./hello\ .mpi"
-     XALT_TRACING=yes ./hello\ .mpi 
+     displayThis "XALT_TRACING=yes ./hello\\ .mpi"
+     XALT_TRACING=yes ./hello\\ .mpi
      
      displayThis "test_record_pkg"
      cp $(outputDir)/XALT/xalt/xalt/libexec/test_record_pkg test_record_pkg_00

@@ -33,7 +33,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
               FILE* my_stderr)
 {
   char * logNm   = NULL;
-  char * p_dbg        = getenv("XALT_TRACING");
+  char * p_dbg        = xalt_getenv("XALT_TRACING");
   int    xalt_tracing = (p_dbg && (strncmp(p_dbg,"yes",3)  == 0 ||
                                    strncmp(p_dbg,"run",3)  == 0 ));
 
@@ -185,7 +185,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       // Prepend $LIB64 to $LD_LIBRARY_PATH
       int  i;
-      char *ld_lib_path = getenv("LD_LIBRARY_PATH");
+      char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
       char *lib64_dir   = xalt_dir("lib64");
       int  len_lpath    = strlen(ld_lib_path);
       int  len_l64dir   = strlen(lib64_dir);

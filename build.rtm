@@ -81,7 +81,7 @@ case $SYSHOST in
     TRANSMISSION="file"
     TRACK_GPU="no"
     MYSQL="yes"
-    CONF_OPTS="--with-supportCURL=no"
+    CONF_OPTS="--with-supportCURL=yes --with-containerSupport=yes"
     MAKE_OPTS=""
     ;;
 
@@ -108,7 +108,7 @@ case $SYSHOST in
     TRANSMISSION="file"
     TRACK_GPU="no"
     MYSQL="yes"
-    CONF_OPTS=""
+    CONF_OPTS="--with-supportCURL=no --with-containerSupport=no"
     MAKE_OPTS=""
     ;;
 

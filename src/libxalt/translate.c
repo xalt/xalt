@@ -6,7 +6,7 @@
 
 static const char * safe_get(const char* key, const char* defaultValue)
 {
-  const char* value = getenv(key);
+  const char* value = xalt_getenv(key);
   if (value)
     return value;
   return defaultValue;
@@ -21,19 +21,19 @@ QueueType_t queueType()
 {
   const char* value;
 
-  value = getenv("SLURM_JOB_ID");
+  value = xalt_getenv("SLURM_JOB_ID");
   if (value)
     return SLURM;
     
-  value = getenv("PBS_JOBID");
+  value = xalt_getenv("PBS_JOBID");
   if (value)
     return PBS;
 
-  value = getenv("SGE_ACCOUNT");
+  value = xalt_getenv("SGE_ACCOUNT");
   if (value)
     return SGE;
 
-  value = getenv("LSF_VERSION");
+  value = xalt_getenv("LSF_VERSION");
   if (value)
     return LSF;
 

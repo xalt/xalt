@@ -54,7 +54,7 @@ void buildUserT(S2S_t** userT, S2D_t** userDT)
   insert_key_double(userDT,"exec_epoch", (double) mtime);
 
   // user
-  char* buff = getenv("USER");
+  char* buff = xalt_getenv("USER");
   insert_key_string(userT, "user", (buff) ? buff : "unknown");
 
   //Is this a singularity container?
@@ -77,7 +77,7 @@ void buildUserT(S2S_t** userT, S2D_t** userDT)
   insert_key_string(userT, "execModify", dateStr);
 
   //num_threads
-  buff = getenv("OMP_NUM_THREADS");
+  buff = xalt_getenv("OMP_NUM_THREADS");
   const char* nt          = (buff) ? buff : "1";
   double      num_threads = strtod(nt, (char **) NULL);
   insert_key_double(userDT, "num_threads", num_threads);

@@ -1,6 +1,21 @@
 New Features in XALT
 ====================
 
+**Support for tracking executables in apptainer containers**
+    (xalt-3.2+): XALT now builds libraries safe to run in apptainer
+    containers. Use --with-containerSupport=yes and have podman in
+    path. Use --with-containerSupport=no to disable. 
+
+**Changing UUID to use version 7**:
+    (xalt-3.1.5+): XALT now uses version 7 of uuid.  This means that
+    the generated uuid are now time ordered.
+    
+
+**Changing to pymysql python module**:
+    (xalt-3.1.5+): XALT now uses the pymysql python module because the
+    mysql.connector does not work with python 3.12+
+
+
 **Controlling installed permission**:
     (xalt-2.10.43+): XALT now uses your umask to set permissions unless
     your user id (id -u) is less than UID_MIN (from /etc/login.defs)

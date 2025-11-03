@@ -3,7 +3,7 @@
 test_name = "end2end"
 test_descript = {
    'description' : "End to end test",
-   'keywords'    : [ "simple", test_name,],
+   'keywords'    : [ "simple", test_name],
 
    'active'      : True,
    'test_name'   : test_name,
@@ -11,13 +11,14 @@ test_descript = {
    'run_script'  : """
      . $(projectDir)/rt/common_funcs.sh
 
+     RUNS=25
      initialize
 
      rm -rf XALT
 
      VERSION=`cat $(projectDir)/.version`
       
-     installXALT --with-syshostConfig=nth_name:2 --prefix=$(outputDir)/XALT/$VERSION --with-siteControlledPrefix=yes
+     installXALT --with-syshostConfig=nth_name:2 --prefix=$(outputDir)/XALT/$VERSION --with-siteControlledPrefix=yes --with-containerSupport=no
      displayThis "buildRmapT"
      buildRmapT
 
@@ -48,13 +49,13 @@ test_descript = {
      export XALT_TRANSMISSION_STYLE=file_separate_dirs
      export XALT_PRELOAD_ONLY=no
 
-     displayThis  "mpicc -o hello\ .mpi.01 $(projectDir)/rt/mpi_hello_world.c"
-     mpicc -o hello\ .mpi.01 $(projectDir)/rt/mpi_hello_world.c 
+     displayThis  "mpicc -o hello\\ .mpi.01 $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello\\ .mpi.01 $(projectDir)/rt/mpi_hello_world.c 
 
      export PATH_PATSQ="I am end2end's variable with utf8 chars: ñèéï¿¡¤â¢ª¯±ç·å£§µ×þÐ¬øØ€αβγ"
      
-     displayThis "mpirun -n 1 ./hello\ .mpi.01 --abc def --seq 01"
-     mpirun -n 1 ./hello\ .mpi.01 --abc def --seq 01
+     displayThis "mpirun -n 1 ./hello\\ .mpi.01 --abc def --seq 01"
+     mpirun -n 1 ./hello\\ .mpi.01 --abc def --seq 01
      
      displayThis "mpicc -o Ðì®/helloñ $(projectDir)/rt/mpi_hello_world.c"
      rm -rf Ðì®
@@ -65,10 +66,10 @@ test_descript = {
      displayThis "mpirun -n 1 Ðì®/helloñ.mpi.02 --seq 02"
      mpirun -n 1 Ðì®/helloñ.mpi.02 --seq 02
      
-     displayThis "Setting LD_PRELOAD, XALT_TRACING=run ./hello\ .mpi.03 --seq 03"
+     displayThis "Setting LD_PRELOAD, XALT_TRACING=run ./hello\\ .mpi.03 --seq 03"
      export LD_PRELOAD=$outputDir/XALT/$VERSION/lib64/libxalt_init.so
-     cp ./hello\ .mpi.01 ./hello\ .mpi.03
-     LD_BIND_NOW=1 XALT_TRACING=run ./hello\ .mpi.03 --ntasks p "a';'d" --seq 03
+     cp ./hello\\ .mpi.01 ./hello\\ .mpi.03
+     LD_BIND_NOW=1 XALT_TRACING=run ./hello\\ .mpi.03 --ntasks p "a';'d" --seq 03
      
      g++ -o try.rd.04 $(testDir)/try.C -rdynamic
 
@@ -106,10 +107,10 @@ test_descript = {
      export XALT_EXECUTABLE_TRACKING=yes
      XALT_TRACING=yes ./helloñññ.09 '`i+1`' "a;'" --seq 09
 
-     displayThis "Turn off command line recording for: mpirun -n 1 ./hello\ .mpi --abc def --seq 10"
+     displayThis "Turn off command line recording for: mpirun -n 1 ./hello\\ .mpi --abc def --seq 10"
      export XALT_CMDLINE_RECORD=no
-     cp ./hello\ .mpi.01 ./hello\ .mpi.10
-     mpirun -n 1 ./hello\ .mpi.10 --abc def --seq 10
+     cp ./hello\\ .mpi.01 ./hello\\ .mpi.10
+     mpirun -n 1 ./hello\\ .mpi.10 --abc def --seq 10
      unset XALT_CMDLINE_RECORD
 
      displayThis "XALT_SCALAR_TRACKING=no ./helloñññ --noseq 11"
@@ -189,7 +190,10 @@ test_descript = {
      python3 $(testDir)/pkg_tracking.py --seq 21
    
      displayThis "Test python2 package recording (seq 22)"
-     python2 $(testDir)/pkg_tracking.py --seq 22
+     if command python2 2> /dev/null; then
+       python2 $(testDir)/pkg_tracking.py --seq 22
+       RUNS=`expr $RUNS + 1`
+     fi
 
      displayThis "Test python3 path arg parsing (seq 23)"
      python3 ../../data/hello_world.py  --seq 23
@@ -233,7 +237,7 @@ test_descript = {
 
 
      displayThis "check_entries_db.py"
-     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 18 --runs 26 --pkgs 15 --uuid 15
+     check_entries_db.py --dbname $DBNAME --results results.csv --functions 4 --links 18 --runs $RUNS --pkgs 15 --uuid 15
      finishTest -o $(resultFn) -t $(runtimeFn) results.csv
      if [ -f results.csv ]; then
        STATUS=`cat results.csv`; 

@@ -1,26 +1,20 @@
 #define _GNU_SOURCE
-#define _DEFAULT_SOURCE
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
 #include <unistd.h>
+#include <string.h>
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <sys/syscall.h>
 #include <linux/random.h>
-#include "xalt_obfuscate.h"
-#include "build_uuid.h"
-#include "xalt_config.h"
-#include "xalt_header.h"
-#include "xalt_dir.h"
-#include "xalt_c_utils.h"
-#define BAD_UUID "deadbeaf-dead-beef-1111-deadbeef1111"
+
 
 static void* handle = NULL;
+static int (*getentropy_ptr)(void *buffer, size_t length) = NULL;
 
-static int (*getentropy_ptr)(     void *buffer, size_t length) = NULL;
 
 /* Implementation of getentropy based on the getrandom system call.
    Copyright (C) 2016-2025 Free Software Foundation, Inc.
@@ -43,14 +37,14 @@ static int (*getentropy_ptr)(     void *buffer, size_t length) = NULL;
 
 /* Write LENGTH bytes of randomness starting at BUFFER.  Return 0 on
    success and -1 on failure.  */
-int my_getentropy (void *buffer, size_t length)
+int simple_getentropy (void *buffer, size_t length)
 {
   /* The interface is documented to return EIO for buffer lengths
      longer than 256 bytes.  */
   if (length > 256)
     {
       errno = EIO;
-      return EXIT_FAILURE;
+      return -1;
     }
 
   /* Try to fill the buffer completely.  Even with the 256 byte limit
@@ -60,52 +54,49 @@ int my_getentropy (void *buffer, size_t length)
   while (buffer < end)
     {
       /* NB: No cancellation point.  */
-      ssize_t bytes = syscall(SYS_getrandom, buffer, end - buffer, 0);
+      //ssize_t bytes = syscall(SYS_getrandom, buffer, end - buffer, 0);
+      ssize_t bytes = syscall(318, buffer, end - buffer, 0);
       if (bytes < 0)
         {
           if (errno == EINTR)
             /* Try again if interrupted by a signal.  */
             continue;
           else
-            return EXIT_FAILURE;
+            {
+              fprintf(stderr,"syscall(SYS_getrandom,...) return bytes < 0\n");
+              exit(1);
+            }
         }
       if (bytes == 0)
         {
           /* No more bytes available.  This should not happen under
              normal circumstances.  */
           errno = EIO;
-          return EXIT_FAILURE;
+          return -1;
         }
       /* Try again in case of a short read.  */
       buffer += bytes;
     }
-  return EXIT_SUCCESS;
+  return 0;
 }
-       
+
+static char *s1 = "Using internal getentropy";
+static char *s2 = "Using libc getentropy";
 
 void build_getentropy_ptr()
 {
-  if (! getentropy_ptr) 
+  char *s = s2;
+  getentropy_ptr = dlsym(RTLD_NEXT, "getentropyRTM");
+  if (! getentropy_ptr)
     {
-      getentropy_ptr = dlsym(RTLD_NEXT, "getentropy");
-      if (! getentropy_ptr)
-        {
-          getentropy_ptr = my_getentropy;
-        }
+      getentropy_ptr = simple_getentropy;
+      s = s1;
     }
+  printf("%s\n",s);
 }
-
-int have_libc_getentropy_func()
-{
-  build_getentropy_ptr();
-  return getentropy_ptr != my_getentropy;
-}
-
 
 int uuidv7(uint8_t *value)
 {
-  build_getentropy_ptr();
-
   // random bytes
   int err = getentropy_ptr(value, 16);
   if (err != EXIT_SUCCESS) 
@@ -113,11 +104,13 @@ int uuidv7(uint8_t *value)
 
   // current timestamp in seconds and nano-seconds
   struct timespec ts;
-  int ok = timespec_get(&ts, TIME_UTC);
-  if (ok == 0) 
+
+  int ok = clock_gettime(CLOCK_REALTIME, &ts);
+  if (ok != 0) 
     return EXIT_FAILURE;
 
   uint64_t timestamp = (uint64_t)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+  
 
   // timestamp
   value[0] = (timestamp >> 40) & 0xFF;
@@ -134,16 +127,16 @@ int uuidv7(uint8_t *value)
   return EXIT_SUCCESS;
 }
 
-void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
+
+void uuid7_unparse_lower(uint8_t* u, char* uuidStr)
 {
-  int i;
-  int k;
   //01234567-0123-0123-0123-012345678901
-  //01915724-4c55-74cd-872a-bbb4d58bc892
+  //f9b8dd57-628d-41de-9e7b-2f1f893be268
   // 0 1 2 3  4 5  6 7  8 9  0 1 2 3 4 5
   //01234567-0123-0123-0123-012345678901
   //          1         2         3
   //        8901234567890123456789012345
+  int k, i;
   int tbl[] = {0, 4, 6, 8, 10, 16};
   int j = 0; 
   for (k = 0; k < 5; ++k)
@@ -159,19 +152,45 @@ void uuidv7_unparse_lower(uint8_t* u, char* uuidStr)
     }
   uuidStr[36] = '\0';
 }
-
-int build_uuid(char * my_uuid_str)
+int charPAcmp(const void* x, const void* y)
 {
-  uint8_t my_uuid[16];
+  int    v = strcmp((const char *) x,(const char *)y);
+  return v;
+}
 
-  int status = uuidv7(&my_uuid[0]);
-  if (status == EXIT_SUCCESS)
-    uuidv7_unparse_lower(&my_uuid[0], my_uuid_str);
-  return status;
-}   
-
-void build_uuid_cleanup()
+int main(int argc, char* argv[])
 {
-  if (handle)
-    dlclose(handle);
+  int j;
+  const int sz    = 10;
+  const int strSz = 37;
+  uint8_t   uuidA[sz][16];
+
+  char (*uuidStrA)[strSz] = malloc(sz * sizeof(*uuidStrA));
+  
+  build_getentropy_ptr();
+
+  for (j = 0; j < sz; ++j)
+    uuidv7(&uuidA[j][0]);
+
+  for (j = 0; j < sz; ++j)
+    uuid7_unparse_lower(&uuidA[j][0], &uuidStrA[j][0]);
+
+  for (j = 0; j < sz; ++j)
+    printf("%s\n", &uuidStrA[j][0]);
+
+  qsort((void *) uuidStrA, sz, strSz, charPAcmp);
+
+  int nDups = 0;
+  for (j = 1; j < sz; ++j)
+    {
+      if (strcmp(uuidStrA[j-1],uuidStrA[j]) == 0)
+        {
+          nDups++;
+          printf("found dup at %d\n", j-1);
+        }
+    }
+
+  printf("all done with %d dups\n",nDups);
+
+  return 0;
 }

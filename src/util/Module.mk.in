@@ -41,7 +41,7 @@ EXTR_REC_OBJ     := $(patsubst %.c, %.o, $(EXTR_REC_C))
 CFG_RPT_X        := $(DESTDIR)$(LIBEXEC)/xalt_configuration_report.x
 CFG_RPT_CXX      := xalt_configuration_report.C
 CFG_RPT_CXX      := $(addprefix $(local_dir)/, $(CFG_RPT_CXX))
-CFG_RPT_C        := epoch.c capture.c xalt_dir.c buildJson.c xalt_quotestring.c xalt_c_utils.c
+CFG_RPT_C        := epoch.c capture.c xalt_dir.c buildJson.c xalt_quotestring.c xalt_c_utils.c build_uuid.c
 CFG_RPT_C        := $(addprefix $(local_dir)/, $(CFG_RPT_C)) $(CURDIR)/__build__/xalt_syshost.c linker/xalt_utils.C
 CFG_RPT_OBJ      := $(patsubst %.C, %.o, $(CFG_RPT_CXX)) \
                     $(patsubst %.c, %.o, $(CFG_RPT_C))
@@ -49,7 +49,10 @@ CFG_RPT_OBJ      := $(patsubst %.C, %.o, $(CFG_RPT_CXX)) \
 TST_REC_PKG_X    := $(DESTDIR)$(LIBEXEC)/test_record_pkg
 TST_REC_PKG_CXX  := test_record_pkg.C
 TST_REC_PKG_CXX  := $(addprefix $(local_dir)/, $(TST_REC_PKG_CXX))
-TST_REC_PKG_OBJ  := $(patsubst %.C, %.o, $(TST_REC_PKG_CXX))
+TST_REC_PKG_C    := xalt_c_utils.c
+TST_REC_PKG_C    := $(addprefix $(local_dir)/, $(TST_REC_PKG_C))
+TST_REC_PKG_OBJ  := $(patsubst %.C, %.o, $(TST_REC_PKG_CXX)) \
+	            $(patsubst %.c, %.o, $(TST_REC_PKG_C))
 
 REC_PKG_X        := $(DESTDIR)$(LIBEXEC)/xalt_record_pkg
 REC_PKG_C        := xalt_record_pkg.c transmit.c xalt_c_utils.c xalt_quotestring.c build_uuid.c \
@@ -105,7 +108,7 @@ $(EXTR_REC_X) : $(EXTR_REC_OBJ)
 	chmod $(MODE_X) $@
 
 $(CFG_RPT_X): $(CFG_RPT_OBJ)
-	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^
+	$(LINK.cc) $(OPTLVL) $(WARN_FLAGS) $(LDFLAGS) -o $@ $^ -ldl
 	chmod $(MODE_X) $@
 
 $(REC_PKG_X): $(REC_PKG_OBJ)

@@ -129,7 +129,7 @@ def main():
 
   try:
     conn   = xalt.connect()
-    cursor = conn.cursor(buffered=True)
+    cursor = conn.cursor()
 
     cursor.execute("SHOW VARIABLES like 'version'")
     row      = cursor.fetchone()

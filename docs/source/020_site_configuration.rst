@@ -12,6 +12,7 @@ namely the filtering is covered next.
 #. Track MPI and/or Non-MPI?
 #. Track GPU usage.
 #. Function tracking.
+#. Container Support
 
 Download XALT
 ^^^^^^^^^^^^^
@@ -19,6 +20,7 @@ Download XALT
 From its Github page you can download XALT:
 
    $ git clone https://github.com/xalt/xalt.git
+
 
 Setting the Name of your Cluster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -314,3 +316,23 @@ For example TACC uses::
 
 where the **reverseMapD** directory can be found.
 
+Container Support
+^^^^^^^^^^^^^^^^^
+
+Apptainer containers have older versions of libc.so.  They do not
+support the latest GLIBC symbols.  To fix this XALT builds the library
+in an apptainer container with older versions of gcc and libc.so.  To
+use have apptainer in your paht and add the following to the configure
+command line::
+
+     --with-containerSupport=yes
+
+To disable do::
+
+     --with-containerSupport=no
+
+Then add the following to XALT's modulefile::
+
+     setenv("APPTAINERENV_LD_PRELOAD", pathJoin(base,"xalt_container_lib/$LIB/libxalt_init.so"))
+
+     

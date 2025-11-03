@@ -1,6 +1,10 @@
 #!/bin/bash
-# -*- shell -*-
+# -*- shell-script -*-
+SCRIPT_NAME="${BASH_SOURCE[0]:-${(%):-%x}}"
+SCRIPT_DIR=${SCRIPT_NAME%/*}
+if [ $SCRIPT_DIR = "." ]; then
+  SCRIPT_DIR=$PWD
+fi  
 
-MY_DIR=$(PATH=@xalt_system_path@ dirname $(PATH=@xalt_system_path@ readlink -f $0))
-LD_LIBRARY_PATH=@xalt_ld_library_path@ $MY_DIR/../libexec/xalt_configuration_report.x "$@"
+LD_LIBRARY_PATH=${SCRIPT_DIR}/../lib64 ${SCRIPT_DIR}/../libexec/xalt_configuration_report.x "$@"
 

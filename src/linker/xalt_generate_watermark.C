@@ -57,15 +57,15 @@ int main(int argc, char* argv[])
   struct utsname u;
   uname(&u);
 
-  const char * user = getenv("USER");
+  const char * user = xalt_getenv("USER");
   if (user == NULL)
     user = "unknown";
 
-  const char * loadedmodules = getenv("LOADEDMODULES");
+  const char * loadedmodules = xalt_getenv("LOADEDMODULES");
   if (loadedmodules == NULL)
     loadedmodules = "";
 
-  const char * lmfiles = getenv("_LMFILES_");
+  const char * lmfiles = xalt_getenv("_LMFILES_");
   if (lmfiles == NULL)
     lmfiles = "";
 

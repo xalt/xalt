@@ -37,7 +37,7 @@ try:
 except:
   import ConfigParser as configparser
 
-import mysql.connector
+import pymysql
 
 try:
   input = raw_input
@@ -221,7 +221,7 @@ class XALTdb(object):
       self.__readFromUser()
 
     try:
-      self.__conn = mysql.connector.connect(
+      self.__conn = pymysql.connect(
         host     = self.__host,
         user     = self.__user,
         password = self.__passwd,
@@ -229,13 +229,13 @@ class XALTdb(object):
         charset  ="utf8",
         connect_timeout=120)
     except Exception as e:
-      print("Failed to open db with either mysql.connector")
+      print("Failed to open db with pymysql")
       print ("XALTdb: Error: %s %s" % (e.args[0], e.args[1]))
       print(traceback.format_exc())
       raise
         
     try:
-      cursor = self.__conn.cursor(buffered=True)
+      cursor = self.__conn.cursor() # buffered=True
       
       cursor.execute("SET NAMES utf8;") #or utf8 or any other charset you want to handle
       cursor.execute("SET CHARACTER SET utf8;") #same as above
@@ -271,7 +271,7 @@ class XALTdb(object):
       
       if (debug): sys.stdout.write("  --> Trying to connect to database\n")
       conn   = self.connect()
-      cursor = conn.cursor(buffered = True)
+      cursor = conn.cursor()
 
       if (debug): sys.stdout.write("  --> Starting TRANSACTION\n")
       query  = 'USE '+self.db()
@@ -393,7 +393,7 @@ class XALTdb(object):
     @param index:        The db index for the join table.
     """
 
-    cursor = conn.cursor(buffered=True)
+    cursor = conn.cursor()
     try:
       for entryA in objA:
         object_path  = entryA[0].rstrip(" \r\n")
@@ -475,7 +475,7 @@ class XALTdb(object):
 
       if (debug): sys.stdout.write("  --> Trying to connect to database\n")
       conn     = self.connect()
-      cursor   = conn.cursor(buffered=True)
+      cursor   = conn.cursor()
       query    = "USE "+self.db()
       cursor.execute(query)
       if (debug): sys.stdout.write("  --> Starting TRANSACTION\n")
@@ -694,7 +694,7 @@ class XALTdb(object):
 
     try:
       conn   = self.connect()
-      cursor = conn.cursor(buffered=True)
+      cursor = conn.cursor()
       query  = "USE "+self.db()
       cursor.execute(query)
       query  = "START TRANSACTION"

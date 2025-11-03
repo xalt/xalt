@@ -9,6 +9,7 @@
 #include "xalt_version.h"
 #include "xalt_interval.h"
 #include "xalt_utils.h"
+#include "build_uuid.h"
 #include <string.h>
 #include <iostream>
 #include <iomanip>
@@ -49,7 +50,7 @@ void displayArray(const char* config_py_fn, const char *name, int n, const char 
 
 int main(int argc, char* argv[])
 {
-  const char* executable_tracking = getenv("XALT_EXECUTABLE_TRACKING");
+  const char* executable_tracking = xalt_getenv("XALT_EXECUTABLE_TRACKING");
   if (executable_tracking == NULL || (strcmp(executable_tracking,"yes") != 0))
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
@@ -61,7 +62,7 @@ int main(int argc, char* argv[])
       return 1;
     }
     
-  const char* home = getenv("HOME");
+  const char* home = xalt_getenv("HOME");
   if (home == NULL)
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
@@ -72,7 +73,7 @@ int main(int argc, char* argv[])
       return 1;
     }
     
-  const char* user = getenv("USER");
+  const char* user = xalt_getenv("USER");
   if (user == NULL)
     {
       std::cout << "*------------------------------------------------------------------------------*\n";
@@ -118,7 +119,7 @@ int main(int argc, char* argv[])
   time_t  now = (time_t) epoch();
   strftime(dateStr,dateSZ, "%c", localtime(&now));
   
-  const char* transmission = getenv("XALT_TRANSMISSION_STYLE");
+  const char* transmission = xalt_getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
   if ((strcasecmp(transmission,"file")      != 0 ) &&
@@ -128,24 +129,24 @@ int main(int argc, char* argv[])
       (strcasecmp(transmission,"curl")      != 0 ))
     transmission = "file";
 
-  const char *log_url = getenv("XALT_LOGGING_URL");
+  const char *log_url = xalt_getenv("XALT_LOGGING_URL");
   if (log_url == NULL)
     log_url = XALT_LOGGING_URL;
 
   long        always_record     = xalt_mpi_always_record;
-  const char *always_record_str = getenv("XALT_MPI_ALWAYS_RECORD");
+  const char *always_record_str = xalt_getenv("XALT_MPI_ALWAYS_RECORD");
   if (always_record_str)
     always_record = strtol(always_record_str, (char **) NULL, 10);
 
-  const char* computeSHA1 = getenv("XALT_COMPUTE_SHA1");
+  const char* computeSHA1 = xalt_getenv("XALT_COMPUTE_SHA1");
   if (computeSHA1 == NULL)
     computeSHA1 = XALT_COMPUTE_SHA1;
 
-  const char* cmdline_record = getenv("XALT_CMDLINE_RECORD");
+  const char* cmdline_record = xalt_getenv("XALT_CMDLINE_RECORD");
   if (cmdline_record == NULL)
     cmdline_record = XALT_CMDLINE_RECORD;
 
-  const char* xalt_etc_dir = getenv("XALT_ETC_DIR");
+  const char* xalt_etc_dir = xalt_getenv("XALT_ETC_DIR");
   if (xalt_etc_dir == NULL)
     xalt_etc_dir = XALT_ETC_DIR;
 
@@ -162,12 +163,12 @@ int main(int argc, char* argv[])
       rmapT_str   = "true";
     }
 
-  const char* xalt_mpi_tracking = getenv("XALT_MPI_TRACKING");
+  const char* xalt_mpi_tracking = xalt_getenv("XALT_MPI_TRACKING");
   if (xalt_mpi_tracking == NULL)
     xalt_mpi_tracking = XALT_MPI_TRACKING;
 
   std::string gpu_style_str;
-  const char* xalt_gpu_tracking = getenv("XALT_GPU_TRACKING");
+  const char* xalt_gpu_tracking = xalt_getenv("XALT_GPU_TRACKING");
   if (xalt_gpu_tracking == NULL)
     xalt_gpu_tracking = XALT_GPU_TRACKING;
   if ( strcasecmp(xalt_gpu_tracking,"no") == 0)
@@ -188,28 +189,28 @@ int main(int argc, char* argv[])
   if ( ! have_gpu_monitoring && strcasecmp(xalt_gpu_tracking,"yes") == 0)
     gpu_style_str.append("(none)");
 
-  const char* xalt_func_tracking = getenv("XALT_FUNCTION_TRACKING");
+  const char* xalt_func_tracking = xalt_getenv("XALT_FUNCTION_TRACKING");
   if (xalt_func_tracking == NULL)
     xalt_func_tracking = XALT_FUNCTION_TRACKING;
   else if (strcmp(xalt_func_tracking,"no") != 0)
     xalt_func_tracking = "yes";
     
-  const char* xalt_signal_handler = getenv("XALT_SIGNAL_HANDLER");
+  const char* xalt_signal_handler = xalt_getenv("XALT_SIGNAL_HANDLER");
   if (xalt_signal_handler == NULL)
     xalt_signal_handler = XALT_SIGNAL_HANDLER;
   else if (strcasecmp(xalt_signal_handler,"yes") != 0)
     xalt_signal_handler = "no";
     
-  const char* xalt_scalar_tracking = getenv("XALT_SCALAR_TRACKING");
+  const char* xalt_scalar_tracking = xalt_getenv("XALT_SCALAR_TRACKING");
   if (xalt_scalar_tracking == NULL)
     xalt_scalar_tracking = XALT_SCALAR_TRACKING;
 
-  const char* xalt_sampling = getenv("XALT_SAMPLING");
+  const char* xalt_sampling = xalt_getenv("XALT_SAMPLING");
   if (!xalt_sampling)
     {
-      xalt_sampling = getenv("XALT_SCALAR_SAMPLING");
+      xalt_sampling = xalt_getenv("XALT_SCALAR_SAMPLING");
       if (!xalt_sampling)
-        xalt_sampling = getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
+        xalt_sampling = xalt_getenv("XALT_SCALAR_AND_SPSR_SAMPLING");
     }
   if (xalt_sampling == NULL || strcmp(xalt_sampling,"yes") != 0)
     xalt_sampling = "no";
@@ -219,6 +220,10 @@ int main(int argc, char* argv[])
   std::string cxx_ld_library_path = CXX_LD_LIBRARY_PATH;
   if (cxx_ld_library_path == "")
     cxx_ld_library_path = "<empty>";
+
+  const char* location_getentropy = have_libc_getentropy_func() ? 
+    "Using libc getentropy" :
+    "Using XALT's getentropy";
 
   if (argc == 2 && strcmp(argv[1],"--json") == 0) 
     {
@@ -271,6 +276,7 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
       json_add_char_str(&json, my_sep,   "FOUND_RmapT",              rmapT_str);
+      json_add_char_str(&json, my_sep,   "Location of getentropy",   location_getentropy);
 
       json_add_array(&json, my_sep,   "hostnameA",       hostnameSz,       hostnameA);
       json_add_array(&json, my_sep,   "pathPatternA",    pathPatternSz,    pathPatternA);
@@ -333,6 +339,7 @@ int main(int argc, char* argv[])
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
   std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";
   std::cout << "Built with DCGM:                 " << HAVE_DCGM                      << "\n";
+  std::cout << "Location of getentropy:          " << location_getentropy            << "\n";
   if (found_rmapT)
     std::cout << "Found xalt_rmapT.json:           " << rmapT_str                    << "\n";
   else

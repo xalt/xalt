@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include "xalt_dir.h"
 #include "xalt_config.h"
+#include "xalt_c_utils.h"
 
 char* xalt_dir(const char* file)
 {
@@ -15,7 +16,7 @@ char* xalt_dir(const char* file)
   char *joined;
   const char* dirA[2];
 
-  dirA[0] = getenv("XALT_DIR");
+  dirA[0] = xalt_getenv("XALT_DIR");
   dirA[1] = XALT_DEFAULT_DIR;
 
   for (i = 0; i < 2; ++i)

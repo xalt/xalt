@@ -658,11 +658,10 @@ PKGV
 HAVE_DCGM
 HAVE_NVML
 GPU_STR
-HAVE_WORKING_LIBUUID
-HAVE_PYMOD_MYSQL_CONNECTOR
-XALT_UUID_V7
+PATH_TO_PODMAN
 XALT_INSTALL_OS
 XALT_LD_LIBRARY_PATH
+GIT_BRANCH
 PATH_TO_PYTHON
 PATH_TO_MKTEMP
 USE_CONTRIB_ARGPARSE
@@ -677,6 +676,7 @@ CXX
 HAVE_32BIT
 XALT_PRIME_FMT
 XALT_SIGNAL_HANDLER
+XALT_CONTAINER_SUPPORT
 XALT_PRIME_NUMBER
 XALT_TMPDIR
 BIT32
@@ -778,6 +778,7 @@ with_siteControlledPrefix
 with_32bit
 with_tmpdir
 with_primeNumber
+with_containerSupport
 with_signalHandler
 '
       ac_precious_vars='build_alias
@@ -1449,6 +1450,9 @@ Optional Packages:
                           [[/dev/shm]]
   --with-primeNumber=ans  The prime number of directories when using
                           XALT_FILE_PREFIX, [[997]]
+  --with-containerSupport=ans
+                          Build XALT with container support yes/no,
+                          [[unknown]]
   --with-signalHandler=ans
                           Have XALT capture executions that fail with a
                           signal: [[no]]
@@ -1709,6 +1713,39 @@ fi
 
 } # ac_fn_cxx_try_run
 
+# ac_fn_c_check_header_compile LINENO HEADER VAR INCLUDES
+# -------------------------------------------------------
+# Tests whether HEADER exists and can be compiled using the include files in
+# INCLUDES, setting the cache variable VAR accordingly.
+ac_fn_c_check_header_compile ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+printf %s "checking for $2... " >&6; }
+if eval test \${$3+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+$4
+#include <$2>
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  eval "$3=yes"
+else $as_nop
+  eval "$3=no"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+eval ac_res=\$$3
+	       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+printf "%s\n" "$ac_res" >&6; }
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+
+} # ac_fn_c_check_header_compile
+
 # ac_fn_c_try_link LINENO
 # -----------------------
 # Try to link conftest.$ac_ext, and return whether this succeeded.
@@ -1755,39 +1792,6 @@ fi
   as_fn_set_status $ac_retval
 
 } # ac_fn_c_try_link
-
-# ac_fn_c_check_header_compile LINENO HEADER VAR INCLUDES
-# -------------------------------------------------------
-# Tests whether HEADER exists and can be compiled using the include files in
-# INCLUDES, setting the cache variable VAR accordingly.
-ac_fn_c_check_header_compile ()
-{
-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
-printf %s "checking for $2... " >&6; }
-if eval test \${$3+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-$4
-#include <$2>
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"
-then :
-  eval "$3=yes"
-else $as_nop
-  eval "$3=no"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-eval ac_res=\$$3
-	       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-printf "%s\n" "$ac_res" >&6; }
-  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
-
-} # ac_fn_c_check_header_compile
 ac_configure_args_raw=
 for ac_arg
 do
@@ -3389,6 +3393,7 @@ VALID_YN ()
 
 ERR_MSG=""
 FOUND_ERROR=
+XALT_CONTAINER_SUPPORT=unknown
 
 
 
@@ -3940,6 +3945,29 @@ fi
 
 
 
+# Check whether --with-containerSupport was given.
+if test ${with_containerSupport+y}
+then :
+  withval=$with_containerSupport; XALT_CONTAINER_SUPPORT="$withval"
+    XALT_CONTAINER_SUPPORT=`echo $XALT_CONTAINER_SUPPORT | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_CONTAINER_SUPPORT "--with-containerSupport=ans: ans must be yes or no"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$with_containerSupport" >&5
+printf "%s\n" "XALT_CONTAINER_SUPPORT=$with_containerSupport" >&6; }
+
+printf "%s\n" "#define XALT_CONTAINER_SUPPORT \"$with_containerSupport\"" >>confdefs.h
+
+else $as_nop
+  withval="yes"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_CONTAINER_SUPPORT=$withval" >&5
+printf "%s\n" "XALT_CONTAINER_SUPPORT=$withval" >&6; }
+    XALT_CONTAINER_SUPPORT="$withval"
+
+printf "%s\n" "#define XALT_CONTAINER_SUPPORT \"$withval\"" >>confdefs.h
+
+fi
+
+
+
 # Check whether --with-signalHandler was given.
 if test ${with_signalHandler+y}
 then :
@@ -3958,6 +3986,8 @@ printf "%s\n" "XALT_SIGNAL_HANDLER=$withval" >&6; }
 printf "%s\n" "#define XALT_SIGNAL_HANDLER \"$withval\"" >>confdefs.h
 
 fi
+
+
 
 
 
@@ -4716,6 +4746,18 @@ if test "x$PATH_TO_PYTHON" = "x"; then
    exit 1
 fi
 
+echo "PATH_TO_GIT: $PATH_TO_GIT"
+GIT_BRANCH=main
+if test $PATH_TO_GIT != "" ; then
+  if command $PATH_TO_GIT describe 2> /dev/null; then
+    GIT_BRANCH=`$PATH_TO_GIT branch --show-current`
+    if test -z "$GIT_BRANCH" ; then
+      GIT_BRANCH=main
+    fi
+  fi
+fi
+
+
 
 
 
@@ -4723,6 +4765,76 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 
 printf "%s\n" "#define XALT_INSTALL_OS \"$XALT_INSTALL_OS\"" >>confdefs.h
 
+
+
+if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
+  MSG="Unable to build XALT without knowing if you want container support or not"
+  ERR_MSG="$ERR_MSG||$MSG"
+  FOUND_ERROR=yes
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
+printf "%s\n" "$as_me: $MSG" >&6;}
+fi
+
+if test "$XALT_CONTAINER_SUPPORT" = yes ; then
+  for ac_prog in podman
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_PATH_TO_PODMAN+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $PATH_TO_PODMAN in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PATH_TO_PODMAN="$PATH_TO_PODMAN" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_PATH_TO_PODMAN="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PATH_TO_PODMAN=$ac_cv_path_PATH_TO_PODMAN
+if test -n "$PATH_TO_PODMAN"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $PATH_TO_PODMAN" >&5
+printf "%s\n" "$PATH_TO_PODMAN" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+  test -n "$PATH_TO_PODMAN" && break
+done
+test -n "$PATH_TO_PODMAN" || PATH_TO_PODMAN="UNKNOWN_PODMAN"
+
+  if test "$PATH_TO_PODMAN" =  UNKNOWN_PODMAN; then
+    MSG="Unable to build XALT without podman. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
+    ERR_MSG="$ERR_MSG||$MSG"
+    FOUND_ERROR=yes
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
+printf "%s\n" "$as_me: $MSG" >&6;}
+  fi
+fi
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
@@ -4751,54 +4863,51 @@ if test found = no; then
    exit 1
 fi
 
-XALT_UUID_V7=no
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for getentropy in -lc" >&5
-printf %s "checking for getentropy in -lc... " >&6; }
-if test ${ac_cv_lib_c_getentropy+y}
+
+XALT_UUID_V7=no
+if test "$cross_compiling" = yes
 then :
-  printf %s "(cached) " >&6
+  { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "cannot run test program while cross compiling
+See \`config.log' for more details" "$LINENO" 5; }
 else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lc  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char getentropy ();
+#include "sys/syscall.h"
+
 int
 main (void)
 {
-return getentropy ();
+
+#ifndef SYS_getrandom
+exit(1);
+#endif
+
   ;
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_link "$LINENO"
+if ac_fn_c_try_run "$LINENO"
 then :
-  ac_cv_lib_c_getentropy=yes
-else $as_nop
-  ac_cv_lib_c_getentropy=no
+  XALT_UUID_V7=yes
 fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_c_getentropy" >&5
-printf "%s\n" "$ac_cv_lib_c_getentropy" >&6; }
-if test "x$ac_cv_lib_c_getentropy" = xyes
-then :
-  XALT_UUID_V7=yes;
-printf "%s\n" "#define HAVE_FUNC_GETENTROPY 1" >>confdefs.h
-
+rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+  conftest.$ac_objext conftest.beam conftest.$ac_ext
 fi
 
 
+if test $XALT_UUID_V7 = no ; then
+   echo "This version of XALT requires support for the system call SYS_getrandom"
+   echo "XALT versions 3.1.4 and earlier do not require SYS_getrandom support"
+   rm -f makefile
+   exit 1
+fi
 
-
-ac_header= ac_cache=
+if test $XALT_SUPPORT_CURL = yes ; then
+  ac_header= ac_cache=
 for ac_item in $ac_header_c_list
 do
   if test $ac_cache; then
@@ -4827,23 +4936,7 @@ then :
 printf "%s\n" "#define STDC_HEADERS 1" >>confdefs.h
 
 fi
-ac_fn_c_check_header_compile "$LINENO" "uuid/uuid.h" "ac_cv_header_uuid_uuid_h" "$ac_includes_default"
-if test "x$ac_cv_header_uuid_uuid_h" = xyes
-then :
-
-printf "%s\n" "#define HAVE_UUID_UUID_H 1" >>confdefs.h
-
-else $as_nop
-  FOUND_ERROR=yes;
-		 MSG="Unable to build XALT without uuid/uuid.h"
-		 ERR_MSG="$ERR_MSG||$MSG"
-		 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
-printf "%s\n" "$as_me: $MSG" >&6;}
-fi
-
-
-if test $XALT_SUPPORT_CURL = yes ; then
-  ac_fn_c_check_header_compile "$LINENO" "curl/curl.h" "ac_cv_header_curl_curl_h" "$ac_includes_default"
+ac_fn_c_check_header_compile "$LINENO" "curl/curl.h" "ac_cv_header_curl_curl_h" "$ac_includes_default"
 if test "x$ac_cv_header_curl_curl_h" = xyes
 then :
 
@@ -4915,79 +5008,6 @@ else $as_nop
 printf "%s\n" "$as_me: $MSG" >&6;}
 fi
 
-
-
-HAVE_WORKING_LIBUUID=no
-if test $ac_cv_header_uuid_uuid_h = yes; then
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing uuid_generate" >&5
-printf %s "checking for library containing uuid_generate... " >&6; }
-if test ${ac_cv_search_uuid_generate+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char uuid_generate ();
-int
-main (void)
-{
-return uuid_generate ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' uuid
-do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_search_uuid_generate=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext
-  if test ${ac_cv_search_uuid_generate+y}
-then :
-  break
-fi
-done
-if test ${ac_cv_search_uuid_generate+y}
-then :
-
-else $as_nop
-  ac_cv_search_uuid_generate=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_uuid_generate" >&5
-printf "%s\n" "$ac_cv_search_uuid_generate" >&6; }
-ac_res=$ac_cv_search_uuid_generate
-if test "$ac_res" != no
-then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
-printf "%s\n" "#define HAVE_LIBUUID 1" >>confdefs.h
- HAVE_WORKING_LIBUUID=yes
-fi
-
-fi
-
-if test $HAVE_WORKING_LIBUUID = no -a ! -f /proc/sys/kernel/random/uuid; then
-   FOUND_ERROR=yes;
-   MSG="Unable to install XALT without uuid and without /proc/sys/kernel/random/uuid|See the manual for details"
-   ERR_MSG="$ERR_MSG||$MSG"
-   rm -f makefile
-fi
 
 
 if test -z "$PATH_TO_FLEX" ; then
@@ -5357,13 +5377,13 @@ if ! test -f $XALT_CONFIG_PY; then
 fi
 
 if test "$MYSQLDB" = yes; then
-   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR" >&5
-printf "%s\n" "HAVE_PYMOD_MYSQL_CONNECTOR:$HAVE_PYMOD_MYSQL_CONNECTOR" >&6; }
+   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: HAVE_PYMOD_PYMYSQL:$HAVE_PYMOD_PYMYSQL" >&5
+printf "%s\n" "HAVE_PYMOD_PYMYSQL:$HAVE_PYMOD_PYMYSQL" >&6; }
 
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking python module: mysql.connector" >&5
-printf %s "checking python module: mysql.connector... " >&6; }
-	ac_python_pkg=`echo mysql.connector | tr . _`
-	$PATH_TO_PYTHON -c "import mysql.connector" > /dev/null 2>&1
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking python module: pymysql" >&5
+printf %s "checking python module: pymysql... " >&6; }
+	ac_python_pkg=`echo pymysql | tr . _`
+	$PATH_TO_PYTHON -c "import pymysql" > /dev/null 2>&1
 	if test $? -eq 0;
 	then
 		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
@@ -5376,16 +5396,16 @@ printf "%s\n" "no" >&6; }
 		#
 		if test -n ""
 		then
-			as_fn_error $? "failed to find required module mysql.connector" "$LINENO" 5
+			as_fn_error $? "failed to find required module pymysql" "$LINENO" 5
 			exit 1
 		fi
 	fi
 
-   if test "$HAVE_PYMOD_MYSQL_CONNECTOR" = no ; then
+   if test "$HAVE_PYMOD_PYMYSQL" = no ; then
       echo
       echo '======================================================================'
-      echo 'Unable to install XALT without the a python module to connect to MySQL'
-      echo 'Install mysql.connector.python using pip3'
+      echo 'Unable to install XALT without the pymsyql python module to connect to MySQL'
+      echo 'Install pymysql using pip3 or your package manager'
       echo '======================================================='
       rm -f makefile
       exit 1
@@ -5849,7 +5869,7 @@ fi
 
 rm -rf $MY_TMPDIR
 
-ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/util/xalt_config.h.in src/makefile:src/Makefile.in src/libxalt/module.mk:src/libxalt/Module.mk.in src/linker/module.mk:src/linker/Module.mk.in src/util/module.mk:src/util/Module.mk.in"
+ac_config_files="$ac_config_files makefile:Makefile.in src/__build__/xalt_config.h:src/util/xalt_config.h.in src/makefile:src/Makefile.in src/libxalt/module.mk:src/libxalt/Module.mk.in src/linker/module.mk:src/linker/Module.mk.in src/util/module.mk:src/util/Module.mk.in Dockerfile:proj_mgmt/Dockerfile.in"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6542,6 +6562,7 @@ do
     "src/libxalt/module.mk") CONFIG_FILES="$CONFIG_FILES src/libxalt/module.mk:src/libxalt/Module.mk.in" ;;
     "src/linker/module.mk") CONFIG_FILES="$CONFIG_FILES src/linker/module.mk:src/linker/Module.mk.in" ;;
     "src/util/module.mk") CONFIG_FILES="$CONFIG_FILES src/util/module.mk:src/util/Module.mk.in" ;;
+    "Dockerfile") CONFIG_FILES="$CONFIG_FILES Dockerfile:proj_mgmt/Dockerfile.in" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -7146,6 +7167,7 @@ echo "Prefix..............................................." : $prefix
 echo "Installation Directory..............................." : $PKGV
 echo "XALT Site Controlled Prefix.........................." : $SITE_CONTROLLED_PREFIX
 echo
+echo "XALT_CONTAINER_SUPPORT..............................." : $XALT_CONTAINER_SUPPORT
 echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION

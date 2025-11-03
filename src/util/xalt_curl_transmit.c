@@ -1,7 +1,4 @@
 #define  _GNU_SOURCE
-#ifdef HAVE_CURL_CURL_H
-#   include <curl/curl.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,8 +7,13 @@
 #include <syslog.h>
 #include <unistd.h>
 #include "xalt_config.h"
+#include "xalt_header.h"
 #include "xalt_c_utils.h"
 #include "xalt_debug_macros.h"
+
+#ifdef HAVE_CURL_CURL_H
+#   include <curl/curl.h>
+#endif
 
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
@@ -23,7 +25,6 @@ struct response {
 #ifndef HAVE_CURL_CURL_H
 int main(int argc, char* argv[])
 {
-  printf("CURL Testing...\n");
   return 0;
 }
 #else    
@@ -51,7 +52,7 @@ int main(int argc, char* argv[])
   char *logNm        = NULL;
   char *syshost      = argv[1];
   char *jsonStr      = argv[2];
-  char *p_dbg        = getenv("XALT_TRACING");
+  char *p_dbg        = xalt_getenv("XALT_TRACING");
   int   xalt_tracing = (p_dbg && (strncmp(p_dbg,"yes",3)  == 0 ||
                                   strncmp(p_dbg,"run",3)  == 0 ));
 
@@ -62,7 +63,7 @@ int main(int argc, char* argv[])
   const char *log_url = NULL;
   const char *status = NULL;
   
-  log_url = getenv("XALT_LOGGING_URL");
+  log_url = xalt_getenv("XALT_LOGGING_URL");
   if (log_url == NULL)
     log_url = XALT_LOGGING_URL;
   

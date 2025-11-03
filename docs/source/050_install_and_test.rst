@@ -115,9 +115,8 @@ package.  The first one is a Lua modulefile that can be used with Lmod::
   prepend_path("LD_PRELOAD",    pathJoin(base,"$LIB/libxalt_init.so"))
   prepend_path("COMPILER_PATH", bin)
 
-  -- Uncomment these two lines to use XALT inside Singularity containers
-  -- setenv("SINGULARITYENV_LD_PRELOAD", pathJoin(base,"$LIB/libxalt_init.so"))
-  -- prepend_path("SINGULARITY_BINDPATH", base)
+  -- Uncomment these two lines to use XALT inside APPTAINER containers
+  -- setenv("APPTAINERENV_LD_PRELOAD", pathJoin(base,"xalt_container_lib/$LIB/libxalt_init.so"))
 
   -- Uncomment this line to have XALT track python packages.
   -- prepend_path("PYTHONPATH",    pathJoin(base,"site_packages"))

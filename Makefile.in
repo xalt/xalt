@@ -51,6 +51,7 @@ ETC_DIR              	:= @ETC_DIR@
 prefix               	:= @prefix@
 XALT_V               	:= src/util/xalt_version.h
 DOT_V               	:= .version
+XALT_CONTAINER_SUPPORT  := @XALT_CONTAINER_SUPPORT@
 XALT_SYSTEM_PATH        := @SYSTEM_PATH@
 SYSLOG_MSG_SZ        	:= @SYSLOG_MSG_SZ@
 HAVE_LIBUUID            := @HAVE_WORKING_LIBUUID@
@@ -103,13 +104,15 @@ endif
 INC                  	:= $(PKGV)/include
 LIB                  	:= $(PKGV)/lib
 LIB64                	:= $(PKGV)/lib64
+XALT_CONTAINER_LIB    	:= $(PKGV)/xalt_container_lib
 LIBEXEC              	:= $(PKGV)/libexec
 BIN                  	:= $(PKGV)/bin
 SBIN                 	:= $(PKGV)/sbin
 SITE_PKG_DIR            := $(PKGV)/site_packages
 DIRLIST              	:= $(DESTDIR)$(LIBEXEC) $(DESTDIR)$(LIB) $(DESTDIR)$(LIB64)            \
                            $(DESTDIR)$(BIN) $(DESTDIR)$(SBIN) $(DESTDIR)$(ETC_DIR)             \
-                           $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)
+                           $(DESTDIR)$(INC) $(DESTDIR)$(SITE_PKG_DIR)                          \
+                           $(DESTDIR)$(XALT_CONTAINER_LIB)
 
 SITE_PKG                := py_src/xalt_sitecustomize.py
 SITE_PKG                := $(patsubst %, $(srcdir)/%, $(SITE_PKG))
@@ -165,7 +168,7 @@ all:
 	@echo done
 
 install: $(DIRLIST) LINKS Inst_site_py Inst_sbin Inst_bin Inst_libexec Use_getent_yes              \
-         Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate
+         Use_argparse_$(USE_ARGPARSE) build_compiled inst_obfuscate 
 	@if test "$(SITE_CONTROLLED_PREFIX)" = "no" ; then                                         \
 	  echo $(RM) $(DESTDIR)$(PKG);                                                             \
 	       $(RM) $(DESTDIR)$(PKG);                                                             \
@@ -191,10 +194,15 @@ build_compiled:
                 GPU_STR=$(GPU_STR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools           \
 	        EXTRA_FLAGS=$(EXTRA_FLAGS) MODE_X=$(MODE_X) MODE_R=$(MODE_R)                       \
                 all
+	if test $(XALT_CONTAINER_SUPPORT) = yes; then                                              \
+          podman build -t xalt_image:latest .;                                                     \
+          podman run --rm -v .:/work -v $(srcdir)/proj_mgmt/xalt_extract_libs.sh:/tmp/extract.sh -it xalt_image:latest /bin/bash /tmp/extract.sh; \
+          podman rmi xalt_image:latest;                                                            \
+          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIB); tar xf $$CWD/xalt_libs.tar.gz;            \
+        fi
 
 inst_obfuscate:
 	install -m $(MODE_R) $(OBFUSCATE_HDR)   $(DESTDIR)$(INC)
-
 
 echo:
 	@echo srcdir: $(srcdir)
@@ -296,7 +304,7 @@ world_update:
 	elif [ $(srcdir)/configure -ot $(srcdir)/configure.ac ]; then         		        \
             echo "configure is out of date => try again"                      		      ; \
         else                                                                  		        \
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'` 		      ; \
+	    branchName=`git branch --show-current`                           		      ; \
             git push        github     $$branchName                           		      ; \
             git push --tags github     $$branchName                           		      ; \
         fi                                                                    		      ; \
@@ -326,7 +334,7 @@ gittag:
             git commit -m "moving to TAG_VERSION $(TAG)" $(XALT_SPEC)  $(CONF_PY)     \
                                                          $(XALT_V)     $(DOT_V)     ; \
             git tag -a $(TAG) -m 'Setting TAG_VERSION to $(TAG)'                    ; \
-	    branchName=`git status | head -n 1 | sed 's/^[# ]*On branch //g'`       ; \
+	    branchName=`git branch --show-current`                                  ; \
             git push        origin $$branchName                                     ; \
 	    git push --tags origin $$branchName                                     ; \
           fi                                                                        ; \
@@ -419,7 +427,7 @@ build_tags:
 
 dist:
 	cd $(srcdir)                                                                        ; \
-	GIT_BRANCH=`git status | head -n 1 | sed -e 's/^[# ]*On branch //g' -e 's/^[# ]*HEAD detached at//g'`; \
+	GIT_BRANCH=`git branch --show-current`                                              ; \
 	git archive --prefix=$(TAR_VERSION)/ $$GIT_BRANCH > $(TAR_VERSION).tar              ; \
 	$(RM) -rf DIST                                                                      ; \
 	mkdir DIST                                                                          ; \

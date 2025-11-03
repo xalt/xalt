@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 {
   char*       run_uuid	   = NULL;
   const char* my_host      = xalt_syshost();
-  const char* user         = getenv("USER");
+  const char* user         = xalt_getenv("USER");
   char*       program      = NULL;
   char*       pkg_name     = NULL;
   char*       pkg_path     = NULL;
@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
   if (!user)
     user = "UNKNOWN";
 
-  p_dbg = getenv("XALT_TRACING");
+  p_dbg = xalt_getenv("XALT_TRACING");
   if (p_dbg)
     xalt_tracing = (strcmp(p_dbg,"yes") == 0) || (strcmp(p_dbg,"pkg") == 0);
 
@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
   //0123456789 123456789 123456789 123456789 
   //3de2c9d8-e857-4482-9aa4-4979620380fc	  
 
-  char* date_str = getenv("XALT_DATE_TIME");
+  char* date_str = xalt_getenv("XALT_DATE_TIME");
   
   char* xalt_tmpdir = create_xalt_tmpdir_str(run_uuid);
   asprintf(&resultFn,"pkg.%s.%s.%s.%s.%s.json", my_host, date_str, user,
