@@ -1,7 +1,5 @@
-
 #include <stdio.h>
 #include "xalt_header.h"
-#include "xalt_debug_macros.h"
 
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
 #include <librdkafka/rdkafka.h>
@@ -18,7 +16,7 @@ static void set_config(rd_kafka_conf_t *conf, char *key, char *value) {
 
     res = rd_kafka_conf_set(conf, key, value, errstr, sizeof(errstr));
     if (res != RD_KAFKA_CONF_OK) {
-        DEBUG(stderr, "Unable to set config: %s", errstr);
+        fprintf(stderr, "Unable to set config: %s\n", errstr);
         exit(1);
     }
 }
@@ -32,14 +30,13 @@ static void dr_msg_cb (rd_kafka_t *kafka_handle,
                        const rd_kafka_message_t *rkmessage,
                        void *opaque) {
     if (rkmessage->err) {
-        DEBUG(stderr, "Message delivery failed: %s", rd_kafka_err2str(rkmessage->err));
+        fprintf(stderr, "Message delivery failed: %s\n", rd_kafka_err2str(rkmessage->err));
     }
 }
 #endif
 
 #ifndef HAVE_LIBRDKAFKA_RDKAFKA_H
 int main (int argc, char **argv) {
-    printf("KAFKA Testing...\n");
     return 0;
 }
 #else
@@ -90,7 +87,7 @@ int main (int argc, char **argv) {
     // Create the Producer instance.
     producer = rd_kafka_new(RD_KAFKA_PRODUCER, conf, errstr, sizeof(errstr));
     if (!producer) {
-        DEBUG(stderr, "Failed to create new producer: %s", errstr);
+        fprintf(stderr, "Failed to create new producer: %s\n", errstr);
         return 1;
     }
 
@@ -110,7 +107,7 @@ int main (int argc, char **argv) {
                             RD_KAFKA_V_END);
 
     if (err) {
-        DEBUG(stderr, "Failed to produce to topic %s: %s", kafka_topic, rd_kafka_err2str(err));
+        fprintf(stderr, "Failed to produce to topic %s: %s\n", kafka_topic, rd_kafka_err2str(err));
         return 1;
     }
 
@@ -118,7 +115,7 @@ int main (int argc, char **argv) {
     rd_kafka_flush(producer, 10 * 1000);
 
     if (rd_kafka_outq_len(producer) > 0) {
-        DEBUG(stderr, "Message was not delivered.");
+        fprintf(stderr, "Message was not delivered.\n");
         return 1;
     }
 
