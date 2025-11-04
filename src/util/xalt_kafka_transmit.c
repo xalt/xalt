@@ -10,6 +10,25 @@
 
 #define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) )
 
+#ifndef KAFKA_TOPIC
+#define KAFKA_TOPIC "default_topic"
+#endif
+#ifndef KAFKA_SERVERS
+#define KAFKA_SERVERS "localhost:9092"
+#endif
+#ifndef KAFKA_USERNAME
+#define KAFKA_USERNAME "default_user"
+#endif
+#ifndef KAFKA_PASSWORD
+#define KAFKA_PASSWORD "default_password"
+#endif
+#ifndef KAFKA_CA_LOCATION
+#define KAFKA_CA_LOCATION "/path/to/ca.pem"
+#endif
+#ifndef KAFKA_CERTIFICATE_LOCATION
+#define KAFKA_CERTIFICATE_LOCATION "/path/to/cert.pem"
+#endif
+
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
 /* Wrapper to set config values and error out if needed.
  */
@@ -48,12 +67,12 @@ int main (int argc, char **argv) {
     char *json_payload = argv[2];
 
     // ENVs
-    const char *kafka_topic = getenv("XALT_KAFKA_TOPIC");
-    char *kafka_servers = getenv("XALT_KAFKA_SERVERS");
-    char *kafka_username = getenv("XALT_KAFKA_USERNAME");
-    char *kafka_password = getenv("XALT_KAFKA_PASSWORD");
-    char *kafka_ca_location = getenv("XALT_KAFKA_CA_LOCATION");
-    char *kafka_certificate_location = getenv("XALT_KAFKA_CERTIFICATE_LOCATION");
+    const char *kafka_topic = KAFKA_TOPIC;
+    const char *kafka_servers = KAFKA_SERVERS;
+    const char *kafka_username = KAFKA_USERNAME;
+    const char *kafka_password = KAFKA_PASSWORD;
+    const char *kafka_ca_location = KAFKA_CA_LOCATION;
+    const char *kafka_certificate_location = KAFKA_CERTIFICATE_LOCATION;
 
     rd_kafka_t *producer;
     rd_kafka_conf_t *conf;
