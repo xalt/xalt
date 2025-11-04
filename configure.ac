@@ -791,10 +791,6 @@ if test $XALT_SUPPORT_KAFKA = yes; then
                                                  MSG="Unable to build XALT without librdkafka"
                                                  ERR_MSG="$ERR_MSG||$MSG"
                                                  AC_MSG_NOTICE([$MSG])])
-  AC_SEARCH_LIBS([rd_kafka_conf_new], [rdkafka], [], [FOUND_ERROR=yes;
-                                                 MSG="Unable to build XALT without librdkafka"
-                                                 ERR_MSG="$ERR_MSG||$MSG"
-                                                 AC_MSG_NOTICE([$MSG])])
 fi
 
 AC_SUBST(CRYPTO_STR)

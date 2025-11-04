@@ -1,4 +1,7 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "xalt_header.h"
 
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
@@ -42,7 +45,6 @@ int main (int argc, char **argv) {
 #else
 int main (int argc, char **argv) {
     // CLI args
-    char *syshost      = argv[1];
     char *json_payload = argv[2];
 
     // ENVs
