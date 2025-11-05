@@ -68,11 +68,6 @@ int main (int argc, char **argv) {
 
     // ENVs
     const char *kafka_topic = KAFKA_TOPIC;
-    const char *kafka_servers = KAFKA_SERVERS;
-    const char *kafka_username = KAFKA_USERNAME;
-    const char *kafka_password = KAFKA_PASSWORD;
-    const char *kafka_ca_location = KAFKA_CA_LOCATION;
-    const char *kafka_certificate_location = KAFKA_CERTIFICATE_LOCATION;
 
     rd_kafka_t *producer;
     rd_kafka_conf_t *conf;
@@ -91,13 +86,13 @@ int main (int argc, char **argv) {
      * - ssl.certificate.location
      */
     // User-specific properties that you must set
-    set_config(conf, "bootstrap.servers", kafka_servers);
+    set_config(conf, "bootstrap.servers", KAFKA_SERVERS);
     set_config(conf, "security.protocol", "SASL_SSL");
     set_config(conf, "sasl.mechanism", "PLAIN");
-    set_config(conf, "sasl.username", kafka_username);
-    set_config(conf, "sasl.password", kafka_password);
-    set_config(conf, "ssl.ca.location", kafka_ca_location);
-    set_config(conf, "ssl.certificate.location", kafka_certificate_location);
+    set_config(conf, "sasl.username", KAFKA_USERNAME);
+    set_config(conf, "sasl.password", KAFKA_PASSWORD);
+    set_config(conf, "ssl.ca.location", KAFKA_CA_LOCATION);
+    set_config(conf, "ssl.certificate.location", KAFKA_CERTIFICATE_LOCATION);
 
     // Fixed properties
     set_config(conf, "acks", "all");
