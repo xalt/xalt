@@ -128,12 +128,12 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
   else if (strcasecmp(transmission, "kafka") == 0)
     {
       int pid, status, ret = 0;
-      char *myargs []   = { NULL, NULL, NULL, NULL};
-      char *myenv  []   = { NULL };
+      char *myargs []   = {NULL, NULL, NULL, NULL};
+      char *myenv  []   = {NULL};
 
       // Prepend $LIB64 to $LD_LIBRARY_PATH
       int  i;
-      char *ld_lib_path = getenv("LD_LIBRARY_PATH");
+      char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
       char *lib64_dir   = xalt_dir("lib64");
       int  len_lpath    = strlen(ld_lib_path);
       int  len_l64dir   = strlen(lib64_dir);
@@ -149,7 +149,7 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       my_free(value,len);
 
       // Define arguments to xalt_curl_transmit.c
-      char* prgm = getenv("XALT_KAFKA_EXE");
+      char* prgm = xalt_getenv("XALT_KAFKA_EXE");
       myargs[0]  = prgm;
       myargs[1]  = (char *) syshost;
       myargs[2]  = (char *) jsonStr;
@@ -173,9 +173,6 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
           my_free(logNm,strlen(logNm));
           return;
         }
-
-      // Free memory
-      my_free(prgm, strlen(prgm));
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
