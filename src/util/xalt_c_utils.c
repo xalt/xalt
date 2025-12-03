@@ -54,7 +54,7 @@ void build_resultDir(char **resultDir, const char* kind, const char* transmissio
 {
 
   char* c_home = xalt_getenv("HOME");
-  
+
   const char * xalt_file_prefix = xalt_getenv("XALT_FILE_PREFIX");
   if (xalt_file_prefix == NULL)
     xalt_file_prefix = XALT_FILE_PREFIX;
@@ -125,7 +125,7 @@ void* xmalloc(size_t size, const char* fn, int lineNo)
   fprintf(stdout, "xmalloc return a null called from %s:%d\n",fn,lineNo);
   exit(1);
 }
-      
+
 extern char ** environ;
 
 // Some programs, like bash, have their own getenv() implementation which
