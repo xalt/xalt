@@ -1,3 +1,8 @@
+#include <string.h>
+#include <iostream>
+#include <iomanip>
+#include <time.h>
+#include <stdlib.h>
 #include "xalt_obfuscate.h"
 #include "xalt_config.h"
 #include "xalt_types.h"
@@ -10,11 +15,6 @@
 #include "xalt_interval.h"
 #include "xalt_utils.h"
 #include "build_uuid.h"
-#include <string.h>
-#include <iostream>
-#include <iomanip>
-#include <time.h>
-#include <stdlib.h>
 #include "epoch.h"
 #include "buildJson.h"
 #include "utarray.h"
@@ -122,16 +122,33 @@ int main(int argc, char* argv[])
   const char* transmission = xalt_getenv("XALT_TRANSMISSION_STYLE");
   if (transmission == NULL)
     transmission = TRANSMISSION;
-  if ((strcasecmp(transmission,"file")      != 0 ) &&
-      (strcasecmp(transmission,"none")      != 0 ) && 
-      (strcasecmp(transmission,"syslog")    != 0 ) && 
-      (strcasecmp(transmission,"syslogv1")  != 0 ) &&
-      (strcasecmp(transmission,"curl")      != 0 ))
+  if ((strcasecmp(transmission, "file") != 0) &&
+      (strcasecmp(transmission, "none") != 0) &&
+      (strcasecmp(transmission, "syslog") != 0) &&
+      (strcasecmp(transmission, "syslogv1") != 0) &&
+      (strcasecmp(transmission, "curl") != 0) &&
+      (strcasecmp(transmission, "uds") != 0))
     transmission = "file";
 
+  const char * transmission_timeout_str = xalt_getenv("XALT_TRANSMISSION_TIMEOUT");
+  int          transmission_timeout     = 0;
+  if (transmission_timeout_str)
+    {
+      transmission_timeout = atoi(transmission_timeout_str);
+    }
+  if (transmission_timeout <= 0)
+    {
+      transmission_timeout = TRANSMISSION_TIMEOUT;
+    }
   const char *log_url = xalt_getenv("XALT_LOGGING_URL");
   if (log_url == NULL)
     log_url = XALT_LOGGING_URL;
+
+  const char * uds_path = xalt_getenv("XALT_UDS_PATH");
+  if (uds_path == NULL)
+    {
+      uds_path = XALT_LOGGING_URL;
+    }
 
   long        always_record     = xalt_mpi_always_record;
   const char *always_record_str = xalt_getenv("XALT_MPI_ALWAYS_RECORD");
@@ -247,6 +264,8 @@ int main(int argc, char* argv[])
         json_add_char_str(&json, my_sep, "XALT_LOGGING_TAG",         syslog_tag.c_str());
       if (strcmp(transmission,"curl") == 0)
         json_add_char_str(&json, my_sep, "XALT_LOGGING_URL",         log_url);
+      if (strcmp(transmission, "uds") == 0)
+        json_add_char_str(&json, my_sep, "XALT_UDS_PATH", uds_path);
       json_add_int(     &json, my_sep,   "XALT_PRIME_NUMBER",        XALT_PRIME_NUMBER);
       json_add_char_str(&json, my_sep,   "XALT_COMPUTE_SHA1",        computeSHA1);
       json_add_char_str(&json, my_sep,   "XALT_ETC_DIR",             xalt_etc_dir);
@@ -305,13 +324,17 @@ int main(int argc, char* argv[])
   std::cout << "XALT_SYSHOST:                    " << syshost                        << "\n";
   std::cout << "XALT_CMDLINE_RECORD:             " << cmdline_record                 << "\n";
   std::cout << "XALT_FILE_PREFIX:                " << XALT_FILE_PREFIX               << "\n";
+  std::cout << "XALT_UDS_PATH:                   " << XALT_UDS_PATH << "\n";
   std::cout << "XALT_PRIME_NUMBER:               " << XALT_PRIME_NUMBER              << "\n";
   std::cout << "XALT_INTERFACE_VERSION:          " << XALT_INTERFACE_VERSION         << "\n";
   std::cout << "XALT_TRANSMISSION_STYLE:         " << transmission                   << "\n";
+  std::cout << "XALT_TRANSMISSION_TIMEOUT:       " << transmission_timeout << "\n";
   if (strcmp(transmission,"syslog") == 0)
     std::cout << "XALT_LOGGING_TAG:                " << syslog_tag                   << "\n";
   if (strcmp(transmission,"curl") == 0)
     std::cout << "XALT_LOGGING_URL:                " << log_url                      << "\n";
+  if (strcmp(transmission, "uds") == 0)
+    std::cout << "XALT_UDS_PATH:                   " << uds_path << "\n";
   std::cout << "XALT_COMPUTE_SHA1 on libraries:  " << computeSHA1                    << "\n";
   std::cout << "XALT_ETC_DIR:                    " << xalt_etc_dir                   << "\n";
   std::cout << "XALT_DIR:                        " << xalt_dir(NULL)                 << "\n";

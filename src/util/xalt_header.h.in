@@ -96,7 +96,7 @@
 /* Link with static libraries (currently only dcgm) */
 #undef STATIC_LIBS
 
-/* Define to 1 if all of the C90 standard headers exist (not just the ones
+/* Define to 1 if all of the C89 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
@@ -107,8 +107,11 @@
 /* The system path that XALT will use (typically /usr/bin:/bin) */
 #undef SYSTEM_PATH
 
-/* transmission style (file,syslog,file_separate_dirs,curl) */
+/* transmission style (file,syslog,file_separate_dirs,curl,uds) */
 #undef TRANSMISSION
+
+/* Abort transmission of data after N seconds */
+#undef TRANSMISSION_TIMEOUT
 
 /* Using DCGM */
 #undef USE_DCGM
@@ -154,3 +157,6 @@
 
 /* Allow xalt to write to /dev/shm */
 #undef XALT_TMPDIR
+
+/* Path to Unix domain socket */
+#undef XALT_UDS_PATH

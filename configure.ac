@@ -34,15 +34,32 @@ XALT_CONTAINER_SUPPORT=unknown
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
+    AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl,uds) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs,curl)])dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs,curl,uds)])dnl
     ,
     withval="file"
     AC_MSG_RESULT([TRANSMISSION=$withval])
     TRANSMISSION="$withval"
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs,curl)]))dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs,curl,uds)]))dnl
+
+AC_SUBST(TRANSMISSION_TIMEOUT)
+AC_ARG_WITH([tranmission-timeout],
+    [AS_HELP_STRING([--with-tranmission-timeout=ans], [Abort transmission of data after N seconds [[10]]])],
+    [],
+    [withval=10])
+AS_CASE(
+    [$withval],
+    [[[0-9]][[0-9]*]],
+    [
+        AC_MSG_RESULT([TRANSMISSION_TIMEOUT=$withval])
+        TRANSMISSION_TIMEOUT=$withval
+        AC_DEFINE_UNQUOTED([TRANSMISSION_TIMEOUT], [$withval], [Abort transmission of data after N seconds])
+    ],
+    [
+        AC_MSG_ERROR(["Transmission timeout must be an integer"])
+    ])
 
 AC_SUBST(XALT_LOGGING_URL)
 AC_ARG_WITH(xaltLoggingUrl,
@@ -81,6 +98,15 @@ AC_ARG_WITH(xaltFilePrefix,
     AC_MSG_RESULT([XALT_FILE_PREFIX=$withval])
     XALT_FILE_PREFIX="$withval"
     AC_DEFINE_UNQUOTED(XALT_FILE_PREFIX, "$withval",[Prefix where the json files are written]))dnl
+
+AC_SUBST(XALT_UDS_PATH)
+AC_ARG_WITH([xaltUdsPath],
+    [AS_HELP_STRING([--with-xaltUdsPath=ans], [Path to Unix domain socket [[]]])],
+    [],
+    [withval=""])
+XALT_UDS_PATH="$withval"
+AC_MSG_RESULT([XALT_UDS_PATH=$withval])
+AC_DEFINE_UNQUOTED([XALT_UDS_PATH], ["$withval"], [Path to Unix domain socket])
 
 AC_SUBST(XALT_GPU_TRACKING_STYLE)
 AC_ARG_WITH(trackGPU,
@@ -346,7 +372,7 @@ AC_SUBST(XALT_PRIME_NUMBER)
 AC_ARG_WITH(primeNumber,
     AS_HELP_STRING([--with-primeNumber=ans],[The prime number of directories when using XALT_FILE_PREFIX, [[997]]]),
     XALT_PRIME_NUMBER="$withval"
-    AC_MSG_RESULT([XALT_PRIME_NUMBER=$with-primeNumber])dnl
+    AC_MSG_RESULT([XALT_PRIME_NUMBER=$with_primeNumber])dnl
     ,
     withval="997"
     AC_MSG_RESULT([XALT_PRIME_NUMBER=$withval])
@@ -478,7 +504,7 @@ fi
 transmission=`echo $TRANSMISSION | tr A-Z a-z`
 
 found=no
-for i in file file_separate_dirs syslog logger none; do
+for i in file file_separate_dirs syslog logger uds none; do
    if test $transmission = $i ; then
       found=yes
       break

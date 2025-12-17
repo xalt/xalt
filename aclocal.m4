@@ -81,7 +81,9 @@ echo
 echo "XALT_CONTAINER_SUPPORT..............................." : $XALT_CONTAINER_SUPPORT
 echo "XALT PRELOAD MODE ONLY..............................." : $PRELOAD_ONLY
 echo "XALT_FILE_PREFIX....................................." : "$XALT_FILE_PREFIX"
+echo "XALT_UDS_PATH........................................" : $XALT_UDS_PATH
 echo "XALT_TRANSMISSION_STYLE.............................." : $TRANSMISSION
+echo "XALT_TRANSMISSION_TIMEOUT............................" : $TRANSMISSION_TIMEOUT
 echo "XALT_ETC_DIR........................................." : $ETC_DIR
 echo "XALT Config.py file.................................." : $XALT_CONFIG_PY
 echo "XALT SYSTEM PATH....................................." : $SYSTEM_PATH
