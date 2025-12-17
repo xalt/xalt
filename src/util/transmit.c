@@ -1,11 +1,14 @@
 #define  _GNU_SOURCE
 #include <ctype.h>
-#include <dlfcn.h>
+#include <errno.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/un.h>
 #include <sys/wait.h>
 #include <syslog.h>
 #include <unistd.h>
@@ -15,6 +18,13 @@
 #include "xalt_dir.h"
 #include "xalt_c_utils.h"
 #include "xalt_debug_macros.h"
+
+static volatile bool transmit_alarm = false;
+
+static void transmit_alarm_handler(int sig)
+{
+  transmit_alarm = true;
+}
 
 #define XALT_LOGGING_LBL  "XALT_LOGGING"
 #define KIND_LBL          "kind"
@@ -43,13 +53,13 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       return;
     }
 
-
-  if ((strcasecmp(transmission,"file")      != 0 ) &&
-      (strcasecmp(transmission,"syslog")    != 0 ) &&
-      (strcasecmp(transmission,"logger")    != 0 ) &&
-      (strcasecmp(transmission,"none")      != 0 ) &&
-      (strcasecmp(transmission,"syslogv1")  != 0 ) &&
-      (strcasecmp(transmission,"curl")      != 0 ))
+  if ((strcasecmp(transmission, "file") != 0) &&
+      (strcasecmp(transmission, "syslog") != 0) &&
+      (strcasecmp(transmission, "logger") != 0) &&
+      (strcasecmp(transmission, "none") != 0) &&
+      (strcasecmp(transmission, "syslogv1") != 0) &&
+      (strcasecmp(transmission, "curl") != 0) &&
+      (strcasecmp(transmission, "uds") != 0))
     transmission = "file";
 
   if (strcasecmp(transmission, "file") == 0 || strcasecmp(transmission, "file_separate_dirs") == 0 )
@@ -268,5 +278,136 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       my_free(keyStr,       strlen(keyStr));
       my_free(valueStr,     nvalueStr);
       my_free(crcS,         strlen(crcS));
+    }
+  else if (strcasecmp(transmission, "uds") == 0)
+    {
+      // Double fork to allow the application to proceed without blocking while XALT logging occurs
+      pid_t pid;
+      pid = fork();
+      if (pid > 0)
+        {
+          while (waitpid(pid, NULL, 0) != -1 && errno == EINTR)
+            {
+            }
+          return;
+        }
+      else if (pid == -1)
+        {
+          DEBUG(my_stderr, "XALT: UDS tranmission - primary fork failed: %s\n", strerror(errno));
+          return;
+        }
+      pid = fork();
+      if (pid > 0)
+        {
+          exit(0);
+        }
+      else if (pid == -1)
+        {
+          DEBUG(my_stderr, "XALT: UDS tranmission - secondary fork failed: %s\n", strerror(errno));
+          exit(1);
+        }
+
+      // Check if UDS_TIMEOUT is set in the environment
+      int    timeout     = 0;
+      char * env_timeout = xalt_getenv("XALT_TRANSMISSION_TIMEOUT");
+      if (env_timeout)
+        {
+          timeout = atoi(env_timeout);
+        }
+      if (timeout <= 0)
+        {
+          timeout = TRANSMISSION_TIMEOUT;
+        }
+
+      // Set up the SIGALRM handler in detached child process
+      struct sigaction sa;
+      memset(&sa, 0, sizeof(sa));
+      sa.sa_handler = transmit_alarm_handler;
+      sigaction(SIGALRM, &sa, NULL);
+
+      // Create a UNIX domain socket
+      int sock = socket(AF_UNIX, SOCK_STREAM, 0);
+      if (sock == -1)
+        {
+          DEBUG(my_stderr, "XALT: UDS tranmission - failed to create socket: %s", strerror(errno));
+          exit(1);
+        }
+
+      // Get the domain socket path
+      const char * socket_path = xalt_getenv("XALT_UDS_PATH");
+      if (socket_path == NULL)
+        {
+          socket_path = XALT_UDS_PATH;
+        }
+
+      // Set up the socket address structure
+      struct sockaddr_un addr;
+      memset(&addr, 0, sizeof(addr));
+      addr.sun_family = AF_UNIX;
+      strncpy(addr.sun_path, socket_path, sizeof(addr.sun_path) - 1);
+
+      // Start the alarm for the timeout
+      alarm(timeout);
+
+      // Connect to the socket
+      do
+        {
+          int rc = connect(sock, (struct sockaddr *)&addr, sizeof(addr));
+          if (rc == -1)
+            {
+              if (errno == EINTR)
+                {
+                  if (transmit_alarm)
+                    {
+                      DEBUG(my_stderr, "XALT: UDS transmission - connect to socket %s timed out\n", socket_path);
+                      exit(1);
+                    }
+                }
+              else
+                {
+                  DEBUG(my_stderr, "XALT: UDS transmission - failed to connect to socket %s: %s\n", socket_path, strerror(errno));
+                  exit(1);
+                }
+            }
+          else
+            {
+              break;
+            }
+        }
+      while (1);
+
+      // Send the message
+      const char * message    = jsonStr;
+      int          bytes_left = strlen(message);
+      do
+        {
+          int bytes_sent = send(sock, message, bytes_left, MSG_NOSIGNAL);
+          if (bytes_sent == -1)
+            {
+              if (errno == EINTR)
+                {
+                  if (transmit_alarm)
+                    {
+                      DEBUG(my_stderr, "XALT: UDS transmission - sending message to socket %s timed out\n", socket_path);
+                      exit(1);
+                    }
+                }
+              else
+                {
+                  DEBUG(my_stderr, "XALT: UDS transmission - failed to send data to socket %s: %s\n", socket_path,
+                        strerror(errno));
+                  exit(1);
+                }
+            }
+          else
+            {
+              message    += bytes_sent;
+              bytes_left -= bytes_sent;
+            }
+        }
+      while (bytes_left > 0);
+
+      close(sock);
+      exit(0);
     }
 }
