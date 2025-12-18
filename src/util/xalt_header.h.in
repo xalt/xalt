@@ -96,7 +96,7 @@
 /* Link with static libraries (currently only dcgm) */
 #undef STATIC_LIBS
 
-/* Define to 1 if all of the C89 standard headers exist (not just the ones
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
