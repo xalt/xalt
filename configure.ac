@@ -34,15 +34,15 @@ XALT_CONTAINER_SUPPORT=unknown
 
 AC_SUBST(TRANSMISSION)
 AC_ARG_WITH(transmission,
-    AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl) [[file]]]),
+    AS_HELP_STRING([--with-transmission=ans],[transmission style (file,syslog,file_separate_dirs,curl,kafka) [[file]]]),
     TRANSMISSION="$withval"
     AC_MSG_RESULT([TRANSMISSION=$with_transmission])
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs,curl)])dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$with_transmission",[transmission style (file,syslog,file_separate_dirs,curl,kafka)])dnl
     ,
     withval="file"
     AC_MSG_RESULT([TRANSMISSION=$withval])
     TRANSMISSION="$withval"
-    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs,curl)]))dnl
+    AC_DEFINE_UNQUOTED(TRANSMISSION, "$withval",[transmission style (file,syslog,file_separate_dirs,curl,kafka)]))dnl
 
 AC_SUBST(XALT_LOGGING_URL)
 AC_ARG_WITH(xaltLoggingUrl,
@@ -160,6 +160,20 @@ AC_ARG_WITH(supportCURL,
     AC_MSG_RESULT([XALT_SUPPORT_CURL=$withval])
     XALT_SUPPORT_CURL="$withval"
     AC_DEFINE_UNQUOTED(XALT_SUPPORT_CURL, "$withval",[Track non-mpi executables]))dnl
+
+AC_SUBST(XALT_SUPPORT_KAFKA)
+AC_ARG_WITH(supportKAFKA,
+    AS_HELP_STRING([--with-supportKAFKA],[Support KAFKA transmission style [[yes]]]),
+    XALT_SUPPORT_KAFKA="$withval"
+    XALT_SUPPORT_KAFKA=`echo $XALT_SUPPORT_KAFKA | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
+    VALID_YN $XALT_SUPPORT_KAFKA "--with-supportKAFKA=ans: ans must be yes or no"
+    AC_MSG_RESULT([XALT_SUPPORT_KAFKA=$with_supportKAFKA])
+    AC_DEFINE_UNQUOTED(XALT_SUPPORT_KAFKA, "$with_supportKAFKA",[Track executables])dnl
+    ,
+    withval="yes"
+    AC_MSG_RESULT([XALT_SUPPORT_KAFKA=$withval])
+    XALT_SUPPORT_KAFKA="$withval"
+    AC_DEFINE_UNQUOTED(XALT_SUPPORT_KAFKA, "$withval",[Track executables]))dnl
 
 
 AC_SUBST(XALT_CMDLINE_RECORD)
@@ -521,6 +535,16 @@ if test $XALT_SUPPORT_CURL = yes ; then
 		  AC_MSG_NOTICE([$MSG])])
 fi
 
+if test $XALT_SUPPORT_KAFKA = yes ; then
+  AC_CHECK_HEADER(librdkafka/rdkafka.h,
+                  [AC_DEFINE([HAVE_LIBRDKAFKA_RDKAFKA_H], 1,
+                     [Define to 1 if you have <librdkafka/rdkafka.h>.])],
+                  [FOUND_ERROR=yes;
+		  MSG="Configure with --supportKAFKA=no if you don't want support for kafka transmission style"
+        ERR_MSG="$ERR_MSG||$MSG"
+		  AC_MSG_NOTICE([$MSG])])
+fi
+
 AC_CHECK_HEADER(openssl/sha.h,
                 [AC_DEFINE([HAVE_OPENSSL_SHA_H], 1,
                    [Define to 1 if you have <openssl/sha.h>.])],
@@ -752,6 +776,13 @@ fi
 if test $XALT_SUPPORT_CURL = yes; then
   AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [FOUND_ERROR=yes;
                                                  MSG="Unable to build XALT without libcurl"
+                                                 ERR_MSG="$ERR_MSG||$MSG"
+                                                 AC_MSG_NOTICE([$MSG])])
+fi
+
+if test $XALT_SUPPORT_KAFKA = yes; then
+  AC_SEARCH_LIBS([rd_kafka_conf_new], [rdkafka], [], [FOUND_ERROR=yes;
+                                                 MSG="Unable to build XALT without librdkafka"
                                                  ERR_MSG="$ERR_MSG||$MSG"
                                                  AC_MSG_NOTICE([$MSG])])
 fi

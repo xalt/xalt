@@ -25,7 +25,6 @@ struct response {
 #ifndef HAVE_CURL_CURL_H
 int main(int argc, char* argv[])
 {
-  printf("Curl does not work!\n");
   return 0;
 }
 #else    

@@ -13,6 +13,7 @@ local_c_src   	 := buildJson.c          \
 		    transmit.c           \
 		    xalt_c_utils.c       \
 		    xalt_curl_transmit.c \
+            xalt_kafka_transmit.c\
 		    xalt_dir.c           \
 		    xalt_epoch.c         \
 		    xalt_fgets_alloc.c   \
@@ -63,6 +64,10 @@ CURL_TRANS_X     := $(DESTDIR)$(LIBEXEC)/xalt_curl_transmit
 CURL_TRANS_C     := xalt_curl_transmit.c xalt_c_utils.c
 CURL_TRANS_OBJ   := $(patsubst %.c, %.o, $(CURL_TRANS_C))
 
+KAFKA_TRANS_X     := $(DESTDIR)$(LIBEXEC)/xalt_kafka_transmit
+KAFKA_TRANS_C     := xalt_kafka_transmit.c
+KAFKA_TRANS_OBJ   := $(patsubst %.c, %.o, $(KAFKA_TRANS_C))
+
 
 SYSHOST_X        := $(DESTDIR)$(BIN)/xalt_syshost
 
@@ -78,12 +83,19 @@ ifeq ($(XALT_SUPPORT_CURL),yes)
    LIBCURL := -lcurl
 endif
 
+XALT_SUPPORT_KAFKA := @XALT_SUPPORT_KAFKA@
+
+ifeq ($(XALT_SUPPORT_KAFKA),yes)
+   LIBKAFKA := -lrdkafka
+endif
+
 
 #=====================================================================#
 c_sources     	 += $(local_c_src) 
 cxx_sources   	 += $(local_cxx_src)
 programs      	 += $(EXTR_REC_X) $(EPOCH_X) $(CFG_RPT_X) $(REC_PKG_X) \
-                    $(TST_REC_PKG_X) $(SYSHOST_X) $(CURL_TRANS_X)
+                    $(TST_REC_PKG_X) $(SYSHOST_X) $(CURL_TRANS_X) \
+					$(KAFKA_TRANS_X)
 libraries        += $(PRE_INGEST_LIB) $(PKG_FILTER_LIB) 
 #=====================================================================#
 
@@ -117,6 +129,10 @@ $(CURDIR)/__build__/xalt_syshost_main.o : $(CURDIR)/__build__/xalt_syshost.c uti
 
 $(CURL_TRANS_X): $(CURL_TRANS_OBJ)
 	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -Wl,-rpath,$(LIB64) -L$(LIB64)  -lm $(LIBCURL)
+	chmod $(MODE_X) $@
+
+$(KAFKA_TRANS_X): $(KAFKA_TRANS_OBJ)
+	$(LINK.c) $(OPTLVL) $(WARN_FLAGS) -o $@ $^ -Wl,-rpath,$(LIB64) -L$(LIB64) $(LIBKAFKA)
 	chmod $(MODE_X) $@
 
 $(CRC_FAST_LIB): crcFast.c
