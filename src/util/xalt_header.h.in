@@ -30,6 +30,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have <librdkafka/rdkafka.h>. */
+#undef HAVE_LIBRDKAFKA_RDKAFKA_H
+
 /* Define to 1 if you have NVML. */
 #undef HAVE_NVML_H
 
@@ -107,7 +110,7 @@
 /* The system path that XALT will use (typically /usr/bin:/bin) */
 #undef SYSTEM_PATH
 
-/* transmission style (file,syslog,file_separate_dirs,curl,uds) */
+/* transmission style (file,syslog,file_separate_dirs,curl,kafka,uds) */
 #undef TRANSMISSION
 
 /* Abort transmission of data after N seconds */
@@ -154,6 +157,9 @@
 
 /* Track non-mpi executables */
 #undef XALT_SUPPORT_CURL
+
+/* Track executables */
+#undef XALT_SUPPORT_KAFKA
 
 /* Allow xalt to write to /dev/shm */
 #undef XALT_TMPDIR

@@ -692,6 +692,7 @@ XALT_CONFIG_PY
 ETC_DIR
 COMPUTE_SHA1SUM
 XALT_CMDLINE_RECORD
+XALT_SUPPORT_KAFKA
 XALT_SUPPORT_CURL
 XALT_SCALAR_TRACKING
 XALT_MPI_TRACKING
@@ -765,6 +766,7 @@ with_mode
 with_trackMPI
 with_trackScalarPrgms
 with_supportCURL
+with_supportKAFKA
 with_cmdlineRecord
 with_computeSHA1
 with_etcDir
@@ -1410,7 +1412,8 @@ Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-transmission=ans transmission style
-                          (file,syslog,file_separate_dirs,curl,uds) [[file]]
+                          (file,syslog,file_separate_dirs,curl,kafka,uds)
+                          [[file]]
   --with-tranmission-timeout=ans
                           Abort transmission of data after N seconds [[10]]
   --with-xaltLoggingUrl=ans
@@ -1428,6 +1431,7 @@ Optional Packages:
   --with-trackScalarPrgms=ans
                           Track non-mpi executables[[yes]]
   --with-supportCURL      Support CURL transmission style [[yes]]
+  --with-supportKAFKA     Support KAFKA transmission style [[yes]]
   --with-cmdlineRecord=ans
                           Record the program's execution command line[[yes]]
   --with-computeSHA1=ans  compute SHA1 sums on libraries, [[no]]
@@ -3653,6 +3657,29 @@ fi
 
 
 
+# Check whether --with-supportKAFKA was given.
+if test ${with_supportKAFKA+y}
+then :
+  withval=$with_supportKAFKA; XALT_SUPPORT_KAFKA="$withval"
+    XALT_SUPPORT_KAFKA=`echo $XALT_SUPPORT_KAFKA | tr '[:upper:]' '[:lower:]'`
+    VALID_YN $XALT_SUPPORT_KAFKA "--with-supportKAFKA=ans: ans must be yes or no"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_SUPPORT_KAFKA=$with_supportKAFKA" >&5
+printf "%s\n" "XALT_SUPPORT_KAFKA=$with_supportKAFKA" >&6; }
+
+printf "%s\n" "#define XALT_SUPPORT_KAFKA \"$with_supportKAFKA\"" >>confdefs.h
+
+else $as_nop
+  withval="yes"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_SUPPORT_KAFKA=$withval" >&5
+printf "%s\n" "XALT_SUPPORT_KAFKA=$withval" >&6; }
+    XALT_SUPPORT_KAFKA="$withval"
+
+printf "%s\n" "#define XALT_SUPPORT_KAFKA \"$withval\"" >>confdefs.h
+
+fi
+
+
+
 
 # Check whether --with-cmdlineRecord was given.
 if test ${with_cmdlineRecord+y}
@@ -4976,6 +5003,23 @@ fi
 
 fi
 
+if test $XALT_SUPPORT_KAFKA = yes ; then
+  ac_fn_c_check_header_compile "$LINENO" "librdkafka/rdkafka.h" "ac_cv_header_librdkafka_rdkafka_h" "$ac_includes_default"
+if test "x$ac_cv_header_librdkafka_rdkafka_h" = xyes
+then :
+
+printf "%s\n" "#define HAVE_LIBRDKAFKA_RDKAFKA_H 1" >>confdefs.h
+
+else $as_nop
+  FOUND_ERROR=yes;
+		  MSG="Configure with --supportKAFKA=no if you don't want support for kafka transmission style"
+        ERR_MSG="$ERR_MSG||$MSG"
+		  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
+printf "%s\n" "$as_me: $MSG" >&6;}
+fi
+
+fi
+
 ac_fn_c_check_header_compile "$LINENO" "openssl/sha.h" "ac_cv_header_openssl_sha_h" "$ac_includes_default"
 if test "x$ac_cv_header_openssl_sha_h" = xyes
 then :
@@ -5586,6 +5630,74 @@ then :
 else $as_nop
   FOUND_ERROR=yes;
                                                  MSG="Unable to build XALT without libcurl"
+                                                 ERR_MSG="$ERR_MSG||$MSG"
+                                                 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
+printf "%s\n" "$as_me: $MSG" >&6;}
+fi
+
+fi
+
+if test $XALT_SUPPORT_KAFKA = yes; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing rd_kafka_conf_new" >&5
+printf %s "checking for library containing rd_kafka_conf_new... " >&6; }
+if test ${ac_cv_search_rd_kafka_conf_new+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+char rd_kafka_conf_new ();
+int
+main (void)
+{
+return rd_kafka_conf_new ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' rdkafka
+do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_c_try_link "$LINENO"
+then :
+  ac_cv_search_rd_kafka_conf_new=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext
+  if test ${ac_cv_search_rd_kafka_conf_new+y}
+then :
+  break
+fi
+done
+if test ${ac_cv_search_rd_kafka_conf_new+y}
+then :
+
+else $as_nop
+  ac_cv_search_rd_kafka_conf_new=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_rd_kafka_conf_new" >&5
+printf "%s\n" "$ac_cv_search_rd_kafka_conf_new" >&6; }
+ac_res=$ac_cv_search_rd_kafka_conf_new
+if test "$ac_res" != no
+then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+else $as_nop
+  FOUND_ERROR=yes;
+                                                 MSG="Unable to build XALT without librdkafka"
                                                  ERR_MSG="$ERR_MSG||$MSG"
                                                  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
 printf "%s\n" "$as_me: $MSG" >&6;}
