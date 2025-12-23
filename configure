@@ -1423,7 +1423,7 @@ Optional Packages:
   --with-trackScalarPrgms=ans
                           Track non-mpi executables[[yes]]
   --with-supportCURL      Support CURL transmission style [[yes]]
-  --with-supportKAFKA     Support KAFKA transmission style [[yes]]
+  --with-supportKAFKA     Support KAFKA transmission style [[no]]
   --with-cmdlineRecord=ans
                           Record the program's execution command line[[yes]]
   --with-computeSHA1=ans  compute SHA1 sums on libraries, [[no]]
@@ -3618,7 +3618,7 @@ printf "%s\n" "XALT_SUPPORT_KAFKA=$with_supportKAFKA" >&6; }
 printf "%s\n" "#define XALT_SUPPORT_KAFKA \"$with_supportKAFKA\"" >>confdefs.h
 
 else $as_nop
-  withval="yes"
+  withval="no"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_SUPPORT_KAFKA=$withval" >&5
 printf "%s\n" "XALT_SUPPORT_KAFKA=$withval" >&6; }
     XALT_SUPPORT_KAFKA="$withval"
@@ -5652,71 +5652,6 @@ else $as_nop
 printf "%s\n" "$as_me: $MSG" >&6;}
 fi
 
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing rd_kafka_conf_new" >&5
-printf %s "checking for library containing rd_kafka_conf_new... " >&6; }
-if test ${ac_cv_search_rd_kafka_conf_new+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char rd_kafka_conf_new ();
-int
-main (void)
-{
-return rd_kafka_conf_new ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' rdkafka
-do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_search_rd_kafka_conf_new=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext
-  if test ${ac_cv_search_rd_kafka_conf_new+y}
-then :
-  break
-fi
-done
-if test ${ac_cv_search_rd_kafka_conf_new+y}
-then :
-
-else $as_nop
-  ac_cv_search_rd_kafka_conf_new=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_rd_kafka_conf_new" >&5
-printf "%s\n" "$ac_cv_search_rd_kafka_conf_new" >&6; }
-ac_res=$ac_cv_search_rd_kafka_conf_new
-if test "$ac_res" != no
-then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
-else $as_nop
-  FOUND_ERROR=yes;
-                                                 MSG="Unable to build XALT without librdkafka"
-                                                 ERR_MSG="$ERR_MSG||$MSG"
-                                                 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
-printf "%s\n" "$as_me: $MSG" >&6;}
-fi
-
 fi
 
 
@@ -7182,7 +7117,6 @@ echo "XALT_MPI_TRACKING...................................." : $XALT_MPI_TRACKIN
 echo "XALT_GPU_TRACKING_STYLE.............................." : $XALT_GPU_TRACKING_STYLE
 echo "XALT_GPU_TRACKING...................................." : $XALT_GPU_TRACKING
 echo "XALT_SUPPORT_CURL...................................." : $XALT_SUPPORT_CURL
-echo "XALT_SUPPORT_KAFKA..................................." : $XALT_SUPPORT_KAFKA
 echo "XALT UUID V7 Support................................." : $XALT_UUID_V7
 echo "XALT 32bit support..................................." : $HAVE_32BIT
 echo "XALT tmpdir.........................................." : $XALT_TMPDIR

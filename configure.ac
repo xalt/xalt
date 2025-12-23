@@ -163,14 +163,14 @@ AC_ARG_WITH(supportCURL,
 
 AC_SUBST(XALT_SUPPORT_KAFKA)
 AC_ARG_WITH(supportKAFKA,
-    AS_HELP_STRING([--with-supportKAFKA],[Support KAFKA transmission style [[yes]]]),
+    AS_HELP_STRING([--with-supportKAFKA],[Support KAFKA transmission style [[no]]]),
     XALT_SUPPORT_KAFKA="$withval"
     XALT_SUPPORT_KAFKA=`echo $XALT_SUPPORT_KAFKA | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
     VALID_YN $XALT_SUPPORT_KAFKA "--with-supportKAFKA=ans: ans must be yes or no"
     AC_MSG_RESULT([XALT_SUPPORT_KAFKA=$with_supportKAFKA])
     AC_DEFINE_UNQUOTED(XALT_SUPPORT_KAFKA, "$with_supportKAFKA",[Track executables])dnl
     ,
-    withval="yes"
+    withval="no"
     AC_MSG_RESULT([XALT_SUPPORT_KAFKA=$withval])
     XALT_SUPPORT_KAFKA="$withval"
     AC_DEFINE_UNQUOTED(XALT_SUPPORT_KAFKA, "$withval",[Track executables]))dnl
