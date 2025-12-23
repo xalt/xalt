@@ -39,4 +39,3 @@ XALT 3.2+
     (3.2.1) * Issue #69: correctly turn on curl operations when XALT is configured with:
               --with-supportCURL=yes
     (3.2.2) * PR70: Merged in kafka transmission support
-    

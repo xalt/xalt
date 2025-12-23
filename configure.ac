@@ -773,12 +773,6 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-AC_SEARCH_LIBS([SHA1], [crypto], [],
-		       [FOUND_ERROR=yes; 
-		       MSG="Unable to build XALT without libcrypto"
-		       ERR_MSG="$ERR_MSG||$MSG"
-                       AC_MSG_NOTICE([$MSG])])
-
 if test $XALT_SUPPORT_CURL = yes; then
   AC_SEARCH_LIBS([curl_easy_setopt], [curl], [], [FOUND_ERROR=yes;
                                                  MSG="Unable to build XALT without libcurl"

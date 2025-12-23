@@ -141,8 +141,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   if (need_sha1)
     {
       t1 = epoch();
-      compute_sha1(exec_path, &sha1buf[0]);
-      compute_sha1_cleanup();
+      xalt_compute_sha1(exec_path, &sha1buf[0]);
       DEBUG(my_stderr,"    Compute sha1 (%s) of exec: %s\n",&sha1buf[0], exec_path);
       insert_key_double(&measureT, "02_Sha1_exec_____", epoch() - t1);
       need_sha1 = false;
