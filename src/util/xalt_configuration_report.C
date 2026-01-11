@@ -271,7 +271,6 @@ int main(int argc, char* argv[])
       json_add_char_str(&json, my_sep,   "HAVE_32BIT",               HAVE_32BIT);
       json_add_char_str(&json, my_sep,   "MY_HOSTNAME_PARSER",       MY_HOSTNAME_PARSER);
       json_add_char_str(&json, my_sep,   "HAVE_DCGM",                HAVE_DCGM);
-      json_add_char_str(&json, my_sep,   "CRYPTO_STR",               CRYPTO_STR);
       json_add_char_str(&json, my_sep,   "UUID_STR",                 UUID_STR);
       json_add_char_str(&json, my_sep,   "GPU_STR",                  GPU_STR);
       json_add_char_str(&json, my_sep,   "CURL_STR",                 CURL_STR);
@@ -334,7 +333,6 @@ int main(int argc, char* argv[])
   std::cout << "XALT_PRELOAD_ONLY:               " << XALT_PRELOAD_ONLY              << "\n";
   std::cout << "HAVE_32BIT:                      " << HAVE_32BIT                     << "\n";
   std::cout << "MY_HOSTNAME_PARSER:              " << MY_HOSTNAME_PARSER             << "\n";
-  std::cout << "CRYPTO_STR:                      " << CRYPTO_STR                     << "\n";
   std::cout << "UUID_STR:                        " << UUID_STR                       << "\n";
   std::cout << "CURL_STR:                        " << CURL_STR                       << "\n";
   std::cout << "GPU_STR:                         " << GPU_STR                        << "\n";

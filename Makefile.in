@@ -37,7 +37,6 @@ OPTLVL               	:= -g -O2
 package              	:= xalt
 VERSION              	:= $(shell cat $(srcdir)/.version)
 TAR_VERSION             := $(package)-$(package)-$(VERSION)
-CRYPTO_STR              := @CRYPTO_STR@
 UUID_STR                := @UUID_STR@
 CURL_STR                := @CURL_STR@
 GPU_STR                 := @GPU_STR@
@@ -189,7 +188,7 @@ build_compiled:
                 LIB64=$(LIB64) HAVE_32BIT=$(HAVE_32BIT) OPTLVL="$(OPTLVL)" HAVE_DCGM=$(HAVE_DCGM)  \
                 HAVE_LIBUUID=$(HAVE_LIBUUID) HAVE_NVML=$(HAVE_NVML) STATIC_LIBS=$(STATIC_LIBS)     \
                 XALT_FILE_PREFIX=$(XALT_FILE_PREFIX) MY_HOSTNAME_PARSER=$(MY_HOSTNAME_PARSER)      \
-                CRYPTO_STR=$(CRYPTO_STR) UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR)                 \
+                UUID_STR=$(UUID_STR) CURL_STR=$(CURL_STR)                                          \
                 XALT_LOGGING_URL=$(XALT_LOGGING_URL) SITE_PKG_DIR=$(SITE_PKG_DIR)                  \
                 GPU_STR=$(GPU_STR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools           \
 	        EXTRA_FLAGS=$(EXTRA_FLAGS) MODE_X=$(MODE_X) MODE_R=$(MODE_R)                       \
