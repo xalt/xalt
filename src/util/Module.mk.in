@@ -13,7 +13,7 @@ local_c_src   	 := buildJson.c          \
 		    transmit.c           \
 		    xalt_c_utils.c       \
 		    xalt_curl_transmit.c \
-            xalt_kafka_transmit.c\
+                    xalt_kafka_transmit.c\
 		    xalt_dir.c           \
 		    xalt_epoch.c         \
 		    xalt_fgets_alloc.c   \
