@@ -1431,7 +1431,7 @@ Optional Packages:
   --with-trackScalarPrgms=ans
                           Track non-mpi executables[[yes]]
   --with-supportCURL      Support CURL transmission style [[yes]]
-  --with-supportKAFKA     Support KAFKA transmission style [[yes]]
+  --with-supportKAFKA     Support KAFKA transmission style [[no]]
   --with-cmdlineRecord=ans
                           Record the program's execution command line[[yes]]
   --with-computeSHA1=ans  compute SHA1 sums on libraries, [[no]]
@@ -3669,7 +3669,7 @@ printf "%s\n" "XALT_SUPPORT_KAFKA=$with_supportKAFKA" >&6; }
 printf "%s\n" "#define XALT_SUPPORT_KAFKA \"$with_supportKAFKA\"" >>confdefs.h
 
 else $as_nop
-  withval="yes"
+  withval="no"
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: XALT_SUPPORT_KAFKA=$withval" >&5
 printf "%s\n" "XALT_SUPPORT_KAFKA=$withval" >&6; }
     XALT_SUPPORT_KAFKA="$withval"
@@ -5503,72 +5503,6 @@ if test "$USE_CONTRIB_ARGPARSE" = yes; then
    fi
 fi
 
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing SHA1" >&5
-printf %s "checking for library containing SHA1... " >&6; }
-if test ${ac_cv_search_SHA1+y}
-then :
-  printf %s "(cached) " >&6
-else $as_nop
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-char SHA1 ();
-int
-main (void)
-{
-return SHA1 ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' crypto
-do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_c_try_link "$LINENO"
-then :
-  ac_cv_search_SHA1=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext
-  if test ${ac_cv_search_SHA1+y}
-then :
-  break
-fi
-done
-if test ${ac_cv_search_SHA1+y}
-then :
-
-else $as_nop
-  ac_cv_search_SHA1=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_SHA1" >&5
-printf "%s\n" "$ac_cv_search_SHA1" >&6; }
-ac_res=$ac_cv_search_SHA1
-if test "$ac_res" != no
-then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
-else $as_nop
-  FOUND_ERROR=yes;
-		       MSG="Unable to build XALT without libcrypto"
-		       ERR_MSG="$ERR_MSG||$MSG"
-                       { printf "%s\n" "$as_me:${as_lineno-$LINENO}: $MSG" >&5
-printf "%s\n" "$as_me: $MSG" >&6;}
-fi
-
-
 if test $XALT_SUPPORT_CURL = yes; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing curl_easy_setopt" >&5
 printf %s "checking for library containing curl_easy_setopt... " >&6; }
@@ -7185,7 +7119,6 @@ echo "XALT signal handler.................................." : $XALT_SIGNAL_HAND
 echo "XALT prime fmt......................................." : $XALT_PRIME_FMT
 echo "XALT my_hostname_parser.............................." : $MY_HOSTNAME_PARSER
 echo "CURL_STR............................................." : $CURL_STR
-echo "CRYPTO_STR..........................................." : $CRYPTO_STR
 echo "GPU_STR.............................................." : $GPU_STR
 echo "UUID_STR............................................." : $UUID_STR
 echo "MODE................................................." : $MODE

@@ -6,7 +6,6 @@
  */
 
 #define SITE_CONTROLLED_PREFIX     "@SITE_CONTROLLED_PREFIX@"
-#define CRYPTO_STR                 "@CRYPTO_STR@"
 #define CURL_STR                   "@CURL_STR@"
 #define CXX_LD_LIBRARY_PATH        "@CXX_LD_LIBRARY_PATH@"
 #define GPU_STR                    "@GPU_STR@"
