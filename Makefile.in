@@ -193,10 +193,19 @@ build_compiled:
                 GPU_STR=$(GPU_STR) PY_BUILD_TOOLS=$(abs_srcdir)/proj_mgmt/py_build_tools           \
 	        EXTRA_FLAGS=$(EXTRA_FLAGS) MODE_X=$(MODE_X) MODE_R=$(MODE_R)                       \
                 all
-	if test $(XALT_CONTAINER_SUPPORT) = yes; then                                              \
-          podman build -t xalt_image:latest .;                                                     \
-          podman run --rm -v .:/work -v $(srcdir)/proj_mgmt/xalt_extract_libs.sh:/tmp/extract.sh -it xalt_image:latest /bin/bash /tmp/extract.sh; \
+	if test $(XALT_CONTAINER_SUPPORT) = podman; then                                           \
+          podman build -v $(XALT_CONFIG_PY):$(XALT_CONFIG_PY) -t xalt_image:latest .;              \
+          podman run --rm -v .:/work                                                               \
+            -v $(srcdir)/proj_mgmt/xalt_extract_libs.sh:/tmp/extract.sh                            \
+            -it xalt_image:latest /bin/bash /tmp/extract.sh;                                       \
           podman rmi xalt_image:latest;                                                            \
+          CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIB); tar xf $$CWD/xalt_libs.tar.gz;            \
+        elif test $(XALT_CONTAINER_SUPPORT) = apptainer; then                                      \
+          apptainer build -B $(XALT_CONFIG_PY):/xalt_config.py xalt_image.sif Apptainer.def;       \
+          apptainer exec -B .:/work                                                                \
+            -B $(srcdir)/proj_mgmt/xalt_extract_libs.sh:/tmp/extract.sh                            \
+            xalt_image.sif /bin/bash /tmp/extract.sh;                                              \
+          rm -f xalt_image.sif;                                                                    \
           CWD=$$PWD; cd $(DESTDIR)$(XALT_CONTAINER_LIB); tar xf $$CWD/xalt_libs.tar.gz;            \
         fi
 

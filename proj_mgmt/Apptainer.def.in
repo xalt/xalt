@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: ubuntu:16.04
+
+%setup
+    touch $APPTAINER_ROOTFS/xalt_config.py
+
+%post
+    mkdir /app
+    cd /app
+
+    apt-get update
+    apt-get install -y git gcc build-essential flex bc libssl-dev python3
+    apt-get install -y libelf-dev uuid-dev libcurl4-openssl-dev
+    git clone https://github.com/xalt/xalt.git
+    cd  xalt
+    git checkout @GIT_BRANCH@
+    mkdir ./my_build
+    cd    ./my_build
+    ../configure --prefix=/opt --with-syshostConfig=@SYSHOST_CONFIG@ --with-containerSupport=no --with-config=/xalt_config.py --with-transmission=@TRANSMISSION@ --with-MySQL=no
+    make GIT_VERSION=@XALT_GIT_VERSION@ install

@@ -367,18 +367,21 @@ AC_ARG_WITH(primeNumber,
     XALT_PRIME_NUMBER="$withval")dnl
 
 AC_SUBST(XALT_CONTAINER_SUPPORT)
-AC_ARG_WITH(containerSupport,
-    AS_HELP_STRING([--with-containerSupport=ans],[Build XALT with container support yes/no, [[unknown]]]),
-    XALT_CONTAINER_SUPPORT="$withval"
-    XALT_CONTAINER_SUPPORT=`echo $XALT_CONTAINER_SUPPORT | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`
-    VALID_YN $XALT_CONTAINER_SUPPORT "--with-containerSupport=ans: ans must be yes or no"
-    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$with_containerSupport])
-    AC_DEFINE_UNQUOTED(XALT_CONTAINER_SUPPORT, "$with_containerSupport",[XALT Container Support])dnl
-    ,
-    withval="yes"
-    AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$withval])
-    XALT_CONTAINER_SUPPORT="$withval"
-    AC_DEFINE_UNQUOTED(XALT_CONTAINER_SUPPORT, "$withval",[Track MPI executables]))dnl
+AC_ARG_WITH([containerSupport],
+  AS_HELP_STRING([--with-containerSupport=val],
+                 [Container support: no|podman|apptainer, [[no]]]),
+  [XALT_CONTAINER_SUPPORT=`echo "$withval" | tr '@<:@:upper:@:>@' '@<:@:lower:@:>@'`],
+  [XALT_CONTAINER_SUPPORT="no"]
+)
+
+case "$XALT_CONTAINER_SUPPORT" in
+  no|podman|apptainer) ;;
+  *) AC_MSG_ERROR([--with-containerSupport must be one of: no, podman, apptainer]) ;;
+esac
+
+AC_MSG_RESULT([XALT_CONTAINER_SUPPORT=$XALT_CONTAINER_SUPPORT])
+AC_DEFINE_UNQUOTED([XALT_CONTAINER_SUPPORT], ["$XALT_CONTAINER_SUPPORT"],
+                   [XALT container support (no/podman/apptainer)])
 
 AC_SUBST(XALT_SIGNAL_HANDLER)
 AC_ARG_WITH(signalHandler,
@@ -463,22 +466,29 @@ XALT_INSTALL_OS=$($ac_confdir/sh_src/xalt_print_os.in)
 AC_DEFINE_UNQUOTED(XALT_INSTALL_OS,"$XALT_INSTALL_OS",[Name of the OS that installed XALT])
 
 
-if test "$XALT_CONTAINER_SUPPORT" = unknown ; then
-  MSG="Unable to build XALT without knowing if you want container support or not"
-  ERR_MSG="$ERR_MSG||$MSG"
-  FOUND_ERROR=yes
-  AC_MSG_NOTICE([$MSG])
-fi
+case "$XALT_CONTAINER_SUPPORT" in
+  podman)
+    AC_PATH_PROGS(PATH_TO_PODMAN, [podman], UNKNOWN_PODMAN)
+    if test "$PATH_TO_PODMAN" = UNKNOWN_PODMAN ; then
+      MSG="Unable to build XALT with podman container support: podman not found. Set --with-containerSupport=no to avoid this."
+      ERR_MSG="$ERR_MSG||$MSG"
+      FOUND_ERROR=yes
+      AC_MSG_NOTICE([$MSG])
+    fi
+    ;;
 
-if test "$XALT_CONTAINER_SUPPORT" = yes ; then
-  AC_PATH_PROGS(PATH_TO_PODMAN, [podman], UNKNOWN_PODMAN)
-  if test "$PATH_TO_PODMAN" =  UNKNOWN_PODMAN; then
-    MSG="Unable to build XALT without podman. This only needed to build XALT to support containers. Set --with-containerSupport=no to avoid this."
-    ERR_MSG="$ERR_MSG||$MSG"
-    FOUND_ERROR=yes
-    AC_MSG_NOTICE([$MSG])
-  fi
-fi  
+  apptainer)
+    AC_PATH_PROGS(PATH_TO_APPTAINER, [apptainer], UNKNOWN_APPTAINER)
+    if test "$PATH_TO_APPTAINER" = UNKNOWN_APPTAINER ; then
+      MSG="Unable to build XALT with apptainer container support: apptainer not found. Set --with-containerSupport=no to avoid this."
+      ERR_MSG="$ERR_MSG||$MSG"
+      FOUND_ERROR=yes
+      AC_MSG_NOTICE([$MSG])
+    fi
+    ;;
+
+  *) : ;;  dnl no container support (or already validated elsewhere)
+esac
 
 
 if test "x${PATH_TO_MKTEMP}" = "x" ; then
@@ -942,7 +952,9 @@ AC_CONFIG_FILES([makefile:Makefile.in                                \
           src/libxalt/module.mk:src/libxalt/Module.mk.in             \
           src/linker/module.mk:src/linker/Module.mk.in               \
           src/util/module.mk:src/util/Module.mk.in                   \
-	  Dockerfile:proj_mgmt/Dockerfile.in])
+	       Dockerfile:proj_mgmt/Dockerfile.in                         \
+          Apptainer.def:proj_mgmt/Apptainer.def.in
+])
 AC_OUTPUT
 
 AX_SUMMARIZE_CONFIG
