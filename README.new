@@ -40,4 +40,5 @@ XALT 3.2+
               --with-supportCURL=yes
     (3.2.2) * PR70: Merged in kafka transmission support
     (3.2.3) * PR71: Merged in support for internal SHA1 implementation
-    
+    (3.2.4) * PR73: Merged in support for choosing either no, podman or apptainer to build
+              container safe xalt libraries
