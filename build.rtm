@@ -81,7 +81,7 @@ case $SYSHOST in
     TRANSMISSION="file"
     TRACK_GPU="no"
     MYSQL="yes"
-    CONF_OPTS="--with-supportCURL=yes --with-containerSupport=yes"
+    CONF_OPTS="--with-supportCURL=yes --with-containerSupport=podman"
     MAKE_OPTS=""
     ;;
 
