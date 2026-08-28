@@ -28,6 +28,9 @@
 #ifndef KAFKA_CERTIFICATE_LOCATION
 #define KAFKA_CERTIFICATE_LOCATION "/path/to/cert.pem"
 #endif
+#ifndef KAFKA_TIMEOUT
+#define KAFKA_TIMEOUT 100
+#endif
 
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
 /* Wrapper to set config values and error out if needed.
@@ -127,11 +130,19 @@ int main (int argc, char **argv) {
         return 1;
     }
 
-    // Block until the messages are all sent.
-    rd_kafka_flush(producer, 10 * 1000);
+    err = rd_kafka_flush(producer, KAFKA_TIMEOUT);
 
-    if (rd_kafka_outq_len(producer) > 0) {
-        fprintf(stderr, "Message was not delivered.\n");
+    if (err != RD_KAFKA_RESP_ERR_NO_ERROR) {
+        int outstanding = rd_kafka_outq_len(producer);
+
+        fprintf(stderr, "%d message(s) were not delivered\n", outstanding);
+
+        rd_kafka_purge(producer, RD_KAFKA_PURGE_F_QUEUE | RD_KAFKA_PURGE_F_INFLIGHT);
+
+        while (rd_kafka_outq_len(producer) > 0)
+            rd_kafka_poll(producer, 100);
+
+        rd_kafka_destroy(producer);
         return 1;
     }
 
