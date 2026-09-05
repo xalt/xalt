@@ -133,23 +133,33 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       // Prepend $LIB64 to $LD_LIBRARY_PATH
       int  i;
+      int  len_lpath    = 0
       char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
       char *lib64_dir   = xalt_dir("lib64");
-      int  len_lpath    = strlen(ld_lib_path);
       int  len_l64dir   = strlen(lib64_dir);
       int  len          = len_l64dir + len_lpath + 2;
       char *value       = (char *) XMALLOC(len*sizeof(char));
 
-      i = 0;
-      memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
-      value[i] = ':';                             i += 1;
-      memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
-      value[i] = '\0';                            i += 1;
-      setenv("LD_LIBRARY_PATH", value, 1);
-      my_free(value,len);
+      if (ld_lib_path != NULL)
+        {
+          len_lpath    = strlen(ld_lib_path);
+          i = 0;
+          memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
+          value[i] = ':';                             i += 1;
+          memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
+          value[i] = '\0';                            i += 1;
+          setenv("LD_LIBRARY_PATH", value, 1);
+          my_free(value,len);
+        }
 
       // Define arguments to xalt_curl_transmit.c
       char* prgm = xalt_getenv("XALT_KAFKA_EXE");
+      if (prgm == NULL)
+        {
+          DEBUG(my_stderr, "  XALT_KAFKA_EXE has no value; error with xalt_kafka_transmit\n");
+          return;
+        }
+          
       myargs[0]  = prgm;
       myargs[1]  = (char *) syshost;
       myargs[2]  = (char *) jsonStr;
@@ -182,20 +192,24 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
 
       // Prepend $LIB64 to $LD_LIBRARY_PATH
       int  i;
+      int len_lpath     = 0;
       char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
       char *lib64_dir   = xalt_dir("lib64");
-      int  len_lpath    = strlen(ld_lib_path);
       int  len_l64dir   = strlen(lib64_dir);
       int  len          = len_l64dir + len_lpath + 2;
       char *value       = (char *) XMALLOC(len*sizeof(char));
 
-      i = 0;
-      memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
-      value[i] = ':';                             i += 1;
-      memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
-      value[i] = '\0';                            i += 1;
-      setenv("LD_LIBRARY_PATH", value, 1);
-      my_free(value,len);
+      if (ld_lib_path != NULL)
+        {
+          len_lpath    = strlen(ld_lib_path);
+          i = 0;
+          memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
+          value[i] = ':';                             i += 1;
+          memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
+          value[i] = '\0';                            i += 1;
+          setenv("LD_LIBRARY_PATH", value, 1);
+          my_free(value,len);
+        }
 
       // Define arguments to xalt_curl_transmit.c
       char* prgm = xalt_dir("libexec/xalt_curl_transmit");
