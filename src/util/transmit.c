@@ -132,18 +132,17 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       char *myenv  []   = {NULL};
 
       // Prepend $LIB64 to $LD_LIBRARY_PATH
-      int  i;
-      int  len_lpath    = 0
       char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
       char *lib64_dir   = xalt_dir("lib64");
       int  len_l64dir   = strlen(lib64_dir);
-      int  len          = len_l64dir + len_lpath + 2;
-      char *value       = (char *) XMALLOC(len*sizeof(char));
 
       if (ld_lib_path != NULL)
         {
-          len_lpath    = strlen(ld_lib_path);
-          i = 0;
+          int  len;
+          char *value    = (char *) XMALLOC(len*sizeof(char));
+          int  i         = 0;
+          int  len_lpath = strlen(ld_lib_path);
+          len            = len_l64dir + len_lpath + 2;
           memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
           value[i] = ':';                             i += 1;
           memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
@@ -191,18 +190,17 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       char *myenv  []   = { NULL };
 
       // Prepend $LIB64 to $LD_LIBRARY_PATH
-      int  i;
-      int len_lpath     = 0;
       char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
       char *lib64_dir   = xalt_dir("lib64");
       int  len_l64dir   = strlen(lib64_dir);
-      int  len          = len_l64dir + len_lpath + 2;
-      char *value       = (char *) XMALLOC(len*sizeof(char));
 
       if (ld_lib_path != NULL)
         {
-          len_lpath    = strlen(ld_lib_path);
-          i = 0;
+          int  i         = 0;
+          int  len_lpath = strlen(ld_lib_path);
+          int  len       = len_l64dir + len_lpath + 2;
+          char *value    = (char *) XMALLOC(len*sizeof(char));
+
           memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
           value[i] = ':';                             i += 1;
           memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
