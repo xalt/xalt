@@ -106,6 +106,8 @@ int main(int argc, char* argv[])
   json_add_libT(     &json, my_sep, "linkA",     libT);
   json_add_SET(      &json, my_sep, "function",  funcSet);
   json_add_utarray(  &json, my_sep, "link_line", linklineA);
+  json_add_char_str( &json, my_sep, "rec_type",  "link");
+  
   json_fini(         &json, &jsonStr);
 
   crc crcValue = crcFast(jsonStr,strlen(jsonStr));

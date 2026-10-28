@@ -218,6 +218,7 @@ void run_submission(xalt_timer_t *xalt_timer, pid_t pid, pid_t ppid, double star
   const char* my_sep = blank0;
   json_init(Json_TABLE, &json);
   json_add_char_str( &json, my_sep, "crc",          "0xFFFF");     my_sep = comma;
+  json_add_char_str( &json, my_sep, "rec_type",     "run"); 
   json_add_json_str( &json, my_sep, "cmdlineA",      usr_cmdline);
   json_add_char_str( &json, my_sep, "hash_id",       &sha1buf[0]);
   json_add_libT(     &json, my_sep, "libA",          libT);

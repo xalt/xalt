@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
   int i;
   int sz = 2;  // {}
   for (i = optind; i < argc; ++i)
-    sz += 3*strlen(argv[i]) + 3;
+    sz += 3*strlen(argv[i]) + 3 + 32;
 
   char* json_str = (char *)XMALLOC(sz+1);
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
     }
 
   const char *qs;
-  strcpy(&json_str[0],"{\"crc\":\"0xFFFF\",");
+  strcpy(&json_str[0],"{\"crc\":\"0xFFFF\",\"rec_type\":\"pkg\",");
   int idx = strlen(&json_str[0]);
   for (i = optind; i < argc; i+=2)
     {
