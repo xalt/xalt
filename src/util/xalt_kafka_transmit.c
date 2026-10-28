@@ -135,7 +135,7 @@ int main (int argc, char **argv) {
     if (err != RD_KAFKA_RESP_ERR_NO_ERROR) {
         int outstanding = rd_kafka_outq_len(producer);
 
-        fprintf(stderr, "%d message(s) were not delivered\n", outstanding);
+        fprintf(stderr, "%d message(s) were not delivered within %d ms\n", outstanding, KAFKA_TIMEOUT);
 
         rd_kafka_purge(producer, RD_KAFKA_PURGE_F_QUEUE | RD_KAFKA_PURGE_F_INFLIGHT);
 
