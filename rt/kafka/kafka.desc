@@ -1,0 +1,87 @@
+# -*- python -*-
+
+test_name = "kafka"
+test_descript = {
+   'description' : "Test syslog transfer (New and old)",
+   'keywords'    : [ test_name ],
+
+   'active'      : True,
+   'test_name'   : test_name,
+
+   'run_script'  : """
+     . $(projectDir)/rt/common_funcs.sh
+
+     rm -f results.csv u2acct.json
+
+     XALT_DIR=$outputDir/XALT/xalt/xalt/
+     PATH=$XALT_DIR/bin:$XALT_DIR/sbin:$(testDir)/bin:$PATH;
+
+     initialize
+     installXALT --with-syshostConfig=nth_name:2 --with-containerSupport=no
+     displayThis "buildRmapT"
+     buildRmapT
+
+     echo '{ "mclay": "A-xyzzy" }' > u2acct.json
+
+     export PROMPT_COMMAND2="printf '\033k${formed_hostname}\033\\';"
+
+     displayThis "installDB"
+     installDB
+
+     displayThis "module commands"
+     module --quiet load gcc mpich
+     module list
+
+     mkdir -p .xalt.d
+
+     XALT_BIN=$outputDir/XALT/xalt/xalt/bin
+     PATH=$XALT_BIN:$outputDir/XALT/xalt/xalt/sbin:$PATH;
+     export COMPILER_PATH=$XALT_BIN
+     export SBATCH_ACCOUNT=rtm
+     export SLURM_JOB_ID=12345
+     export SLURM_JOB_PARTITION=xyzzy_xyzzy_xyzzy_xyzzy_xyzzy_xyzzy_xyzzy
+     export XALT_EXECUTABLE_TRACKING=yes
+     export XALT_TRANSMISSION_STYLE=kafka
+     export XALT_KAFKA_EXE=`type -p xalt_fake_kafka.py`
+
+     my_arch=`arch`
+     if [ $my_arch = x86_64 ]; then
+       export LD_PRELOAD="$outputDir"'/XALT/xalt/xalt/$LIB/libxalt_init.so'
+     else
+       export LD_PRELOAD="$outputDir"'/XALT/xalt/xalt/lib64/libxalt_init.so'
+     fi
+     
+     displayThis  "mpicc -o hello.01 $(projectDir)/rt/mpi_hello_world.c"
+     mpicc -o hello.01 $(projectDir)/rt/mpi_hello_world.c
+     displayThis  "LD_LIBRARY_PATH= XALT_TRACING=run ./hello.01 --seq 01"
+     
+     LD_LIBRARY_PATH= XALT_TRACING=run ./hello.01 --seq 01 "a';'d" 
+
+     cp ./hello.01 ./hello.02
+     displayThis  "XALT_TRACING=run ./hello.01 --seq 01"
+     XALT_TRACING=run ./hello.02 --seq 01 "a';'d" 
+
+     export XALT_EXECUTABLE_TRACKING=no
+     SYSHOST=`xalt_syshost`
+     displayThis "SYSHOST: $SYSHOST"
+
+     export XALT_USERS="$USER;$outputDir"
+     export XALT_TRANSMISSION_STYLE=file
+     displayThis "xalt_file_to_db.py "
+     xalt_file_to_db.py  --timeout 300 --testing --syshost $SYSHOST --confFn $DB_CONF_FN --u2acct u2acct.json --reverseMapD $outputDir/reverseMapD
+
+     displayThis "check_entries_db.py"
+     check_entries_db.py --dbname $DBNAME --results results.csv --links 1 --runs 2 --objects 1 --uuid 2
+     finishTest -o $(resultFn) -t $(runtimeFn) results.csv
+     if [ -f results.csv ]; then
+       STATUS=`cat results.csv`; 
+     else
+       STATUS=failed
+     fi
+     echo; echo STATUS=$STATUS; echo
+   """,
+
+   'tests' : [
+      { 'id' : 't1', 'tol' : 1.01e-6},
+   ],
+}
