@@ -28,6 +28,9 @@
 #define INTERFACE_Version  4
 const int syslog_msg_sz = SYSLOG_MSG_SZ;
 
+void prgm_transmission(char* prgm, const char* prgm_name, const char* syshost,
+                       const char* jsonStr, int xalt_tracing, FILE* my_stderr);
+
 void transmit(const char* transmission, const char* jsonStr, const char* kind, const char* key,
               const char* crcStr, const char* syshost, char* resultDir, const char* resultFn,
               FILE* my_stderr)
@@ -127,116 +130,18 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
     }
   else if (strcasecmp(transmission, "kafka") == 0)
     {
-      int pid, status, ret = 0;
-      char *myargs []   = {NULL, NULL, NULL, NULL};
-      char *myenv  []   = {NULL};
-
-      // Prepend $LIB64 to $LD_LIBRARY_PATH
-      char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
-      char *lib64_dir   = xalt_dir("lib64");
-      int  len_l64dir   = strlen(lib64_dir);
-
-      if (ld_lib_path != NULL)
-        {
-          int  len;
-          char *value    = (char *) XMALLOC(len*sizeof(char));
-          int  i         = 0;
-          int  len_lpath = strlen(ld_lib_path);
-          len            = len_l64dir + len_lpath + 2;
-          memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
-          value[i] = ':';                             i += 1;
-          memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
-          value[i] = '\0';                            i += 1;
-          setenv("LD_LIBRARY_PATH", value, 1);
-          my_free(value,len);
-        }
-
-      // Define arguments to xalt_curl_transmit.c
       char* prgm = xalt_getenv("XALT_KAFKA_EXE");
       if (prgm == NULL)
         {
           DEBUG(my_stderr, "  XALT_KAFKA_EXE has no value; error with xalt_kafka_transmit\n");
           return;
         }
-          
-      myargs[0]  = prgm;
-      myargs[1]  = (char *) syshost;
-      myargs[2]  = (char *) jsonStr;
-
-      // Call xalt_curl_transmit as a child process and wait for it to complete.
-      pid = fork();
-      if (pid == 0)
-        {
-          // Child process
-          execve(prgm, myargs, myenv);
-        }
-
-      // Parent: Wait for child to complete
-      if ((ret = waitpid (pid, &status, 0)) == -1)
-        {
-          DEBUG(my_stderr, "  waitpid() returned -1: error with xalt_kafka_transmit\n");
-          asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
-          openlog(logNm, LOG_PID, LOG_USER);
-          syslog(LOG_INFO, "waitpid() returned -1: error with xalt_kafka_transmit");
-          closelog();
-          my_free(logNm,strlen(logNm));
-          return;
-        }
+      prgm_transmission(prgm, "xalt_kafka_prgm", syshost, jsonStr, xalt_tracing, my_stderr);
     }
   else if (strcasecmp(transmission, "curl") == 0)
     {
-      int pid, status, ret = 0;
-      char *myargs []   = { NULL, NULL, NULL, NULL};
-      char *myenv  []   = { NULL };
-
-      // Prepend $LIB64 to $LD_LIBRARY_PATH
-      char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
-      char *lib64_dir   = xalt_dir("lib64");
-      int  len_l64dir   = strlen(lib64_dir);
-
-      if (ld_lib_path != NULL)
-        {
-          int  i         = 0;
-          int  len_lpath = strlen(ld_lib_path);
-          int  len       = len_l64dir + len_lpath + 2;
-          char *value    = (char *) XMALLOC(len*sizeof(char));
-
-          memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
-          value[i] = ':';                             i += 1;
-          memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
-          value[i] = '\0';                            i += 1;
-          setenv("LD_LIBRARY_PATH", value, 1);
-          my_free(value,len);
-        }
-
-      // Define arguments to xalt_curl_transmit.c
       char* prgm = xalt_dir("libexec/xalt_curl_transmit");
-      myargs[0]  = prgm;
-      myargs[1]  = (char *) syshost;
-      myargs[2]  = (char *) jsonStr;
-
-      // Call xalt_curl_transmit as a child process and wait for it to complete.
-      pid = fork();
-      if (pid == 0)
-        {
-          // Child process
-          execve(prgm, myargs, myenv);
-        }
-
-      // Parent: Wait for child to complete
-      if ((ret = waitpid (pid, &status, 0)) == -1)
-        {
-          DEBUG(my_stderr, "  waitpid() returned -1: error with xalt_curl_transmit\n");
-          asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
-          openlog(logNm, LOG_PID, LOG_USER);
-          syslog(LOG_INFO, "waitpid() returned -1: error with xalt_curl_transmit");
-          closelog();
-          my_free(logNm,strlen(logNm));
-          return;
-        }
-
-      // Free memory
-      my_free(prgm, strlen(prgm));
+      prgm_transmission(prgm, "xalt_curl_transmit", syshost, jsonStr, xalt_tracing, my_stderr);
     }
   else if (strcasecmp(transmission, "syslogv1") == 0)
     {
@@ -330,5 +235,62 @@ void transmit(const char* transmission, const char* jsonStr, const char* kind, c
       my_free(keyStr,       strlen(keyStr));
       my_free(valueStr,     nvalueStr);
       my_free(crcS,         strlen(crcS));
+    }
+}
+void prgm_transmission(char* prgm, const char* prgm_name, const char* syshost,
+                       const char* jsonStr, int xalt_tracing, FILE* my_stderr)
+{
+  int pid, status, ret = 0;
+  char *myargs []   = {NULL, NULL, NULL, NULL};
+  char *myenv  []   = {NULL};
+
+  // Prepend $LIB64 to $LD_LIBRARY_PATH
+  char *ld_lib_path = xalt_getenv("LD_LIBRARY_PATH");
+  char *lib64_dir   = xalt_dir("lib64");
+  int  len_l64dir   = strlen(lib64_dir);
+
+  char *value;
+  int  len_lpath = 0;
+  int  i         = 0;
+  if (ld_lib_path != NULL)
+    len_lpath = strlen(ld_lib_path);
+  
+  int  len       = len_l64dir + len_lpath + 2;
+  value          = (char *) XMALLOC(len*sizeof(char));
+  memcpy(&value[i], lib64_dir,   len_l64dir); i += len_l64dir;
+  if (ld_lib_path != NULL)
+    {
+      value[i] = ':';                             i += 1;
+      memcpy(&value[i], ld_lib_path, len_lpath);  i += len_lpath;
+    }
+  value[i] = '\0';                            i += 1;
+  setenv("LD_LIBRARY_PATH", value, 1);
+  my_free(value,len);
+      
+      
+  // Define arguments to the prgm
+  myargs[0]  = prgm;
+  myargs[1]  = (char *) syshost;
+  myargs[2]  = (char *) jsonStr;
+  
+  // Call prgm as a child process and wait for it to complete.
+  pid = fork();
+  if (pid == 0)
+    {
+      // Child process
+      execve(prgm, myargs, myenv);
+    }
+
+  // Parent: Wait for child to complete
+  if ((ret = waitpid (pid, &status, 0)) == -1)
+    {
+      char * logNm   = NULL;
+      DEBUG(my_stderr, "  waitpid() returned -1: error with %s\n",prgm_name);
+      asprintf(&logNm, "XALT_LOGGING_ERROR_%s",syshost);
+      openlog(logNm, LOG_PID, LOG_USER);
+      syslog(LOG_INFO, "waitpid() returned -1: error with %s",prgm_name);
+      closelog();
+      my_free(logNm,strlen(logNm));
+      return;
     }
 }
