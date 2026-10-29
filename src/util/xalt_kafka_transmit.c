@@ -10,10 +10,6 @@
 
 #define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) )
 
-#ifndef KAFKA_SILENT
-#define KAFKA_SILENT 0
-#endif
-
 #ifndef KAFKA_TOPIC
 #define KAFKA_TOPIC "default_topic"
 #endif
@@ -34,6 +30,9 @@
 #endif
 #ifndef KAFKA_TIMEOUT
 #define KAFKA_TIMEOUT 100
+#endif
+#ifndef KAFKA_SILENT
+#define KAFKA_SILENT 0
 #endif
 
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
