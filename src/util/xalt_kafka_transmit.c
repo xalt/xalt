@@ -28,8 +28,20 @@
 #ifndef KAFKA_CERTIFICATE_LOCATION
 #define KAFKA_CERTIFICATE_LOCATION "/path/to/cert.pem"
 #endif
+#ifndef KAFKA_TIMEOUT
+#define KAFKA_TIMEOUT 100
+#endif
+#ifndef KAFKA_SILENT
+#define KAFKA_SILENT 0
+#endif
 
 #ifdef HAVE_LIBRDKAFKA_RDKAFKA_H
+#define KAFKA_LOG(...) do { \
+    if (!KAFKA_SILENT) { \
+        fprintf(stderr, __VA_ARGS__); \
+    } \
+} while (0)
+
 /* Wrapper to set config values and error out if needed.
  */
 static void set_config(rd_kafka_conf_t *conf, char *key, char *value) {
@@ -38,7 +50,7 @@ static void set_config(rd_kafka_conf_t *conf, char *key, char *value) {
 
     res = rd_kafka_conf_set(conf, key, value, errstr, sizeof(errstr));
     if (res != RD_KAFKA_CONF_OK) {
-        fprintf(stderr, "Unable to set config: %s\n", errstr);
+        KAFKA_LOG("Unable to set config: %s\n", errstr);
         exit(1);
     }
 }
@@ -51,8 +63,8 @@ static void set_config(rd_kafka_conf_t *conf, char *key, char *value) {
 static void dr_msg_cb (rd_kafka_t *kafka_handle,
                        const rd_kafka_message_t *rkmessage,
                        void *opaque) {
-    if (rkmessage->err) {
-        fprintf(stderr, "Message delivery failed: %s\n", rd_kafka_err2str(rkmessage->err));
+    if (!KAFKA_SILENT && rkmessage->err) {
+        KAFKA_LOG("Message delivery failed: %s\n", rd_kafka_err2str(rkmessage->err));
     }
 }
 #endif
@@ -103,7 +115,7 @@ int main (int argc, char **argv) {
     // Create the Producer instance.
     producer = rd_kafka_new(RD_KAFKA_PRODUCER, conf, errstr, sizeof(errstr));
     if (!producer) {
-        fprintf(stderr, "Failed to create new producer: %s\n", errstr);
+        KAFKA_LOG("Failed to create new producer: %s\n", errstr);
         return 1;
     }
 
@@ -123,15 +135,23 @@ int main (int argc, char **argv) {
                             RD_KAFKA_V_END);
 
     if (err) {
-        fprintf(stderr, "Failed to produce to topic %s: %s\n", kafka_topic, rd_kafka_err2str(err));
+        KAFKA_LOG("Failed to produce to topic %s: %s\n", kafka_topic, rd_kafka_err2str(err));
         return 1;
     }
 
-    // Block until the messages are all sent.
-    rd_kafka_flush(producer, 10 * 1000);
+    err = rd_kafka_flush(producer, KAFKA_TIMEOUT);
 
-    if (rd_kafka_outq_len(producer) > 0) {
-        fprintf(stderr, "Message was not delivered.\n");
+    if (err != RD_KAFKA_RESP_ERR_NO_ERROR) {
+        int outstanding = rd_kafka_outq_len(producer);
+
+        KAFKA_LOG("%d message(s) were not delivered within %d ms\n", outstanding, KAFKA_TIMEOUT);
+
+        rd_kafka_purge(producer, RD_KAFKA_PURGE_F_QUEUE | RD_KAFKA_PURGE_F_INFLIGHT);
+
+        while (rd_kafka_outq_len(producer) > 0)
+            rd_kafka_poll(producer, 100);
+
+        rd_kafka_destroy(producer);
         return 1;
     }
 
